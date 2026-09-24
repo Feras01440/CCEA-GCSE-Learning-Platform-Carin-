@@ -1,0 +1,230 @@
+[
+  {
+    "type": "hero",
+    "lede": "A jumper is in a sale at 30% off and costs £28. What was it before? You cannot take 30% off £28, because the 30% was taken off the larger, original price. Every percentage change is a multiplication, and going backwards means dividing by the same multiplier.",
+    "can": [
+      "Write the multiplier for any increase or decrease.",
+      "Decide whether the number you are given comes before or after the change.",
+      "Divide by the multiplier to get back to the original."
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "Reverse percentages: finding the original quantity"
+  },
+  {
+    "type": "p",
+    "md": "Ten words, and the marks all turn on one of them: **result**. The number you are handed is the result, not the start. A sale price, a price including VAT, a population after growth, a value after depreciation — every one of those is the *after* value. A percentage change is a multiplication, and multiplication has exactly one inverse: division."
+  },
+  {
+    "type": "figure",
+    "alt": "Two bars. The upper bar is ten blocks long and labelled Original, 100%. The lower bar is twelve blocks long and labelled New, 120%, with a dashed line where 100% ends. A downward arrow reads times 1.2 and an upward arrow reads divided by 1.2.",
+    "svg": "<svg viewBox=\"0 0 640 210\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"mb1-t\"><title id=\"mb1-t\">Original × 1.2 gives New; ÷ 1.2 goes back</title><defs><marker id=\"mb1-a\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 5 L0 10 z\" fill=\"currentColor\"/></marker></defs><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"><rect x=\"128\" y=\"46\" width=\"240\" height=\"30\"/><rect x=\"128\" y=\"128\" width=\"288\" height=\"30\"/><path d=\"M152 46 L152 76\" stroke-width=\"0.6\"/><path d=\"M176 46 L176 76\" stroke-width=\"0.6\"/><path d=\"M200 46 L200 76\" stroke-width=\"0.6\"/><path d=\"M224 46 L224 76\" stroke-width=\"0.6\"/><path d=\"M248 46 L248 76\" stroke-width=\"0.6\"/><path d=\"M272 46 L272 76\" stroke-width=\"0.6\"/><path d=\"M296 46 L296 76\" stroke-width=\"0.6\"/><path d=\"M320 46 L320 76\" stroke-width=\"0.6\"/><path d=\"M344 46 L344 76\" stroke-width=\"0.6\"/><path d=\"M152 128 L152 158\" stroke-width=\"0.6\"/><path d=\"M176 128 L176 158\" stroke-width=\"0.6\"/><path d=\"M200 128 L200 158\" stroke-width=\"0.6\"/><path d=\"M224 128 L224 158\" stroke-width=\"0.6\"/><path d=\"M248 128 L248 158\" stroke-width=\"0.6\"/><path d=\"M272 128 L272 158\" stroke-width=\"0.6\"/><path d=\"M296 128 L296 158\" stroke-width=\"0.6\"/><path d=\"M320 128 L320 158\" stroke-width=\"0.6\"/><path d=\"M344 128 L344 158\" stroke-width=\"0.6\"/><path d=\"M368 128 L368 158\" stroke-width=\"0.6\"/><path d=\"M392 128 L392 158\" stroke-width=\"0.6\"/><path d=\"M368 120 L368 166\" stroke-dasharray=\"4 3\"/><path d=\"M154 84 L154 120\" marker-end=\"url(#mb1-a)\"/><path d=\"M342 120 L342 84\" marker-end=\"url(#mb1-a)\"/></g><g font-family=\"system-ui, sans-serif\" font-size=\"15\" fill=\"currentColor\"><text x=\"8\" y=\"66\">Original</text><text x=\"8\" y=\"148\">New</text><text x=\"380\" y=\"66\">100%</text><text x=\"428\" y=\"148\">120%</text><text x=\"166\" y=\"106\">× 1.2</text><text x=\"284\" y=\"106\">÷ 1.2</text></g><g font-family=\"system-ui, sans-serif\" font-size=\"13\" fill=\"currentColor\"><text x=\"8\" y=\"198\">Twelve blocks against ten: the two extra blocks are the 20% increase.</text></g></svg>",
+    "caption": "Forwards is × 1.2. Backwards is ÷ 1.2 — not × 0.8, which would land 4% low."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "An amount is increased by 8%. The multiplier is",
+    "options": [
+      "× 1.08",
+      "× 0.08",
+      "× 0.92"
+    ],
+    "answer": "× 1.08",
+    "explain": "An increase keeps the whole amount and adds more, so the multiplier is 1 + 0.08."
+  },
+  {
+    "type": "h",
+    "text": "Multipliers: the whole topic in one line"
+  },
+  {
+    "type": "p",
+    "md": "A percentage change is a multiplication. An increase of $r\\%$ multiplies by $1 + \\frac{r}{100}$; a decrease multiplies by $1 - \\frac{r}{100}$.\n\n| Change | Multiplier |\n| --- | --- |\n| increase 8% | 1.08 |\n| increase 2.5% | 1.025 |\n| decrease 15% | 0.85 |\n| decrease 6.2% | 0.938 |\n| VAT at 20% added | 1.2 |\n| 0.5% interest | 1.005 |\n\nMultiplication has one inverse, and it is division. That is the whole method: **forwards multiply, backwards divide**."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "blank",
+    "prompt": "Write the multiplier for a decrease of 15%.",
+    "answer": "0.85",
+    "explain": "100% − 15% = 85%, so × 0.85."
+  },
+  {
+    "type": "h",
+    "text": "Reversing: divide, never subtract"
+  },
+  {
+    "type": "p",
+    "md": "A gym fee rose by 24% and is now £930. The £930 is *after* the rise, so it is 124% of the old fee. CCEA schemes print three lines and give a mark for each:\n$124\\% = £930$\n$1\\% = £930 \\div 124 = £7.50$\n$100\\% = £7.50 \\times 100 = £750$\nOn a calculator paper the single line $£930 \\div 1.24 = £750$ earns the same three marks. Check by going forwards: $£750 \\times 1.24 = £930$."
+  },
+  {
+    "type": "gate",
+    "id": "g2b",
+    "kind": "choice",
+    "prompt": "A gym fee rose by 24% and is now £930. What percentage of the old fee is £930?",
+    "options": [
+      "124%",
+      "76%",
+      "24%"
+    ],
+    "answer": "124%",
+    "explain": "The rise was added on to 100%, so £930 is 124% of the old fee. Writing that line first is what turns the question into a single division."
+  },
+  {
+    "type": "p",
+    "md": "**Why subtracting fails.** The 24% was worked out on the old fee of £750, so it was £180. Taking 24% of the *new* £930 gives £223.20, and £930 − £223.20 = £706.80, which is not the old fee. The bigger the percentage, the bigger the error."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "A price rose by 18% to £1475. The price before the rise, in pounds, was",
+    "answer": "1250",
+    "explain": "118% = £1475, so 1% = £12.50 and 100% = £1250."
+  },
+  {
+    "type": "h",
+    "text": "Finding the after value inside the words"
+  },
+  {
+    "type": "p",
+    "md": "The examiners' word for this is recognition. These all mean *the change has already happened*:\n**sale price** or **reduced to** — below 100%; **including VAT at 20%** — 120%; **the population is now** — above 100% after growth; **depreciated**, **loss**, **discount** — below 100%; **profit of 12%** — 112% of what was paid.\nDepreciation catches people every November: it means fallen in value, so a fall of 6.2% leaves 93.8%."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "November 2025 M3 Q30 and M4 Q15",
+    "md": "Candidates who wrote 93.8% = the given value usually finished. Others set that line up and then reverted to adding or subtracting 6.2%, and some started from 106.2% because 'depreciated' had not been read as a decrease.",
+    "source": "ccea-cer:maths:2025-november:M3:Q30"
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "A car has depreciated by 6.2% and is now worth £22 512. The £22 512 is",
+    "options": [
+      "93.8% of its earlier value",
+      "106.2% of its earlier value",
+      "6.2% of its earlier value"
+    ],
+    "answer": "93.8% of its earlier value",
+    "explain": "Depreciation is a fall, so 6.2% has gone and 93.8% is left."
+  },
+  {
+    "type": "h",
+    "text": "When the amount you are given is a difference"
+  },
+  {
+    "type": "p",
+    "md": "A large coffee costs 30% more than a small one, and the **difference** is £0.66. The 66p is not 130% and it is not 100%: it is the 30%. So $30\\% = £0.66$, which gives $10\\% = £0.22$ and $100\\% = £2.20$ for the small one — and if the question wants the large one, that is $£2.20 + £0.66 = £2.86$, which agrees with $£2.20 \\times 1.3$."
+  },
+  {
+    "type": "figure",
+    "alt": "Two bars. The upper bar is labelled Smaller, 100%. The lower bar is longer and labelled Larger, 130%. A bracket under the overhang is labelled difference = 30%.",
+    "svg": "<svg viewBox=\"0 0 600 216\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"db1-t\"><title id=\"db1-t\">The overhang between the two bars is 30 per cent of the smaller bar</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"><rect x=\"96\" y=\"36\" width=\"240\" height=\"28\"/><rect x=\"96\" y=\"96\" width=\"312\" height=\"28\"/><path d=\"M120 36 L120 64\" stroke-width=\"0.6\"/><path d=\"M144 36 L144 64\" stroke-width=\"0.6\"/><path d=\"M168 36 L168 64\" stroke-width=\"0.6\"/><path d=\"M192 36 L192 64\" stroke-width=\"0.6\"/><path d=\"M216 36 L216 64\" stroke-width=\"0.6\"/><path d=\"M240 36 L240 64\" stroke-width=\"0.6\"/><path d=\"M264 36 L264 64\" stroke-width=\"0.6\"/><path d=\"M288 36 L288 64\" stroke-width=\"0.6\"/><path d=\"M312 36 L312 64\" stroke-width=\"0.6\"/><path d=\"M120 96 L120 124\" stroke-width=\"0.6\"/><path d=\"M144 96 L144 124\" stroke-width=\"0.6\"/><path d=\"M168 96 L168 124\" stroke-width=\"0.6\"/><path d=\"M192 96 L192 124\" stroke-width=\"0.6\"/><path d=\"M216 96 L216 124\" stroke-width=\"0.6\"/><path d=\"M240 96 L240 124\" stroke-width=\"0.6\"/><path d=\"M264 96 L264 124\" stroke-width=\"0.6\"/><path d=\"M288 96 L288 124\" stroke-width=\"0.6\"/><path d=\"M312 96 L312 124\" stroke-width=\"0.6\"/><path d=\"M336 96 L336 124\" stroke-width=\"0.6\"/><path d=\"M360 96 L360 124\" stroke-width=\"0.6\"/><path d=\"M384 96 L384 124\" stroke-width=\"0.6\"/><path d=\"M336 36 L336 142\" stroke-dasharray=\"4 3\" stroke-width=\"1\"/><path d=\"M336 142 L408 142\"/><path d=\"M336 136 L336 148\"/><path d=\"M408 136 L408 148\"/></g><g font-family=\"system-ui, sans-serif\" font-size=\"15\" fill=\"currentColor\"><text x=\"8\" y=\"55\">Smaller</text><text x=\"8\" y=\"115\">Larger</text><text x=\"348\" y=\"55\">100%</text><text x=\"422\" y=\"115\">130%</text></g><g font-family=\"system-ui, sans-serif\" font-size=\"13\" fill=\"currentColor\"><text x=\"342\" y=\"164\">difference = 30%</text><text x=\"8\" y=\"196\">The difference is 30% of the smaller bar, not 100%.</text><text x=\"8\" y=\"211\">Divide it by 30, multiply by 100, then add it back for the larger bar.</text></g></svg>",
+    "caption": "The overhang is the difference, and the difference is the percentage — not the whole bar."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "A large tub of paint costs 35% more than a small tub, and the difference is £9.45. The small tub costs, in pounds,",
+    "answer": "27",
+    "explain": "35% = £9.45, so 1% = £0.27 and 100% = £27. The large tub would be £36.45."
+  },
+  {
+    "type": "h",
+    "text": "Two changes, two reversals"
+  },
+  {
+    "type": "p",
+    "md": "A flat sold in 2025 for £184 320, a loss of 4%; the seller had bought it from an owner who made 20% profit. Undo the most recent change first.\n$96\\% = £184\\,320$, so she paid $£184\\,320 \\div 0.96 = £192\\,000$.\n$120\\% = £192\\,000$, so he paid $£192\\,000 \\div 1.2 = £160\\,000$.\nForwards, $£160\\,000 \\times 1.2 \\times 0.96 = £184\\,320$, so both directions were read correctly."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "£27 300 is 91% of a figure that is itself 125% of the price a dealer paid. The dealer paid, in pounds,",
+    "answer": "24000",
+    "explain": "£27 300 ÷ 0.91 = £30 000, and £30 000 ÷ 1.25 = £24 000."
+  },
+  {
+    "type": "h",
+    "text": "A change as a percentage of the original"
+  },
+  {
+    "type": "p",
+    "md": "The same relationship, read the other way. **Percentage change $= \\frac{\\text{change}}{\\text{original}} \\times 100$.** A jacket that cost £96 and now costs £120 has risen by £24, and $\\frac{24}{96} \\times 100 = 25\\%$.\nTwo divisions look tempting and are not the answer: $\\frac{120}{96} \\times 100 = 125\\%$ is the multiplier as a percentage, and $\\frac{24}{120} \\times 100 = 20\\%$ measures the rise against the new price."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "Membership rose by 84 to 684. The percentage increase is",
+    "answer": "14",
+    "explain": "684 − 84 = 600 before the rise, and 84 ÷ 600 × 100 = 14%."
+  },
+  {
+    "type": "h",
+    "text": "Different rates in successive years"
+  },
+  {
+    "type": "p",
+    "md": "An account paying 3% in the first year and 1.5% in the second is $\\times 1.03$ then $\\times 1.015$, each acting on the balance at the time. £2400 becomes £2472, then £2509.08.\nAdding the rates gives 4.5% and the wrong answer, because $1.03 \\times 1.015 = 1.04545$. Backwards, divide by each in turn: £5227.25 ÷ 1.015 = £5150, then ÷ 1.03 = £5000. Money always carries two decimal places."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "An account paid 5% then 2%, and now holds £5355. The opening deposit, in pounds, was",
+    "answer": "5000",
+    "explain": "£5355 ÷ 1.02 = £5250, then £5250 ÷ 1.05 = £5000."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why two changes need two divisions",
+    "md": "Each percentage acts on the balance at the time, so the changes multiply rather than add: $1.03 \\times 1.015 = 1.04545$, which is not $1.045$. Undoing them one at a time, most recent first, is the only way back."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write the multiplier for any increase or decrease.\nSay whether the number given is before or after the change.\nDivide by the multiplier to get back to the original.\nUndo two changes one at a time, most recent first."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "This is a fixture on both calculator papers: one straight reversal of three marks, and often a four-mark version with a step after it. The first mark is the line that names the percentage — 124% = the value. The last is the quantity actually asked for, which may not be the original. Stuck: write that first line and divide; the unitary route scores the same."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "The compound-interest formula with an index, $P(1 + r)^n$, and questions asking for the number of years belong to M8 growth and decay (M8-NA-04). The Teacher Guidance on M2-NA-08 caps compound interest at three iterations, so no reversal here has more than three multipliers to undo. Percentage error and exponential growth to base $e$ are not CCEA content, and reverse percentages are never combined with upper and lower bounds."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.reverse-percentages.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.reverse-percentages.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.reverse-percentages.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.reverse-percentages.07"
+  }
+]

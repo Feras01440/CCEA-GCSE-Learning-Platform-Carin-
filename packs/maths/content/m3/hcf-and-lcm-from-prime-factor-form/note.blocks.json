@@ -1,0 +1,224 @@
+[
+  {
+    "type": "hero",
+    "lede": "Every whole number is built from primes the way a word is built from letters: $84$ is $2 \\times 2 \\times 3 \\times 7$ and nothing else. Once two numbers are written that way, the highest common factor and the lowest common multiple can be read straight off the primes they share.",
+    "can": [
+      "Write a number as a product of primes in index form.",
+      "Take the lower power of each shared prime for the HCF.",
+      "Take the higher power of every prime for the LCM."
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "HCF and LCM from prime factor form"
+  },
+  {
+    "type": "p",
+    "md": "You already know how to find an HCF by listing factors. That stops working once the numbers get large: nobody lists the factors of 9680. Prime factor form is the upgrade. Once a number is a product of primes, its factors are no mystery: they are every selection from those primes, and the HCF and the LCM become two short rules about **powers**."
+  },
+  {
+    "type": "figure",
+    "alt": "Two overlapping circles. The left-only region holds the primes 2 and 7, the overlap holds 2 and 3, the right-only region holds 3 and 5. Labels read 84 = 2 x 2 x 3 x 7 and 90 = 2 x 3 x 3 x 5, with HCF = 2 x 3 = 6 and LCM = 2 x 3 x 2 x 7 x 3 x 5 = 1260 underneath.",
+    "svg": "<svg viewBox=\"0 0 540 330\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"venn-hcf-lcm\"><title id=\"venn-hcf-lcm\">Every prime of 84 and 90 placed once; the overlap is the HCF and the whole diagram is the LCM</title>\n<g fill=\"currentColor\" fill-opacity=\"0.06\" stroke=\"currentColor\" stroke-width=\"1.6\">\n  <circle cx=\"210\" cy=\"150\" r=\"110\"/><circle cx=\"330\" cy=\"150\" r=\"110\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-serif, Georgia, serif\" font-size=\"19\" text-anchor=\"middle\">\n  <text x=\"150\" y=\"140\">2</text><text x=\"150\" y=\"175\">7</text>\n  <text x=\"270\" y=\"140\">2</text><text x=\"270\" y=\"175\">3</text>\n  <text x=\"390\" y=\"140\">3</text><text x=\"390\" y=\"175\">5</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"16\" text-anchor=\"middle\">\n  <text x=\"120\" y=\"34\">84 = 2 x 2 x 3 x 7</text><text x=\"420\" y=\"34\">90 = 2 x 3 x 3 x 5</text>\n  <text x=\"270\" y=\"112\">shared</text>\n  <text x=\"270\" y=\"292\">HCF = 2 x 3 = 6</text>\n  <text x=\"270\" y=\"316\">LCM = 2 x 3 x 2 x 7 x 3 x 5 = 1260</text>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1\" stroke-dasharray=\"4 3\" fill=\"none\">\n  <path d=\"M270 190 L270 274\"/>\n</g></svg>",
+    "caption": "Every prime of 84 and 90 placed once; the overlap is the HCF and the whole diagram is the LCM"
+  },
+  {
+    "type": "gate",
+    "id": "g0a",
+    "kind": "number",
+    "prompt": "$84 = 2 \\times 2 \\times 3 \\times 7$. How many 2s does 84 contain?",
+    "answer": "2",
+    "explain": "Two of them. Counting the copies of each prime is the whole method."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the rules are what they are",
+    "md": "A **common factor** has to divide both numbers. It may therefore use a prime only as many times as the number with **fewer** copies of it allows — so the HCF takes the lower power.\nA **common multiple** has to contain both numbers inside it. It must therefore carry a prime at least as many times as the number with **more** copies — so the LCM takes the higher power."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "$45 = 3^2 \\times 5$ and $60 = 2^2 \\times 3 \\times 5$. Which primes can appear in the HCF?",
+    "options": [
+      "3 and 5 only",
+      "2, 3 and 5",
+      "3² and 5"
+    ],
+    "answer": "3 and 5 only",
+    "explain": "45 has no 2 at all, so no common factor can contain one. And 60 has only one 3, so the HCF gets one 3, not two."
+  },
+  {
+    "type": "h",
+    "text": "The picture: one diagram, both answers"
+  },
+  {
+    "type": "p",
+    "md": "Write the primes as plain lists and drop each one into a two-circle diagram. Primes in **both** lists go in the overlap; whatever is left over goes in its own circle. Then read the two answers off the same picture: the HCF is the overlap, the LCM is the whole diagram."
+  },
+  {
+    "type": "gate",
+    "id": "g1b",
+    "kind": "choice",
+    "prompt": "In the diagram, where do primes in both lists go?",
+    "options": [
+      "In the overlap",
+      "In the left circle only",
+      "Outside both circles"
+    ],
+    "answer": "In the overlap",
+    "explain": "The overlap holds what both numbers share, and multiplying it out gives the HCF."
+  },
+  {
+    "type": "p",
+    "md": "$84 = 2 \\times 2 \\times 3 \\times 7$ and $90 = 2 \\times 3 \\times 3 \\times 5$.\nOne 2 and one 3 are in both, so the overlap is $2 \\times 3 = 6$: that is the HCF.\nThe whole diagram is $6 \\times (2 \\times 7) \\times (3 \\times 5) = 6 \\times 14 \\times 15 = 1260$: that is the LCM. In index form it is $2^2 \\times 3^2 \\times 5 \\times 7$ — the **higher** power of each prime."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "In that diagram, $84 \\times 90 = 7560$. Divide it by the HCF, 6. What do you get?",
+    "answer": "1260",
+    "explain": "The product counts the shared 6 twice, so dividing by it gives the LCM. That is the check: HCF × LCM = a × b."
+  },
+  {
+    "type": "h",
+    "text": "Straight from index form, no diagram"
+  },
+  {
+    "type": "p",
+    "md": "Once the picture makes sense, work from the powers directly. Line the two factorisations up prime by prime:"
+  },
+  {
+    "type": "figure",
+    "alt": "A five-column table listing the primes 2, 5 and 11 with their powers in 5500 and in 9680, then the power the HCF takes (the lower one) and the power the LCM takes (the higher one).",
+    "svg": "<svg viewBox=\"0 0 710 200\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"power-table-hcf-lcm\"><title id=\"power-table-hcf-lcm\">Prime by prime, the HCF takes the lower power and the LCM takes the higher power</title>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"17\">\n  <text x=\"16\" y=\"30\">prime</text><text x=\"130\" y=\"30\">in 5500</text><text x=\"270\" y=\"30\">in 9680</text>\n  <text x=\"410\" y=\"30\">HCF takes</text><text x=\"560\" y=\"30\">LCM takes</text>\n  <text x=\"16\" y=\"68\">2</text><text x=\"130\" y=\"68\">2 squared</text><text x=\"270\" y=\"68\">2 to the 4</text>\n  <text x=\"410\" y=\"68\">2 squared</text><text x=\"560\" y=\"68\">2 to the 4</text>\n  <text x=\"16\" y=\"104\">5</text><text x=\"130\" y=\"104\">5 cubed</text><text x=\"270\" y=\"104\">5</text>\n  <text x=\"410\" y=\"104\">5</text><text x=\"560\" y=\"104\">5 cubed</text>\n  <text x=\"16\" y=\"140\">11</text><text x=\"130\" y=\"140\">11</text><text x=\"270\" y=\"140\">11 squared</text>\n  <text x=\"410\" y=\"140\">11</text><text x=\"560\" y=\"140\">11 squared</text>\n  <text x=\"16\" y=\"186\">lowest power for the HCF, highest power for the LCM</text>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.2\">\n  <path d=\"M10 42 L700 42\"/><path d=\"M395 12 L395 158\"/><path d=\"M545 12 L545 158\"/>\n</g></svg>",
+    "caption": "Prime by prime, the HCF takes the lower power and the LCM takes the higher power"
+  },
+  {
+    "type": "p",
+    "md": "$5500 = 2^2 \\times 5^3 \\times 11$ and $9680 = 2^4 \\times 5 \\times 11^2$.\n$\\text{HCF} = 2^2 \\times 5 \\times 11 = 220$ (lower power each time).\n$\\text{LCM} = 2^4 \\times 5^3 \\times 11^2 = 242\\,000$ (higher power each time).\nIn an exam, leaving those in index form is usually safest: the mark is for the powers, and a slip in the arithmetic can still cost the accuracy mark."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "$P = 2^3 \\times 7$ and $Q = 2^5 \\times 3$. Which power of 2 goes in the HCF?",
+    "options": [
+      "$2^3$",
+      "$2^5$",
+      "$2^8$"
+    ],
+    "answer": "$2^3$",
+    "explain": "$P$ has only three 2s. $2^5 = 32$ does not divide $P$, so it cannot be a common factor."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "$P = 2^3 \\times 7$ and $Q = 2^5 \\times 3$. Write the LCM in index form.",
+    "answer": "2^5 × 3 × 7",
+    "explain": "Higher power of 2, then every other prime that appears: $2^5 \\times 3 \\times 7 = 672$."
+  },
+  {
+    "type": "h",
+    "text": "Which one does the question want?"
+  },
+  {
+    "type": "p",
+    "md": "Almost every mark lost here is lost on this decision, not on the arithmetic. Two families of wording:\n**HCF** — cutting into equal pieces with nothing wasted, sharing into identical groups, the largest tile that fits, the biggest bag size. The answer is smaller than both numbers.\n**LCM** — two events happening together again, matching two pack sizes with none left over, the shortest length made from both. The answer is at least as big as both numbers."
+  },
+  {
+    "type": "gate",
+    "id": "g4b",
+    "kind": "choice",
+    "prompt": "Two buses leave a stand together and leave together again. Is that an HCF or an LCM?",
+    "options": [
+      "LCM",
+      "HCF",
+      "Neither of them"
+    ],
+    "answer": "LCM",
+    "explain": "Two events coming together again is the lowest common multiple: the first time the cycles line up."
+  },
+  {
+    "type": "p",
+    "md": "A one-second sanity check: if the answer is bigger than both numbers it is a multiple; if it is smaller than both it is a factor. Read your answer back against the story."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2024 M3 Q20(b)",
+    "md": "The HCF was asked for and the LCM, 630, came back. The same swap turned up in M4 Q5(b) the same series. Writing 'HCF must be smaller than both' at the top of the working takes three seconds and catches it.",
+    "source": "ccea-cer:maths:2024-summer:M3:Q20b"
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Two ribbons, 126 cm and 198 cm, cut into equal whole-centimetre pieces with nothing wasted. HCF or LCM?",
+    "options": [
+      "HCF",
+      "LCM",
+      "Neither — divide 198 by 126"
+    ],
+    "answer": "HCF",
+    "explain": "The piece length has to divide both ribbons, so it is a common factor; 'longest possible' makes it the highest one, 18 cm."
+  },
+  {
+    "type": "h",
+    "text": "The last line is the one that scores"
+  },
+  {
+    "type": "p",
+    "md": "This is the single most reported loss on this topic. You find the lowest common multiple, it is correct, and the answer line asks for something else — packs, pieces, minutes and seconds.\nBadges in packs of 24, lanyards in packs of 18. $\\text{LCM} = 2^3 \\times 3^2 = 72$, so 72 of each. **Packs of badges** $= 72 \\div 24 = 3$. The 72 earns two marks; the 3 earns the third."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "Buns come in packs of 8, burgers in packs of 6. Equal numbers, none left over, as few as possible. How many packs of **buns**?",
+    "answer": "3",
+    "explain": "LCM(8, 6) = 24, so 24 of each; $24 \\div 8 = 3$ packs of buns (and 4 packs of burgers)."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write each number as a product of primes in index form.\nTake the lower power of each shared prime for the HCF.\nTake the higher power of every prime for the LCM.\nFinish on the quantity the answer line asks for."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Expect one item of two to four marks in the second half. Two shapes recur: write a number as a product of primes, then find the HCF; or a word problem whose last mark is the conversion into packs, pieces or minutes. The first mark is the factorisations. Stuck: write both the HCF and the LCM with their labels — a labelled correct value earns its method mark."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "M3-NA-01 is about numbers. You will not be asked for the HCF of $12x^3y$ and $18xy^2$, and CCEA's M3 pattern is two numbers, not three. Euclid's algorithm and divisibility proofs are A level."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.hcf-and-lcm-from-prime-factor-form.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.hcf-and-lcm-from-prime-factor-form.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.hcf-and-lcm-from-prime-factor-form.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.hcf-and-lcm-from-prime-factor-form.06"
+  }
+]

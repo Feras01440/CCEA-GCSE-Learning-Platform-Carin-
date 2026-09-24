@@ -1,0 +1,232 @@
+[
+  {
+    "type": "hero",
+    "lede": "A power started life as a counter: $2^{5}$ means five twos multiplied together. That reading says nothing about $2^{-3}$ or $16^{\\frac{1}{2}}$, because you cannot multiply minus three twos, or half of one. So the meaning is widened, in the one way that keeps the index laws working.",
+    "can": [
+      "Write a negative index as a reciprocal without pausing.",
+      "Take the root named underneath a fractional index, then the power.",
+      "Do the three jobs of a negative fractional index in order."
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "Fractional and negative indices"
+  },
+  {
+    "type": "p",
+    "md": "Write the powers of two in a row, 8, 4, 2, and each step to the right halves what came before. Keep walking and you run out of whole-number indices, but the halving does not stop: it gives $2^{0} = 1$, then $2^{-1} = \\tfrac{1}{2}$. Fractional indices come from the same demand, that the laws keep working, and they turn into roots."
+  },
+  {
+    "type": "figure",
+    "alt": "Seven boxes in a row showing two cubed equals 8, two squared equals 4, two to the one equals 2, two to the zero equals 1, two to the minus one equals one half, two to the minus two equals one quarter and two to the minus three equals one eighth. Arrows between the boxes are labelled: every step to the right divides by two.",
+    "svg": "<svg viewBox='0 0 546 168' xmlns='http://www.w3.org/2000/svg' width='546' height='168' role='img' aria-labelledby='fig-ladder'><title id='fig-ladder'>The power ladder for base two, from two cubed down to two to the minus three</title><g fill='none' stroke='currentColor' stroke-width='1.2' stroke-linejoin='round'><path d='M14 54 h66 v44 h-66 z M88 54 h66 v44 h-66 z M162 54 h66 v44 h-66 z M236 54 h66 v44 h-66 z M310 54 h66 v44 h-66 z M384 54 h66 v44 h-66 z M458 54 h66 v44 h-66 z'/></g><g fill='none' stroke='currentColor' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'><path d='M63 122 L105 122 M99 118 L105 122 L99 126 M137 122 L179 122 M173 118 L179 122 L173 126 M211 122 L253 122 M247 118 L253 122 L247 126 M285 122 L327 122 M321 118 L327 122 L321 126 M359 122 L401 122 M395 118 L401 122 L395 126 M433 122 L475 122 M469 118 L475 122 L469 126'/></g><g fill='currentColor' font-family='inherit' font-size='13'><text x='47' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>3</tspan></text><text x='47' y='91' text-anchor='middle' font-size='13'>= 8</text><text x='121' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>2</tspan></text><text x='121' y='91' text-anchor='middle' font-size='13'>= 4</text><text x='195' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>1</tspan></text><text x='195' y='91' text-anchor='middle' font-size='13'>= 2</text><text x='269' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>0</tspan></text><text x='269' y='91' text-anchor='middle' font-size='13'>= 1</text><text x='343' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>-1</tspan></text><text x='343' y='91' text-anchor='middle' font-size='13'>= 1/2</text><text x='417' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>-2</tspan></text><text x='417' y='91' text-anchor='middle' font-size='13'>= 1/4</text><text x='491' y='73' text-anchor='middle' font-size='14'>2<tspan dy='-6' font-size='10'>-3</tspan></text><text x='491' y='91' text-anchor='middle' font-size='13'>= 1/8</text><text x='273' y='146' text-anchor='middle' font-size='12'>every step to the right divides by 2</text><text x='273' y='30' text-anchor='middle' font-size='13' font-weight='600'>The pattern does not stop at 2<tspan dy='-6' font-size='10'>0</tspan><tspan dy='6'> = 1</tspan></text></g></svg>",
+    "caption": "Nothing special happens at zero. The same halving carries straight on into the negative indices."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "A warm-up, to show how these boxes work. What is $3^{2}$?",
+    "answer": "9",
+    "explain": "Two threes multiplied together. Everything on this page is built on that ordinary meaning, stretched."
+  },
+  {
+    "type": "h",
+    "text": "Negative indices: keep the ladder going"
+  },
+  {
+    "type": "p",
+    "md": "Write out the powers of $2$ and walk down them. Each step down takes one factor of $2$ away, so each step divides by $2$.\n\nThe pattern does not need to stop when the index reaches $0$. Carry on and you are forced into $2^{0} = 1$, then $2^{-1} = \\dfrac{1}{2}$, then $2^{-2} = \\dfrac{1}{4}$."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "Carry the ladder one more step. What is $2^{-4}$? Give your answer as a fraction.",
+    "answer": "1/16 | 0.0625",
+    "explain": "Halving 1/8 gives 1/16, which is $\\dfrac{1}{2^{4}}$. The general rule is $a^{-n} = \\dfrac{1}{a^{n}}$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why a negative index is a reciprocal",
+    "md": "Adding indices must keep working, so $a^{n} \\times a^{-n} = a^{n + (-n)} = a^{0} = 1$. Two numbers that multiply to $1$ are reciprocals of each other, so $a^{-n}$ has to be $\\dfrac{1}{a^{n}}$.\n\nThat is also why the answer is never negative: if $a$ is positive, $a^{n}$ is positive, and one over a positive number is positive."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "What is $2^{-3}$?",
+    "options": [
+      "$\\dfrac{1}{8}$",
+      "$-8$",
+      "$-6$"
+    ],
+    "answer": "$\\dfrac{1}{8}$",
+    "explain": "$2^{3} = 8$, and the minus index turns it over. The examiners' report on the Summer 2025 M71 paper lists $-8$ as a common wrong answer for exactly this."
+  },
+  {
+    "type": "h",
+    "text": "Fractional indices: what could half a power mean?"
+  },
+  {
+    "type": "p",
+    "md": "Ask the same question: what value would keep the laws true? If $a^{\\frac{1}{2}} \\times a^{\\frac{1}{2}} = a^{\\frac{1}{2} + \\frac{1}{2}} = a^{1} = a$, then $a^{\\frac{1}{2}}$ is the number that squares to give $a$. It is $\\sqrt{a}$, and there is no choice about it.\n\nThe same argument with $n$ copies gives $a^{\\frac{1}{n}} = \\sqrt[n]{a}$. Then $a^{\\frac{m}{n}}$ is that root raised to the power $m$."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "md": "$a^{\\frac{1}{n}} = \\sqrt[n]{a}$ and $a^{\\frac{m}{n}} = \\left(\\sqrt[n]{a}\\right)^{m}$: **the bottom number is the root, the top number is the power.**\n\nTake the root first. On a non-calculator paper $27^{\\frac{2}{3}}$ done as $\\sqrt[3]{27} = 3$ then $3^{2} = 9$ takes seconds; done the other way it starts with $27^{2} = 729$."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "In $27^{\\frac{2}{3}}$, which number tells you the root?",
+    "options": [
+      "The $3$, underneath",
+      "The $2$, on top",
+      "The $27$"
+    ],
+    "answer": "The $3$, underneath",
+    "explain": "The denominator is always the root, the numerator always the power. Swapping them is the error the November 2025 report describes as not understanding the meaning of the indices."
+  },
+  {
+    "type": "video",
+    "videoId": "qYDClSo89eQ",
+    "title": "Fractional indices - Corbettmaths",
+    "channel": "corbettmaths",
+    "why": "Six minutes of worked fractional indices, in the same root-then-power order used here. Watch it once, then answer the question underneath from memory.",
+    "corbettmathsNumber": 173
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "Work out $16^{\\frac{3}{4}}$.",
+    "answer": "8",
+    "explain": "$\\sqrt[4]{16} = 2$, then $2^{3} = 8$. Root first, power second."
+  },
+  {
+    "type": "h",
+    "text": "Both at once: three small jobs"
+  },
+  {
+    "type": "p",
+    "md": "A negative fractional index carries three instructions, and the safest thing you can do is take them one line at a time.\n\n1. **The minus sign** — turn the whole thing over, so $a^{-\\frac{m}{n}} = \\dfrac{1}{a^{\\frac{m}{n}}}$. If the base is itself a fraction, turn the fraction up the other way instead."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "blank",
+    "prompt": "Fill the gap: in $a^{\\frac{m}{n}}$, the number underneath tells you the ______.",
+    "answer": "root | the root | nth root",
+    "explain": "The denominator is the root and the numerator is the power. Say it in that order every time you meet one and the two can never swap."
+  },
+  {
+    "type": "p",
+    "md": "2. **The bottom number** — take that root.\n3. **The top number** — raise the result to that power."
+  },
+  {
+    "type": "figure",
+    "alt": "Four boxes joined by arrows showing eight to the minus four thirds becoming one over eight to the four thirds, then one over two to the fourth, then one sixteenth. Each arrow carries the job it does: turn it over, take the cube root, then raise to the fourth power.",
+    "svg": "<svg viewBox='0 0 560 210' xmlns='http://www.w3.org/2000/svg' width='560' height='210' role='img' aria-labelledby='fig-three-jobs'><title id='fig-three-jobs'>Three separate jobs inside a negative fractional index</title><g fill='none' stroke='currentColor' stroke-width='1.2' stroke-linejoin='round'><path d='M14 78 h116 v52 h-116 z M158 78 h116 v52 h-116 z M302 78 h116 v52 h-116 z M446 78 h116 v52 h-116 z'/></g><g fill='none' stroke='currentColor' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'><path d='M136 104 L152 104 M145 99 L152 104 L145 109 M280 104 L296 104 M289 99 L296 104 L289 109 M424 104 L440 104 M433 99 L440 104 L433 109'/></g><g fill='currentColor' font-family='inherit'><text x='72' y='110' text-anchor='middle' font-size='15'>8<tspan dy='-7' font-size='10'>-4/3</tspan></text><text x='72' y='150' text-anchor='middle' font-size='11'>start</text><text x='216' y='110' text-anchor='middle' font-size='15'>1 / 8<tspan dy='-7' font-size='10'>4/3</tspan></text><text x='216' y='150' text-anchor='middle' font-size='11'>minus sign: turn it over</text><text x='360' y='110' text-anchor='middle' font-size='15'>1 / 2<tspan dy='-7' font-size='10'>4</tspan></text><text x='360' y='150' text-anchor='middle' font-size='11'>bottom 3: cube root of 8 is 2</text><text x='504' y='110' text-anchor='middle' font-size='15'>1 / 16</text><text x='504' y='150' text-anchor='middle' font-size='11'>top 4: two to the fourth is 16</text><text x='280' y='34' text-anchor='middle' font-size='13' font-weight='600'>Sign, then bottom, then top: three small jobs, never one big one</text><text x='280' y='52' text-anchor='middle' font-size='11'>the root comes before the power so the numbers stay small</text></g></svg>",
+    "caption": "The Teacher Guidance example worked as three separate lines: $8^{-\\frac{4}{3}} = 1/16$."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "Work out $8^{-\\frac{2}{3}}$. Give your answer as a fraction.",
+    "answer": "1/4 | 0.25",
+    "explain": "Turn it over, cube-root the $8$ to get 2, square that to get 4: the answer is 1/4."
+  },
+  {
+    "type": "p",
+    "md": "When the base is a fraction, the minus sign is even easier: $\\left(\\dfrac{a}{b}\\right)^{-n} = \\left(\\dfrac{b}{a}\\right)^{n}$. Turn it up the other way and the index becomes positive.\n\nOne sanity check worth having: a base bigger than $1$ with a negative index gives an answer smaller than $1$, and a base smaller than $1$ with a negative index gives an answer bigger than $1$."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "Work out $\\left(\\dfrac{3}{4}\\right)^{-2}$. Give your answer as a fraction.",
+    "answer": "16/9",
+    "explain": "Turn it over to $4/3$, then square: $16/9$. It is bigger than $1$, as it should be for a base under $1$."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "November 2025 M8 Paper 1 Q11",
+    "md": "A short numerical index proof. Fewer than half the entry produced an argument the examiners accepted, and more than half showed no grasp of what the two numbers in the index were for. In a show-that question the marks live in the chain, so put the root on one line and the power on the next.",
+    "source": "ccea-cer:maths:2025-november:M81:Q11"
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "A show-that question asks you to prove that $125^{-\\frac{2}{3}} = 1/25$. What earns the first mark?",
+    "options": [
+      "Writing $\\dfrac{1}{125^{\\frac{2}{3}}}$ or $\\sqrt[3]{125} = 5$",
+      "Writing down $1/25$, because that is the answer",
+      "Checking on a calculator that both sides agree"
+    ],
+    "answer": "Writing $\\dfrac{1}{125^{\\frac{2}{3}}}$ or $\\sqrt[3]{125} = 5$",
+    "explain": "The first mark is for a correct first step of the chain. The printed result earns nothing on its own, and this is a non-calculator paper in any case."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "You will not be asked to solve $a^{x} = b$ using logarithms: logarithms appear nowhere in the CCEA GCSE statements. Irrational indices are not on the spec either, and a fractional index whose root is not exact is never set on Paper 1, because every answer there has to be exact."
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "Which of these is outside the CCEA GCSE statements, so it can never be asked?",
+    "options": [
+      "Solving $2^{x} = 10$ using logarithms",
+      "Working out $8^{-\\frac{4}{3}}$ without a calculator",
+      "Writing a cube root as a power of one third"
+    ],
+    "answer": "Solving $2^{x} = 10$ using logarithms",
+    "explain": "Logarithms appear in no CCEA GCSE Mathematics statement. The other two are M8-NA-03 itself, and the first is the Teacher Guidance example."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write $a^{-n}$ as $\\dfrac{1}{a^{n}}$ without pausing.\nTake the root named underneath, then the power.\nDo the three jobs of $a^{-\\frac{m}{n}}$ in order: reciprocal, root, power.\nTurn a fraction base over and drop the minus sign."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Short **Write down the value of** parts, one mark each, on the non-calculator paper. The root named underneath comes first, then the power, then the reciprocal if the index is negative. Stuck: split the index into its three jobs and do them one at a time, in that order."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.fractional-and-negative-indices.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.fractional-and-negative-indices.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.fractional-and-negative-indices.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.fractional-and-negative-indices.07"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.fractional-and-negative-indices.09"
+  }
+]

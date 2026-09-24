@@ -1,0 +1,614 @@
+{
+  "$schema": "../../../../pipeline/schema/topic-bundle.schema.json",
+  "topic": {
+    "id": "maths.m4.histograms",
+    "slug": "histograms",
+    "title": "Histograms with unequal class widths and the median from a histogram",
+    "subject": "maths",
+    "unit": "M4",
+    "tier": "H",
+    "strand": "HD",
+    "statementIds": ["M4-HD-02"],
+    "prerequisites": ["maths.m2.grouped-frequency-and-estimated-mean", "maths.m3.cumulative-frequency-curves"],
+    "order": 38,
+    "hardness": "H",
+    "difficulty": 5,
+    "examinerFlagged": true,
+    "examinerSources": [
+      "ccea-cer:maths:2025-summer:M4:Q22",
+      "ccea-cer:maths:2024-november:M4:Q21",
+      "ccea-cer:maths:2024-summer:M4:Q21b"
+    ],
+    "examWeightHint": "Usually one 6–9 mark question in the last third of M4: draw on a blank grid, then read a frequency or estimate the median; often paired with stratified sampling.",
+    "mustMemorise": [
+      "frequency density = frequency ÷ class width",
+      "frequency = frequency density × class width (the area of the bar)",
+      "median from a histogram: find the n ÷ 2-th value by adding bar areas, then interpolate inside that class"
+    ],
+    "onFormulaSheet": [],
+    "notOnThisSpec": [
+      "Frequency polygons drawn over a histogram",
+      "Histograms with open-ended classes"
+    ],
+    "externalRefs": [
+      { "kind": "corbettmaths", "videos": [157, 158, 159] },
+      { "kind": "bitesize", "url": "https://www.bbc.co.uk/bitesize/examspecs/zcq8b82" },
+      {
+        "kind": "ccea-doc",
+        "docType": "cer",
+        "url": "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-mathematics-2017/reports",
+        "asOf": "2026-09-01"
+      }
+    ],
+    "keywords": ["histogram", "frequency density", "unequal class widths", "median from a histogram", "area of a bar"]
+  },
+  "note": {
+    "id": "note.maths.m4.histograms",
+    "topic": "maths.m4.histograms",
+    "title": "Histograms with unequal class widths",
+    "subject": "maths",
+    "unit": "M4",
+    "tier": "H",
+    "specRefs": ["M4-HD-02"],
+    "calculator": true,
+    "formulaSheet": {
+      "given": [],
+      "mustKnow": ["frequency density = frequency ÷ class width"]
+    },
+    "notOnThisSpec": [
+      "Frequency polygons drawn over a histogram",
+      "Histograms with open-ended classes"
+    ],
+    "hardness": "H",
+    "examinerFlagged": true,
+    "externalRefs": [{ "kind": "corbettmaths", "videos": [157, 158, 159] }],
+    "sheet": {
+      "mustBeAbleTo": [
+        "Calculate the frequency density of every class",
+        "Draw a histogram on a blank grid: sensible scale, vertical axis labelled Frequency density, no gaps between bars",
+        "Read a frequency from a bar using frequency = frequency density × class width",
+        "Estimate how many values lie in part of a class, assuming an even spread",
+        "Estimate the median by adding bar areas up to n ÷ 2 and interpolating inside that class"
+      ],
+      "howExamined": "One multi-part question late in the M4 paper, usually 6–9 marks: draw on a blank grid, then read a frequency or estimate the median. Calculator allowed.",
+      "traps": [
+        "Plotting frequency as the bar height",
+        "Leaving the vertical axis unlabelled, or choosing a scale that does not fit the grid",
+        "Taking the class midpoint, or the middle of the axis, as the median"
+      ]
+    },
+    "verification": "ver.note.maths.m4.histograms",
+    "version": 1,
+    "updated": "2026-09-05"
+  },
+  "workedExamples": [
+    {
+      "id": "we.maths.m4.histograms.01",
+      "topic": "maths.m4.histograms",
+      "specRefs": ["M4-HD-02"],
+      "paper": { "unit": "M4", "calculator": true, "resources": ["formula-sheet-H"] },
+      "stem": "The table shows the journey times, $t$ minutes, of 40 bus journeys on the same route.\n\n| Time ($t$ minutes) | $0 < t \\le 10$ | $10 < t \\le 15$ | $15 < t \\le 25$ | $25 < t \\le 45$ |\n|---|---|---|---|---|\n| Frequency | 4 | 10 | 18 | 8 |\n\nEstimate the median journey time.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$n = 40$, so the median is the 20th value.",
+          "decision": "The question says *estimate the median*, so I find the position $n \\div 2$ before I look at the classes."
+        },
+        {
+          "n": 2,
+          "working": "Cumulative frequencies: 4, 14, 32. The 20th value lies in $15 < t \\le 25$.",
+          "decision": "14 journeys are done by $t = 15$ and 32 by $t = 25$, so the 20th is inside this class.",
+          "earns": ["M1"]
+        },
+        {
+          "n": 3,
+          "working": "I need $20 - 14 = 6$ more values from the 18 in the class: $\\frac{6}{18} \\times 10 = 3.33$",
+          "decision": "Values are assumed to be spread evenly across the class, so I take that fraction of the class *width*, not of the frequency.",
+          "whyMenu": {
+            "options": [
+              "Because a bar is a rectangle, so its area grows in proportion to its width",
+              "Because 18 is the largest frequency in the table",
+              "Because the median is always in the third class"
+            ],
+            "correct": 0,
+            "explain": "Area stands for frequency, so moving a fraction of the way across the class passes the same fraction of its values."
+          },
+          "earns": ["M1"]
+        },
+        {
+          "n": 4,
+          "working": "Median $\\approx 15 + 3.33 = 18.3$ minutes",
+          "decision": "Add the offset to the lower boundary of the class, round sensibly and write the unit. The class midpoint, 20, would earn no accuracy mark.",
+          "earns": ["A1"]
+        }
+      ],
+      "finalAnswer": "18.3 minutes (accept 18.3 to 18.4)",
+      "twin": {
+        "stem": "Same classes; the frequencies are now 5, 9, 16 and 10. Estimate the median journey time.",
+        "answer": {
+          "kind": "numeric",
+          "value": 18.75,
+          "tolerance": { "type": "range", "min": 18.7, "max": 18.8 },
+          "unit": "minutes",
+          "unitRequired": false,
+          "acceptForms": ["decimal"]
+        }
+      },
+      "faded": [
+        { "showSteps": 3, "studentSupplies": [4] },
+        { "showSteps": 2, "studentSupplies": [3, 4] }
+      ],
+      "verification": "ver.we.maths.m4.histograms.01",
+      "version": 1
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "dx.maths.m4.histograms",
+      "topic": "maths.m4.histograms",
+      "specRefs": ["M4-HD-02"],
+      "when": "pre",
+      "items": [
+        {
+          "id": "01",
+          "stem": "The class $20 < h \\le 30$ has frequency 16. What is its frequency density?",
+          "skill": "Calculate frequency density from a frequency and a class width",
+          "options": [
+            {
+              "id": "a",
+              "text": "1.6",
+              "correct": true,
+              "feedback": "Frequency density = frequency ÷ class width = 16 ÷ 10 = 1.6."
+            },
+            {
+              "id": "b",
+              "text": "16",
+              "correct": false,
+              "misconception": "hist.freq-as-height",
+              "feedback": "That is the frequency. With unequal class widths the bar height must be frequency ÷ class width, or the drawing mark is lost."
+            },
+            {
+              "id": "c",
+              "text": "160",
+              "correct": false,
+              "misconception": "fd.multiplies-by-width",
+              "feedback": "You multiplied by the width. Frequency density divides the frequency by the width of the class."
+            },
+            {
+              "id": "d",
+              "text": "0.625",
+              "correct": false,
+              "misconception": "fd.inverted",
+              "feedback": "You divided the width by the frequency. It is the other way round: 16 ÷ 10."
+            }
+          ],
+          "secondsExpected": 15,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "02",
+          "stem": "On a histogram two bars are the same height. Bar A is for $0 < h \\le 20$ and bar B for $50 < h \\le 90$. Which class has more values?",
+          "skill": "Read frequency as the area of a bar",
+          "options": [
+            {
+              "id": "a",
+              "text": "Bar B, because its class is wider",
+              "correct": true,
+              "feedback": "Frequency = frequency density × class width, so the wider bar holds twice as many values."
+            },
+            {
+              "id": "b",
+              "text": "They have the same number of values",
+              "correct": false,
+              "misconception": "hist.freq-as-height",
+              "feedback": "Equal heights mean equal frequency densities, not equal frequencies. Multiply each height by its class width."
+            },
+            {
+              "id": "c",
+              "text": "Bar A, because narrow bars are denser",
+              "correct": false,
+              "misconception": "hist.narrow-means-more",
+              "feedback": "Both bars are equally dense; the narrower class simply covers fewer values. Compare areas."
+            },
+            {
+              "id": "d",
+              "text": "It cannot be decided without the scale",
+              "correct": false,
+              "misconception": "hist.needs-scale",
+              "feedback": "The widths (20 and 40) settle it whatever the vertical scale is: the areas are in the ratio 1 : 2."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "q.maths.m4.histograms.0001",
+      "topic": "maths.m4.histograms",
+      "specRefs": ["M4-HD-02"],
+      "paper": { "unit": "M4", "calculator": true, "resources": ["formula-sheet-H"] },
+      "tier": "H",
+      "style": "exam-style",
+      "difficulty": 5,
+      "ao": ["AO1", "AO2"],
+      "commandWords": ["draw", "estimate"],
+      "emphasis": ["Estimate"],
+      "context": {
+        "setting": "A garden centre measures the heights of 60 young apple trees",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg-gen",
+          "generator": "table",
+          "data": {
+            "caption": "The table shows the heights, h cm, of 60 young apple trees.",
+            "columns": ["Height (h cm)", "0 < h ≤ 20", "20 < h ≤ 30", "30 < h ≤ 50", "50 < h ≤ 90"],
+            "rows": [["Frequency", 6, 16, 26, 12]]
+          }
+        }
+      ],
+      "parts": [
+        {
+          "id": "a",
+          "stem": "On the grid, draw a histogram to show this information.",
+          "marks": 3,
+          "answer": {
+            "kind": "graph",
+            "expect": {
+              "plot": "histogram",
+              "bars": [
+                { "from": 0, "to": 20, "frequencyDensity": 0.3 },
+                { "from": 20, "to": 30, "frequencyDensity": 1.6 },
+                { "from": 30, "to": 50, "frequencyDensity": 1.3 },
+                { "from": 50, "to": 90, "frequencyDensity": 0.3 }
+              ],
+              "axisLabelY": "Frequency density",
+              "scaleTolerance": 0.05
+            }
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "at least one frequency density correctly calculated (0.3, 1.6, 1.3, 0.3), or a frequency-density column started",
+              "seenIf": "working contains any of 6/20, 16/10, 26/20, 12/40 or their values"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "all four frequency densities correct",
+              "dependsOn": ["M1"]
+            },
+            {
+              "id": "A2",
+              "code": "A",
+              "marks": 1,
+              "for": "histogram drawn with correct heights, no gaps between bars, vertical axis labelled Frequency density with a linear scale",
+              "dependsOn": ["M1"],
+              "examinerNote": "Bars drawn to the frequencies (6, 16, 26, 12) score 0 for this part."
+            }
+          ],
+          "hints": [
+            "The classes are not all the same width, so the bar height is not the frequency.",
+            "Divide each frequency by the width of its class.",
+            "Frequency densities: 6 ÷ 20 = 0.3 and 16 ÷ 10 = 1.6; now do 26 ÷ 20 and 12 ÷ 40."
+          ],
+          "workedSolution": "Frequency densities: $6 \\div 20 = 0.3$, $16 \\div 10 = 1.6$, $26 \\div 20 = 1.3$, $12 \\div 40 = 0.3$. Draw bars of these heights over their classes with no gaps, label the vertical axis *Frequency density* and the horizontal axis *Height (h cm)*.",
+          "commonErrors": [
+            {
+              "misconception": "hist.freq-as-height",
+              "pattern": { "kind": "graph", "test": "barHeightsEqualFrequencies" },
+              "feedback": "The bars have been drawn to the frequencies. With unequal class widths the height must be frequency ÷ class width; the Summer 2025 report says this scored nothing for the drawing.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:maths:2025-summer:M4:Q22"
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "b",
+          "stem": "Estimate the number of trees that are taller than 40 cm.",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 25,
+            "tolerance": { "type": "exact" },
+            "unitRequired": false,
+            "acceptForms": ["decimal"]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "half of the 30 < h ≤ 50 class: (50 − 40) ÷ 20 × 26 = 13, or 13 seen",
+              "ft": true
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "13 + 12 = 25",
+              "dependsOn": ["M1"],
+              "ft": true,
+              "examinerNote": "Follow through from a wrongly drawn histogram when the method is clear."
+            }
+          ],
+          "hints": [
+            "40 cm is halfway through the class 30 < h ≤ 50.",
+            "Assume the 26 trees in that class are spread evenly across it.",
+            "Add every tree in the class 50 < h ≤ 90."
+          ],
+          "workedSolution": "Half of the class $30 < h \\le 50$ lies above 40 cm: $\\frac{10}{20} \\times 26 = 13$. All 12 trees in $50 < h \\le 90$ are taller than 40 cm. Estimate: $13 + 12 = 25$ trees.",
+          "commonErrors": [
+            {
+              "misconception": "hist.whole-class-counted",
+              "pattern": { "kind": "numeric", "value": 38 },
+              "feedback": "You counted the whole of the 30 < h ≤ 50 class. Only the part above 40 cm belongs in the estimate.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": { "fromPart": "a", "rule": "use-candidate-diagram" }
+        },
+        {
+          "id": "c",
+          "stem": "Estimate the median height of the trees.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 36.2,
+            "tolerance": { "type": "range", "min": 36.1, "max": 36.2 },
+            "unit": "cm",
+            "unitRequired": false,
+            "acceptForms": ["decimal"]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "30th value identified (n ÷ 2) and the class 30 < h ≤ 50 chosen from cumulative frequencies 6, 22, 48"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "30 + (30 − 22) ÷ 26 × 20, or equivalent interpolation inside their class",
+              "dependsOn": ["M1"],
+              "ft": true
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "36.2 (accept 36.1 to 36.2)",
+              "dependsOn": ["M1", "M2"],
+              "examinerNote": "40 (the class midpoint) scores M1 only."
+            }
+          ],
+          "hints": [
+            "There are 60 trees, so the median is the 30th value.",
+            "Add the frequencies until you pass 30: 6, 22, 48.",
+            "You need 8 more of the 26 values in the class 30 < h ≤ 50; take that fraction of the class width."
+          ],
+          "workedSolution": "$n = 60$, so the median is the 30th value. Cumulative frequencies 6, 22, 48 put it in $30 < h \\le 50$. Eight more values are needed from the 26 in that class: $30 + \\frac{8}{26} \\times 20 = 36.15\\ldots \\approx 36.2$ cm.",
+          "commonErrors": [
+            {
+              "misconception": "median.class-midpoint",
+              "pattern": { "kind": "numeric", "value": 40 },
+              "feedback": "40 is the midpoint of the median class, not the median. Interpolate: 8 of the 26 values are still needed, so move 8/26 of the way across the class.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:maths:2025-summer:M4:Q22"
+            },
+            {
+              "misconception": "median.midpoint-of-axis",
+              "pattern": { "kind": "numeric", "value": 45 },
+              "feedback": "45 is the middle of the axis, not of the data. The median is half of the total area of the bars.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 8,
+      "timeAllowanceSec": 600,
+      "skeleton": "(a)draw3|(b)estimate2|(c)estimate3",
+      "examinerSources": ["ccea-cer:maths:2025-summer:M4:Q22", "ccea-cer:maths:2024-summer:M4:Q21b"],
+      "solutionProgram": "fd = [6/20, 16/10, 26/20, 12/40]; above40 = (50 - 40)/20 * 26 + 12; median = 30 + (30 - 22)/26 * 20",
+      "verification": "ver.q.maths.m4.histograms.0001",
+      "version": 1
+    }
+  ],
+  "findTheMistake": [
+    {
+      "id": "ftm.maths.m4.histograms.01",
+      "topic": "maths.m4.histograms",
+      "specRefs": ["M4-HD-02"],
+      "stem": "Niamh's answer to \"Estimate the median height\" for the apple-tree data (frequencies 6, 16, 26, 12 in the classes 0–20, 20–30, 30–50 and 50–90 cm):",
+      "studentWorking": [
+        "There are 60 trees, so the median is the 30th value.",
+        "Cumulative frequencies: 6, 22, 48, so the 30th value is in 30 < h ≤ 50.",
+        "Median = (30 + 50) ÷ 2 = 40 cm"
+      ],
+      "mistakeLine": 3,
+      "misconception": "median.class-midpoint",
+      "whatWentWrong": "She took the midpoint of the median class instead of interpolating. Eight of the 26 values in the class are still needed, so the median sits 8/26 of the way across it.",
+      "correction": [
+        "Values still needed: 30 − 22 = 8 of the 26 in the class.",
+        "Median ≈ 30 + (8 ÷ 26) × 20 = 36.2 cm"
+      ],
+      "marksEarnedAsWritten": ["M1"],
+      "feedback": "Correct class identified — M1. The midpoint gains no further credit: the interpolation is the second method mark and the accuracy mark follows from it. The Summer 2025 examiners reported that the median from a histogram still defeats most candidates.",
+      "source": "ccea-cer:maths:2025-summer:M4:Q22"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "rp.maths.m4.histograms.01",
+      "topic": "maths.m4.histograms",
+      "specRefs": ["M4-HD-02"],
+      "kind": "formula",
+      "prompt": "frequency density = ?",
+      "answer": "frequency ÷ class width",
+      "keyWords": ["frequency", "class width"],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.histograms.02",
+      "topic": "maths.m4.histograms",
+      "specRefs": ["M4-HD-02"],
+      "kind": "trap",
+      "prompt": "Two bars on a histogram are the same height. Do their classes have the same frequency?",
+      "answer": "Only if the classes are the same width. Frequency is the area of the bar: height × width.",
+      "examUnit": "M4",
+      "difficultyPrior": 5
+    }
+  ],
+  "insight": {
+    "id": "ins.maths.m4.histograms",
+    "topic": "maths.m4.histograms",
+    "specRefs": ["M4-HD-02", "M4-HD-01"],
+    "findings": [
+      {
+        "source": "ccea-cer:maths:2025-summer:M4:Q22",
+        "url": "https://ccea.org.uk/downloads/docs/ExamMod-Reports/GCSE/GCSE%20Mathematics%20%282017%29/2025/GCSE%20Mathematics%20%282017%29-Summer2025-Report_0.pdf",
+        "asked": "Draw a histogram on a blank grid, then estimate the median from it; a stratified-sampling part followed.",
+        "wentWrong": "Many scored nothing on the drawing: bars at the frequencies, home-made scales, unlabelled axes. The median part was failed by the large majority and the sampling part was often left blank.",
+        "fullMarkAnswersDid": "Worked out every frequency density first, chose a scale that used the grid, labelled both axes and interpolated inside the median class.",
+        "rule": "Frequency density before anything else; the median is half of the area, never the class midpoint.",
+        "misconceptions": ["hist.freq-as-height", "median.class-midpoint"]
+      },
+      {
+        "source": "ccea-cer:maths:2024-november:M4:Q21",
+        "url": "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-mathematics-2017/reports",
+        "asked": "Interpret a histogram, then use the data in a sampling question.",
+        "wentWrong": "The majority scored zero on both parts.",
+        "rule": "Read frequencies as areas: height × class width.",
+        "misconceptions": ["hist.freq-as-height"]
+      },
+      {
+        "source": "ccea-cer:maths:2024-summer:M4:Q21b",
+        "url": "https://ccea.org.uk/downloads/docs/ExamMod-Reports/GCSE/GCSE%20Mathematics%20%282017%29/2024/GCSE%20Mathematics%20%282017%29-Summer2024-Report_0.pdf",
+        "asked": "Reverse-read a histogram: one frequency given, find the vertical scale and then the other frequencies.",
+        "wentWrong": "Answers were all or nothing. Candidates who did not set the scale from the known bar could make no progress.",
+        "rule": "Find the scale from the bar whose frequency you know, then multiply every other height by its width.",
+        "misconceptions": ["hist.needs-scale"]
+      }
+    ],
+    "ruleToRemember": "Label the vertical axis Frequency density; frequency is the area of the bar; the median is half of the total area, interpolated inside its class — never the class midpoint and never the middle of the axis.",
+    "aStarSignal": "This question sits in the last third of M4, where most candidates score zero; every mark here is one that the field leaves behind."
+  },
+  "sets": [
+    {
+      "id": "set.maths.m4.histograms.warm-up",
+      "topic": "maths.m4.histograms",
+      "kind": "interleaved",
+      "title": "Histograms warm-up",
+      "subject": "maths",
+      "units": ["M4"],
+      "itemIds": ["dx.maths.m4.histograms", "rp.maths.m4.histograms.01", "q.maths.m4.histograms.0001"],
+      "showTopicLabels": false,
+      "version": 1
+    }
+  ],
+  "verification": [
+    {
+      "id": "ver.note.maths.m4.histograms",
+      "itemId": "note.maths.m4.histograms",
+      "version": 1,
+      "checks": [
+        { "type": "schema", "tool": "pipeline/check/schema.mts", "result": "pass", "at": "2026-09-05T09:00:00Z", "by": "pipeline" },
+        { "type": "scope-tier", "tool": "pipeline/check/scope.mts", "result": "pass", "at": "2026-09-05T09:00:05Z", "by": "pipeline" },
+        { "type": "copy-shingle", "tool": "pipeline/check/copycheck.mts", "result": "pass", "at": "2026-09-05T09:00:20Z", "by": "pipeline" },
+        {
+          "type": "human-spot",
+          "tool": "pipeline/check/sign-off.mts",
+          "result": "pass",
+          "detail": "Read in full; the trap list matches the Summer 2025 report.",
+          "at": "2026-09-05T18:30:00Z",
+          "by": "developer"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.maths.m4.histograms.01",
+      "itemId": "we.maths.m4.histograms.01",
+      "version": 1,
+      "checks": [
+        { "type": "schema", "tool": "pipeline/check/schema.mts", "result": "pass", "at": "2026-09-05T09:01:00Z", "by": "pipeline" },
+        {
+          "type": "maths-numeric",
+          "tool": "pipeline/check/verify-maths.mts",
+          "result": "pass",
+          "detail": "median 18.33 recomputed from the stem; twin 18.75",
+          "at": "2026-09-05T09:01:02Z",
+          "by": "pipeline"
+        },
+        { "type": "copy-shingle", "tool": "pipeline/check/copycheck.mts", "result": "pass", "at": "2026-09-05T09:01:20Z", "by": "pipeline" },
+        { "type": "human-spot", "tool": "pipeline/check/sign-off.mts", "result": "pass", "at": "2026-09-05T18:35:00Z", "by": "developer" }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m4.histograms.0001",
+      "itemId": "q.maths.m4.histograms.0001",
+      "version": 1,
+      "checks": [
+        { "type": "schema", "tool": "pipeline/check/schema.mts", "result": "pass", "at": "2026-09-05T09:02:00Z", "by": "pipeline" },
+        {
+          "type": "tariff",
+          "tool": "pipeline/check/exam-true.mts",
+          "result": "pass",
+          "detail": "8 marks; inside the mined M4 histogram tariff band",
+          "at": "2026-09-05T09:02:01Z",
+          "by": "pipeline"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "pipeline/check/verify-maths.mts",
+          "result": "pass",
+          "detail": "solutionProgram: fd 0.3, 1.6, 1.3, 0.3; above40 = 25; median = 36.15",
+          "at": "2026-09-05T09:02:02Z",
+          "by": "pipeline"
+        },
+        { "type": "independent-solve", "tool": "claude", "result": "pass", "at": "2026-09-05T09:02:30Z", "by": "claude" },
+        { "type": "examiner-alignment", "tool": "pipeline/check/alignment.mts", "result": "pass", "at": "2026-09-05T09:02:31Z", "by": "pipeline" },
+        { "type": "copy-shingle", "tool": "pipeline/check/copycheck.mts", "result": "pass", "at": "2026-09-05T09:02:40Z", "by": "pipeline" },
+        { "type": "isomorph", "tool": "pipeline/check/copycheck.mts", "result": "pass", "at": "2026-09-05T09:02:41Z", "by": "pipeline" },
+        { "type": "style-lint", "tool": "pipeline/check/lint.mts", "result": "pass", "at": "2026-09-05T09:02:42Z", "by": "pipeline" },
+        { "type": "katex-compile", "tool": "pipeline/check/lint.mts", "result": "pass", "at": "2026-09-05T09:02:42Z", "by": "pipeline" },
+        {
+          "type": "human-spot",
+          "tool": "pipeline/check/sign-off.mts",
+          "result": "pass",
+          "detail": "Reads like a CCEA question; a marker could use the scheme.",
+          "at": "2026-09-05T18:40:00Z",
+          "by": "developer"
+        }
+      ],
+      "status": "verified",
+      "reports": [
+        {
+          "at": "2026-09-06T18:20:00Z",
+          "by": "learner",
+          "text": "Part (b): is 25 exact or an estimate?",
+          "resolvedAt": "2026-09-06T19:00:00Z",
+          "resolution": "The stem says estimate; the marker accepts 25 and the worked solution explains the even-spread assumption."
+        }
+      ]
+    }
+  ]
+}

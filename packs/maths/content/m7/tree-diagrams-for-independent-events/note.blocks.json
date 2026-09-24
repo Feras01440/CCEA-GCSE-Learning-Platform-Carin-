@@ -1,0 +1,234 @@
+[
+  {
+    "type": "hero",
+    "lede": "Two things happen one after the other, and you want the chance of a particular pair. A tree diagram lays every possible pair out at once. Multiply along a branch for both things happening, add branches for the different ways one description can come true.",
+    "can": [
+      "Draw and label a two-stage tree with a probability on every branch.",
+      "Multiply along a branch and add across branches.",
+      "Reach an at-least-one answer by subtracting the opposite from 1."
+    ],
+    "minutes": 9
+  },
+  {
+    "type": "h",
+    "text": "A picture for two stages"
+  },
+  {
+    "type": "p",
+    "md": "A bag holds 3 yellow and 5 purple counters. One is taken, its colour written down, and **put back**. Then a second is taken. A tree diagram holds both picks in one picture: the first pair of branches is the first pick, and each of those splits again for the second."
+  },
+  {
+    "type": "figure",
+    "alt": "A probability tree for two picks with replacement from 3 yellow and 5 purple counters. Both pairs of branches carry 3/8 for yellow and 5/8 for purple, at the first pick and at the second.",
+    "svg": "<svg viewBox='0 0 350 216' xmlns='http://www.w3.org/2000/svg' width='350' height='216'><text x='86' y='13' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>First pick</text><text x='226' y='13' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>Second pick</text><circle cx='16' cy='115' r='2.4' fill='currentColor'/><path d='M20 115L118 61' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='122' cy='61' r='2.4' fill='currentColor'/><text x='69' y='76.4' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M63.2 79H74.8' stroke='currentColor' stroke-width='0.8'/><text x='69' y='88' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='128' y='64.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M20 115L118 169' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='122' cy='169' r='2.4' fill='currentColor'/><text x='69' y='150.4' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M63.2 153H74.8' stroke='currentColor' stroke-width='0.8'/><text x='69' y='162' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='128' y='172.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text><path d='M160 61L258 34' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='34' r='2.4' fill='currentColor'/><text x='209' y='35.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M203.2 38.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='47.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='37.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M160 61L258 88' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='88' r='2.4' fill='currentColor'/><text x='209' y='82.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M203.2 85.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='94.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='91.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text><path d='M160 169L258 142' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='142' r='2.4' fill='currentColor'/><text x='209' y='143.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M203.2 146.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='155.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='145.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M160 169L258 196' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='196' r='2.4' fill='currentColor'/><text x='209' y='190.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M203.2 193.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='202.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='199.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text></svg>",
+    "caption": "Two picks from 3 yellow and 5 purple, with the counter put back. Four paths through the tree, one for each pair of colours."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "On the tree above, how many branches leave the starting point?",
+    "answer": "2",
+    "explain": "Two, one for each colour the first counter can be. Each of those then splits into two again."
+  },
+  {
+    "type": "h",
+    "text": "Every branch carries two things"
+  },
+  {
+    "type": "figure",
+    "alt": "The first pair of branches only: Yellow with 3/8 and Purple with 5/8.",
+    "svg": "<svg viewBox='0 0 210 108' xmlns='http://www.w3.org/2000/svg' width='210' height='108'><text x='86' y='13' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>First pick</text><circle cx='16' cy='61' r='2.4' fill='currentColor'/><path d='M20 61L118 34' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='122' cy='34' r='2.4' fill='currentColor'/><text x='69' y='35.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M63.2 38.5H74.8' stroke='currentColor' stroke-width='0.8'/><text x='69' y='47.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='128' y='37.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M20 61L118 88' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='122' cy='88' r='2.4' fill='currentColor'/><text x='69' y='82.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M63.2 85.5H74.8' stroke='currentColor' stroke-width='0.8'/><text x='69' y='94.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='128' y='91.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text></svg>",
+    "caption": "The first pair of branches. The two probabilities $\\tfrac{3}{8}$ and $\\tfrac{5}{8}$ add to 1, because the counter must be one colour or the other."
+  },
+  {
+    "type": "p",
+    "md": "A branch needs an **outcome label** and a **probability**, and the examiner reports say the label is what goes missing.\n\nA pair of branches leaving one point always adds to 1, because those outcomes are the only ones available: $\\tfrac{3}{8} + \\tfrac{5}{8} = 1$. That is the quickest check on a tree you have just filled in."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "blank",
+    "prompt": "A bag holds 3 yellow and 5 purple counters. What probability goes on the purple branch of the first pick? Give a fraction.",
+    "answer": "5/8 | 0.625",
+    "explain": "5 of the 8 counters are purple, so the branch carries $\\tfrac{5}{8}$, and $\\tfrac{3}{8} + \\tfrac{5}{8} = 1$."
+  },
+  {
+    "type": "h",
+    "text": "Put back, so nothing changes"
+  },
+  {
+    "type": "figure",
+    "alt": "A strip of 8 cells standing for the bag: 3 marked Y for yellow and 5 marked P for purple.",
+    "svg": "<svg viewBox='0 0 220 56' xmlns='http://www.w3.org/2000/svg' width='220' height='56'><rect x='6' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='19' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>Y</text><rect x='32' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='45' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>Y</text><rect x='58' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='71' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>Y</text><rect x='84' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='97' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>P</text><rect x='110' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='123' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>P</text><rect x='136' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='149' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>P</text><rect x='162' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='175' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>P</text><rect x='188' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='201' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>P</text></svg>",
+    "caption": "The bag before the second pick looks exactly as it did before the first: the counter went back in."
+  },
+  {
+    "type": "p",
+    "md": "Because the counter is replaced, the bag is identical for the second pick. The second pair of branches carries the same numbers as the first, $\\tfrac{3}{8}$ and $\\tfrac{5}{8}$, whichever colour came out first.\n\nEvents like that are **independent**: the first outcome tells you nothing about the second. Changing the second-stage numbers is the slip the reports name most often after missing labels."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "The first counter was yellow and has been put back. What is the probability that the second is yellow?",
+    "options": [
+      "$\\tfrac{3}{8}$",
+      "$\\tfrac{2}{7}$",
+      "$\\tfrac{3}{7}$"
+    ],
+    "answer": "$\\tfrac{3}{8}$",
+    "explain": "The counter went back, so there are still 3 yellow among 8. Nothing about the bag has changed."
+  },
+  {
+    "type": "h",
+    "text": "Multiply along a branch"
+  },
+  {
+    "type": "figure",
+    "alt": "The same tree with the four outcomes written at the ends: YY 9/64, YP 15/64, PY 15/64 and PP 25/64.",
+    "svg": "<svg viewBox='0 0 388 216' xmlns='http://www.w3.org/2000/svg' width='388' height='216'><text x='86' y='13' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>First pick</text><text x='226' y='13' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>Second pick</text><circle cx='16' cy='115' r='2.4' fill='currentColor'/><path d='M20 115L118 61' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='122' cy='61' r='2.4' fill='currentColor'/><text x='69' y='76.4' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M63.2 79H74.8' stroke='currentColor' stroke-width='0.8'/><text x='69' y='88' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='128' y='64.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M20 115L118 169' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='122' cy='169' r='2.4' fill='currentColor'/><text x='69' y='150.4' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M63.2 153H74.8' stroke='currentColor' stroke-width='0.8'/><text x='69' y='162' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='128' y='172.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text><path d='M160 61L258 34' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='34' r='2.4' fill='currentColor'/><text x='209' y='35.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M203.2 38.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='47.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='37.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M160 61L258 88' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='88' r='2.4' fill='currentColor'/><text x='209' y='82.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M203.2 85.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='94.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='91.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text><path d='M160 169L258 142' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='142' r='2.4' fill='currentColor'/><text x='209' y='143.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>3</text><path d='M203.2 146.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='155.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='145.4' font-family='inherit' font-size='9.5' fill='currentColor'>Yellow</text><path d='M160 169L258 196' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='262' cy='196' r='2.4' fill='currentColor'/><text x='209' y='190.9' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>5</text><path d='M203.2 193.5H214.8' stroke='currentColor' stroke-width='0.8'/><text x='209' y='202.5' font-family='inherit' font-size='8.5' fill='currentColor' text-anchor='middle'>8</text><text x='268' y='199.4' font-family='inherit' font-size='9.5' fill='currentColor'>Purple</text><text x='330' y='37.4' font-family='inherit' font-size='9' fill='currentColor' fill-opacity='0.8'>YY  9/64</text><text x='330' y='91.4' font-family='inherit' font-size='9' fill='currentColor' fill-opacity='0.8'>YP  15/64</text><text x='330' y='145.4' font-family='inherit' font-size='9' fill='currentColor' fill-opacity='0.8'>PY  15/64</text><text x='330' y='199.4' font-family='inherit' font-size='9' fill='currentColor' fill-opacity='0.8'>PP  25/64</text></svg>",
+    "caption": "Each path's probability is the product of the branches along it, and the four of them add to 1."
+  },
+  {
+    "type": "p",
+    "md": "Following a path means both things happened, so the branch probabilities multiply.\n\n$P(\\text{yellow, then yellow}) = \\tfrac{3}{8} \\times \\tfrac{3}{8} = \\tfrac{9}{64}$\n\nThe four path probabilities always add to 1. That is a free check on the whole diagram."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "From the same bag, with the counter replaced, what is $P(\\text{purple, then purple})$? Give a fraction.",
+    "answer": "25/64 | 0.390625",
+    "explain": "$\\tfrac{5}{8} \\times \\tfrac{5}{8} = \\tfrac{25}{64}$. Along a branch, multiply."
+  },
+  {
+    "type": "h",
+    "text": "See it drawn"
+  },
+  {
+    "type": "video",
+    "videoId": "PYEvSuz1Dxo",
+    "title": "Tree Diagrams - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 252,
+    "why": "Corbettmaths video 252 builds a tree branch by branch and shows the multiplying and the adding in the same picture. Watch it once, then answer the check below."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "On a tree diagram, which pair of operations is right?",
+    "options": [
+      "Multiply along a branch, add the branches",
+      "Add along a branch, multiply the branches",
+      "Multiply along a branch, multiply the branches"
+    ],
+    "answer": "Multiply along a branch, add the branches",
+    "explain": "Along a branch both events happen, which multiplies. Across branches either path will do, which adds."
+  },
+  {
+    "type": "h",
+    "text": "Add across the branches"
+  },
+  {
+    "type": "figure",
+    "alt": "A table of the four outcomes with their probabilities: YY 9/64 yes, YP 15/64 yes, PY 15/64 yes, PP 25/64 no, where the last column says whether the outcome contains a yellow.",
+    "svg": "<svg viewBox='0 0 216 142' xmlns='http://www.w3.org/2000/svg' width='216' height='142'><path d='M62 20V130' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M134 20V130' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M206 20V130' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 20H206' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 42H206' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 64H206' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 86H206' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 108H206' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 130H206' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 20V130' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><text x='6' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='start'>Outcome</text><text x='98' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Probability</text><text x='170' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Any yellow?</text><text x='10' y='57' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>YY</text><text x='98' y='57' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>9/64</text><text x='170' y='57' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>yes</text><text x='10' y='79' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>YP</text><text x='98' y='79' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>15/64</text><text x='170' y='79' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>yes</text><text x='10' y='101' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>PY</text><text x='98' y='101' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>15/64</text><text x='170' y='101' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>yes</text><text x='10' y='123' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>PP</text><text x='98' y='123' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>25/64</text><text x='170' y='123' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>no</text></svg>",
+    "caption": "The four outcomes with their probabilities. Two of them, YP and PY, are one of each colour."
+  },
+  {
+    "type": "p",
+    "md": "\"One of each colour\" does not say which comes first, so two different paths fit it. Two paths means two chances, so their probabilities add.\n\n$P(\\text{one of each}) = \\tfrac{15}{64} + \\tfrac{15}{64} = \\tfrac{15}{32}$\n\nIf the question fixes the order — *the first is yellow and the second is purple* — then only one path counts."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "blank",
+    "prompt": "From the same bag with replacement, what is $P(\\text{one yellow and one purple, in either order})$? Give a fraction in its simplest form.",
+    "answer": "15/32 | 30/64",
+    "explain": "$\\tfrac{15}{64} + \\tfrac{15}{64} = \\tfrac{15}{32}$. Both orders fit the description, so both paths are added."
+  },
+  {
+    "type": "h",
+    "text": "At least one"
+  },
+  {
+    "type": "p",
+    "md": "*At least one yellow* covers three of the four paths, so adding them is three chances to slip. The table above shows a shorter route: only one outcome has **no** yellow at all, and that is purple then purple.\n\n$P(\\text{at least one yellow}) = 1 - P(\\text{no yellow}) = 1 - \\tfrac{25}{64} = \\tfrac{39}{64}$\n\nThe subtraction is always from 1, and *at least one* is not *exactly one*."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the four paths add to 1",
+    "md": "Each pair of branches adds to 1, so multiplying the tree out shares that 1 among the paths: $(\\tfrac{3}{8} + \\tfrac{5}{8}) \\times (\\tfrac{3}{8} + \\tfrac{5}{8}) = 1$. A finished tree can therefore check itself, and a total above 1 means an addition crept in where a multiplication belonged."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "blank",
+    "prompt": "From the same bag with replacement, what is $P(\\text{at least one purple})$? Give a fraction.",
+    "answer": "55/64 | 55/64",
+    "explain": "The only outcome with no purple is yellow then yellow, $\\tfrac{9}{64}$, so the answer is $1 - \\tfrac{9}{64} = \\tfrac{55}{64}$."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "November 2025 M7 Paper 2 Q14",
+    "md": "Complete a tree for two rolls, then find the probability of no sixes. **Candidates lost a mark when the branch labels were missing**, and some changed the fractions on the second set of branches although nothing about the dice had changed. In the second part, adding the fractions gave an answer above 1 that went unquestioned.",
+    "source": "ccea-cer:maths:2025-november:M72:Q14"
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "You have filled in a two-stage tree and the four path probabilities add to $1.4$. What does that tell you?",
+    "options": [
+      "Something is wrong: the four paths must add to 1",
+      "Nothing: paths can add to more than 1",
+      "The tree is right but the outcomes are in the wrong order"
+    ],
+    "answer": "Something is wrong: the four paths must add to 1",
+    "explain": "The four paths cover every possibility once, so they share the whole of 1 between them. A total above 1 usually means a branch pair does not add to 1, or an addition was used where a multiplication belonged."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Draw a two-stage tree with an outcome label and a probability on every branch.\nKeep the second stage the same when the item is replaced.\nMultiply along a branch, and add the branches that fit.\nReach at least one by subtracting the probability of none from 1.\nCheck the tree: each branch pair adds to 1, and so do the four paths."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Usually one question of four marks, in two parts, in the second half of Paper 2. The first mark is the tree itself: every branch labelled with its outcome and its probability. The last mark is the probability read off it, multiplied along and added across. Stuck: fill in whatever branches you can, because the labelled tree scores on its own."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.tree-diagrams-for-independent-events.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.tree-diagrams-for-independent-events.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.tree-diagrams-for-independent-events.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.tree-diagrams-for-independent-events.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.tree-diagrams-for-independent-events.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.tree-diagrams-for-independent-events.06"
+  }
+]

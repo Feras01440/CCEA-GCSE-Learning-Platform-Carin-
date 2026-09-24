@@ -1,0 +1,186 @@
+[
+  {
+    "type": "hero",
+    "lede": "A grower measures 50 tomato plants but writes down only which class each one falls in: 20 to 24 centimetres, 25 to 29, and so on. The individual heights are gone. You can still work out a mean and a spread, but both are estimates, and the table tells you how.",
+    "can": [
+      "Write the midpoint of a class, discrete or continuous.",
+      "Build the $fx$ column and total it.",
+      "Divide $\\sum fx$ by $\\sum f$ for the estimated mean."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "When the table hides the numbers"
+  },
+  {
+    "type": "p",
+    "md": "Grouping has thrown the individual values away, so every value in a class is treated as sitting at its midpoint. That one assumption makes both answers estimates. After it the method is the ordinary one, with an $fx$ column for the values and an $fx^{2}$ column for their squares."
+  },
+  {
+    "type": "figure",
+    "alt": "A shaded band running from 30 to 34 with 18 question marks inside it, and a dashed vertical line at the midpoint 32.",
+    "svg": "<svg viewBox='0 0 460 172' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A band from 30 to 34 holding 18 unknown values, with a dashed line at the midpoint 32'><title>A band from 30 to 34 holding 18 unknown values, with a dashed line at the midpoint 32</title><rect x='70' y='66' width='320' height='46' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.3'/><text x='86.8' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='103.7' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='120.5' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='137.4' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='154.2' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='171.1' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='187.9' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='204.7' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='221.6' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='238.4' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='255.3' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='272.1' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='288.9' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='305.8' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='322.6' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='339.5' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='356.3' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='373.2' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><path d='M70 112 L390 112' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M70 112 L70 119' stroke='currentColor' stroke-width='1.2'/><path d='M390 112 L390 119' stroke='currentColor' stroke-width='1.2'/><text x='70' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>30</text><text x='390' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>34</text><path d='M230.0 50 L230.0 126' stroke='currentColor' stroke-width='1.6' stroke-dasharray='5 4' fill='none'/><text x='230.0' y='42' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>midpoint 32</text><text x='14' y='158' font-family='inherit' font-size='12.5' fill='currentColor'>18 plants are somewhere in this class; the table does not say where</text></svg>",
+    "caption": "18 plants are somewhere in the class 30 to 34. The midpoint 32 stands in for all of them."
+  },
+  {
+    "type": "h",
+    "text": "1. One value stands for a whole class"
+  },
+  {
+    "type": "p",
+    "md": "Nobody knows where in a class the values sit, so each class is represented by the value in its middle: $x = \\dfrac{\\text{lower end} + \\text{upper end}}{2}$. Every answer that follows is therefore an estimate, and the exam asks you to say so in words."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "What is the midpoint of the class 20 to 24?",
+    "answer": "22",
+    "explain": "$\\dfrac{20 + 24}{2} = 22$. That number now stands for all 6 plants in the class."
+  },
+  {
+    "type": "h",
+    "text": "2. The fx column, and what you divide by"
+  },
+  {
+    "type": "p",
+    "md": "Multiply each frequency by its own midpoint. The total $\\sum fx$ is an estimate of the sum of all the heights, so the estimated mean is $\\bar{x} = \\dfrac{\\sum fx}{\\sum f}$.\n**Divide by $\\sum f$, never by the number of classes.** $\\sum f$ counts the plants; there are 50 of them, not 5."
+  },
+  {
+    "type": "figure",
+    "alt": "A five-column table for the tomato heights showing class, frequency, midpoint, fx and f times x squared, with the columns totalled.",
+    "svg": "<svg viewBox='0 0 540 252' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The five classes of the tomato-plant table with the frequency, midpoint, fx and f times x squared columns filled in and totalled'><title>The five classes of the tomato-plant table with the frequency, midpoint, fx and f times x squared columns filled in and totalled</title><text x='20' y='22' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8'>one row at a time: midpoint, then fx, then f times x squared</text><text x='70.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>Height (cm)</text><text x='170.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>f</text><text x='270.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>x</text><text x='370.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>fx</text><text x='470.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>f x squared</text><path d='M14 52 L526 52' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='70.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>20 to 24</text><text x='170.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>6</text><text x='270.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>22</text><text x='370.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>132</text><text x='470.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>2904</text><text x='70.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>25 to 29</text><text x='170.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>11</text><text x='270.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>27</text><text x='370.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>297</text><text x='470.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>8019</text><text x='70.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>30 to 34</text><text x='170.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>18</text><text x='270.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>32</text><text x='370.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>576</text><text x='470.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>18432</text><text x='70.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>35 to 39</text><text x='170.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>10</text><text x='270.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>37</text><text x='370.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>370</text><text x='470.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>13690</text><text x='70.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>40 to 44</text><text x='170.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>5</text><text x='270.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>42</text><text x='370.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>210</text><text x='470.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>8820</text><path d='M14 194 L526 194' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='70.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>totals</text><text x='170.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>50</text><text x='270.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='370.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>1585</text><text x='470.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>51865</text></svg>",
+    "caption": "The working table in full: $\\sum f = 50$, $\\sum fx = 1585$ and $\\sum fx^{2} = 51865$."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "Using $\\sum fx = 1585$ and $\\sum f = 50$, what is the estimated mean height in centimetres?",
+    "answer": "31.7",
+    "explain": "$1585 \\div 50 = 31.7$ cm. Dividing by 5, the number of classes, would give 317, which is nonsense for a plant."
+  },
+  {
+    "type": "h",
+    "text": "3. The column that costs the marks"
+  },
+  {
+    "type": "p",
+    "md": "The fifth column is $f x^{2}$: **square the midpoint, then multiply by the frequency**. It is not the fx entry squared.\nFor the class 30 to 34: $18 \\times 32^{2} = 18432$, while squaring the fx entry would give $576^{2} = 331776$."
+  },
+  {
+    "type": "figure",
+    "alt": "Two rows of a table set side by side, comparing the f times x squared entries with the much larger values you get by squaring the fx entries.",
+    "svg": "<svg viewBox='0 0 460 168' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two rows of the table showing that f times x squared and (fx) squared are different numbers'><title>Two rows of the table showing that f times x squared and (fx) squared are different numbers</title><text x='20' y='22' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8'>f times x squared, not the fx entry squared</text><text x='62.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>f</text><text x='146.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>x</text><text x='230.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>fx</text><text x='314.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>f x squared</text><text x='398.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>(fx) squared</text><path d='M14 52 L446 52' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='62.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>18</text><text x='146.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>32</text><text x='230.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>576</text><text x='314.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>18432</text><text x='398.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>331776</text><text x='62.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>10</text><text x='146.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>37</text><text x='230.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>370</text><text x='314.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>13690</text><text x='398.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>136900</text><path d='M14 110 L446 110' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='62.0' y='134' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='146.0' y='134' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='230.0' y='134' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='314.0' y='134' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>use this column</text><text x='398.0' y='134' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>not this one</text></svg>",
+    "caption": "Two rows of the same table: $f x^{2}$ on the left of the pair, $\\left(fx\\right)^{2}$ on the right."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the square sits on the x only",
+    "md": "The formula adds one squared value for each item in the class, which is $f \\times x^{2}$. Squaring $fx$ would square the count as well, and a count is not a measurement."
+  },
+  {
+    "type": "video",
+    "videoId": "qkMTrcPl3yw",
+    "title": "OCR MEI Statistics 1 2.05 Mean and Standard Deviation from Grouped Frequency and Identifying Outliers",
+    "channel": "TLMaths",
+    "why": "The whole five-column routine on a different table, with the f x squared column built one row at a time."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "A class has frequency $11$ and midpoint $27$. What is its $f x^{2}$ entry?",
+    "answer": "8019",
+    "explain": "$11 \\times 27^{2} = 11 \\times 729 = 8019$."
+  },
+  {
+    "type": "h",
+    "text": "4. A worked example, start to finish"
+  },
+  {
+    "type": "p",
+    "md": "The 50 tomato plants again, all five steps.\n**Step 1.** Midpoints $22,\\ 27,\\ 32,\\ 37,\\ 42$, because the exact heights are unknown.\n**Step 2.** $\\sum fx = 1585$, so $\\bar{x} = \\dfrac{1585}{50} = 31.7$ cm.\n**Step 3.** $\\sum fx^{2} = 51865$, one row at a time.\n**Step 4.** $\\dfrac{51865}{50} - 31.7^{2} = 1037.3 - 1004.89 = 32.41$.\n**Step 5.** $\\sigma = \\sqrt{32.41} = 5.69$ cm."
+  },
+  {
+    "type": "figure",
+    "alt": "The completed tomato-plant table again, with the frequency, midpoint, fx and f times x squared columns and their totals.",
+    "svg": "<svg viewBox='0 0 540 252' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The five classes of the tomato-plant table with the frequency, midpoint, fx and f times x squared columns filled in and totalled'><title>The five classes of the tomato-plant table with the frequency, midpoint, fx and f times x squared columns filled in and totalled</title><text x='20' y='22' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8'>one row at a time: midpoint, then fx, then f times x squared</text><text x='70.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>Height (cm)</text><text x='170.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>f</text><text x='270.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>x</text><text x='370.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>fx</text><text x='470.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>f x squared</text><path d='M14 52 L526 52' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='70.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>20 to 24</text><text x='170.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>6</text><text x='270.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>22</text><text x='370.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>132</text><text x='470.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>2904</text><text x='70.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>25 to 29</text><text x='170.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>11</text><text x='270.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>27</text><text x='370.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>297</text><text x='470.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>8019</text><text x='70.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>30 to 34</text><text x='170.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>18</text><text x='270.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>32</text><text x='370.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>576</text><text x='470.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>18432</text><text x='70.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>35 to 39</text><text x='170.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>10</text><text x='270.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>37</text><text x='370.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>370</text><text x='470.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>13690</text><text x='70.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>40 to 44</text><text x='170.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>5</text><text x='270.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>42</text><text x='370.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>210</text><text x='470.0' y='184' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>8820</text><path d='M14 194 L526 194' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='70.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>totals</text><text x='170.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>50</text><text x='270.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='370.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>1585</text><text x='470.0' y='218' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>51865</text></svg>",
+    "caption": "Every number in the worked example comes from this table: $\\sum f = 50$, $\\sum fx = 1585$, $\\sum fx^{2} = 51865$."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "Finish it: $\\sqrt{32.41}$, to 2 decimal places.",
+    "answer": "5.69 | 5.693",
+    "explain": "5.69 cm. The variance 32.41 is in centimetres squared; the root brings it back to centimetres."
+  },
+  {
+    "type": "h",
+    "text": "5. Saying why it is an estimate"
+  },
+  {
+    "type": "p",
+    "md": "One mark, one sentence, and the sentence has to name two things: **what is unknown** and **what replaced it**.\nA sentence that earns it: the exact heights inside each class are not known, so the midpoint is used to stand for every plant in that class.\nRounding is not the reason, and neither is the size of the sample."
+  },
+  {
+    "type": "figure",
+    "alt": "The same shaded class band with question marks inside it and the midpoint marked, shown again as the picture behind the sentence.",
+    "svg": "<svg viewBox='0 0 460 172' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A band from 30 to 34 holding 18 unknown values, with a dashed line at the midpoint 32'><title>A band from 30 to 34 holding 18 unknown values, with a dashed line at the midpoint 32</title><rect x='70' y='66' width='320' height='46' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.3'/><text x='86.8' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='103.7' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='120.5' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='137.4' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='154.2' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='171.1' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='187.9' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='204.7' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='221.6' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='238.4' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='255.3' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='272.1' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='288.9' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='305.8' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='322.6' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='339.5' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='356.3' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><text x='373.2' y='92' font-family='inherit' font-size='15' fill='currentColor' fill-opacity='0.55' text-anchor='middle'>?</text><path d='M70 112 L390 112' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M70 112 L70 119' stroke='currentColor' stroke-width='1.2'/><path d='M390 112 L390 119' stroke='currentColor' stroke-width='1.2'/><text x='70' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>30</text><text x='390' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>34</text><path d='M230.0 50 L230.0 126' stroke='currentColor' stroke-width='1.6' stroke-dasharray='5 4' fill='none'/><text x='230.0' y='42' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>midpoint 32</text><text x='14' y='158' font-family='inherit' font-size='12.5' fill='currentColor'>18 plants are somewhere in this class; the table does not say where</text></svg>",
+    "caption": "The picture is the answer: unknown values inside the class, one midpoint standing in for them all."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Which sentence earns the mark?",
+    "options": [
+      "The exact values inside each class are unknown, so the midpoint stands for them all",
+      "The numbers in the table have been rounded",
+      "A mean is always an approximation"
+    ],
+    "answer": "The exact values inside each class are unknown, so the midpoint stands for them all",
+    "explain": "It names what is missing and what took its place. The other two would be just as true of a table that was not grouped at all."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "You can now",
+    "md": "Write the midpoint of a class, discrete or continuous, and use it as $x$.\nBuild the $fx$ column and divide $\\sum fx$ by $\\sum f$ for the estimated mean.\nBuild the $f x^{2}$ column by squaring the midpoint first.\nSubstitute into $\\sigma = \\sqrt{\\dfrac{\\sum fx^{2}}{\\sum f} - \\bar{x}^{2}}$ and finish with the root.\nSay in one sentence why both answers are estimates."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write the midpoint of each class, discrete or continuous.\nBuild the $fx$ and $fx^{2}$ columns and total them.\nDivide by $sum f$ for the estimated mean, and say why it is an estimate."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "A grouped table has opened the paper again and again: two marks for the estimated mean, one for saying why it is only an estimate, and two or three for the deviation. The first mark is the $fx$ column. Stuck: write the midpoints down, then the $fx$ column, before anything else."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.mean-sd-grouped-data.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.mean-sd-grouped-data.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.mean-sd-grouped-data.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.mean-sd-grouped-data.05"
+  }
+]

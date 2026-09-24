@@ -1,0 +1,242 @@
+[
+  {
+    "type": "hero",
+    "lede": "Two things happen one after the other, and the second depends on how the first went. A tree diagram lays every possible pair of outcomes out on its own branch, with a probability on each, so a question that sounded tangled becomes a list you can add up.",
+    "can": [
+      "Draw a two- or three-stage tree, with and without replacement",
+      "Multiply along a branch and add the branches that qualify",
+      "Use the complement to answer 'at least one' in a single line"
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "One branch for every way it can go"
+  },
+  {
+    "type": "p",
+    "md": "A pencil case holds 11 pens: 7 blue and 4 black. Two are taken out one after the other, and the first is not put back.\nEach draw has two outcomes, so there are four ways the pair can come out. A tree gives each of them a branch and writes the probability along it."
+  },
+  {
+    "type": "figure",
+    "alt": "A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10",
+    "svg": "<svg viewBox='0 0 385 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10'><title>A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10</title><circle cx='26' cy='115' r='3.5' fill='currentColor'/><path d='M30 115 L172 75.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='88.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/11</text><text x='176' y='62' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Blue</text><path d='M30 115 L172 162.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='133.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/11</text><text x='176' y='184' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Black</text><path d='M180 75.5 L322 53.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='55.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/10</text><text x='335' y='57.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M180 75.5 L322 97.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='83.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/10</text><text x='335' y='101.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><path d='M180 162.5 L322 140.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='142.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/10</text><text x='335' y='144.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M180 162.5 L322 184.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='170.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/10</text><text x='335' y='188.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text></svg>",
+    "caption": "The second-stage denominators are 10, not 11: one pen has gone. The two branches leaving any point add to 1."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "On the tree above, what is written on the very first branch, for the first pen being blue?",
+    "options": [
+      "$\\dfrac{7}{11}$",
+      "$\\dfrac{6}{10}$",
+      "$\\dfrac{4}{11}$"
+    ],
+    "answer": "$\\dfrac{7}{11}$",
+    "explain": "7 of the 11 pens are blue, and nothing has been taken yet, so the denominator is still 11."
+  },
+  {
+    "type": "h",
+    "text": "1. Without replacement changes the second stage"
+  },
+  {
+    "type": "p",
+    "md": "If the first pen is not put back, the case holds 10 pens for the second draw. That is why every second-stage denominator on the tree is 10.\nThe numerator changes too, but only on the branches where a pen of that colour has already gone: after a blue pen, 6 blue are left; after a black pen, all 7 blue are still there."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the second stage depends on the first",
+    "md": "A second-stage branch carries a probability **given** what happened above it. After a blue pen there are 6 blue among 10; after a black pen, 7 blue among 10. The two differ because the first draw changed what is left."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "On the pen tree above, the first pen taken is blue. How many pens are left in the case for the second draw?",
+    "answer": "10",
+    "explain": "11 - 1 = 10. The pen is not replaced, so every second-stage denominator on the tree is 10."
+  },
+  {
+    "type": "h",
+    "text": "2. Multiply along, add across"
+  },
+  {
+    "type": "p",
+    "md": "Two rules do all the work.\n**Along a branch, multiply.** $P(\\text{blue then blue}) = \\dfrac{7}{11} \\times \\dfrac{6}{10} = \\dfrac{42}{110} = \\dfrac{21}{55}$.\n**Across branches, add.** Branches are separate ways for the same event to happen, and they cannot both occur, so their probabilities add."
+  },
+  {
+    "type": "figure",
+    "alt": "A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10",
+    "svg": "<svg viewBox='0 0 385 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10'><title>A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10</title><circle cx='26' cy='115' r='3.5' fill='currentColor'/><path d='M30 115 L172 75.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='88.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/11</text><text x='176' y='62' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Blue</text><path d='M30 115 L172 162.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='133.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/11</text><text x='176' y='184' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Black</text><path d='M180 75.5 L322 53.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='55.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/10</text><text x='335' y='57.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M180 75.5 L322 97.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='83.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/10</text><text x='335' y='101.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><path d='M180 162.5 L322 140.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='142.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/10</text><text x='335' y='144.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M180 162.5 L322 184.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='170.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/10</text><text x='335' y='188.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text></svg>",
+    "caption": "Reading the top path: $\\dfrac{7}{11} \\times \\dfrac{6}{10}$. Each path ends in one outcome of the pair."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "Using the pen tree above, what is $P(\\text{both pens are black})$? Give a fraction or a decimal.",
+    "answer": "6/55 | 12/110 | 0.11",
+    "explain": "$\\dfrac{4}{11} \\times \\dfrac{3}{10} = \\dfrac{6}{55}$. Multiplying along the branch, with the denominator dropping to 10."
+  },
+  {
+    "type": "h",
+    "text": "3. An event that needs more than one branch"
+  },
+  {
+    "type": "p",
+    "md": "'Both the same colour' happens on two branches, blue-blue and black-black. Work each one out, then add.\n$P(\\text{same}) = \\dfrac{21}{55} + \\dfrac{6}{55} = \\dfrac{27}{55}$.\nMultiplying those two instead of adding is the slip the reports name: multiplying asks for both branches to happen at once, which is impossible."
+  },
+  {
+    "type": "figure",
+    "alt": "The same pen tree with every path's product written at its end: blue, blue 21/55; blue, black 14/55; black, blue 14/55; black, black 6/55.",
+    "svg": "<svg viewBox='0 0 500 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10'><title>A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10</title><circle cx='26' cy='115' r='3.5' fill='currentColor'/><path d='M30 115 L172 75.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='88.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/11</text><text x='176' y='62' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Blue</text><path d='M30 115 L172 162.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='133.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/11</text><text x='176' y='184' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Black</text><path d='M180 75.5 L322 53.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='55.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/10</text><text x='335' y='57.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M180 75.5 L322 97.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='83.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/10</text><text x='335' y='101.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><path d='M180 162.5 L322 140.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='142.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/10</text><text x='335' y='144.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M180 162.5 L322 184.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='170.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/10</text><text x='335' y='188.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><text x='490' y='57.75' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end' fill-opacity='0.85'>blue, blue 21/55</text><text x='490' y='101.25' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end' fill-opacity='0.85'>blue, black 14/55</text><text x='490' y='144.75' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end' fill-opacity='0.85'>black, blue 14/55</text><text x='490' y='188.25' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end' fill-opacity='0.85'>black, black 6/55</text></svg>",
+    "caption": "The two same-colour paths end in $\\dfrac{21}{55}$ and $\\dfrac{6}{55}$. The four path products add to 1."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "What the reports keep finding",
+    "md": "Candidates work out each branch correctly and then multiply the two results instead of adding them. The same reports also ask for exact fractions: switching to decimals part-way through has cost accuracy marks.",
+    "source": "ccea-cer:further-maths:2019-summer:FM3:Q2"
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Two branches of the pen tree each give 'the pair is the same colour'. What do you do with their two probabilities?",
+    "options": [
+      "Add them, because the two branches cannot both happen",
+      "Multiply them, because both are needed",
+      "Take the larger of the two"
+    ],
+    "answer": "Add them, because the two branches cannot both happen",
+    "explain": "The pair is either blue-blue or black-black, never both. Separate branches add: $\\dfrac{21}{55} + \\dfrac{6}{55} = \\dfrac{27}{55}$."
+  },
+  {
+    "type": "h",
+    "text": "4. 'One of each' has two orders"
+  },
+  {
+    "type": "p",
+    "md": "A pair with one pen of each colour can come out blue then black, or black then blue. Both branches count, so both products go into the answer:\n$\\dfrac{7}{11} \\times \\dfrac{4}{10} + \\dfrac{4}{11} \\times \\dfrac{7}{10}$.\nCounting one order only halves the answer, and that is exactly what examiners report."
+  },
+  {
+    "type": "video",
+    "videoId": "PYEvSuz1Dxo",
+    "title": "Tree Diagrams",
+    "channel": "corbettmaths",
+    "why": "Building a tree and reading pairs off it, with and without replacement. The three-stage tree and the conditional read are the steps this unit adds on top."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "On the pen tree, blue-then-black has probability $\\dfrac{14}{55}$ and black-then-blue has the same. What is $P(\\text{one of each colour})$?",
+    "answer": "28/55 | 0.51 | 56/110",
+    "explain": "The two orders add: $\\dfrac{14}{55} + \\dfrac{14}{55} = \\dfrac{28}{55}$. One order alone would give half of that."
+  },
+  {
+    "type": "h",
+    "text": "5. 'At least one' is easier backwards"
+  },
+  {
+    "type": "p",
+    "md": "Adding every branch that has at least one black pen means three branches. Taking the one branch that has none away from 1 means one line.\n$P(\\text{at least one black}) = 1 - P(\\text{both blue}) = 1 - \\dfrac{21}{55} = \\dfrac{34}{55}$.\nExaminers have said outright that subtracting from 1 is the simpler route, and that adding every branch invites an arithmetic slip."
+  },
+  {
+    "type": "figure",
+    "alt": "A two-stage probability tree for two mornings, each with probability 0.15 that the bus is late and 0.85 that it is on time. The same two probabilities appear on both stages.",
+    "svg": "<svg viewBox='0 0 399 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two mornings, each with probability 0.15 of the bus being late and 0.85 of it being on time'><title>A two-stage probability tree for two mornings, each with probability 0.15 of the bus being late and 0.85 of it being on time</title><circle cx='26' cy='115' r='3.5' fill='currentColor'/><path d='M30 115 L172 75.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='88.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.15</text><text x='176' y='62' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Late</text><path d='M30 115 L172 162.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='133.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.85</text><text x='176' y='184' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>On time</text><path d='M180 75.5 L322 53.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='282.5' y='54.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.15</text><text x='335' y='57.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Late</text><path d='M180 75.5 L322 97.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='282.5' y='84.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.85</text><text x='335' y='101.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>On time</text><path d='M180 162.5 L322 140.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='282.5' y='141.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.15</text><text x='335' y='144.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Late</text><path d='M180 162.5 L322 184.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='282.5' y='171.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.85</text><text x='335' y='188.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>On time</text></svg>",
+    "caption": "With replacement, or with two independent days, the second stage repeats the first: both branches carry 0.15 and 0.85."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "On the bus tree above, $P(\\text{on time both mornings}) = 0.7225$. What is $P(\\text{late on at least one of the two mornings})$?",
+    "answer": "0.2775 | 111/400 | 0.28",
+    "explain": "$1 - 0.7225 = 0.2775$. 'At least one' is everything except the branch with none."
+  },
+  {
+    "type": "h",
+    "text": "6. Three stages, same two rules"
+  },
+  {
+    "type": "p",
+    "md": "A third pen adds a third stage, and the denominators fall again to 9. There are eight paths now, but nothing new to learn.\n$P(\\text{all three blue}) = \\dfrac{7}{11} \\times \\dfrac{6}{10} \\times \\dfrac{5}{9} = \\dfrac{7}{33}$.\nWith replacement every stage would keep the denominator 11, and the answer would be different."
+  },
+  {
+    "type": "figure",
+    "alt": "A three-stage probability tree for three pens taken without replacement from 11. The denominators fall from 11 to 10 to 9 stage by stage, and the top path reads 7/11, 6/10, 5/9",
+    "svg": "<svg viewBox='0 0 565 332' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A three-stage probability tree for three pens taken without replacement from 11. The denominators fall from 11 to 10 to 9 stage by stage, and the top path reads 7/11, 6/10, 5/9'><title>A three-stage probability tree for three pens taken without replacement from 11. The denominators fall from 11 to 10 to 9 stage by stage, and the top path reads 7/11, 6/10, 5/9</title><circle cx='26' cy='166' r='3.5' fill='currentColor'/><path d='M30 166 L182 101' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='109' y='126.3' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/11</text><text x='186' y='87.5' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Blue</text><path d='M30 166 L182 239' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='109' y='197.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/11</text><text x='186' y='260.5' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Black</text><path d='M190 101 L342 66.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='290.5' y='72.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/10</text><text x='346' y='53' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Blue</text><path d='M190 101 L342 135.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='290.5' y='117.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/10</text><text x='346' y='157' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Black</text><path d='M190 239 L342 204.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='290.5' y='210.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/10</text><text x='346' y='191' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Blue</text><path d='M190 239 L342 273.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='290.5' y='255.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/10</text><text x='346' y='295' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Black</text><path d='M350 66.5 L502 49.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='49.2' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>5/9</text><text x='515' y='53.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M350 66.5 L502 83.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='71.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/9</text><text x='515' y='87.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><path d='M350 135.5 L502 118.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='118.2' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/9</text><text x='515' y='122.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M350 135.5 L502 152.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='140.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/9</text><text x='515' y='156.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><path d='M350 204.5 L502 187.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='187.2' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/9</text><text x='515' y='191.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M350 204.5 L502 221.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='209.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/9</text><text x='515' y='225.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text><path d='M350 273.5 L502 256.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='256.2' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/9</text><text x='515' y='260.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Blue</text><path d='M350 273.5 L502 290.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='450.5' y='278.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>2/9</text><text x='515' y='294.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Black</text></svg>",
+    "caption": "Eight paths. The denominators fall 11, 10, 9, because a pen leaves the case at each draw."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "On the three-stage pen tree above, the first two pens taken are blue. What is the probability that the third is blue as well?",
+    "answer": "5/9 | 0.56",
+    "explain": "Two blue pens have gone, so 5 blue are left among 9: $\\dfrac{5}{9}$."
+  },
+  {
+    "type": "h",
+    "text": "7. Keep the fractions exact"
+  },
+  {
+    "type": "p",
+    "md": "Every probability on these trees is an exact fraction, and it is worth keeping it that way to the last line. Turning $\\dfrac{21}{55}$ into a rounded decimal early and then adding rounded decimals is a reported cause of lost accuracy marks.\nMultiply numerators and denominators, cancel at the end, and convert only if the question asks for a decimal."
+  },
+  {
+    "type": "figure",
+    "alt": "A two-stage probability tree for two counters taken without replacement from 8 counters, 5 red and 3 white, with second-stage denominators of 7.",
+    "svg": "<svg viewBox='0 0 385 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two counters taken without replacement from 8 counters, 5 red and 3 white, with second-stage denominators of 7'><title>A two-stage probability tree for two counters taken without replacement from 8 counters, 5 red and 3 white, with second-stage denominators of 7</title><circle cx='26' cy='115' r='3.5' fill='currentColor'/><path d='M30 115 L172 75.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='88.5' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>5/8</text><text x='176' y='62' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>Red</text><path d='M30 115 L172 162.5' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='104' y='133.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/8</text><text x='176' y='184' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>White</text><path d='M180 75.5 L322 53.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='55.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>4/7</text><text x='335' y='57.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Red</text><path d='M180 75.5 L322 97.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='83.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>3/7</text><text x='335' y='101.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>White</text><path d='M180 162.5 L322 140.75' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='142.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>5/7</text><text x='335' y='144.75' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>Red</text><path d='M180 162.5 L322 184.25' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='275.5' y='170.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>2/7</text><text x='335' y='188.25' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>White</text></svg>",
+    "caption": "A second bag, same shape: 5 red and 3 white among 8, so the second stage is over 7."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "On the counter tree above, what is $P(\\text{both counters are red})$? Give an exact fraction or a decimal.",
+    "answer": "5/14 | 20/56 | 0.36",
+    "explain": "$\\dfrac{5}{8} \\times \\dfrac{4}{7} = \\dfrac{5}{14}$. Keeping 8 on the second denominator would have given 0.31."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Draw a two- or three-stage tree and write a probability on every branch.\nDrop the denominator at each stage when there is no replacement.\nMultiply along a branch and add the branches that qualify.\nCount both orders for 'one of each', and use $1 -$ the complement for 'at least one'.\nKeep every probability as an exact fraction to the last line."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Unit 3 asks you to complete a printed tree for a mark or two, then two or three short probabilities off it. The first mark is a branch product written down; the last is the sum of the branches that qualify, left as an exact fraction. Stuck: label every branch, write the product for each path you need, and add them."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.tree-diagrams-probability.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.tree-diagrams-probability.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.tree-diagrams-probability.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.tree-diagrams-probability.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.tree-diagrams-probability.07"
+  }
+]

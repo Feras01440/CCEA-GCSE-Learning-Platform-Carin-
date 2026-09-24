@@ -1,0 +1,204 @@
+[
+  {
+    "type": "hero",
+    "lede": "Pick a bread, then pick a filling. Every bread can meet every filling, so the choices do not add up, they fan out. Counting how far they fan out is one short multiplication, and it is the whole of this topic.",
+    "can": [
+      "Multiply the number of choices at each stage to count the outcomes.",
+      "Handle three stages as easily as two.",
+      "Take out the combinations a question rules out."
+    ],
+    "minutes": 8
+  },
+  {
+    "type": "h",
+    "text": "Choices that fan out"
+  },
+  {
+    "type": "p",
+    "md": "A café offers a breakfast deal: one bread and one filling. There are 4 breads and 3 fillings. Listing every deal is slow, so draw the table instead. Each bread gets a row, each filling gets a column, and every box inside is one deal."
+  },
+  {
+    "type": "figure",
+    "alt": "A table with 4 rows labelled Soda, Wheaten, Bagel, Rye and 3 columns labelled Egg, Mushroom, Halloumi. Every box holds one bread-and-filling pair, so the table has 12 boxes in all.",
+    "svg": "<svg viewBox='0 0 234 150' xmlns='http://www.w3.org/2000/svg' width='234' height='150'><path d='M62 18V138' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M116 18V138' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M170 18V138' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M224 18V138' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 18H224' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 42H224' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 66H224' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 90H224' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 114H224' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 138H224' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 18V138' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><text x='143' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>Filling</text><text x='6' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='start'>Bread</text><text x='89' y='34' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Egg</text><text x='143' y='34' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Mushroom</text><text x='197' y='34' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Halloumi</text><text x='10' y='58' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Soda</text><text x='89' y='58' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>SE</text><text x='143' y='58' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>SM</text><text x='197' y='58' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>SH</text><text x='10' y='82' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Wheaten</text><text x='89' y='82' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>WE</text><text x='143' y='82' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>WM</text><text x='197' y='82' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>WH</text><text x='10' y='106' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Bagel</text><text x='89' y='106' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>BE</text><text x='143' y='106' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>BM</text><text x='197' y='106' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>BH</text><text x='10' y='130' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Rye</text><text x='89' y='130' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>RE</text><text x='143' y='130' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>RM</text><text x='197' y='130' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>RH</text></svg>",
+    "caption": "Every box is one breakfast deal: 4 rows of 3, so 4 $\\times$ 3 $=$ 12 deals."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "On the breakfast table above, how many boxes are there in one row?",
+    "answer": "3",
+    "explain": "One row is one bread meeting each filling in turn, and there are 3 fillings."
+  },
+  {
+    "type": "h",
+    "text": "The product rule"
+  },
+  {
+    "type": "p",
+    "md": "The table is a rectangle, so the number of boxes is rows $\\times$ columns. That is the whole rule.\n\n**If one task can be done in $m$ ways, and for each of those the next task can be done in $n$ ways, the two together can be done in $m \\times n$ ways.**\n\nIt is a multiplication because each of the $m$ first choices opens a fresh set of $n$ second choices, and none of those sets overlaps. Adding would give 7 here, which is fewer deals than the table plainly shows."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "A shop sells 5 shirt colours and 3 collar styles. How many different shirts can be ordered?",
+    "answer": "15",
+    "explain": "5 $\\times$ 3 $=$ 15. Each colour can have any of the 3 collars."
+  },
+  {
+    "type": "h",
+    "text": "More than two stages"
+  },
+  {
+    "type": "p",
+    "md": "Nothing changes when a third choice is added: you multiply again. A smoothie bar lets you pick one fruit from 5, one base from 4 and one of 2 sizes."
+  },
+  {
+    "type": "figure",
+    "alt": "Three boxes in a row joined by multiplication signs: Fruit 5, Base 4, Size 2.",
+    "svg": "<svg viewBox='0 0 372 76' xmlns='http://www.w3.org/2000/svg' width='372' height='76'><rect x='8' y='14' width='96' height='46' rx='6' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.1'/><text x='56' y='32' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>Fruit</text><text x='56' y='50' font-family='inherit' font-size='14' font-weight='600' fill='currentColor' text-anchor='middle'>5</text><path d='M116 32L126 42M126 32L116 42' fill='none' stroke='currentColor' stroke-width='1.4'/><rect x='138' y='14' width='96' height='46' rx='6' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.1'/><text x='186' y='32' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>Base</text><text x='186' y='50' font-family='inherit' font-size='14' font-weight='600' fill='currentColor' text-anchor='middle'>4</text><path d='M246 32L256 42M256 32L246 42' fill='none' stroke='currentColor' stroke-width='1.4'/><rect x='268' y='14' width='96' height='46' rx='6' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.1'/><text x='316' y='32' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>Size</text><text x='316' y='50' font-family='inherit' font-size='14' font-weight='600' fill='currentColor' text-anchor='middle'>2</text></svg>",
+    "caption": "One box per stage, multiplied across: 5 $\\times$ 4 $\\times$ 2 $=$ 40 smoothies."
+  },
+  {
+    "type": "p",
+    "md": "Write one box per stage, put the number of choices in each, then multiply across: 5 $\\times$ 4 $\\times$ 2 $=$ 40.\n\nThe boxes matter more than they look. They stop you multiplying a stage the question never asked for, and they stop you dropping one: 5 $\\times$ 4 $=$ 20 would be the answer if size were fixed."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "A wristband is made from 3 band colours, 5 patterns and 4 clasps. How many different wristbands are there?",
+    "answer": "60",
+    "explain": "3 $\\times$ 5 $\\times$ 4 $=$ 60. One factor for each stage of the choice."
+  },
+  {
+    "type": "h",
+    "text": "See it worked through"
+  },
+  {
+    "type": "video",
+    "videoId": "3H6ET7P902Q",
+    "title": "Product Rule for Counting - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 383,
+    "why": "Corbettmaths video 383 builds the rule from a short list and then stops listing, which is exactly the moment the multiplication earns its place. Watch it once, then answer the check below."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Two choices are made, one after the other. What do you do with the numbers of ways?",
+    "options": [
+      "Multiply them",
+      "Add them",
+      "Take the larger one"
+    ],
+    "answer": "Multiply them",
+    "explain": "Each way of making the first choice opens a whole fresh set of second choices, so the sets stack up by multiplication."
+  },
+  {
+    "type": "h",
+    "text": "When some combinations are ruled out"
+  },
+  {
+    "type": "p",
+    "md": "Exam questions often follow the count with a part that takes something back out. A parlour has 7 ice-cream flavours and 6 sorbet flavours, and 2 flavour names appear in both lists.\n\nOne scoop of each: 7 $\\times$ 6 $=$ 42."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "Among those 42 ice-cream-and-sorbet pairs, how many use the same flavour twice?",
+    "answer": "2",
+    "explain": "Only the 2 names that appear in both lists can be paired with themselves, so 2 pairs repeat a flavour."
+  },
+  {
+    "type": "p",
+    "md": "Two **different** flavours, then: the 2 repeated pairs come off, so 42 $-$ 2 $=$ 40.\n\nCount everything first, then subtract. Trying to dodge the repeats while you multiply is what turns a two-line answer into a muddle."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2025 M7 Paper 2 Q14",
+    "md": "Two lists of flavours, one scoop from each. Most candidates reached the product for the first part. The second part asked for two different flavours, and **only a minority took the repeats off the total** — the rest gave the full product or started a fresh multiplication.",
+    "source": "ccea-cer:maths:2025-summer:M72:Q14"
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "A deli offers 5 fillings and 5 salads. 3 names appear in both lists. How many filling-and-salad pairs use two different names?",
+    "answer": "22",
+    "explain": "5 $\\times$ 5 $=$ 25 pairs in all, then take off the 3 that repeat a name: 22."
+  },
+  {
+    "type": "h",
+    "text": "When a choice cannot be repeated"
+  },
+  {
+    "type": "p",
+    "md": "A club of 12 picks a chairperson and then a secretary, and one person cannot hold both jobs."
+  },
+  {
+    "type": "figure",
+    "alt": "Two boxes joined by a multiplication sign: Chairperson 12, Secretary 11.",
+    "svg": "<svg viewBox='0 0 242 76' xmlns='http://www.w3.org/2000/svg' width='242' height='76'><rect x='8' y='14' width='96' height='46' rx='6' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.1'/><text x='56' y='32' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>Chairperson</text><text x='56' y='50' font-family='inherit' font-size='14' font-weight='600' fill='currentColor' text-anchor='middle'>12</text><path d='M116 32L126 42M126 32L116 42' fill='none' stroke='currentColor' stroke-width='1.4'/><rect x='138' y='14' width='96' height='46' rx='6' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.1'/><text x='186' y='32' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>Secretary</text><text x='186' y='50' font-family='inherit' font-size='14' font-weight='600' fill='currentColor' text-anchor='middle'>11</text></svg>",
+    "caption": "The second box is 11, not 12: the chairperson is no longer available."
+  },
+  {
+    "type": "p",
+    "md": "The first box is 12. The second is 11: whoever takes the first job is out of the running. So 12 $\\times$ 11 $=$ 132 ways.\n\nThe jobs differ, so Ana as chair with Ben as secretary is a different outcome from Ben as chair with Ana. Both are counted."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the second number drops",
+    "md": "The rule counts, for each first choice, the second choices still open. Once Ana is chair, 11 people remain, and that holds whoever is picked first. The number of second choices is the same every time, which is what lets you multiply."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "A squad of 14 picks a captain and then a different vice-captain. How many ways are there?",
+    "answer": "182",
+    "explain": "14 $\\times$ 13 $=$ 182. The captain cannot also be vice-captain, so the second number is 13."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Multiply the number of choices at each stage to count the outcomes.\nDraw one box per stage so no stage is dropped or added.\nSubtract the combinations a question rules out, after counting them all.\nDrop the second number by one when the first choice cannot be repeated."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Usually one question in the second half of the paper, three marks, in two parts. The first mark is the product itself, written down: show the multiplication, not just the total. The last mark is the adjustment the second part asks for, taken off that total. Stuck: write the number of choices at each stage in a row and multiply across."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.product-rule-for-counting.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.product-rule-for-counting.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.product-rule-for-counting.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.product-rule-for-counting.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.product-rule-for-counting.05"
+  }
+]

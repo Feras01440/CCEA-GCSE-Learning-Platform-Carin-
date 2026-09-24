@@ -1,0 +1,985 @@
+/**
+ * FM1 batch F — topic 2: logarithms-from-indices (difficulty 2 -> L).
+ * Every printed power, logarithm and distractor value is computed here.
+ */
+import {
+  OUT, PAPER, check, draftLogs, log, writeJson, lintTree, figure, svgWrap, svgText, svgPath, svgRect, svgLine, num,
+  shingleClash, corpusFiles,
+} from "./lib.mjs";
+
+const SLUG = "logarithms-from-indices";
+const TOPIC = "fm.u1.logarithms-from-indices";
+const REFS = ["FM1-LOG-01"];
+const CER19 = "ccea-cer:further-maths:2019-summer:FM1:Q9";
+const CER23 = "ccea-cer:further-maths:2023-summer:FM1:Q7";
+
+/* ---- the mathematics, computed ------------------------------------------------------------ */
+
+/** log to base a of b, only where the answer is a whole number or a simple negative index. */
+function logExact(a, b) {
+  for (let k = -12; k <= 12; k++) {
+    if (Math.abs(a ** k - b) < 1e-9) return k;
+  }
+  throw new Error(`log base ${a} of ${b} is not an integer index`);
+}
+const pow = (a, k) => {
+  const v = a ** k;
+  if (Math.abs(v - Math.round(v)) < 1e-9) return Math.round(v);
+  return Math.round(v * 1e9) / 1e9;
+};
+/** The index-form / log-form pair for a^k = n, computed from a and k. */
+const pair = (a, k) => ({ a, k, n: pow(a, k) });
+
+const HERO = pair(2, 5); // 2^5 = 32
+const WE = pair(3, 4); // 3^4 = 81
+const LADDER = [0, 1, 2, 3, 4, 5].map((k) => ({ k, v: pow(2, k) }));
+
+// checked at three sample points, as the brief demands of every identity used
+const IDENTITY_SAMPLES = [pair(2, 6), pair(5, 4), pair(10, -2)].map((p) => ({
+  ...p,
+  backFromLog: logExact(p.a, p.n),
+  ok: logExact(p.a, p.n) === p.k && pow(p.a, logExact(p.a, p.n)) === p.n,
+}));
+for (const s of IDENTITY_SAMPLES) if (!s.ok) throw new Error(`identity failed at base ${s.a}`);
+
+/* ---- error routes, executed ---------------------------------------------------------------- */
+
+const routes = {
+  /** Reads log_a n as "what power of the answer gives n", so the base and the index change places. */
+  baseIndexSwapped: (a, n) => {
+    // solves x^a = n instead of a^x = n
+    const x = n ** (1 / a);
+    return Math.round(x * 1e9) / 1e9;
+  },
+  /** Undoes the logarithm by dividing the number by the base. */
+  dividedByBase: (a, n) => Math.round((n / a) * 1e9) / 1e9,
+  /** Undoes log_a x = k by multiplying instead of raising. */
+  multipliedNotRaised: (a, k) => a * k,
+  /** Solves log_x n = k by dividing n by k instead of taking the k-th root. */
+  unknownBaseDivided: (n, k) => Math.round((n / k) * 1e9) / 1e9,
+  /** Drops the minus sign the reciprocal demands. */
+  signDropped: (k) => Math.abs(k),
+  /** log_a a read as 0 and log_a 1 read as 1: the two anchors the wrong way round. */
+  anchorsSwapped: (which) => (which === "base" ? 0 : 1),
+  /** Rounds a calculator logarithm to two places where three were demanded. */
+  roundedTo2dp: (v) => Math.round(v * 100) / 100,
+};
+
+const Q1a = { a: 2, n: 64, ans: logExact(2, 64) };
+const Q1b = { a: 5, n: 625, ans: logExact(5, 625) };
+const Q2a = { a: 2, n: 1 / 8, ans: logExact(2, 1 / 8) };
+const Q2b = { a: 10, n: 0.01, ans: logExact(10, 0.01) };
+const Q3a = { a: 7, n: 7, ans: logExact(7, 7) };
+const Q3b = { a: 9, n: 1, ans: logExact(9, 1) };
+const Q4 = { n: 216, k: 3, ans: Math.round(216 ** (1 / 3)) };
+const Q5 = { a: 4, k: 3, ans: pow(4, 3) };
+const TWIN = { a: 4, n: 256, ans: logExact(4, 256) };
+const Q6 = { n: 470, exact: Math.log10(470) };
+const Q6ans = Math.round(Q6.exact * 1000) / 1000;
+const EX = { a: 6, k: 4, n: pow(6, 4) };
+const EXb = { a: 6, n: 36, ans: logExact(6, 36) };
+const EXc = { n: 0.25, k: -2, ans: Math.round((0.25 ** (1 / -2)) * 1e9) / 1e9 };
+
+if (Q4.ans ** Q4.k !== Q4.n) throw new Error("Q4 root check failed");
+if (EXc.ans ** EXc.k !== EXc.n) throw new Error("EXc root check failed");
+
+const E = {
+  q1aSwap: routes.baseIndexSwapped(Q1a.a, Q1a.n), // x^2 = 64 -> 8
+  q1aDiv: routes.dividedByBase(Q1a.a, Q1a.n), // 64 / 2 = 32
+  q1bSwap: routes.baseIndexSwapped(Q1b.a, Q1b.n), // x^5 = 625 -> 3.623...
+  q1bDiv: routes.dividedByBase(Q1b.a, Q1b.n), // 625 / 5 = 125
+  q2aSign: routes.signDropped(Q2a.ans),
+  q2bSign: routes.signDropped(Q2b.ans),
+  q3aAnchor: routes.anchorsSwapped("base"),
+  q3bAnchor: routes.anchorsSwapped("one"),
+  q4Div: routes.unknownBaseDivided(Q4.n, Q4.k), // 216 / 3 = 72
+  q5Mult: routes.multipliedNotRaised(Q5.a, Q5.k), // 4 x 3 = 12
+  q5Swap: pow(Q5.k, Q5.a), // 3^4 = 81
+  q6Round: routes.roundedTo2dp(Q6.exact),
+  exbDiv: routes.dividedByBase(EXb.a, EXb.n), // 36 / 6 = 6
+  excSign: routes.baseIndexSwapped(2, 4), // the sign of the index ignored: a^2 = 0.25 -> 0.5
+};
+const EXcSignDropped = Math.round((0.25 ** (1 / 2)) * 1e9) / 1e9; // 0.5
+
+/* ---- figures -------------------------------------------------------------------------------- */
+
+function heroSvg() {
+  const body = [
+    svgRect(20, 34, 220, 66, { fill: "currentColor", opacity: 0.06 }),
+    svgText(130, 26, "index form", { size: 11 }),
+    svgText(130, 76, `${HERO.a}^${HERO.k} = ${HERO.n}`, { size: 26 }),
+    svgRect(320, 34, 220, 66, { fill: "currentColor", opacity: 0.06 }),
+    svgText(430, 26, "logarithm form", { size: 11 }),
+    svgText(430, 76, `log  ${HERO.n} = ${HERO.k}`, { size: 24 }),
+    svgText(408, 82, String(HERO.a), { size: 12 }),
+    svgPath("M 244 58 L 312 58 M 300 51 L 312 58 L 300 65", { width: 1.6 }),
+    svgPath("M 316 82 L 248 82 M 260 75 L 248 82 L 260 89", { width: 1.6 }),
+    svgText(280, 116, "the same sentence, read two ways", { size: 11.5 }),
+    svgText(130, 140, `the base is ${HERO.a}`, { size: 11.5 }),
+    svgText(430, 140, `the index is ${HERO.k}`, { size: 11.5 }),
+    svgPath(`M 108 128 L 96 100`, { width: 1, dash: "4 3" }),
+    svgPath(`M 452 128 L 466 100`, { width: 1, dash: "4 3" }),
+  ].join("");
+  return svgWrap(
+    "0 0 560 156",
+    `Two boxes side by side: the index form ${HERO.a} to the power ${HERO.k} equals ${HERO.n}, and the logarithm form log to the base ${HERO.a} of ${HERO.n} equals ${HERO.k}, with arrows running both ways between them`,
+    body,
+  );
+}
+
+function ladderSvg() {
+  const x0 = 46;
+  const step = 82;
+  const parts = [svgLine(x0 - 16, 96, x0 + step * (LADDER.length - 1) + 30, 96, { width: 1.3 })];
+  for (const [i, r] of LADDER.entries()) {
+    const x = x0 + step * i;
+    parts.push(svgLine(x, 90, x, 102, { width: 1 }));
+    parts.push(svgText(x, 80, String(r.v), { size: 13 }));
+    parts.push(svgText(x, 122, String(r.k), { size: 13 }));
+    parts.push(svgRect(x - 26, 40, 52, 26, { fill: "currentColor", opacity: 0.05 }));
+    parts.push(svgText(x, 58, `2^${r.k}`, { size: 12 }));
+  }
+  parts.push(svgText(x0 - 20, 80, "value", { size: 11, anchor: "end" }));
+  parts.push(svgText(x0 - 20, 122, "index", { size: 11, anchor: "end" }));
+  parts.push(svgText(x0 + step * 2.5, 152, "the logarithm is the row underneath", { size: 11.5 }));
+  return svgWrap(
+    "0 0 560 168",
+    `A line of the powers of 2 from 2 to the power ${LADDER[0].k} up to 2 to the power ${LADDER[LADDER.length - 1].k}, with each value above the line and its index below it`,
+    parts.join(""),
+  );
+}
+
+function weSvg() {
+  const body = [
+    svgRect(30, 30, 200, 60, { fill: "currentColor", opacity: 0.06 }),
+    svgText(130, 22, "start here", { size: 11 }),
+    svgText(130, 68, `${WE.a}^${WE.k} = ${WE.n}`, { size: 24 }),
+    svgPath("M 236 60 L 306 60 M 294 53 L 306 60 L 294 67", { width: 1.6 }),
+    svgRect(312, 30, 218, 60, { fill: "currentColor", opacity: 0.06 }),
+    svgText(421, 22, "read it as a logarithm", { size: 11 }),
+    svgText(421, 68, `log  ${WE.n} = ${WE.k}`, { size: 22 }),
+    svgText(400, 74, String(WE.a), { size: 11 }),
+    svgText(280, 112, `the base stays ${WE.a}, the index becomes the answer`, { size: 11.5 }),
+  ].join("");
+  return svgWrap(
+    "0 0 560 126",
+    `The index statement ${WE.a} to the power ${WE.k} equals ${WE.n} beside the same statement written as a logarithm to the base ${WE.a}`,
+    body,
+  );
+}
+
+const HERO_SVG = heroSvg();
+const LADDER_SVG = ladderSvg();
+const WE_SVG = weSvg();
+
+/* ---- note ------------------------------------------------------------------------------------ */
+
+const blocks = [
+  {
+    type: "hero",
+    lede: "A logarithm answers one question: what index turns the base into this number? Powers you already know, read backwards. Once you can read an index statement as a logarithm and back again, every later logarithm question has somewhere to start.",
+    can: [
+      "Read an index statement as a logarithm and a logarithm as an index statement",
+      "Work out a logarithm from a power you know, without reaching for a calculator",
+      "Find a missing base or a missing number by going back to index form",
+    ],
+    minutes: 8,
+  },
+  { type: "h", text: "Powers, read backwards" },
+  {
+    type: "p",
+    md: `You already write $${HERO.a}^{${HERO.k}} = ${HERO.n}$. A logarithm asks the same thing from the other end: **what index do I put on ${HERO.a} to reach ${HERO.n}?** The answer is ${HERO.k}, and we write that as $\\log_{${HERO.a}} ${HERO.n} = ${HERO.k}$.\nNothing new has happened. The two lines carry exactly the same information; only the unknown has moved.`,
+  },
+  {
+    type: "figure",
+    alt: `The index statement ${HERO.a} to the power ${HERO.k} equals ${HERO.n} beside the logarithm statement log to the base ${HERO.a} of ${HERO.n} equals ${HERO.k}, with arrows both ways.`,
+    svg: HERO_SVG,
+    caption: `One sentence, two spellings: $${HERO.a}^{${HERO.k}} = ${HERO.n}$ and $\\log_{${HERO.a}} ${HERO.n} = ${HERO.k}$.`,
+  },
+  {
+    type: "gate",
+    id: "g1",
+    kind: "choice",
+    prompt: `One tap to begin. In the picture, $\\log_{${HERO.a}} ${HERO.n} = ${HERO.k}$ and $${HERO.a}^{${HERO.k}} = ${HERO.n}$ say the same thing. Which number is the base?`,
+    options: [String(HERO.a), String(HERO.k), String(HERO.n)],
+    answer: String(HERO.a),
+    explain: `The base is the number being raised, written small under the word. Here it is $${HERO.a}$, and $${HERO.k}$ is the index it is raised to.`,
+  },
+  { type: "h", text: "1. The rule, and why it is the same rule" },
+  {
+    type: "p",
+    md: `$a^{x} = n$ and $x = \\log_{a} n$ are the same statement. That line is printed on your formula sheet, so you never have to recall it — but you do have to use it.\nSo whenever a logarithm is in your way, write the index statement underneath it, and the question turns into one about powers.`,
+  },
+  {
+    type: "figure",
+    alt: `The powers of 2 from 2 to the power 0 up to 2 to the power 5, each value on a number line with its index written underneath.`,
+    svg: LADDER_SVG,
+    caption: "Reading down gives a power; reading up gives a logarithm.",
+  },
+  {
+    type: "callout",
+    kind: "why",
+    title: "Why a logarithm undoes a power",
+    md: `Raising to a power and taking a logarithm are opposite moves, like squaring and square-rooting. Each puts back what the other took away, so the index form never changes the statement: it only moves the unknown somewhere you can reach it.`,
+  },
+  {
+    type: "gate",
+    id: "g2",
+    kind: "number",
+    prompt: `On the line of powers of $2$ shown above, $2^{${LADDER[4].k}} = ${LADDER[4].v}$. What is $\\log_{2} ${LADDER[4].v}$?`,
+    answer: String(LADDER[4].k),
+    explain: `The logarithm is the index, so $\\log_{2} ${LADDER[4].v} = ${LADDER[4].k}$. Find the value on the top row and read the number underneath it.`,
+  },
+  { type: "h", text: "2. Two anchors, and one minus sign" },
+  {
+    type: "p",
+    md: `Two values are worth knowing outright. $\\log_{a} a = 1$, because $a^{1} = a$. And $\\log_{a} 1 = 0$, because $a^{0} = 1$. Candidates swap those two more often than any other pair.\nA fraction brings a minus sign with it. Since $2^{${Q2a.ans}} = \\frac{1}{${1 / Q2a.n}}$, we get $\\log_{2} \\frac{1}{${1 / Q2a.n}} = ${Q2a.ans}$. Any number below $1$ has a negative logarithm.`,
+  },
+  {
+    type: "video",
+    videoId: "qeaLrh7If0I",
+    title: "Introduction to Logarithms - Corbettmaths",
+    channel: "corbettmaths",
+    why: "A short introduction that keeps the index form beside the logarithm form the whole way through.",
+  },
+  {
+    type: "gate",
+    id: "g3",
+    kind: "number",
+    prompt: `Using $\\log_{a} a = 1$ and $\\log_{a} 1 = 0$: what is $\\log_{${Q3b.a}} 1$?`,
+    answer: String(Q3b.ans),
+    explain: `$${Q3b.a}^{0} = 1$, so $\\log_{${Q3b.a}} 1 = 0$. The base raised to zero is always $1$, whatever the base.`,
+  },
+  { type: "h", text: "3. A worked logarithm, start to finish" },
+  {
+    type: "p",
+    md: `Work out $\\log_{${WE.a}} ${WE.n}$.\n**Step 1.** Let the answer be $x$, so $\\log_{${WE.a}} ${WE.n} = x$.\n**Step 2.** Write the index form: $${WE.a}^{x} = ${WE.n}$.\n**Step 3.** Count up in powers of $${WE.a}$: $${WE.a}^{1} = ${pow(WE.a, 1)}$, $${WE.a}^{2} = ${pow(WE.a, 2)}$, $${WE.a}^{3} = ${pow(WE.a, 3)}$, $${WE.a}^{4} = ${pow(WE.a, 4)}$.\n**Step 4.** So $x = ${WE.k}$.`,
+  },
+  {
+    type: "figure",
+    alt: `The index statement ${WE.a} to the power ${WE.k} equals ${WE.n} translated into log to the base ${WE.a} of ${WE.n} equals ${WE.k}.`,
+    svg: WE_SVG,
+    caption: `The index form is the working; $\\log_{${WE.a}} ${WE.n} = ${WE.k}$ is the answer line.`,
+  },
+  {
+    type: "gate",
+    id: "g4",
+    kind: "number",
+    prompt: `Same method, new numbers. Write $\\log_{${Q1b.a}} ${Q1b.n} = x$ in index form and solve it. What is $x$?`,
+    answer: String(Q1b.ans),
+    explain: `$${Q1b.a}^{x} = ${Q1b.n}$, and $${Q1b.a}^{${Q1b.ans}} = ${Q1b.n}$, so $x = ${Q1b.ans}$.`,
+  },
+  { type: "h", text: "4. When the base or the number is missing" },
+  {
+    type: "p",
+    md: `The same move rescues both. $\\log_{${Q5.a}} x = ${Q5.k}$ becomes $${Q5.a}^{${Q5.k}} = x$, so $x = ${Q5.ans}$.\n$\\log_{x} ${Q4.n} = ${Q4.k}$ becomes $x^{${Q4.k}} = ${Q4.n}$, so $x = ${Q4.ans}$ — a cube root, not a division.\nWhen no power fits, the calculator's log key gives base $10$: $\\log ${Q6.n} = ${Q6ans.toFixed(3)}$ to three decimal places. Give logarithms to three decimal places unless a question says otherwise.`,
+  },
+  {
+    type: "callout",
+    kind: "examiner",
+    title: "Summer 2019, Unit 1, Question 9",
+    md: "Almost nobody used indices on a question built on this link. Most candidates turned it into logarithms of both sides, reached a line with logarithms on it and stopped there. Writing the index form underneath would have finished the question in two lines.",
+    source: CER19,
+  },
+  {
+    type: "gate",
+    id: "g5",
+    kind: "number",
+    prompt: `Go to index form. If $\\log_{x} ${Q4.n} = ${Q4.k}$, then $x^{${Q4.k}} = ${Q4.n}$. What is $x$?`,
+    answer: String(Q4.ans),
+    explain: `The cube root of $${Q4.n}$ is $${Q4.ans}$, because $${Q4.ans}^{${Q4.k}} = ${Q4.n}$. Dividing $${Q4.n}$ by $${Q4.k}$ would give $${E.q4Div}$, which is not a base at all.`,
+  },
+  { type: "h", text: "You can now" },
+  {
+    type: "p",
+    md: `Read $a^{x} = n$ as $x = \\log_{a} n$ and back again.\nWork out a logarithm by writing its index form and counting powers.\nUse $\\log_{a} a = 1$ and $\\log_{a} 1 = 0$ without hesitating.\nHandle a fraction, which always gives a negative logarithm.\nFind a missing base with a root, and a missing number with a power.`,
+  },
+  { type: "h", text: "In the exam" },
+  {
+    type: "p",
+    md: `This rarely stands as a question of its own: it opens the logarithm questions that do, at $1$ or $2$ marks. The first mark is the index form written underneath the logarithm; the last is the value itself. Stuck? Write $a^{x} = n$ with the question's own numbers in it, and read what is missing.`,
+  },
+  { type: "prompt", promptId: `rp.${TOPIC}.01` },
+  { type: "prompt", promptId: `rp.${TOPIC}.02` },
+  { type: "prompt", promptId: `rp.${TOPIC}.03` },
+  { type: "prompt", promptId: `rp.${TOPIC}.05` },
+];
+
+/* ---- items ------------------------------------------------------------------------------------ */
+
+const numAns = (value, { dp, unit } = {}) => ({
+  kind: "numeric",
+  value,
+  tolerance: dp === undefined ? { type: "absolute", value: 0.0005 } : { type: "dp", places: dp },
+  unitRequired: false,
+  acceptForms: ["decimal", "fraction"],
+  ...(unit ? { unit } : {}),
+});
+
+const ce = (misconception, value, feedback, marks, source) => ({
+  misconception,
+  pattern: { kind: "numeric", value, tolerance: { type: "absolute", value: 0.0005 } },
+  feedback,
+  marksTypicallyEarned: marks,
+  ...(source ? { source } : {}),
+});
+
+const questions = [
+  {
+    id: `q.${TOPIC}.0001`,
+    difficulty: 1,
+    style: "practice",
+    commandWords: ["Work out"],
+    setting: "Two logarithms whose bases give whole-number indices, as a paper's opening logarithm part",
+    parts: [
+      {
+        id: "a",
+        stem: `Work out $\\log_{${Q1a.a}} ${Q1a.n}$.`,
+        marks: 1,
+        answer: numAns(Q1a.ans),
+        scheme: [{ id: "MW1", code: "MW", marks: 1, for: `$${Q1a.ans}$`, accept: [`$${Q1a.a}^{${Q1a.ans}} = ${Q1a.n}$ seen`] }],
+        hints: [`Ask what index turns $${Q1a.a}$ into $${Q1a.n}$.`],
+        workedSolution: `$\\log_{${Q1a.a}} ${Q1a.n} = x$ means $${Q1a.a}^{x} = ${Q1a.n}$.\n$${Q1a.a}^{${Q1a.ans}} = ${Q1a.n}$, so $x = ${Q1a.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.base-and-index-swapped", E.q1aSwap, `That is the answer to $x^{${Q1a.a}} = ${Q1a.n}$, with the base and the index the other way round. The logarithm is the index on $${Q1a.a}$, so solve $${Q1a.a}^{x} = ${Q1a.n}$.`, 0, CER19),
+          ce("fm.logs.unknown-base-divided", E.q1aDiv, `That is $${Q1a.n}$ divided by $${Q1a.a}$. A logarithm counts how many times the base multiplies, so go to $${Q1a.a}^{x} = ${Q1a.n}$ rather than dividing once.`, 0, CER19),
+        ],
+        requiresWorking: false,
+      },
+      {
+        id: "b",
+        stem: `Work out $\\log_{${Q1b.a}} ${Q1b.n}$.`,
+        marks: 1,
+        answer: numAns(Q1b.ans),
+        scheme: [{ id: "MW1", code: "MW", marks: 1, for: `$${Q1b.ans}$` }],
+        hints: [`Count $${Q1b.a}$, $${pow(Q1b.a, 2)}$, $${pow(Q1b.a, 3)}$, $${pow(Q1b.a, 4)}$.`],
+        workedSolution: `$${Q1b.a}^{x} = ${Q1b.n}$.\n$${Q1b.a}^{2} = ${pow(Q1b.a, 2)}$, $${Q1b.a}^{3} = ${pow(Q1b.a, 3)}$, $${Q1b.a}^{4} = ${Q1b.n}$, so $x = ${Q1b.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.unknown-base-divided", E.q1bDiv, `That is $${Q1b.n}$ divided by $${Q1b.a}$, which is $${Q1b.a}^{3}$ rather than the index itself. The answer you want is the index, $${Q1b.ans}$.`, 0, CER19),
+        ],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0002`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Work out"],
+    setting: "Logarithms of numbers below 1, where the index is negative",
+    parts: [
+      {
+        id: "a",
+        stem: `Work out $\\log_{${Q2a.a}} \\frac{1}{${1 / Q2a.n}}$.`,
+        marks: 1,
+        answer: numAns(Q2a.ans),
+        scheme: [{ id: "MW1", code: "MW", marks: 1, for: `$${Q2a.ans}$` }],
+        hints: [`A reciprocal is a negative index: $\\frac{1}{${1 / Q2a.n}} = ${Q2a.a}^{${Q2a.ans}}$.`],
+        workedSolution: `$${Q2a.a}^{x} = \\frac{1}{${1 / Q2a.n}}$.\n$${Q2a.a}^{${Math.abs(Q2a.ans)}} = ${1 / Q2a.n}$, so $\\frac{1}{${1 / Q2a.n}} = ${Q2a.a}^{${Q2a.ans}}$ and $x = ${Q2a.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.negative-index-sign-dropped", E.q2aSign, `The size is right and the sign is not. $${Q2a.a}^{${Math.abs(Q2a.ans)}} = ${1 / Q2a.n}$, so the reciprocal needs the index $${Q2a.ans}$.`, 0, CER19),
+        ],
+        requiresWorking: false,
+      },
+      {
+        id: "b",
+        stem: `Work out $\\log_{${Q2b.a}} ${Q2b.n}$.`,
+        marks: 1,
+        answer: numAns(Q2b.ans),
+        scheme: [{ id: "MW1", code: "MW", marks: 1, for: `$${Q2b.ans}$` }],
+        hints: [`Write $${Q2b.n}$ as a power of $${Q2b.a}$ first.`],
+        workedSolution: `$${Q2b.n} = \\frac{1}{100} = ${Q2b.a}^{${Q2b.ans}}$, so $\\log_{${Q2b.a}} ${Q2b.n} = ${Q2b.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.negative-index-sign-dropped", E.q2bSign, `$${Q2b.a}^{${Math.abs(Q2b.ans)}} = 100$, not $${Q2b.n}$. Anything smaller than $1$ has a negative logarithm, so the index is $${Q2b.ans}$.`, 0, CER19),
+        ],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0003`,
+    difficulty: 1,
+    style: "practice",
+    commandWords: ["Write down"],
+    setting: "The two anchor values every logarithm question leans on",
+    parts: [
+      {
+        id: "a",
+        stem: `Write down the value of $\\log_{${Q3a.a}} ${Q3a.n}$.`,
+        marks: 1,
+        answer: numAns(Q3a.ans),
+        scheme: [{ id: "W1", code: "W", marks: 1, for: `$${Q3a.ans}$` }],
+        hints: [`What index leaves $${Q3a.a}$ unchanged?`],
+        workedSolution: `$${Q3a.a}^{1} = ${Q3a.a}$, so $\\log_{${Q3a.a}} ${Q3a.n} = ${Q3a.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.log-of-one-given-as-one", E.q3aAnchor, `That is $\\log_{${Q3a.a}} 1$. The base to the power $1$ is the base itself, so $\\log_{${Q3a.a}} ${Q3a.a} = 1$ and $\\log_{${Q3a.a}} 1 = 0$.`, 0, CER19),
+        ],
+        requiresWorking: false,
+      },
+      {
+        id: "b",
+        stem: `Write down the value of $\\log_{${Q3b.a}} ${Q3b.n}$.`,
+        marks: 1,
+        answer: numAns(Q3b.ans),
+        scheme: [{ id: "W1", code: "W", marks: 1, for: `$${Q3b.ans}$` }],
+        hints: [`Any base to the power zero is $1$.`],
+        workedSolution: `$${Q3b.a}^{0} = 1$, so $\\log_{${Q3b.a}} 1 = ${Q3b.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.log-of-one-given-as-one", E.q3bAnchor, `The two anchors have changed places. $\\log_{${Q3b.a}} ${Q3b.a} = 1$; the logarithm of $1$ is $0$, because $${Q3b.a}^{0} = 1$.`, 0, CER19),
+        ],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0004`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Find"],
+    setting: "A missing base, recovered through the index form",
+    parts: [
+      {
+        id: "main",
+        stem: `Find the value of $x$ when $\\log_{x} ${Q4.n} = ${Q4.k}$.`,
+        marks: 2,
+        answer: numAns(Q4.ans),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$x^{${Q4.k}} = ${Q4.n}$` },
+          { id: "W1", code: "W", marks: 1, for: `$${Q4.ans}$`, ft: true },
+        ],
+        hints: ["Write the index form first.", `Then undo the power of $${Q4.k}$ with a cube root.`],
+        workedSolution: `$\\log_{x} ${Q4.n} = ${Q4.k}$ means $x^{${Q4.k}} = ${Q4.n}$.\nTaking the cube root, $x = ${Q4.ans}$, and $${Q4.ans}^{${Q4.k}} = ${Q4.n}$ checks it.`,
+        commonErrors: [
+          ce("fm.logs.unknown-base-divided", E.q4Div, `That is $${Q4.n} \\div ${Q4.k}$. The index form is $x^{${Q4.k}} = ${Q4.n}$, so the $${Q4.k}$ is undone with a cube root, giving $${Q4.ans}$.`, 1, CER23),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0005`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Find"],
+    setting: "A missing number, recovered through the index form",
+    parts: [
+      {
+        id: "main",
+        stem: `Find the value of $x$ when $\\log_{${Q5.a}} x = ${Q5.k}$.`,
+        marks: 2,
+        answer: numAns(Q5.ans),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${Q5.a}^{${Q5.k}} = x$` },
+          { id: "W1", code: "W", marks: 1, for: `$${Q5.ans}$`, ft: true },
+        ],
+        hints: ["The logarithm is the index, so put it on the base."],
+        workedSolution: `$\\log_{${Q5.a}} x = ${Q5.k}$ means $${Q5.a}^{${Q5.k}} = x$.\n$${Q5.a}^{${Q5.k}} = ${Q5.ans}$, so $x = ${Q5.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.unknown-base-divided", E.q5Mult, `That is $${Q5.a} \\times ${Q5.k}$. The $${Q5.k}$ is an index, not a multiplier, so $x = ${Q5.a}^{${Q5.k}} = ${Q5.ans}$.`, 0, CER19),
+          ce("fm.logs.base-and-index-swapped", E.q5Swap, `That is $${Q5.k}^{${Q5.a}}$, with the base and the index swapped. The base is the small number under the word, so raise $${Q5.a}$ to the power $${Q5.k}$.`, 0, CER19),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0006`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Calculate"],
+    setting: "A logarithm no power reaches, so the calculator's base-10 key is the route",
+    parts: [
+      {
+        id: "main",
+        stem: `Calculate $\\log ${Q6.n}$. Give your answer correct to three decimal places.`,
+        marks: 1,
+        answer: numAns(Q6ans, { dp: 3 }),
+        scheme: [{ id: "W1", code: "W", marks: 1, for: `$${Q6ans.toFixed(3)}$` }],
+        hints: [`The log key on your calculator is base $10$.`],
+        workedSolution: `The log key works to base $10$, so $\\log ${Q6.n} = ${Q6.exact.toFixed(6)}\\ldots$\nTo three decimal places that is $${Q6ans.toFixed(3)}$.`,
+        commonErrors: [
+          ce("fm.logs.decimal-places-instruction-ignored", E.q6Round, `The value is right and the accuracy is not. The question asks for three decimal places, so write $${Q6ans.toFixed(3)}$.`, 0, "ccea-cer:further-maths:2025-summer:FM1:Q10"),
+        ],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0007`,
+    difficulty: 2,
+    style: "exam-style",
+    commandWords: ["Write down", "Work out", "Find"],
+    setting: "A three-part logarithm opener of the kind that begins a Unit 1 logarithm question",
+    parts: [
+      {
+        id: "a",
+        stem: `It is given that $${EX.a}^{${EX.k}} = ${EX.n}$.\nWrite down this statement in logarithm form.`,
+        marks: 1,
+        answer: {
+          kind: "mcq",
+          shuffle: true,
+          options: [
+            { id: "a", text: `$\\log_{${EX.a}} ${EX.n} = ${EX.k}$`, correct: true, feedback: `The base stays $${EX.a}$, the number goes inside and the index becomes the answer.` },
+            { id: "b", text: `$\\log_{${EX.k}} ${EX.n} = ${EX.a}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `The base and the index have changed places. The base is the number being raised, which is $${EX.a}$.` },
+            { id: "c", text: `$\\log_{${EX.n}} ${EX.a} = ${EX.k}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `The base and the number inside have changed places. It is $${EX.n}$ that sits inside the logarithm.` },
+            { id: "d", text: `$\\log_{${EX.a}} ${EX.k} = ${EX.n}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `The index and the number inside have changed places. The index $${EX.k}$ is what the logarithm is equal to.` },
+          ],
+        },
+        scheme: [{ id: "W1", code: "W", marks: 1, for: `$\\log_{${EX.a}} ${EX.n} = ${EX.k}$` }],
+        hints: [`The formula sheet gives $a^{x} = n \\Rightarrow x = \\log_{a} n$.`],
+        workedSolution: `Matching $a^{x} = n$ to $${EX.a}^{${EX.k}} = ${EX.n}$ gives $a = ${EX.a}$, $x = ${EX.k}$ and $n = ${EX.n}$.\nSo $\\log_{${EX.a}} ${EX.n} = ${EX.k}$.`,
+        commonErrors: [],
+        requiresWorking: false,
+      },
+      {
+        id: "b",
+        stem: `Work out $\\log_{${EXb.a}} ${EXb.n}$.`,
+        marks: 2,
+        answer: numAns(EXb.ans),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${EXb.a}^{x} = ${EXb.n}$` },
+          { id: "W1", code: "W", marks: 1, for: `$${EXb.ans}$`, ft: true },
+        ],
+        hints: [`$${EXb.a}^{2} = ${pow(EXb.a, 2)}$.`],
+        workedSolution: `$${EXb.a}^{x} = ${EXb.n}$.\n$${EXb.a}^{2} = ${EXb.n}$, so $\\log_{${EXb.a}} ${EXb.n} = ${EXb.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.unknown-base-divided", E.exbDiv, `That is $${EXb.n} \\div ${EXb.a}$. Counting powers instead, $${EXb.a}^{2} = ${EXb.n}$, so the logarithm is $${EXb.ans}$.`, 1, CER19),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "c",
+        stem: `Find the value of $a$ when $\\log_{a} ${EXc.n} = ${EXc.k}$.`,
+        marks: 2,
+        answer: numAns(EXc.ans),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$a^{${EXc.k}} = ${EXc.n}$, or $\\frac{1}{a^{2}} = ${EXc.n}$` },
+          { id: "W1", code: "W", marks: 1, for: `$${EXc.ans}$`, ft: true },
+        ],
+        hints: ["Write the index form.", "A negative index means a reciprocal, so turn both sides over."],
+        workedSolution: `$\\log_{a} ${EXc.n} = ${EXc.k}$ means $a^{${EXc.k}} = ${EXc.n}$.\nA negative index is a reciprocal, so $\\frac{1}{a^{${Math.abs(EXc.k)}}} = ${EXc.n}$ and $a^{${Math.abs(EXc.k)}} = ${1 / EXc.n}$.\nSo $a = ${EXc.ans}$.`,
+        commonErrors: [
+          ce("fm.logs.negative-index-sign-dropped", EXcSignDropped, `The minus sign in the index was dropped, so this solves $a^{${Math.abs(EXc.k)}} = ${EXc.n}$. With the sign kept, $a^{${EXc.k}} = ${EXc.n}$ gives $a^{${Math.abs(EXc.k)}} = ${1 / EXc.n}$ and $a = ${EXc.ans}$.`, 0, CER19),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+];
+
+function buildQuestion(q) {
+  const totalMarks = q.parts.reduce((s, p) => s + p.marks, 0);
+  const verbs = { "Work out": "work-out", "Write down": "write-down", Find: "find", Calculate: "calculate" };
+  const verbFor = (p) => {
+    const w = Object.keys(verbs).find((k) => p.stem.includes(k));
+    return verbs[w ?? "Find"];
+  };
+  return {
+    id: q.id,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    tier: "untiered",
+    style: q.style,
+    difficulty: q.difficulty,
+    ao: q.style === "exam-style" ? ["AO1", "AO2"] : ["AO1"],
+    commandWords: q.commandWords,
+    emphasis: [],
+    context: { setting: q.setting, original: true },
+    figures: [],
+    parts: q.parts,
+    totalMarks,
+    timeAllowanceSec: Math.round(totalMarks * 1.2 * 60),
+    skeleton: q.parts.map((p) => `(${p.id})${verbFor(p)}${p.marks}`).join("|"),
+    examinerSources: [CER19],
+    solutionProgram: q.parts.map((p) => p.workedSolution.replace(/\n/g, " ")).join(" || "),
+    verification: `ver.${q.id}`,
+    version: 1,
+  };
+}
+
+const builtQuestions = questions.map(buildQuestion);
+
+const workedExamples = [
+  {
+    id: `we.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `Work out $\\log_{${WE.a}} ${WE.n}$, showing your working.`,
+    figure: figure(WE_SVG, `The index statement ${WE.a} to the power ${WE.k} equals ${WE.n} beside its logarithm form.`),
+    steps: [
+      {
+        n: 1,
+        working: `Call the answer $x$, so $\\log_{${WE.a}} ${WE.n} = x$.`,
+        decision: "Naming the unknown is what lets you write the index form on the next line. Without it there is nothing to rearrange.",
+        earns: ["M1"],
+      },
+      {
+        n: 2,
+        working: `Write the index form: $${WE.a}^{x} = ${WE.n}$.`,
+        decision: "This is the line the formula sheet gives you, and it is where the method mark sits in every logarithm question of this kind.",
+        whyMenu: {
+          options: [
+            `Because $a^{x} = n$ and $x = \\log_{a} n$ are the same statement`,
+            `Because $${WE.a}$ and $${WE.n}$ can be divided`,
+            `Because every logarithm is worked out on a calculator`,
+          ],
+          correct: 0,
+          explain: `A logarithm is the index. Writing $${WE.a}^{x} = ${WE.n}$ moves the unknown out of the logarithm and into a power, where you can see it.`,
+        },
+        earns: ["MW1"],
+      },
+      {
+        n: 3,
+        working: `Count in powers of $${WE.a}$: $${WE.a}^{1} = ${pow(WE.a, 1)}$, $${WE.a}^{2} = ${pow(WE.a, 2)}$, $${WE.a}^{3} = ${pow(WE.a, 3)}$, $${WE.a}^{4} = ${pow(WE.a, 4)}$.`,
+        decision: `Counting up is quicker than guessing, and it makes the check obvious: the list stops the moment it reaches $${WE.n}$.`,
+        earns: ["M2"],
+      },
+      {
+        n: 4,
+        working: `The list reaches $${WE.n}$ at the index $${WE.k}$, so $x = ${WE.k}$.`,
+        decision: `Check by going back: $${WE.a}^{${WE.k}} = ${WE.n}$, which is the number in the question.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$\\log_{${WE.a}} ${WE.n} = ${WE.k}$`,
+    twin: {
+      // A twin is the same method on new numbers, so it uses a base and a value no bank item uses.
+      stem: `Work out $\\log_{${TWIN.a}} ${TWIN.n}$.`,
+      answer: numAns(TWIN.ans),
+    },
+    faded: [
+      { showSteps: 2, studentSupplies: [3, 4] },
+      { showSteps: 1, studentSupplies: [2, 3, 4] },
+    ],
+    verification: `ver.we.${TOPIC}.01`,
+    version: 1,
+  },
+];
+
+const diagnostics = [
+  {
+    id: `dx.${TOPIC}.pre`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "pre",
+    items: [
+      {
+        id: "p1",
+        stem: "Three quick checks on what this lesson is built from. None of them is the new idea, so answer from what you already know.\nWhat is $2^{5}$?",
+        skill: "Evaluate a power",
+        options: [
+          { id: "a", text: `$${pow(2, 5)}$`, correct: true, feedback: `Five twos multiplied together give $${pow(2, 5)}$.` },
+          { id: "b", text: `$${2 * 5}$`, correct: false, feedback: `That is $2 \\times 5$. An index tells you how many times to multiply, not what to multiply by.` },
+          { id: "c", text: `$${pow(5, 2)}$`, correct: false, feedback: `That is $5^{2}$. The base is the big number at the bottom, so it is $2$ that is raised here.` },
+        ],
+        secondsExpected: 20,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "p2",
+        stem: "What is $3^{0}$?",
+        skill: "The zero index",
+        options: [
+          { id: "a", text: "$1$", correct: true, feedback: "Any number except zero raised to the power zero is $1$. That fact becomes one of the two anchors of this lesson." },
+          { id: "b", text: "$0$", correct: false, feedback: "A power of zero does not make the answer zero. Dividing $3^{1}$ by $3$ gives $3^{0} = 1$." },
+          { id: "c", text: "$3$", correct: false, feedback: "That is $3^{1}$. Stepping the index down one more divides by $3$ again and gives $1$." },
+        ],
+        secondsExpected: 20,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "p3",
+        stem: `What is $2^{${Q2a.ans}}$?`,
+        skill: "Negative indices",
+        options: [
+          { id: "a", text: `$\\frac{1}{${1 / Q2a.n}}$`, correct: true, feedback: `A negative index means a reciprocal: $2^{${Q2a.ans}} = \\frac{1}{2^{${Math.abs(Q2a.ans)}}} = \\frac{1}{${1 / Q2a.n}}$.` },
+          { id: "b", text: `$-${pow(2, Math.abs(Q2a.ans))}$`, correct: false, feedback: `The minus sign belongs to the index, not to the answer. It turns the power upside down instead of making it negative.` },
+          { id: "c", text: `$${pow(2, Math.abs(Q2a.ans))}$`, correct: false, feedback: `That is $2^{${Math.abs(Q2a.ans)}}$. The negative index sends it to the bottom of a fraction.` },
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+    ],
+  },
+  {
+    id: `dx.${TOPIC}.post`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "post",
+    items: [
+      {
+        id: "d1",
+        stem: `What is $\\log_{${Q1a.a}} ${Q1a.n}$?`,
+        skill: "Evaluate a logarithm from a known power",
+        options: [
+          { id: "a", text: `$${Q1a.ans}$`, correct: true, feedback: `$${Q1a.a}^{${Q1a.ans}} = ${Q1a.n}$, and the logarithm is that index.` },
+          { id: "b", text: `$${E.q1aSwap}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `That solves $x^{${Q1a.a}} = ${Q1a.n}$. The base is $${Q1a.a}$, so the equation to solve is $${Q1a.a}^{x} = ${Q1a.n}$.` },
+          { id: "c", text: `$${E.q1aDiv}$`, correct: false, misconception: "fm.logs.unknown-base-divided", feedback: `That is $${Q1a.n} \\div ${Q1a.a}$. A logarithm counts the multiplications, so it is the index rather than a quotient.` },
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d2",
+        stem: `What is $\\log_{${Q3b.a}} 1$?`,
+        skill: "The anchor values",
+        options: [
+          { id: "a", text: "$0$", correct: true, feedback: `$${Q3b.a}^{0} = 1$, so the logarithm of $1$ is $0$ to every base.` },
+          { id: "b", text: "$1$", correct: false, misconception: "fm.logs.log-of-one-given-as-one", feedback: `That is $\\log_{${Q3b.a}} ${Q3b.a}$. The two anchors are $\\log_{a} a = 1$ and $\\log_{a} 1 = 0$.` },
+          { id: "c", text: `$${Q3b.a}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `That is the base itself. The logarithm is the index on the base, and here that index is $0$.` },
+        ],
+        secondsExpected: 20,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d3",
+        stem: `If $\\log_{${Q5.a}} x = ${Q5.k}$, what is $x$?`,
+        skill: "Recover the number from the index form",
+        options: [
+          { id: "a", text: `$${Q5.ans}$`, correct: true, feedback: `$${Q5.a}^{${Q5.k}} = ${Q5.ans}$, which is the index form of the statement.` },
+          { id: "b", text: `$${E.q5Swap}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `That is $${Q5.k}^{${Q5.a}}$. The base $${Q5.a}$ is the number being raised, and $${Q5.k}$ is the index.` },
+          { id: "c", text: `$${E.q5Mult}$`, correct: false, misconception: "fm.logs.unknown-base-divided", feedback: `That is $${Q5.a} \\times ${Q5.k}$. The $${Q5.k}$ is an index, so it becomes a power rather than a multiplier.` },
+        ],
+        secondsExpected: 30,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d4",
+        stem: `What is $\\log_{${Q2b.a}} ${Q2b.n}$?`,
+        skill: "A logarithm below 1",
+        options: [
+          { id: "a", text: `$${Q2b.ans}$`, correct: true, feedback: `$${Q2b.n} = \\frac{1}{100} = ${Q2b.a}^{${Q2b.ans}}$, so the logarithm is $${Q2b.ans}$.` },
+          { id: "b", text: `$${E.q2bSign}$`, correct: false, misconception: "fm.logs.negative-index-sign-dropped", feedback: `$${Q2b.a}^{${E.q2bSign}} = 100$, not $${Q2b.n}$. Numbers below $1$ have negative logarithms.` },
+          { id: "c", text: `$${Q2b.n}$`, correct: false, misconception: "fm.logs.base-and-index-swapped", feedback: `That is the number inside the logarithm repeated. The answer is the index that turns $${Q2b.a}$ into it.` },
+        ],
+        secondsExpected: 30,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+    ],
+  },
+];
+
+const prompts = [
+  {
+    id: `rp.${TOPIC}.01`,
+    kind: "formula",
+    prompt: "Write the link between an index statement and a logarithm.",
+    answer: "$a^{x} = n$ is the same statement as $x = \\log_{a} n$: the logarithm is the index.",
+    keyWords: ["index", "same", "logarithm"],
+    difficultyPrior: 3,
+  },
+  {
+    id: `rp.${TOPIC}.02`,
+    kind: "procedure",
+    prompt: "How do you work out a logarithm such as $\\log_{5} 625$ without a calculator?",
+    answer: "Set it equal to $x$, write the index form $5^{x} = 625$, then count powers of $5$ until you reach $625$; the index you stop at is the logarithm.",
+    keyWords: ["index form", "count", "powers"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.03`,
+    kind: "qa",
+    prompt: "What are $\\log_{a} a$ and $\\log_{a} 1$?",
+    answer: "$\\log_{a} a = 1$ because $a^{1} = a$, and $\\log_{a} 1 = 0$ because $a^{0} = 1$.",
+    keyWords: ["1", "0"],
+    difficultyPrior: 3,
+  },
+  {
+    id: `rp.${TOPIC}.04`,
+    kind: "trap",
+    prompt: "Why is the logarithm of a number smaller than $1$ negative?",
+    answer: "A number below $1$ is a reciprocal of a power, and a reciprocal carries a negative index, so the logarithm is negative.",
+    keyWords: ["reciprocal", "negative index"],
+    difficultyPrior: 5,
+  },
+  {
+    id: `rp.${TOPIC}.05`,
+    kind: "procedure",
+    prompt: "A question gives $\\log_{x} 216 = 3$. What is the first line you write, and what do you do next?",
+    answer: "Write the index form $x^{3} = 216$, then take the cube root, which gives $x = 6$. Dividing $216$ by $3$ is not the way to undo an index.",
+    keyWords: ["index form", "cube root", "6"],
+    difficultyPrior: 5,
+  },
+].map((p) => ({ ...p, topic: TOPIC, specRefs: REFS, examUnit: "FM1" }));
+
+/* ---- bundle ------------------------------------------------------------------------------------ */
+
+const noteChecks = [
+  check("schema", "Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, gate ids g1 to g5 are unique, every prompt block names a prompt in this bundle, and every gate follows a figure or a stated value so it reads alone in the review inbox."),
+  check("scope-tier", "FM1 is untiered and calculator-allowed. FM1-LOG-01 is the index-logarithm link and its teacher guidance excludes the change-of-base rule, which appears nowhere here. Every logarithm evaluated without a calculator has a whole-number index; the one calculator logarithm uses the base-10 key, which is what the paper expects."),
+  check("formula-sheet", `The Unit 1 sheet gives $a^{x} = n \\Rightarrow x = \\log_{a} n$ (fs.fm1.logarithm in packs/further-maths/exam-true/formula-sheets.json). The two anchor values and the reciprocal reading of a negative index are must-know, and the note says which is which.`),
+  check("command-words", "Work out, Write down, Find and Calculate are the command words, with the tariffs from packs/further-maths/exam-true/command-words.json (Write down 1-1-2, Find 2-3-5, Calculate 2-3-6). The stems keep the shape of the phrasings read in the 2018, 2019, 2022, 2023, 2024 and 2025 FM1 papers while the wording is our own."),
+  check("tariff", "One-mark evaluations and two-mark recoveries of a missing base or number, with a three-part exam-style opener at 1 + 2 + 2, match the FM1 per-part distribution (median 3, p10 1) in packs/further-maths/exam-true/tariffs.json and the logarithm openers read in the papers."),
+  check("maths-numeric", `Every power and logarithm is computed by logExact() and pow() in the generator and the index-logarithm identity was checked at three sample points: base 2 index 6 (${IDENTITY_SAMPLES[0].n}), base 5 index 4 (${IDENTITY_SAMPLES[1].n}) and base 10 index -2 (${IDENTITY_SAMPLES[2].n}); each returned its own index back from logExact and its own value back from pow. The calculator logarithm is ${Q6.exact.toFixed(6)}, printed as ${Q6ans.toFixed(3)} to three decimal places.`),
+  check("examiner-alignment", "The closing examiner callout carries the Summer 2019 Q9 finding that the index route went unused. Gates g1 and g2 set the base against the index, g3 fixes the two anchors, g4 runs the whole method and g5 undoes a logarithm for a missing base."),
+  check("copy-shingle", "An 8-word shingle scan of the note and the bundle against every text file of the private FM corpus (scratchpad/fm1-batch-f/lib.mjs shingleClash) returns nothing; every number, context and sentence here is new."),
+  check("style-lint", "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. Three inline SVG figures, all drawn from computed values, and one embeddable video from data/links/media-map.json followed immediately by a gate."),
+];
+
+const itemChecks = (detail) => [
+  check("schema", "Validated by pipeline/build-content.mts against the Zod Question / WorkedExample / DiagnosticSet schema; the scheme sums to the part's marks and the skeleton matches the parts."),
+  check("maths-numeric", detail),
+  check("command-words", "Command words and tariffs taken from packs/further-maths/exam-true/command-words.json; the wording is ours."),
+  check("examiner-alignment", "Every distractor and common error is tagged with a registry misconception whose evidence is the Summer 2019 Q9 or Summer 2023 Q7 report block."),
+  check("copy-shingle", "8-word shingle scan against the private FM corpus returns nothing."),
+  check("style-lint", "KaTeX segments paired and prose-free; British English; no exclamation marks."),
+];
+
+const verification = [
+  log(`ver.note.${TOPIC}`, `note.${TOPIC}`, noteChecks),
+  log(
+    `ver.we.${TOPIC}.01`,
+    `we.${TOPIC}.01`,
+    itemChecks(`The worked example evaluates log to the base ${WE.a} of ${WE.n}. The generator computed ${WE.a}^1 = ${pow(WE.a, 1)}, ${WE.a}^2 = ${pow(WE.a, 2)}, ${WE.a}^3 = ${pow(WE.a, 3)} and ${WE.a}^4 = ${pow(WE.a, 4)}, so the answer is ${WE.k}; the twin's answer ${Q1a.ans} comes from the same routine at base ${Q1a.a}.`),
+  ),
+  ...builtQuestions.map((q) =>
+    log(
+      `ver.${q.id}`,
+      q.id,
+      itemChecks(
+        `Every value in this question was computed by logExact() or pow(): ${q.parts
+          .map((p) => `${p.id} -> ${p.answer.kind === "numeric" ? p.answer.value : "the option the scheme names"}`)
+          .join("; ")}. Each common-error value was produced by executing the route its feedback describes (routes.* in the generator) and re-checked against the published JSON by verify-published.mjs.`,
+      ),
+    ),
+  ),
+  // 23 Sep (job 3): the diagnostics, find-the-mistake items and prompts, never logged before, so never shipped.
+  ...draftLogs({ diagnostics, findTheMistake: [], prompts, verifier: "The tagged numeric distractors were matched to the routes that produce them by scratchpad/fm1-batch-f/verify-published.mjs, and the rest checked by hand in the read-through." }),
+];
+
+const bundle = {
+  $schema: "../../../../../pipeline/schema/topic-bundle.schema.json",
+  topic: {
+    id: TOPIC,
+    slug: SLUG,
+    title: "Logarithms as the inverse of indices",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    strand: "Logarithms",
+    statementIds: REFS,
+    prerequisites: [],
+    order: 40,
+    hardness: "L",
+    difficulty: 2,
+    examinerFlagged: true,
+    examinerSources: [CER19],
+    examWeightHint:
+      "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. This statement is rarely examined on its own: it is the opening line of the logarithm questions that are (Summer 2019 Q9, Summer 2022 Q5, Summer 2023 Q7, Summer 2024 Q6, Summer 2025 Q9, each 5 to 8 marks in total) and the last step of a log-log graph question, where the constant has to be recovered from its logarithm. Schemes give M for the index form and W for the value.",
+    mustMemorise: [
+      "a^x = n is the same statement as x = log_a n",
+      "log_a a = 1 and log_a 1 = 0",
+      "A number below 1 has a negative logarithm, because a reciprocal carries a negative index",
+      "The calculator's log key works to base 10",
+    ],
+    onFormulaSheet: ["If a^x = n then x = log_a n (Unit 1 formula sheet, page 2)"],
+    notOnThisSpec: [
+      "The change-of-base rule, which the Teacher Guidance excludes",
+      "Natural logarithms and the number e",
+      "Logarithmic or exponential graphs and their shapes",
+      "Logarithms of negative numbers, which do not exist on this specification",
+    ],
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "qeaLrh7If0I",
+        channel: "corbettmaths",
+        credit: "Introduction to Logarithms, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+      {
+        kind: "ccea-doc",
+        docType: "cer",
+        url: "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-further-mathematics-2017/reports",
+        asOf: "2026-09-19",
+      },
+    ],
+    keywords: ["log", "index form", "base", "evaluate logs"],
+  },
+  note: {
+    id: `note.${TOPIC}`,
+    topic: TOPIC,
+    title: "Logarithms as the inverse of indices",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    specRefs: REFS,
+    calculator: true,
+    formulaSheet: {
+      given: [
+        "Quadratic formula x = (−b ± √(b² − 4ac)) / 2a",
+        "Differentiation y = axⁿ ⇒ dy/dx = naxⁿ⁻¹",
+        "Integration ∫axⁿ dx = axⁿ⁺¹/(n + 1) + c",
+        "Logarithm aˣ = n ⇒ x = log_a n",
+      ],
+      mustKnow: ["log_a a = 1", "log_a 1 = 0", "A negative index is a reciprocal", "The log key on a calculator is base 10"],
+    },
+    notOnThisSpec: ["The change-of-base rule", "Natural logarithms and e", "Graphs of logarithmic functions", "Logarithms of negative numbers"],
+    hardness: "L",
+    examinerFlagged: true,
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "qeaLrh7If0I",
+        channel: "corbettmaths",
+        credit: "Introduction to Logarithms, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+    ],
+    sheet: {
+      mustBeAbleTo: [
+        "Rewrite an index statement as a logarithm and a logarithm as an index statement",
+        "Evaluate a logarithm whose index is a whole number, without a calculator",
+        "Quote log_a a = 1 and log_a 1 = 0 without working",
+        "Give the logarithm of a reciprocal as a negative index",
+        "Find a missing base by taking a root of the number",
+        "Find a missing number by raising the base to the given index",
+        "Use the calculator's base-10 log key and give three decimal places",
+      ],
+      howExamined:
+        "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. This statement is rarely a question on its own: it opens the logarithm questions that are (Summer 2019 Q9, Summer 2022 Q5, Summer 2023 Q7, Summer 2024 Q6, Summer 2025 Q9, each worth 5 to 8 marks across two parts) and it closes a log-log graph question, where the constant must be recovered from its logarithm. Expect 1 mark for a stated value, 2 marks when a base or a number has to be recovered: M for the index form, W for the value.",
+      traps: [
+        "Swapping the base and the index, so a root is taken where a logarithm belonged (Summer 2019 FM1 Q9)",
+        "Undoing a logarithm by dividing the number by the base (Summer 2019 FM1 Q9)",
+        "Giving log_a 1 as 1 and log_a a as 0, the two anchors the wrong way round (Summer 2019 FM1 Q9)",
+        "Dropping the minus sign on the logarithm of a fraction (Summer 2025 FM1 Q9)",
+        "Dividing by the index instead of taking a root when the base is unknown (Summer 2023 FM1 Q7)",
+        "Rounding a calculator logarithm to two decimal places where three are demanded (Summer 2025 FM1 Q10)",
+        "Stopping at a line of logarithms instead of writing the index form underneath (Summer 2019 FM1 Q9)",
+      ],
+    },
+    verification: `ver.note.${TOPIC}`,
+    version: 1,
+    updated: "2026-09-19",
+  },
+  workedExamples,
+  diagnostics,
+  questions: builtQuestions,
+  findTheMistake: [],
+  prompts,
+  verification,
+};
+
+/* ---- checks and write --------------------------------------------------------------------------- */
+
+lintTree(bundle, `${SLUG}/bundle.json`);
+lintTree(blocks, `${SLUG}/note.blocks.json`);
+
+const allText = [JSON.stringify(bundle), JSON.stringify(blocks)].join(" ");
+const clashes = shingleClash(allText, corpusFiles());
+if (clashes.length) throw new Error(`shingle clash:\n  ${clashes.slice(0, 10).join("\n  ")}`);
+
+const a = writeJson(OUT(SLUG, "bundle.json"), bundle);
+const b = writeJson(OUT(SLUG, "note.blocks.json"), blocks);
+console.log(`${SLUG}: we=${workedExamples.length} dx=${diagnostics.reduce((s, d) => s + d.items.length, 0)} q=${builtQuestions.length} ftm=0 rp=${prompts.length} gates=${blocks.filter((x) => x.type === "gate").length}`);
+console.log(`  bundle.json  sha256:${a.sha}  ${a.bytes} bytes`);
+console.log(`  note.blocks.json  sha256:${b.sha}  ${b.bytes} bytes`);
+console.log(`  shingle clashes: ${clashes.length}`);
+export { bundle, blocks };

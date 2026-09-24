@@ -1,0 +1,153 @@
+{
+  "$comment": "CCEA GCSE grade-boundary data for the grade/UMS engine (src/lib/grades/ums.ts). Numbers were checked against docs/research/01-ccea-gcse-mathematics-spec.md (§2.1–2.3, §8), 02-ccea-gcse-further-mathematics-spec.md (§2 'Grading and UMS' and 'Raw-mark grade boundaries'), 03-ccea-gcse-double-award-science-spec.md (§2, §3), 09-ni-student-needs-and-context.md (subject-level UMS table), docs/sources/maths/grade-boundaries-raw-to-ums-summer2025.txt, docs/sources/maths/grade-boundaries-raw-to-ums-summer2026.txt, docs/sources/maths/gcse-subject-level-ums-boundaries-with-Astar-summer2026.txt and docs/sources/science/DA-Grade-Outcomes-Tier-Combinations.pdf. Fields marked estimated:true are derived, not published by CCEA.",
+  "series": ["summer-2025", "summer-2026"],
+  "unitGradeOrder": ["a", "b", "c*", "c", "d", "e", "f", "g"],
+  "maths": {
+    "code": "G9602",
+    "title": "GCSE Mathematics (2017)",
+    "subjectMaxUms": 400,
+    "subjectBoundaries": { "A": 320, "B": 292, "C*": 268, "C": 240, "D": 200, "E": 160, "F": 120, "G": 80 },
+    "aStarBySeries": { "summer-2025": 394, "summer-2026": 393 },
+    "unitThresholdLadders": {
+      "$comment": "Fixed for the life of the spec (Guidance for teachers 2020 p.8; raw-to-UMS PDFs). Modular tests M1–M4 are on a 180 scale, completion tests M5–M8 on a 220 scale. M4 and M8 have an 'allowable d' boundary (99 / 121) in place of the ordinary d.",
+      "modular": { "a": 144, "b": 132, "c*": 121, "c": 108, "d": 90, "e": 72, "f": 54, "g": 36 },
+      "completion": { "a": 176, "b": 161, "c*": 148, "c": 132, "d": 110, "e": 88, "f": 66, "g": 44 }
+    },
+    "units": {
+      "M1": { "code": "GMC1", "tier": "foundation", "kind": "modular", "weighting": 45, "rawMax": 100, "umsMax": 107, "grades": ["d", "e", "f", "g"], "thresholds": { "d": 90, "e": 72, "f": 54, "g": 36 } },
+      "M2": { "code": "GMC2", "tier": "foundation", "kind": "modular", "weighting": 45, "rawMax": 100, "umsMax": 131, "grades": ["c*", "c", "d", "e", "f", "g"], "thresholds": { "c*": 121, "c": 108, "d": 90, "e": 72, "f": 54, "g": 36 } },
+      "M3": { "code": "GMC3", "tier": "higher", "kind": "modular", "weighting": 45, "rawMax": 100, "umsMax": 143, "grades": ["b", "c*", "c", "d", "e"], "thresholds": { "b": 132, "c*": 121, "c": 108, "d": 90, "e": 72 } },
+      "M4": { "code": "GMC4", "tier": "higher", "kind": "modular", "weighting": 45, "rawMax": 100, "umsMax": 180, "grades": ["a", "b", "c*", "c", "d"], "thresholds": { "a": 144, "b": 132, "c*": 121, "c": 108, "d": 99 }, "allowableD": true },
+      "M5": { "code": "GMC5", "tier": "foundation", "kind": "completion", "weighting": 55, "rawMax": 100, "umsMax": 131, "grades": ["d", "e", "f", "g"], "thresholds": { "d": 110, "e": 88, "f": 66, "g": 44 } },
+      "M6": { "code": "GMC6", "tier": "foundation", "kind": "completion", "weighting": 55, "rawMax": 100, "umsMax": 160, "grades": ["c*", "c", "d", "e", "f", "g"], "thresholds": { "c*": 148, "c": 132, "d": 110, "e": 88, "f": 66, "g": 44 } },
+      "M7": { "code": "GMC7", "tier": "higher", "kind": "completion", "weighting": 55, "rawMax": 100, "umsMax": 175, "grades": ["b", "c*", "c", "d", "e"], "thresholds": { "b": 161, "c*": 148, "c": 132, "d": 110, "e": 88 } },
+      "M8": { "code": "GMC8", "tier": "higher", "kind": "completion", "weighting": 55, "rawMax": 100, "umsMax": 220, "grades": ["a", "b", "c*", "c", "d"], "thresholds": { "a": 176, "b": 161, "c*": 148, "c": 132, "d": 121 }, "allowableD": true }
+    },
+    "combinations": {
+      "$comment": "Spec §4.5 'Available Final GCSE Grades' for the recommended pathways. CCEA entry rules allow any modular unit with any completion unit; the cap for a cross-tier pair follows from the sum of the two unit UMS maxima (research 01 §2.1).",
+      "recommended": [
+        { "units": ["M1", "M5"], "grades": "D–G", "maxGrade": "D", "minGrade": "G" },
+        { "units": ["M2", "M6"], "grades": "C*–G", "maxGrade": "C*", "minGrade": "G" },
+        { "units": ["M3", "M7"], "grades": "B–E", "maxGrade": "B", "minGrade": "E" },
+        { "units": ["M4", "M8"], "grades": "A*–D", "maxGrade": "A*", "minGrade": "D" }
+      ],
+      "rule": "one of M1–M4 plus one of M5–M8"
+    },
+    "rawBoundaries": {
+      "$comment": "Raw marks out of 100 at which each unit grade's fixed UMS threshold is awarded. Set independently each series.",
+      "summer-2025": {
+        "M1": { "d": 46, "e": 35, "f": 25, "g": 15 },
+        "M2": { "c*": 68, "c": 52, "d": 39, "e": 26, "f": 14, "g": 2 },
+        "M3": { "b": 55, "c*": 45, "c": 35, "d": 25, "e": 15 },
+        "M4": { "a": 45, "b": 37, "c*": 29, "c": 21, "d": 17 },
+        "M5": { "d": 54, "e": 40, "f": 27, "g": 14 },
+        "M6": { "c*": 61, "c": 50, "d": 41, "e": 32, "f": 24, "g": 16 },
+        "M7": { "b": 59, "c*": 50, "c": 42, "d": 34, "e": 26 },
+        "M8": { "a": 40, "b": 31, "c*": 23, "c": 15, "d": 11 }
+      },
+      "summer-2026": {
+        "M1": { "d": 47, "e": 35, "f": 24, "g": 13 },
+        "M2": { "c*": 71, "c": 54, "d": 41, "e": 28, "f": 15, "g": 2 },
+        "M3": { "b": 58, "c*": 48, "c": 39, "d": 30, "e": 21 },
+        "M4": { "a": 45, "b": 37, "c*": 29, "c": 21, "d": 17 },
+        "M5": { "d": 50, "e": 35, "f": 21, "g": 7 },
+        "M6": { "c*": 66, "c": 54, "d": 44, "e": 34, "f": 25, "g": 16 },
+        "M7": { "b": 65, "c*": 56, "c": 48, "d": 40, "e": 32 },
+        "M8": { "a": 49, "b": 39, "c*": 30, "c": 21, "d": 16 }
+      }
+    },
+    "sources": [
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/individual-quals/GCSE%20Mathematics%20%282017%29/2025/Summer/GCSE%20Mathematics%20%282017%29-Raw%20to%20Uniform%20Mark%20Boundaries-2025-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/individual-quals/GCSE%20Mathematics%20%282017%29/2026/Summer/GCSE%20Mathematics%20%282017%29-Raw%20to%20Uniform%20Mark%20Boundaries-2026-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/gcse/2025/Summer/GCSE-Subject%20Level%20Uniform%20Mark%20Grade%20Boundaries%20with%20A%2A-2025-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/gcse/2026/Summer/GCSE-Subject%20Level%20Uniform%20Mark%20Grade%20Boundaries%20with%20A%2A-2026-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Support/Teacher%20Guidance/2020/Guidance%20for%20teachers%20on%20Grading%2C%20Aggregation%2C%20Resit%20and%20Terminal%20Rules.pdf",
+      "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-mathematics-2017/grade-boundaries"
+    ]
+  },
+  "furtherMaths": {
+    "code": "G2337",
+    "title": "GCSE Further Mathematics (2017)",
+    "subjectMaxUms": 200,
+    "subjectBoundaries": { "A": 160, "B": 146, "C*": 134, "C": 120, "D": 100, "E": 80, "F": 60, "G": 40 },
+    "aStarBySeries": { "summer-2025": 184, "summer-2026": 186 },
+    "units": {
+      "U1": { "code": "GFM1", "title": "Pure Mathematics", "mandatory": true, "weighting": 50, "rawMax": 100, "umsMax": 100, "grades": ["a", "b", "c*", "c", "d", "e", "f", "g"], "thresholds": { "a": 80, "b": 73, "c*": 67, "c": 60, "d": 50, "e": 40, "f": 30, "g": 20 } },
+      "U2": { "code": "GFM2", "title": "Mechanics", "mandatory": false, "weighting": 25, "rawMax": 50, "umsMax": 50, "grades": ["a", "b", "c*", "c", "d", "e", "f", "g"], "thresholds": { "a": 40, "b": 37, "c*": 34, "c": 30, "d": 25, "e": 20, "f": 15, "g": 10 } },
+      "U3": { "code": "GFM3", "title": "Statistics", "mandatory": false, "weighting": 25, "rawMax": 50, "umsMax": 50, "grades": ["a", "b", "c*", "c", "d", "e", "f", "g"], "thresholds": { "a": 40, "b": 37, "c*": 34, "c": 30, "d": 25, "e": 20, "f": 15, "g": 10 } },
+      "U4": { "code": "GFM4", "title": "Discrete and Decision Mathematics", "mandatory": false, "weighting": 25, "rawMax": 50, "umsMax": 50, "grades": ["a", "b", "c*", "c", "d", "e", "f", "g"], "thresholds": { "a": 40, "b": 37, "c*": 34, "c": 30, "d": 25, "e": 20, "f": 15, "g": 10 } }
+    },
+    "combinations": { "rule": "U1 plus any two of U2, U3, U4", "maxGrade": "A*" },
+    "rawBoundaries": {
+      "$comment": "Full ladders transcribed from research 02 (Raw to Uniform Mark Boundaries PDFs); nothing is estimated.",
+      "summer-2025": {
+        "U1": { "a": 68, "b": 52, "c*": 36, "c": 20, "d": 17, "e": 15, "f": 13, "g": 11 },
+        "U2": { "a": 39, "b": 31, "c*": 24, "c": 17, "d": 14, "e": 12, "f": 10, "g": 8 },
+        "U3": { "a": 41, "b": 31, "c*": 22, "c": 13, "d": 11, "e": 9, "f": 8, "g": 7 },
+        "U4": { "a": 32, "b": 25, "c*": 18, "c": 11, "d": 9, "e": 7, "f": 6, "g": 5 }
+      },
+      "summer-2026": {
+        "U1": { "a": 72, "b": 56, "c*": 40, "c": 24, "d": 21, "e": 19, "f": 17, "g": 15 },
+        "U2": { "a": 37, "b": 29, "c*": 22, "c": 15, "d": 13, "e": 11, "f": 10, "g": 9 },
+        "U3": { "a": 40, "b": 30, "c*": 21, "c": 12, "d": 10, "e": 8, "f": 7, "g": 6 },
+        "U4": { "a": 32, "b": 25, "c*": 18, "c": 11, "d": 9, "e": 7, "f": 6, "g": 5 }
+      }
+    },
+    "sources": [
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/individual-quals/GCSE%20Further%20Mathematics%20(2017)/2025/Summer/GCSE%20Further%20Mathematics%20(2017)-Raw%20to%20Uniform%20Mark%20Boundaries-2025-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/individual-quals/GCSE%20Further%20Mathematics%20(2017)/2026/Summer/GCSE%20Further%20Mathematics%20(2017)-Raw%20to%20Uniform%20Mark%20Boundaries-2026-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/gcse/2026/Summer/GCSE-Subject%20Level%20Uniform%20Mark%20Grade%20Boundaries%20with%20A%2A-2026-Summer.pdf"
+    ]
+  },
+  "doubleAwardScience": {
+    "code": "G9824",
+    "title": "GCSE Science: Double Award (2017)",
+    "subjectMaxUms": 600,
+    "doubleGradeOrder": ["A*A*", "A*A", "AA", "AB", "BB", "BC*", "C*C*", "C*C", "CC", "CD", "DD", "DE", "EE", "EF", "FF", "FG", "GG"],
+    "doubleGradeLadders": {
+      "$comment": "AA downwards is fixed for the life of the spec and transcribed from the Summer 2026 subject-level PDF (docs/sources/maths/gcse-subject-level-ums-boundaries-with-Astar-summer2026.txt line 92). A*A* and A*A are derived per series (research 09: 544/512 in 2025, 541/510 in 2026).",
+      "summer-2025": { "A*A*": 544, "A*A": 512, "AA": 480, "AB": 462, "BB": 438, "BC*": 420, "C*C*": 402, "C*C": 378, "CC": 360, "CD": 330, "DD": 300, "DE": 270, "EE": 240, "EF": 210, "FF": 180, "FG": 150, "GG": 120 },
+      "summer-2026": { "A*A*": 541, "A*A": 510, "AA": 480, "AB": 462, "BB": 438, "BC*": 420, "C*C*": 402, "C*C": 378, "CC": 360, "CD": 330, "DD": 300, "DE": 270, "EE": 240, "EF": 210, "FF": 180, "FG": 150, "GG": 120 }
+    },
+    "tiers": { "foundation": { "notionalGrades": "C*–G" }, "higher": { "notionalGrades": "A*–D", "allowable": "E" } },
+    "units": {
+      "$comment": "umsMax = weighting% of 600 (spec §2). Higher raw maxima from the Summer 2025 papers (research 03 §2); Foundation raw maxima: B1 FT 60 confirmed, the others are ASSUMED equal to the confirmed pattern (60 for 1-hour units, 70 for 1h15 units) — research 03 open question 3. foundationUmsCap (estimated) is the largest cap consistent with the CCEA tier-combination table and the 2026 double-grade ladder: ceil(0.73 × umsMax) − 1, i.e. the top of the notional c* band. CCEA has not published unit-level raw boundaries for Science in the research files, so raw→UMS for Science is proportional and flagged estimated.",
+      "B1": { "title": "Biology Unit B1", "group": "unit1", "weighting": 11, "umsMax": 66, "rawMax": { "H": 70, "F": 60 }, "foundationUmsCap": 48, "estimated": true },
+      "C1": { "title": "Chemistry Unit C1", "group": "unit1", "weighting": 11, "umsMax": 66, "rawMax": { "H": 70, "F": 60 }, "foundationUmsCap": 48, "estimated": true },
+      "P1": { "title": "Physics Unit P1", "group": "unit1", "weighting": 11, "umsMax": 66, "rawMax": { "H": 70, "F": 60 }, "foundationUmsCap": 48, "estimated": true },
+      "B2": { "title": "Biology Unit B2", "group": "unit2", "weighting": 14, "umsMax": 84, "rawMax": { "H": 80, "F": 70 }, "foundationUmsCap": 61, "estimated": true },
+      "C2": { "title": "Chemistry Unit C2", "group": "unit2", "weighting": 14, "umsMax": 84, "rawMax": { "H": 80, "F": 70 }, "foundationUmsCap": 61, "estimated": true },
+      "P2": { "title": "Physics Unit P2", "group": "unit2", "weighting": 14, "umsMax": 84, "rawMax": { "H": 80, "F": 70 }, "foundationUmsCap": 61, "estimated": true },
+      "U7A": { "title": "Unit 7 Booklet A (practical tasks)", "group": "unit7", "weighting": 7.5, "umsMax": 45, "rawMax": { "H": 45, "F": 45 }, "foundationUmsCap": 33, "estimated": true },
+      "U7B": { "title": "Unit 7 Booklet B (practical theory)", "group": "unit7", "weighting": 17.5, "umsMax": 105, "rawMax": { "H": 105, "F": 105 }, "foundationUmsCap": 76, "estimated": true }
+    },
+    "unitThresholdPercent": {
+      "$comment": "Estimated unit-grade thresholds as a fraction of unit UMS max (ceil), matching the pattern of the published Maths and Further Maths unit ladders (a 80%, b 73%, c* 67%, c 60%, d 50%, e 40%, f 30%, g 20%).",
+      "a": 0.8, "b": 0.73, "c*": 0.67, "c": 0.6, "d": 0.5, "e": 0.4, "f": 0.3, "g": 0.2,
+      "estimated": true
+    },
+    "tierCombinationMaxGrade": {
+      "$comment": "Transcribed from docs/sources/science/DA-Grade-Outcomes-Tier-Combinations.pdf ('Tiering for GCSE Double Award Science', CCEA 2026). Key = '<number of Unit 1 papers (B1,C1,P1) at Foundation>,<number of Unit 2 papers (B2,C2,P2) at Foundation>'.",
+      "unit7Higher": {
+        "0,0": "A*A*", "1,0": "A*A*", "2,0": "A*A*", "3,0": "A*A*",
+        "0,1": "A*A*", "0,2": "A*A*", "0,3": "A*A",
+        "1,1": "A*A*", "1,2": "A*A", "1,3": "A*A",
+        "2,1": "A*A*", "2,2": "A*A", "2,3": "AA",
+        "3,1": "A*A", "3,2": "AA", "3,3": "AB"
+      },
+      "unit7Foundation": {
+        "0,0": "A*A*", "1,0": "A*A*", "2,0": "A*A", "3,0": "AA",
+        "0,1": "A*A", "0,2": "A*A", "0,3": "AA",
+        "1,1": "A*A", "1,2": "AA", "1,3": "AB",
+        "2,1": "AA", "2,2": "AB", "2,3": "BB",
+        "3,1": "AA", "3,2": "BB", "3,3": "BC*"
+      }
+    },
+    "sources": [
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/gcse/2025/Summer/GCSE-Subject%20Level%20Uniform%20Mark%20Grade%20Boundaries%20with%20A%2A-2025-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Grade-Boundaries/gcse/2026/Summer/GCSE-Subject%20Level%20Uniform%20Mark%20Grade%20Boundaries%20with%20A%2A-2026-Summer.pdf",
+      "https://ccea.org.uk/downloads/docs/Support/General/2026/Grade%20Outcomes%20for%20Double%20Award%20Science%20Tier%20Combinations.pdf",
+      "https://ccea.org.uk/downloads/docs/Specifications/GCSE/GCSE%20Science%20Double%20Award%20%282017%29/GCSE%20Science%20Double%20Award%20%282017%29-specification-Standard.pdf"
+    ]
+  }
+}

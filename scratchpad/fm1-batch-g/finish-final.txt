@@ -1,0 +1,373 @@
+### node scripts/qa/lesson-v2.mjs --unit fm1
+
+warnings — examiner sources no trap answers yet (write the finding from the report, never invent one):
+  fm1/solve-three-simultaneous-equations                   no trap answers ccea-cer:further-maths:2023-summer:FM1:Q11 (question cited, series not)
+  fm1/tangents-and-normals                                 no trap answers ccea-cer:further-maths:2022-summer:FM1:Q8 (neither cited)
+
+lesson-v2: 29 note(s) checked, 0 breaches, 2 warning(s), 2 allowed.
+exit 0
+### node scripts/qa/figure-leaks.mjs --unit fm1 --quiet
+
+further-maths/fm1: 29 bundle(s), 44 figure(s) checked, 0 leak(s), 0 allowed, 3 review line(s)
+figure-leaks: 0 leaks in 44 figure(s) across 1 unit(s); 0 allowed, 3 review line(s)
+exit 0
+### node scripts/qa/shingles.mjs --unit fm1
+shingles: 114,718 distinct 8-word sequences in 58 content files, against 1,636,599 from 895 corpus files (454 papers, 419 mark schemes, 22 reports)
+
+BREACH scheme-or-report  packs/further-maths/content/fm1/laws-of-logarithms/bundle.json
+  "one of the most challenging questions on the"
+  shared with a mark scheme or examiner report: docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2022.txt, docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2025.txt
+
+BREACH scheme-or-report  packs/further-maths/content/fm1/laws-of-logarithms/bundle.json
+  "of the most challenging questions on the paper"
+  shared with a mark scheme or examiner report: docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2022.txt, docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2025.txt
+
+allowed as stock instruction language — each recurs in at least 3 different question papers:
+   14 papers  "give your answer correct to one decimal place"
+    4 papers  "write down the coordinates of the point where"
+    3 papers  "use the method of completing the square to"
+    3 papers  "giving your answers correct to 2 decimal places"
+    3 papers  "give your answer in the form y mx"
+    3 papers  "your answer in the form y mx c"
+
+2 breach(es) across 1 unit(s):
+  further-maths/fm1  2
+exit 1
+### npm run insights:unregistered
+
+> ccea-gcse-top-learning-platform@0.1.0 insights:unregistered
+> node scripts/find-unregistered-misconceptions.mjs
+
+
+=== further-maths: 55 bundle(s), 269 misconception id(s) used, 280 registered
+  all used ids are in the registry
+
+=== maths: 58 bundle(s), 354 misconception id(s) used, 359 registered
+  all used ids are in the registry
+
+=== science: 58 bundle(s), 448 misconception id(s) used, 485 registered
+  9 id(s) not in the registry:
+
+  sci.lens.focal-length-method-incomplete
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  diagnostics[1].items[3].options[1].misconception  [bright]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  diagnostics[1].items[3].options[2].misconception  [bigger]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  diagnostics[1].items[3].options[3].misconception  [safe]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  questions[4].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2F:Q3]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  questions[6].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2F:Q3]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  questions[9].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2F:Q3]
+
+  sci.practical.average-bodmas
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  questions[5].parts[1].commonErrors[2].misconception  [ccea-cer:science:2024-summer:U7BPhysF:Q4]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  questions[8].parts[2].commonErrors[1].misconception  [ccea-cer:science:2024-summer:U7BPhysF:Q4]
+      packs/science/content/p2/p2-lenses-focal-length/bundle.json  questions[8].parts[2].commonErrors[2].misconception  [ccea-cer:science:2024-summer:U7BPhysF:Q4]
+
+  sci.practical.proportional-wording
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[6].options[1].misconception  [directly]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[6].options[2].misconception  [inverse]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[6].options[3].misconception  [nothing]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[10].parts[0].answer.options[1].misconception  [proportional]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[10].parts[0].answer.options[2].misconception  [none]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[10].parts[0].answer.options[3].misconception  [inverse]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[10].parts[1].commonErrors[0].misconception  [ccea-cer:science:2025-summer:U7APhysH:Q1]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  findTheMistake[2].misconception  [ftm.science.p2.p2-refraction-and-dispersion.0003]
+
+  sci.refraction.angle-from-surface
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[1].options[1].misconception  [thirty]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[1].options[2].misconception  [ninety]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[1].options[3].misconception  [fifteen]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[1].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[1].parts[2].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[6].parts[0].commonErrors[0].misconception  [ccea-cer:science:2024-summer:P2H:Q7]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[15].parts[1].commonErrors[1].misconception  [ccea-cer:science:2023-summer:P2F:Q4]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  findTheMistake[1].misconception  [ftm.science.p2.p2-refraction-and-dispersion.0002]
+
+  sci.refraction.colour-order-reversed
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[4].options[1].misconception  [red]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[4].options[3].misconception  [green]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[5].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[12].parts[2].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+
+  sci.refraction.colour-speeds
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[4].options[2].misconception  [violet-fast]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[5].parts[1].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[14].parts[2].commonErrors[0].misconception  [ccea-cer:science:2025-summer:U7APhysH:Q1]
+
+  sci.refraction.dispersion-vs-refraction
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[2].options[2].misconception  [bounce]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[3].options[1].misconception  [rainbow]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[3].options[2].misconception  [refraction]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[3].options[3].misconception  [reflection]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[5].options[3].misconception  [spread]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[4].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2F:Q2]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[4].parts[1].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2F:Q2]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[13].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2F:Q2]
+
+  sci.refraction.normal-omitted-or-wrong-way
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[0].options[1].misconception  [away-slow]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[0].options[3].misconception  [none]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[5].options[1].misconception  [same-line]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[5].options[2].misconception  [right-angles]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[0].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[1].parts[1].answer.options[1].misconception  [away]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[1].parts[1].answer.options[2].misconception  [none]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[1].parts[2].commonErrors[1].misconception  [ccea-cer:science:2023-summer:P2F:Q4]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[2].parts[0].commonErrors[1].misconception  [ccea-cer:science:2023-summer:P2F:Q4]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[6].parts[1].commonErrors[0].misconception  [ccea-cer:science:2024-summer:P2H:Q7]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[8].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:U7APhysF:Q1]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[11].parts[0].commonErrors[0].misconception  [ccea-cer:science:2023-summer:P2F:Q4]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[11].parts[0].commonErrors[1].misconception  [ccea-cer:science:2023-summer:P2F:Q4]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[11].parts[2].commonErrors[0].misconception  [ccea-cer:science:2024-summer:P2H:Q7]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[12].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[12].parts[1].commonErrors[0].misconception  [ccea-cer:science:2025-summer:P2H:Q8]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[15].parts[0].answer.options[1].misconception  [same]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[15].parts[0].answer.options[2].misconception  [along]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[15].parts[1].commonErrors[0].misconception  [ccea-cer:science:2023-summer:P2F:Q4]
+
+  sci.refraction.speed-change-not-optical-density
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[0].options[2].misconception  [towards-fast]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[2].options[1].misconception  [density]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  diagnostics[1].items[2].options[3].misconception  [heavy]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[2].parts[0].commonErrors[0].misconception  [ccea-cer:science:2025-summer:U7APhysH:Q1]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  questions[11].parts[1].commonErrors[0].misconception  [ccea-cer:science:2025-summer:U7APhysH:Q1]
+      packs/science/content/p2/p2-refraction-and-dispersion/bundle.json  findTheMistake[0].misconception  [ftm.science.p2.p2-refraction-and-dispersion.0001]
+
+
+9 unregistered misconception id(s) - add them to pipeline/mine/insights-source/ and run npm run insights:build
+exit 1
+### npx tsx scripts/keyword-soft.mts
+
+0 hard, 0 soft key-word finding(s)
+exit 0
+### npx tsx scripts/qa/text-parts-vs-solutions.mts
+docs\dev\qa\text-parts-vs-worked-solutions.md: 0 zero, 0 partial of 493 text parts
+exit 0
+### node scripts/qa/svg-draws.mjs
+svgs scanned 1927 | files with defects: 0
+exit 0
+### node scripts/qa/gate-context.mjs
+gates 1364 | leaning on a figure: 71 | without a preceding visual: 0
+  area-under-curve g1 -> block 3 (The curve y equals x squared plus 1 drawn on axes,)
+  curve-sketching-quadratic-cubic g7 -> block 33 (The cubic y = (x - 2) squared times (x - 8), touch)
+  indicial-equations g1 -> block 3 (Two boxed equations: 2 to the power x equals 40 on)
+  log-log-graphs g3 -> block 12 (A table with rows for depth h, flow F, log h and l)
+  trig-graphs-sin-cos-tan g1 -> block 3 (The graph of y = sin x from 0 to 360 degrees. It s)
+  trig-graphs-sin-cos-tan g3 -> block 11 (The graph of y = sin x drawn from -360 to 360 degr)
+  trig-graphs-sin-cos-tan g6 -> block 24 (The graph of y = sin x with the horizontal line y )
+  displacement-time-graphs g7 -> block 17 (A displacement/time graph for a survey drone: a st)
+  force-diagrams g1 -> block 3 (A crate of mass 6 kg on a rough horizontal floor. )
+  addition-rule-probability g1 -> block 3 (A two-circle Venn diagram inside a rectangle. The )
+  addition-rule-probability g2 -> block 7 (Two bars laid against a scale of 40 students. The )
+  addition-rule-probability g3 -> block 7 (Two bars laid against a scale of 40 students. The )
+  conditional-probability g1 -> block 3 (A two-way table of 200 people by how they travel a)
+  conditional-probability g2 -> block 7 (The same two-way table with the under-25 column ri)
+  conditional-probability g5 -> block 19 (A two-circle Venn diagram for 96 students: 32 stud)
+  conditional-probability g6 -> block 23 (A two-stage probability tree for a delivery van. T)
+  conditional-probability g8 -> block 32 (Two nested regions inside a rectangle: the outer o)
+  linear-transformation-mean-sd g3 -> block 7 (Two number lines on the same scale from 10 to 45 p)
+  mean-and-standard-deviation g1 -> block 3 (Two dot plots on the same scale. The upper one, Ro)
+  spearmans-rank-correlation g1 -> block 3 (Places 1 to 8 for Judge A on the left and Judge B )
+  spearmans-rank-correlation g3 -> block 14 (A table of the two sets of ranks for entries A to )
+  tree-diagrams-probability g1 -> block 3 (A two-stage probability tree for two pens taken wi)
+  tree-diagrams-probability g2 -> block 3 (A two-stage probability tree for two pens taken wi)
+  tree-diagrams-probability g3 -> block 11 (A two-stage probability tree for two pens taken wi)
+  tree-diagrams-probability g6 -> block 23 (A two-stage probability tree for two mornings, eac)
+  tree-diagrams-probability g7 -> block 27 (A three-stage probability tree for three pens take)
+  tree-diagrams-probability g8 -> block 31 (A two-stage probability tree for two counters take)
+  venn-diagrams-probability g1 -> block 3 (A two-circle Venn diagram for 32 pupils. The left )
+  venn-diagrams-probability g3 -> block 7 (A three-circle Venn diagram with the centre marked)
+  venn-diagrams-probability g4 -> block 15 (The same two-circle Venn diagram with the unknown )
+  venn-diagrams-probability g5 -> block 19 (A three-circle Venn diagram for 120 visitors: 24 s)
+  box-plots-and-comparing-distributions g2 -> block 3 (A labelled box plot of waiting times in minutes on)
+  cumulative-frequency-tables-and-curves g4 -> block 15 (The cumulative frequency curve for the 80 eggs wit)
+  cumulative-frequency-tables-and-curves g5 -> block 15 (The cumulative frequency curve for the 80 eggs wit)
+  identities-and-expanding-double-brackets g0a -> block 3 (A two by two grid. The columns are headed 3x and m)
+  quartiles-and-interquartile-range-from-a-list g3 -> block 3 (Eleven waiting times in order from 2 to 14 minutes)
+  straight-lines-y-mx-c-equation-of-a-line-and-parallel-lines g0a -> block 3 (Coordinate axes with a straight line rising from l)
+  upper-and-lower-bounds-addition-and-multiplication g0a -> block 3 (A number line marked 6.35, 6.4 and 6.45. Arrows fr)
+  combined-transformations-and-reflections-in-y-equals-plus-or-minus-x g13 -> block 42 (A coordinate grid from -8 to 8. Triangle R has ver)
+  combined-transformations-and-reflections-in-y-equals-plus-or-minus-x g14 -> block 45 (A coordinate grid from -8 to 8. Triangle S has ver)
+  combined-transformations-and-reflections-in-y-equals-plus-or-minus-x g15 -> block 48 (A coordinate grid from -8 to 8. Triangle M has ver)
+  enlargements-with-fractional-scale-factors g1 -> block 3 (A coordinate grid from -8 to 8 on both axes. Trian)
+  product-rule-for-counting g1 -> block 3 (A table with 4 rows labelled Soda, Wheaten, Bagel,)
+  quadratic-graphs-and-intersections-with-straight-lines g4 -> block 15 (A U-shaped curve on a grid with x from -2 to 4 and)
+  quadratic-graphs-and-intersections-with-straight-lines g8 -> block 32 (Four lines of working. The first reads: you want x)
+  tree-diagrams-for-independent-events g1 -> block 3 (A probability tree for two picks with replacement )
+  conditional-probability-and-tree-diagrams-without-replacement g2 -> block 3 (A probability tree for two picks without replaceme)
+  graphical-solution-of-quadratic-equations g9 -> block 22 (The curve y = 4x minus x squared on a labelled gri)
+  growth-decay-and-exponential-graphs g4 -> block 3 (The curve y equals 2 to the power x drawn on axes )
+  pythagoras-and-trigonometry-in-3d g2 -> block 3 (On the left, a cuboid ABCDEFGH drawn in oblique pr)
+  pythagoras-and-trigonometry-in-3d g7 -> block 25 (The same pyramid with N marked as the midpoint of )
+  pythagoras-and-trigonometry-in-3d g8 -> block 28 (A wedge: the horizontal rectangular base ABCD is 9)
+  b1-competition-food-webs g1 -> block 3 (A food web with four rows. Wheat and hawthorn at t)
+  c1-atomic-structure g1 -> block 6 (A table of the three particles. Proton: relative c)
+  c2-addition-polymerisation g0 -> block 3 (Three ethene molecules, each with a double bond be)
+  c2-alkenes g0 -> block 3 (The displayed formula of ethene: two carbons joine)
+  c2-alkenes g5 -> block 24 (Ethene, drawn with its carbon-to-carbon double bon)
+  c2-collision-theory-catalysts g0 -> block 3 (Four reaction boxes side by side showing the same )
+  c2-collision-theory-catalysts g2 -> block 12 (One cube of side two centimetres beside the eight )
+  c2-collision-theory-catalysts g8 -> block 35 (Three rate curves of different steepness drawn on )
+  c2-combustion-and-pollution g0 -> block 3 (Two burners side by side: one with its air hole op)
+  c2-equilibrium g3 -> block 15 (Two curves of rate against time in a closed contai)
+  c2-homologous-series-alkanes g0 -> block 3 (A table of the first four alkanes: each name, its )
+  c2-measuring-rates g3 -> block 15 (A curve of the volume of carbon dioxide against ti)
+  c2-measuring-rates g6 -> block 26 (Three rate curves of different steepness drawn on )
+  p2-lens-ray-diagrams g2 -> block 8 (A converging lens with two rays drawn from the tip)
+  p2-lens-ray-diagrams g3 -> block 13 (A converging lens with an object 15 centimetres aw)
+  p2-lens-ray-diagrams g4 -> block 17 (A converging lens with an object 7.5 centimetres a)
+  p2-lens-ray-diagrams g5 -> block 21 (A converging lens with an object 3 centimetres awa)
+  p2-lenses-focal-length g1 -> block 4 (On the left a converging lens drawn in section, fa)
+  p2-wave-types-and-properties g3 -> block 12 (Two wave graphs side by side: displacement against)
+exit 0
+### npx tsx scratchpad/fm1-batch-g/check-marking.mts
+marker self-check: 284 probes
+no findings
+exit 0
+### node scratchpad/fm1-batch-g/verify-published.mjs
+verify-published: 85 route checks
+no findings
+exit 0
+### npx tsx scratchpad/fm1-batch-f/check-marking.mts
+marker self-check: 193 probes
+no findings
+exit 0
+### node scratchpad/fm1-batch-f/verify-published.mjs
+verify-published: 109 route checks
+no findings
+exit 0
+### npx tsx scratchpad/fm1-batch-g/probe-fixpass-0922.mts
+== matrix-arithmetic
+ok   MA-1 d3 stem is the 2x2 / 2x3 pair  :: A matrix $P$ is $2 \times 2$ and a matrix $Q$ is $2 \times 3$. Which products exist?
+ok   MA-1 d3 correct option is 'PQ only'  :: $PQ$ only
+ok   MA-1 d3 mentions no 3 x 3 product
+ok   MA-1 shape rule recomputed: PQ exists, QP does not
+ok   MA-2 q0008(b) carries no common error  :: []
+ok   MA-2 a 2x2 answer gets the engine's wrong-size line  :: 0/3 This answer should be a 2 by 3 matrix; that one is 2 by 2.
+ok   MA-2 q0008(b) right answer full  :: 3/3
+ok   MA-3 q0008(c) "C has 3 columns and A has 2 rows, and they are not equal, so the product does not exist" -> 1/1  :: 1/1 That is the accepted answer.
+ok   MA-3 q0008(c) "the number of columns of C is 3 and the number of rows of A is 2, so they do not match" -> 1/1  :: 1/1 That is the accepted answer.
+ok   MA-3 q0008(c) "C has 3 columns but A has 2 rows, so they do not match" -> 1/1  :: 1/1 Every marking point is there.
+ok   MA-3 q0008(c) "3 and 2 are not equal" -> 1/1  :: 1/1 That is the accepted answer.
+ok   MA-3 q0008(c) "the inner numbers differ" -> 1/1  :: 1/1 That is the accepted answer.
+ok   MA-3 q0008(c) "C and A have the same number of columns, so the product works" -> 0/1  :: 0/1 The marking points are not there yet. Expected: columns of c, rows of a, do not 
+ok   MA-3 q0008(c) "the columns of A match the columns of C" -> 0/1  :: 0/1 0 of 1: still missing rows of a, do not match.
+ok   MA-3 q0008(c) "A has 3 columns and C has 2 rows" -> 0/1  :: 0/1 0 of 1: still missing do not match.
+ok   MA-3 q0008(c) "columns" -> 0/1  :: 0/1 The marking points are not there yet. Expected: columns of c, rows of a, do not 
+ok   MA-3 q0008(c) "C has 3 columns and A has 2 rows, so they match" -> 0/1  :: 0/1 0 of 1: still missing do not match.
+ok   MA-3 q0008(c) "the rows are the same" -> 0/1  :: 0/1 The marking points are not there yet. Expected: columns of c, rows of a, do not 
+ok   MA-3 three key-word groups  :: 3
+ok   MA-4 we01 earns match q0004's scheme  :: M1,M2,W1 vs M1,M2,W1
+ok   MA-4 we01 twin marked out of q0004's tariff  :: 3 vs 3
+ok   MA-5 ftm01 earns nothing as written  :: []
+ok   MA-5 ftm01 feedback claims no mark  :: The shape you predicted is right and the arithmetic is accurate, so this is a method probl
+ok   MA-x q0001 carries no subtract-wrong-way common error
+ok   MA-x q0001 'A - B' still earns 0 of 2, untagged  :: 0 1 of 4 entries is right. Row 1, column 1 should be 8. Row 1, column 2 should be 1. 1 other entry needs another look.
+ok   MA-x d1(c) B - A for a sum carries no tag
+ok   MA-x q0008(a) B - 2A keeps its subtract-wrong-way diagnosis (1 of 2)  :: 1 ["fm.matrix.subtract-wrong-way"]
+ok   MA-x note: the three false sentences are gone
+== matrix-inverse-2x2
+ok   MI-1 routes recomputed: products added gives -2, reversed subtraction gives the answer 2
+ok   MI-1 q0008 '-2' earns 1 of 2  :: 1/2
+ok   MI-1 '-2' tagged products-added  :: ["fm.matrix.determinant-products-added"]
+ok   MI-1 feedback names the products added  :: Setting the determinant to zero is right, but $6k + 12$ adds the two diagonal products. The determinant subtracts them: $ad - bc = 6k - 12$, and $6k - 12 = 0$ gives $k = 2$.
+ok   MI-1 q0008 '2' full
+ok   MI-2 route recomputed: ad + bc = 11
+ok   MI-2 d1 '11' tagged products-added  :: fm.matrix.determinant-products-added
+ok   MI-2 d1 '-5' keeps sign-reversed  :: fm.matrix.determinant-sign-reversed
+ok   MI-3 d5 additive-inverse option carries no tag  :: undefined
+ok   MI-3 d5 reciprocal option keeps elementwise-product  :: fm.matrix.elementwise-product
+ok   MI-5 q0009(c) "det H = 0, so H has no inverse because the formula divides by the determinant" -> 2/2  :: 2/2 That is the accepted answer.
+ok   MI-5 q0009(c) "the determinant of H is zero, so H is singular and has no inverse" -> 2/2  :: 2/2 That is the accepted answer.
+ok   MI-5 q0009(c) "det H = 18 - 18 = 0 so H has no inverse" -> 2/2  :: 2/2 Every marking point is there.
+ok   MI-5 q0009(c) "H has determinant 0 so it has no inverse" -> 2/2  :: 2/2 Every marking point is there.
+ok   MI-5 q0009(c) "the determinant is not zero, so the inverse exists" -> 0/2  :: 0/2 "not zero" cancels the mark it sits with. Leave it out.
+ok   MI-5 q0009(c) "det H is not 0" -> 0/2  :: 0/2 "not 0" cancels the mark it sits with. Leave it out.
+ok   MI-5 q0009(c) "the determinant is zero" -> 1/2  :: 1/2 1 of 2: still missing matrix H.
+ok   MI-5 q0009(c) "the determinant of F is zero" -> 1/2  :: 1/2 1 of 2: still missing matrix H.
+ok   MI-5 q0009(c) "H is singular" -> 1/2  :: 1/2 1 of 2: still missing determinant.
+ok   MI-5 q0009(c) "zero" -> 0/2  :: 0/2 0 of 2: still missing determinant, matrix H.
+ok   MI-5 q0009(c) "H" -> 0/2  :: 0/2 0 of 2: still missing determinant, 0.
+ok   MI-5 q0009(c) own worked solution earns 2/2  :: 2/2
+ok   MI-6 we.fm.u1.matrix-inverse-2x2.01 earns match the question's scheme  :: MW1,M2,W1 vs MW1,M2,W1
+ok   MI-6 we.fm.u1.matrix-inverse-2x2.01 twin marked out of 3  :: 3
+ok   MI-6 we.fm.u1.matrix-inverse-2x2.01 keeps its check step
+ok   MI-6 we.fm.u1.matrix-inverse-2x2.02 earns match the question's scheme  :: MW1,M2,W1 vs MW1,M2,W1
+ok   MI-6 we.fm.u1.matrix-inverse-2x2.02 twin marked out of 3  :: 3
+ok   MI-6 we.fm.u1.matrix-inverse-2x2.02 keeps its check step
+ok   MI-x q0003(c) prints the products-added determinant 12 + 12 = 24  :: $\det S = 12 + 12 = 24$, so the inverse exists
+ok   MI-x q0003(c) tagged products-added  :: fm.matrix.determinant-products-added
+ok   MI-4 (waived) q0005 scalar-box submission '1/5 [2 -1; -3 4]' earns full  :: 3/3
+== matrix-equations
+ok   ME-1 q0009(c) "det S = 0, so S has no inverse and the equation cannot be solved" -> 2/2  :: 2/2 That is the accepted answer.
+ok   ME-1 q0009(c) "the determinant of S is zero, so S is singular and there is no inverse to multiply by" -> 2/2  :: 2/2 That is the accepted answer.
+ok   ME-1 q0009(c) "det S = 6 - 6 = 0 so S has no inverse" -> 2/2  :: 2/2 Every marking point is there.
+ok   ME-1 q0009(c) "the determinant is not zero, so it can be solved" -> 0/2  :: 0/2 "not zero" cancels the mark it sits with. Leave it out.
+ok   ME-1 q0009(c) "det S isn't 0" -> 0/2  :: 0/2 "isnt 0" cancels the mark it sits with. Leave it out.
+ok   ME-1 q0009(c) "S is not singular" -> 0/2  :: 0/2 "not singular" cancels the mark it sits with. Leave it out.
+ok   ME-1 q0009(c) "the determinant is zero" -> 1/2  :: 1/2 1 of 2: still missing matrix S.
+ok   ME-1 q0009(c) "S is singular" -> 1/2  :: 1/2 1 of 2: still missing determinant.
+ok   ME-1 q0009(c) "the matrix has no inverse" -> 0/2  :: 0/2 The marking points are not there yet. Expected: determinant, 0, matrix S.
+ok   ME-1 q0009(c) "zero" -> 0/2  :: 0/2 0 of 2: still missing determinant, matrix S.
+ok   ME-1 q0009(c) own worked solution earns 2/2
+ok   ME-2 we01 earns = q0004's scheme, twin out of 4  :: MW1,M2,M3,W1 / 4
+ok   ME-2 we01 shape check earns nothing
+ok   ME-3 we02 earns = q0008's scheme, twin out of 4  :: MW1,M2,M3,W1 / 4
+ok   ME-3 we02 twin is AX + C = B and solves to (3; -1)  :: [[3],[-1]]
+ok   ME-3 we02 twin substituted back: AX + C = (15; 6)
+ok   ME-3 we02 twin right answer earns 4/4  :: 4
+ok   ME-4 ftm earned = q0005's determinant and inverse marks  :: MW1,M2 vs MW1:$\det A = 1$,M2:$A^{-1} = \begin{pma,M3:$X = A^{-1}B$, with ,W1:$\begin{pmatrix}-7 &
+ok   ME-4 q0005 scheme reads determinant, inverse, order, answer
+ok   ME-4 q0005 BA^-1 earns what the ftm says the same working earns  :: 2/4
+ok   ME-4 ftm feedback no longer promises follow-through on a wrong order
+ok   ME-5 q0009(b) BA^-1 earns 0 of 3 under its scheme, diagnosed  :: 0/3 ["fm.matrix.inverse-order"]
+ok   ME-6 post d1/b tag  :: fm.matrix.subtract-wrong-way
+ok   ME-6 post d1/c tag  :: fm.matrix.equation-undone-wrongly
+ok   ME-6 post d2/b tag  :: fm.matrix.inverse-order
+ok   ME-6 post d2/c tag  :: fm.matrix.equation-undone-wrongly
+ok   ME-6 post d3/b tag  :: fm.matrix.inverse-order
+ok   ME-6 post d3/c tag  :: fm.matrix.equation-undone-wrongly
+ok   ME-6 post d4/b tag  :: fm.matrix.equation-undone-wrongly
+ok   ME-6 post d4/c tag  :: fm.matrix.equation-undone-wrongly
+ok   ME-6 post d5/b tag  :: fm.matrix.singular-not-recognised
+ok   ME-6 post d5/c tag  :: fm.matrix.singular-not-recognised
+ok   ME-6 q0008 A^-1 B with C never cleared: 1 of 4, retagged  :: 1 ["fm.matrix.equation-undone-wrongly"]
+ok   ME-6 q0010 A^-1 B with C never cleared: 1 of 4, retagged  :: 1 ["fm.matrix.equation-undone-wrongly"]
+ok   ME-6 route recomputed: A^-1 B = (-6; 5)
+ok   ME-7 traps cite 2019 Q5; no 2024 attribution on the added-matrix trap
+== matrix-simultaneous-equations
+ok   MS-1 q0008 "the determinant of the coefficient matrix is 0, so it has no inverse and there is no unique solution" -> 2/2  :: 2/2 That is the accepted answer.
+ok   MS-1 q0008 "det A = 0, so the coefficient matrix is singular and cannot be inverted" -> 2/2  :: 2/2 That is the accepted answer.
+ok   MS-1 q0008 "det A = 12 - 12 = 0 so there is no unique solution" -> 2/2  :: 2/2 Every marking point is there.
+ok   MS-1 q0008 "the determinant is 0 so the matrix has no inverse" -> 2/2  :: 2/2 Every marking point is there.
+ok   MS-1 q0008 "the determinant is zero" -> 1/2  :: 1/2 1 of 2: still missing no inverse.
+ok   MS-1 q0008 "the coefficient matrix is singular" -> 1/2  :: 1/2 1 of 2: still missing determinant, 0.
+ok   MS-1 q0008 "the lines are parallel" -> 1/2  :: 1/2 1 of 2: still missing determinant, 0.
+ok   MS-1 q0008 "the determinant is not zero so it can be solved" -> 0/2  :: 0/2 "not zero" cancels the mark it sits with. Leave it out.
+ok   MS-1 q0008 "det A is not 0, so there is an inverse" -> 0/2  :: 0/2 "not 0" cancels the mark it sits with. Leave it out.
+ok   MS-1 q0008 "the matrix is not singular" -> 0/2  :: 0/2 "not singular" cancels the mark it sits with. Leave it out.
+ok   MS-1 q0008 "zero" -> 0/2  :: 0/2 0 of 2: still missing determinant, no inverse.
+ok   MS-1 q0008 "det" -> 0/2  :: 0/2 0 of 2: still missing 0, no inverse.
+ok   MS-1 q0008 own worked solution earns 2/2
+ok   MS-1 maths: det 0 and the second equation is not a multiple of the first, so no solution at all
+ok   MS-2 post b ($\begin{pmatrix}4 & 2 \\ 3 & 5) tagged misformed  :: fm.matrix.coefficient-matrix-misformed
+ok   MS-2 post c ($\begin{pmatrix}4 & 18 \\ 2 & ) tagged misformed  :: fm.matrix.coefficient-matrix-misformed
+ok   MS-2 post b (The slot is left empty) tagged misformed  :: fm.matrix.coefficient-matrix-misformed
+ok   MS-2 post c ($1$) tagged misformed  :: fm.matrix.coefficient-matrix-misformed
+ok   MS-2 q0001 read down the columns: 0/1, tagged misformed  :: 0 ["fm.matrix.coefficient-matrix-misformed"]
+ok   MS-2 q0001 constants inside: 0/1, tagged misformed  :: 0 ["fm.matrix.coefficient-matrix-misformed"]
+ok   MS-2 q0002 sign kept across the equals: 1/2, tagged misformed  :: 1 ["fm.matrix.coefficient-matrix-misformed"]
+ok   MS-3 q0005 MW1 prints the unknowns column, not a zero column  :: $\begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}\begin{pmatrix}x \\ y\end{pmatrix} = \begin{pmatrix}18 \\ 16\end{pmatrix}$, with the unknowns in the middle column
+ok   MS-4 q0010(a) "3n + 2p = 19 and 5n + 4p = 33" -> 2/2  :: 2/2
+ok   MS-4 q0010(a) "2p + 3n = 19 and 4p + 5n = 33" -> 2/2  :: 2/2
+ok   MS-4 q0010(a) "19 = 3n + 2p, 33 = 5n + 4p" -> 2/2  :: 2/2
+ok   MS-4 q0010(a) "3n+2p=19, 5n+4p=33" -> 2/2  :: 2/2
+ok   MS-4 q0010(a) "3n + 2p = 19" -> 1/2  :: 1/2
+ok   MS-4 q0010(a) "3n + 2p = 33 and 5n + 4p = 19" -> 0/2  :: 0/2
+ok   MS-4 q0010(a) own worked solution earns 2/2
+ok   MS-5 the 2023 Q6 trap says what the report says (naming the matrix)
+
+125 ok, 0 FAIL
+exit 0
+### node scratchpad/fm1-batch-g/check-printed-arithmetic.mjs matrix-arithmetic matrix-inverse-2x2 matrix-equations matrix-simultaneous-equations laws-of-logarithms
+printed arithmetic: 93 equalities re-executed
+no findings
+exit 0

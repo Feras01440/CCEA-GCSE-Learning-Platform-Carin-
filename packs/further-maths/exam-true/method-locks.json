@@ -1,0 +1,129 @@
+{
+  "$schema": "cairn-method-locks/1",
+  "subject": "further-maths",
+  "status": "confirmed",
+  "generatedAt": "2026-09-05",
+  "note": "A method lock is an instruction in the stem that restricts which method earns marks. The marker refuses M/W/MW credit when a lock is violated and explains why in M/W language (master plan §3.5 D7, concept C §6.8). paperPhraseCount = occurrences of the trigger phrase across the 29 Standard FM question papers 2018-2026 (text scan 2026-09-05, counts only). Evidence findings are paraphrased from the Chief Examiner reports in docs/sources/further-maths; no report text is quoted beyond a few words.",
+  "locks": [
+    {
+      "id": "lock.fm.hence",
+      "instructionRegex": "\\bhence\\b(?!,? or otherwise)",
+      "instruction": "Hence …",
+      "requiredMethod": "Use the result or form obtained in the previous part (e.g. the completed-square form to read off the minimum; the factorised form to solve; the derivative already found).",
+      "zeroIfIgnored": true,
+      "release": "'Hence, or otherwise' (2 occurrences) releases the lock: any valid method earns full marks.",
+      "paperPhraseCount": { "hence find": 13, "hence write": 9, "hence solve": 7, "hence show": 5, "hence calculate": 3, "hence, or otherwise": 2 },
+      "evidence": [
+        { "series": "Summer 2025", "unit": "FM1", "question": "Q3(ii)", "finding": "After completing the square, candidates who differentiated to find the minimum were not credited because the required method was not followed; many scored zero despite correct working.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2025.txt lines 131-140" },
+        { "series": "Summer 2023", "unit": "FM1", "question": "Q4(ii)", "finding": "Same pattern: differentiation offered instead of the completed-square form.", "source": "research 02 §8.1 rank 8" },
+        { "series": "Summer 2019", "unit": "FM1", "question": "Q2", "finding": "Same pattern.", "source": "research 02 §8.1 rank 8" }
+      ],
+      "coach": "'Hence' means 'use what you just found'. Look back at the previous part before you start.",
+      "source": "research 02 §8.1 rank 8 and §9 point 2; CER Summer 2025 Q3(ii)"
+    },
+    {
+      "id": "lock.fm.use-matrices",
+      "instructionRegex": "\\b(use|using) (a |the )?matri(x|ces)( method)?\\b",
+      "instruction": "Use matrices / using a matrix method (printed in bold)",
+      "requiredMethod": "Write the system as AX = B, find A⁻¹ = (1/det A) × adjugate, and compute X = A⁻¹B (multiplying in that order).",
+      "zeroIfIgnored": true,
+      "paperPhraseCount": { "using a matrix method": 2 },
+      "evidence": [
+        { "series": "Summer 2025", "unit": "FM1", "question": "Q5(ii)", "finding": "Despite the explicit instruction, many solved by substitution or elimination; those responses received no marks even when mathematically correct. Examiners also noted that bold text marks such key terms.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2025.txt lines 83, 173-186" },
+        { "series": "Summer 2018–2024", "unit": "FM1", "question": "matrix questions", "finding": "Typical errors when the method is used: multiplying by the inverse in the wrong order, determinant arithmetic, squaring elements instead of multiplying.", "source": "research 02 §8.1 rank 12" }
+      ],
+      "coach": "Inverse first, then A⁻¹ on the left of B. Show the determinant.",
+      "source": "research 02 §8.1 rank 12; CER Summer 2025 Q5(ii)"
+    },
+    {
+      "id": "lock.fm.show-that",
+      "instructionRegex": "\\bshow that\\b",
+      "instruction": "Show that …",
+      "requiredMethod": "Start from the given information and derive the printed result, ending with the exact form printed in the stem.",
+      "zeroIfIgnored": true,
+      "forbidden": "Assuming the result and substituting it in (working backwards).",
+      "paperPhraseCount": { "show that": 42 },
+      "evidence": [
+        { "series": "Summer 2022", "unit": "FM2", "question": "Q3", "finding": "Starting from the assumption that the acceleration was the printed value gained no marks; examiners restated that working backwards is not acceptable in a 'show that' question.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2022.txt lines 258-262" },
+        { "series": "Summer 2024", "unit": "FM2", "question": "Q4(i)", "finding": "Substituting the acceleration into an equation instead of forming it earned partial marks at most; full marks only for the required method.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2024.txt lines 221-226" },
+        { "series": "Summer 2023", "unit": "FM4", "question": "Q(iv)", "finding": "Candidates must start with the given information and show it leads to the required expression, not start from the expression.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2023.txt lines 455-457" }
+      ],
+      "coach": "Forwards only. The printed answer is the last line you write, never the first.",
+      "source": "research 02 §8.2 rank 7 and §9 point 2; CER Summer 2022 Q3, Summer 2024 Q4(i)"
+    },
+    {
+      "id": "lock.fm.use-calculus",
+      "instructionRegex": "\\b(use|using) calculus\\b|\\bby (differentiation|integration)\\b",
+      "instruction": "Using calculus …",
+      "requiredMethod": "Differentiate (or integrate) and show the derivative/integral; for a maximum or minimum set dy/dx = 0 and confirm the nature with the second derivative or a sign check.",
+      "zeroIfIgnored": true,
+      "evidenceStrength": "instruction-based: the phrase appears 12 times in the papers and the reports show marks lost for not using calculus; no report sentence explicitly says a non-calculus route scored zero, so treat as a lock by the same principle as 'use matrices'.",
+      "paperPhraseCount": { "using calculus": 12 },
+      "evidence": [
+        { "series": "Summer 2019", "unit": "FM1", "question": "Q14", "finding": "Many did not attempt the final part because they did not realise calculus was needed; some also forgot to show the stationary value was a maximum.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2019.txt lines 212-215" },
+        { "series": "Summer 2023", "unit": "FM1", "question": "optimisation", "finding": "The second derivative was not used to show the maximum.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2023.txt line 228" },
+        { "series": "Summer 2025", "unit": "FM1", "question": "Q13", "finding": "dy/dx set to 0 out of habit when the question required dy/dx = 5.", "source": "research 02 §8.1 rank 2" }
+      ],
+      "coach": "Write dy/dx before anything else, then say what you are setting it equal to and why.",
+      "source": "corpus phrase count; research 02 §8.1 ranks 2 and 4"
+    },
+    {
+      "id": "lock.fm.show-working",
+      "instructionRegex": "\\byou must show (all |your )?working\\b|\\bwithout (using |the use of )?a calculator\\b",
+      "instruction": "You must show your working",
+      "requiredMethod": "Every step of the algebra or arithmetic that produces the answer must be written; an answer alone is not a method.",
+      "zeroIfIgnored": true,
+      "note": "The phrase 'without a calculator' does not occur in any of the 29 FM papers in the corpus (all FM papers permit a calculator); the FM lock is triggered by 'you must show your working' (17 occurrences) and by the general instruction on every paper. The regex also covers the maths wording for shared tooling.",
+      "paperPhraseCount": { "you must show your working": 9, "you must show working": 8, "without a calculator": 0 },
+      "evidence": [
+        { "series": "Teacher Guidance 2024", "unit": "FM1", "question": "simultaneous equations", "finding": "Students must show the full development of the answer; sole use of a calculator gains no marks.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Teacher-Guidance-2024.pdf p.10 (pdftotext lines 230-236)" },
+        { "series": "Summer 2024", "unit": "FM1", "question": "Q11(iv)", "finding": "Values apparently produced on a calculator with no method gained no marks.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2024.txt lines 155-156" },
+        { "series": "Summer 2025", "unit": "FM1", "question": "Q12(iii)", "finding": "Jumping to final answers with a calculator and no working gained no marks.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2025.txt lines 336-338" }
+      ],
+      "coach": "Use the calculator to check, not to answer.",
+      "source": "CCEA Teacher Guidance 2024; CER Summer 2024 Q11(iv); CER Summer 2025 Q12(iii)"
+    },
+    {
+      "id": "lock.fm.form-equations",
+      "instructionRegex": "\\b(form|write down) (three |two |an? )?(simultaneous )?equations?\\b",
+      "instruction": "Form (three) equations …",
+      "requiredMethod": "Translate the context into equations in the named unknowns before solving; the equations themselves carry the method marks.",
+      "zeroIfIgnored": true,
+      "forbidden": "Working backwards from the given/expected equations or the answers.",
+      "paperPhraseCount": { "note": "phrase varies by context; see the 'form' evidence" },
+      "evidence": [
+        { "series": "Summer 2025", "unit": "FM1", "question": "Q12(i)-(ii)", "finding": "Working backwards from the answer limited the method marks; omitted variables produced incomplete equations.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2025.txt lines 329-333" },
+        { "series": "Summer 2023", "unit": "FM1", "question": "Q11", "finding": "Working backwards from the given equations gained no marks.", "source": "research 02 §8.1 rank 5" }
+      ],
+      "coach": "Define the letters, write each sentence of the context as an equation, then solve.",
+      "source": "research 02 §8.1 rank 5; CER Summer 2025 Q12"
+    },
+    {
+      "id": "lock.fm.completing-the-square",
+      "instructionRegex": "\\bby completing the square\\b",
+      "instruction": "By completing the square …",
+      "requiredMethod": "Write the quadratic as (x + a)² + b (coefficient of x² is always 1) and solve or read off the turning point from that form; the quadratic formula or factorising is not the demanded method.",
+      "zeroIfIgnored": true,
+      "evidenceStrength": "instruction seen once in the corpus; lock by the same principle as 'hence' (examiners credit only the required method).",
+      "paperPhraseCount": { "by completing the square": 1 },
+      "evidence": [
+        { "series": "Summer 2025", "unit": "FM1", "question": "Q3", "finding": "Sign errors in (x + a)² + b and misuse of the form in part (ii).", "source": "research 02 §8.1 rank 8; CER Summer 2025 lines 128-131" }
+      ],
+      "coach": "Half the x-coefficient, square it, subtract it — then the bracket tells you the minimum.",
+      "source": "research 02 §4.1 (spec: apply completing the square to solving quadratic equations and identifying minimum turning points); corpus phrase count"
+    },
+    {
+      "id": "lock.fm.verify-is-not-show",
+      "instructionRegex": "\\bverify that\\b",
+      "instruction": "Verify that …",
+      "requiredMethod": "Substitution IS the expected method: put the given value in and show both sides agree. This entry exists so the marker does not apply the 'show that' lock to 'verify'.",
+      "zeroIfIgnored": false,
+      "paperPhraseCount": { "verify that": 7 },
+      "evidence": [
+        { "series": "Summer 2024", "unit": "FM1", "question": "(verification part)", "finding": "Verification of a value by substituting it in was the accepted route.", "source": "docs/sources/further-maths/GCSE-Further-Mathematics-Chief-Examiner-Report-Summer2024.txt line 257" }
+      ],
+      "coach": "'Verify' = substitute and check. 'Show that' = derive.",
+      "source": "corpus phrase count; CER Summer 2024"
+    }
+  ]
+}

@@ -1,0 +1,1272 @@
+{
+  "subject": "further-maths",
+  "unit": "FM3",
+  "version": 1,
+  "sections": [
+    {
+      "id": "central-tendency-and-dispersion",
+      "title": "Central tendency and dispersion",
+      "topics": [
+        {
+          "slug": "mean-and-standard-deviation",
+          "title": "Mean and standard deviation from raw data",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.01",
+              "front": "State the formula for the mean and say where you can find it.",
+              "back": "$\\bar{x}=\\dfrac{\\sum fx}{\\sum f}$ — printed **on the Unit 3 formula sheet**. For raw data every frequency is 1, so it is $\\dfrac{\\sum x}{n}$.",
+              "kind": "formula",
+              "source": "packs/further-maths/exam-true/formula-sheets.json fs.fm3.mean"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.02",
+              "front": "State the formula for the standard deviation and say where you can find it.",
+              "back": "$\\sigma=\\sqrt{\\dfrac{\\sum fx^2}{\\sum f}-\\bar{x}^2}$ — printed **on the Unit 3 formula sheet**. For raw data it is $\\sqrt{\\dfrac{\\sum x^2}{n}-\\bar{x}^2}$.",
+              "kind": "formula",
+              "keyWords": [
+                "standard deviation",
+                "spread"
+              ],
+              "source": "packs/further-maths/exam-true/formula-sheets.json fs.fm3.standard-deviation"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.03",
+              "front": "What are the steps for finding the standard deviation of a small list of raw values?",
+              "back": "1. Add the values to get $\\sum x$ and find the mean.\n2. Square each value and add to get $\\sum x^2$.\n3. Work out $\\dfrac{\\sum x^2}{n}$.\n4. Subtract $\\bar{x}^2$.\n5. Square root, and round only at this last step.",
+              "kind": "method",
+              "source": "spec FM3-CTD-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.04",
+              "front": "Trap: what is the difference between $\\sum x^2$ and $\\left(\\sum x\\right)^2$?",
+              "back": "$\\sum x^2$ squares **each value first** and then adds. $\\left(\\sum x\\right)^2$ adds first and squares the total, which is much bigger and always wrong in this formula.",
+              "kind": "trap",
+              "keyWords": [
+                "square each value first"
+              ],
+              "source": "CER Summer 2025 Q2"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.05",
+              "front": "Find the mean and standard deviation of 2, 4, 6, 8, giving the standard deviation to 2 decimal places.",
+              "back": "$\\bar{x}=5$; $\\sum x^2=120$, so $\\dfrac{120}{4}-25=5$ and $\\sigma=\\sqrt{5}=2.24$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.06",
+              "front": "Trap: a table lists a value for each day of the week, and a candidate assigns the days midpoints 1 to 5. What has gone wrong?",
+              "back": "The days are labels, not data. The five recorded values **are** the raw data, so use $\\sum x$ and $\\sum x^2$ on them directly with $n=5$.",
+              "kind": "trap",
+              "source": "CER Summer 2025 Q2"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.07",
+              "front": "Which measures of average and spread are **not** examined on this specification?",
+              "back": "The median, the interquartile range, box plots and histograms are excluded. Unit 3 uses the mean and the standard deviation.",
+              "kind": "fact",
+              "keyWords": [
+                "not examined"
+              ],
+              "source": "spec FM3-CTD-01 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-and-standard-deviation.08",
+              "front": "How should mean and standard deviation answers be rounded?",
+              "back": "To 2 decimal places unless the question says otherwise, with **no** rounding of intermediate values. Rounding the mean before squaring it is a common cause of a wrong standard deviation.",
+              "kind": "fact",
+              "source": "packs/further-maths/exam-true/mark-language.json fm.paper.rounding-default"
+            }
+          ]
+        },
+        {
+          "slug": "mean-sd-grouped-data",
+          "title": "Estimating mean and standard deviation from grouped data",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.01",
+              "front": "What are the steps for estimating the mean and standard deviation from a grouped frequency table?",
+              "back": "1. Write the midpoint $x$ of each class.\n2. Add an $fx$ column and total it.\n3. Add an $fx^2$ column, computed as $f\\times x^2$, and total it.\n4. Mean $=\\dfrac{\\sum fx}{\\sum f}$.\n5. $\\sigma=\\sqrt{\\dfrac{\\sum fx^2}{\\sum f}-\\bar{x}^2}$.",
+              "kind": "method",
+              "source": "spec FM3-CTD-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.02",
+              "front": "Trap: what exactly does the $fx^2$ column contain?",
+              "back": "$f\\times x^2$ — square the **midpoint**, then multiply by the frequency. Squaring the $fx$ column gives $(fx)^2$, which is the single most reported error in this topic.",
+              "kind": "trap",
+              "keyWords": [
+                "f times x squared"
+              ],
+              "source": "CER Summer 2019 Q1, Summer 2024 Q1"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.03",
+              "front": "A class is $0\\le t<10$. What value of $x$ goes in the table?",
+              "back": "The midpoint, $5$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.04",
+              "front": "A class has midpoint $x=5$ and frequency $f=4$. What are $fx$ and $fx^2$?",
+              "back": "$fx=20$ and $fx^2=4\\times25=100$. It is **not** $20^2=400$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.05",
+              "front": "Why is the mean of grouped data only an estimate?",
+              "back": "Because the individual values inside each class are not known, so every value is assumed to sit at its class midpoint. That assumption is what makes the answer approximate.",
+              "kind": "definition",
+              "keyWords": [
+                "estimate",
+                "midpoint assumption"
+              ],
+              "source": "CER Summer 2022 Q3"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.06",
+              "front": "A table gives $\\sum f=20$, $\\sum fx=130$ and $\\sum fx^2=1000$. Find the mean and standard deviation, to 2 decimal places.",
+              "back": "$\\bar{x}=\\dfrac{130}{20}=6.5$; $\\dfrac{1000}{20}-6.5^2=50-42.25=7.75$, so $\\sigma=\\sqrt{7.75}=2.78$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.07",
+              "front": "Trap: a candidate uses the class width instead of the midpoint in the $x$ column. How can you spot it?",
+              "back": "The mean comes out far too small and unrelated to the range of the data. Check that your mean lies inside the span of the classes before going on to the standard deviation.",
+              "kind": "trap"
+            },
+            {
+              "id": "fc.further-maths.fm3.mean-sd-grouped-data.08",
+              "front": "Complete: for grouped data the mean is $\\dfrac{\\sum fx}{\\text{\\_\\_\\_\\_}}$ and the $fx^2$ column holds $f\\times\\text{\\_\\_\\_\\_}$.",
+              "back": "$\\sum f$; $x^2$",
+              "kind": "cloze"
+            }
+          ]
+        },
+        {
+          "slug": "combined-sets-mean-sd",
+          "title": "Mean and standard deviation of combined sets",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.01",
+              "front": "What are the steps for finding the standard deviation of two pooled data sets?",
+              "back": "1. For each group work out $\\sum x=n\\bar{x}$.\n2. For each group work out $\\sum x^2=n\\left(\\sigma^2+\\bar{x}^2\\right)$.\n3. Add the two $\\sum x$ values and the two $\\sum x^2$ values, and add the two $n$ values.\n4. Combined mean $=\\dfrac{\\sum x}{n}$.\n5. Combined $\\sigma=\\sqrt{\\dfrac{\\sum x^2}{n}-\\bar{x}^2}$ using the combined figures.",
+              "kind": "method",
+              "keyWords": [
+                "pooled standard deviation",
+                "work with totals"
+              ],
+              "source": "spec FM3-CTD-02"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.02",
+              "front": "How do you recover the total of a data set from its mean?",
+              "back": "$\\sum x=n\\bar{x}$. Totals can be added between groups; means cannot.",
+              "kind": "formula",
+              "source": "packs/further-maths/exam-true/formula-sheets.json mk.fm3.combined-sets"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.03",
+              "front": "How do you recover $\\sum x^2$ from a group's mean and standard deviation?",
+              "back": "Rearranging the standard deviation formula gives $\\sum x^2=n\\left(\\sigma^2+\\bar{x}^2\\right)$. This is the key that unlocks every pooled-standard-deviation question, and it is not on the formula sheet.",
+              "kind": "formula",
+              "keyWords": [
+                "sum of squares"
+              ],
+              "source": "packs/further-maths/exam-true/formula-sheets.json mk.fm3.combined-sets"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.04",
+              "front": "Trap: two groups have means 69 and 83, so a candidate gives the combined mean as 76. When is that right?",
+              "back": "Only if the two groups are the **same size**. Otherwise use $\\dfrac{n_1\\bar{x}_1+n_2\\bar{x}_2}{n_1+n_2}$, which weights each mean by its group size.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q3(i), Summer 2022 Q5(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.05",
+              "front": "State the formula for the mean of two combined data sets.",
+              "back": "$\\bar{x}=\\dfrac{n_1\\bar{x}_1+n_2\\bar{x}_2}{n_1+n_2}$ — the sum of the two totals divided by the total number of values.",
+              "kind": "formula"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.06",
+              "front": "A class of 6 boys and 4 girls has an overall mean mark of 16.8. The boys' mean is 16.0. Find the girls' mean.",
+              "back": "Total for all ten $=168$; boys' total $=96$; girls' total $=72$, so the girls' mean is $\\dfrac{72}{4}=18$.",
+              "kind": "example",
+              "source": "spec FM3-CTD-02 teacher guidance example"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.07",
+              "front": "A group has $n=5$, mean 10 and standard deviation 2. Find $\\sum x$ and $\\sum x^2$.",
+              "back": "$\\sum x=5\\times10=50$; $\\sum x^2=5\\left(2^2+10^2\\right)=5\\times104=520$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.08",
+              "front": "Group 1 has 4 values with mean 5; group 2 has 6 values with mean 10. Find the combined mean.",
+              "back": "$\\dfrac{20+60}{10}=8$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.09",
+              "front": "Group 1: $n=3$, mean 4, SD 1. Group 2: $n=2$, mean 9, SD 2. Find the combined standard deviation, to 2 decimal places.",
+              "back": "$\\sum x=12+18=30$ so $\\bar{x}=6$; $\\sum x^2=51+170=221$. Then $\\dfrac{221}{5}-36=8.2$ and $\\sigma=\\sqrt{8.2}=2.86$.",
+              "kind": "example",
+              "hint": "$\\sum x^2=3(1+16)$ and $2(4+81)$."
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.10",
+              "front": "Trap: a candidate finds the two group totals of squares and then forgets to divide. What is the last step?",
+              "back": "Divide the combined $\\sum x^2$ by the **combined** $n$, subtract the square of the **combined** mean, and only then square root. Examiners report candidates reaching the right totals and stopping.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q2(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.11",
+              "front": "You know the totals for all the data and for one group. How do you get the other group's $\\sum x^2$?",
+              "back": "Subtract: $\\sum x^2_{\\text{other}}=\\sum x^2_{\\text{all}}-\\sum x^2_{\\text{known}}$. The same subtraction works for $\\sum x$ and for $n$.",
+              "kind": "method",
+              "source": "CER Summer 2023 Q2(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.combined-sets-mean-sd.12",
+              "front": "Trap: a candidate adds a second group's raw scores into $\\sum x^2$ without squaring them. Why is the answer badly wrong?",
+              "back": "Because $\\sum x^2$ and $\\sum x$ measure different things and cannot be mixed. Keep two clearly headed running totals, one of values and one of squares, throughout.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q3(ii)"
+            }
+          ]
+        },
+        {
+          "slug": "adjusted-data-mean-sd",
+          "title": "Recalculating mean and SD when items are added or removed",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.01",
+              "front": "What are the steps for recalculating the mean and standard deviation after a value is added, removed or corrected?",
+              "back": "1. Work out $\\sum x$ and $\\sum x^2$ for the original data.\n2. Add or subtract the value itself in $\\sum x$.\n3. Add or subtract the **square** of that value in $\\sum x^2$.\n4. Adjust $n$.\n5. Recompute the mean, then the standard deviation, from the new totals.",
+              "kind": "method",
+              "keyWords": [
+                "adjust the totals"
+              ],
+              "source": "spec FM3-CTD-02"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.02",
+              "front": "How should this working be set out so nothing is lost?",
+              "back": "As a small table with three columns — $n$, $\\sum x$, $\\sum x^2$ — and two rows, before and after. Every change is then visible and the examiner can award the method marks.",
+              "kind": "method",
+              "source": "CER Summer 2025 Q5(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.03",
+              "front": "Ten values have mean 20. One value of 15 is removed. Find the new mean, to 2 decimal places.",
+              "back": "$\\sum x=200$; after removal $\\sum x=185$ with $n=9$, so the mean is $\\dfrac{185}{9}=20.56$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.04",
+              "front": "For that data set $\\sum x^2=4200$. What is $\\sum x^2$ after the value 15 is removed?",
+              "back": "$4200-15^2=4200-225=3975$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.05",
+              "front": "Trap: a value of 182 is added to the data, so a candidate adds 182 to $\\sum x^2$. What should be added?",
+              "back": "$182^2$. $\\sum x^2$ only ever changes by the **square** of the value concerned; this exact slip is reported on one of the most challenging questions of a recent paper.",
+              "kind": "trap",
+              "source": "CER Summer 2025 Q5(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.06",
+              "front": "Trap: fifteen values have mean 108.4, and a candidate writes $\\sum x=108.4\\times14$. What has gone wrong?",
+              "back": "The wrong $n$. Decide before you start whether the stated mean belongs to the data **before** or **after** the change, and use the matching value of $n$.",
+              "kind": "trap",
+              "source": "CER Summer 2025 Q5(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.07",
+              "front": "A value recorded as 3 should have been 30. How do $\\sum x$ and $\\sum x^2$ change?",
+              "back": "$\\sum x$ increases by $30-3=27$. $\\sum x^2$ increases by $900-9=891$. $n$ is unchanged.",
+              "kind": "example",
+              "hint": "Remove the wrong value and its square, then add the right ones."
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.08",
+              "front": "Five values have mean 10 and standard deviation 2. The value 8 is replaced by 13. Find the new mean and standard deviation.",
+              "back": "$\\sum x=50\\to55$ so the mean is 11. $\\sum x^2=520-64+169=625$, so $\\dfrac{625}{5}-121=4$ and $\\sigma=2$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.09",
+              "front": "Trap: two values are corrected but a candidate adjusts only one of them. What is the check?",
+              "back": "Count the corrections in the question and count the adjustments in your table. Each corrected value needs one change to $\\sum x$ and one to $\\sum x^2$.",
+              "kind": "trap",
+              "source": "CER Summer 2025 Q5(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.10",
+              "front": "Why can you never adjust a standard deviation directly when a value changes?",
+              "back": "Because the standard deviation depends on $\\sum x^2$ **and** the mean, both of which move. The only safe route is back to the two totals and forward again.",
+              "kind": "fact"
+            },
+            {
+              "id": "fc.further-maths.fm3.adjusted-data-mean-sd.11",
+              "front": "A data set has $n=8$ and mean 12. A ninth value of 21 is added. Find the new mean.",
+              "back": "$\\sum x=96+21=117$ with $n=9$, so the mean is $13$.",
+              "kind": "example"
+            }
+          ]
+        },
+        {
+          "slug": "linear-transformation-mean-sd",
+          "title": "Effect of a linear transformation on mean and SD",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.01",
+              "front": "If every value of $x$ is transformed by $y=ax+b$, what happens to the mean and the standard deviation?",
+              "back": "$\\bar{y}=a\\bar{x}+b$ and $\\sigma_y=|a|\\sigma_x$. The mean is stretched **and** shifted; the standard deviation is only stretched.",
+              "kind": "formula",
+              "keyWords": [
+                "y = ax + b",
+                "SD unaffected by b"
+              ],
+              "source": "spec FM3-CTD-03"
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.02",
+              "front": "Trap: 3 is added to every value, and a candidate adds 3 to the standard deviation as well. Why is that wrong?",
+              "back": "Adding a constant slides the whole data set along without changing how spread out it is, so the standard deviation is unchanged. Only the multiplier affects spread.",
+              "kind": "trap",
+              "source": "CER Summer 2024 Q1(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.03",
+              "front": "A data set has mean 12 and standard deviation 3. Each value has 3 added. Give the new mean and standard deviation.",
+              "back": "Mean 15, standard deviation 3.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.04",
+              "front": "A data set has mean 12 and standard deviation 3. Each value is doubled. Give the new mean and standard deviation.",
+              "back": "Mean 24, standard deviation 6.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.05",
+              "front": "A data set has mean 50 and standard deviation 4. Each value is transformed by $y=2x-10$. Give the new mean and standard deviation.",
+              "back": "$\\bar{y}=2(50)-10=90$; $\\sigma_y=2\\times4=8$.",
+              "kind": "example",
+              "hint": "The $-10$ moves the mean only."
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.06",
+              "front": "In one sentence, what does each part of $y=ax+b$ do to a data set?",
+              "back": "$a$ stretches the data, scaling both the mean and the standard deviation; $b$ slides the data, moving the mean only.",
+              "kind": "fact"
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.07",
+              "front": "Complete: under $y=ax+b$, $\\bar{y}=\\text{\\_\\_\\_\\_}$ and $\\sigma_y=\\text{\\_\\_\\_\\_}$.",
+              "back": "$a\\bar{x}+b$; $|a|\\sigma_x$",
+              "kind": "cloze"
+            },
+            {
+              "id": "fc.further-maths.fm3.linear-transformation-mean-sd.08",
+              "front": "Marks with mean 40 and standard deviation 5 are rescaled to mean 60 and standard deviation 10. Find $a$ and $b$ in $y=ax+b$.",
+              "back": "From the standard deviations, $a=\\dfrac{10}{5}=2$. Then $60=2(40)+b$, so $b=-20$.",
+              "kind": "example",
+              "hint": "Use the standard deviations first — they involve $a$ only.",
+              "source": "CER Summer 2023 Q6(ii)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "topics": [
+        {
+          "slug": "addition-rule-probability",
+          "title": "Addition rule and mutually exclusive events",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.01",
+              "front": "State the addition rule for two events and say where you can find it.",
+              "back": "$P(A\\cup B)=P(A)+P(B)-P(A\\cap B)$ — printed **on the Unit 3 formula sheet**. The overlap is subtracted because it would otherwise be counted twice.",
+              "kind": "formula",
+              "keyWords": [
+                "union",
+                "subtract the overlap"
+              ],
+              "source": "packs/further-maths/exam-true/formula-sheets.json fs.fm3.addition-rule"
+            },
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.02",
+              "front": "What does it mean for two events to be mutually exclusive, and what does the addition rule become?",
+              "back": "They cannot both happen, so $P(A\\cap B)=0$ and the rule simplifies to $P(A\\cup B)=P(A)+P(B)$.",
+              "kind": "definition",
+              "keyWords": [
+                "mutually exclusive"
+              ],
+              "source": "spec FM3-PRB-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.03",
+              "front": "What does it mean for two events to be independent, and what follows?",
+              "back": "One happening does not change the probability of the other, so $P(A\\cap B)=P(A)\\times P(B)$. Independence is about multiplying; mutual exclusivity is about adding.",
+              "kind": "definition",
+              "keyWords": [
+                "independent"
+              ]
+            },
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.04",
+              "front": "Trap: how do you decide between adding and multiplying two probabilities?",
+              "back": "**And** means multiply (for independent events); **or** means add, subtracting any overlap. Examiners report straightforward \"both happen\" questions being answered by addition.",
+              "kind": "trap",
+              "source": "CER Summer 2022 Q1, Summer 2024 Q3(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.05",
+              "front": "$P(A)=0.5$, $P(B)=0.4$ and $P(A\\cap B)=0.2$. Find $P(A\\cup B)$.",
+              "back": "$0.5+0.4-0.2=0.7$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.06",
+              "front": "Two independent events have probabilities $\\dfrac{3}{11}$ and $\\dfrac{7}{12}$. Find the probability that both happen.",
+              "back": "$\\dfrac{3}{11}\\times\\dfrac{7}{12}=\\dfrac{21}{132}=\\dfrac{7}{44}$",
+              "kind": "example",
+              "source": "CER Summer 2022 Q1"
+            },
+            {
+              "id": "fc.further-maths.fm3.addition-rule-probability.07",
+              "front": "What do the symbols $\\cup$, $\\cap$ and $A'$ mean in probability?",
+              "back": "$A\\cup B$ is A **or** B (or both); $A\\cap B$ is A **and** B; $A'$ is the complement, \"not A\", with $P(A')=1-P(A)$.",
+              "kind": "keyword",
+              "keyWords": [
+                "union",
+                "intersection",
+                "complement"
+              ],
+              "source": "spec FM3-PRB-01 teacher guidance"
+            }
+          ]
+        },
+        {
+          "slug": "venn-diagrams-probability",
+          "title": "Venn diagrams and probabilities from them",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.01",
+              "front": "What are the steps for filling in a Venn diagram?",
+              "back": "1. Put the number in the **intersection** first.\n2. Subtract it to get each \"only\" region.\n3. Work outwards to any third set.\n4. Add all the regions and subtract from the total to get the value outside the circles.\n5. Check every region totals the population.",
+              "kind": "method",
+              "keyWords": [
+                "fill from the centre outwards"
+              ],
+              "source": "spec FM3-PRB-03"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.02",
+              "front": "What does \"only A\" mean on a Venn diagram?",
+              "back": "The part of circle A that lies outside every other circle. The value written there **excludes** the intersection, so \"20 people take A\" is the whole circle, not the \"only A\" region.",
+              "kind": "definition",
+              "keyWords": [
+                "only"
+              ],
+              "source": "CER Summer 2025 Q3(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.03",
+              "front": "Read the diagram: what are the four regions, and what must they add up to?",
+              "back": "Only A, the intersection $A\\cap B$, only B, and the region outside both circles. Together they must equal the total population stated in the question.",
+              "kind": "fact",
+              "source": "spec FM3-PRB-03",
+              "image": {
+                "alt": "A rectangle labelled with the universal set containing two overlapping circles labelled A and B, showing the only-A region, the overlap, the only-B region and a value outside both circles.",
+                "svg": "<svg viewBox='0 0 240 150' fill='none' stroke='currentColor' stroke-width='1.6'><rect x='15' y='12' width='210' height='126'/><circle cx='95' cy='75' r='45'/><circle cx='145' cy='75' r='45'/><g fill='currentColor' stroke='none' font-size='11'><text x='66' y='80'>14</text><text x='114' y='80'>6</text><text x='164' y='80'>9</text><text x='198' y='128'>21</text><text x='60' y='34'>A</text><text x='178' y='34'>B</text><text x='22' y='26'>50</text></g></svg>"
+              }
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.04",
+              "front": "20 people study A, 15 study B and 6 study both. How many study only A?",
+              "back": "$20-6=14$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.05",
+              "front": "In a group of 50 people, 14 study only A, 9 only B and 6 both. How many study neither?",
+              "back": "$50-(14+9+6)=21$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.06",
+              "front": "Trap: a candidate answers a probability question with \"10\". What is missing?",
+              "back": "The division. A probability is (the regions that satisfy the event) $\\div$ (the total), so the answer is a fraction or decimal between 0 and 1, never a raw count.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q7(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.07",
+              "front": "Trap: your probability comes out greater than 1. What has gone wrong?",
+              "back": "Either a count has been used as a probability, or the denominator is too small. Every probability lies between 0 and 1, so a value above 1 is an immediate signal to recheck.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q7(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.08",
+              "front": "The diagram contains an unknown $x$ and the population is 80. How do you form the equation?",
+              "back": "Add **every** region, including the one outside the circles, and set the total equal to 80. Leaving out the outside region or a constant term is the usual cause of a wrong $x$.",
+              "kind": "method",
+              "source": "CER Summer 2023 Q3, Summer 2025 Q3(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.venn-diagrams-probability.09",
+              "front": "Trap: 120 houses are surveyed but your regions total only 94. What should you do?",
+              "back": "Place the missing 26 outside the circles, then check again. Examiners report whole questions going wrong because the stated total was never reconciled.",
+              "kind": "trap",
+              "source": "CER Summer 2024 Q6"
+            }
+          ]
+        },
+        {
+          "slug": "tree-diagrams-probability",
+          "title": "Tree diagrams, with and without replacement",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.01",
+              "front": "What are the steps for using a tree diagram?",
+              "back": "1. Draw a branch for every outcome at each stage.\n2. Write the probability on every branch; each set must total 1.\n3. Multiply along a path for \"and\".\n4. Add the paths that satisfy the event for \"or\".\n5. Leave the answer as an exact fraction unless told otherwise.",
+              "kind": "method",
+              "keyWords": [
+                "multiply along",
+                "add between"
+              ],
+              "source": "spec FM3-PRB-03"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.02",
+              "front": "How do the second-stage probabilities change when selection is **without replacement**?",
+              "back": "Both the numerator and the denominator drop. From 5 red in 8, after taking a red the next branch is $\\dfrac{4}{7}$; after taking a blue it is $\\dfrac{5}{7}$.",
+              "kind": "fact",
+              "keyWords": [
+                "without replacement"
+              ],
+              "source": "spec FM3-PRB-03"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.03",
+              "front": "A bag holds 5 red and 3 blue counters. Two are taken without replacement. Find the probability that both are red.",
+              "back": "$\\dfrac{5}{8}\\times\\dfrac{4}{7}=\\dfrac{20}{56}=\\dfrac{5}{14}$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.04",
+              "front": "From the same bag of 5 red and 3 blue, two are taken without replacement. Find the probability of one of each colour.",
+              "back": "$\\dfrac{5}{8}\\times\\dfrac{3}{7}+\\dfrac{3}{8}\\times\\dfrac{5}{7}=\\dfrac{15}{56}+\\dfrac{15}{56}=\\dfrac{15}{28}$",
+              "kind": "example",
+              "hint": "Two orders: red then blue, and blue then red."
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.05",
+              "front": "Trap: a candidate gives $0.7\\times0.02=0.014$ for \"one of each\". What is missing?",
+              "back": "The second order. Unless the question fixes the order, both paths count, so the answer is $2\\times0.014=0.028$.",
+              "kind": "trap",
+              "keyWords": [
+                "count both orders"
+              ],
+              "source": "CER Summer 2022 Q6(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.06",
+              "front": "How do you find the probability of \"at least one\" from a tree diagram?",
+              "back": "$P(\\text{at least one})=1-P(\\text{none})$. One subtraction replaces adding several branch products, and it is far less error-prone.",
+              "kind": "method",
+              "keyWords": [
+                "at least one",
+                "complement"
+              ],
+              "source": "CER Summer 2024 Q3(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.07",
+              "front": "From a bag of 5 red and 3 blue, two counters are taken without replacement. Find the probability of at least one red.",
+              "back": "$1-\\dfrac{3}{8}\\times\\dfrac{2}{7}=1-\\dfrac{6}{56}=\\dfrac{25}{28}$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.08",
+              "front": "Trap: a candidate multiplies $P(BB)$ and $P(GG)$ to find the probability that both children are the same sex. What should they do?",
+              "back": "Add them. Those two outcomes are alternatives, not a sequence: multiply **along** a path, add **between** paths.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q2(i)"
+            },
+            {
+              "id": "fc.further-maths.fm3.tree-diagrams-probability.09",
+              "front": "Trap: a candidate converts every branch to two-decimal-place decimals early on. What is the risk?",
+              "back": "Accumulated rounding error in the final answer. Keep the exact fractions through the working and round once at the end, or not at all if an exact answer is acceptable.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q2"
+            }
+          ]
+        },
+        {
+          "slug": "conditional-probability",
+          "title": "Conditional probability from tables, Venn and tree diagrams",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.01",
+              "front": "State the conditional probability formula and say where you can find it.",
+              "back": "$P(A\\mid B)=\\dfrac{P(A\\cap B)}{P(B)}$ — printed **on the Unit 3 formula sheet**. The event after the bar is the one that goes on the bottom.",
+              "kind": "formula",
+              "keyWords": [
+                "given that",
+                "denominator is the condition"
+              ],
+              "source": "packs/further-maths/exam-true/formula-sheets.json fs.fm3.conditional-probability"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.02",
+              "front": "What is a conditional probability?",
+              "back": "The probability of an event given that another has already happened. The condition **restricts the sample space**: you are no longer choosing from everyone, only from the group named after \"given that\".",
+              "kind": "definition",
+              "keyWords": [
+                "restricted sample space"
+              ],
+              "source": "spec FM3-PRB-02"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.03",
+              "front": "The condition B is the shaded circle. Which region is the numerator of $P(A\\mid B)$, and which is the denominator?",
+              "back": "Numerator: the darker overlap $A\\cap B$. Denominator: the **whole** of B, not the whole rectangle. The condition shrinks the population you divide by.",
+              "kind": "method",
+              "source": "spec FM3-PRB-02",
+              "image": {
+                "alt": "Two overlapping circles A and B inside a rectangle; circle B is lightly shaded to show the restricted sample space and the overlap of A and B is shaded more darkly.",
+                "svg": "<svg viewBox='0 0 240 150' fill='none' stroke='currentColor' stroke-width='1.6'><rect x='15' y='12' width='210' height='126'/><circle cx='145' cy='75' r='45' fill='currentColor' fill-opacity='0.1' stroke='none'/><path d='M120 37.58 A45 45 0 0 1 120 112.42 A45 45 0 0 1 120 37.58 Z' fill='currentColor' fill-opacity='0.3' stroke='none'/><circle cx='95' cy='75' r='45'/><circle cx='145' cy='75' r='45'/><g fill='currentColor' stroke='none' font-size='11'><text x='60' y='34'>A</text><text x='178' y='34'>B</text><text x='104' y='138'>A and B</text><text x='168' y='128'>all of B</text></g></svg>"
+              }
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.04",
+              "front": "What are the steps for a conditional probability from a two-way table?",
+              "back": "1. Underline the words after \"given that\" — that names the row or column you are restricted to.\n2. Find that row or column total: it is the denominator.\n3. Find the single cell that also satisfies the other event: it is the numerator.\n4. Divide, and simplify.",
+              "kind": "method",
+              "keyWords": [
+                "two-way table",
+                "row or column total"
+              ],
+              "source": "spec FM3-PRB-02"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.05",
+              "front": "What are the steps for a conditional probability from a tree diagram?",
+              "back": "1. Identify every path where the condition happens, and add their probabilities — that is the denominator.\n2. From those, keep only the paths where the other event also happens — that sum is the numerator.\n3. Divide.",
+              "kind": "method",
+              "source": "CER Summer 2025 Q7(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.06",
+              "front": "Trap: 28 out of 100 students in a survey, and a candidate gives $P(\\text{A}\\mid\\text{B})$ as $\\dfrac{28}{100}$. What is the likely correct denominator?",
+              "back": "The size of group B alone, for example 88, giving $\\dfrac{28}{88}$. Dividing by the whole population is the most reported conditional-probability error at this level.",
+              "kind": "trap",
+              "source": "CER Summer 2022 Q6(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.07",
+              "front": "28 of the 88 people who own a car also own a bicycle. Find the probability that a car owner owns a bicycle, as a fraction and to 2 decimal places.",
+              "back": "$\\dfrac{28}{88}=\\dfrac{7}{22}=0.32$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.08",
+              "front": "A tree gives $P(A\\cap B)=0.3\\times0.4$ and $P(B)=0.68$. Find $P(A\\mid B)$, to 2 decimal places.",
+              "back": "$\\dfrac{0.12}{0.68}=0.18$",
+              "kind": "example",
+              "hint": "Both pieces are needed — find each, then divide.",
+              "source": "CER Summer 2025 Q7(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.09",
+              "front": "On a Venn diagram, 12 people are in $A\\cap B$ and 30 are in B altogether. Find $P(A\\mid B)$.",
+              "back": "$\\dfrac{12}{30}=0.4$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.10",
+              "front": "If event A is entirely inside event B, what is $P(A\\cap B)$?",
+              "back": "$P(A)$ — every outcome in A is already in B, so nothing is lost in the overlap. Recognising this turns a hard question into a one-line division.",
+              "kind": "fact",
+              "keyWords": [
+                "nested events",
+                "subset"
+              ],
+              "source": "CER Summer 2019 Q2(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.11",
+              "front": "Trap: a candidate finds the numerator correctly and then divides by the wrong total. What single habit fixes this?",
+              "back": "Write the denominator **first**, straight from the words after \"given that\", before working out anything else. Examiners describe the numerator as usually right and the denominator as usually wrong.",
+              "kind": "trap",
+              "source": "CER Summer 2024 Q3(iii), Q6(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability.12",
+              "front": "Trap: a conditional answer comes out as a value over 80 when 80 was the whole population. Why is that a red flag?",
+              "back": "Because conditioning always **reduces** the sample space, so the denominator must be smaller than the population. Examiners call an answer over the full total a total misunderstanding of conditioning.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q3(iv)"
+            }
+          ]
+        },
+        {
+          "slug": "conditional-probability-with-distributions",
+          "title": "Conditional probability with the binomial and normal distributions",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.01",
+              "front": "For $a<b$, what does $P(X<a\\mid X<b)$ simplify to?",
+              "back": "$\\dfrac{P(X<a)}{P(X<b)}$, because \"$X<a$\" is entirely inside \"$X<b$\", so the intersection is just $P(X<a)$.",
+              "kind": "formula",
+              "keyWords": [
+                "nested events"
+              ],
+              "source": "spec FM3-PRB-02 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.02",
+              "front": "What are the steps for a conditional probability inside a normal distribution?",
+              "back": "1. Sketch the curve and shade both regions.\n2. Check whether one region sits inside the other.\n3. Standardise each boundary with $z=\\dfrac{x-\\mu}{\\sigma}$ and read the table.\n4. Numerator: the probability of the smaller (inner) event.\n5. Divide by the probability of the condition.",
+              "kind": "method",
+              "source": "spec FM3-NOR-02 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.03",
+              "front": "Trap: asked for $P(X<34\\mid X<60)$, a candidate multiplies the two probabilities. What has been missed?",
+              "back": "That \"less than 34\" is already contained in \"less than 60\". Nested events are divided, never multiplied; this exact error is reported across several series.",
+              "kind": "trap",
+              "source": "CER Summer 2022 Q7(iii), Summer 2023 Q5(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.04",
+              "front": "$P(X<34)=0.1151$ and $P(X<60)=0.8413$. Find $P(X<34\\mid X<60)$, to 2 decimal places.",
+              "back": "$\\dfrac{0.1151}{0.8413}=0.14$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.05",
+              "front": "How do you identify the condition in a wordy distribution question?",
+              "back": "Look for \"given that\", \"of those who\", \"among the\" or \"knowing that\". Everything after those words describes the restricted group and becomes the denominator.",
+              "kind": "method",
+              "keyWords": [
+                "given that",
+                "of those who"
+              ]
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.06",
+              "front": "Why does a sketch of the normal curve make these questions safer?",
+              "back": "Shading both regions shows at a glance whether one lies inside the other, which decides between dividing and multiplying. CCEA encourages a good diagram in every normal-distribution answer.",
+              "kind": "method",
+              "source": "spec FM3-NOR-01 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.07",
+              "front": "A fair coin is tossed 4 times. Find $P(X\\ge1)$ and $P(X\\ge2)$ for the number of heads.",
+              "back": "$P(X\\ge1)=1-\\dfrac{1}{16}=\\dfrac{15}{16}$; $P(X\\ge2)=1-\\dfrac{1}{16}-\\dfrac{4}{16}=\\dfrac{11}{16}$.",
+              "kind": "example",
+              "hint": "Use Pascal's row 1 4 6 4 1 with $p=q=\\dfrac{1}{2}$."
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.08",
+              "front": "For that coin, find $P(X\\ge2\\mid X\\ge1)$, to 2 decimal places.",
+              "back": "$\\dfrac{11/16}{15/16}=\\dfrac{11}{15}=0.73$",
+              "kind": "example",
+              "hint": "\"At least 2\" is inside \"at least 1\"."
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.09",
+              "front": "Can conditional probability be tested through the binomial and normal distributions on this specification?",
+              "back": "Yes — the Teacher Guidance says so explicitly, and it is one of the hardest things asked. A distribution question that ends with \"given that\" is a conditional probability question.",
+              "kind": "fact",
+              "source": "spec FM3-PRB-02 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.10",
+              "front": "Trap: a candidate answers with the numerator alone, for example 0.1151. What has been left out?",
+              "back": "The division by the probability of the condition. A conditional answer is always larger than the plain probability of the event, because the sample space has shrunk.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q5(iii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.conditional-probability-with-distributions.11",
+              "front": "What does it mean for one event to be nested inside another, and what is the consequence for $P(A\\cap B)$?",
+              "back": "Every outcome of the inner event is also an outcome of the outer one. Then $P(A\\cap B)$ is simply the probability of the inner event, so no multiplication is needed.",
+              "kind": "definition",
+              "keyWords": [
+                "nested",
+                "subset"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "binomial-distribution",
+      "title": "Binomial distribution",
+      "topics": [
+        {
+          "slug": "pascals-triangle-binomial-expansion",
+          "title": "Pascal's triangle and expanding (p + q) to the n",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.pascals-triangle-binomial-expansion.01",
+              "front": "Write out the rows of Pascal's triangle up to $n=8$.",
+              "back": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1",
+              "kind": "fact",
+              "keyWords": [
+                "Pascal's triangle"
+              ],
+              "source": "spec FM3-BIN-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.pascals-triangle-binomial-expansion.02",
+              "front": "How do you build the next row of Pascal's triangle?",
+              "back": "Start and end with 1, and make every other entry the sum of the two numbers above it. The row for $(p+q)^n$ has $n+1$ entries.",
+              "kind": "method"
+            },
+            {
+              "id": "fc.further-maths.fm3.pascals-triangle-binomial-expansion.03",
+              "front": "Which row of Pascal's triangle do you need for $(p+q)^4$, and what is it?",
+              "back": "The row with five entries: 1 4 6 4 1.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.pascals-triangle-binomial-expansion.04",
+              "front": "Expand $(p+q)^3$.",
+              "back": "$p^3+3p^2q+3pq^2+q^3$",
+              "kind": "example",
+              "hint": "Coefficients 1 3 3 1; the powers of $p$ fall as the powers of $q$ rise."
+            },
+            {
+              "id": "fc.further-maths.fm3.pascals-triangle-binomial-expansion.05",
+              "front": "Trap: a candidate writes the expansion straight down without showing Pascal's triangle. What can that cost?",
+              "back": "A mark. Examiners report the triangle itself being credited, so write the rows out — it also prevents using the wrong power or dropping a coefficient.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q4(a)"
+            },
+            {
+              "id": "fc.further-maths.fm3.pascals-triangle-binomial-expansion.06",
+              "front": "In any term of $(p+q)^n$, what must the two powers do, and how are the terms joined?",
+              "back": "The powers of $p$ and $q$ add to $n$ in every term, and the terms are joined with **plus** signs. Omitting the plus signs or using the wrong $n$ are the errors examiners list.",
+              "kind": "fact",
+              "source": "CER Summer 2019 Q4(a)"
+            }
+          ]
+        },
+        {
+          "slug": "binomial-probabilities",
+          "title": "Binomial probabilities in context",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.01",
+              "front": "Write the probability of exactly $r$ successes in $n$ trials.",
+              "back": "$P(X=r)=\\left(\\text{Pascal coefficient}\\right)\\times p^r q^{n-r}$, where $p$ is the probability of a success and $q=1-p$. CCEA requires the full derivation, so show the coefficient and both powers.",
+              "kind": "formula",
+              "keyWords": [
+                "coefficient",
+                "p to the r",
+                "q to the n minus r"
+              ],
+              "source": "spec FM3-BIN-02 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.02",
+              "front": "What are the steps for an \"at least $r$\" binomial probability?",
+              "back": "1. Decide what counts as a success and write down $p$, $q$ and $n$.\n2. Note that \"at least $r$\" means $r$ or more.\n3. Write $1-\\left(P(0)+P(1)+\\cdots+P(r-1)\\right)$ — keep the whole sum in brackets.\n4. Work out each of those few terms with its coefficient.\n5. Subtract, and round only at the end.",
+              "kind": "method",
+              "keyWords": [
+                "at least",
+                "complement",
+                "brackets"
+              ],
+              "source": "spec FM3-BIN-02 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.03",
+              "front": "Trap: the question says 30% of items are faulty and asks about working items. What is $p$?",
+              "back": "Whatever the question counts as a success. If you are counting working items then $p=0.7$ and $q=0.3$. Write down which is which before touching the calculator — mixing them is the most reported binomial error.",
+              "kind": "trap",
+              "source": "CER Summer 2022 Q4, Summer 2023 Q4"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.04",
+              "front": "A coin is tossed 4 times. Find the probability of at least one head.",
+              "back": "$1-\\left(\\dfrac{1}{2}\\right)^4=1-\\dfrac{1}{16}=\\dfrac{15}{16}=0.9375$",
+              "kind": "example",
+              "hint": "\"At least one\" is $1-P(\\text{none})$."
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.05",
+              "front": "$n=5$ and $p=0.2$. Find the probability of exactly 2 successes.",
+              "back": "$10\\times0.2^2\\times0.8^3=10\\times0.04\\times0.512=0.2048$",
+              "kind": "example",
+              "hint": "The coefficient comes from the row 1 5 10 10 5 1."
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.06",
+              "front": "A coin with $P(\\text{head})=0.4$ is tossed 7 times. Find the probability of at least 2 heads, to 2 decimal places.",
+              "back": "$1-\\left(0.6^7+7(0.4)(0.6)^6\\right)=1-(0.0280+0.1306)=0.84$",
+              "kind": "example",
+              "source": "spec FM3-BIN-02 teacher guidance example"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.07",
+              "front": "Trap: a candidate writes $1-P(0)+P(1)$ for \"at least 2\". What is wrong?",
+              "back": "The missing bracket. It must be $1-\\left(P(0)+P(1)\\right)$; without the bracket the second probability is added instead of subtracted. Examiners single this out as a recurring problem.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q4(iv)"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.08",
+              "front": "Trap: a calculator gives a binomial probability of 0.0367 and a candidate writes 0.03. What has gone wrong, and what is the marking rule?",
+              "back": "The value has been **truncated** rather than rounded: 0.0367 rounds to 0.04 at 2 decimal places, so 0.03 loses the accuracy mark. Never cut digits off; round properly at the final step, to the accuracy the question asks for.",
+              "kind": "trap",
+              "source": "CER Summer 2024 Q4(v)"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.09",
+              "front": "Trap: your calculator has a binomial distribution function, so you write down the answer alone. What is the mark?",
+              "back": "Nothing if it is wrong, and often nothing even if it is right. The mark codes **M** (method) and **MW** (method and working) are awarded for the terms you write, so show the coefficient and the powers.",
+              "kind": "trap",
+              "keyWords": [
+                "M",
+                "MW",
+                "show the derivation"
+              ],
+              "source": "packs/further-maths/exam-true/mark-language.json; CER Summer 2025 Q4(iv)"
+            },
+            {
+              "id": "fc.further-maths.fm3.binomial-probabilities.10",
+              "front": "What do the mark codes **M**, **W** and **MW** mean in a CCEA Further Mathematics scheme?",
+              "back": "**M**: a method mark, given for a correct method even if a slip follows.\n**W**: a working mark, given for accurate working or a correct value.\n**MW**: one combined mark that needs the method **and** the accurate result, so a slip loses all of it.",
+              "kind": "definition",
+              "source": "packs/further-maths/exam-true/mark-language.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "normal-distribution",
+      "title": "Normal distribution",
+      "topics": [
+        {
+          "slug": "normal-distribution-bell-curve",
+          "title": "The normal distribution as a model",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-bell-curve.01",
+              "front": "Describe the shape of a normal distribution.",
+              "back": "A bell curve: symmetric about the mean, highest at the mean, tailing away on both sides, with total area 1 under it. The mean, median and mode all sit at the centre.",
+              "kind": "definition",
+              "keyWords": [
+                "bell curve",
+                "symmetric"
+              ],
+              "source": "spec FM3-NOR-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-bell-curve.02",
+              "front": "What two numbers completely describe a normal distribution, and what does each control?",
+              "back": "The mean $\\mu$ fixes where the curve is centred; the standard deviation $\\sigma$ fixes how wide and flat it is. A larger $\\sigma$ spreads the curve out.",
+              "kind": "fact"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-bell-curve.03",
+              "front": "Roughly what proportion of a normal distribution lies within one and within two standard deviations of the mean?",
+              "back": "About 68% within one standard deviation and about 95% within two. It is a useful sanity check on any probability you calculate.",
+              "kind": "fact"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-bell-curve.04",
+              "front": "Give three real-world variables that are modelled well by a normal distribution.",
+              "back": "Heights of adults, masses of packaged goods, and errors in repeated measurements. Many natural quantities cluster around a typical value with symmetric variation.",
+              "kind": "example",
+              "source": "spec FM3-NOR-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-bell-curve.05",
+              "front": "Trap: faced with a normal distribution question, a candidate reaches for the standard deviation formula. What is actually needed?",
+              "back": "The mean and standard deviation are **given**; the work is standardising with $z=\\dfrac{x-\\mu}{\\sigma}$ and reading the table. Examiners note candidates using the dispersion formula or leaving the question blank.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q5"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-bell-curve.06",
+              "front": "Why does CCEA encourage a diagram in every normal distribution answer?",
+              "back": "Because the sketch shows which side of the mean the value lies and which area is wanted, which is what decides between the table value and $1-$ that value. Mark the mean, the $x$-value and the $z$-value below the axis.",
+              "kind": "method",
+              "source": "spec FM3-NOR-01 teacher guidance"
+            }
+          ]
+        },
+        {
+          "slug": "normal-distribution-z-probabilities",
+          "title": "Probabilities from the normal table",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.01",
+              "front": "State the standardising formula, and say whether it is given in the exam.",
+              "back": "$z=\\dfrac{x-\\mu}{\\sigma}$. It is **not** on the Unit 3 formula sheet, so it must be memorised — only the Normal Probability Table is provided, on page 3 of the booklet.",
+              "kind": "formula",
+              "keyWords": [
+                "z-score",
+                "standardise"
+              ],
+              "source": "packs/further-maths/exam-true/formula-sheets.json mk.fm3.z-score"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.02",
+              "front": "The shaded region is the upper tail beyond $x$. What are the steps for finding its probability?",
+              "back": "1. Sketch the curve; mark $\\mu$ and $x$, and shade the region wanted.\n2. Standardise: $z=\\dfrac{x-\\mu}{\\sigma}$.\n3. Read $\\Phi(z)$ from the table — that is the area to the **left**.\n4. Since the shaded area is on the right, the answer is $1-\\Phi(z)$.",
+              "kind": "method",
+              "source": "spec FM3-NOR-02",
+              "image": {
+                "alt": "A normal bell curve on a horizontal axis with the mean marked by a dashed vertical line at the centre and a vertical line further right at x, with the single tail to the right of x shaded.",
+                "svg": "<svg viewBox='0 0 250 150' fill='none' stroke='currentColor' stroke-width='1.6'><path d='M173 76 C188 92 200 120 225 120 L173 120 Z' fill='currentColor' fill-opacity='0.18' stroke='none'/><path d='M25 120 C70 120 85 32 125 32 C165 32 180 120 225 120'/><line x1='18' y1='120' x2='234' y2='120' stroke-width='1.1'/><line x1='125' y1='120' x2='125' y2='32' stroke-dasharray='4 3' stroke-width='1'/><line x1='173' y1='120' x2='173' y2='76' stroke-width='1.2'/><g fill='currentColor' stroke='none' font-size='10'><text x='120' y='136'>mean</text><text x='168' y='136'>x</text><text x='186' y='96'>1 - table value</text><text x='38' y='60'>area = 1 in total</text></g></svg>"
+              }
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.03",
+              "front": "What does the Normal Probability Table give you, and for which values of $z$?",
+              "back": "$\\Phi(z)=P(Z<z)$, the area to the **left** of $z$, tabulated for $z$ from 0.00 upwards. Negative $z$ values are handled by symmetry.",
+              "kind": "fact",
+              "source": "packs/further-maths/exam-true/formula-sheets.json fs.fm3.normal-table"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.04",
+              "front": "How do you find $P(Z<-z)$ for a positive $z$?",
+              "back": "By symmetry, $P(Z<-z)=1-\\Phi(z)$. The left tail below $-z$ has exactly the same area as the right tail above $z$.",
+              "kind": "formula",
+              "keyWords": [
+                "symmetry",
+                "negative z"
+              ]
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.05",
+              "front": "$X$ is normal with $\\mu=50$ and $\\sigma=10$. Find the $z$-value for $x=65$.",
+              "back": "$z=\\dfrac{65-50}{10}=1.5$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.06",
+              "front": "$\\Phi(1.5)=0.9332$. Find $P(X>65)$ when $\\mu=50$ and $\\sigma=10$.",
+              "back": "$1-0.9332=0.0668$",
+              "kind": "example",
+              "hint": "The table gives the area to the left; you want the right tail."
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.07",
+              "front": "$X$ is normal with $\\mu=50$ and $\\sigma=10$, and $\\Phi(0.6)=0.7257$. Find $P(X<44)$.",
+              "back": "$z=\\dfrac{44-50}{10}=-0.6$, so $P(X<44)=1-0.7257=0.2743$.",
+              "kind": "example",
+              "hint": "A negative $z$ means the left tail, so use symmetry."
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.08",
+              "front": "Trap: a candidate finds $z=-1.2$, looks up 0.8849 and writes that down. What is the answer really?",
+              "back": "$1-0.8849=0.1151$ for the left tail. The table value is the area on the other side, so a shaded sketch is the reliable guard against this.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q5(ii)"
+            },
+            {
+              "id": "fc.further-maths.fm3.normal-distribution-z-probabilities.09",
+              "front": "Which normal-distribution questions are **not** examined on this specification?",
+              "back": "Two-sided probabilities of the form $P(a<z<b)$, and finding a $z$-value (or an $x$-value) from a given probability. Only a single probability from a given $z$ is required.",
+              "kind": "fact",
+              "keyWords": [
+                "not examined",
+                "single tail only"
+              ],
+              "source": "spec FM3-NOR-02 teacher guidance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bivariate-analysis",
+      "title": "Bivariate analysis",
+      "topics": [
+        {
+          "slug": "spearmans-rank-correlation",
+          "title": "Spearman's rank correlation coefficient",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.01",
+              "front": "State Spearman's rank correlation coefficient and say where you can find it.",
+              "back": "$r=1-\\dfrac{6\\sum d^2}{n\\left(n^2-1\\right)}$ — printed **on the Unit 3 formula sheet**, where $d$ is the difference between a pair of ranks and $n$ is the number of pairs.",
+              "kind": "formula",
+              "keyWords": [
+                "Spearman",
+                "rank"
+              ],
+              "source": "packs/further-maths/exam-true/formula-sheets.json fs.fm3.spearman"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.02",
+              "front": "What are the steps for calculating Spearman's coefficient?",
+              "back": "1. Rank each variable, both in the same direction.\n2. Share tied ranks as the mean of the positions they occupy.\n3. Find $d$ for each pair, then $d^2$.\n4. Total the $d^2$ column.\n5. Substitute into the formula and interpret the value.",
+              "kind": "method",
+              "source": "spec FM3-BIV-01"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.03",
+              "front": "The scatter diagram shows five competitors with their rank pairs written beside each point. What does a $d$ of 0 for most pairs tell you?",
+              "back": "That the two rankings almost agree, so $r$ will be close to $+1$. Here $\\sum d^2=2$ and $n=5$, giving $r=1-\\dfrac{12}{120}=0.9$: strong positive correlation.",
+              "kind": "example",
+              "source": "spec FM3-BIV-01",
+              "image": {
+                "alt": "A scatter diagram with five plotted points rising from lower left to upper right, each labelled with its pair of ranks in brackets.",
+                "svg": "<svg viewBox='0 0 240 160' fill='none' stroke='currentColor' stroke-width='1.6'><line x1='35' y1='20' x2='35' y2='130' stroke-width='1.1'/><line x1='35' y1='130' x2='228' y2='130' stroke-width='1.1'/><circle cx='60' cy='115' r='3' fill='currentColor'/><circle cx='95' cy='90' r='3' fill='currentColor'/><circle cx='130' cy='70' r='3' fill='currentColor'/><circle cx='165' cy='80' r='3' fill='currentColor'/><circle cx='200' cy='45' r='3' fill='currentColor'/><g fill='currentColor' stroke='none' font-size='9'><text x='66' y='113'>(5, 5)</text><text x='101' y='88'>(4, 4)</text><text x='136' y='68'>(3, 2)</text><text x='171' y='78'>(2, 3)</text><text x='196' y='38'>(1, 1)</text><text x='40' y='16'>judge B</text><text x='186' y='148'>judge A</text></g></svg>"
+              }
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.04",
+              "front": "Three competitors score 7, 7 and 4, ranked with the highest first. What ranks do they get?",
+              "back": "The two 7s occupy positions 1 and 2, so each takes the mean, 1.5. The 4 takes rank 3.",
+              "kind": "example",
+              "keyWords": [
+                "tied ranks"
+              ],
+              "source": "CER Summer 2025 Q1"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.05",
+              "front": "Three values are tied for positions 2, 3 and 4. What rank does each receive?",
+              "back": "$\\dfrac{2+3+4}{3}=3$ for all three, and the next value takes rank 5. A three-way tie is exactly where examiners report candidates going wrong.",
+              "kind": "example",
+              "source": "CER Summer 2025 Q1"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.06",
+              "front": "$n=5$ and $\\sum d^2=4$. Find $r$.",
+              "back": "$r=1-\\dfrac{6\\times4}{5\\times24}=1-0.2=0.8$",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.07",
+              "front": "Trap: with $n=9$, a candidate writes $9\\times81$ in the denominator. What should it be?",
+              "back": "$n\\left(n^2-1\\right)=9\\times80=720$. The $-1$ is inside the bracket, and the 6 in the numerator is also often dropped.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q6"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.08",
+              "front": "Trap: a candidate uses $\\left(\\sum d\\right)^2$, and another records a negative $d^2$. Why are both impossible?",
+              "back": "Each $d$ is squared **before** adding, so $\\sum d^2$ can never be negative and is not the square of the total. The sum of the $d$ values themselves is always zero, which is a useful check on your ranking.",
+              "kind": "trap",
+              "source": "CER Summer 2022 Q2, Summer 2024 Q2"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.09",
+              "front": "What range can $r$ take, and what does CCEA treat as weak or no correlation?",
+              "back": "$-1\\le r\\le1$. For this specification, $-0.4\\le r\\le0.4$ counts as **weak or no correlation**, so a small positive value must not be called positive correlation.",
+              "kind": "fact",
+              "keyWords": [
+                "minus 0.4 to 0.4"
+              ],
+              "source": "spec FM3-BIV-01 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.spearmans-rank-correlation.10",
+              "front": "How should you word the interpretation of a Spearman coefficient of 0.9?",
+              "back": "Use the word **correlation** and put it in context: for example, strong positive correlation, so the two judges largely agreed on the order. Interpretations without the word \"correlation\" lose the mark.",
+              "kind": "method",
+              "source": "CER Summer 2019 Q6, Summer 2022 Q2"
+            }
+          ]
+        },
+        {
+          "slug": "line-of-best-fit",
+          "title": "Line of best fit through the mean point",
+          "cards": [
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.01",
+              "front": "Which point must a line of best fit pass through on this specification?",
+              "back": "The mean point $\\left(\\bar{x},\\bar{y}\\right)$. CCEA states that wherever possible the line must go through both means, so calculate and plot that point before drawing.",
+              "kind": "fact",
+              "keyWords": [
+                "mean point"
+              ],
+              "source": "spec FM3-BIV-02 teacher guidance"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.02",
+              "front": "What are the steps for finding the equation of the line of best fit?",
+              "back": "1. Work out $\\bar{x}$ and $\\bar{y}$ and plot the mean point.\n2. Draw the line by eye through it, balancing the points either side.\n3. Read a **second** point that lies on your line.\n4. Gradient $m=\\dfrac{y_2-y_1}{x_2-x_1}$ from those two points.\n5. Substitute the mean point into $y=mx+c$ to find $c$.",
+              "kind": "method",
+              "source": "spec FM3-BIV-03"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.03",
+              "front": "Trap: a candidate finds the gradient using two points taken from the data table. Why is that wrong?",
+              "back": "Because those points are almost never **on** the line. Both points must be read off the line you drew, one of them being the mean point.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q6(vi), Summer 2022 Q2(vi)"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.04",
+              "front": "Trap: a line of best fit is drawn through the origin. When is that acceptable?",
+              "back": "Only if the origin happens to lie on the line through the mean point. Forcing the line through $(0,0)$ out of habit puts it outside the acceptable range and loses the mark.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q1(v)"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.05",
+              "front": "A line of best fit has gradient $-2$ and passes through the mean point $(5,12)$. Find its equation.",
+              "back": "$12=-2(5)+c$, so $c=22$ and the line is $y=-2x+22$.",
+              "kind": "example"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.06",
+              "front": "Trap: to find $c$ a candidate divides instead of subtracting. What is the correct rearrangement of $y=mx+c$?",
+              "back": "$c=y-mx$. Substitute the mean point and subtract; dividing is a reported error that spoils an otherwise correct answer.",
+              "kind": "trap",
+              "source": "CER Summer 2023 Q1(vi)"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.07",
+              "front": "Trap: the gradient is negative but a candidate writes it as positive. How do you check?",
+              "back": "Look at the line: falling from left to right means a negative gradient. Also check the sign of the rise, since dividing a negative rise by a positive run must stay negative.",
+              "kind": "trap",
+              "source": "CER Summer 2019 Q6(vi), Summer 2024 Q2"
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.08",
+              "front": "Eight pairs of data give $\\sum x=40$ and $\\sum y=100$. Where is the mean point?",
+              "back": "$\\left(\\dfrac{40}{8},\\dfrac{100}{8}\\right)=(5,\\,12.5)$",
+              "kind": "example",
+              "hint": "Do not round the means to whole numbers before plotting."
+            },
+            {
+              "id": "fc.further-maths.fm3.line-of-best-fit.09",
+              "front": "You use the equation to predict a value far outside the range of the data. Why is that unreliable, and what else can go wrong when reading an intercept?",
+              "back": "The relationship is only evidenced inside the data range, so a prediction beyond it is extrapolation. Reading $c$ off a graph whose axes do not start at zero also gives the wrong intercept — calculate $c$ instead.",
+              "kind": "trap",
+              "keyWords": [
+                "extrapolation",
+                "truncated axis"
+              ],
+              "source": "CER Summer 2024 Q2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

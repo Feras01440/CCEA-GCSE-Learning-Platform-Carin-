@@ -1,0 +1,450 @@
+[
+  {
+    "type": "hero",
+    "lede": "A plank balances when the turning effects on each side are equal, and a turning effect is a force times its distance from the pivot. So a light load far out can balance a heavy one close in. Every CCEA rod question is two rules used together: the moments balance, and the forces up equal the forces down.",
+    "can": [
+      "Calculate a moment, with a uniform rod's own weight at its midpoint",
+      "Choose the point to take moments about, then resolve vertically for the rest",
+      "Find reactions, tensions, a ratio, an unknown distance or the tipping point"
+    ],
+    "minutes": 17
+  },
+  {
+    "type": "h",
+    "text": "Turning, not sliding",
+    "role": "idea"
+  },
+  {
+    "type": "p",
+    "md": "Push a door near its hinges and it hardly moves; push the handle with the same force and it swings open. A force turns things more the further from the turning point it acts. This topic is about a straight rod that must not turn at all."
+  },
+  {
+    "type": "h",
+    "text": "1. The moment of a force",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "A plank balanced on a pivot at its middle. A 400 newton load hangs 0.9 metres to the left of the pivot and a 300 newton load 1.2 metres to the right. Dimension lines give each distance from the pivot.",
+    "svg": "<svg viewBox='0 0 400 150' xmlns='http://www.w3.org/2000/svg' width='400' height='150'><g fill='currentColor' font-family='inherit'><rect x='46' y='29' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M200 43l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M107.6 44L107.6 90' fill='none' stroke='currentColor' stroke-width='2'/><path d='M107.6 90L103.4 80L111.8 80Z' fill='currentColor'/><text x='107.6' y='108' text-anchor='middle' font-size='15'>400 N</text><path d='M323.2 44L323.2 90' fill='none' stroke='currentColor' stroke-width='2'/><path d='M323.2 90L319 80L327.4 80Z' fill='currentColor'/><text x='323.2' y='108' text-anchor='middle' font-size='15'>300 N</text><circle cx='200' cy='36' r='8' fill='none' stroke='currentColor' stroke-width='2'/><text x='38' y='42' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='362' y='42' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M107.6 133v10M200 133v10M107.6 138H200' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='153.8' y='131' text-anchor='middle' font-size='14'>0.9 m</text><path d='M200 133v10M323.2 133v10M200 138H323.2' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='261.6' y='131' text-anchor='middle' font-size='14'>1.2 m</text></g></svg>",
+    "caption": "400 × 0.9 = 300 × 1.2: the lighter load balances by sitting further out."
+  },
+  {
+    "type": "p",
+    "md": "The **moment** of a force about a point is the force times the perpendicular distance from the point to its line of action. On a horizontal rod every weight acts straight down, so that distance is measured along the rod. A moment is in newton metres, N m, and turns the rod clockwise or anticlockwise."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "A 50 N force acts straight down at the end A of a rod, and the pivot C is 0.6 m from A. What is the moment of the force about C, in newton metres?",
+    "answer": "30",
+    "explain": "$50 \\times 0.6 = 30$ N m, anticlockwise about C. The distance is measured from C, the point the moment is about."
+  },
+  {
+    "type": "h",
+    "text": "2. The rod's own weight",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform rod AB, 5 metres long, resting on supports at A and at C, 3 metres from A, with reactions R A and R C drawn upwards. The rod's weight is a dashed arrow straight down from its midpoint M, 2.5 metres from A, which is not halfway between the supports.",
+    "svg": "<svg viewBox='0 0 400 236' xmlns='http://www.w3.org/2000/svg' width='400' height='236'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M46 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M46 85L46 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 41L50.2 51L41.8 51Z' fill='currentColor'/><text x='46' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>A</tspan></text><path d='M230.8 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M230.8 85L230.8 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M230.8 41L235 51L226.6 51Z' fill='currentColor'/><text x='230.8' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>C</tspan></text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>weight</text><text x='38' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='195' y='116' text-anchor='end' font-size='16' font-weight='600'>M</text><text x='217.8' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='362' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 189v10M200 189v10M46 194H200' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='123' y='187' text-anchor='middle' font-size='14'>2.5 m</text><path d='M46 219v10M230.8 219v10M46 224H230.8' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='138.4' y='217' text-anchor='middle' font-size='14'>3 m</text></g></svg>",
+    "caption": "Uniform: the weight acts at M, the rod's midpoint, wherever the supports are."
+  },
+  {
+    "type": "p",
+    "md": "A rod has a weight of its own, and it belongs in every equation. **Uniform** means the mass is spread evenly, so the whole weight acts at the rod's midpoint. That is the middle of the rod, not the point halfway between its supports or strings, where the 2019 report found it drawn."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "A uniform rod AB is 3.6 m long and rests on supports at A and at a point 2.4 m from A. How far from A does the rod's weight act, in metres?",
+    "answer": "1.8",
+    "explain": "At the rod's midpoint, 1.8 m from A. Halfway between the supports, 1.2 m, is the misplacement the 2019 report names."
+  },
+  {
+    "type": "h",
+    "text": "3. Two rules, and why any point works",
+    "role": "why"
+  },
+  {
+    "type": "p",
+    "md": "A rod at rest is not speeding up, so the forces up equal the forces down. It is not starting to turn either, so the clockwise moments equal the anticlockwise moments. Because the forces balance too, that is true about every point on the rod, so you may take moments about whichever point you choose."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "A uniform plank of weight 300 N carries a 500 N load and rests on two supports. One support pushes up with 620 N. What does the other push up with, in newtons?",
+    "answer": "180",
+    "explain": "Up equals down: $R + 620 = 300 + 500$, so $R = 180$ N. Once one reaction is known, no moments are needed for the other."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the choice of point matters",
+    "md": "Take moments about the point where an unknown force acts and that force has no distance, so no moment: it drops out of the equation. Choosing the point is how you choose which unknown to find first."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "A rod rests on supports at A and B, and neither reaction is known. You want the reaction at B first. About which point should you take moments?",
+    "options": [
+      "A",
+      "B",
+      "The midpoint of the rod"
+    ],
+    "answer": "A",
+    "explain": "About A, the reaction at A has no moment and drops out, so the reaction at B is the only unknown left. About B, the reaction you want would drop out instead."
+  },
+  {
+    "type": "h",
+    "text": "4. Where the midpoint rule comes from",
+    "role": "derivation"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform rod AB with its midpoint M ringed. Four equal small weights w are drawn as pieces of the rod, in two pairs placed symmetrically either side of M; dimension lines show the outer pair each a distance x from M.",
+    "svg": "<svg viewBox='0 0 400 150' xmlns='http://www.w3.org/2000/svg' width='400' height='150'><g fill='currentColor' font-family='inherit'><rect x='46' y='29' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M92.2 44L92.2 90' fill='none' stroke='currentColor' stroke-width='2'/><path d='M92.2 90L88 80L96.4 80Z' fill='currentColor'/><text x='92.2' y='108' text-anchor='middle' font-size='15'>w</text><path d='M153.8 44L153.8 90' fill='none' stroke='currentColor' stroke-width='2'/><path d='M153.8 90L149.6 80L158 80Z' fill='currentColor'/><text x='153.8' y='108' text-anchor='middle' font-size='15'>w</text><path d='M246.2 44L246.2 90' fill='none' stroke='currentColor' stroke-width='2'/><path d='M246.2 90L242 80L250.4 80Z' fill='currentColor'/><text x='246.2' y='108' text-anchor='middle' font-size='15'>w</text><path d='M307.8 44L307.8 90' fill='none' stroke='currentColor' stroke-width='2'/><path d='M307.8 90L303.6 80L312 80Z' fill='currentColor'/><text x='307.8' y='108' text-anchor='middle' font-size='15'>w</text><circle cx='200' cy='36' r='8' fill='none' stroke='currentColor' stroke-width='2'/><text x='38' y='42' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='195' y='60' text-anchor='end' font-size='16' font-weight='600'>M</text><text x='362' y='42' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M92.2 133v10M200 133v10M92.2 138H200' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='146.1' y='131' text-anchor='middle' font-size='14'>x</text><path d='M200 133v10M307.8 133v10M200 138H307.8' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='253.9' y='131' text-anchor='middle' font-size='14'>x</text></g></svg>",
+    "caption": "Every piece has a partner the same distance from M on the other side."
+  },
+  {
+    "type": "p",
+    "md": "Cut a uniform rod into many equal small pieces, each of weight $w$. For every piece a distance $x$ to the left of the midpoint, an identical piece sits $x$ to the right. About the midpoint their moments are $wx$ each way, so they cancel, pair by pair. The whole weight has no moment about the midpoint, so it acts there."
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "Two equal pieces of a uniform rod, each weighing 6 N, sit 0.4 m either side of the rod's midpoint. What is their total moment about the midpoint, in N m?",
+    "answer": "0",
+    "explain": "Each has a moment of $6 \\times 0.4 = 2.4$ N m, one clockwise and one anticlockwise, so together they give 0. Pair every piece like this and the rod's weight has no moment about its midpoint."
+  },
+  {
+    "type": "h",
+    "text": "5. Two supports: remove one reaction",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform plank AB, 6 metres long and of weight 250 newtons, resting on trestles at A and at C, 5 metres from A, with reactions R A and R C drawn upwards. A child of weight 400 newtons stands at D, 4 metres from A, and the plank's weight acts at its midpoint, 3 metres from A. Dimension lines give each distance from A. A ring marks A as the point moments are taken about.",
+    "svg": "<svg viewBox='0 0 400 266' xmlns='http://www.w3.org/2000/svg' width='400' height='266'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M46 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M46 85L46 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 41L50.2 51L41.8 51Z' fill='currentColor'/><text x='46' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>A</tspan></text><path d='M302.7 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M302.7 85L302.7 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M302.7 41L306.9 51L298.5 51Z' fill='currentColor'/><text x='302.7' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>C</tspan></text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>250 N</text><path d='M251.3 100L251.3 146' fill='none' stroke='currentColor' stroke-width='2'/><path d='M251.3 146L247.1 136L255.5 136Z' fill='currentColor'/><text x='251.3' y='164' text-anchor='middle' font-size='15'>400 N</text><circle cx='46' cy='92' r='8' fill='none' stroke='currentColor' stroke-width='2'/><text x='29' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='246.3' y='116' text-anchor='end' font-size='16' font-weight='600'>D</text><text x='289.7' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='362' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 189v10M200 189v10M46 194H200' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='123' y='187' text-anchor='middle' font-size='14'>3 m</text><path d='M46 219v10M251.3 219v10M46 224H251.3' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='148.7' y='217' text-anchor='middle' font-size='14'>4 m</text><path d='M46 249v10M302.7 249v10M46 254H302.7' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='174.3' y='247' text-anchor='middle' font-size='14'>5 m</text></g></svg>",
+    "caption": "Moments about A: the reaction at A has no distance, so it drops out."
+  },
+  {
+    "type": "p",
+    "md": "Two supports mean two unknown reactions, so the method has two steps. First take moments about one support: its reaction drops out, and the other reaction is the only unknown left. Then resolve vertically: the two reactions add up to the total weight."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Any point, but not a random one",
+    "md": "The 2023 and 2024 reports saw moments taken about almost every point on the rod, with mixed success. Choose the support whose reaction you do not want: one unknown, one equation.",
+    "source": "ccea-cer:further-maths:2024-summer:FM2:Q5"
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "A uniform rod AB, of length 4 m and weight 60 N, rests on supports at A and B. A 90 N load hangs 1 m from A. Taking moments about A, what is the reaction at B, in newtons?",
+    "answer": "52.5",
+    "explain": "About A: $4R_B = 60 \\times 2 + 90 \\times 1$, so $4R_B = 210$ and $R_B = 52.5$ N. The reaction at A has no moment about A."
+  },
+  {
+    "type": "h",
+    "text": "6. See it done: a plank on trestles",
+    "role": "see"
+  },
+  {
+    "type": "p",
+    "md": "The plank in the last figure is 6 m long and weighs 250 N, with trestles at A and C and a 400 N child at D.\n**About A:** $5R_C = 250 \\times 3 + 400 \\times 4$\n**So** $5R_C = 2350$ and $R_C = 470$ N.\n**Up equals down:** $R_A + 470 = 650$, so $R_A = 180$ N."
+  },
+  {
+    "type": "video",
+    "videoId": "5yDLFvr3DZs",
+    "title": "Moments - Uniform Rods Example 1",
+    "channel": "corbettmaths",
+    "why": "A second rod on two supports, worked at writing speed. Before each line, say which point the moments are about and which force that removes."
+  },
+  {
+    "type": "gate",
+    "id": "g15",
+    "kind": "number",
+    "prompt": "A uniform plank AB, 5 m long and of weight 200 N, rests on trestles at A and at C, 4 m from A. A 300 N load sits 3 m from A. What is the reaction at A, in newtons?",
+    "answer": "150",
+    "explain": "About A: $4R_C = 200 \\times 2.5 + 300 \\times 3$, so $R_C = 350$ N. Up equals down: $R_A = 500 - 350$, so $R_A = 150$ N."
+  },
+  {
+    "type": "h",
+    "text": "7. Loads beyond the supports",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform rod AB, 3 metres long, hanging horizontally from vertical strings at C, 0.4 metres from A, and at D, 0.6 metres from B, with tensions T C and T D drawn up the strings. Weights of 50 newtons at A and 70 newtons at B hang beyond the strings, and the rod's 40 newtons acts at its midpoint. A ring marks C.",
+    "svg": "<svg viewBox='0 0 400 268' xmlns='http://www.w3.org/2000/svg' width='400' height='268'><g fill='currentColor' font-family='inherit'><path d='M53.1 22H326.4' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M57.1 22l8 -8M69.1 22l8 -8M81.1 22l8 -8M93.1 22l8 -8M105.1 22l8 -8M117.1 22l8 -8M129.1 22l8 -8M141.1 22l8 -8M153.1 22l8 -8M165.1 22l8 -8M177.1 22l8 -8M189.1 22l8 -8M201.1 22l8 -8M213.1 22l8 -8M225.1 22l8 -8M237.1 22l8 -8M249.1 22l8 -8M261.1 22l8 -8M273.1 22l8 -8M285.1 22l8 -8M297.1 22l8 -8M309.1 22l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M87.1 22V117' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.7'/><path d='M292.4 22V117' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.7'/><rect x='46' y='117' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M87.1 117L87.1 73' fill='none' stroke='currentColor' stroke-width='2'/><path d='M87.1 73L91.3 83L82.9 83Z' fill='currentColor'/><text x='95.1' y='91' text-anchor='start' font-size='16'>T<tspan dy='4' font-size='14'>C</tspan></text><path d='M292.4 117L292.4 73' fill='none' stroke='currentColor' stroke-width='2'/><path d='M292.4 73L296.6 83L288.2 83Z' fill='currentColor'/><text x='300.4' y='91' text-anchor='start' font-size='16'>T<tspan dy='4' font-size='14'>D</tspan></text><path d='M46 132L46 178' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 178L41.8 168L50.2 168Z' fill='currentColor'/><text x='46' y='196' text-anchor='middle' font-size='15'>50 N</text><circle cx='200' cy='124' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 132L200 178' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 178L195.8 168L204.2 168Z' fill='currentColor'/><text x='200' y='196' text-anchor='middle' font-size='15'>40 N</text><path d='M354 132L354 178' fill='none' stroke='currentColor' stroke-width='2'/><path d='M354 178L349.8 168L358.2 168Z' fill='currentColor'/><text x='354' y='196' text-anchor='middle' font-size='15'>70 N</text><circle cx='87.1' cy='124' r='8' fill='none' stroke='currentColor' stroke-width='2'/><text x='38' y='130' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='82.1' y='111' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='287.4' y='111' text-anchor='end' font-size='16' font-weight='600'>D</text><text x='362' y='130' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 221v10M87.1 221v10M46 226H87.1' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='66.5' y='219' text-anchor='middle' font-size='14'>0.4 m</text><path d='M292.4 221v10M354 221v10M292.4 226H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='323.2' y='219' text-anchor='middle' font-size='14'>0.6 m</text><path d='M46 251v10M354 251v10M46 256H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='200' y='249' text-anchor='middle' font-size='14'>3 m</text></g></svg>",
+    "caption": "Moments about C: the load at A, beyond C, turns the rod the other way."
+  },
+  {
+    "type": "p",
+    "md": "CCEA often hangs the rod from two vertical strings, with masses at the ends beyond the strings. The tensions act as the reactions, so give each string its own letter. Take moments about one string: a load beyond that point turns the rod the other way, so its moment goes on the other side."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "A uniform rod AB, 3 m long and of weight 40 N, hangs from strings at C and D, where AC = 0.5 m and DB = 0.5 m. 30 N hangs at A and 50 N at B. Taking moments about C, what is the tension at D, in newtons?",
+    "answer": "75",
+    "explain": "About C: $2T_D + 30 \\times 0.5 = 40 \\times 1 + 50 \\times 2.5$, so $2T_D = 150$ and $T_D = 75$ N. The 30 N at A is beyond C, so its moment sits with $T_D$'s."
+  },
+  {
+    "type": "h",
+    "text": "8. See it done: two strings",
+    "role": "see"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform rod AB, 4 metres long and of weight 60 newtons, hanging from vertical strings at C, 1 metre from A, and D, 1 metre from B. 40 newtons hang at A and 80 newtons at E, 0.5 metres from B.",
+    "svg": "<svg viewBox='0 0 400 268' xmlns='http://www.w3.org/2000/svg' width='400' height='268'><g fill='currentColor' font-family='inherit'><path d='M89 22H311' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M93 22l8 -8M105 22l8 -8M117 22l8 -8M129 22l8 -8M141 22l8 -8M153 22l8 -8M165 22l8 -8M177 22l8 -8M189 22l8 -8M201 22l8 -8M213 22l8 -8M225 22l8 -8M237 22l8 -8M249 22l8 -8M261 22l8 -8M273 22l8 -8M285 22l8 -8M297 22l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M123 22V117' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.7'/><path d='M277 22V117' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.7'/><rect x='46' y='117' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M123 117L123 73' fill='none' stroke='currentColor' stroke-width='2'/><path d='M123 73L127.2 83L118.8 83Z' fill='currentColor'/><text x='131' y='91' text-anchor='start' font-size='16'>T<tspan dy='4' font-size='14'>C</tspan></text><path d='M277 117L277 73' fill='none' stroke='currentColor' stroke-width='2'/><path d='M277 73L281.2 83L272.8 83Z' fill='currentColor'/><text x='285' y='91' text-anchor='start' font-size='16'>T<tspan dy='4' font-size='14'>D</tspan></text><path d='M46 132L46 178' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 178L41.8 168L50.2 168Z' fill='currentColor'/><text x='46' y='196' text-anchor='middle' font-size='15'>40 N</text><circle cx='200' cy='124' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 132L200 178' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 178L195.8 168L204.2 168Z' fill='currentColor'/><text x='200' y='196' text-anchor='middle' font-size='15'>60 N</text><path d='M315.5 132L315.5 178' fill='none' stroke='currentColor' stroke-width='2'/><path d='M315.5 178L311.3 168L319.7 168Z' fill='currentColor'/><text x='315.5' y='196' text-anchor='middle' font-size='15'>80 N</text><text x='38' y='130' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='118' y='111' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='272' y='111' text-anchor='end' font-size='16' font-weight='600'>D</text><text x='310.5' y='148' text-anchor='end' font-size='16' font-weight='600'>E</text><text x='362' y='130' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 221v10M123 221v10M46 226H123' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='84.5' y='219' text-anchor='middle' font-size='14'>1 m</text><path d='M123 221v10M277 221v10M123 226H277' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='200' y='219' text-anchor='middle' font-size='14'>2 m</text><path d='M277 221v10M354 221v10M277 226H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='315.5' y='219' text-anchor='middle' font-size='14'>1 m</text><path d='M315.5 251v10M354 251v10M315.5 256H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='334.8' y='249' text-anchor='middle' font-size='14'>0.5 m</text></g></svg>",
+    "caption": "The 80 N hangs at E, not at the end: measure its distance from C with care."
+  },
+  {
+    "type": "p",
+    "md": "**About C:** $2T_D + 40 \\times 1 = 60 \\times 1 + 80 \\times 2.5$\n**So** $2T_D + 40 = 260$ and $T_D = 110$ N.\n**Up equals down:** $T_C + 110 = 180$, so $T_C = 70$ N."
+  },
+  {
+    "type": "video",
+    "videoId": "wFDT9OyS_uY",
+    "title": "Moments - CCEA GCSE Further Mathematics (Mechanics)",
+    "channel": "P McAleavey",
+    "why": "Taught against this specification by name, with rods on supports and on strings."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "A uniform rod of weight 45 N hangs from two vertical strings, with 40 N hanging at one end and 60 N at the other. One string pulls up with 88 N. What is the tension in the other string, in newtons?",
+    "answer": "57",
+    "explain": "Up equals down: $T + 88 = 45 + 40 + 60$, so $T = 57$ N. The strings hold up the rod as well as both loads."
+  },
+  {
+    "type": "h",
+    "text": "9. One support: an unknown distance",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform rod AB, 4 metres long and of weight 30 newtons, balanced on one pivot at C, a distance x from A, with the reaction R drawn upwards. 50 newtons hang at A and 20 newtons at B.",
+    "svg": "<svg viewBox='0 0 400 236' xmlns='http://www.w3.org/2000/svg' width='400' height='236'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M153.8 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M153.8 85L153.8 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M153.8 41L158 51L149.6 51Z' fill='currentColor'/><text x='153.8' y='33' text-anchor='middle' font-size='16'>R</text><path d='M46 100L46 146' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 146L41.8 136L50.2 136Z' fill='currentColor'/><text x='46' y='164' text-anchor='middle' font-size='15'>50 N</text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>30 N</text><path d='M354 100L354 146' fill='none' stroke='currentColor' stroke-width='2'/><path d='M354 146L349.8 136L358.2 136Z' fill='currentColor'/><text x='354' y='164' text-anchor='middle' font-size='15'>20 N</text><text x='38' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='140.8' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='362' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 189v10M153.8 189v10M46 194H153.8' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='99.9' y='187' text-anchor='middle' font-size='14'>x</text><path d='M46 219v10M354 219v10M46 224H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='200' y='217' text-anchor='middle' font-size='14'>4 m</text></g></svg>",
+    "caption": "One support: its reaction is the whole weight, and moments fix where it is."
+  },
+  {
+    "type": "p",
+    "md": "On one support or one string, the reaction is the total weight: up equals down. The position is the unknown, so call it $x$, take moments about the end A and solve. The 2025 report saw the weakest candidates try values by trial and error instead."
+  },
+  {
+    "type": "p",
+    "md": "**Up equals down:** the pivot carries 50 + 30 + 20, so $R = 100$ N.\n**About A:** $100x = 30 \\times 2 + 20 \\times 4$, so $100x = 140$.\n**So** $x = 1.4$ m."
+  },
+  {
+    "type": "sim",
+    "provider": "phet",
+    "url": "https://phet.colorado.edu/sims/html/balancing-act/latest/balancing-act_en.html",
+    "title": "PhET: Balancing Act",
+    "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)",
+    "licence": "CC BY-NC 4.0",
+    "task": "Place a known mass on the plank, then predict where a second, different mass must go to balance it before you release the support. On the Balance Lab screen, check that the clockwise and anticlockwise moments are equal, then move one mass and predict the new position. Note the limit of the model: this plank rests on a single fulcrum, so it shows the Principle of Moments but not the two-support algebra CCEA examines, where the vertical forces must balance as well."
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "number",
+    "prompt": "A uniform rod AB, 3 m long and of weight 40 N, rests on a single pivot, with 60 N hanging at A and 20 N at B. The pivot's reaction is 120 N. Taking moments about A, how far is the pivot from A, in metres?",
+    "answer": "1",
+    "explain": "About A: $120x = 40 \\times 1.5 + 20 \\times 3$, so $120x = 120$ and $x = 1$ m. The 60 N at A has no moment about A."
+  },
+  {
+    "type": "h",
+    "text": "10. On the point of tipping",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform plank AB, 6 metres long and of weight 400 newtons, on supports at C and D, each 1.5 metres from an end. A 600 newton person stands a distance x beyond D. The reaction at D is drawn upwards; the reaction at C is drawn faint and dashed and labelled zero, because the plank is about to lift off C.",
+    "svg": "<svg viewBox='0 0 400 206' xmlns='http://www.w3.org/2000/svg' width='400' height='206'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M123 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M123 85L123 41' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4' stroke-opacity='0.5'/><path d='M123 41L127.2 51L118.8 51Z' fill='currentColor'/><text x='123' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>C</tspan><tspan dx='5' dy='-4' font-size='16'>= 0</tspan></text><path d='M277 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M277 85L277 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M277 41L281.2 51L272.8 51Z' fill='currentColor'/><text x='277' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>D</tspan></text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>400 N</text><path d='M328.3 100L328.3 146' fill='none' stroke='currentColor' stroke-width='2'/><path d='M328.3 146L324.1 136L332.5 136Z' fill='currentColor'/><text x='328.3' y='164' text-anchor='middle' font-size='15'>600 N</text><text x='38' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='110' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='264' y='116' text-anchor='end' font-size='16' font-weight='600'>D</text><text x='362' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M200 189v10M277 189v10M200 194H277' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='238.5' y='187' text-anchor='middle' font-size='14'>1.5 m</text><path d='M277 189v10M328.3 189v10M277 194H328.3' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='302.7' y='187' text-anchor='middle' font-size='14'>x</text></g></svg>",
+    "caption": "About to tip about D: the plank just leaves C, so the reaction at C is zero."
+  },
+  {
+    "type": "p",
+    "md": "As a load moves out past a support, the plank presses less and less on the other support. On the point of tipping it presses not at all, so that reaction is **zero**. Set it to zero and take moments about the support the plank tips about. CCEA has not set this yet; it is the same two rules."
+  },
+  {
+    "type": "p",
+    "md": "**Tipping about D, so** $R_C = 0$.\n**About D:** $400 \\times 1.5 = 600x$\n**So** $x = 1$ m beyond D."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "A uniform plank of weight 240 N rests on two supports, and its midpoint is 1 m from the support D. A person of weight 480 N walks out beyond D. How far beyond D can they stand before the plank tips, in metres?",
+    "answer": "0.5",
+    "explain": "On the point of tipping the other reaction is zero. About D: $240 \\times 1 = 480x$, so $x = 0.5$ m."
+  },
+  {
+    "type": "h",
+    "text": "11. Reactions in a ratio",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform plank AB, 5 metres long and of weight 200 newtons, on pivots at A and at C, 4 metres from A. The reaction at A is labelled R and the reaction at C, twice as large, 2R. A 100 newton box sits at P, between the pivots.",
+    "svg": "<svg viewBox='0 0 400 236' xmlns='http://www.w3.org/2000/svg' width='400' height='236'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M46 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M46 85L46 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 41L50.2 51L41.8 51Z' fill='currentColor'/><text x='46' y='33' text-anchor='middle' font-size='16'>R</text><path d='M292.4 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M292.4 85L292.4 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M292.4 41L296.6 51L288.2 51Z' fill='currentColor'/><text x='292.4' y='33' text-anchor='middle' font-size='16'>2R</text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>200 N</text><rect x='203' y='57' width='55.5' height='28' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><text x='230.8' y='76' text-anchor='middle' font-size='15' font-weight='600'>100 N</text><text x='38' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='225.8' y='116' text-anchor='end' font-size='16' font-weight='600'>P</text><text x='279.4' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='362' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 189v10M292.4 189v10M46 194H292.4' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='169.2' y='187' text-anchor='middle' font-size='14'>4 m</text><path d='M46 219v10M354 219v10M46 224H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='200' y='217' text-anchor='middle' font-size='14'>5 m</text></g></svg>",
+    "caption": "Call the smaller reaction R; the other is then 2R, one unknown in both equations."
+  },
+  {
+    "type": "p",
+    "md": "Some questions fix the reactions in a ratio: one is twice or three times the other. Call the smaller $R$ and the larger $2R$ or $3R$, and put both into both equations. When every weight is known, up equals down finds $R$ at once, and moments then find the missing distance."
+  },
+  {
+    "type": "p",
+    "md": "**Up equals down:** $R + 2R = 200 + 100$, so $R = 100$ N.\n**About A:** $200 \\times 4 = 200 \\times 2.5 + 100 \\times AP$\n**So** $800 = 500 + 100 \\times AP$ and $AP = 3$ m."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "A rod rests on supports at A and C. The reaction at C is three times as large as the reaction at A, and the total downward force on the rod is 480 N. What is the reaction at A, in newtons?",
+    "answer": "120",
+    "explain": "$R + 3R = 480$, so $4R = 480$ and $R = 120$ N. The reaction at C is then 360 N."
+  },
+  {
+    "type": "h",
+    "text": "12. Exam twists",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Strings instead of supports** (2019, 2024, 2025, 2026). The rod hangs from one or two vertical strings. First line: turn every mass into a weight, then take moments about a string."
+  },
+  {
+    "type": "p",
+    "md": "**The load changes** (2021, 2022). A mass is added, moved or swapped, and both reactions change by different amounts. First line: a new moments equation with the new load in place."
+  },
+  {
+    "type": "p",
+    "md": "**The point is named** (2022). A part that names the point for moments is helping, as the 2022 report says: an unknown you do not want acts there. First line: every distance measured from that point."
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A rod rests level on two supports. A 2 kg mass is then hung from one end, and the rod stays level. What should the first line of the new part be?",
+    "options": [
+      "A new moments equation with the 2 kg included",
+      "The old reactions, each increased by 10 N",
+      "The old reactions, unchanged"
+    ],
+    "answer": "A new moments equation with the 2 kg included",
+    "explain": "The new mass has its own moment, so the reactions change by different amounts. The 2022 report found many candidates reusing the old reaction instead of finding it again."
+  },
+  {
+    "type": "p",
+    "md": "**The length is the unknown** (2021). A part asks you to show the rod's length, so your working must produce it, not use it. First line: call it $L$, with the weight at $\\frac{L}{2}$."
+  },
+  {
+    "type": "p",
+    "md": "**Equal reactions** (2022). After a change the reactions are equal, so each is half the total downward force. First line: twice the reaction equals the total."
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "choice",
+    "prompt": "A part asks you to show that a uniform rod is 2.4 m long. How should your moments equation treat the length?",
+    "options": [
+      "Call it L, with the weight at half of L",
+      "Use 2.4 m, with the weight at 1.2 m",
+      "Leave the rod's weight out until the end"
+    ],
+    "answer": "Call it L, with the weight at half of L",
+    "explain": "A show-that gives you the answer, so an equation that starts from 2.4 m proves nothing. The 2021 scheme wanted an equation with the length unknown, and a last mark for reaching the given value."
+  },
+  {
+    "type": "h",
+    "text": "13. Going further: the whole chain",
+    "role": "further"
+  },
+  {
+    "type": "figure",
+    "alt": "A uniform plank AB, 4 metres long and of weight 280 newtons, on pivots at A and at C, 3 metres from A, with reactions R and 3R. A mass of M kilograms hangs at B, where a ring marks the point moments are taken about.",
+    "svg": "<svg viewBox='0 0 400 206' xmlns='http://www.w3.org/2000/svg' width='400' height='206'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M46 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M46 85L46 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 41L50.2 51L41.8 51Z' fill='currentColor'/><text x='46' y='33' text-anchor='middle' font-size='16'>R</text><path d='M277 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M277 85L277 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M277 41L281.2 51L272.8 51Z' fill='currentColor'/><text x='277' y='33' text-anchor='middle' font-size='16'>3R</text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>280 N</text><path d='M354 100V118' fill='none' stroke='currentColor' stroke-width='1.2'/><rect x='330.6' y='118' width='46.8' height='28' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><text x='354' y='137' text-anchor='middle' font-size='15' font-weight='600'>M kg</text><circle cx='354' cy='92' r='8' fill='none' stroke='currentColor' stroke-width='2'/><text x='38' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='264' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='371' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 189v10M277 189v10M46 194H277' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='161.5' y='187' text-anchor='middle' font-size='14'>3 m</text><path d='M277 189v10M354 189v10M277 194H354' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='315.5' y='187' text-anchor='middle' font-size='14'>1 m</text></g></svg>",
+    "caption": "Stage one: reactions R and 3R, a mass M at B, and moments taken about B."
+  },
+  {
+    "type": "p",
+    "md": "The hardest shape so far (2022) chains four parts on one rod, each part using the answer before it."
+  },
+  {
+    "type": "p",
+    "md": "**About B:** $4R + 1 \\times 3R = 280 \\times 2$, so $R = 80$ N.\n**Up equals down:** $80 + 240 = 280 + 10M$, so $M = 4$.\n**M goes; 200 N hangs at D, $d$ m from A; the reactions are now equal:** $2X = 480$, so $X = 240$ N.\n**About A:** $3 \\times 240 = 280 \\times 2 + 200d$, so $d = 0.8$ m."
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "choice",
+    "prompt": "A uniform rod rests on supports at A and C, with the reaction at C three times the reaction at A. An unknown mass hangs at the end B. About which point should you take moments to find the reactions first?",
+    "options": [
+      "B",
+      "A",
+      "C"
+    ],
+    "answer": "B",
+    "explain": "About B the unknown mass has no moment, and both reactions are written in R, so R is the only unknown. About A or C, R and the mass would both remain."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where the specification stops",
+    "md": "Hinges, ladders, rods that are not uniform or not horizontal, and forces at an angle to a rod are A-level mechanics. CCEA's GCSE rods are uniform and horizontal, on one or two supports or strings."
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "Calculate a moment, with the rod's weight at its midpoint.\nTake moments about a support to remove its reaction, then resolve.\nHandle loads beyond the supports, and an unknown distance on one support.\nSet a reaction to zero on the point of tipping, and write a ratio as $R$ and $3R$.\nSpot the twists: strings, a changed load, a named point, a length to show, equal reactions."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "A uniform rod comes up every year, usually as Q4, Q5 or Q6: a force diagram for 2 marks, then reactions or tensions, often with a ratio, an unknown distance or a changed load. The first mark is for taking moments about a point, then one for each correct side of the equation, then one for the value. Stuck? Put the weight at the midpoint, take moments about an unknown, then resolve vertically."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.moments-uniform-rod.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.moments-uniform-rod.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.moments-uniform-rod.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.moments-uniform-rod.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.moments-uniform-rod.11"
+  }
+]

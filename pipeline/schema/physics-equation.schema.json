@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "physics-equation.schema.json",
+  "title": "PhysicsEquation",
+  "$ref": "#/$defs/PhysicsEquation",
+  "$defs": {
+    "PhysicsEquation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/PhysicsEquationId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "latex": {
+          "type": "string",
+          "minLength": 1
+        },
+        "words": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symbols": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sym": {
+                "type": "string",
+                "minLength": 1
+              },
+              "quantity": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unit": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "sym",
+              "quantity",
+              "unit"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "rearrangements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "conversions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "minLength": 1
+              },
+              "to": {
+                "type": "string",
+                "minLength": 1
+              },
+              "factor": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "examinerNote": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "factor"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "givenInExam": {
+          "type": "boolean",
+          "const": false
+        },
+        "constants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sym": {
+                "type": "string",
+                "minLength": 1
+              },
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "sym",
+              "value",
+              "unit",
+              "note"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "drills": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "recall",
+              "units",
+              "rearrange",
+              "substitute-convert"
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "specRefs",
+        "latex",
+        "words",
+        "symbols",
+        "rearrangements",
+        "conversions",
+        "givenInExam",
+        "drills"
+      ],
+      "additionalProperties": false,
+      "description": "Equation Vault entry: physics equations are never given in the exam"
+    },
+    "PhysicsEquationId": {
+      "type": "string",
+      "pattern": "^eq\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "SpecRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{0,4}(-[A-Za-z0-9.]+){1,3}$",
+      "description": "Learning-outcome statement id from data/spec/*.json"
+    }
+  }
+}

@@ -1,0 +1,211 @@
+[
+  {
+    "type": "hero",
+    "lede": "Two machines pack boxes of bulbs. One fills 12 boxes, the other 8, and each has its own average and its own consistency. A shop wants one figure for the whole morning. You cannot simply average the two averages, and you certainly cannot average the two spreads. Here is what you do instead.",
+    "can": [
+      "Recover $\\sum x$ and $\\sum x^{2}$ from $n$, the mean and the deviation.",
+      "Pool two groups by adding the counts and both totals.",
+      "Work out the combined mean and standard deviation from the pooled totals."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Two groups, one answer"
+  },
+  {
+    "type": "p",
+    "md": "Averaging two averages works only when the groups are the same size, and spreads cannot be averaged at all. What does combine is the raw totals: rebuild each group's $sum x$ and $sum x^{2}$, add them, and the pooled set behaves like one you had measured all along."
+  },
+  {
+    "type": "figure",
+    "alt": "Two blocks on a scale of bulbs per box. The wider block sits at 25 and holds 12 boxes; the narrower one sits at 35 and holds 8. A solid line marks the combined mean of 29 and a dashed line marks the halfway point of 30.",
+    "svg": "<svg viewBox='0 0 460 200' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two blocks on a scale of bulbs per box: machine A holds 12 boxes at a mean of 25, machine B holds 8 boxes at a mean of 35, and the combined mean of 29 sits nearer machine A than the halfway point of 30'><title>Two blocks on a scale of bulbs per box: machine A holds 12 boxes at a mean of 25, machine B holds 8 boxes at a mean of 35, and the combined mean of 29 sits nearer machine A than the halfway point of 30</title><rect x='117.0' y='96.0' width='44' height='40.0' fill='currentColor' fill-opacity='0.18' stroke='currentColor' stroke-width='1.3'/><text x='139.0' y='89.0' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>machine A</text><text x='139.0' y='120.0' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>12</text><rect x='315.0' y='104.7' width='44' height='31.3' fill='currentColor' fill-opacity='0.18' stroke='currentColor' stroke-width='1.3'/><text x='337.0' y='97.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>machine B</text><text x='337.0' y='124.3' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>8</text><path d='M40 140 L436 140' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M40.0 140 L40.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='40.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>20</text><path d='M139.0 140 L139.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='139.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>25</text><path d='M238.0 140 L238.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='238.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>30</text><path d='M337.0 140 L337.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='337.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>35</text><path d='M436.0 140 L436.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='436.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>40</text><path d='M238.0 138 L238.0 180' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 4' fill='none' stroke-opacity='0.6'/><text x='238.0' y='194' font-family='inherit' font-size='11.5' fill='currentColor' fill-opacity='0.7' text-anchor='middle'>halfway 30</text><path d='M218.2 138 L218.2 168' stroke='currentColor' stroke-width='2' fill='none'/><text x='218.2' y='180' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>combined 29</text><text x='40' y='18' font-family='inherit' font-size='12' fill='currentColor'>bulbs per box</text></svg>",
+    "caption": "The combined mean of 29 sits nearer machine A, because machine A filled more boxes. Halfway would be 30."
+  },
+  {
+    "type": "h",
+    "text": "1. Why averaging the averages fails"
+  },
+  {
+    "type": "p",
+    "md": "A mean is a total that has already been shared out. Sharing it out again over a different number of items is meaningless, so the two means cannot be averaged unless the groups happen to be the same size.\nWhat you can do is put each mean back together into a total: $\\sum x = n\\bar{x}$."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "Machine A filled 12 boxes with a mean of 25 bulbs. What is $\\sum x$ for machine A?",
+    "answer": "300",
+    "explain": "$12 \\times 25 = 300$ bulbs. That total is a thing you can add to another total."
+  },
+  {
+    "type": "h",
+    "text": "2. Totals add; averages do not"
+  },
+  {
+    "type": "p",
+    "md": "Three quantities survive being poured together: the count $n$, the total $\\sum x$, and the total of the squares $\\sum x^{2}$. Everything else has to be rebuilt from them.\nSo the combined mean is $\\dfrac{\\sum x_{1} + \\sum x_{2}}{n_{1} + n_{2}}$, which for the two machines is $\\dfrac{580}{20} = 29$."
+  },
+  {
+    "type": "figure",
+    "alt": "A table with a row for each machine showing its sum of x and its sum of x squared, and a totals row adding them to 580 and 17780.",
+    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780'><title>A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>totals add; averages do not</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>A (12 boxes)</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12 x 25 = 300</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12(4² + 25²) = 7692</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>B (8 boxes)</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8 x 35 = 280</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8(6² + 35²) = 10088</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>all 20 boxes</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>580</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>17780</text></svg>",
+    "caption": "One row per group, two totals each. The bottom row is the only thing the formula ever sees."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the pooled spread is bigger than both",
+    "md": "Even if each machine were perfectly consistent, a box from machine A would still differ from a box from machine B. The gap between the two means is spread in its own right, so the pooled standard deviation of 6.93 is larger than either 4 or 6."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "Machine A's total is 300 and machine B's is 280, over 20 boxes in all. What is the combined mean?",
+    "answer": "29",
+    "explain": "$\\dfrac{580}{20} = 29$. Averaging 25 and 35 would have given 30."
+  },
+  {
+    "type": "h",
+    "text": "3. Getting the sum of squares back"
+  },
+  {
+    "type": "p",
+    "md": "The question hands you a standard deviation, and the formula wants $\\sum x^{2}$. Square the sheet's formula and rearrange:\n$\\sigma^{2} = \\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}$, so $\\sum x^{2} = n\\left(\\sigma^{2} + \\bar{x}^{2}\\right)$.\nBoth terms matter. Drop the $\\sigma^{2}$ and every group becomes perfectly uniform, which is never what the data said."
+  },
+  {
+    "type": "figure",
+    "alt": "A four-row table of conversions: n and the mean give the sum of x; n, the mean and the standard deviation give the sum of x squared; the totals and n give the mean back; the totals and n give the standard deviation back.",
+    "svg": "<svg viewBox='0 0 500 224' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A four-row table of the conversions between n, mean, standard deviation and the two totals'><title>A four-row table of the conversions between n, mean, standard deviation and the two totals</title><text x='20' y='22' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8'>the four conversions this topic runs on</text><text x='96.7' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>what you are given</text><text x='250.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>what you want</text><text x='403.3' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>how</text><path d='M14 52 L486 52' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='96.7' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>n and the mean</text><text x='250.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>sum of x</text><text x='403.3' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>multiply: n x mean</text><text x='96.7' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>n, the mean and the sd</text><text x='250.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>sum of x squared</text><text x='403.3' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>n(sd² + mean²)</text><text x='96.7' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the two totals and n</text><text x='250.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the mean</text><text x='403.3' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>divide: sum of x over n</text><text x='96.7' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the two totals and n</text><text x='250.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the sd</text><text x='403.3' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the sheet's formula</text><path d='M14 166 L486 166' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='96.7' y='190' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='250.0' y='190' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='403.3' y='190' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>every route goes through the totals</text></svg>",
+    "caption": "Four conversions, and every pooled question is some path through them."
+  },
+  {
+    "type": "video",
+    "videoId": "L6mssp1aP10",
+    "title": "Combined Mean",
+    "channel": "corbettmaths",
+    "why": "The weighted-mean step on its own, worked slowly, before the sum of squares is added to it."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "Machine B has $n = 8$, $\\bar{x} = 35$ and $\\sigma = 6$. What is $\\sum x^{2}$?",
+    "answer": "10088",
+    "explain": "$8\\left(6^{2} + 35^{2}\\right) = 8 \\times 1261 = 10088$."
+  },
+  {
+    "type": "h",
+    "text": "4. A worked example, start to finish"
+  },
+  {
+    "type": "p",
+    "md": "Machine A: 12 boxes, mean 25, standard deviation 4. Machine B: 8 boxes, mean 35, standard deviation 6.\n**Step 1.** $\\sum x = 300 + 280 = 580$, so $\\bar{x} = 29$.\n**Step 2.** $\\sum x^{2} = 12\\left(4^{2} + 25^{2}\\right) = 7692$ for A.\n**Step 3.** $\\sum x^{2} = 8\\left(6^{2} + 35^{2}\\right) = 10088$ for B, so 17780 altogether.\n**Step 4.** $\\sigma = \\sqrt{\\dfrac{17780}{20} - 29^{2}} = \\sqrt{48} = 6.93$ bulbs."
+  },
+  {
+    "type": "figure",
+    "alt": "The same two-row totals table again, showing how the worked example's numbers 580 and 17780 are reached.",
+    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780'><title>A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>totals add; averages do not</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>A (12 boxes)</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12 x 25 = 300</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12(4² + 25²) = 7692</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>B (8 boxes)</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8 x 35 = 280</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8(6² + 35²) = 10088</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>all 20 boxes</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>580</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>17780</text></svg>",
+    "caption": "Every number in the worked example comes from this table and the combined mean of 29."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "Finish it: $\\sqrt{48}$, to 2 decimal places.",
+    "answer": "6.93 | 6.928",
+    "explain": "6.93 bulbs, which is larger than either 4 or 6 because the two machine means are 10 bulbs apart."
+  },
+  {
+    "type": "h",
+    "text": "5. Running it backwards: taking a group out"
+  },
+  {
+    "type": "p",
+    "md": "Sometimes the whole set is summarised and one group is listed, and the question asks about the rest. Nothing changes except the sign: rebuild both totals for the whole set, subtract the listed group's two totals, and **subtract the counts as well**.\nThen divide by the new count. That division is the step examiners describe candidates reaching and then forgetting."
+  },
+  {
+    "type": "figure",
+    "alt": "A table showing the whole walking group's sum of 270 and sum of squares of 5235, the family's 95 and 1953, and the remainder of 175 and 3282.",
+    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table showing the whole set's totals of 270 and 5235, the listed group's totals of 95 and 1953, and the difference of 175 and 3282 for the rest'><title>A table showing the whole set's totals of 270 and 5235, the listed group's totals of 95 and 1953, and the difference of 175 and 3282 for the rest</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>take a group out the same way you put one in</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>all 15 walkers</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>270</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>5235</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>the 5 of them listed</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>95</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>1953</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>the other 10</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>175</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>3282</text></svg>",
+    "caption": "15 walkers less 5 leaves 10, with a mean of 17.5 km and a standard deviation of 4.69 km."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "All 15 walkers covered 270 km and the family of 5 covered 95 km. What is the mean distance of the other 10?",
+    "answer": "17.5",
+    "explain": "$\\dfrac{270 - 95}{10} = \\dfrac{175}{10} = 17.5$ km. The count drops from 15 to 10 as well as the total."
+  },
+  {
+    "type": "h",
+    "text": "6. Finding a group you were never told about"
+  },
+  {
+    "type": "p",
+    "md": "The same subtraction answers a question the specification names directly: one group's mean is missing, and the overall mean is given.\nWith 20 players averaging 70 and 8 of them averaging 64: the squad totals 1400, team A totals 512, so team B totals 888 over 12 players."
+  },
+  {
+    "type": "figure",
+    "alt": "A table showing the squad total of 1400, team A's total of 512 and the remaining 888 shared over 12 players.",
+    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table showing the whole squad's total of 1400, team A's total of 512, and the remaining 888 shared over 12 players to give a mean of 74'><title>A table showing the whole squad's total of 1400, team A's total of 512, and the remaining 888 shared over 12 players to give a mean of 74</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>one unknown mean, found from the two totals</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>all 20 players</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>20 x 70 = 1400</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>not needed here</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>team A (8)</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8 x 64 = 512</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>not needed here</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>team B (12)</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>888</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>mean 74</text></svg>",
+    "caption": "One unknown mean, read straight off the two totals: 74 points."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "Team B totals 888 points over 12 players. What is their mean?",
+    "answer": "74",
+    "explain": "$\\dfrac{888}{12} = 74$ points. Averaging 70 and 64 would have given 67."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "You can now",
+    "md": "Recover $\\sum x = n\\bar{x}$ and $\\sum x^{2} = n\\left(\\sigma^{2} + \\bar{x}^{2}\\right)$ for any summarised group.\nAdd the counts and the two totals to pool two groups, and divide for the combined mean.\nPut the combined totals into the sheet's formula and finish with the square root.\nSubtract a listed group's totals, and its count, to describe the group that is left.\nFind a missing group's mean from the overall total and the known group's total."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Recover $sum x$ and $sum x^{2}$ for each group.\nAdd the counts and both totals to pool them.\nDivide for the combined mean, then use the same formula for the deviation."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The pooled question appears every year the paper has been sat: two marks for the combined mean, three or four for the combined deviation. The first mark is a rebuilt total; the last is the deviation from the pooled totals. Stuck: write $sum x$ and $sum x^{2}$ for each group before combining anything."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.07"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.08"
+  }
+]

@@ -1,0 +1,180 @@
+# fm.u1.logarithms-from-indices — Logarithms as the inverse of indices  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Logarithms as the inverse of indices v1 [verified]
+verification statuses: {"verified":9}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Powers, read backwards
+- [p] 
+- [figure] One sentence, two spellings: $2^{5} = 32$ and $\log_{2} 32 = 5$.
+- [choice] 
+- [h] 1. The rule, and why it is the same rule
+- [p] 
+- [figure] Reading down gives a power; reading up gives a logarithm.
+- [number] 
+- [h] 2. Two anchors, and one minus sign
+- [p] 
+- [video] Introduction to Logarithms - Corbettmaths
+- [number] 
+- [h] 3. A worked logarithm, start to finish
+- [p] 
+- [figure] The index form is the working; $\log_{3} 81 = 4$ is the answer line.
+- [number] 
+- [h] 4. When the base or the number is missing
+- [p] 
+- [examiner] Summer 2019, Unit 1, Question 9
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.logarithms-from-indices.01 [verified] paper FM1 calc
+STEM: Work out $\log_{3} 81$, showing your working.
+  FIG: svg — The index statement 3 to the power 4 equals 81 beside its logarithm form.
+  1. Call the answer $x$, so $\log_{3} 81 = x$.   — Naming the unknown is what lets you write the index form on the next line. Without it there is nothing to rearrange.  (M1)
+  2. Write the index form: $3^{x} = 81$.   — This is the line the formula sheet gives you, and it is where the method mark sits in every logarithm question of this kind.  (MW1)  WHY: ✔Because $a^{x} = n$ and $x = \log_{a} n$ are the same statement | ✘Because $3$ and $81$ can be divided | ✘Because every logarithm is worked out on a calculator
+  3. Count in powers of $3$: $3^{1} = 3$, $3^{2} = 9$, $3^{3} = 27$, $3^{4} = 81$.   — Counting up is quicker than guessing, and it makes the check obvious: the list stops the moment it reaches $81$.  (M2)
+  4. The list reaches $81$ at the index $4$, so $x = 4$.   — Check by going back: $3^{4} = 81$, which is the number in the question.  (W1)
+  FINAL: $\log_{3} 81 = 4$
+  TWIN: Work out $\log_{2} 64$.  → numeric 6 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u1.logarithms-from-indices.pre (pre) [draft]
+- p1 (Evaluate a power): Three quick checks on what this lesson is built from. None of them is the new idea, so answer from what you already know.
+What is $2^{5}$?
+    ✔ $32$ — Five twos multiplied together give $32$.
+    ✘ $10$ — That is $2 \times 5$. An index tells you how many times to multiply, not what to multiply by.
+    ✘ $25$ — That is $5^{2}$. The base is the big number at the bottom, so it is $2$ that is raised here.
+- p2 (The zero index): What is $3^{0}$?
+    ✔ $1$ — Any number except zero raised to the power zero is $1$. That fact becomes one of the two anchors of this lesson.
+    ✘ $0$ — A power of zero does not make the answer zero. Dividing $3^{1}$ by $3$ gives $3^{0} = 1$.
+    ✘ $3$ — That is $3^{1}$. Stepping the index down one more divides by $3$ again and gives $1$.
+- p3 (Negative indices): What is $2^{-3}$?
+    ✔ $\frac{1}{8}$ — A negative index means a reciprocal: $2^{-3} = \frac{1}{2^{3}} = \frac{1}{8}$.
+    ✘ $-8$ — The minus sign belongs to the index, not to the answer. It turns the power upside down instead of making it negative.
+    ✘ $8$ — That is $2^{3}$. The negative index sends it to the bottom of a fraction.
+
+### dx.fm.u1.logarithms-from-indices.post (post) [draft]
+- d1 (Evaluate a logarithm from a known power): What is $\log_{2} 64$?
+    ✔ $6$ — $2^{6} = 64$, and the logarithm is that index.
+    ✘ $8$ [fm.logs.base-and-index-swapped] — That solves $x^{2} = 64$. The base is $2$, so the equation to solve is $2^{x} = 64$.
+    ✘ $32$ [fm.logs.unknown-base-divided] — That is $64 \div 2$. A logarithm counts the multiplications, so it is the index rather than a quotient.
+- d2 (The anchor values): What is $\log_{9} 1$?
+    ✔ $0$ — $9^{0} = 1$, so the logarithm of $1$ is $0$ to every base.
+    ✘ $1$ [fm.logs.log-of-one-given-as-one] — That is $\log_{9} 9$. The two anchors are $\log_{a} a = 1$ and $\log_{a} 1 = 0$.
+    ✘ $9$ [fm.logs.base-and-index-swapped] — That is the base itself. The logarithm is the index on the base, and here that index is $0$.
+- d3 (Recover the number from the index form): If $\log_{4} x = 3$, what is $x$?
+    ✔ $64$ — $4^{3} = 64$, which is the index form of the statement.
+    ✘ $81$ [fm.logs.base-and-index-swapped] — That is $3^{4}$. The base $4$ is the number being raised, and $3$ is the index.
+    ✘ $12$ [fm.logs.unknown-base-divided] — That is $4 \times 3$. The $3$ is an index, so it becomes a power rather than a multiplier.
+- d4 (A logarithm below 1): What is $\log_{10} 0.01$?
+    ✔ $-2$ — $0.01 = \frac{1}{100} = 10^{-2}$, so the logarithm is $-2$.
+    ✘ $2$ [fm.logs.negative-index-sign-dropped] — $10^{2} = 100$, not $0.01$. Numbers below $1$ have negative logarithms.
+    ✘ $0.01$ [fm.logs.base-and-index-swapped] — That is the number inside the logarithm repeated. The answer is the index that turns $10$ into it.
+
+## QUESTIONS
+### q.fm.u1.logarithms-from-indices.0001 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (a)work-out1|(b)work-out1 · Two logarithms whose bases give whole-number indices, as a paper's opening logarithm part
+  (a) [1] Work out $\log_{2} 64$.
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $6$ accept ["$2^{6} = 64$ seen"]
+      SOLUTION: $\log_{2} 64 = x$ means $2^{x} = 64$. $2^{6} = 64$, so $x = 6$.
+      ERR [fm.logs.base-and-index-swapped] {"kind":"numeric","value":8} → That is the answer to $x^{2} = 64$, with the base and the index the other way round. The logarithm is the index on $2$, so solve $2^{x} = 64$. (0)
+      ERR [fm.logs.unknown-base-divided] {"kind":"numeric","value":32} → That is $64$ divided by $2$. A logarithm counts how many times the base multiplies, so go to $2^{x} = 64$ rather than dividing once. (0)
+      HINTS: Ask what index turns $2$ into $64$.
+  (b) [1] Work out $\log_{5} 625$.
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $4$
+      SOLUTION: $5^{x} = 625$. $5^{2} = 25$, $5^{3} = 125$, $5^{4} = 625$, so $x = 4$.
+      ERR [fm.logs.unknown-base-divided] {"kind":"numeric","value":125} → That is $625$ divided by $5$, which is $5^{3}$ rather than the index itself. The answer you want is the index, $4$. (0)
+      HINTS: Count $5$, $25$, $125$, $625$.
+
+### q.fm.u1.logarithms-from-indices.0002 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (a)work-out1|(b)work-out1 · Logarithms of numbers below 1, where the index is negative
+  (a) [1] Work out $\log_{2} \frac{1}{8}$.
+      ANSWER: numeric -3 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $-3$
+      SOLUTION: $2^{x} = \frac{1}{8}$. $2^{3} = 8$, so $\frac{1}{8} = 2^{-3}$ and $x = -3$.
+      ERR [fm.logs.negative-index-sign-dropped] {"kind":"numeric","value":3} → The size is right and the sign is not. $2^{3} = 8$, so the reciprocal needs the index $-3$. (0)
+      HINTS: A reciprocal is a negative index: $\frac{1}{8} = 2^{-3}$.
+  (b) [1] Work out $\log_{10} 0.01$.
+      ANSWER: numeric -2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $-2$
+      SOLUTION: $0.01 = \frac{1}{100} = 10^{-2}$, so $\log_{10} 0.01 = -2$.
+      ERR [fm.logs.negative-index-sign-dropped] {"kind":"numeric","value":2} → $10^{2} = 100$, not $0.01$. Anything smaller than $1$ has a negative logarithm, so the index is $-2$. (0)
+      HINTS: Write $0.01$ as a power of $10$ first.
+
+### q.fm.u1.logarithms-from-indices.0003 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (a)write-down1|(b)write-down1 · The two anchor values every logarithm question leans on
+  (a) [1] Write down the value of $\log_{7} 7$.
+      ANSWER: numeric 1 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      W1 W1: $1$
+      SOLUTION: $7^{1} = 7$, so $\log_{7} 7 = 1$.
+      ERR [fm.logs.log-of-one-given-as-one] {"kind":"numeric","value":0} → That is $\log_{7} 1$. The base to the power $1$ is the base itself, so $\log_{7} 7 = 1$ and $\log_{7} 1 = 0$. (0)
+      HINTS: What index leaves $7$ unchanged?
+  (b) [1] Write down the value of $\log_{9} 1$.
+      ANSWER: numeric 0 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      W1 W1: $0$
+      SOLUTION: $9^{0} = 1$, so $\log_{9} 1 = 0$.
+      ERR [fm.logs.log-of-one-given-as-one] {"kind":"numeric","value":1} → The two anchors have changed places. $\log_{9} 9 = 1$; the logarithm of $1$ is $0$, because $9^{0} = 1$. (0)
+      HINTS: Any base to the power zero is $1$.
+
+### q.fm.u1.logarithms-from-indices.0004 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A missing base, recovered through the index form
+  (main) [2] Find the value of $x$ when $\log_{x} 216 = 3$.
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $x^{3} = 216$
+      W1 W1: $6$ ft
+      SOLUTION: $\log_{x} 216 = 3$ means $x^{3} = 216$. Taking the cube root, $x = 6$, and $6^{3} = 216$ checks it.
+      ERR [fm.logs.unknown-base-divided] {"kind":"numeric","value":72} → That is $216 \div 3$. The index form is $x^{3} = 216$, so the $3$ is undone with a cube root, giving $6$. (1)
+      HINTS: Write the index form first. || Then undo the power of $3$ with a cube root.
+
+### q.fm.u1.logarithms-from-indices.0005 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A missing number, recovered through the index form
+  (main) [2] Find the value of $x$ when $\log_{4} x = 3$.
+      ANSWER: numeric 64 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $4^{3} = x$
+      W1 W1: $64$ ft
+      SOLUTION: $\log_{4} x = 3$ means $4^{3} = x$. $4^{3} = 64$, so $x = 64$.
+      ERR [fm.logs.unknown-base-divided] {"kind":"numeric","value":12} → That is $4 \times 3$. The $3$ is an index, not a multiplier, so $x = 4^{3} = 64$. (0)
+      ERR [fm.logs.base-and-index-swapped] {"kind":"numeric","value":81} → That is $3^{4}$, with the base and the index swapped. The base is the small number under the word, so raise $4$ to the power $3$. (0)
+      HINTS: The logarithm is the index, so put it on the base.
+
+### q.fm.u1.logarithms-from-indices.0006 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)calculate1 · A logarithm no power reaches, so the calculator's base-10 key is the route
+  (main) [1] Calculate $\log 470$. Give your answer correct to three decimal places.
+      ANSWER: numeric 2.672 tol={"type":"dp","places":3} forms=decimal/fraction
+      W1 W1: $2.672$
+      SOLUTION: The log key works to base $10$, so $\log 470 = 2.672098\ldots$ To three decimal places that is $2.672$.
+      ERR [fm.logs.decimal-places-instruction-ignored] {"kind":"numeric","value":2.67} → The value is right and the accuracy is not. The question asks for three decimal places, so write $2.672$. (0)
+      HINTS: The log key on your calculator is base $10$.
+
+### q.fm.u1.logarithms-from-indices.0007 [verified] exam-style · diff 2 · untiered · FM1 calc · 5 marks · (a)write-down1|(b)work-out2|(c)find2 · A three-part logarithm opener of the kind that begins a Unit 1 logarithm question
+  (a) [1] It is given that $6^{4} = 1296$.
+Write down this statement in logarithm form.
+      ANSWER: mcq ✔$\log_{6} 1296 = 4$ | ✘$\log_{4} 1296 = 6$ [fm.logs.base-and-index-swapped] | ✘$\log_{1296} 6 = 4$ [fm.logs.base-and-index-swapped] | ✘$\log_{6} 4 = 1296$ [fm.logs.base-and-index-swapped]
+      W1 W1: $\log_{6} 1296 = 4$
+      SOLUTION: Matching $a^{x} = n$ to $6^{4} = 1296$ gives $a = 6$, $x = 4$ and $n = 1296$. So $\log_{6} 1296 = 4$.
+      HINTS: The formula sheet gives $a^{x} = n \Rightarrow x = \log_{a} n$.
+  (b) [2] Work out $\log_{6} 36$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $6^{x} = 36$
+      W1 W1: $2$ ft
+      SOLUTION: $6^{x} = 36$. $6^{2} = 36$, so $\log_{6} 36 = 2$.
+      ERR [fm.logs.unknown-base-divided] {"kind":"numeric","value":6} → That is $36 \div 6$. Counting powers instead, $6^{2} = 36$, so the logarithm is $2$. (1)
+      HINTS: $6^{2} = 36$.
+  (c) [2] Find the value of $a$ when $\log_{a} 0.25 = -2$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $a^{-2} = 0.25$, or $\frac{1}{a^{2}} = 0.25$
+      W1 W1: $2$ ft
+      SOLUTION: $\log_{a} 0.25 = -2$ means $a^{-2} = 0.25$. A negative index is a reciprocal, so $\frac{1}{a^{2}} = 0.25$ and $a^{2} = 4$. So $a = 2$.
+      ERR [fm.logs.negative-index-sign-dropped] {"kind":"numeric","value":0.5} → The minus sign in the index was dropped, so this solves $a^{2} = 0.25$. With the sign kept, $a^{-2} = 0.25$ gives $a^{2} = 4$ and $a = 2$. (0)
+      HINTS: Write the index form. || A negative index means a reciprocal, so turn both sides over.
+
+## FIND THE MISTAKE
+## RETRIEVAL PROMPTS
+- rp.fm.u1.logarithms-from-indices.01 [draft] (formula) Write the link between an index statement and a logarithm.  →  $a^{x} = n$ is the same statement as $x = \log_{a} n$: the logarithm is the index.
+- rp.fm.u1.logarithms-from-indices.02 [draft] (procedure) How do you work out a logarithm such as $\log_{5} 625$ without a calculator?  →  Set it equal to $x$, write the index form $5^{x} = 625$, then count powers of $5$ until you reach $625$; the index you stop at is the logarithm.
+- rp.fm.u1.logarithms-from-indices.03 [draft] (qa) What are $\log_{a} a$ and $\log_{a} 1$?  →  $\log_{a} a = 1$ because $a^{1} = a$, and $\log_{a} 1 = 0$ because $a^{0} = 1$.
+- rp.fm.u1.logarithms-from-indices.04 [draft] (trap) Why is the logarithm of a number smaller than $1$ negative?  →  A number below $1$ is a reciprocal of a power, and a reciprocal carries a negative index, so the logarithm is negative.
+- rp.fm.u1.logarithms-from-indices.05 [draft] (procedure) A question gives $\log_{x} 216 = 3$. What is the first line you write, and what do you do next?  →  Write the index form $x^{3} = 216$, then take the cube root, which gives $x = 6$. Dividing $216$ by $3$ is not the way to undo an index.

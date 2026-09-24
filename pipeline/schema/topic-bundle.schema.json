@@ -1,0 +1,3258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "topic-bundle.schema.json",
+  "title": "TopicBundle",
+  "$ref": "#/$defs/TopicBundle",
+  "$defs": {
+    "TopicBundle": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "topic": {
+          "$ref": "#/$defs/Topic"
+        },
+        "note": {
+          "$ref": "#/$defs/NoteFrontmatter"
+        },
+        "workedExamples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/WorkedExample"
+          }
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DiagnosticSet"
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Question"
+          }
+        },
+        "findTheMistake": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FindTheMistake"
+          }
+        },
+        "prompts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RetrievalPrompt"
+          }
+        },
+        "insight": {
+          "$ref": "#/$defs/ExaminerInsight"
+        },
+        "sets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PracticeSet"
+          }
+        },
+        "verification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VerificationLog"
+          }
+        }
+      },
+      "required": [
+        "topic",
+        "workedExamples",
+        "diagnostics",
+        "questions",
+        "findTheMistake",
+        "prompts",
+        "verification"
+      ],
+      "additionalProperties": false,
+      "description": "Everything authored for one topic: topic row, note frontmatter, worked examples, diagnostics, questions, find-the-mistake, prompts, insight, sets and verification logs"
+    },
+    "Topic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "$ref": "#/$defs/SubjectId"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{0,3}[0-9]{1,2}$"
+            },
+            {
+              "type": "string",
+              "const": "practicals"
+            }
+          ]
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "strand": {
+          "type": "string",
+          "minLength": 1
+        },
+        "statementIds": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TopicId"
+          }
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "hardness": {
+          "$ref": "#/$defs/Hardness"
+        },
+        "difficulty": {
+          "$ref": "#/$defs/Difficulty"
+        },
+        "examinerFlagged": {
+          "type": "boolean"
+        },
+        "examinerSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExaminerSource"
+          }
+        },
+        "examWeightHint": {
+          "type": "string"
+        },
+        "mustMemorise": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "onFormulaSheet": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notOnThisSpec": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "externalRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalRef"
+          }
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "practicals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[BCP][1-6]$"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "slug",
+        "title",
+        "subject",
+        "unit",
+        "tier",
+        "strand",
+        "statementIds",
+        "prerequisites",
+        "order",
+        "hardness",
+        "difficulty",
+        "examinerFlagged",
+        "examinerSources",
+        "examWeightHint",
+        "mustMemorise",
+        "onFormulaSheet",
+        "notOnThisSpec",
+        "externalRefs",
+        "keywords"
+      ],
+      "additionalProperties": false,
+      "description": "Teachable topic: the unit of authoring and navigation; maps to >= 1 statement"
+    },
+    "TopicId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[a-z0-9]+\\.[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Teachable-topic id \"<subject>.<unit>.<slug>\", e.g. \"maths.m4.histograms\""
+    },
+    "SubjectId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Subject pack id: \"maths\" | \"further-maths\" | \"science\" | \"english-language\" | \"english-literature\" | another kebab-case id"
+    },
+    "Tier": {
+      "type": "string",
+      "enum": [
+        "F",
+        "H",
+        "both",
+        "untiered"
+      ]
+    },
+    "SpecRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{0,4}(-[A-Za-z0-9.]+){1,3}$",
+      "description": "Learning-outcome statement id from data/spec/*.json"
+    },
+    "Hardness": {
+      "type": "string",
+      "enum": [
+        "L",
+        "S",
+        "H"
+      ],
+      "description": "Bundle size: L lite, S standard, H hard (examiner-flagged)"
+    },
+    "Difficulty": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "description": "1 routine … 5 A*/A discriminator"
+    },
+    "ExaminerSource": {
+      "type": "string",
+      "pattern": "^ccea-cer:[a-z][a-z0-9-]*:\\d{4}-(?:summer|november|march|january):[A-Za-z0-9]+:Q\\d{1,2}(?:[a-z]|\\([a-z]\\))?(?:\\([ivx]{1,4}\\))?$",
+      "description": "Chief Examiner report citation: ccea-cer:<subject>:<yyyy>-<series>:<unit>:Q<n>"
+    },
+    "ExternalRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "corbettmaths"
+            },
+            "videos": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "playlistId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "practiceUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "textbookUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "kind",
+            "videos"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "bitesize"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "articleId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "youtube"
+            },
+            "videoId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{6,}$"
+            },
+            "channel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start": {
+              "type": "number",
+              "minimum": 0
+            },
+            "end": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "credit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "checkpoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "at": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "promptId": {
+                    "$ref": "#/$defs/RetrievalPromptId"
+                  }
+                },
+                "required": [
+                  "at",
+                  "promptId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "videoId",
+            "channel",
+            "credit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ccea-doc"
+            },
+            "docType": {
+              "type": "string",
+              "enum": [
+                "spec",
+                "teacher-guidance",
+                "factfile",
+                "glossary",
+                "practical-manual",
+                "qa-booklet",
+                "data-leaflet",
+                "cer",
+                "pastpaper",
+                "markscheme"
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "page": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "asOf": {
+              "$ref": "#/$defs/IsoDateLike"
+            }
+          },
+          "required": [
+            "kind",
+            "docType",
+            "url",
+            "asOf"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "phet"
+            },
+            "sim": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "licence": {
+              "type": "string",
+              "enum": [
+                "CC BY 4.0 (pre-2026-03-29)",
+                "CC BY-NC 4.0"
+              ]
+            },
+            "attribution": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "sim",
+            "url",
+            "licence",
+            "attribution"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "geogebra"
+            },
+            "materialId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "attribution": {
+              "type": "string",
+              "const": "Made with GeoGebra®"
+            }
+          },
+          "required": [
+            "kind",
+            "materialId",
+            "attribution"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "pastpaper-question"
+            },
+            "paperId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "paperId",
+            "question",
+            "page"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "Outbound link to Corbettmaths, Bitesize, YouTube, a CCEA document, PhET, GeoGebra or a past-paper question (metadata only)"
+    },
+    "RetrievalPromptId": {
+      "type": "string",
+      "pattern": "^rp\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "IsoDateLike": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$"
+        }
+      ],
+      "description": "ISO 8601 date (2026-09-05) or date-time (2026-09-05T10:00:00Z)"
+    },
+    "NoteFrontmatter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/NoteId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "$ref": "#/$defs/SubjectId"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{0,3}[0-9]{1,2}$"
+            },
+            {
+              "type": "string",
+              "const": "practicals"
+            }
+          ]
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "calculator": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "const": "P1-no/P2-yes"
+            }
+          ]
+        },
+        "formulaSheet": {
+          "type": "object",
+          "properties": {
+            "given": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "mustKnow": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "given",
+            "mustKnow"
+          ],
+          "additionalProperties": false
+        },
+        "notOnThisSpec": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hardness": {
+          "$ref": "#/$defs/Hardness"
+        },
+        "examinerFlagged": {
+          "type": "boolean"
+        },
+        "externalRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalRef"
+          }
+        },
+        "sheet": {
+          "type": "object",
+          "properties": {
+            "mustBeAbleTo": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "howExamined": {
+              "type": "string",
+              "minLength": 1
+            },
+            "traps": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "mustBeAbleTo",
+            "howExamined",
+            "traps"
+          ],
+          "additionalProperties": false
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationRef"
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "updated": {
+          "$ref": "#/$defs/IsoDateLike"
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "title",
+        "subject",
+        "unit",
+        "tier",
+        "specRefs",
+        "calculator",
+        "formulaSheet",
+        "notOnThisSpec",
+        "hardness",
+        "examinerFlagged",
+        "externalRefs",
+        "sheet",
+        "verification",
+        "version",
+        "updated"
+      ],
+      "additionalProperties": false,
+      "description": "Frontmatter of note.mdx: the Sheet (must-be-able-to, how examined, traps), formula-sheet split, scope limits"
+    },
+    "NoteId": {
+      "type": "string",
+      "pattern": "^note\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "VerificationRef": {
+      "type": "string",
+      "pattern": "^ver\\.[a-z0-9][a-z0-9.-]*$",
+      "description": "Id of the item's VerificationLog"
+    },
+    "WorkedExample": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/WorkedExampleId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "paper": {
+          "$ref": "#/$defs/PaperContext"
+        },
+        "stem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "figure": {
+          "$ref": "#/$defs/FigureSpec"
+        },
+        "steps": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/WorkedExampleStep"
+          }
+        },
+        "finalAnswer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "twin": {
+          "type": "object",
+          "properties": {
+            "stem": {
+              "type": "string",
+              "minLength": 1
+            },
+            "answer": {
+              "$ref": "#/$defs/AnswerSpec"
+            },
+            "figure": {
+              "$ref": "#/$defs/FigureSpec"
+            }
+          },
+          "required": [
+            "stem",
+            "answer"
+          ],
+          "additionalProperties": false
+        },
+        "faded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "showSteps": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "studentSupplies": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              }
+            },
+            "required": [
+              "showSteps",
+              "studentSupplies"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "clip": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "manim",
+                "motion-canvas",
+                "youtube"
+              ]
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "captions": {
+              "type": "string",
+              "minLength": 1
+            },
+            "seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "seconds"
+          ],
+          "additionalProperties": false
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationRef"
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "paper",
+        "stem",
+        "steps",
+        "finalAnswer",
+        "twin",
+        "faded",
+        "verification",
+        "version"
+      ],
+      "additionalProperties": false,
+      "description": "Step list with narrated decisions and the mark each step earns, plus a twin and faded versions"
+    },
+    "WorkedExampleId": {
+      "type": "string",
+      "pattern": "^we\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "PaperContext": {
+      "type": "object",
+      "properties": {
+        "unit": {
+          "type": "string",
+          "pattern": "^[A-Z]{0,3}[0-9]{1,2}$"
+        },
+        "paper": {
+          "type": "number",
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "calculator": {
+          "type": "boolean"
+        },
+        "bookletB": {
+          "type": "boolean"
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "unit",
+        "calculator",
+        "resources"
+      ],
+      "additionalProperties": false,
+      "description": "Which paper the item imitates: unit, paper 1/2, calculator, Booklet B, resources allowed"
+    },
+    "FigureSpec": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "svg-gen"
+            },
+            "generator": {
+              "type": "string",
+              "enum": [
+                "histogram",
+                "cf-curve",
+                "box-plot",
+                "bar",
+                "pie",
+                "scatter",
+                "table",
+                "number-line",
+                "axes"
+              ]
+            },
+            "data": {},
+            "options": {}
+          },
+          "required": [
+            "kind",
+            "generator",
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "jsxgraph"
+            },
+            "script": {
+              "type": "string",
+              "minLength": 1
+            },
+            "static": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "script",
+            "static"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "mafs"
+            },
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "props": {}
+          },
+          "required": [
+            "kind",
+            "component",
+            "props"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "svg"
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "alt"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "photo"
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "licence": {
+              "type": "string",
+              "minLength": 1
+            },
+            "credit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "alt",
+            "licence",
+            "credit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "apparatus"
+            },
+            "parts": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "style": {
+              "type": "string",
+              "const": "ccea-2d"
+            }
+          },
+          "required": [
+            "kind",
+            "parts",
+            "style"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "WorkedExampleStep": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "working": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "whyMenu": {
+          "type": "object",
+          "properties": {
+            "options": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "correct": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "explain": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "options",
+            "correct",
+            "explain"
+          ],
+          "additionalProperties": false
+        },
+        "earns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{1,3}\\d?$"
+          }
+        },
+        "input": {
+          "$ref": "#/$defs/AnswerSpec"
+        }
+      },
+      "required": [
+        "n",
+        "working",
+        "decision"
+      ],
+      "additionalProperties": false
+    },
+    "AnswerSpec": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "numeric"
+            },
+            "value": {
+              "type": "number"
+            },
+            "tolerance": {
+              "$ref": "#/$defs/Tolerance"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unitRequired": {
+              "type": "boolean"
+            },
+            "acceptForms": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "decimal",
+                  "fraction",
+                  "mixed",
+                  "surd",
+                  "pi",
+                  "percent",
+                  "standardForm",
+                  "ratio"
+                ]
+              }
+            },
+            "mustBeSimplified": {
+              "type": "boolean"
+            },
+            "moneyFormat": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "value",
+            "tolerance",
+            "unitRequired",
+            "acceptForms"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "algebraic"
+            },
+            "latex": {
+              "type": "string",
+              "minLength": 1
+            },
+            "equivalence": {
+              "type": "string",
+              "enum": [
+                "identical",
+                "equivalent",
+                "simplifiedOnly"
+              ]
+            },
+            "variables": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "domain": {
+              "type": "string"
+            },
+            "form": {
+              "$ref": "#/$defs/AlgebraForm"
+            },
+            "tolerance": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "mustBeFactorised": {
+              "type": "boolean"
+            },
+            "mustBeExpanded": {
+              "type": "boolean"
+            },
+            "keepInequalitySign": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "latex",
+            "equivalence",
+            "variables"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "mcq"
+            },
+            "options": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/McqOption"
+              }
+            },
+            "shuffle": {
+              "type": "boolean"
+            },
+            "multi": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "options",
+            "shuffle"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "text"
+            },
+            "accepted": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "keyWords": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "any": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "marks": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "reject": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "required": [
+                  "any",
+                  "marks"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "listingRule": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "accepted",
+            "keyWords",
+            "listingRule"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "text-long"
+            },
+            "rubricId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bands": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "band": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "marks": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "descriptor": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "band",
+                  "marks",
+                  "descriptor"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "indicativeContent": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "point": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "keyWords": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "required": [
+                  "point",
+                  "keyWords"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "selfMark": {
+              "type": "boolean",
+              "const": true
+            },
+            "aiMark": {
+              "type": "boolean"
+            },
+            "minWords": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "rubricId",
+            "bands",
+            "indicativeContent",
+            "selfMark"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "graph"
+            },
+            "expect": {
+              "$ref": "#/$defs/GraphExpectation"
+            }
+          },
+          "required": [
+            "kind",
+            "expect"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "drawing"
+            },
+            "rubric": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "selfMark": {
+              "type": "boolean",
+              "const": true
+            },
+            "aiMark": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "rubric",
+            "selfMark"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "table"
+            },
+            "cells": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "row": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "col": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "value": {
+                    "type": [
+                      "number",
+                      "string"
+                    ]
+                  },
+                  "tolerance": {
+                    "$ref": "#/$defs/Tolerance"
+                  }
+                },
+                "required": [
+                  "row",
+                  "col",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "cells"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "matrix"
+            },
+            "rows": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cols": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "entries": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "tolerance": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "absolute"
+                },
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "type",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "rows",
+            "cols",
+            "entries"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "equation"
+            },
+            "kindOf": {
+              "type": "string",
+              "enum": [
+                "word",
+                "symbol",
+                "ionic",
+                "half",
+                "nuclear",
+                "physics"
+              ]
+            },
+            "balancedLatex": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stateSymbolsRequired": {
+              "type": "boolean"
+            },
+            "acceptMultiples": {
+              "type": "boolean"
+            },
+            "registryId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "kindOf",
+            "balancedLatex",
+            "stateSymbolsRequired",
+            "acceptMultiples"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "steps"
+            },
+            "expectedOrder": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "allowSkips": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "kind",
+            "expectedOrder",
+            "allowSkips"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "label"
+            },
+            "targets": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "accepted": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "position": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "up",
+                      "down",
+                      "left",
+                      "right",
+                      "normal",
+                      "along"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "accepted"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "bank": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "targets",
+            "bank"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "order"
+            },
+            "items": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "correctOrder": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "items",
+            "correctOrder"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "annotation"
+            },
+            "spans": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "to": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "tag": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "from",
+                  "to",
+                  "tag"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "tags": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "minCorrect": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "spans",
+            "tags",
+            "minCorrect"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "What the marker compares the learner's response against; discriminated on kind"
+    },
+    "Tolerance": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "absolute"
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "relative"
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "dp"
+            },
+            "places": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "type",
+            "places"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "sf"
+            },
+            "figures": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "type",
+            "figures"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "range"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "type",
+            "min",
+            "max"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "exact"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "How close a numeric answer must be: absolute, relative, decimal places, significant figures, a range, or exact"
+    },
+    "AlgebraForm": {
+      "type": "string",
+      "enum": [
+        "factorised",
+        "expanded",
+        "simplest-fraction",
+        "completed-square",
+        "y=mx+c",
+        "surd-rationalised",
+        "single-fraction",
+        "integer-coefficients",
+        "subject",
+        "single-log",
+        "expanded-logs",
+        "single-log-expanded"
+      ],
+      "description": "Required written form of an algebraic answer; \"subject\" = the spec's subject alone on one side and absent from the other"
+    },
+    "McqOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correct": {
+          "type": "boolean"
+        },
+        "misconception": {
+          "$ref": "#/$defs/MisconceptionId"
+        },
+        "feedback": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "correct",
+        "feedback"
+      ],
+      "additionalProperties": false
+    },
+    "MisconceptionId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9]+(-[a-z0-9]+)*)+$"
+    },
+    "GraphExpectation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "histogram"
+            },
+            "bars": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "type": "number"
+                  },
+                  "to": {
+                    "type": "number"
+                  },
+                  "frequencyDensity": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "from",
+                  "to",
+                  "frequencyDensity"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "axisLabelY": {
+              "type": "string",
+              "const": "Frequency density"
+            },
+            "scaleTolerance": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "plot",
+            "bars",
+            "axisLabelY",
+            "scaleTolerance"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "points-line"
+            },
+            "points": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "lineThrough": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "tolerance": {
+              "$ref": "#/$defs/Tolerance"
+            },
+            "lineRequired": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "plot",
+            "points",
+            "tolerance",
+            "lineRequired"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "curve"
+            },
+            "samples": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "tolerance": {
+              "$ref": "#/$defs/Tolerance"
+            },
+            "smooth": {
+              "type": "boolean",
+              "const": true
+            },
+            "noStraightSegments": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "plot",
+            "samples",
+            "tolerance",
+            "smooth",
+            "noStraightSegments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "region"
+            },
+            "inequalities": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "shadeInside": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "plot",
+            "inequalities",
+            "shadeInside"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "box"
+            },
+            "min": {
+              "type": "number"
+            },
+            "q1": {
+              "type": "number"
+            },
+            "median": {
+              "type": "number"
+            },
+            "q3": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "tolerance": {
+              "$ref": "#/$defs/Tolerance"
+            }
+          },
+          "required": [
+            "plot",
+            "min",
+            "q1",
+            "median",
+            "q3",
+            "max",
+            "tolerance"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "transformation"
+            },
+            "object": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "image": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          },
+          "required": [
+            "plot",
+            "object",
+            "image"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plot": {
+              "type": "string",
+              "const": "best-fit"
+            },
+            "throughMeans": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "line",
+                "curve"
+              ]
+            },
+            "tolerance": {
+              "$ref": "#/$defs/Tolerance"
+            }
+          },
+          "required": [
+            "plot",
+            "kind",
+            "tolerance"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "DiagnosticSet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/DiagnosticSetId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "pre",
+            "post",
+            "both"
+          ]
+        },
+        "items": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DiagnosticItem"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "when",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "DiagnosticSetId": {
+      "type": "string",
+      "pattern": "^dx\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "DiagnosticItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skill": {
+          "type": "string",
+          "minLength": 1
+        },
+        "figure": {
+          "$ref": "#/$defs/FigureSpec"
+        },
+        "options": {
+          "minItems": 2,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/McqOption"
+          }
+        },
+        "secondsExpected": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 90
+        },
+        "confidence": {
+          "type": "boolean",
+          "const": true
+        },
+        "hypercorrectionQueue": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "id",
+        "stem",
+        "skill",
+        "options",
+        "secondsExpected",
+        "confidence",
+        "hypercorrectionQueue"
+      ],
+      "additionalProperties": false,
+      "description": "Single-skill multiple-choice item; every distractor names a misconception"
+    },
+    "Question": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/QuestionId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "paper": {
+          "$ref": "#/$defs/PaperContext"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "practice",
+            "exam-style"
+          ]
+        },
+        "difficulty": {
+          "$ref": "#/$defs/Difficulty"
+        },
+        "ao": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^AO[1-9]$"
+          }
+        },
+        "commandWords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "emphasis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "setting": {
+              "type": "string",
+              "minLength": 1
+            },
+            "original": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "setting",
+            "original"
+          ],
+          "additionalProperties": false
+        },
+        "figures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FigureSpec"
+          }
+        },
+        "parts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Part"
+          }
+        },
+        "totalMarks": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "timeAllowanceSec": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "skeleton": {
+          "type": "string",
+          "minLength": 1
+        },
+        "methodLock": {
+          "type": "object",
+          "properties": {
+            "instruction": {
+              "type": "string",
+              "minLength": 1
+            },
+            "requiredMethod": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence": {
+              "$ref": "#/$defs/ExaminerSource"
+            }
+          },
+          "required": [
+            "instruction",
+            "requiredMethod",
+            "evidence"
+          ],
+          "additionalProperties": false
+        },
+        "examinerSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExaminerSource"
+          }
+        },
+        "solutionProgram": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verification": {
+          "$ref": "#/$defs/VerificationRef"
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "paper",
+        "tier",
+        "style",
+        "difficulty",
+        "ao",
+        "commandWords",
+        "emphasis",
+        "context",
+        "figures",
+        "parts",
+        "totalMarks",
+        "timeAllowanceSec",
+        "skeleton",
+        "examinerSources",
+        "verification",
+        "version"
+      ],
+      "additionalProperties": false,
+      "description": "Original exam-style or practice question with a CCEA-language mark scheme"
+    },
+    "QuestionId": {
+      "type": "string",
+      "pattern": "^q\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "Part": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(main|[a-z]{1,2}(\\([ivx]{1,4}\\))?)$"
+        },
+        "stem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "marks": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "answer": {
+          "$ref": "#/$defs/AnswerSpec"
+        },
+        "scheme": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MarkPoint"
+          }
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "workedSolution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commonErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommonError"
+          }
+        },
+        "requiresWorking": {
+          "type": "boolean"
+        },
+        "followThrough": {
+          "type": "object",
+          "properties": {
+            "fromPart": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rule": {
+              "type": "string",
+              "enum": [
+                "use-candidate-value",
+                "use-candidate-diagram"
+              ]
+            }
+          },
+          "required": [
+            "fromPart",
+            "rule"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "stem",
+        "marks",
+        "answer",
+        "scheme",
+        "hints",
+        "workedSolution",
+        "commonErrors",
+        "requiresWorking"
+      ],
+      "additionalProperties": false
+    },
+    "MarkPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z]{1,3}$"
+        },
+        "marks": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "for": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accept": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reject": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ignore": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ft": {
+          "type": "boolean"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "seenIf": {
+          "type": "string",
+          "minLength": 1
+        },
+        "examinerNote": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "marks",
+        "for"
+      ],
+      "additionalProperties": false,
+      "description": "One line of the mark scheme in the subject's mark language"
+    },
+    "CommonError": {
+      "type": "object",
+      "properties": {
+        "misconception": {
+          "$ref": "#/$defs/MisconceptionId"
+        },
+        "pattern": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "numeric"
+                },
+                "value": {
+                  "type": "number"
+                },
+                "tolerance": {
+                  "$ref": "#/$defs/Tolerance"
+                }
+              },
+              "required": [
+                "kind",
+                "value"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "algebraic"
+                },
+                "latex": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "kind",
+                "latex"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "matrix"
+                },
+                "entries": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              },
+              "required": [
+                "kind",
+                "entries"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "text"
+                },
+                "regex": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "kind",
+                "regex"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "graph"
+                },
+                "test": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "kind",
+                "test"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "feedback": {
+          "type": "string",
+          "minLength": 1
+        },
+        "marksTypicallyEarned": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "source": {
+          "$ref": "#/$defs/ExaminerSource"
+        }
+      },
+      "required": [
+        "misconception",
+        "pattern",
+        "feedback",
+        "marksTypicallyEarned"
+      ],
+      "additionalProperties": false
+    },
+    "FindTheMistake": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/FindTheMistakeId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "stem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "studentWorking": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "mistakeLine": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "misconception": {
+          "$ref": "#/$defs/MisconceptionId"
+        },
+        "whatWentWrong": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correction": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "marksEarnedAsWritten": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{1,3}\\d?$"
+          }
+        },
+        "feedback": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/ExaminerSource"
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "stem",
+        "studentWorking",
+        "mistakeLine",
+        "misconception",
+        "whatWentWrong",
+        "correction",
+        "marksEarnedAsWritten",
+        "feedback",
+        "source"
+      ],
+      "additionalProperties": false,
+      "description": "Plausible wrong working seeded from an examiner report: locate, name, fix"
+    },
+    "FindTheMistakeId": {
+      "type": "string",
+      "pattern": "^ftm\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "RetrievalPrompt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/RetrievalPromptId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "qa",
+            "cloze",
+            "formula",
+            "definition",
+            "procedure",
+            "trap",
+            "label-diagram",
+            "novel-example",
+            "quotation"
+          ]
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "keyWords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "image": {
+          "$ref": "#/$defs/FigureSpec"
+        },
+        "examUnit": {
+          "type": "string",
+          "pattern": "^[A-Z]{0,3}[0-9]{1,2}$"
+        },
+        "difficultyPrior": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "kind",
+        "prompt",
+        "answer"
+      ],
+      "additionalProperties": false,
+      "description": "Atomic retrieval prompt scheduled by FSRS towards the unit's paper date"
+    },
+    "ExaminerInsight": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ExaminerInsightId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "findings": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "$ref": "#/$defs/ExaminerSource"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "asked": {
+                "type": "string",
+                "minLength": 1
+              },
+              "wentWrong": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fullMarkAnswersDid": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rule": {
+                "type": "string",
+                "minLength": 1
+              },
+              "misconceptions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/MisconceptionId"
+                }
+              }
+            },
+            "required": [
+              "source",
+              "url",
+              "asked",
+              "wentWrong",
+              "rule",
+              "misconceptions"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ruleToRemember": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aStarSignal": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "findings",
+        "ruleToRemember"
+      ],
+      "additionalProperties": false,
+      "description": "Chief Examiner report findings for one topic, in our words, cited to series/unit/question"
+    },
+    "ExaminerInsightId": {
+      "type": "string",
+      "pattern": "^ins\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "PracticeSet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/PracticeSetId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "interleaved",
+            "ssdd",
+            "mixed",
+            "unit-review"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "$ref": "#/$defs/SubjectId"
+        },
+        "units": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{0,3}[0-9]{1,2}$"
+          }
+        },
+        "itemIds": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/QuestionId"
+              },
+              {
+                "$ref": "#/$defs/DiagnosticSetId"
+              },
+              {
+                "$ref": "#/$defs/RetrievalPromptId"
+              },
+              {
+                "$ref": "#/$defs/FindTheMistakeId"
+              }
+            ]
+          }
+        },
+        "showTopicLabels": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "subject",
+        "units",
+        "itemIds",
+        "showTopicLabels",
+        "version"
+      ],
+      "additionalProperties": false,
+      "description": "Interleaved / SSDD / mixed set of existing items, shown without topic labels by default"
+    },
+    "PracticeSetId": {
+      "type": "string",
+      "pattern": "^set\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "VerificationLog": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/VerificationRef"
+        },
+        "itemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "$ref": "#/$defs/VerificationCheckType"
+              },
+              "tool": {
+                "type": "string",
+                "minLength": 1
+              },
+              "result": {
+                "type": "string",
+                "enum": [
+                  "pass",
+                  "fail",
+                  "waived"
+                ]
+              },
+              "detail": {
+                "type": "string"
+              },
+              "at": {
+                "$ref": "#/$defs/IsoDateLike"
+              },
+              "by": {
+                "type": "string",
+                "enum": [
+                  "pipeline",
+                  "claude",
+                  "developer",
+                  "teacher"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "tool",
+              "result",
+              "at",
+              "by"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/VerificationStatus"
+        },
+        "reports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "$ref": "#/$defs/IsoDateLike"
+              },
+              "by": {
+                "type": "string",
+                "enum": [
+                  "learner",
+                  "developer"
+                ]
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "resolvedAt": {
+                "$ref": "#/$defs/IsoDateLike"
+              },
+              "resolution": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "at",
+              "by",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "id",
+        "itemId",
+        "version",
+        "checks",
+        "status",
+        "reports"
+      ],
+      "additionalProperties": false,
+      "description": "The \"Checked\" panel: every gate result for one item version, plus learner reports and their resolution"
+    },
+    "VerificationCheckType": {
+      "type": "string",
+      "enum": [
+        "schema",
+        "scope-tier",
+        "formula-sheet",
+        "command-words",
+        "tariff",
+        "maths-numeric",
+        "maths-symbolic",
+        "independent-solve",
+        "units-dimensions",
+        "chem-balance",
+        "examiner-alignment",
+        "copy-shingle",
+        "isomorph",
+        "style-lint",
+        "katex-compile",
+        "link-health",
+        "human-spot"
+      ]
+    },
+    "VerificationStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "checked",
+        "verified",
+        "published",
+        "withdrawn"
+      ]
+    }
+  }
+}

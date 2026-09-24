@@ -1,0 +1,445 @@
+# fm.u3.conditional-probability — Conditional probability from tables, Venn and tree diagrams  [H, difficulty 5]
+unit FM3 · tier untiered · specRefs []
+note: Conditional probability: which number goes underneath v1 [verified]
+verification statuses: {"verified":35}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] The group gets smaller
+- [p] 
+- [figure] Every count belongs to one cell. The row and column totals are the two groups a condition can shrink you down to.
+- [number] 
+- [h] 1. 'Given that' names the denominator
+- [p] 
+- [figure] $P(\text{bus} \mid \text{under 25}) = \dfrac{42}{80} = \dfrac{21}{40}$, which is 0.525.
+- [choice] 
+- [h] 2. The formula on the sheet says the same thing
+- [p] 
+- [why] Why dividing works
+- [choice] 
+- [h] 3. The same table, the other way round
+- [p] 
+- [figure] $P(\text{under 25} \mid \text{bus}) = \dfrac{42}{96} = \dfrac{7}{16}$, which is 0.4375, not 0.525.
+- [number] 
+- [h] 4. A worked example, start to finish
+- [p] 
+- [figure] The chemistry circle holds 32 + 22 = 54 students, and 22 of them take physics too.
+- [number] 
+- [h] 5. From a tree, where only probabilities are given
+- [p] 
+- [figure] $P(\text{late}) = 0.10 + 0.06 = 0.16$, which is the denominator of any 'given that it was late' question.
+- [video] Conditional Probability
+- [number] 
+- [h] 6. Both pieces, then divide
+- [p] 
+- [examiner] What the reports keep finding
+- [number] 
+- [h] 7. When one event sits inside the other
+- [p] 
+- [figure] $P(\text{all three blue} \mid \text{at least two}) = \dfrac{\dfrac{7}{33}}{\dfrac{119}{165}} = \dfrac{5}{17}$.
+- [choice] 
+- [h] 8. Expected numbers from a conditional probability
+- [p] 
+- [figure] The two expected numbers add back to the 800 members the condition named.
+- [number] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u3.conditional-probability.01 [verified] paper FM3 calc
+STEM: The two-way table shows how 200 people travel to work, by age group.
+One person is picked at random from those aged 25 or over. Calculate the probability that this person travels by car.
+  FIG: svg — A two-way table of 200 people by how they travel and by age. Bus: 42 under 25 and 54 aged 25 and over, total 96. Car: 38 under 25 and 66 aged 25 and over, total 104. Column totals 80 and 120. The under-25 column is ringed with a dashed box.
+  1. The condition is 'aged 25 or over'.   — Read the condition first and name the group out loud. Everything else follows from it, and reading it last is how the denominator goes wrong.  (M1)
+  2. That column totals 54 + 66 = 120.   — The group is no longer all 200. Adding the column gives the new whole, and it is worth writing down before any fraction is formed.  (MW1)  WHY: ✔120, the 25-and-over total, because that is the group named | ✘200, because that is how many were surveyed | ✘104, because the question is about car travel
+  3. Of those 120, 66 travel by car.   — The numerator is the single cell where the condition and the event meet. On a table it is always one cell, never a total.  (M1)
+  4. $P(\text{car} \mid \text{25 and over}) = \dfrac{66}{120} = \dfrac{11}{20} = 0.55$   — Divide and simplify. A sense check: more than half of that age group travel by car, which matches the two numbers in the column.  (W1)
+  FINAL: $P(\text{car} \mid \text{25 and over}) = \dfrac{11}{20}$, which is 0.55
+  TWIN: Using the same table, one person is picked at random from those who travel by car. Calculate the probability that this person is aged 25 or over.  → numeric 0.6346153846153846 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+
+### we.fm.u3.conditional-probability.02 [verified] paper FM3 calc
+STEM: A morning is wet with probability $0.4$. A delivery van is late with probability $0.25$ on a wet morning and $0.1$ on a dry one.
+Given that the van was late, calculate the probability that the morning was wet.
+  FIG: svg — A two-stage probability tree for a delivery van. The morning is wet with probability 0.4 and dry with probability 0.6; the van is late with probability 0.25 on a wet morning and 0.1 on a dry one
+  1. $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$ with $A$ wet and $B$ late.   — Write the formula from the sheet with the letters named before any number goes in. Naming them is what keeps the condition on the bottom.  (M1)
+  2. $P(\text{wet and late}) = 0.4 \times 0.25 = 0.10$   — The numerator is one branch: both things happen, so the branch probabilities multiply.  (MW1)
+  3. $P(\text{late}) = 0.10 + 0.6 \times 0.1 = 0.10 + 0.06 = 0.16$   — The denominator is every branch that ends in 'late', wet or dry. Using only the wet one would leave the condition half-counted.  (M1)  WHY: ✔Both late branches, because the morning could have been wet or dry | ✘Only the wet-and-late branch, because the question is about wet mornings | ✘The probability of a wet morning, because that is the event asked for
+  4. $P(\text{wet} \mid \text{late}) = \dfrac{0.10}{0.16} = \dfrac{5}{8} = 0.625$   — Divide, and check against sense: wet mornings are less common but far more likely to bring a late van, so more than half of the late mornings being wet is the right shape of answer.  (W1)
+  FINAL: $P(\text{wet} \mid \text{late}) = \dfrac{5}{8}$, which is 0.625
+  TWIN: Using the same tree, given that the van ran on time, calculate the probability that the morning was dry.  → numeric 0.6428571428571429 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+
+### we.fm.u3.conditional-probability.03 [verified] paper FM3 calc
+STEM: Three pens are taken without replacement from a case of 11, of which 7 are blue.
+$P(\text{all three blue}) = \dfrac{7}{33}$ and $P(\text{exactly two blue}) = \dfrac{28}{55}$.
+Given that at least two of the pens are blue, calculate the probability that all three are blue.
+  FIG: svg — Two nested regions inside a rectangle: the outer one is 'at least two of the three pens are blue' with probability 119/165, and the inner one, entirely inside it, is 'all three are blue' with probability 7/33.
+  1. $P(\text{at least two blue}) = \dfrac{28}{55} + \dfrac{7}{33} = \dfrac{119}{165}$   — Build the condition first: at least two means exactly two or all three, and those two cases cannot both happen, so they add.  (M1)
+  2. All three blue is inside at least two blue, so $P(A \cap B) = P(\text{all three blue}) = \dfrac{7}{33}$.   — Ask whether one event forces the other. It does here, so there is nothing to multiply: the joint probability is the inner one.  (MW1)  WHY: ✔$\dfrac{7}{33}$, because three blue pens already means at least two are blue | ✘$\dfrac{7}{33} \times \dfrac{119}{165}$, because both events must happen | ✘$\dfrac{7}{33} + \dfrac{119}{165}$, because either event will do
+  3. $P(\text{all three} \mid \text{at least two}) = \dfrac{\dfrac{7}{33}}{\dfrac{119}{165}}$   — Substitute into the formula. The condition's probability goes underneath, as it always does.  (M1)
+  4. $= \dfrac{7}{33} \times \dfrac{165}{119} = \dfrac{5}{17} = 0.29$   — Dividing by a fraction is multiplying by its reciprocal. A check: the answer must be larger than $\dfrac{7}{33}$, because conditioning on a smaller group makes the share bigger.  (W1)
+  FINAL: $P(\text{all three blue} \mid \text{at least two blue}) = \dfrac{5}{17}$, which is 0.29
+  TWIN: Using the same three pens, given that at least two are blue, calculate the probability that exactly two are blue.  → numeric 0.7058823529411765 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+
+## DIAGNOSTICS
+### dx.fm.u3.conditional-probability.pre (pre) [verified]
+- p1 (Reading a two-way table (from GCSE Mathematics)): Before the lesson, a check on something you already know. A two-way table has a row total of 45 and one cell in that row holds 18. What is the other cell in the row?
+    ✔ $27$ — Yes: $45 - 18$. Row and column totals are what make a two-way table fill itself in.
+    ✘ $63$ — The two numbers have been added. A row total already includes both cells, so subtract.
+    ✘ $18$ — That is the cell you were given. The rest of the row is what is left of the 45.
+- p2 (Dividing decimals (from GCSE Mathematics)): Another check on earlier work. What is $\dfrac{0.12}{0.4}$?
+    ✔ $0.3$ — Yes: $\dfrac{12}{40}$. Conditional probability from a tree is a division exactly like this one.
+    ✘ $0.048$ — The two have been multiplied. Dividing by a number smaller than 1 makes the answer larger, not smaller.
+    ✘ $3.33$ — The fraction is upside down. The 0.4 is the divisor, so it goes on the bottom.
+- p3 (Adding across branches of a tree (from GCSE Mathematics)): One more from earlier work. On a probability tree, two branches end in the same outcome, with probabilities 0.1 and 0.06. What is the probability of that outcome?
+    ✔ $0.16$ — Yes: separate branches add. This sum is the denominator of most conditional questions from a tree.
+    ✘ $0.006$ — The two have been multiplied. Multiplying is for stages along one branch, not for separate branches.
+    ✘ $0.04$ — One has been subtracted from the other. Both branches lead to the outcome, so both count.
+- p4 (Reading a whole circle from its regions (from GCSE Mathematics)): A last check on earlier work. A Venn diagram shows 31 in the left circle only and 22 in the overlap. How many are in the left circle altogether?
+    ✔ $53$ — Yes: $31 + 22$. A circle total is the sum of every region inside it, and it is often the denominator you need.
+    ✘ $31$ — That is the 'only' region. The overlap is inside the left circle too.
+    ✘ $9$ — The two have been subtracted. Both regions are inside the circle, so they add.
+
+### dx.fm.u3.conditional-probability.post (post) [verified]
+- d1 (The denominator of a conditional probability): In a survey of 150 people, 60 own a dog and 24 of those 60 also own a cat. Given that a person owns a dog, what is the probability that they own a cat?
+    ✔ $\dfrac{24}{60}$ — Yes. Being told the person owns a dog shrinks the group to those 60.
+    ✘ $\dfrac{24}{150}$ [fm.condprob.denominator-not-conditioned] — The numerator is right, but the condition has been ignored. Examiners report this as the commonest error in these parts.
+    ✘ $\dfrac{60}{150}$ [fm.condprob.denominator-not-conditioned] — That is the probability of owning a dog at all. The question asks about cat ownership within the dog owners.
+- d2 (Choosing between two plausible denominators): 88 people were asked, 28 of them said yes and all 28 were season-ticket holders. There are 100 people altogether. Given that a person is one of the 88, what is the probability they said yes?
+    ✔ $\dfrac{28}{88}$ — Yes. The condition names the 88, so that is the group you are choosing from.
+    ✘ $\dfrac{28}{100}$ [fm.condprob.denominator-not-conditioned] — That divides by everybody. The report on this exact question says only the best candidates used 88.
+    ✘ $\dfrac{88}{100}$ [fm.condprob.denominator-not-conditioned] — That is the probability of being one of the 88, which is the condition itself rather than the answer.
+- d3 (Using the formula as printed): $P(A \cap B) = 0.2$ and $P(B) = 0.5$. What is $P(A \mid B)$?
+    ✔ $0.4$ — Yes: $0.2 \div 0.5$. The condition's probability goes underneath.
+    ✘ $0.1$ [fm.condprob.numerator-and-denominator-not-combined] — The two have been multiplied. The formula divides the joint probability by the condition's.
+    ✘ $0.2$ [fm.condprob.numerator-and-denominator-not-combined] — That is the joint probability, the numerator. The division has not been done yet.
+- d4 (Combining the numerator and the denominator from a tree): A tree gives $P(\text{rain and late}) = 0.09$ and $P(\text{late}) = 0.15$. Given that the train was late, what is the probability that it rained?
+    ✔ $0.6$ — Yes: $0.09 \div 0.15$. Both pieces are needed, and then the division.
+    ✘ $0.09$ [fm.condprob.numerator-and-denominator-not-combined] — That is the numerator on its own. Examiners report that many candidates find one piece and stop.
+    ✘ $0.15$ [fm.condprob.numerator-and-denominator-not-combined] — That is the denominator on its own, the probability of being late.
+- d5 (Telling P(A given B) from P(B given A)): On a Venn diagram, 40 take French, 25 take German and 15 take both, out of 80 students. What is $P(\text{French} \mid \text{German})$?
+    ✔ $\dfrac{15}{25}$ — Yes. The condition names German, so the German total is the denominator.
+    ✘ $\dfrac{15}{40}$ [fm.condprob.condition-reversed] — That is $P(\text{German} \mid \text{French})$, the question the other way round. The two share a numerator and nothing else.
+    ✘ $\dfrac{15}{80}$ [fm.condprob.denominator-not-conditioned] — That is the probability of taking both, out of everybody. The condition has been ignored.
+- d6 (Nested events: the numerator is the inner one): A spinner is spun twice. $P(\text{two sixes}) = 0.04$ and $P(\text{at least one six}) = 0.36$. Given that at least one six was spun, what is the probability that both were sixes?
+    ✔ $\dfrac{0.04}{0.36}$ — Yes. Two sixes already means at least one six, so the joint probability is simply 0.04.
+    ✘ $\dfrac{0.04 \times 0.36}{0.36}$ [fm.condprob.subset-event-multiplied] — The two probabilities have been multiplied on top, as if the events were unrelated. One sits inside the other.
+    ✘ $\dfrac{0.36}{0.04}$ [fm.condprob.condition-reversed] — The fraction is upside down, and the answer is above 1. The condition always goes underneath.
+- d7 (Spotting the condition in the wording): Which phrase in a question tells you that the denominator will not be the whole group?
+    ✔ 'given that', or 'a person is chosen from those who' — Yes. Either phrasing names the group you are now choosing from.
+    ✘ 'at random' [fm.condprob.denominator-not-conditioned] — 'At random' only says the choice is fair. It says nothing about which group is being chosen from.
+    ✘ 'and' [fm.condprob.numerator-and-denominator-not-combined] — 'And' points at the numerator, the outcomes where both things happen. The condition is what follows 'given'.
+- d8 (Expected frequency from a conditional probability): $P(\text{bus} \mid \text{under 25}) = 0.6$ and a club has 200 under-25 members. How many would you expect to travel by bus?
+    ✔ $120$ — Yes: $200 \times 0.6$. The condition names the group, and that group is what gets scaled.
+    ✘ $0.6$ [fm.condprob.numerator-and-denominator-not-combined] — That is the probability. An expected number is the probability multiplied by the size of the group.
+    ✘ $333$ [fm.condprob.condition-reversed] — The 200 has been divided by 0.6 instead of multiplied, which gives more members than the club has.
+
+## QUESTIONS
+### q.fm.u3.conditional-probability.0001 [verified] practice · diff 1 · untiered · FM3 calc · 1 marks · (main)write-down1 · A survey of how people travel to work, by age group
+  FIG: svg — A two-way table of 200 people by how they travel and by age. Bus: 42 under 25 and 54 aged 25 and over, total 96. Car: 38 under 25 and 66 aged 25 and over, total 104. Column totals 80 and 120
+  (main) [1] The two-way table shows how 200 people travel to work.
+Write down how many of them travel by car and are aged 25 or over.
+      ANSWER: numeric 66 people tol={"type":"exact"} forms=decimal
+      MW1 MW1: 66
+      SOLUTION: The car row meets the 25-and-over column at 66.
+      HINTS: Find the car row. || Then the 25-and-over column.
+
+### q.fm.u3.conditional-probability.0002 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · A survey of how people travel to work, by age group
+  FIG: svg — A two-way table of 200 people by how they travel and by age. Bus: 42 under 25 and 54 aged 25 and over, total 96. Car: 38 under 25 and 66 aged 25 and over, total 104. Column totals 80 and 120
+  (main) [2] One person is picked at random from those under 25.
+Calculate the probability that this person travels by bus.
+      ANSWER: numeric 0.525 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{42}{80}$, with the under-25 total as the denominator
+      W1 W1: 21/40 or 0.525
+      SOLUTION: The under-25 column holds 80 people, of whom 42 travel by bus. $P(\text{bus} \mid \text{under 25}) = \dfrac{42}{80} = \dfrac{21}{40}$, which is 0.525.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.21,"tolerance":{"type":"absolute","value":0.004}} → The numerator is right, but dividing by all 200 ignores the condition. Being told the person is under 25 shrinks the group to 80: \dfrac{21}{40}. (1)
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.4375,"tolerance":{"type":"absolute","value":0.004}} → That is $P(\text{under 25} \mid \text{bus})$, the other way round. Here the condition names the under-25s, so 80 goes underneath: \dfrac{21}{40}. (1)
+      HINTS: The condition names the under-25s. || That column total is the denominator.
+
+### q.fm.u3.conditional-probability.0003 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · A survey of how people travel to work, by age group
+  FIG: svg — A two-way table of 200 people by how they travel and by age. Bus: 42 under 25 and 54 aged 25 and over, total 96. Car: 38 under 25 and 66 aged 25 and over, total 104. Column totals 80 and 120
+  (main) [2] One person is picked at random from those aged 25 or over.
+Calculate the probability that this person travels by car.
+      ANSWER: numeric 0.55 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{66}{120}$
+      W1 W1: 11/20 or 0.55
+      SOLUTION: The 25-and-over column holds 120 people, of whom 66 travel by car. $P(\text{car} \mid \text{25 and over}) = \dfrac{66}{120} = \dfrac{11}{20}$, which is 0.55.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.6346153846153846,"tolerance":{"type":"absolute","value":0.004}} → That divides by the car total and answers 'given that the person travels by car'. The condition here is the age group, so 120 goes underneath: \dfrac{11}{20}. (1)
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.33,"tolerance":{"type":"absolute","value":0.004}} → Dividing by all 200 ignores the condition. The group is the 120 aged 25 or over, so the answer is \dfrac{11}{20}. (1)
+      HINTS: The condition names the 25-and-over column. || That column totals 120.
+
+### q.fm.u3.conditional-probability.0004 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · Students taking chemistry, physics, both or neither
+  FIG: svg — A two-circle Venn diagram for 96 students: 32 study chemistry only, 22 study both, 18 study physics only and 24 study neither
+  (main) [2] The Venn diagram shows the subjects taken by 96 students.
+One student is picked at random from those taking chemistry.
+Calculate the probability that this student also takes physics.
+      ANSWER: numeric 0.4074074074074074 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{22}{54}$, with the chemistry total as the denominator
+      W1 W1: 11/27 or 0.41
+      SOLUTION: The chemistry circle holds 32 + 22 = 54 students, and 22 of them take physics as well. $P(\text{physics} \mid \text{chemistry}) = \dfrac{22}{54} = \dfrac{11}{27}$, which is 0.41.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.55,"tolerance":{"type":"absolute","value":0.004}} → That divides by the physics total, which answers the question the other way round. The condition names chemistry, so 54 goes underneath: \dfrac{11}{27}. (1)
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.22916666666666666,"tolerance":{"type":"absolute","value":0.004}} → The overlap is right, but dividing by all 96 students ignores the condition. The group is the 54 taking chemistry: \dfrac{11}{27}. (1)
+      HINTS: The chemistry circle holds 32 + 22 students. || The overlap is the numerator.
+
+### q.fm.u3.conditional-probability.0005 [verified] practice · diff 4 · untiered · FM3 calc · 3 marks · (main)calculate3 · Students taking chemistry, physics, both or neither
+  FIG: svg — A two-circle Venn diagram for 96 students: 32 study chemistry only, 22 study both, 18 study physics only and 24 study neither
+  (main) [3] One student is picked at random from those who do not take chemistry.
+Calculate the probability that this student takes physics.
+      ANSWER: numeric 0.42857142857142855 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 96 - 54 = 42 identified as the group
+      MW1 MW1: numerator 18, the physics-only region
+      W1 W1: 3/7 or 0.43
+      SOLUTION: Outside the chemistry circle: 18 + 24 = 42 students. Of those, 18 take physics. $P(\text{physics} \mid \text{not chemistry}) = \dfrac{18}{42} = \dfrac{3}{7}$, which is 0.43.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.1875,"tolerance":{"type":"absolute","value":0.004}} → The numerator is right, but the denominator is still all 96. The condition rules out the 54 chemists, leaving 42: \dfrac{3}{7}. (1)
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.45,"tolerance":{"type":"absolute","value":0.004}} → Dividing by the physics total answers 'given that the student takes physics, what is the probability they avoid chemistry'. Here the condition is 'not chemistry', so 42 goes underneath: \dfrac{3}{7}. (1)
+      HINTS: 'Does not take chemistry' is everything outside the chemistry circle. || Of those, only the physics-only region takes physics.
+
+### q.fm.u3.conditional-probability.0006 [verified] practice · diff 4 · untiered · FM3 calc · 3 marks · (main)calculate3 · A delivery van that may be late on a wet or a dry morning
+  FIG: svg — A two-stage probability tree for a delivery van. The morning is wet with probability 0.4 and dry with probability 0.6; the van is late with probability 0.25 on a wet morning and 0.1 on a dry one
+  (main) [3] The tree diagram shows the probabilities for a delivery van on one morning.
+Given that the van was late, calculate the probability that the morning was wet.
+      ANSWER: numeric 0.625 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $P(\text{late}) = 0.10 + 0.06 = 0.16$
+      MW1 MW1: numerator 0.10, and the two divided
+      W1 W1: 5/8 or 0.625
+      SOLUTION: $P(\text{late}) = 0.4 \times 0.25 + 0.6 \times 0.1 = 0.10 + 0.06 = 0.16$. $P(\text{wet} \mid \text{late}) = \dfrac{0.10}{0.16} = \dfrac{5}{8}$, which is 0.625.
+      ERR [fm.condprob.numerator-and-denominator-not-combined] {"kind":"numeric","value":0.1,"tolerance":{"type":"absolute","value":0.004}} → That is the wet-and-late branch on its own, the numerator of the fraction. Dividing it by $P(\text{late}) = 0.16$ finishes the question: \dfrac{5}{8}. (1)
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.25,"tolerance":{"type":"absolute","value":0.004}} → That is the branch probability of being late on a wet morning, which conditions the other way round. The question conditions on 'late', so 0.16 goes underneath: \dfrac{5}{8}. (1)
+      HINTS: Add every branch that ends in 'late' for the denominator. || The numerator is the wet-and-late branch.
+
+### q.fm.u3.conditional-probability.0007 [verified] practice · diff 4 · untiered · FM3 calc · 3 marks · (main)calculate3 · A delivery van that may be late on a wet or a dry morning
+  FIG: svg — A two-stage probability tree for a delivery van. The morning is wet with probability 0.4 and dry with probability 0.6; the van is late with probability 0.25 on a wet morning and 0.1 on a dry one
+  (main) [3] Given that the van ran on time, calculate the probability that the morning was dry.
+      ANSWER: numeric 0.6428571428571429 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $P(\text{on time}) = 1 - 0.16 = 0.84$, or the two on-time branches added
+      MW1 MW1: numerator 0.54, and the two divided
+      W1 W1: 9/14 or 0.643
+      SOLUTION: $P(\text{on time}) = 1 - 0.16 = 0.84$. $P(\text{dry and on time}) = 0.6 \times 0.9 = 0.54$. $P(\text{dry} \mid \text{on time}) = \dfrac{0.54}{0.84} = \dfrac{9}{14}$, which is 0.643.
+      ERR [fm.condprob.numerator-and-denominator-not-combined] {"kind":"numeric","value":0.54,"tolerance":{"type":"absolute","value":0.004}} → That is the dry-and-on-time branch, the numerator. Dividing it by $P(\text{on time}) = 0.84$ gives \dfrac{9}{14}. (1)
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.9,"tolerance":{"type":"absolute","value":0.004}} → That is the branch probability of running on time on a dry morning, which conditions the other way round. Here the condition is 'on time': \dfrac{9}{14}. (1)
+      HINTS: Two branches end in 'on time'. || Or take $P(\text{late})$ from 1.
+
+### q.fm.u3.conditional-probability.0008 [verified] practice · diff 5 · untiered · FM3 calc · 3 marks · (main)calculate3 · Three pens taken from a pencil case without replacement
+  FIG: svg — Two nested regions inside a rectangle: the outer one is 'at least two of the three pens are blue' with probability 119/165, and the inner one, entirely inside it, is 'all three are blue' with probability 7/33.
+  (main) [3] Three pens are taken without replacement from a case of 11 pens, 7 blue and 4 black. $P(\text{all three blue}) = \dfrac{7}{33}$ and $P(\text{at least two blue}) = \dfrac{119}{165}$.
+Given that at least two of the pens are blue, calculate the probability that all three are blue.
+      ANSWER: numeric 0.29411764705882354 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: numerator recognised as $P(\text{all three blue}) = 7/33$, not a product
+      MW1 MW1: $\dfrac{7/33}{119/165}$
+      W1 W1: 5/17 or 0.29
+      SOLUTION: All three blue is inside at least two blue, so $P(A \cap B) = P(\text{all three blue}) = \dfrac{7}{33}$. $P(\text{all three} \mid \text{at least two}) = \dfrac{\dfrac{7}{33}}{\dfrac{119}{165}} = \dfrac{5}{17}$, which is 0.29.
+      ERR [fm.condprob.subset-event-multiplied] {"kind":"numeric","value":0.15298438934802572,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been multiplied on the numerator, as if the events were unrelated. Every outcome with three blue pens already has at least two, so the numerator is simply \dfrac{7}{33} and the answer is \dfrac{5}{17}. (0)
+      ERR [fm.condprob.numerator-and-denominator-not-combined] {"kind":"numeric","value":0.21212121212121213,"tolerance":{"type":"absolute","value":0.004}} → That is the numerator on its own. Dividing it by $P(\text{at least two blue}) = \dfrac{119}{165}$ finishes the question: \dfrac{5}{17}. (1)
+      HINTS: Three blue pens already means at least two are blue. || So $P(A \cap B)$ is just $\dfrac{7}{33}$.
+
+### q.fm.u3.conditional-probability.0009 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · A survey of how people travel to work, by age group
+  FIG: svg — A two-way table of 200 people by how they travel and by age. Bus: 42 under 25 and 54 aged 25 and over, total 96. Car: 38 under 25 and 66 aged 25 and over, total 104. Column totals 80 and 120
+  (main) [2] One person is picked at random from those who travel by bus.
+Calculate the probability that this person is under 25.
+      ANSWER: numeric 0.4375 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{42}{96}$, with the bus total as the denominator
+      W1 W1: 7/16 or 0.4375
+      SOLUTION: The bus row holds 96 people, of whom 42 are under 25. $P(\text{under 25} \mid \text{bus}) = \dfrac{42}{96} = \dfrac{7}{16}$, which is 0.4375.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.525,"tolerance":{"type":"absolute","value":0.004}} → That is $P(\text{bus} \mid \text{under 25})$, the question the other way round. Here the condition names the bus travellers, so 96 is the denominator: \dfrac{7}{16}. (1)
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.21,"tolerance":{"type":"absolute","value":0.004}} → Dividing by all 200 ignores the condition. The group is the 96 who travel by bus: \dfrac{7}{16}. (1)
+      HINTS: The condition names the bus travellers this time. || Their total is 96.
+
+### q.fm.u3.conditional-probability.0010 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · Students taking chemistry, physics, both or neither
+  FIG: svg — A two-circle Venn diagram for 96 students: 32 study chemistry only, 22 study both, 18 study physics only and 24 study neither
+  (main) [2] One student is picked at random from those taking physics.
+Calculate the probability that this student also takes chemistry.
+      ANSWER: numeric 0.55 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{22}{40}$
+      W1 W1: 11/20 or 0.55
+      SOLUTION: The physics circle holds 22 + 18 = 40 students, and 22 of them take chemistry too. $P(\text{chemistry} \mid \text{physics}) = \dfrac{22}{40} = \dfrac{11}{20}$, which is 0.55.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.4074074074074074,"tolerance":{"type":"absolute","value":0.004}} → That divides by the chemistry total and answers the other conditional question. The condition here names physics, so 40 goes underneath: \dfrac{11}{20}. (1)
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.22916666666666666,"tolerance":{"type":"absolute","value":0.004}} → Dividing by all 96 students ignores the condition. The group is the 40 taking physics: \dfrac{11}{20}. (1)
+      HINTS: The physics circle holds 22 + 18 students. || The overlap is the numerator again.
+
+### q.fm.u3.conditional-probability.0011 [verified] practice · diff 4 · untiered · FM3 calc · 3 marks · (main)calculate3 · A club scaling a travel survey up to its own under-25 membership
+  FIG: svg — A two-way table of 200 people by how they travel and by age. Bus: 42 under 25 and 54 aged 25 and over, total 96. Car: 38 under 25 and 66 aged 25 and over, total 104. Column totals 80 and 120
+  (main) [3] A club has 800 members who are under 25. The club assumes they travel like the under-25s in the survey above.
+Calculate the expected number of these members who travel by bus.
+      ANSWER: numeric 420 members tol={"type":"exact"} forms=decimal
+      M1 M1: $P(\text{bus} \mid \text{under 25}) = \dfrac{42}{80}$
+      MW1 MW1: $800 \times \dfrac{21}{40}$
+      W1 W1: 420
+      SOLUTION: $P(\text{bus} \mid \text{under 25}) = \dfrac{42}{80} = \dfrac{21}{40}$. Expected number $= 800 \times \dfrac{21}{40} = 420$ members.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":168,"tolerance":{"type":"absolute","value":0.004}} → The 800 members have been scaled by $\dfrac{42}{200}$, the share of the whole survey. These members are all under 25, so the conditional probability \dfrac{21}{40} is what scales them: 420. (1)
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":350,"tolerance":{"type":"absolute","value":0.004}} → The reversed conditional probability has been used. $P(\text{under 25} \mid \text{bus})$ answers a different question; scaling by $P(\text{bus} \mid \text{under 25})$ gives 420. (1)
+      HINTS: First find the conditional probability for the under-25s. || Then scale the 800 members by it.
+
+### q.fm.u3.conditional-probability.0012 [verified] practice · diff 2 · untiered · FM3 calc · 1 marks · (main)identify1 · Reading a conditional probability statement
+  (main) [1] A question asks for the probability that a runner finished the race, given that the runner started in the first wave.
+Identify what goes on the bottom of the fraction.
+      ANSWER: mcq ✔The number who started in the first wave | ✘The number who finished the race [fm.condprob.condition-reversed] | ✘The number of runners altogether [fm.condprob.denominator-not-conditioned] | ✘The number who both started in the first wave and finished [fm.condprob.numerator-and-denominator-not-combined]
+      W1 W1: the condition's own total identified as the denominator
+      SOLUTION: The condition is 'started in the first wave', so the group is everyone in that wave and their total is the denominator.
+      HINTS: Find the words 'given that'. || Whatever follows them is the new group.
+
+### q.fm.u3.conditional-probability.0013 [verified] exam-style · diff 4 · untiered · FM3 calc · 6 marks · (a)complete2|(b)calculate2|(c)calculate2 · A survey of how people travel to work, by age group
+  FIG: svg — A partly filled two-way table of 200 people by travel and age, with four cells left blank.
+  (a) [2] The partly completed table shows how 200 people travel to work.
+Complete the table.
+      ANSWER: table {"kind":"table","cells":[{"row":1,"col":2,"value":54,"tolerance":{"type":"exact"}},{"row":2,"col":1,"value":38,"tolerance":{"type":"exact"}},{"row":2,"col":3,"value":104,"tolerance":{"type":"exact"}},
+      MW1 MW1: 54 and 38 in the body of the table
+      MW1 MW2: the totals 104 and 120
+      SOLUTION: Bus row: 96 - 42 = 54. Under-25 column: 80 - 42 = 38. Car row: 38 + 66 = 104. 25-and-over column: 54 + 66 = 120, and 80 + 120 = 200.
+      HINTS: Each row adds to its own total. || Each column adds to its own total, and the two grand totals agree.
+  (b) [2] One person is picked at random from those under 25.
+Calculate the probability that this person travels by bus.
+      ANSWER: numeric 0.525 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{42}{80}$ ft
+      W1 W1: 21/40 or 0.525
+      SOLUTION: $P(\text{bus} \mid \text{under 25}) = \dfrac{42}{80} = \dfrac{21}{40}$, which is 0.525.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.21,"tolerance":{"type":"absolute","value":0.004}} → The numerator is right, but dividing by all 200 ignores the condition. The group is the 80 under-25s: \dfrac{21}{40}. (1)
+      HINTS: The condition names the under-25 column. || Its total goes underneath.
+  (c) [2] One person is picked at random from those who travel by bus.
+Calculate the probability that this person is under 25.
+      ANSWER: numeric 0.4375 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{42}{96}$, with the bus total as the denominator ft
+      W1 W1: 7/16 or 0.4375
+      SOLUTION: $P(\text{under 25} \mid \text{bus}) = \dfrac{42}{96} = \dfrac{7}{16}$, which is 0.4375.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.525,"tolerance":{"type":"absolute","value":0.004}} → That is part (b) again. The condition here names the bus travellers, so the denominator is 96 and the answer is \dfrac{7}{16}. (1)
+      HINTS: The condition has changed to the bus row. || That row totals 96.
+
+### q.fm.u3.conditional-probability.0014 [verified] exam-style · diff 4 · untiered · FM3 calc · 8 marks · (a)complete2|(b)calculate3|(c)calculate3 · A delivery van that may be late on a wet or a dry morning
+  FIG: svg — A two-stage probability tree for a delivery van with the first-stage branches labelled wet and dry and three branches marked (i) to (iii).
+  (a) [2] A morning is wet with probability $0.4$. The delivery van is late with probability $0.25$ on a wet morning and $0.1$ on a dry one.
+Complete the tree diagram by choosing the probability for each of the branches (i) to (iii).
+      ANSWER: label {"kind":"label","targets":[{"id":"i","accepted":["0.6"],"position":[180,150]},{"id":"ii","accepted":["0.75"],"position":[340,100]},{"id":"iii","accepted":["0.9"],"position":[340,190]}],"bank":["0.6","
+      MW1 MW1: (i) 0.6
+      MW1 MW2: (ii) 0.75 and (iii) 0.9
+      SOLUTION: (i) $1 - 0.4 = 0.6$. (ii) $1 - 0.25 = 0.75$. (iii) $1 - 0.1 = 0.9$.
+      HINTS: The two branches leaving one point always total 1. || Each pair is worked out on its own.
+  (b) [3] Calculate the probability that the van is late.
+      ANSWER: numeric 0.16 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: $0.4 \times 0.25$ and $0.6 \times 0.1$ both attempted ft
+      MW1 MW1: 0.10 and 0.06
+      W1 W1: 0.16
+      SOLUTION: Wet and late: $0.4 \times 0.25 = 0.10$. Dry and late: $0.6 \times 0.1 = 0.06$. $P(\text{late}) = 0.10 + 0.06 = 0.16$.
+      ERR [fm.prob.add-instead-of-multiply] {"kind":"numeric","value":0.65,"tolerance":{"type":"absolute","value":0.004}} → The two first-stage and second-stage probabilities have been added. Along a branch they multiply, and only then do the two 'late' branches add: $0.16$. (0)
+      HINTS: Two branches end in 'late'. || Multiply along each, then add.
+  (c) [3] Given that the van was late, calculate the probability that the morning was wet.
+      ANSWER: numeric 0.625 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{0.10}{P(\text{late})}$ with the candidate's own denominator ft
+      MW1 MW1: $\dfrac{0.10}{0.16}$
+      W1 W1: 5/8 or 0.625
+      SOLUTION: $P(\text{wet} \mid \text{late}) = \dfrac{0.10}{0.16} = \dfrac{5}{8}$, which is 0.625.
+      ERR [fm.condprob.numerator-and-denominator-not-combined] {"kind":"numeric","value":0.1,"tolerance":{"type":"absolute","value":0.004}} → That is the numerator on its own, which is what most candidates reach. Dividing by part (b) finishes it: \dfrac{5}{8}. (1)
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.25,"tolerance":{"type":"absolute","value":0.004}} → That is the branch probability of being late on a wet morning. The condition here is 'late', so 0.16 goes underneath: \dfrac{5}{8}. (1)
+      HINTS: The numerator is the wet-and-late branch. || The denominator is part (b).
+
+### q.fm.u3.conditional-probability.0015 [verified] exam-style · diff 4 · untiered · FM3 calc · 6 marks · (a)calculate2|(b)calculate2|(c)calculate2 · Students taking chemistry, physics, both or neither
+  FIG: svg — A two-circle Venn diagram for 96 students: 32 study chemistry only, 22 study both, 18 study physics only and 24 study neither
+  (a) [2] The Venn diagram shows the subjects taken by 96 students.
+One student is picked at random.
+Calculate the probability that this student takes neither subject.
+      ANSWER: numeric 0.25 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{24}{96}$ seen
+      W1 W1: 1/4 or 0.25
+      SOLUTION: 24 students sit outside both circles. $P(\text{neither}) = \dfrac{24}{96} = \dfrac{1}{4}$, which is 0.25.
+      HINTS: 'Neither' is the region outside both circles. || The denominator is all 96 students.
+  (b) [2] One student is picked at random from those taking chemistry.
+Calculate the probability that this student also takes physics.
+      ANSWER: numeric 0.4074074074074074 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{22}{54}$
+      W1 W1: 11/27 or 0.41
+      SOLUTION: $P(\text{physics} \mid \text{chemistry}) = \dfrac{22}{54} = \dfrac{11}{27}$, which is 0.41.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.22916666666666666,"tolerance":{"type":"absolute","value":0.004}} → Dividing by all 96 students ignores the condition. The group is the 54 chemists: \dfrac{11}{27}. (1)
+      HINTS: The chemistry circle totals 54. || The overlap is the numerator.
+  (c) [2] One student is picked at random from those taking physics.
+Calculate the probability that this student also takes chemistry.
+      ANSWER: numeric 0.55 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{22}{40}$, with the physics total as the denominator
+      W1 W1: 11/20 or 0.55
+      SOLUTION: $P(\text{chemistry} \mid \text{physics}) = \dfrac{22}{40} = \dfrac{11}{20}$, which is 0.55.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.4074074074074074,"tolerance":{"type":"absolute","value":0.004}} → That is part (b) again, dividing by the chemistry total. The condition here names physics, so 40 goes underneath: \dfrac{11}{20}. (1)
+      HINTS: The condition has swapped. || The physics circle totals 40.
+
+### q.fm.u3.conditional-probability.0016 [verified] exam-style · diff 5 · untiered · FM3 calc · 8 marks · (a)calculate3|(b)calculate2|(c)calculate3 · Three pens taken from a pencil case without replacement
+  FIG: svg — Two nested regions inside a rectangle: the outer one is 'at least two of the three pens are blue' with probability 119/165, and the inner one, entirely inside it, is 'all three are blue' with probability 7/33.
+  (a) [3] Three pens are taken without replacement from a case of 11 pens, 7 blue and 4 black.
+$P(\text{all three blue}) = \dfrac{7}{33}$.
+Calculate the probability that exactly two of the three pens are blue.
+      ANSWER: numeric 0.509090909090909 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: one order attempted, such as $\dfrac{7}{11} \times \dfrac{6}{10} \times \dfrac{4}{9}$
+      MW1 MW1: three orders counted
+      W1 W1: 28/55 or 0.509
+      SOLUTION: One order: $\dfrac{7}{11} \times \dfrac{6}{10} \times \dfrac{4}{9} = \dfrac{28}{165}$. The black pen can come first, second or third, so multiply by 3: $\dfrac{28}{55}$.
+      HINTS: The black pen can be the first, the second or the third. || Each of the three orders has the same probability.
+  (b) [2] Calculate the probability that at least two of the three pens are blue.
+      ANSWER: numeric 0.7212121212121212 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: their exactly-two answer $+ 7/33$ ft
+      W1 W1: 119/165 or 0.721
+      SOLUTION: $P(\text{at least two blue}) = \dfrac{28}{55} + \dfrac{7}{33} = \dfrac{119}{165}$.
+      ERR [fm.prob.complement-not-used] {"kind":"numeric","value":0.509090909090909,"tolerance":{"type":"absolute","value":0.004}} → That is part (a) on its own. 'At least two' also includes the all-three branch, so add $\dfrac{7}{33}$: \dfrac{119}{165}. (1)
+      HINTS: 'At least two' is exactly two or all three. || Add part (a) to the probability you were given.
+  (c) [3] Given that at least two of the pens are blue, calculate the probability that all three are blue.
+      ANSWER: numeric 0.29411764705882354 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: numerator recognised as $P(\text{all three blue})$, because all three blue is inside at least two blue
+      MW1 MW1: $\dfrac{7/33}{119/165}$ with the candidate's own denominator ft
+      W1 W1: 5/17 or 0.29
+      SOLUTION: All three blue lies inside at least two blue, so $P(A \cap B) = \dfrac{7}{33}$. $P(\text{all three} \mid \text{at least two}) = \dfrac{\dfrac{7}{33}}{\dfrac{119}{165}} = \dfrac{5}{17}$, which is 0.29.
+      ERR [fm.condprob.subset-event-multiplied] {"kind":"numeric","value":0.15298438934802572,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been multiplied on the numerator. One event sits inside the other, so their intersection is simply the inner one: \dfrac{5}{17}. (0)
+      ERR [fm.condprob.numerator-and-denominator-not-combined] {"kind":"numeric","value":0.21212121212121213,"tolerance":{"type":"absolute","value":0.004}} → That is the numerator on its own. Dividing by part (b) finishes the question: \dfrac{5}{17}. (1)
+      HINTS: Three blue pens already means at least two are blue. || So the numerator is the smaller probability, not a product.
+
+## FIND THE MISTAKE
+### ftm.fm.u3.conditional-probability.01 [verified] fm.condprob.denominator-not-conditioned · earned M1 · ccea-cer:further-maths:2024-summer:FM3:Q6
+STEM: Sean was asked, using the travel table, for the probability that a person picked from those under 25 travels by bus. The table shows 42 of the 80 under-25s on the bus, out of 200 people altogether. His working:
+    1. people under 25 who take the bus = 42
+  ✘ 2. P(bus and under 25) = 42/200 = 0.210
+    3. so P(bus given under 25) = 0.210
+  WRONG: Line 2 divides by all 200 people. That is the probability of being under 25 AND on the bus, which is a different quantity. Being told the person is under 25 shrinks the group to the 80 in that column, so 80 is the denominator.
+  FIX: people under 25 who take the bus = 42 / people under 25 altogether = 80 / P(bus given under 25) = 42/80 = 21/40 = 0.525
+  FEEDBACK: The right cell has been picked out, so the first mark is safe. The working mark goes at line 2, where the condition is ignored. Examiners describe exactly this: the numerator is usually right and the denominator is where the marks go. The answer is \dfrac{21}{40}.
+
+### ftm.fm.u3.conditional-probability.02 [verified] fm.condprob.numerator-and-denominator-not-combined · earned M1,MW1 · ccea-cer:further-maths:2025-summer:FM3:Q7
+STEM: Aoife was asked, given that the van was late, for the probability that the morning was wet. She had already found the two late branches. Her working:
+    1. P(wet and late) = 0.4 x 0.25 = 0.10
+    2. P(dry and late) = 0.6 x 0.1 = 0.06
+  ✘ 3. P(wet given late) = 0.10
+  WRONG: Lines 1 and 2 are both right, and together they give $P(\text{late}) = 0.16$. Line 3 stops at the numerator. The two pieces have to be combined: the joint probability goes on top and the condition's probability underneath.
+  FIX: P(wet and late) = 0.10 / P(late) = 0.10 + 0.06 = 0.16 / P(wet given late) = 0.10 / 0.16 = 5/8 = 0.625
+  FEEDBACK: Both branch products are right, so the method and working marks for them stand. The final mark is lost at line 3. Examiners say candidates find either the numerator or the denominator but rarely combine them, so write the fraction before you calculate anything. The answer is \dfrac{5}{8}.
+
+### ftm.fm.u3.conditional-probability.03 [verified] fm.condprob.subset-event-multiplied · earned none · ccea-cer:further-maths:2019-summer:FM3:Q2
+STEM: Ruairi was asked, given that at least two of three pens are blue, for the probability that all three are blue. He had $P(\text{all three blue}) = 7/33$ and $P(\text{at least two blue}) = 119/165$. His working:
+  ✘ 1. P(all three blue and at least two blue) = 7/33 x 119/165 = 833/5445
+    2. P(all three given at least two) = 833/5445 / 119/165
+    3. = 7/33
+  WRONG: Line 1 multiplies the two probabilities, as if the events were unrelated. All three blue already means at least two are blue, so the two events happening together is simply all three blue: $P(A \cap B) = \dfrac{7}{33}$, with nothing to multiply.
+  FIX: all three blue is inside at least two blue, so P(all three and at least two) = 7/33 / P(all three given at least two) = 7/33 / 119/165 / = 5/17 = 0.29
+  FEEDBACK: The formula is written the right way up, which is worth knowing, but the numerator is wrong from line 1 and the answer comes back as the probability he started with. Ask first whether one event forces the other; when it does, the numerator is the smaller probability on its own. The answer is \dfrac{5}{17}.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u3.conditional-probability.01 [verified] (formula) The conditional-probability formula, as the Unit 3 formula sheet prints it.  →  $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$
+- rp.fm.u3.conditional-probability.02 [verified] (definition) What do the words 'given that' change in a probability question?  →  They name the group you are choosing from, so the denominator becomes that group's total instead of the whole population.
+- rp.fm.u3.conditional-probability.03 [verified] (trap) Why are $P(A \mid B)$ and $P(B \mid A)$ different?  →  They share the same numerator, the outcomes where both happen, but the denominator is the condition's own total, and the two conditions have different totals.
+- rp.fm.u3.conditional-probability.04 [verified] (procedure) How do you find a conditional probability from a two-way table?  →  Find the row or column the condition names, use its total as the denominator, and use the single cell where the condition and the event meet as the numerator.
+- rp.fm.u3.conditional-probability.05 [verified] (procedure) How do you find a conditional probability from a tree diagram?  →  The numerator is the branch where both happen, and the denominator is every branch that satisfies the condition, added together.
+- rp.fm.u3.conditional-probability.06 [verified] (trap) What goes wrong most often in a conditional-probability part, according to the examiners?  →  The numerator is usually right and the denominator is wrong: the whole population is used instead of the group the condition names.
+- rp.fm.u3.conditional-probability.07 [verified] (trap) One event is inside another, such as 'three the same' inside 'two the same'. What is $P(A \cap B)$?  →  It is P(A), the inner event on its own, because every outcome of A is already in B. There is nothing to multiply.
+- rp.fm.u3.conditional-probability.08 [verified] (trap) You have the numerator of a conditional probability. What must you not do next?  →  Stop there. The numerator on its own is the joint probability, and it still has to be divided by the probability of the condition.
+- rp.fm.u3.conditional-probability.09 [verified] (qa) How do you find an expected number from a conditional probability?  →  Multiply the size of the group named in the condition by the conditional probability.
+- rp.fm.u3.conditional-probability.10 [verified] (qa) Why can a conditional probability be larger than the joint probability it was built from?  →  Because dividing by the condition rescales it to a smaller group, and a share of a smaller group is bigger.
+
+## INSIGHT
+RULE: P(A given B) = P(A and B) / P(B): the denominator is the reduced group named after 'given'; if A is inside B the numerator is simply P(A); count both orders where the order is not fixed.
+A*: Conditioning correctly when the events are nested (normal or binomial) or when the condition is a region of a Venn or tree diagram.
+- ccea-cer:further-maths:2019-summer:FM3:Q2: asked Probability that three beads match given that two do. | went wrong: Under a third finished: candidates did not see that 'three the same' already implies 'two the same', so they multiplied the two probabilities in the numerator. | rule: If A is inside B, P(A and B) is just P(A).
+- ccea-cer:further-maths:2022-summer:FM3:Q6: asked Conditional probability from a table of percentages; then two students in either order. | went wrong: 28% or 28/100 was given instead of 28/88 - the denominator must be the group in the condition; in the next part both orders were not counted (0.014). | rule: Divide by the probability of the condition, not by the whole population; count both orders.
+- ccea-cer:further-maths:2022-summer:FM3:Q7: asked Conditional probability inside a normal distribution. | went wrong: Most did not see that 'less than 34' is contained in 'less than 60' and multiplied two probabilities on top. | rule: Sketch both regions; if one sits inside the other, the numerator is the smaller region.
+- ccea-cer:further-maths:2023-summer:FM3:Q3: asked Venn diagram with an unknown, then a conditional probability. | went wrong: A quarter got the conditional part; many gave a number over 80 (the whole population), a basic misunderstanding of conditioning. | rule: The denominator shrinks to the region named after 'given that'.
+- ccea-cer:further-maths:2023-summer:FM3:Q5: asked Conditional probability with a normal distribution. | went wrong: Only the top 40%; the rest multiplied two probabilities for a nested event (0.1151 appeared). | rule: Nested events: numerator = the inner probability.
+- ccea-cer:further-maths:2024-summer:FM3:Q6: asked Venn diagram question ending with a conditional probability. | went wrong: A considerable number ignored the total of 120 houses (26 unaccounted for); the numerator was usually right but the denominator wrong. | rule: Check the Venn total, then condition on the right region.
+- ccea-cer:further-maths:2025-summer:FM3:Q7: asked Tree diagram, then a conditional probability. | went wrong: Candidates found either the numerator (0.3 x 0.4) or the denominator (0.68) but rarely combined them. | rule: P(A given B) = P(A and B) / P(B) - both pieces, then divide.
+- ccea-cer:further-maths:2025-summer:FM3:Q3: asked Venn diagram with 'only', an equation for x, then a conditional probability. | went wrong: 'Only' was misread so overlaps were misplaced and the outside value omitted; only the strongest managed the conditional part. | rule: 'Only A' is the part of A outside every other circle.

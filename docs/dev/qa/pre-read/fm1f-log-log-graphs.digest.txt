@@ -1,0 +1,279 @@
+# fm.u1.log-log-graphs — Log/log graphs: finding k and n in y = kxⁿ  [S, difficulty 3]
+unit FM1 · tier untiered · specRefs []
+note: Log/log graphs: finding k and n in y = kxⁿ v1 [verified]
+verification statuses: {"verified":12}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Make it straight, then read it
+- [p] 
+- [figure] The same five measurements, twice: as they come, and after logarithms.
+- [choice] 
+- [h] 1. Three lines of algebra, and it is a straight line
+- [p] 
+- [figure] Three uses of the log laws, and the power law is a straight line.
+- [why] Why the intercept is not k
+- [choice] 
+- [h] 2. The table, to three decimal places
+- [p] 
+- [figure] Both rows to three decimal places, which is what the answer line is marked against.
+- [number] 
+- [h] 3. Plotting, and where the marks leak
+- [p] 
+- [figure] Two panels, one fault each. Both faults are named in the reports almost every year.
+- [choice] 
+- [h] 4. The gradient gives the power
+- [p] 
+- [figure] Rise over run, in logarithm units: $\frac{2.097}{1.398} = 1.5$.
+- [number] 
+- [h] 5. The intercept gives log k, so un-log it
+- [p] 
+- [examiner] Summer 2018, Unit 1, Question 11
+- [number] 
+- [h] 6. Using the relationship, and checking it
+- [p] 
+- [video] log/log Graphs - Corbettmaths
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.log-log-graphs.01 [verified] paper FM1 calc
+STEM: A log-log graph of $\log F$ against $\log h$ is a straight line through $(0, 0.602)$ and $(1.398, 2.699)$, where $F = k h^{n}$.
+Find $n$ and $k$, and write down the relationship between $F$ and $h$.
+  FIG: svg — A log-log line with a dashed right-angled triangle between its two end points, both legs labelled, and the intercept marked log k.
+  1. Write the two forms side by side: $\log F = n \log h + \log k$ and $y = mx + c$.   — This line costs nothing and it decides everything that follows: it is what tells you the gradient is the power and the intercept is the logarithm of the constant.  (MW1)
+  2. Gradient $= \frac{2.699 - 0.602}{1.398 - 0} = \frac{2.097}{1.398} = 1.5$, so $n = 1.5$.   — The change in the vertical goes on top. Writing the fraction out before dividing is what stops it going in upside down.  (M2)  WHY: ✔Because the gradient sits where $m$ sits, and the comparison puts $n$ there | ✘Because $n$ is always the larger of the two constants | ✘Because the gradient of any log-log line is $1$
+  3. The line meets the vertical axis at $0.602$, so $\log k = 0.602$.   — Name what you have read before you use it. Calling it log k rather than k is the whole defence against the slip the reports name most often.  (M3)
+  4. Un-log it: $k = 10^{0.602} = 4.0$.   — A separate line for a separate step. Folded into the line above, this is the step that quietly goes missing.  (W1)
+  5. So the relationship is $F = 4.0 h^{1.5}$.   — Answer in the form the question named. Leaving it as a log equation answers a different question, and so does giving the two constants without assembling them.  (W2)
+  FINAL: $n = 1.5$, $k = 4.0$ and $F = 4.0 h^{1.5}$
+  TWIN: A log-log graph of $\log P$ against $\log d$ is a straight line of gradient $2$ meeting the vertical axis at $0.699$, where $P = k d^{n}$.
+Find $k$, correct to one decimal place.  → numeric 5 tol={"type":"dp","places":1} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u1.log-log-graphs.pre (pre) [draft]
+- p1 (Gradient from two points): Three quick checks on what this lesson is built from. None of them is the new idea, so answer from what you already know.
+What is the gradient of the straight line through $(1, 5)$ and $(4, 11)$?
+    ✔ $2$ — The change in the vertical is $6$ and in the horizontal is $3$, so the gradient is $2$.
+    ✘ $0.5$ — That is the fraction the other way up. The vertical change belongs on top.
+    ✘ $6$ — That is the vertical change on its own. It still has to be divided by the horizontal change.
+- p2 (The intercept of a straight line): In $y = mx + c$, what does $c$ tell you?
+    ✔ Where the line crosses the vertical axis — At $x = 0$ the equation leaves $y = c$, which is the intercept.
+    ✘ How steep the line is — That is $m$, the gradient. The constant $c$ fixes the height.
+    ✘ Where the line crosses the horizontal axis — That crossing is where $y = 0$, which is a different value.
+- p3 (Product and power laws): Using the laws of logarithms, what is $\log(k x^{n})$?
+    ✔ $\log k + n \log x$ — The product law splits it, then the power law brings $n$ down in front.
+    ✘ $\log k \times n \log x$ — A product inside a logarithm becomes a sum of logarithms, not a product of them.
+    ✘ $n \log k + \log x$ — The power belongs to $x$, so it is $\log x$ that $n$ multiplies.
+
+### dx.fm.u1.log-log-graphs.post (post) [draft]
+- d1 (The linear form of a power law): Taking logarithms of $y = kx^{n}$ gives which straight line?
+    ✔ $\log y = n \log x + \log k$ — Product law then power law, and the result sits beside $y = mx + c$.
+    ✘ $\log y = k \log x + \log n$ [fm.logs.gradient-intercept-swapped] — The two constants have changed places. The power comes down as the gradient.
+    ✘ $\log y = \log n + \log k + \log x$ [fm.logs.power-as-multiplier-inside] — The power does not become a separate logarithm; it multiplies $\log x$.
+- d2 (Un-logging the intercept): A log-log line has gradient $1.5$ and meets the vertical axis at $0.602$. What is $k$?
+    ✔ $4.0$ — The intercept is $\log k$, so $k = 10^{0.602} = 4.0$.
+    ✘ $0.602$ [fm.logs.log-a-given-as-a] — That is the intercept itself, which is the logarithm of $k$. It still has to be un-logged.
+    ✘ $1.5$ [fm.logs.gradient-intercept-swapped] — That is the gradient, which gives the power rather than the constant.
+- d3 (The gradient, the right way up): A log-log line rises by $2.097$ as $\log h$ increases by $1.398$. What is $n$?
+    ✔ $1.5$ — The vertical change goes on top: $\frac{2.097}{1.398} = 1.5$.
+    ✘ $0.667$ [fm.logs.gradient-inverted] — That is the fraction upside down, which gives the reciprocal of the power.
+    ✘ $2.097$ [fm.logs.gradient-inverted] — That is the vertical change alone. A gradient is always a division.
+- d4 (The accuracy this topic is marked to): A table of logarithms is being completed for a log-log graph. To how many decimal places should the values be given?
+    ✔ Three — Three decimal places throughout, in the table and on the plot.
+    ✘ Two [fm.logs.decimal-places-instruction-ignored] — Two places is the accuracy the reports name as a lost mark almost every year on this topic.
+    ✘ As many as the calculator shows [fm.logs.decimal-places-instruction-ignored] — The paper asks for three, and a full calculator display is not what the answer line is marked against.
+- d5 (What the finished relationship takes): With $F = 4.0 h^{1.5}$, what goes into the relationship when a depth of $12.25$ cm is predicted?
+    ✔ $12.25$, the depth itself — The logarithms were only there to straighten the graph. The relationship takes the measurement.
+    ✘ $\log 12.25$, the logarithm of the depth [fm.logs.log-values-in-original-equation] — Putting a logarithm into the power law mixes the two forms, and gives $4.54$ instead of $171.5$.
+    ✘ $0.602$, the intercept [fm.logs.log-values-in-original-equation] — The intercept is already used: it became the constant in front. The depth is what varies.
+
+## QUESTIONS
+### q.fm.u1.log-log-graphs.0001 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)complete2 · The two missing logarithms of a weir table, the part every log-log question opens with
+  FIG: svg — A table of depth, flow, log h and log F for five weir readings, with two of the log F values left blank.
+  (main) [2] The table shows five depths $h$ and flows $F$ measured at a weir, with most of the logarithms already worked out.
+Complete the two missing values in the $\log F$ row, each correct to three decimal places.
+      ANSWER: table {"kind":"table","cells":[{"row":3,"col":3,"value":2.033,"tolerance":{"type":"absolute","value":0.0005}},{"row":3,"col":5,"value":2.699,"tolerance":{"type":"absolute","value":0.0005}}]}
+      MW1 MW1: $2.033$
+      W1 W1: $2.699$
+      SOLUTION: $\log 108 = 2.033$ and $\log 500 = 2.699$, both to three decimal places.
+      HINTS: Use the log key on your calculator, which works to base $10$. || Three decimal places throughout.
+
+### q.fm.u1.log-log-graphs.0002 [verified] practice · diff 1 · untiered · FM1 calc · 1 marks · (main)calculate1 · A single log value at the accuracy the paper demands
+  (main) [1] A flow of $F = 108$ litres per second is recorded at a weir.
+Calculate $\log F$. Give your answer correct to three decimal places.
+      ANSWER: numeric 2.033 tol={"type":"dp","places":3} forms=decimal/fraction
+      W1 W1: $2.033$
+      SOLUTION: $\log 108 = 2.033424\ldots$, which is $2.033$ to three decimal places.
+      ERR [fm.logs.decimal-places-instruction-ignored] {"kind":"numeric","value":2.03} → The value is right and the accuracy is not. This topic is marked to three decimal places throughout, so write $2.033$. (0)
+      HINTS: The log key is base $10$.
+
+### q.fm.u1.log-log-graphs.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · The gradient of a log-log line read from two points on it
+  FIG: svg — A log-log line with a dashed right-angled triangle drawn between its two end points, each leg labelled with its change.
+  (main) [2] The graph shows the line drawn from a set of weir readings, where $F = k h^{n}$.
+The line passes through $(0, 0.602)$ and $(1.398, 2.699)$.
+Find the value of $n$.
+      ANSWER: numeric 1.5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $\frac{2.097}{1.398}$
+      W1 W1: $1.5$ ft
+      SOLUTION: The gradient is $\frac{2.699 - 0.602}{1.398 - 0} = \frac{2.097}{1.398} = 1.5$. Comparing $\log F = n \log h + \log k$ with $y = mx + c$, that gradient is $n$, so $n = 1.5$.
+      ERR [fm.logs.gradient-inverted] {"kind":"numeric","value":0.666666667} → The fraction is upside down: that is the horizontal change divided by the vertical one. The change in $\log F$ goes on top, which gives $1.5$. (1)
+      ERR [fm.logs.gradient-intercept-swapped] {"kind":"numeric","value":0.602} → That is the intercept of the line, which is $\log k$. The gradient is what gives $n$, and here it is $1.5$. (0)
+      HINTS: Comparing with $y = mx + c$, the gradient is $n$. || Change in the vertical on top, change in the horizontal underneath.
+
+### q.fm.u1.log-log-graphs.0004 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · The constant recovered from the intercept, which is the step the reports name most often
+  (main) [2] For a relationship of the form $F = k h^{n}$, the graph of $\log F$ against $\log h$ is a straight line meeting the vertical axis at $0.602$.
+Find the value of $k$. Give your answer correct to one decimal place.
+      ANSWER: numeric 4 tol={"type":"dp","places":1} forms=decimal/fraction
+      M1 M1: $\log k = 0.602$, so $k = 10^{0.602}$
+      W1 W1: $4.0$ ft
+      SOLUTION: Comparing $\log F = n \log h + \log k$ with $y = mx + c$, the intercept is $\log k$. So $\log k = 0.602$ and $k = 10^{0.602} = 4.0$ to one decimal place.
+      ERR [fm.logs.log-a-given-as-a] {"kind":"numeric","value":0.602} → That is the intercept itself, which is $\log k$ rather than $k$. Undo the logarithm: $k = 10^{0.602} = 4.0$. (1)
+      ERR [fm.logs.gradient-intercept-swapped] {"kind":"numeric","value":1.5} → That is the gradient of the line, which gives $n$. The constant comes from the intercept, un-logged, and is $4.0$. (0)
+      HINTS: The intercept sits where $c$ sits in $y = mx + c$, and here that is $\log k$. || Undo the logarithm with a power of ten.
+
+### q.fm.u1.log-log-graphs.0005 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)write-down1 · Turning the two constants back into the relationship the question asked about
+  (main) [1] A set of weir readings gives a log-log line of gradient $1.5$ meeting the vertical axis at $0.602$.
+Write down the relationship between $F$ and $h$.
+      ANSWER: mcq ✔$F = 4.0 h^{1.5}$ | ✘$F = 0.602 h^{1.5}$ [fm.logs.log-a-given-as-a] | ✘$F = 1.5 h^{4.0}$ [fm.logs.gradient-intercept-swapped] | ✘$\log F = 1.5 \log h + 0.602$ [fm.logs.log-values-in-original-equation]
+      W1 W1: $F = 4.0 h^{1.5}$
+      SOLUTION: The gradient is $n = 1.5$ and the intercept is $\log k = 0.602$, so $k = 10^{0.602} = 4.0$. The relationship is $F = 4.0 h^{1.5}$.
+      HINTS: Un-log the intercept first.
+
+### q.fm.u1.log-log-graphs.0006 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)calculate2 · A prediction from the finished relationship, inside the range of the readings
+  (main) [2] The weir readings give $F = 4.0 h^{1.5}$, where $h$ is in centimetres and $F$ is in litres per second.
+Calculate the flow when the depth is $12.25$ cm.
+      ANSWER: numeric 171.5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $4.0 \times 12.25^{1.5}$
+      W1 W1: $171.5$ ft
+      SOLUTION: $F = 4.0 \times 12.25^{1.5} = 4.0 \times 42.875 = 171.5$ litres per second.
+      ERR [fm.logs.log-values-in-original-equation] {"kind":"numeric","value":4.540303} → That came from putting $\log 12.25$ into the power law. The logarithms belong on the graph; the relationship itself takes the depth, so $F = 171.5$. (0)
+      HINTS: Put the depth into the relationship, not its logarithm.
+
+### q.fm.u1.log-log-graphs.0007 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)calculate2 · A context answer that has to be rounded the way the situation demands
+  (main) [2] At a depth of $12.25$ cm the weir carries $171.5$ litres per second.
+Each pump can move $50$ litres per second.
+Calculate the number of pumps needed to move all of this flow.
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $171.5 \div 50 = 3.43$
+      W1 W1: $4$ ft
+      SOLUTION: $171.5 \div 50 = 3.43$. Pumps come whole, and all of the flow has to be moved, so $4$ pumps are needed.
+      ERR [fm.logs.rounded-too-early] {"kind":"numeric","value":3} → The division is right and the rounding goes the wrong way for this context. With $3$ pumps some of the flow is left, so $4$ are needed. (1)
+      HINTS: Divide first, then ask what the answer is for.
+
+### q.fm.u1.log-log-graphs.0008 [verified] practice · diff 3 · untiered · FM1 calc · 1 marks · (main)identify1 · The range check, which turns a lucky answer into a checked one
+  (main) [1] The weir readings ran from a depth of $1$ cm to a depth of $25$ cm, and gave $F = 4.0 h^{1.5}$.
+A student uses this to predict the flow at a depth of $100$ cm.
+Identify the reason this prediction should not be trusted.
+      ANSWER: mcq ✔The depth $100$ cm lies outside the range of the readings the line was drawn from | ✘The relationship only works for whole-number depths [fm.logs.result-outside-data-range-unnoticed] | ✘The value of $k$ was rounded to one decimal place [fm.logs.result-outside-data-range-unnoticed] | ✘Logarithms cannot be taken of a number larger than $25$ [fm.logs.result-outside-data-range-unnoticed]
+      W1 W1: outside the range of the plotted data
+      SOLUTION: The line was fitted to depths between $1$ cm and $25$ cm. A depth of $100$ cm sits well outside that range, so the prediction is an extrapolation rather than a reading.
+      HINTS: Ask what the line was drawn from.
+
+### q.fm.u1.log-log-graphs.0009 [verified] exam-style · diff 4 · untiered · FM1 calc · 10 marks · (a)complete2|(b)plot3|(c)find2|(d)find2|(e)write-down1 · The full log-log question in the order CCEA sets it: table, plot, the two constants, the relationship
+  FIG: svg — A table of depth, flow and log h for five weir readings, with the whole log F row left blank.
+  (a) [2] The table shows the depth $h$ cm and the flow $F$ litres per second at a weir, together with the values of $\log h$.
+It is believed that $F = k h^{n}$, where $k$ and $n$ are constants.
+Complete the $\log F$ row of the table, giving each value correct to three decimal places.
+      ANSWER: table {"kind":"table","cells":[{"row":3,"col":1,"value":0.602,"tolerance":{"type":"absolute","value":0.0005}},{"row":3,"col":2,"value":1.505,"tolerance":{"type":"absolute","value":0.0005}},{"row":3,"col":3,
+      MW1 MW1: the five values of $\log F$
+      W1 W1: all five correct to three decimal places
+      SOLUTION: Taking logarithms of each flow gives 0.602, 1.505, 2.033, 2.408, 2.699, each to three decimal places.
+      HINTS: The log key on the calculator is base $10$. || Three decimal places for every entry.
+  (b) [3] Plot $\log F$ against $\log h$ and draw the straight line through your points.
+Label the axes $\log h$ and $\log F$.
+      ANSWER: graph {"kind":"graph","expect":{"plot":"points-line","points":[[0,0.602],[0.602,1.505],[0.954,2.033],[1.204,2.408],[1.398,2.699]],"lineThrough":[[0,0.602],[1.398,2.699]],"lineRequired":true,"tolerance":{"ty
+      MW1 MW1: a scale chosen from the range of the logarithm values, with both axes labelled
+      W1 W1: all five points plotted and circled
+      W1 W2: a ruled straight line through the points
+      SOLUTION: The five points are (0.000, 0.602), (0.602, 1.505), (0.954, 2.033), (1.204, 2.408), (1.398, 2.699). They lie on a straight line, which passes through $(0.000, 0.602)$ and $(1.398, 2.699)$.
+      HINTS: Label the axes before plotting anything. || Choose the scale from the logarithm values, not the raw readings.
+  (c) [2] Use your graph to find the value of $n$.
+      ANSWER: numeric 1.5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: a gradient from two points on the line, $\frac{2.097}{1.398}$
+      W1 W1: $1.5$ ft
+      SOLUTION: Using the two end points, the gradient is $\frac{2.699 - 0.602}{1.398 - 0} = 1.5$. Comparing with $y = mx + c$, that gradient is $n$, so $n = 1.5$.
+      ERR [fm.logs.gradient-inverted] {"kind":"numeric","value":0.666666667} → The fraction is the wrong way up. The change in $\log F$ belongs on top, which gives $1.5$. (1)
+      HINTS: Take two points far apart on the line. || The gradient is $n$.
+  (d) [2] Use your graph to find the value of $k$. Give your answer correct to one decimal place.
+      ANSWER: numeric 4 tol={"type":"dp","places":1} forms=decimal/fraction
+      M1 M1: intercept $= 0.602$, so $k = 10^{0.602}$
+      W1 W1: $4.0$ ft
+      SOLUTION: The line meets the vertical axis at $0.602$, and that value is $\log k$. So $k = 10^{0.602} = 4.0$ to one decimal place.
+      ERR [fm.logs.log-a-given-as-a] {"kind":"numeric","value":0.602} → That is the intercept, which is $\log k$. It still has to be un-logged: $k = 10^{0.602} = 4.0$. (1)
+      HINTS: The intercept is not the constant itself. || Undo the logarithm with a power of ten.
+  (e) [1] Write down the relationship between $F$ and $h$.
+      ANSWER: mcq ✔$F = 4.0 h^{1.5}$ | ✘$\log F = 1.5 \log h + 0.602$ [fm.logs.log-values-in-original-equation] | ✘$F = 0.602 h^{1.5}$ [fm.logs.log-a-given-as-a] | ✘$F = 1.5 h^{4.0}$ [fm.logs.gradient-intercept-swapped]
+      W1 W1: $F = 4.0 h^{1.5}$ ft
+      SOLUTION: With $n = 1.5$ and $k = 4.0$, the relationship is $F = 4.0 h^{1.5}$.
+      HINTS: Put your two constants into the form the question named.
+
+### q.fm.u1.log-log-graphs.0010 [verified] exam-style · diff 4 · untiered · FM1 calc · 8 marks · (a)complete2|(b)find2|(c)find2|(d)find2 · A second context with a different power, taken from the table straight to a prediction
+  FIG: svg — A table of diameter, price, log d and log P for five circular tabletops, with one log d value and one log P value left blank.
+  (a) [2] A workshop prices circular tabletops by diameter. The table shows five diameters $d$ cm and prices $P$ pounds, and it is believed that $P = k d^{n}$.
+Complete the two missing values in the table, each correct to three decimal places.
+      ANSWER: table {"kind":"table","cells":[{"row":2,"col":3,"value":0.778,"tolerance":{"type":"absolute","value":0.0005}},{"row":3,"col":3,"value":2.255,"tolerance":{"type":"absolute","value":0.0005}}]}
+      MW1 MW1: $0.778$
+      W1 W1: $2.255$
+      SOLUTION: $\log 6 = 0.778$ and $\log 180 = 2.255$, each to three decimal places.
+      HINTS: Three decimal places for both.
+  (b) [2] The graph of $\log P$ against $\log d$ is a straight line through $(0.301, 1.301)$ and $(1, 2.699)$.
+Find the value of $n$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $\frac{1.398}{0.699}$
+      W1 W1: $2$ ft
+      SOLUTION: The gradient is $\frac{2.699 - 1.301}{1 - 0.301} = \frac{1.398}{0.699} = 2$. So $n = 2$.
+      ERR [fm.logs.gradient-inverted] {"kind":"numeric","value":0.5} → The fraction is upside down. The change in $\log P$ goes on top, giving $2$. (1)
+      HINTS: The gradient of the log-log line is $n$.
+  (c) [2] The same line meets the vertical axis at $0.699$.
+Find the value of $k$. Give your answer correct to one decimal place.
+      ANSWER: numeric 5 tol={"type":"dp","places":1} forms=decimal/fraction
+      M1 M1: $k = 10^{0.699}$
+      W1 W1: $5.0$ ft
+      SOLUTION: The intercept is $\log k = 0.699$, so $k = 10^{0.699} = 5.0$ to one decimal place.
+      ERR [fm.logs.log-a-given-as-a] {"kind":"numeric","value":0.699} → That is $\log k$, straight off the axis. Un-log it: $k = 10^{0.699} = 5.0$. (1)
+      HINTS: The intercept is the logarithm of the constant.
+  (d) [2] Using $P = 5.0 d^{2}$, calculate the price of a tabletop of diameter $7$ cm.
+      ANSWER: numeric 245 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $5.0 \times 7^{2}$
+      W1 W1: $245$ ft
+      SOLUTION: $P = 5.0 \times 7^{2} = 5.0 \times 49 = 245$ pounds. The diameter $7$ cm sits inside the range $2$ cm to $10$ cm, so the prediction is safe.
+      ERR [fm.logs.log-values-in-original-equation] {"kind":"numeric","value":3.570953} → That came from putting $\log 7$ into the power law. The relationship takes the diameter itself, so $P = 245$. (0)
+      HINTS: The diameter goes in, not its logarithm.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.log-log-graphs.01 [draft] fm.logs.log-a-given-as-a · earned MW1,M2 · ccea-cer:further-maths:2018-summer:FM1:Q11
+STEM: Orla drew a log-log graph for $F = k h^{n}$ and read the gradient as 1.5 and the intercept as 0.602. Her working:
+    1. log F = n log h + log k
+    2. comparing with y = mx + c
+    3. gradient = n, so n = 1.5
+  ✘ 4. intercept = k, so k = 0.602
+    5. F = 0.602 h^1.5
+  WRONG: Lines 1 to 3 are exactly right, and line 5 is honest work on the value line 4 handed over.
+Line 4 names the intercept as $k$. The comparison in line 2 put $\log k$ in the intercept position, not $k$, so the number read off the axis is the logarithm of the constant.
+Un-logging it gives $k = 10^{0.602} = 4.0$.
+  FIX: intercept = log k, so log k = 0.602 / k = 10^0.602 = 4.0 / F = 4.0 h^1.5
+  FEEDBACK: The comparison and the gradient are both right, so the method marks stand and the rest is marked on her own value. The fix is one extra line, written every time: the intercept is log k, so k is ten to that power. Examiners have named this step in three separate series, which is why it is worth a line of its own.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.log-log-graphs.01 [draft] (formula) What straight line does $y = kx^{n}$ become when logarithms are taken?  →  $\log y = n \log x + \log k$, so the gradient is $n$ and the intercept is $\log k$.
+- rp.fm.u1.log-log-graphs.02 [draft] (procedure) Give the three steps that turn $y = kx^{n}$ into a straight line.  →  Take logarithms of both sides; use the product law to split $\log(kx^{n})$ into $\log k + \log x^{n}$; use the power law to write $\log x^{n}$ as $n \log x$.
+- rp.fm.u1.log-log-graphs.03 [draft] (trap) The log-log line meets the vertical axis at $0.602$. What is $k$?  →  The intercept is $\log k$, so $k = 10^{0.602} = 4.0$ to one decimal place. The intercept is never the constant itself.
+- rp.fm.u1.log-log-graphs.04 [draft] (trap) Which way up is the gradient of a log-log line written?  →  The change in $\log y$ on top, the change in $\log x$ underneath, taken between two points far apart on the line.
+- rp.fm.u1.log-log-graphs.05 [draft] (qa) To how many decimal places are the log values given, and what are the axes labelled?  →  Three decimal places throughout, and the axes are labelled $\log x$ and $\log y$, not $x$ and $y$.
+- rp.fm.u1.log-log-graphs.06 [draft] (trap) Why should a prediction be checked against the range of the data?  →  The line was fitted only to the readings you plotted, so outside that range the relationship has not been tested and the answer is a guess.
+- rp.fm.u1.log-log-graphs.07 [draft] (trap) Once $k$ and $n$ are found, what goes into the relationship to make a prediction?  →  The measurement itself, not its logarithm. The logarithms were only used to straighten the graph.
+
+## INSIGHT
+RULE: Take logs to the stated decimal places, plot with labelled axes and a sensible scale, gradient = the power, intercept = log of the constant (undo it), and check predictions sit inside the data range.
+- ccea-cer:further-maths:2018-summer:FM1:Q11: asked Take logs, plot, find k and A, then predict. | went wrong: Nearly everyone took logs; scales were often poor so points bunched; k came from the gradient, but A was frequently given as log A; some put log values into the exponential equation. | rule: The intercept is log A - undo the log to get A.
+- ccea-cer:further-maths:2019-summer:FM1:Q10: asked Log-log graph, find a and b, predict, state an assumption. | went wrong: Values not to 3 d.p.; log r on the wrong axis; a given as log a; predictions outside the data range not questioned; the radius given for the diameter; the assumption misunderstood. | rule: A prediction must lie within the range of the data you plotted.
+- ccea-cer:further-maths:2022-summer:FM1:Q12: asked Standard log-log question. | went wrong: Rounding, plotting and axis labels cost marks; some inverted the gradient for n; a left as log a. | rule: n = gradient (rise over run in log units), a = 10 to the intercept.
+- ccea-cer:further-maths:2024-summer:FM1:Q12: asked Log-log graph with a contextual final part. | went wrong: Rounding, plotting and labelling again; some inverted the gradient or used the wrong equation for k; the final mark was lost by rounding down when the context required rounding up. | rule: Round the final answer according to the context, not automatically down.
+- ccea-cer:further-maths:2025-summer:FM1:Q10: asked Log-log table, plot, gradient, find v and k, predict. | went wrong: Two decimal places instead of three, inaccurate plotting, missing axis labels; a few inverted the gradient or swapped k and v; some used a log equation for k unnecessarily. | rule: Gradient gives the power; the intercept gives log of the constant.

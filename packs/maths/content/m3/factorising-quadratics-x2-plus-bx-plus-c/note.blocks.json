@@ -1,0 +1,215 @@
+[
+  {
+    "type": "hero",
+    "lede": "Expanding $(x - 3)(x - 4)$ gives $x^2 - 7x + 12$. Factorising runs that backwards: you are handed the quadratic and asked for the brackets. Two numbers do the whole job, and they are the pair that multiplies to the last number and adds to the middle one.",
+    "can": [
+      "Find two numbers with product $c$ and sum $b$.",
+      "Decide both signs from $b$ and $c$ before searching.",
+      "Take out a common factor first when the question says fully."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Factorising x² + bx + c"
+  },
+  {
+    "type": "p",
+    "md": "Factorising is expanding run backwards. You already know that $(x - 3)(x - 4)$ gives $x^2 - 7x + 12$; this topic starts from the $x^2 - 7x + 12$ and asks for the brackets. It is the gateway to solving quadratics and to algebraic fractions, and nearly all the loss on it is signs."
+  },
+  {
+    "type": "figure",
+    "alt": "A two by two grid with the corner cells x squared and plus 12 already filled in, and the two middle cells minus 3x and minus 4x. The headings read x and minus 3 across, x and minus 4 down. A note says the two middle cells must add to minus 7x.",
+    "svg": "<svg viewBox=\"0 0 660 296\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"reverse-grid-factorise\"><title id=\"reverse-grid-factorise\">The grid with its corners filled in: the middle cells must add to the x term</title>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\">\n  <rect x=\"150\" y=\"70\" width=\"360\" height=\"170\"/>\n  <path d=\"M330 70 L330 240\"/><path d=\"M150 155 L510 155\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-serif, Georgia, serif\" font-size=\"22\" text-anchor=\"middle\">\n  <text x=\"240\" y=\"52\">x</text><text x=\"420\" y=\"52\">-3</text>\n  <text x=\"240\" y=\"120\">x²</text><text x=\"420\" y=\"120\">-3x</text>\n  <text x=\"240\" y=\"205\">-4x</text><text x=\"420\" y=\"205\">+12</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-serif, Georgia, serif\" font-size=\"22\" text-anchor=\"end\">\n  <text x=\"130\" y=\"120\">x</text><text x=\"130\" y=\"205\">-4</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"16\" text-anchor=\"middle\">\n  <text x=\"330\" y=\"278\">the corners are given: x² and +12. The two middle cells must add to -7x.</text>\n</g></svg>",
+    "caption": "The grid with its corners filled in: the middle cells must add to the x term"
+  },
+  {
+    "type": "gate",
+    "id": "g0a",
+    "kind": "choice",
+    "prompt": "Which two numbers multiply to 12 and add to $-7$?",
+    "options": [
+      "$-3$ and $-4$",
+      "$3$ and $4$",
+      "$-2$ and $-6$"
+    ],
+    "answer": "$-3$ and $-4$",
+    "explain": "$-3 \\times -4 = 12$ and $-3 - 4 = -7$, so the brackets are $(x - 3)(x - 4)$."
+  },
+  {
+    "type": "h",
+    "text": "The rule, and why it is the rule"
+  },
+  {
+    "type": "p",
+    "md": "Expand $(x + p)(x + q)$ and look at what comes out:\n$(x + p)(x + q) = x^2 + qx + px + pq = x^2 + (p + q)x + pq$.\nSo the coefficient of $x$ is $p + q$ and the constant is $pq$. Reading that backwards gives the whole method: **find two numbers that multiply to $c$ and add to $b$.**"
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "blank",
+    "prompt": "For $x^2 + 9x + 20$, the two numbers are",
+    "answer": "4 and 5",
+    "explain": "$4 \\times 5 = 20$ and $4 + 5 = 9$."
+  },
+  {
+    "type": "h",
+    "text": "Read the signs first, then search"
+  },
+  {
+    "type": "p",
+    "md": "Most of the errors here are sign errors, and almost all of them are avoidable by deciding the signs **before** looking for numbers.\n**$c$ positive** → the two numbers have the same sign, and it is the sign of $b$. ($x^2 - 7x + 12$: both negative.)\n**$c$ negative** → the two numbers have opposite signs, and the **larger** one carries the sign of $b$. ($x^2 + 3x - 28$: $+7$ and $-4$.)\nThat single decision halves the search and removes the guesswork."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "In $x^2 - 5x - 36$, what are the signs of the two numbers?",
+    "options": [
+      "One positive, one negative, with the negative one larger",
+      "Both negative",
+      "Both positive"
+    ],
+    "answer": "One positive, one negative, with the negative one larger",
+    "explain": "$c$ is negative so the signs differ; $b$ is negative so the larger number is the negative one, giving $(x - 9)(x + 4)$."
+  },
+  {
+    "type": "h",
+    "text": "List the pairs, do not guess"
+  },
+  {
+    "type": "p",
+    "md": "For $x^2 - 7x + 12$: the constant is $+12$ and the middle term is negative, so both numbers are negative. Write the factor pairs of 12 in order and test the sums."
+  },
+  {
+    "type": "figure",
+    "alt": "A table of factor pairs of positive 12 with their sums: 1 and 12 give 13, 2 and 6 give 8, 3 and 4 give 7, and minus 3 and minus 4 give minus 7. The last row is boxed as the pair that works.",
+    "svg": "<svg viewBox=\"0 0 640 250\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"factor-pair-table\"><title id=\"factor-pair-table\">Factor pairs of 12 and their sums; only minus 3 and minus 4 give minus 7</title>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\">\n  <path d=\"M40 62 L600 62\"/><path d=\"M40 104 L600 104\"/>\n  <path d=\"M250 30 L250 236\"/><path d=\"M420 30 L420 236\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"17\" text-anchor=\"middle\">\n  <text x=\"145\" y=\"52\">pair of factors of +12</text>\n  <text x=\"335\" y=\"52\">sum</text>\n  <text x=\"510\" y=\"52\">is the sum -7?</text>\n  <text x=\"145\" y=\"94\">1 and 12</text><text x=\"335\" y=\"94\">13</text><text x=\"510\" y=\"94\">no</text>\n  <text x=\"145\" y=\"134\">2 and 6</text><text x=\"335\" y=\"134\">8</text><text x=\"510\" y=\"134\">no</text>\n  <text x=\"145\" y=\"174\">3 and 4</text><text x=\"335\" y=\"174\">7</text><text x=\"510\" y=\"174\">right size, wrong sign</text>\n  <text x=\"145\" y=\"214\">-3 and -4</text><text x=\"335\" y=\"214\">-7</text><text x=\"510\" y=\"214\">yes</text>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n  <rect x=\"44\" y=\"194\" width=\"552\" height=\"30\" rx=\"6\"/>\n</g></svg>",
+    "caption": "Factor pairs of 12 and their sums; only minus 3 and minus 4 give minus 7"
+  },
+  {
+    "type": "p",
+    "md": "$x^2 - 7x + 12 = (x - 3)(x - 4)$.\nAn ordered list is quicker than guessing and it never misses a pair. When $b$ is small, the two numbers are close together: for $x^2 + x - 56$ they differ by 1, which points straight at 7 and 8."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "blank",
+    "prompt": "Factorise $x^2 + 3x - 28$.",
+    "answer": "(x + 7)(x − 4)",
+    "explain": "$7 \\times -4 = -28$ and $7 - 4 = 3$."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "November 2025 M3 Q28",
+    "md": "About a third succeeded. Many did not see that two brackets were needed at all; of those who did, the signs were muddled; and some wrote the brackets in $x$ when the quadratic was in $c$, which cost a mark on its own.",
+    "source": "ccea-cer:maths:2025-november:M3:Q28"
+  },
+  {
+    "type": "h",
+    "text": "Use the letter in front of you"
+  },
+  {
+    "type": "p",
+    "md": "If the question says $c^2 + 11c + 30$, the answer is $(c + 5)(c + 6)$. Writing $(x + 5)(x + 6)$ is the right maths in the wrong language and it loses the accuracy mark. Copy the letter out of the question into both brackets before you start."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "Factorise $k^2 - 2k - 35$.",
+    "answer": "(k − 7)(k + 5)",
+    "explain": "Opposite signs, difference 2; the larger, 7, takes the minus because $b$ is negative."
+  },
+  {
+    "type": "h",
+    "text": "Factorise fully"
+  },
+  {
+    "type": "p",
+    "md": "When 'fully' appears, look for a number that divides every term and take it out first:\n$2x^2 + 10x - 48 = 2(x^2 + 5x - 24) = 2(x + 8)(x - 3)$.\nTwo different half-answers lose marks here. **Stopping** at $2(x^2 + 5x - 24)$ leaves a quadratic that still factorises. **Hiding** the 2 inside, as $(2x + 16)(x - 3)$, expands correctly but is not fully factorised, because $(2x + 16)$ still has a 2 in it."
+  },
+  {
+    "type": "gate",
+    "id": "g4a",
+    "kind": "choice",
+    "prompt": "Is $(2x + 16)(x - 3)$ fully factorised?",
+    "options": [
+      "No, a 2 is still inside",
+      "Yes",
+      "No, the order is wrong"
+    ],
+    "answer": "No, a 2 is still inside",
+    "explain": "It expands correctly, but the 2 is hidden inside a bracket instead of in front."
+  },
+  {
+    "type": "p",
+    "md": "Two shapes are not double brackets at all: $t^2 - 6t = t(t - 6)$ has no constant term, so a letter comes out; and $x^2 + 14x + 49 = (x + 7)^2$ is a perfect square, where the two brackets turn out the same."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Factorise fully $3x^2 - 21x + 30$.",
+    "options": [
+      "$3(x - 2)(x - 5)$",
+      "$3(x^2 - 7x + 10)$",
+      "$(3x - 6)(x - 5)$"
+    ],
+    "answer": "$3(x - 2)(x - 5)$",
+    "explain": "The second stops too early; the third leaves the 3 inside a bracket."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why factorising is not solving",
+    "md": "A factorised quadratic is the same expression written as a product, still waiting for a value of $x$. Only an equation makes particular values the answer."
+  },
+  {
+    "type": "h",
+    "text": "Factorise is not solve"
+  },
+  {
+    "type": "p",
+    "md": "'Factorise $x^2 - x - 20$' asks for $(x - 5)(x + 4)$ and nothing else. Writing $(x - 5)(x + 4) = 0$, or $x = 5$ and $x = -4$, answers a question that was not asked, and the extra line can cost the mark. Solving comes in the next topic, where the equation is given with an $= 0$ already in place."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Find two numbers with product $c$ and sum $b$.\nFix both signs before searching.\nTake a common factor out when it says fully."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Expect one two-mark item near the end, often part (b) of a factorise question whose part (a) took out a single common factor. Both marks are accuracy marks, one per bracket, so a half-right answer still scores. The last is the complete product, in the question's own letter. Stuck: write the pair you are testing and the sum it gives, then multiply back to check the middle term."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "M3-NA-06 is $x^2 + bx + c$ — the $x^2$ has coefficient 1, or becomes 1 after a common factor is removed. Quadratics like $6x^2 - 17x + 12$, where the 6 will not come out, are **M4**. Completing the square is not in M3 either."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.factorising-quadratics-x2-plus-bx-plus-c.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.factorising-quadratics-x2-plus-bx-plus-c.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.factorising-quadratics-x2-plus-bx-plus-c.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.factorising-quadratics-x2-plus-bx-plus-c.05"
+  }
+]

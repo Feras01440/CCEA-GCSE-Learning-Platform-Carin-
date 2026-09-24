@@ -1,0 +1,471 @@
+# fm.u1.optimisation — Optimisation problems  [H, difficulty 5]
+unit FM1 · tier untiered · specRefs []
+note: Optimisation problems v1 [verified]
+verification statuses: {"verified":35}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] The biggest rectangle a fence can hold
+- [p] 
+- [figure] Three sides fenced, one side free. The wall is the whole reason $x$ and $y$ are not equal.
+- [choice] 
+- [h] 1. The same five steps every time
+- [p] 
+- [figure] Write these five down the margin before you start, and tick them off.
+- [choice] 
+- [h] 2. Reading the constraint
+- [p] 
+- [why] Why one letter and not two
+- [blank] 
+- [h] 3. The garden bed, worked in full
+- [p] 
+- [figure] Every width is possible. The area peaks at $x = 12$ and falls away on both sides.
+- [number] 
+- [h] 4. Confirming which kind of turning point it is
+- [p] 
+- [figure] The sign is the argument, and the number is the evidence.
+- [choice] 
+- [h] 5. Finish with what was asked
+- [p] 
+- [video] Maximising Using Differentiation - GCSE Further Maths/AS-Level Maths Solution
+- [number] 
+- [h] 6. When the expression has a negative power
+- [p] 
+- [figure] Two sides of $x$, two sides of $y$, and one more fence of $y$ across the middle.
+- [p] 
+- [figure] A fixed area gives a dip rather than a peak: the fencing is least at $x = 9$.
+- [number] 
+- [h] 7. A show-that, then the answer
+- [p] 
+- [figure] The outer rectangle is wider by $6$ and taller by $8$.
+- [choice] 
+- [p] 
+- [notonspec] Only flat contexts
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.optimisation.01 [verified] paper FM1 calc
+STEM: A rectangular flower bed is made against a straight wall. The other three sides are edged with $48$ m of timber. The two sides at right angles to the wall are each $x$ m long.
+Find the value of $x$ that gives the greatest possible area, show that it is a maximum, and state that greatest area.
+  FIG: svg — A rectangular flower bed against a wall, with two sides of x metres and the side facing the wall completing the 48 metres of timber
+  1. The timber covers two sides of $x$ and one side of $y$, so $2x + y = 48$ and $y = 48 - 2x$.   — The wall is the fourth side and costs nothing, which is the only reason this problem has an answer. Reading that from the picture is the first mark.  (MW1)  WHY: ✔Because the wall replaces one of the four sides | ✘Because the bed is a square | ✘Because x and y are always equal
+  2. The area is $A = xy = x(48 - 2x) = -2x^{2} + 48x$.   — Substituting the constraint leaves one letter, which is what differentiation needs. Expand it now: an unsimplified expression is where slips start.  (MW1)
+  3. Differentiate: $\frac{dA}{dx} = -4x + 48$.   — Each term separately: multiply by the power, step the power down. The term in x contributes its coefficient, never nothing.  (MW1)
+  4. Set the gradient to zero: $-4x + 48 = 0$, so $4x = 48$ and $x = 12$.   — A largest or smallest value sits where the quantity stops changing, so the derivative is zero there.  (M1,W1)
+  5. Differentiate again: $\frac{d^{2}A}{dx^{2}} = -4$, which is negative, so $x = 12$ gives a maximum.   — The question is not answered until the turning point has been named. A negative second derivative is the evidence the scheme pays for.  (MW1)
+  6. Substitute back: $y = 48 - 2 \times 12 = 24$ m, and $A = 12 \times 24 = 288$ m².   — The question asked for the area, not for x. Finishing at $x = 12$ leaves the last marks on the table, and the unit belongs on the answer line.  (W1)  WHY: ✔Because the question asked for an area, not a length | ✘Because x is always the answer | ✘Because the units are the same either way
+  FINAL: $x = 12$ m gives a maximum, because $\frac{d^{2}A}{dx^{2}} = -4$, and the greatest area is $288$ m².
+  TWIN: A rectangular pen is built against a barn wall using $36$ m of fencing for the two ends, the far side and one divider parallel to the ends, each end being $x$ m.
+The area is $A = -3x^{2} + 36x$. Find the value of $x$ that gives the greatest area.  → numeric 6 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+### we.fm.u1.optimisation.02 [verified] paper FM1 calc
+STEM: A rectangular vegetable plot of area $54$ m² is fenced round all four sides and has one more fence across it, parallel to the two shorter sides. The plot is $x$ m across.
+Find the value of $x$ that uses the least fencing, show that it is a minimum, and state that least length.
+  FIG: svg — A rectangular vegetable plot with one extra fence across the middle, 9 metres across and 6 metres deep
+  1. The area fixes the depth: $xy = 54$, so $y = \frac{54}{x}$.   — Here the constraint is an area rather than a length, so the substitution produces a fraction instead of a subtraction.  (MW1)
+  2. The fencing is two sides of $x$, two sides of $y$ and one more $y$ across the middle: $L = 2x + 3y = 2x + \frac{162}{x}$.   — Count the fences on the picture one at a time. Leaving the middle fence out is the single commonest way this expression goes wrong.  (MW1)  WHY: ✔Because the extra fence is a third side of length y | ✘Because the extra fence is a third side of length x | ✘Because the extra fence has no length
+  3. Write the fraction as a power and differentiate: $L = 2x + 162x^{-1}$, so $\frac{dL}{dx} = 2 - \frac{162}{x^{2}}$.   — The power rule only speaks about powers, so the fraction has to come up as a negative index first. The index steps down from -1 to -2.  (MW1)
+  4. Set it to zero: $\frac{162}{x^{2}} = 2$, so $x^{2} = 81$ and $x = 9$.   — Take the square root, and take only the positive one: a length cannot be negative, so the other root is discarded with a word.  (M1,W1)
+  5. Second derivative: $\frac{d^{2}L}{dx^{2}} = \frac{324}{x^{3}}$. At $x = 9$ that is $\frac{4}{9}$, which is positive, so this is a minimum.   — This second derivative depends on x, so the value of x has to be put in before the sign can be read. A general statement is not evidence.  (MW1)
+  6. Substitute back: $y = \frac{54}{9} = 6$ m, and $L = 2 \times 9 + 3 \times 6 = 36$ m.   — Check the answer against the picture: a plot 9 m by 6 m has an area of 54 m², so the constraint is satisfied and the arithmetic holds.  (W1)
+  FINAL: $x = 9$ m gives a minimum, because $\frac{d^{2}L}{dx^{2}} = \frac{4}{9}$ there, and the least fencing is $36$ m.
+  TWIN: A rectangular field of area $288$ m² lies beside a river and is fenced on three sides only, the side parallel to the river being $x$ m.
+The fencing is $L = x + \frac{576}{x}$ m. Find the value of $x$ that uses the least fencing.  → numeric 24 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+### we.fm.u1.optimisation.03 [verified] paper FM1 calc
+STEM: A notice is printed on a rectangular card. The printed part has an area of $300$ cm² and is $w$ cm wide. There is a margin of $3$ cm at each side and $4$ cm at the top and at the bottom.
+Show that the total area of the card is $A = 8w + 348 + \frac{1800}{w}$ cm², then find the least possible total area.
+  FIG: svg — A notice with a printed rectangle of area 300 square centimetres and margins of 3 centimetres at the sides and 4 centimetres at the top and bottom
+  1. The printed part is $w$ by $h$ with $wh = 300$, so $h = \frac{300}{w}$.   — The fixed printed area is the constraint. Naming the printed height h before using it keeps the two rectangles apart in your head.  (MW1)
+  2. The card is wider by two side margins and taller by two end margins: $(w + 6)$ by $\left(h + 8\right)$.   — Two margins, not one, on each measurement. Halving this is the slip that makes the whole answer plausible and wrong.  (MW1)
+  3. Multiply out: $A = wh + 8w + 6h + 48 = 300 + 8w + 6\left(\frac{300}{w}\right) + 48 = 8w + 348 + \frac{1800}{w}$.   — Every line of a show-that earns its own mark, so write the expansion before the tidy version. The printed result is the last line you write, never the first.  (MW1,W1)
+  4. Differentiate: $\frac{dA}{dw} = 8 - \frac{1800}{w^{2}}$.   — The constant 348 goes to zero and the fraction is differentiated as 1800w to the power -1, whose index steps down to -2.  (MW1)
+  5. Set it to zero: $\frac{1800}{w^{2}} = 8$, so $w^{2} = 225$ and $w = 15$ cm.   — Only the positive root is a width. Leaving the answer as w squared is the last place this question is commonly abandoned.  (M1,W1)
+  6. Second derivative: $\frac{d^{2}A}{dw^{2}} = \frac{3600}{w^{3}}$, which at $w = 15$ is $\frac{16}{15}$: positive, so the area is least here.   — Positive means the gradient is climbing through zero, which is a dip, and a dip in area is the smallest card.  (MW1)
+  7. The least total area is $A = 348 + 8 \times 15 + \frac{1800}{15} = 588$ cm².   — That is a card $21$ cm by $28$ cm, which multiplies back to $588$, so the answer checks against the picture.  (W1)
+  FINAL: $w = 15$ cm gives a minimum, and the least total area of the card is $588$ cm².
+  TWIN: A workshop makes $x$ trays a week, and the cost of making each tray is $C = 2x + 15 + \frac{800}{x}$ pounds.
+Find the number of trays a week that makes the cost of each tray least.  → numeric 20 tol={"type":"absolute","value":0.005} forms=decimal
+
+## DIAGNOSTICS
+### dx.fm.u1.optimisation.pre (pre) [verified]
+- p1 (Rearrange a product to make one letter the subject): Three checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+A rectangle $x$ m by $y$ m has area $54$ m². Write $y$ in terms of $x$.
+    ✔ $y = \frac{54}{x}$ — Dividing both sides of $xy = 54$ by $x$ leaves $y$ on its own. That fraction is what turns an optimisation problem into one letter.
+    ✘ $y = 54 - x$ — Subtracting undoes an addition. Here $x$ and $y$ are multiplied, so the opposite operation is division.
+    ✘ $y = 54x$ — That would make $y$ grow with $x$. A fixed area means the two measurements work against each other.
+- p2 (Differentiate a negative power): Differentiate $y = 5x^{-1}$.
+    ✔ $-5x^{-2}$ — Multiply by the power $-1$ and step the index down to $-2$.
+    ✘ $5x^{-2}$ — The coefficient is multiplied by the power, and that power is $-1$, so the sign changes.
+    ✘ $-5x^{0}$ — The index steps down from $-1$, and down from $-1$ is $-2$.
+- p3 (Take a square root): Solve $x^{2} = 81$ for the positive value of $x$.
+    ✔ $x = 9$ — Both roots are $9$ and $-9$; a length takes the positive one.
+    ✘ $x = 81$ [fm.optim.square-root-not-taken] — That is the value of $x^{2}$. The square root still has to be taken before you have $x$.
+    ✘ $x = 40.5$ — Halving undoes doubling, not squaring. The opposite of squaring is the square root.
+
+### dx.fm.u1.optimisation.post (post) [verified]
+- d1 (Read a constraint from a picture): A bed against a wall uses $48$ m of edging on three sides, the two ends being $x$ m each. Which constraint is right?
+    ✔ $2x + y = 48$ — Two ends and one front, because the wall takes the fourth side.
+    ✘ $2x + 2y = 48$ [fm.optim.wall-side-fenced] — That fences all four sides and ignores the wall. It would give a greatest area of $144$ m² instead of $288$ m².
+    ✘ $xy = 48$ [fm.optim.constraint-not-read-from-diagram] — That is an area of 48 m², but 48 m of edging is a length. The constraint has to add up the sides.
+- d2 (Know the step after solving the derivative): You have solved $\frac{dA}{dx} = 0$ and found a value of $x$. What does the scheme want next?
+    ✔ The second derivative, with its value and sign — A stationary value is not yet a maximum. The second derivative is the evidence the mark is for.
+    ✘ Nothing more; the value of $x$ is the answer [fm.optim.nature-not-shown] — The question asks for a maximum or a minimum, so the turning point has to be named before the answer is complete.
+    ✘ A table of values on either side [fm.optim.nature-not-shown] — A sign check either side is valid mathematics, but where the stem says using calculus the second derivative is the expected evidence.
+- d3 (Answer the quantity the question asked for): The bed's area is $A = -2x^{2} + 48x$ and the greatest area is wanted. You have found $x = 12$. What do you write on the answer line?
+    ✔ $288$ m² — Substituting $12$ back into $A$ gives $288$, and an area carries square metres.
+    ✘ $12$ m [fm.optim.final-quantity-not-evaluated] — That is the width that produces the greatest area, not the area itself. The last step is to substitute it back.
+    ✘ $24$ m [fm.optim.final-quantity-not-evaluated] — That is the other side of the bed. Both lengths are useful working, and neither is the area that was asked for.
+- d4 (Read the sign of the second derivative): A quantity has $\frac{d^{2}P}{dx^{2}} = \frac{4}{9}$ at its stationary value. What has been shown?
+    ✔ That the stationary value is a minimum — A positive second derivative means the gradient is climbing through zero, which is a dip.
+    ✘ That the stationary value is a maximum [fm.calc.second-derivative-sign-misread] — The test runs the other way: positive names a minimum and negative names a maximum.
+    ✘ Nothing, because the value is a fraction [fm.optim.nature-not-shown] — Only the sign matters, and a fraction has a sign like any other number. This one is positive.
+- d5 (Differentiate a sum with a plain term in x and a negative power): Differentiate $L = x + \frac{576}{x}$.
+    ✔ $1 - \frac{576}{x^{2}}$ — The plain $x$ contributes $1$, and $576x^{-1}$ gives $-576x^{-2}$.
+    ✘ $-\frac{576}{x^{2}}$ [fm.calc.linear-term-derivative-omitted] — The fraction has been handled correctly and the plain $x$ has vanished. The derivative of $x$ is $1$, so that $1$ belongs in the answer.
+    ✘ $1 + \frac{576}{x^{2}}$ [fm.calc.negative-power-differentiation] — The index is right. Multiplying $576$ by the power $-1$ makes that term negative.
+
+## QUESTIONS
+### q.fm.u1.optimisation.0001 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · Differentiating an area expression that has already been formed
+  (main) [2] The area of a flower bed is given by $A = -2x^{2} + 48x$, where $x$ is measured in metres.
+Find $\frac{dA}{dx}$.
+      ANSWER: algebraic -4x + 48 (equivalent)
+      MW1 MW1: $-4x$ from the term in $x^{2}$
+      W1 W1: $-4x + 48$ complete
+      SOLUTION: $-2x^{2}$ gives $-4x$, and $48x$ gives $48$. So $\frac{dA}{dx} = -4x + 48$.
+      ERR [fm.calc.linear-term-derivative-omitted] {"kind":"algebraic","latex":"-4x"} → The squared term is right. The term $48x$ is a straight line of gradient $48$, so it leaves $48$ behind rather than nothing. (1)
+      ERR [fm.calc.default-to-derivative-zero] {"kind":"algebraic","latex":"12"} → That is the value of $x$ you would get by going one step further and solving $-4x + 48 = 0$. This part asks only for the expression. (1)
+      HINTS: Differentiate each term on its own. || The term $48x$ has power 1, so it leaves $48$ behind.
+
+### q.fm.u1.optimisation.0002 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)solve2 · Solving the derivative equal to zero
+  (main) [2] A flower bed has $\frac{dA}{dx} = -4x + 48$.
+Solve $\frac{dA}{dx} = 0$.
+      ANSWER: numeric 12 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: setting $-4x + 48 = 0$
+      W1 W1: $x = 12$
+      SOLUTION: $-4x + 48 = 0$ gives $4x = 48$. Dividing by $4$: $x = 12$.
+      HINTS: Move the term in $x$ to the other side. || Then divide by its coefficient.
+
+### q.fm.u1.optimisation.0003 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · Differentiating a length expression with a negative power
+  (main) [3] The fencing round a vegetable plot is given by $L = 2x + \frac{162}{x}$, where $x$ is measured in metres.
+Find $\frac{dL}{dx}$.
+      ANSWER: algebraic 2 - \frac{162}{x^{2}} (equivalent)
+      M1 M1: writing the fraction as $162x^{-1}$
+      MW1 MW1: $2$ from the term $2x$
+      W1 W1: $2 - \frac{162}{x^{2}}$ complete
+      SOLUTION: Rewrite: $L = 2x + 162x^{-1}$. $2x$ gives $2$. $162x^{-1}$ gives $162 \times (-1) \times x^{-2} = -162x^{-2}$. So $\frac{dL}{dx} = 2 - \frac{162}{x^{2}}$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"algebraic","latex":"2 + \\frac{162}{x^{2}}"} → The index has stepped down correctly. Multiplying $162$ by the power $-1$ makes that term negative, so it is subtracted. (2)
+      ERR [fm.calc.linear-term-derivative-omitted] {"kind":"algebraic","latex":"-\\frac{162}{x^{2}}"} → The fraction is handled correctly and the term $2x$ has disappeared. Its derivative is the number $2$, which belongs in the answer. (2)
+      HINTS: Rewrite the fraction with a negative index first. || Multiplying $162$ by the power $-1$ changes the sign. || The index steps down from $-1$ to $-2$.
+
+### q.fm.u1.optimisation.0004 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)solve3 · Solving a derivative with a negative power equal to zero
+  (main) [3] A length is given by $L = 2x + \frac{162}{x}$ for $x > 0$, and $\frac{dL}{dx} = 2 - \frac{162}{x^{2}}$.
+Solve $\frac{dL}{dx} = 0$.
+      ANSWER: numeric 9 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: rearranging to $\frac{162}{x^{2}} = 2$
+      W1 W1: $x^{2} = 81$
+      W1 W2: $x = 9$, the negative root rejected because $x$ is a length
+      SOLUTION: $2 - \frac{162}{x^{2}} = 0$ gives $\frac{162}{x^{2}} = 2$. Multiplying by $x^{2}$ and dividing by $2$: $x^{2} = 81$. So $x = 9$, taking the positive root because $x$ is a length.
+      ERR [fm.optim.square-root-not-taken] {"kind":"numeric","value":81} → That is the value of $x^{2}$, reached correctly. One step is left: take the square root, which gives $x = 9$. (2)
+      HINTS: Move the fraction to the other side. || Multiply both sides by $x^{2}$. || Take the square root, and keep the positive one.
+
+### q.fm.u1.optimisation.0005 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)find4 · A short maximum problem with the expression already formed
+  METHOD LOCK: Using calculus
+  (main) [4] A quantity is given by $A = x(20 - x)$ for $0 < x < 20$.
+Using calculus, find the greatest value of $A$.
+      ANSWER: numeric 100 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: expanding to $A = -x^{2} + 20x$ and differentiating to $\frac{dA}{dx} = -2x + 20$
+      M1 M1: setting the derivative to zero, giving $x = 10$
+      MW1 MW2: $\frac{d^{2}A}{dx^{2}} = -2$, negative, so a maximum
+      W1 W1: $A = 100$ ft
+      SOLUTION: Expand: $A = -x^{2} + 20x$. Differentiate: $\frac{dA}{dx} = -2x + 20$. Set to zero: $x = 10$. $\frac{d^{2}A}{dx^{2}} = -2$, which is negative, so this is a maximum. Substitute back: $A = 10(20 - 10) = 100$.
+      ERR [fm.optim.final-quantity-not-evaluated] {"kind":"numeric","value":10} → That is the value of $x$ at the maximum, which is three of the four marks. The question asks for the greatest value of $A$, so put it back: $A = 100$. (3)
+      HINTS: Expand the bracket before differentiating. || Set the derivative to zero and solve. || The question asks for the value of $A$, so substitute back.
+
+### q.fm.u1.optimisation.0006 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)find4 · A short minimum problem with a negative power
+  METHOD LOCK: Using calculus
+  (main) [4] A cost is given by $C = 3x + \frac{300}{x}$ for $x > 0$.
+Using calculus, find the value of $x$ that makes $C$ least.
+      ANSWER: numeric 10 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dC}{dx} = 3 - \frac{300}{x^{2}}$
+      M1 M1: setting it to zero and reaching $x^{2} = 100$
+      W1 W1: $x = 10$
+      MW1 MW2: $\frac{d^{2}C}{dx^{2}} = \frac{600}{x^{3}}$, which is $\frac{3}{5}$ at $x = 10$, positive, so a minimum
+      SOLUTION: $\frac{dC}{dx} = 3 - \frac{300}{x^{2}}$. Set to zero: $\frac{300}{x^{2}} = 3$, so $x^{2} = 100$ and $x = 10$. $\frac{d^{2}C}{dx^{2}} = \frac{600}{x^{3}}$, which at $x = 10$ is $\frac{3}{5}$: positive, so $C$ is least here.
+      ERR [fm.optim.square-root-not-taken] {"kind":"numeric","value":100} → That is $x^{2}$, so the method marks stand. Take the square root to reach $x = 10$. (2)
+      HINTS: Rewrite the fraction as $300x^{-1}$. || Set the derivative to zero and multiply through by $x^{2}$. || Take the positive square root, then confirm with the second derivative.
+
+### q.fm.u1.optimisation.0007 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)find2 · Substituting the optimal value back into the quantity
+  (main) [2] A cost is given by $C = 3x + \frac{300}{x}$, and it is least when $x = 10$.
+Find that least cost.
+      ANSWER: numeric 60 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $x = 10$ into $C$
+      W1 W1: $60$
+      SOLUTION: $C = 3 \times 10 + \frac{300}{10} = 30 + 30 = 60$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"numeric","value":0} → That is what $\frac{dC}{dx}$ gives at $x = 10$, and it is zero there by definition. The cost itself comes from the original expression, where it is $60$. (0)
+      HINTS: Put the value into the original expression, not into the derivative. || Work out both terms and add them.
+
+### q.fm.u1.optimisation.0008 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)determine1 · Naming a turning point from the second derivative
+  (main) [1] A bed's area has $\frac{d^{2}A}{dx^{2}} = -4$ at its stationary value.
+Determine whether that value is a maximum or a minimum.
+      ANSWER: mcq ✔A maximum, because the second derivative is negative | ✘A minimum, because the second derivative is negative [fm.calc.second-derivative-sign-misread] | ✘It cannot be decided without a sketch [fm.optim.nature-not-shown]
+      MW1 MW1: $\frac{d^{2}A}{dx^{2}} = -4$, which is negative, so the stationary value is a maximum
+      SOLUTION: $\frac{d^{2}A}{dx^{2}} = -4$ is negative, so the gradient is falling through zero and the stationary value is a maximum.
+      HINTS: Look only at the sign. || Negative names a maximum.
+
+### q.fm.u1.optimisation.0009 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)write3 · Forming a fencing expression from a fixed area
+  FIG: svg — A rectangular vegetable plot with one extra fence across the middle, 9 metres across and 6 metres deep
+  (main) [3] A rectangular vegetable plot is $x$ m across and $y$ m deep, and its area is $54$ m². It is fenced round all four sides, and one more fence runs across it parallel to the sides of length $y$.
+Write down an expression in $x$ for the total length of fencing.
+      ANSWER: algebraic 2x + \frac{162}{x} (equivalent)
+      MW1 MW1: $L = 2x + 3y$ read from the diagram
+      M1 M1: $y = \frac{54}{x}$ from the area
+      W1 W1: $L = 2x + \frac{162}{x}$
+      SOLUTION: There are two sides of length $x$, two of length $y$, and one more of length $y$ across the middle, so $L = 2x + 3y$. The area gives $y = \frac{54}{x}$. So $L = 2x + 3 \times \frac{54}{x} = 2x + \frac{162}{x}$.
+      ERR [fm.optim.constraint-not-read-from-diagram] {"kind":"algebraic","latex":"2x + \\frac{108}{x}"} → The substitution for $y$ is right, so the method mark stands. Only four fences have been counted: the extra one across the middle is another $y$, which makes the total $2x + 3y$. (1)
+      HINTS: Count the fences of each length separately. || The extra fence is parallel to the sides of length $y$, so it is $y$ long. || Use $xy = 54$ to replace $y$.
+
+### q.fm.u1.optimisation.0010 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)write2 · Reading a constraint from a three-sided fence
+  FIG: svg — A rectangular flower bed against a wall, edged on three sides only
+  (main) [2] A flower bed is a rectangle $x$ m by $y$ m built against a straight wall, with the side of length $y$ facing the wall. The three sides that are not the wall are edged with $48$ m of timber.
+Write down an expression for $y$ in terms of $x$.
+      ANSWER: algebraic 48 - 2x (equivalent)
+      MW1 MW1: $2x + y = 48$
+      W1 W1: $y = 48 - 2x$
+      SOLUTION: The timber runs along the two sides of length $x$ and the one side of length $y$, so $2x + y = 48$. Rearranging gives $y = 48 - 2x$.
+      ERR [fm.optim.wall-side-fenced] {"kind":"algebraic","latex":"24 - x"} → That comes from $2x + 2y = 48$, which edges all four sides. The wall takes one of them, so only one length of $y$ is paid for. (0)
+      HINTS: Which three sides carry timber? || The wall is the fourth side, so it is not edged.
+
+### q.fm.u1.optimisation.0011 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)find3 · Two pens against a barn wall
+  METHOD LOCK: Using calculus
+  (main) [3] Two pens are built side by side against a barn wall, using $36$ m of fencing for the two ends, the far side and one divider. Each end is $x$ m, and the area enclosed is $A = -3x^{2} + 36x$ m².
+Using calculus, find the value of $x$ that gives the greatest area.
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dA}{dx} = -6x + 36$
+      M1 M1: setting the derivative to zero
+      W1 W1: $x = 6$
+      SOLUTION: $\frac{dA}{dx} = -6x + 36$. Set it to zero: $6x = 36$, so $x = 6$.
+      HINTS: Differentiate the expression as it stands. || Set the result to zero. || Divide by the coefficient of $x$.
+
+### q.fm.u1.optimisation.0012 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)find2 · Evaluating the greatest area once x is known
+  (main) [2] The area of the two pens is $A = -3x^{2} + 36x$ m², and it is greatest when $x = 6$.
+Find the greatest area.
+      ANSWER: numeric 108 m² tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $x = 6$ into $A$
+      W1 W1: $108$ m², with the unit
+      SOLUTION: $A = 36 \times 6 - 3 \times 6^{2} = 216 - 108 = 108$ m².
+      ERR [fm.optim.final-quantity-not-evaluated] {"kind":"numeric","value":6} → That is the value of $x$, which is the length of one end in metres. The area is what the question asks for, and substituting gives $108$ m². (0)
+      HINTS: Substitute into the expression for the area. || An area is measured in square metres.
+
+### q.fm.u1.optimisation.0013 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)find4 · The number of trays that makes the cost of each one least
+  METHOD LOCK: Using calculus
+  (main) [4] A workshop makes $x$ trays a week, and the cost of making each tray is $C = 2x + 15 + \frac{800}{x}$ pounds.
+Using calculus, find the number of trays a week that makes the cost of each tray least.
+      ANSWER: numeric 20 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dC}{dx} = 2 - \frac{800}{x^{2}}$
+      M1 M1: setting it to zero and reaching $x^{2} = 400$
+      W1 W1: $x = 20$
+      MW1 MW2: $\frac{d^{2}C}{dx^{2}} = \frac{1600}{x^{3}}$, which is $\frac{1}{5}$ at $x = 20$, positive, so a minimum
+      SOLUTION: $\frac{dC}{dx} = 2 - \frac{800}{x^{2}}$. Set to zero: $\frac{800}{x^{2}} = 2$, so $x^{2} = 400$ and $x = 20$. $\frac{d^{2}C}{dx^{2}} = \frac{1600}{x^{3}}$, which at $x = 20$ is $\frac{1}{5}$: positive, so the cost is least at $20$ trays a week.
+      ERR [fm.optim.square-root-not-taken] {"kind":"numeric","value":400} → That is $x^{2}$, reached correctly. The square root is still to be taken, which gives $20$ trays. (2)
+      HINTS: The constant term differentiates to zero. || Rewrite $\frac{800}{x}$ as $800x^{-1}$. || Take the positive root, then confirm with the second derivative.
+
+### q.fm.u1.optimisation.0014 [verified] exam-style · diff 5 · untiered · FM1 calc · 10 marks · (a)show1|(b)show2|(c)find5|(d)find2 · A printed notice with fixed printed area and margins
+  METHOD LOCK: Using calculus
+  FIG: svg — A notice with a printed rectangle of area 300 square centimetres and margins of 3 centimetres at the sides and 4 centimetres at the top and bottom
+  (a) [1] A notice is printed on a rectangular card. The printed part is $w$ cm wide, $h$ cm tall and has an area of $300$ cm². There is a margin of $3$ cm at each side and $4$ cm at the top and at the bottom.
+Show that $h = \frac{300}{w}$.
+      ANSWER: text accepted=["The printed area is wh = 300, so dividing both sides by w gives h = 300/w","wh = 300 therefore h = 300/w"] keyWords=[{"any":["wh = 300","hw = 300","w x h = 300"],"marks":1}]
+      MW1 MW1: $wh = 300$, then dividing by $w$
+      SOLUTION: The printed rectangle is $w$ by $h$, so its area is $wh = 300$. Dividing both sides by $w$ gives $h = \frac{300}{w}$.
+      HINTS: Write down the area of the printed rectangle. || Then make $h$ the subject.
+  (b) [2] Show that the total area of the card is $A = 8w + 348 + \frac{1800}{w}$ cm².
+      ANSWER: text accepted=["A = (w + 6)(h + 8) = wh + 8w + 6h + 48 = 300 + 8w + 6(300/w) + 48 = 8w + 348 + 1800/w","The card is (w + 6) by (h + 8), so A = wh + 8w + 6h + 48, and with h = 300/w that is 8w + 348 + 1800/w"] keyWords=[{"any":["(w + 6)(h + 8)","w + 6 h + 8"],"marks":1},{"any":["wh + 8w + 6h + 48"],"marks":1}]
+      M1 M1: the card measuring $(w + 6)$ by $\left(h + 8\right)$
+      W1 W1: expanding and substituting $h = \frac{300}{w}$ to reach $8w + 348 + \frac{1800}{w}$
+      SOLUTION: The card is $(w + 6)$ cm by $\left(h + 8\right)$ cm, so $A = (w + 6)(h + 8)$. Multiplying out: $A = wh + 8w + 6h + 48$. Substituting $wh = 300$ and $h = 300/w$ gives $A = 300 + 8w + 6(300/w) + 48 = 8w + 348 + \frac{1800}{w}$.
+      ERR [fm.show-that.steps-missing] {"kind":"text","regex":"^\\s*(a\\s*=\\s*)?8w\\s*\\+\\s*348[^\\n]{0,30}$"} → The printed expression has been copied down with nothing in front of it. A show-that pays for the derivation, so write the two brackets, the expansion and the substitution as three separate lines. (0)
+      HINTS: Each measurement grows by two margins. || Multiply the two brackets out before substituting. || Collect the two constant terms.
+  (c) [5] Using calculus, find the value of $w$ that makes the total area least, showing clearly that it is a minimum.
+      ANSWER: numeric 15 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dA}{dw} = 8 - \frac{1800}{w^{2}}$
+      M1 M1: setting the derivative to zero
+      W1 W1: $w^{2} = 225$
+      W1 W2: $w = 15$, the negative root rejected because $w$ is a width
+      MW1 MW2: $\frac{d^{2}A}{dw^{2}} = \frac{3600}{w^{3}}$, which is $\frac{16}{15}$ at $w = 15$, positive, so a minimum
+      SOLUTION: $\frac{dA}{dw} = 8 - \frac{1800}{w^{2}}$. Set it to zero: $\frac{1800}{w^{2}} = 8$, so $w^{2} = 225$ and $w = 15$ cm, taking the positive root because $w$ is a width. $\frac{d^{2}A}{dw^{2}} = \frac{3600}{w^{3}}$, which at $w = 15$ is $\frac{16}{15}$. That is positive, so the total area is least when $w = 15$ cm.
+      ERR [fm.optim.square-root-not-taken] {"kind":"numeric","value":225} → That is $w^{2}$, which is three of the five marks. Take the square root for $w = 15$, then show the second derivative is positive. (3)
+      HINTS: Write $\frac{1800}{w}$ as $1800w^{-1}$ before differentiating. || The constant term differentiates to zero. || After solving, differentiate a second time and substitute your value of $w$.
+  (d) [2] Find the least possible total area of the card.
+      ANSWER: numeric 588 cm² tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $w = 15$ into $A$ ft
+      W1 W1: $588$ cm², with the unit
+      SOLUTION: $A = 348 + 8 \times 15 + \frac{1800}{15} = 348 + 120 + 120 = 588$ cm². As a check, the card is $21$ cm by $28$ cm, and $21 \times 28 = 588$.
+      ERR [fm.optim.final-quantity-not-evaluated] {"kind":"numeric","value":15} → That is the printed width in centimetres, which part (c) already asked for. This part wants the area of the whole card, which is $588$ cm². (0)
+      HINTS: Substitute your value of $w$ into the expression from part (b). || A check: the card is $21$ cm by $28$ cm.
+
+### q.fm.u1.optimisation.0015 [verified] exam-style · diff 4 · untiered · FM1 calc · 8 marks · (a)show1|(b)show1|(c)find4|(d)find2 · Two pens against a barn wall
+  METHOD LOCK: Using calculus
+  FIG: svg — A rectangular enclosure against a wall, fenced on three sides
+  (a) [1] Two rectangular pens are built side by side against a long barn wall. Altogether they use $36$ m of fencing for the two ends, the far side and the divider between them. Each end, and the divider, is $x$ m long, and the far side is $y$ m long.
+Show that $y = 36 - 3x$.
+      ANSWER: text accepted=["The fencing covers two ends, the divider and the far side, so 3x + y = 36, giving y = 36 - 3x","3x + y = 36 so y = 36 - 3x"] keyWords=[{"any":["3x + y = 36","y + 3x = 36"],"marks":1}]
+      MW1 MW1: $3x + y = 36$ read from the arrangement, then rearranged
+      SOLUTION: Three fences are $x$ m long: the two ends and the divider. One fence is $y$ m long: the far side. So $3x + y = 36$, and rearranging gives $y = 36 - 3x$.
+      HINTS: How many fences are $x$ metres long? || The wall is not fenced.
+  (b) [1] Show that the total area enclosed is $A = -3x^{2} + 36x$ m².
+      ANSWER: text accepted=["A = xy = x(36 - 3x) = 36x - 3x²","The area is xy, and substituting y gives x(36 - 3x) = 36x - 3x^2"] keyWords=[{"any":["x(36 - 3x)","xy = x(36 - 3x)"],"marks":1}]
+      MW1 MW1: $A = xy = x(36 - 3x)$, expanded
+      SOLUTION: The two pens together are one rectangle $x$ m by $y$ m, so $A = xy$. Substituting from part (a): $A = x(36 - 3x) = -3x^{2} + 36x$.
+      HINTS: The two pens together form one rectangle. || Substitute the expression for $y$ from part (a).
+  (c) [4] Using calculus, find the value of $x$ that gives the greatest total area, showing clearly that it is a maximum.
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dA}{dx} = -6x + 36$
+      M1 M1: setting the derivative to zero
+      W1 W1: $x = 6$
+      MW1 MW2: $\frac{d^{2}A}{dx^{2}} = -6$, which is negative, so a maximum
+      SOLUTION: $\frac{dA}{dx} = -6x + 36$. Set it to zero: $6x = 36$, so $x = 6$. $\frac{d^{2}A}{dx^{2}} = -6$, which is negative, so $x = 6$ gives the greatest area.
+      HINTS: Differentiate the expression from part (b). || Set it to zero and solve. || Differentiate again and read the sign.
+  (d) [2] Find the greatest total area enclosed.
+      ANSWER: numeric 108 m² tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $x = 6$, or $x = 6$ and $y = 18$ ft
+      W1 W1: $108$ m², with the unit
+      SOLUTION: $A = 36 \times 6 - 3 \times 6^{2} = 108$ m². As a check, $y = 36 - 3 \times 6 = 18$ m, and $6 \times 18 = 108$.
+      ERR [fm.optim.final-quantity-not-evaluated] {"kind":"numeric","value":6} → That is the value of $x$ from part (c), a length in metres. The area is $108$ m². (0)
+      HINTS: Substitute your value of $x$ into the area. || A check: $y = 18$ m, and $6 \times 18$ is the same number.
+
+### q.fm.u1.optimisation.0016 [verified] exam-style · diff 5 · untiered · FM1 calc · 9 marks · (a)find2|(b)find3|(c)show2|(d)find2 · The cost of making each tray in a workshop
+  METHOD LOCK: Using calculus
+  (a) [2] A workshop makes $x$ trays a week. The cost of making each tray, in pounds, is
+$C = 2x + 15 + \frac{800}{x}$
+Find $\frac{dC}{dx}$.
+      ANSWER: algebraic 2 - \frac{800}{x^{2}} (equivalent)
+      M1 M1: writing $\frac{800}{x}$ as $800x^{-1}$
+      W1 W1: $2 - \frac{800}{x^{2}}$, the constant gone
+      SOLUTION: Rewrite: $C = 2x + 15 + 800x^{-1}$. $2x$ gives $2$, $15$ gives $0$, and $800x^{-1}$ gives $-800x^{-2}$. So $\frac{dC}{dx} = 2 - \frac{800}{x^{2}}$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"algebraic","latex":"2 + \\frac{800}{x^{2}}"} → The index is right. Multiplying $800$ by the power $-1$ makes that term negative, so it is subtracted rather than added. (1)
+      ERR [fm.calc.linear-term-derivative-omitted] {"kind":"algebraic","latex":"-\\frac{800}{x^{2}}"} → The fraction is handled correctly and the term $2x$ has gone. Its derivative is the number $2$, which belongs in the answer. (1)
+      HINTS: Rewrite the fraction with a negative index. || The constant $15$ differentiates to zero.
+  (b) [3] Using calculus, find the number of trays a week that makes the cost of each tray least.
+      ANSWER: numeric 20 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: setting the derivative to zero ft
+      W1 W1: $x^{2} = 400$
+      W1 W2: $x = 20$, the negative root rejected because $x$ is a number of trays
+      SOLUTION: Set $\frac{dC}{dx} = 0$: $\frac{800}{x^{2}} = 2$. Multiplying by $x^{2}$ and dividing by $2$: $x^{2} = 400$. So $x = 20$ trays a week, taking the positive root.
+      ERR [fm.optim.square-root-not-taken] {"kind":"numeric","value":400} → That is $x^{2}$, so two of the three marks stand. One step is left: take the square root for $20$ trays. (2)
+      HINTS: Set the derivative from part (a) to zero. || Multiply both sides by $x^{2}$. || Take the positive square root.
+  (c) [2] Show clearly that this number of trays gives the least cost.
+      ANSWER: text accepted=["d2C/dx2 = 1600x^-3, and at x = 20 that is 1/5, which is positive, so the cost is a minimum","The second derivative is 1600/x^3, which at x = 20 is 1/5, a positive value, so this is a minimum"] keyWords=[{"any":["1600/x^3","1600x^-3"],"marks":1},{"any":["positive","greater than zero","above zero"],"marks":1}]
+      MW1 MW1: $\frac{d^{2}C}{dx^{2}} = \frac{1600}{x^{3}}$
+      W1 W1: the value $\frac{1}{5}$ at $x = 20$, positive, so a minimum
+      SOLUTION: Differentiating again: $\frac{d^{2}C}{dx^{2}} = \frac{1600}{x^{3}}$, that is $1600/x^3$. At $x = 20$ this is $\frac{1}{5}$, which is positive. A positive second derivative means the gradient is climbing through zero, so the cost is at a minimum.
+      ERR [fm.calc.second-derivative-sign-misread] {"kind":"text","regex":"(negative|less than zero|below zero)[^;\\n]*(minimum|least)|(minimum|least)[^;\\n]*(negative)"} → The second derivative has been found, which is the method mark. The sign is being read backwards: a positive value names a minimum and a negative one names a maximum. (1)
+      HINTS: Differentiate the derivative. || Substitute your value of $x$. || Say what the sign of that number means.
+  (d) [2] Find the least cost of making each tray.
+      ANSWER: numeric 95 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $x = 20$ into $C$ ft
+      W1 W1: $95$
+      SOLUTION: $C = 2 \times 20 + 15 + \frac{800}{20} = 40 + 15 + 40 = 95$ pounds.
+      ERR [fm.optim.final-quantity-not-evaluated] {"kind":"numeric","value":20} → That is the number of trays from part (b). This part asks for the cost of each tray at that number, which is $95$ pounds. (0)
+      HINTS: Substitute into the original expression for $C$. || Three terms to add.
+
+### q.fm.u1.optimisation.0017 [verified] exam-style · diff 5 · untiered · FM1 calc · 9 marks · (a)show1|(b)show2|(c)find5|(d)find1 · A field beside a river, fenced on three sides
+  METHOD LOCK: Using calculus
+  FIG: svg — A rectangular field beside a river, fenced on three sides, 24 metres along the far side and 12 metres on each end
+  (a) [1] A rectangular field of area $288$ m² lies beside a straight river. The side along the river needs no fence. The side opposite the river is $x$ m long and the two ends are each $y$ m long.
+Show that $y = \frac{288}{x}$.
+      ANSWER: text accepted=["The area is xy = 288, so dividing by x gives y = 288/x","xy = 288 therefore y = 288/x"] keyWords=[{"any":["xy = 288","yx = 288"],"marks":1}]
+      MW1 MW1: $xy = 288$, then dividing by $x$
+      SOLUTION: The field is $x$ m by $y$ m, so $xy = 288$. Dividing both sides by $x$ gives $y = \frac{288}{x}$.
+      HINTS: Write down the area of the rectangle. || Make $y$ the subject.
+  (b) [2] Show that the total length of fencing is $L = x + \frac{576}{x}$ m.
+      ANSWER: text accepted=["The fence covers the far side and the two ends, so L = x + 2y = x + 2(288/x) = x + 576/x","L = x + 2y and y = 288/x, so L = x + 2(288/x) = x + 576/x"] keyWords=[{"any":["x + 2y"],"marks":1},{"any":["2(288/x)","2 x 288/x"],"marks":1}]
+      MW1 MW1: $L = x + 2y$ read from the arrangement
+      W1 W1: substituting $y = \frac{288}{x}$ to reach $x + \frac{576}{x}$
+      SOLUTION: The fence runs along the side opposite the river and the two ends, so $L = x + 2y$. Substituting $y = 288/x$ gives $L = x + 2(288/x) = x + \frac{576}{x}$.
+      ERR [fm.optim.wall-side-fenced] {"kind":"text","regex":"\\b2x\\s*\\+\\s*2y\\b"} → That fences all four sides. The river takes the side opposite $x$, so only one length of $x$ and the two ends are paid for. (0)
+      HINTS: Three sides are fenced, not four. || Two of them are the ends, each $y$ m. || Now replace $y$.
+  (c) [5] Using calculus, find the value of $x$ that uses the least fencing, showing clearly that it is a minimum.
+      ANSWER: numeric 24 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: writing $\frac{576}{x}$ as $576x^{-1}$
+      MW1 MW1: $\frac{dL}{dx} = 1 - \frac{576}{x^{2}}$, including the $1$ from the term in $x$
+      W1 W1: $x^{2} = 576$
+      W1 W2: $x = 24$, the negative root rejected because $x$ is a length
+      MW1 MW2: $\frac{d^{2}L}{dx^{2}} = \frac{1152}{x^{3}}$, which is $\frac{1}{12}$ at $x = 24$, positive, so a minimum
+      SOLUTION: Rewrite: $L = x + 576x^{-1}$, so $\frac{dL}{dx} = 1 - \frac{576}{x^{2}}$. Set it to zero: $\frac{576}{x^{2}} = 1$, so $x^{2} = 576$ and $x = 24$ m, taking the positive root. $\frac{d^{2}L}{dx^{2}} = \frac{1152}{x^{3}}$, which at $x = 24$ is $\frac{1}{12}$: positive, so this is the least fencing.
+      ERR [fm.optim.square-root-not-taken] {"kind":"numeric","value":576} → That is $x^{2}$, so three of the five marks stand. Taking the square root gives $x = 24$ m. (3)
+      HINTS: The plain $x$ differentiates to $1$, not to nothing. || Multiply through by $x^{2}$ after setting the derivative to zero. || Confirm with the second derivative at your value of $x$.
+  (d) [1] Find the least length of fencing needed.
+      ANSWER: numeric 48 m tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      W1 W1: $48$ m, with the unit ft
+      SOLUTION: $L = 24 + \frac{576}{24} = 24 + 24 = 48$ m. As a check, $y = \frac{288}{24} = 12$ m, and $24 + 2 \times 12 = 48$ m.
+      ERR [fm.optim.final-quantity-not-evaluated] {"kind":"numeric","value":24} → That is the value of $x$ from part (c), the length of one side. The fencing is all three sides together, which is $48$ m. (0)
+      HINTS: Substitute $x = 24$ into $L$. || A check: $y = 12$ m, so the three sides are 24, 12 and 12.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.optimisation.01 [verified] fm.optim.final-quantity-not-evaluated · earned M1,MW1,W1,W2 · ccea-cer:further-maths:2022-summer:FM1:Q13
+STEM: Ruairí was asked for the least length of fencing for a field of area $288$ m² beside a river, where $L = x + \frac{576}{x}$. His working:
+    1. L = x + 576x^-1
+    2. dL/dx = 1 - 576x^-2
+    3. 1 - 576x^-2 = 0 so x^2 = 576
+    4. x = 24
+  ✘ 5. The least length of fencing is 24 m
+  WRONG: Lines 1 to 4 are all correct, and they are worth most of the marks.
+Line 5 reports the value of $x$, which is the length of one side of the field. The question asked for the total fencing, and that is $L$.
+Substituting back gives $L = 24 + \frac{576}{24} = 48$ m.
+  FIX: L = 24 + 576/24 / The least length of fencing is 48 m
+  FEEDBACK: The calculus is sound and it earns its marks. What is missing is the last line: a value of $x$ is not the quantity the question named. Read the final sentence of the question again, substitute, and write the answer with its unit. Here the fencing is $48$ m, made up of $24$ m along the far side and $12$ m at each end.
+
+### ftm.fm.u1.optimisation.02 [verified] fm.calc.second-derivative-sign-misread · earned MW1,M1,W1 · ccea-cer:further-maths:2023-summer:FM1:Q13
+STEM: Méabh was asked to show that the stationary value of $A = -3x^{2} + 36x$ is a maximum. Her working:
+    1. dA/dx = -6x + 36
+    2. -6x + 36 = 0 so x = 6
+    3. d2A/dx2 = -6
+  ✘ 4. -6 is negative so this is a minimum
+    5. The area is least when x = 6
+  WRONG: Lines 1 to 3 are exactly right, including the second derivative, which is the step most candidates forget altogether.
+Line 4 reads the sign the wrong way round. A negative second derivative means the gradient is falling as it passes through zero: up, level, down, which is a peak.
+Positive names a minimum; negative names a maximum.
+  FIX: -6 is negative so this is a maximum / The area is greatest when x = 6
+  FEEDBACK: All the calculus is right, so the method and working marks up to line 3 stand. Only the reading of the sign has slipped. Picture the gradient itself: if it is decreasing as it crosses zero, the curve rose to the point and then fell, and that is a maximum. A quick sanity check also helps here, since a fixed length of fencing can enclose a largest area but has no smallest one.
+
+### ftm.fm.u1.optimisation.03 [verified] fm.optim.wall-side-fenced · earned none · ccea-cer:further-maths:2022-summer:FM1:Q13
+STEM: Cara was asked for the greatest area of a bed built against a wall with $48$ m of edging on three sides, the two ends each $x$ m. Her working:
+  ✘ 1. 2x + 2y = 48 so y = 24 - x
+    2. A = x(24 - x) = -x^2 + 24x
+    3. dA/dx = -2x + 24
+    4. dA/dx = 0 gives x = 12
+    5. The greatest area is 144 m^2
+  WRONG: Everything from line 2 onwards is correct working on the expression in line 1, which is why the error is so hard to spot on the page.
+Line 1 fences all four sides. The wall provides one of them, so the edging covers two ends of $x$ and one side of $y$ only: $2x + y = 48$.
+That gives $y = 48 - 2x$ and $A = -2x^{2} + 48x$, whose greatest value is $288$ m², not $144$ m².
+  FIX: 2x + y = 48 so y = 48 - 2x / A = x(48 - 2x) = -2x^2 + 48x / The greatest area is 288 m^2
+  FEEDBACK: The calculus is faultless, and in a real paper the follow-through would rescue some of it. The lost mark is the first one: before writing a constraint, count on the diagram which sides actually carry fencing. Here the wall takes one side, so only three lengths are paid for, and the answer roughly doubles to $288$ m².
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.optimisation.01 [verified] (procedure) What are the five steps of an optimisation question?  →  Read the constraint, use it to write the quantity in one letter, differentiate and set the derivative to zero, confirm the nature with the second derivative, then substitute back for the quantity asked.
+- rp.fm.u1.optimisation.02 [verified] (definition) What does the word constraint mean in one of these questions?  →  The sentence or diagram that ties the two letters together, such as a fixed length of fencing or a fixed area.
+- rp.fm.u1.optimisation.03 [verified] (trap) A bed is fenced on three sides against a wall, with ends of $x$ and a front of $y$. Why is the constraint not $2x + 2y$?  →  The wall provides the fourth side, so only two ends and one front are fenced.
+- rp.fm.u1.optimisation.04 [verified] (procedure) How do you differentiate a term such as $\frac{162}{x}$?  →  Rewrite it as $162x^{-1}$, multiply by the power $-1$ and step the index down to $-2$, giving $-162x^{-2}$.
+- rp.fm.u1.optimisation.05 [verified] (qa) After solving $\frac{dA}{dx} = 0$, what does the scheme still want?  →  The second derivative, worked out at that value of x, with its sign read as a maximum or a minimum.
+- rp.fm.u1.optimisation.06 [verified] (trap) You reach $x^{2} = 81$. What is left to do?  →  Take the square root, giving $x = 9$, and reject the negative root because a length cannot be negative.
+- rp.fm.u1.optimisation.07 [verified] (trap) You have found the value of $x$ that maximises an area. Are you finished?  →  Only if the question asked for x; otherwise substitute it back to find the area, the length or the cost that was asked for, with its unit.
+- rp.fm.u1.optimisation.08 [verified] (qa) What do the words using calculus in a stem forbid?  →  Any non-calculus route: a table of values, a graph read by eye or a calculator maximum earns nothing.
+- rp.fm.u1.optimisation.09 [verified] (trap) Which optimisation contexts are not asked on this specification?  →  Three-dimensional problems such as boxes, and anything involving pi.
+
+## INSIGHT
+RULE: Build the expression from the constraint and simplify it; differentiate every term; set the derivative to zero and solve; use the second derivative to state max or min; then evaluate the quantity actually asked for.
+A*: Reading the constraint from a diagram, handling a negative power in the derivative, and finishing with the optimised quantity rather than x.
+- ccea-cer:further-maths:2018-summer:FM1:Q12: asked Show an expression, then optimise it in context. | went wrong: In the 'show' part terms were added but not expanded step by step; few progressed in the calculus; some computed a different quantity (total shoppers) at the end. | rule: Show every line of a 'show that'; finish with the quantity asked.
+- ccea-cer:further-maths:2019-summer:FM1:Q14: asked Area and perimeter expressions, a constraint, then the maximum area. | went wrong: Expressions were left unsimplified, causing later slips; many did not realise calculus was needed for the last part; some forgot to show the value was a maximum. | rule: Simplify each expression, differentiate, and confirm max/min with the second derivative.
+- ccea-cer:further-maths:2022-summer:FM1:Q13: asked Form L from a diagram, then minimise it. | went wrong: Many could not read L = x + 2y from the diagram; when differentiating, the x term's derivative (1) was omitted, giving x squared = 900 and x = 30; the answer 30 mm was given instead of the required L = 60 mm. | rule: Differentiate every term (x gives 1) and substitute back to find the quantity asked.
+- ccea-cer:further-maths:2024-summer:FM1:Q13: asked An easier optimisation question. | went wrong: Weaker candidates could not prove the two given results or apply them; most could differentiate the given expression. | rule: Even if the setup is lost, differentiate the printed expression for method marks.
+- ccea-cer:further-maths:2025-summer:FM1:Q14: asked Form expressions, then find and classify a stationary point. | went wrong: Parts (i) and (ii) were strong. In (iii) the negative power of x was mishandled in the derivative and the resulting equation with fractional or negative exponents was hard to solve; the second derivative test was mostly done. | rule: Differentiate negative powers carefully and solve for x before classifying.

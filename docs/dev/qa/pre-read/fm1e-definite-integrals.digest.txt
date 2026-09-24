@@ -1,0 +1,206 @@
+# fm.u1.definite-integrals — Forming and evaluating definite integrals  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Forming and evaluating definite integrals v1 [verified]
+verification statuses: {"verified":17}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Two numbers on the integral sign
+- [p] 
+- [figure] The two limits mark off one strip, and the integral turns it into the single number $12$.
+- [choice] 
+- [h] 1. The four moves
+- [p] 
+- [figure] The constant of integration is left out: it would appear twice and cancel.
+- [why] Why there is no $+ c$ here
+- [number] 
+- [h] 2. A worked example
+- [p] 
+- [video] Integration - The Definite Integral - GCSE Further Maths
+- [number] 
+- [h] 3. Where the marks go
+- [p] 
+- [figure] Each of these is visible on the page before you reach the answer.
+- [notonspec] A negative answer is still an answer
+- [choice] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.definite-integrals.01 [verified] paper FM1 calc
+STEM: Find the value of $\int_{1}^{3} \left(3x^{2} - 4x + 1\right) dx$
+  FIG: svg — The curve y = 3x^2 - 4x + 1 with the strip between x = 1 and x = 3 shaded
+  1. Integrate each term and simplify as you write it: $\left[x^{3} - 2x^{2} + x\right]_{1}^{3}$.   — Simplifying now, rather than leaving a term over its divisor, is what keeps the substitution arithmetic short. The limits travel with the square bracket.  (MW1)  WHY: ✔Because the square bracket holds the limits until they are substituted | ✘Because the integral sign is still needed | ✘Because the constant of integration goes inside it
+  2. Substitute the top limit: at $x = 3$ the bracket is $12$.   — Top limit first. Working it out on its own line, in its own bracket, is what protects the next step from a sign slip.  (M1)
+  3. Substitute the bottom limit: at $x = 1$ the bracket is $0$.   — The same expression, the other value. Nothing is re-integrated here.  (M2)
+  4. Subtract, top minus bottom: $12 - \left(0\right) = 12$.   — The order matters. The other way round gives $-12$, the same size with the sign turned over, and the scheme does not accept it.  (W1)
+  FINAL: $12$
+  TWIN: Find the value of $\int_{0}^{2} \left(6x^{2} + 1\right) dx$  → numeric 18 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u1.definite-integrals.pre (pre) [verified]
+- p1 (Integrate a single power of x): Two checks on what this lesson is built from. Neither is the new method, so answer from what you already know.
+What is $\int 6x^{2}\,dx$?
+    ✔ $2x^{3} + c$ — Raise the power to $3$ and divide $6$ by that new power.
+    ✘ $6x^{3} + c$ — The power has risen correctly. The coefficient still has to be divided by the new power of $3$.
+    ✘ $12x + c$ — That is the derivative. Integrating raises the power rather than lowering it.
+- p2 (Subtract a negative number): What is $7 - (-3)$?
+    ✔ $10$ — Subtracting a negative adds it on. This exact step appears whenever the lower limit gives a negative value.
+    ✘ $4$ — That is $7 - 3$. The number being subtracted is itself negative, so the two signs make a plus.
+    ✘ $-10$ — The first number is positive and larger, so the answer is positive.
+
+### dx.fm.u1.definite-integrals.post (post) [verified]
+- d1 (Substitute the limits in the right order): A candidate integrates and reaches $\left[x^{2} + 3x\right]_{1}^{4}$. What comes next?
+    ✔ $\left(28\right) - \left(4\right)$ — Top limit first, bottom limit second, giving $24$.
+    ✘ $\left(4\right) - \left(28\right)$ [fm.int.limits-reversed] — That gives $-24$, the right size with the sign turned over. The number on top of the integral sign is substituted first.
+    ✘ $\left(28\right) + \left(4\right)$ [fm.int.limits-reversed] — The two substitutions are subtracted, not added. Adding them would count the strip below the lower limit as well.
+- d2 (Evaluate a definite integral): What is the value of $\int_{1}^{2} \left(4x^{3} - 6x\right) dx$?
+    ✔ $6$ — The bracket is $x^4 - 3x^2$, worth $4$ at the top limit and $-2$ at the bottom.
+    ✘ $-6$ [fm.int.limits-reversed] — Both substitutions are right and the subtraction has gone the wrong way round, which turns the sign over.
+    ✘ $22$ [fm.int.limits-into-integrand] — That came from putting the limits into $4x^3 - 6x$ itself. They belong in the integrated expression.
+- d3 (Explain why the constant of integration is absent): Why is there no $+ c$ in a definite integral?
+    ✔ It appears in both substitutions and cancels in the subtraction — $(F(b) + c) - (F(a) + c)$ leaves $F(b) - F(a)$ whatever $c$ was.
+    ✘ Because $c$ is always zero between limits [fm.int.constant-omitted] — The constant is not zero; it is simply the same at both limits, so it subtracts away.
+    ✘ Because the answer is a number rather than an expression [fm.int.constant-omitted] — That is true of the answer but it is not the reason. The reason is that the two copies of $c$ cancel.
+- d4 (Treat an unknown constant as a constant): In $\int_{0}^{2} (k + 6x)\,dx$ the letter $k$ is a constant. What does it integrate to?
+    ✔ $kx$ — A constant behaves as a number does: raise the power of $x^{0}$ to $x^{1}$ and divide by $1$.
+    ✘ $\frac{k^{2}}{2}$ [fm.int.unknown-constant-integrated] — That treats $k$ as the variable. It then takes the same value at both limits and cancels, so the $k$ vanishes and the answer collapses to $12$.
+    ✘ $k$ [fm.int.unknown-constant-integrated] — Leaving it unchanged is what differentiating would do to $kx$. Integrating goes the other way, so it gains a factor of $x$.
+
+## QUESTIONS
+### q.fm.u1.definite-integrals.0001 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · A definite integral evaluated between two ordinates
+  (main) [3] Find the value of
+$\int_{1}^{4} \left(2x + 3\right) dx$
+      ANSWER: numeric 24 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\left[x^{2} + 3x\right]_{1}^{4}$, each term simplified
+      M1 M2: substituting both limits, each inside its own bracket
+      W1 W1: $24$
+      SOLUTION: Integrating gives $\left[x^{2} + 3x\right]_{1}^{4}$. At $x = 4$ the bracket is $28$. At $x = 1$ it is $4$. Subtracting: $28 - \left(4\right) = 24$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-24} → The integrating and both substitutions are right, so the method marks stand. The bottom limit has been taken from the top one the wrong way round: it is $28 - \left(4\right)$, which gives $24$. (2)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":6} → That came from putting the two limits straight into $2x + 3$ and subtracting. The limits belong in the integrated expression $x^2 + 3x$, which gives $24$. (0)
+      ERR [fm.int.lower-limit-ignored] {"kind":"numeric","value":28} → The top limit has been substituted correctly. The bottom limit still has to be substituted and taken away: $28 - \left(4\right) = 24$. (2)
+      HINTS: Integrate first, and simplify each term as you write it. || Substitute the top limit, then the bottom one. || Put each substitution in its own bracket before subtracting.
+
+### q.fm.u1.definite-integrals.0002 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · A definite integral evaluated between two ordinates
+  (main) [3] Find the value of
+$\int_{1}^{2} \left(4x^{3} - 6x\right) dx$
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\left[x^{4} - 3x^{2}\right]_{1}^{2}$, each term simplified
+      M1 M2: substituting both limits, each inside its own bracket
+      W1 W1: $6$
+      SOLUTION: Integrating gives $\left[x^{4} - 3x^{2}\right]_{1}^{2}$. At $x = 2$ the bracket is $4$. At $x = 1$ it is $-2$. Subtracting: $4 - \left(-2\right) = 6$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-6} → The integrating and both substitutions are right, so the method marks stand. The bottom limit has been taken from the top one the wrong way round: it is $4 - \left(-2\right)$, which gives $6$. (2)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":22} → That came from putting the two limits straight into $4x^3 - 6x$ and subtracting. The limits belong in the integrated expression $x^4 - 3x^2$, which gives $6$. (0)
+      ERR [fm.int.lower-limit-ignored] {"kind":"numeric","value":4} → The top limit has been substituted correctly. The bottom limit still has to be substituted and taken away: $4 - \left(-2\right) = 6$. (2)
+      HINTS: Integrate first, and simplify each term as you write it. || Substitute the top limit, then the bottom one. || Put each substitution in its own bracket before subtracting.
+
+### q.fm.u1.definite-integrals.0003 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A definite integral evaluated between two ordinates
+  (main) [3] Find the value of
+$\int_{0}^{2} \left(x^{2} + x\right) dx$
+      ANSWER: numeric 4.666666666666667 tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: $\left[\frac{1x^{3}}{3} + \frac{1x^{2}}{2}\right]_{0}^{2}$, each term simplified
+      M1 M2: substituting both limits, each inside its own bracket
+      W1 W1: $14/3$
+      SOLUTION: Integrating gives $\left[\frac{1x^{3}}{3} + \frac{1x^{2}}{2}\right]_{0}^{2}$. At $x = 2$ the bracket is $14/3$. At $x = 0$ it is $0$. Subtracting: $14/3 - \left(0\right) = 14/3$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-4.666666666666667} → The integrating and both substitutions are right, so the method marks stand. The bottom limit has been taken from the top one the wrong way round: it is $14/3 - \left(0\right)$, which gives $14/3$. (2)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":6} → That came from putting the two limits straight into $x^2 + x$ and subtracting. The limits belong in the integrated expression $(1/3)x^3 + (1/2)x^2$, which gives $14/3$. (0)
+      HINTS: Integrate first, and simplify each term as you write it. || Substitute the top limit, then the bottom one. || Put each substitution in its own bracket before subtracting.
+
+### q.fm.u1.definite-integrals.0004 [verified] practice · diff 3 · untiered · FM1 calc · 4 marks · (main)find4 · A definite integral evaluated between two ordinates
+  (main) [4] Find the value of
+$\int_{2}^{3} \left(\frac{12}{x^{2}}\right) dx$
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: writing the term under the line with a negative index
+      MW1 MW1: $\left[-\frac{12}{x}\right]_{2}^{3}$, each term simplified
+      M1 M2: substituting both limits, each inside its own bracket
+      W1 W1: $2$
+      SOLUTION: Integrating gives $\left[-\frac{12}{x}\right]_{2}^{3}$. At $x = 3$ the bracket is $-4$. At $x = 2$ it is $-6$. Subtracting: $-4 - \left(-6\right) = 2$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-2} → The integrating and both substitutions are right, so the method marks stand. The bottom limit has been taken from the top one the wrong way round: it is $-4 - \left(-6\right)$, which gives $2$. (3)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":-1.6666666666666667} → That came from putting the two limits straight into $12x^-2$ and subtracting. The limits belong in the integrated expression $-12x^-1$, which gives $2$. (0)
+      ERR [fm.int.lower-limit-ignored] {"kind":"numeric","value":-4} → The top limit has been substituted correctly. The bottom limit still has to be substituted and taken away: $-4 - \left(-6\right) = 2$. (3)
+      HINTS: Integrate first, and simplify each term as you write it. || Substitute the top limit, then the bottom one. || Put each substitution in its own bracket before subtracting.
+
+### q.fm.u1.definite-integrals.0005 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A definite integral evaluated between two ordinates
+  (main) [3] Find the value of
+$\int_{-1}^{2} \left(6x - 2\right) dx$
+      ANSWER: numeric 3 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\left[3x^{2} - 2x\right]_{-1}^{2}$, each term simplified
+      M1 M2: substituting both limits, each inside its own bracket
+      W1 W1: $3$
+      SOLUTION: Integrating gives $\left[3x^{2} - 2x\right]_{-1}^{2}$. At $x = 2$ the bracket is $8$. At $x = -1$ it is $5$. Subtracting: $8 - \left(5\right) = 3$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-3} → The integrating and both substitutions are right, so the method marks stand. The bottom limit has been taken from the top one the wrong way round: it is $8 - \left(5\right)$, which gives $3$. (2)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":18} → That came from putting the two limits straight into $6x - 2$ and subtracting. The limits belong in the integrated expression $3x^2 - 2x$, which gives $3$. (0)
+      ERR [fm.int.lower-limit-ignored] {"kind":"numeric","value":8} → The top limit has been substituted correctly. The bottom limit still has to be substituted and taken away: $8 - \left(5\right) = 3$. (2)
+      HINTS: Integrate first, and simplify each term as you write it. || Substitute the top limit, then the bottom one. || Put each substitution in its own bracket before subtracting.
+
+### q.fm.u1.definite-integrals.0006 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A definite integral evaluated between two ordinates
+  (main) [3] Find the value of
+$\int_{0}^{3} \left(x^{2} - 4x\right) dx$
+      ANSWER: numeric -9 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\left[\frac{1x^{3}}{3} - 2x^{2}\right]_{0}^{3}$, each term simplified
+      M1 M2: substituting both limits, each inside its own bracket
+      W1 W1: $-9$
+      SOLUTION: Integrating gives $\left[\frac{1x^{3}}{3} - 2x^{2}\right]_{0}^{3}$. At $x = 3$ the bracket is $-9$. At $x = 0$ it is $0$. Subtracting: $-9 - \left(0\right) = -9$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":9} → The integrating and both substitutions are right, so the method marks stand. The bottom limit has been taken from the top one the wrong way round: it is $-9 - \left(0\right)$, which gives $-9$. (2)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":-3} → That came from putting the two limits straight into $x^2 - 4x$ and subtracting. The limits belong in the integrated expression $(1/3)x^3 - 2x^2$, which gives $-9$. (0)
+      HINTS: Integrate first, and simplify each term as you write it. || Substitute the top limit, then the bottom one. || Put each substitution in its own bracket before subtracting.
+
+### q.fm.u1.definite-integrals.0007 [verified] exam-style · diff 3 · untiered · FM1 calc · 7 marks · (a)find4|(b)find2|(c)find1 · A definite integral, then the same integral with an unknown constant in it
+  (a) [4] Find the value of
+$\int_{1}^{3} \left(3x^{2} + 2x - 5\right) dx$
+      ANSWER: numeric 24 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $x^{3}$ and $x^{2}$ from the first two terms
+      MW1 MW2: $-5x$ from the constant term, giving $\left[x^{3} + x^{2} - 5x\right]_{1}^{3}$
+      M1 M1: substituting both limits, each inside its own bracket
+      W1 W1: $24$
+      SOLUTION: Integrating gives $\left[x^{3} + x^{2} - 5x\right]_{1}^{3}$. At $x = 3$: $21$. At $x = 1$: $-3$. Subtracting: $21 - \left(-3\right) = 24$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-24} → Both substitutions are right, so three of the four marks stand. The subtraction has gone the other way round: it is $21 - \left(-3\right) = 24$. (3)
+      ERR [fm.int.lower-limit-ignored] {"kind":"numeric","value":21} → That is the value of the bracket at the top limit alone. The bottom limit gives $-3$, and subtracting a negative number adds it on: $24$. (2)
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":28} → That came from substituting the limits into $3x^2 + 2x - 5$ itself. They belong in the integrated expression $x^3 + x^2 - 5x$. (0)
+      HINTS: Integrate each term and simplify as you go. || At $x = 3$ the bracket comes to $21$. || Subtract the bottom limit inside its own bracket, because it is negative.
+  (b) [2] $k$ is a constant.
+Find, in terms of $k$, the value of
+$\int_{0}^{2} (k + 6x)\,dx$
+      ANSWER: algebraic 2k + 12 (equivalent)
+      MW1 MW1: $\left[kx + 3x^{2}\right]_{0}^{2}$, with $k$ treated as a constant
+      W1 W1: $2k + 12$
+      SOLUTION: $k$ is a constant, so it integrates to $kx$, and $6x$ integrates to $3x^{2}$. That gives $\left[kx + 3x^{2}\right]_{0}^{2}$. At $x = 2$: $2k + 12$. At $x = 0$: $0$. So the integral is $2k + 12$.
+      ERR [fm.int.unknown-constant-integrated] {"kind":"algebraic","latex":"12"} → The term in $x$ is right. The $k$ has been integrated as though it were the variable, giving $\frac{k^{2}}{2}$, which is the same at both limits and cancels, so the $k$ disappears. A constant integrates to $kx$. (1)
+      HINTS: $k$ is a constant, so it integrates exactly as a number does. || A constant $k$ becomes $kx$. || Substitute the limits as usual; the lower limit is zero here.
+  (c) [1] Given that $\int_{0}^{2} (k + 6x)\,dx = 20$, find the value of $k$.
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      W1 W1: $2k + 12 = 20$, so $k = 4$ ft
+      SOLUTION: From part (b), $2k + 12 = 20$. So $2k = 8$ and $k = 4$.
+      ERR [fm.int.unknown-constant-integrated] {"kind":"numeric","value":20} → That is the value of the integral, not of $k$. Setting $2k + 12 = 20$ and solving gives $k = 4$. (0)
+      HINTS: Set your answer to part (b) equal to the given value. || Then solve the linear equation.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.definite-integrals.01 [verified] fm.int.limits-reversed · earned MW1,M1 · ccea-cer:further-maths:2018-summer:FM1:Q2
+STEM: Aoibhín was asked to find $\int_{-1}^{2} \left(6x - 2\right) dx$. Her working:
+    1. 6x - 2
+    2. [3x^2 - 2x] from -1 to 2
+    3. At x = 2: 8
+    4. At x = -1: 5
+  ✘ 5. 5 - 8 = -3
+  WRONG: Lines 2, 3 and 4 are all correct, including the substitution of a negative lower limit, which is where most slips happen.
+Line 5 subtracts the top value from the bottom one. The rule is the other way round: the limit written above the integral sign goes first.
+So it is $8 - \left(5\right) = 3$.
+  FIX: 8 - (5) = 3
+  FEEDBACK: Everything up to line 4 earns its marks, and the arithmetic in line 5 is itself accurate. Only the order is reversed, which turns the sign of the answer over. A habit that prevents it: write the top value first, then a minus, then the bottom value inside its own bracket, before working anything out. The value is $3$.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.definite-integrals.01 [verified] (formula) How do you evaluate a definite integral between $a$ and $b$?  →  Integrate, write the result in square brackets with the limits, substitute the top limit and subtract the bottom one.
+- rp.fm.u1.definite-integrals.02 [verified] (qa) Why is there no constant of integration in a definite integral?  →  It appears in both substitutions and cancels in the subtraction, so the answer is the same whatever the constant was.
+- rp.fm.u1.definite-integrals.03 [verified] (trap) You reach the square bracket. Which limit is substituted first?  →  The top one, the number written above the integral sign; subtracting the other way round turns the sign of the answer over.
+- rp.fm.u1.definite-integrals.04 [verified] (trap) An integrand contains a letter $k$ that the question calls a constant. What does it integrate to?  →  It integrates to $kx$, exactly as a number would; treating it as the variable makes it cancel between the limits.
+- rp.fm.u1.definite-integrals.05 [verified] (procedure) Why simplify each term before substituting the limits?  →  Because substituting into a tidy term such as $x^{3}$ is quicker and safer than into an untidy one left over its divisor.
+
+## INSIGHT
+RULE: Simplify each integrated term, substitute the limits in brackets, subtract; treat unknown coefficients as constants.
+- ccea-cer:further-maths:2018-summer:FM1:Q2: asked Evaluate a definite integral. | went wrong: Second-term errors; substituting into unsimplified terms like 3x cubed over 3 caused arithmetic slips; the integral sign was kept after integrating and brackets were missing around the substitutions. | rule: Simplify each term before substituting, and bracket each substitution.
+- ccea-cer:further-maths:2019-summer:FM1:Q13: asked Integrate with an unknown constant k in the integrand; compare areas. | went wrong: k was integrated as if it were a variable (k squared over 2); the area comparison was misinterpreted as one area being a multiple of the other. | rule: A constant coefficient stays a constant when you integrate.

@@ -1,0 +1,244 @@
+[
+  {
+    "type": "hero",
+    "lede": "Ask where something is, not how far it has gone. Pick a point on the line, call it zero, and this graph tracks the position from that point, second by second.",
+    "can": [
+      "Draw a displacement-time graph from a written journey.",
+      "Read a velocity as the gradient of one section.",
+      "Give a velocity with its sign, and a speed as its size."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Where something is, second by second"
+  },
+  {
+    "type": "p",
+    "md": "A distance-time graph only ever climbs, because distance keeps adding up. A displacement-time graph can come back down, because displacement is measured from a fixed point and a journey home shrinks it. Pick that point, call it zero, and the steepness of each straight section says how fast the object was going, sign and all."
+  },
+  {
+    "type": "figure",
+    "alt": "A displacement/time graph for a delivery robot: a straight line from (0, 0) to (20, 30), a horizontal line to (35, 30), then a straight line falling to (60, -20).",
+    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M77.8 20V308M93.6 20V308M109.4 20V308M125.2 20V308M141 20V308M156.8 20V308M172.6 20V308M188.4 20V308M204.2 20V308M220 20V308M235.8 20V308M251.6 20V308M267.4 20V308M283.2 20V308M299 20V308M314.8 20V308M330.6 20V308M346.4 20V308M362.2 20V308M378 20V308M393.8 20V308M409.6 20V308M425.4 20V308M441.2 20V308M457 20V308M472.8 20V308M488.6 20V308M504.4 20V308M520.2 20V308M536 20V308M62 308H536M62 298.4H536M62 288.8H536M62 279.2H536M62 269.6H536M62 260H536M62 250.4H536M62 240.8H536M62 231.2H536M62 221.6H536M62 212H536M62 202.4H536M62 192.8H536M62 183.2H536M62 173.6H536M62 164H536M62 154.4H536M62 144.8H536M62 135.2H536M62 125.6H536M62 116H536M62 106.4H536M62 96.8H536M62 87.2H536M62 77.6H536M62 68H536M62 58.4H536M62 48.8H536M62 39.2H536M62 29.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M141 20V308M220 20V308M299 20V308M378 20V308M457 20V308M536 20V308M62 308H536M62 260H536M62 212H536M62 164H536M62 116H536M62 68H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 212H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 212l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M141 308v5M220 308v5M299 308v5M378 308v5M457 308v5M536 308v5M57 308h5M57 260h5M57 212h5M57 164h5M57 116h5M57 68h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='141' y='326' text-anchor='middle'>10</text><text x='220' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>30</text><text x='378' y='326' text-anchor='middle'>40</text><text x='457' y='326' text-anchor='middle'>50</text><text x='536' y='326' text-anchor='middle'>60</text><text x='53' y='312' text-anchor='end'>-20</text><text x='53' y='264' text-anchor='end'>-10</text><text x='53' y='216' text-anchor='end'>0</text><text x='53' y='168' text-anchor='end'>10</text><text x='53' y='120' text-anchor='end'>20</text><text x='53' y='72' text-anchor='end'>30</text><text x='53' y='24' text-anchor='end'>40</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Displacement (m)</text></g><path d='M62 212L220 68L338.5 68L536 308' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='62' cy='212' r='3' fill='currentColor'/><circle cx='220' cy='68' r='3' fill='currentColor'/><circle cx='338.5' cy='68' r='3' fill='currentColor'/><circle cx='536' cy='308' r='3' fill='currentColor'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='133.1' y='106.4' text-anchor='middle' font-size='11.5'>1.5 m/s</text><text x='279.3' y='51.2' text-anchor='middle' font-size='11.5'>at rest</text><text x='457' y='173.6' text-anchor='middle' font-size='11.5'>-2 m/s</text></g></svg>",
+    "caption": "A hospital delivery robot on a straight corridor, measured from the pharmacy door."
+  },
+  {
+    "type": "h",
+    "text": "1. Height is position"
+  },
+  {
+    "type": "p",
+    "md": "The vertical axis is not a running total of ground covered. It is a live position: how far the body is from the chosen point, with a plus or a minus for which side of it. Read a height and you have read where the body was at that moment."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "The robot's graph is flat at 30 m from 20 s to 35 s. What is its displacement when $t = 30$ s, in metres?",
+    "answer": "30",
+    "explain": "Straight up from 30 s meets the flat section at 30 m. The robot is parked there, 30 m from the pharmacy door."
+  },
+  {
+    "type": "h",
+    "text": "2. Gradient is velocity"
+  },
+  {
+    "type": "figure",
+    "alt": "The same robot graph with dashed lines showing the rise and run of the first section and of the last section.",
+    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M77.8 20V308M93.6 20V308M109.4 20V308M125.2 20V308M141 20V308M156.8 20V308M172.6 20V308M188.4 20V308M204.2 20V308M220 20V308M235.8 20V308M251.6 20V308M267.4 20V308M283.2 20V308M299 20V308M314.8 20V308M330.6 20V308M346.4 20V308M362.2 20V308M378 20V308M393.8 20V308M409.6 20V308M425.4 20V308M441.2 20V308M457 20V308M472.8 20V308M488.6 20V308M504.4 20V308M520.2 20V308M536 20V308M62 308H536M62 298.4H536M62 288.8H536M62 279.2H536M62 269.6H536M62 260H536M62 250.4H536M62 240.8H536M62 231.2H536M62 221.6H536M62 212H536M62 202.4H536M62 192.8H536M62 183.2H536M62 173.6H536M62 164H536M62 154.4H536M62 144.8H536M62 135.2H536M62 125.6H536M62 116H536M62 106.4H536M62 96.8H536M62 87.2H536M62 77.6H536M62 68H536M62 58.4H536M62 48.8H536M62 39.2H536M62 29.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M141 20V308M220 20V308M299 20V308M378 20V308M457 20V308M536 20V308M62 308H536M62 260H536M62 212H536M62 164H536M62 116H536M62 68H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 212H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 212l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M141 308v5M220 308v5M299 308v5M378 308v5M457 308v5M536 308v5M57 308h5M57 260h5M57 212h5M57 164h5M57 116h5M57 68h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='141' y='326' text-anchor='middle'>10</text><text x='220' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>30</text><text x='378' y='326' text-anchor='middle'>40</text><text x='457' y='326' text-anchor='middle'>50</text><text x='536' y='326' text-anchor='middle'>60</text><text x='53' y='312' text-anchor='end'>-20</text><text x='53' y='264' text-anchor='end'>-10</text><text x='53' y='216' text-anchor='end'>0</text><text x='53' y='168' text-anchor='end'>10</text><text x='53' y='120' text-anchor='end'>20</text><text x='53' y='72' text-anchor='end'>30</text><text x='53' y='24' text-anchor='end'>40</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Displacement (m)</text></g><path d='M62 212L220 212M220 212L220 68M338.5 68L536 68M536 68L536 308' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75'/><path d='M62 212L220 68L338.5 68L536 308' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='62' cy='212' r='3' fill='currentColor'/><circle cx='220' cy='68' r='3' fill='currentColor'/><circle cx='338.5' cy='68' r='3' fill='currentColor'/><circle cx='536' cy='308' r='3' fill='currentColor'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='141' y='226' text-anchor='middle' font-size='11.5'>run 20 s</text><text x='226.3' y='140' text-anchor='start' font-size='11.5'>rise 30 m</text><text x='437.3' y='63' text-anchor='middle' font-size='11.5'>run 25 s</text><text x='528.1' y='188' text-anchor='end' font-size='11.5'>rise -50 m</text></g></svg>",
+    "caption": "The two gradients, read from the axes: $30 \\div 20$ and $-50 \\div 25$."
+  },
+  {
+    "type": "p",
+    "md": "A straight section climbs by a fixed number of metres in every second, and that number is the velocity. Take the two ends of the section, subtract the displacements for the rise, subtract the times for the run, then divide.\n\nUse the section's own start time, never the clock reading at its end: the robot's last section lasts $60 - 35 = 25$ s, not 60."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "Work out the velocity of the robot during the first 20 seconds, in m/s.",
+    "answer": "1.5",
+    "explain": "Rise 30 m, run 20 s, so $30 \\div 20 = 1.5$ m/s. The robot is moving away from the pharmacy door."
+  },
+  {
+    "type": "h",
+    "text": "3. Flat, and falling"
+  },
+  {
+    "type": "figure",
+    "alt": "A table matching the shape of each section to the motion: a line sloping up means moving away with positive velocity; a flat line means at rest; a line sloping down means coming back with negative velocity; below the time axis means the other side of the start.",
+    "svg": "<svg viewBox='0 0 434 210' xmlns='http://www.w3.org/2000/svg' width='434' height='210'><rect x='2' y='2' width='430' height='206' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.5'/><path d='M6 76H428M6 106H428M6 136H428M6 166H428M6 196H428M186 46V196' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.45'/><g fill='currentColor' font-family='inherit'><text x='12' y='35' font-size='13.5' font-weight='600'>What each shape on a displacement/time graph means</text><text x='12' y='65' font-size='12' font-weight='600'>The graph</text><text x='192' y='65' font-size='12' font-weight='600'>The motion</text><text x='12' y='95' font-size='13'>a line sloping up</text><text x='192' y='95' font-size='13'>moving away: velocity positive</text><text x='12' y='125' font-size='13'>a flat line</text><text x='192' y='125' font-size='13'>at rest, still at that displacement</text><text x='12' y='155' font-size='13'>a line sloping down</text><text x='192' y='155' font-size='13'>coming back: velocity negative</text><text x='12' y='185' font-size='13'>below the time axis</text><text x='192' y='185' font-size='13'>on the other side of the start</text></g></svg>",
+    "caption": "Four shapes, four readings."
+  },
+  {
+    "type": "p",
+    "md": "Flat means the position is not changing, so the body has stopped somewhere, not necessarily back at the start. A falling section means the displacement is getting smaller, so the body has turned round and is heading back. That is a negative velocity, and the minus sign is the direction."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why a falling line is not a slowing body",
+    "md": "A straight section, however steep, has one velocity all the way along it. So a line sloping down is not a body slowing down: it is a body going the other way at a steady rate."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "The robot's last section falls from 30 m to $-20$ m. What is it doing?",
+    "options": [
+      "Travelling back past the pharmacy door at a steady velocity",
+      "Slowing down and stopping at the pharmacy door",
+      "Going downhill"
+    ],
+    "answer": "Travelling back past the pharmacy door at a steady velocity",
+    "explain": "The section is straight, so the velocity is constant; it is negative, so the robot is travelling the other way; it finishes below zero, so it has passed the door and gone 20 m beyond it."
+  },
+  {
+    "type": "h",
+    "text": "4. A worked example"
+  },
+  {
+    "type": "figure",
+    "alt": "A displacement/time graph for a survey drone: a straight line from (0, 0) to (12, 42), a horizontal line to (20, 42), then a straight line falling to (35, -18).",
+    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M75.5 20V308M89.1 20V308M102.6 20V308M116.2 20V308M129.7 20V308M143.3 20V308M156.8 20V308M170.3 20V308M183.9 20V308M197.4 20V308M211 20V308M224.5 20V308M238.1 20V308M251.6 20V308M265.1 20V308M278.7 20V308M292.2 20V308M305.8 20V308M319.3 20V308M332.9 20V308M346.4 20V308M359.9 20V308M373.5 20V308M387 20V308M400.6 20V308M414.1 20V308M427.7 20V308M441.2 20V308M454.7 20V308M468.3 20V308M481.8 20V308M495.4 20V308M508.9 20V308M522.5 20V308M536 20V308M62 308H536M62 299.8H536M62 291.5H536M62 283.3H536M62 275.1H536M62 266.9H536M62 258.6H536M62 250.4H536M62 242.2H536M62 233.9H536M62 225.7H536M62 217.5H536M62 209.3H536M62 201H536M62 192.8H536M62 184.6H536M62 176.3H536M62 168.1H536M62 159.9H536M62 151.7H536M62 143.4H536M62 135.2H536M62 127H536M62 118.7H536M62 110.5H536M62 102.3H536M62 94.1H536M62 85.8H536M62 77.6H536M62 69.4H536M62 61.1H536M62 52.9H536M62 44.7H536M62 36.5H536M62 28.2H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M129.7 20V308M197.4 20V308M265.1 20V308M332.9 20V308M400.6 20V308M468.3 20V308M536 20V308M62 308H536M62 266.9H536M62 225.7H536M62 184.6H536M62 143.4H536M62 102.3H536M62 61.1H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 225.7H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 225.7l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M129.7 308v5M197.4 308v5M265.1 308v5M332.9 308v5M400.6 308v5M468.3 308v5M536 308v5M57 308h5M57 266.9h5M57 225.7h5M57 184.6h5M57 143.4h5M57 102.3h5M57 61.1h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='129.7' y='326' text-anchor='middle'>5</text><text x='197.4' y='326' text-anchor='middle'>10</text><text x='265.1' y='326' text-anchor='middle'>15</text><text x='332.9' y='326' text-anchor='middle'>20</text><text x='400.6' y='326' text-anchor='middle'>25</text><text x='468.3' y='326' text-anchor='middle'>30</text><text x='536' y='326' text-anchor='middle'>35</text><text x='53' y='312' text-anchor='end'>-20</text><text x='53' y='270.9' text-anchor='end'>-10</text><text x='53' y='229.7' text-anchor='end'>0</text><text x='53' y='188.6' text-anchor='end'>10</text><text x='53' y='147.4' text-anchor='end'>20</text><text x='53' y='106.3' text-anchor='end'>30</text><text x='53' y='65.1' text-anchor='end'>40</text><text x='53' y='24' text-anchor='end'>50</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Displacement (m)</text></g><path d='M62 225.7L224.5 52.9L332.9 52.9L536 299.8' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='62' cy='225.7' r='3' fill='currentColor'/><circle cx='224.5' cy='52.9' r='3' fill='currentColor'/><circle cx='332.9' cy='52.9' r='3' fill='currentColor'/><circle cx='536' cy='299.8' r='3' fill='currentColor'/></svg>",
+    "caption": "A survey drone in a straight tunnel, measured from the entrance."
+  },
+  {
+    "type": "p",
+    "md": "**First section:** rise $= 42 - 0 = 42$ m, run $= 12 - 0 = 12$ s, so the velocity is $42 \\div 12 = 3.5$ m/s."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "Your graph is drawn but you cannot see how to get the velocity of one stage. What is worth writing first?",
+    "options": [
+      "The coordinates of the two ends of that stage",
+      "The total distance for the whole journey",
+      "The average speed"
+    ],
+    "answer": "The coordinates of the two ends of that stage",
+    "explain": "Two coordinate pairs give you the rise and the run at a glance, and that is exactly what the first mark is for."
+  },
+  {
+    "type": "p",
+    "md": "**Middle section:** the graph is flat from 12 s to 20 s, so the drone hovers for 8 s, 42 m from the entrance.\n**Last section:** rise $= -18 - 42 = -60$ m, run $= 35 - 20 = 15$ s, so the velocity is $-60 \\div 15 = -4$ m/s."
+  },
+  {
+    "type": "video",
+    "videoId": "1DAEEBEJujU",
+    "title": "GCSE Mechanics Further - Displacement Time",
+    "channel": "P McAleavey",
+    "why": "A Northern Ireland teacher working straight off the CCEA Unit 2 specification. Watch how each section is treated on its own before anything is added up."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "A body is at 60 m when $t = 20$ s and at 12 m when $t = 36$ s. What is its velocity, in m/s?",
+    "answer": "-3",
+    "explain": "Rise $= 12 - 60 = -48$ m and run $= 36 - 20 = 16$ s, so $-48 \\div 16 = -3$ m/s. Dividing by the clock reading of 36 s would have given $-1.33$."
+  },
+  {
+    "type": "h",
+    "text": "5. Distance is not displacement"
+  },
+  {
+    "type": "figure",
+    "alt": "A displacement/time graph for a model boat: a straight line from (0, 0) to (15, 45), a horizontal line to (25, 45), then a straight line falling to (45, -25).",
+    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M72.5 20V308M83.1 20V308M93.6 20V308M104.1 20V308M114.7 20V308M125.2 20V308M135.7 20V308M146.3 20V308M156.8 20V308M167.3 20V308M177.9 20V308M188.4 20V308M198.9 20V308M209.5 20V308M220 20V308M230.5 20V308M241.1 20V308M251.6 20V308M262.1 20V308M272.7 20V308M283.2 20V308M293.7 20V308M304.3 20V308M314.8 20V308M325.3 20V308M335.9 20V308M346.4 20V308M356.9 20V308M367.5 20V308M378 20V308M388.5 20V308M399.1 20V308M409.6 20V308M420.1 20V308M430.7 20V308M441.2 20V308M451.7 20V308M462.3 20V308M472.8 20V308M483.3 20V308M493.9 20V308M504.4 20V308M514.9 20V308M525.5 20V308M536 20V308M62 308H536M62 300.8H536M62 293.6H536M62 286.4H536M62 279.2H536M62 272H536M62 264.8H536M62 257.6H536M62 250.4H536M62 243.2H536M62 236H536M62 228.8H536M62 221.6H536M62 214.4H536M62 207.2H536M62 200H536M62 192.8H536M62 185.6H536M62 178.4H536M62 171.2H536M62 164H536M62 156.8H536M62 149.6H536M62 142.4H536M62 135.2H536M62 128H536M62 120.8H536M62 113.6H536M62 106.4H536M62 99.2H536M62 92H536M62 84.8H536M62 77.6H536M62 70.4H536M62 63.2H536M62 56H536M62 48.8H536M62 41.6H536M62 34.4H536M62 27.2H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M114.7 20V308M167.3 20V308M220 20V308M272.7 20V308M325.3 20V308M378 20V308M430.7 20V308M483.3 20V308M536 20V308M62 308H536M62 272H536M62 236H536M62 200H536M62 164H536M62 128H536M62 92H536M62 56H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 200H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 200l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M114.7 308v5M167.3 308v5M220 308v5M272.7 308v5M325.3 308v5M378 308v5M430.7 308v5M483.3 308v5M536 308v5M57 308h5M57 272h5M57 236h5M57 200h5M57 164h5M57 128h5M57 92h5M57 56h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='114.7' y='326' text-anchor='middle'>5</text><text x='167.3' y='326' text-anchor='middle'>10</text><text x='220' y='326' text-anchor='middle'>15</text><text x='272.7' y='326' text-anchor='middle'>20</text><text x='325.3' y='326' text-anchor='middle'>25</text><text x='378' y='326' text-anchor='middle'>30</text><text x='430.7' y='326' text-anchor='middle'>35</text><text x='483.3' y='326' text-anchor='middle'>40</text><text x='536' y='326' text-anchor='middle'>45</text><text x='53' y='312' text-anchor='end'>-30</text><text x='53' y='276' text-anchor='end'>-20</text><text x='53' y='240' text-anchor='end'>-10</text><text x='53' y='204' text-anchor='end'>0</text><text x='53' y='168' text-anchor='end'>10</text><text x='53' y='132' text-anchor='end'>20</text><text x='53' y='96' text-anchor='end'>30</text><text x='53' y='60' text-anchor='end'>40</text><text x='53' y='24' text-anchor='end'>50</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Displacement (m)</text></g><path d='M62 200L220 38L325.3 38L536 290' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='62' cy='200' r='3' fill='currentColor'/><circle cx='220' cy='38' r='3' fill='currentColor'/><circle cx='325.3' cy='38' r='3' fill='currentColor'/><circle cx='536' cy='290' r='3' fill='currentColor'/></svg>",
+    "caption": "The boat covers 115 m of water and finishes 25 m past the jetty."
+  },
+  {
+    "type": "p",
+    "md": "Distance counts every metre covered, whichever way the body was pointing, so it only grows. Displacement is one signed reading at the end.\n\nFor distance, take each sloping section, find the size of its change, and add the sizes. For displacement, read one number off the vertical axis. The boat covers $45 + 70 = 115$ m and finishes at $-25$ m."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "A body goes 40 m forwards along a line and then 65 m backwards. What is its displacement from the start, in metres?",
+    "answer": "-25",
+    "explain": "$40 - 65 = -25$ m. Its distance travelled is 105 m, which is a different question with a different answer."
+  },
+  {
+    "type": "h",
+    "text": "6. Two journeys on one grid"
+  },
+  {
+    "type": "figure",
+    "alt": "A displacement/time graph with two straight lines: Eimear from (0, 0) to (60, 480) and Niall from (0, 300) to (60, 60), crossing at (25, 200).",
+    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M77.8 20V308M93.6 20V308M109.4 20V308M125.2 20V308M141 20V308M156.8 20V308M172.6 20V308M188.4 20V308M204.2 20V308M220 20V308M235.8 20V308M251.6 20V308M267.4 20V308M283.2 20V308M299 20V308M314.8 20V308M330.6 20V308M346.4 20V308M362.2 20V308M378 20V308M393.8 20V308M409.6 20V308M425.4 20V308M441.2 20V308M457 20V308M472.8 20V308M488.6 20V308M504.4 20V308M520.2 20V308M536 20V308M62 308H536M62 296.5H536M62 285H536M62 273.4H536M62 261.9H536M62 250.4H536M62 238.9H536M62 227.4H536M62 215.8H536M62 204.3H536M62 192.8H536M62 181.3H536M62 169.8H536M62 158.2H536M62 146.7H536M62 135.2H536M62 123.7H536M62 112.2H536M62 100.6H536M62 89.1H536M62 77.6H536M62 66.1H536M62 54.6H536M62 43H536M62 31.5H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M141 20V308M220 20V308M299 20V308M378 20V308M457 20V308M536 20V308M62 308H536M62 250.4H536M62 192.8H536M62 135.2H536M62 77.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 308H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 308l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M141 308v5M220 308v5M299 308v5M378 308v5M457 308v5M536 308v5M57 308h5M57 250.4h5M57 192.8h5M57 135.2h5M57 77.6h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='141' y='326' text-anchor='middle'>10</text><text x='220' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>30</text><text x='378' y='326' text-anchor='middle'>40</text><text x='457' y='326' text-anchor='middle'>50</text><text x='536' y='326' text-anchor='middle'>60</text><text x='53' y='312' text-anchor='end'>0</text><text x='53' y='254.4' text-anchor='end'>100</text><text x='53' y='196.8' text-anchor='end'>200</text><text x='53' y='139.2' text-anchor='end'>300</text><text x='53' y='81.6' text-anchor='end'>400</text><text x='53' y='24' text-anchor='end'>500</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Displacement (m)</text></g><path d='M62 308L536 31.5' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><path d='M62 135.2L536 273.4' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='259.5' cy='192.8' r='3' fill='currentColor'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='457' y='60.3' text-anchor='end' font-size='11.5'>Eimear</text><text x='457' y='233.1' text-anchor='end' font-size='11.5'>Niall</text></g></svg>",
+    "caption": "Eimear and Niall pass each other where the two lines cross."
+  },
+  {
+    "type": "p",
+    "md": "Two bodies can share one set of axes, and each line is read exactly as before. The place where they cross is the moment their displacements are equal: they are at the same point on the line, passing each other. Read the time off the bottom and the position off the side."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "At what time, in seconds, do Eimear and Niall pass each other?",
+    "answer": "25",
+    "explain": "The lines cross at $(25, 200)$, so they pass after 25 s, both 200 m from the bridge."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "You can now",
+    "md": "Read a displacement off the vertical axis, sign included.\nFind a section's velocity from its own rise and its own run.\nSay what a flat section and a falling section mean.\nTell a total distance apart from a final displacement.\nRead where two journeys cross."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Sheet or memory?",
+    "md": "**On the Unit 2 formula sheet:** nothing for this topic. The sheet gives the quadratic formula, the magnitude and angle of a vector, the four constant-acceleration formulae and $F = ma$.\n**Must be known:** gradient of a displacement/time graph = velocity; flat = at rest; negative displacement = the other side of the start."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "Which of these is printed on the Unit 2 formula sheet?",
+    "options": [
+      "None of them",
+      "Velocity = change in displacement ÷ time",
+      "Gradient = rise ÷ run"
+    ],
+    "answer": "None of them",
+    "explain": "The sheet stops at the constant-acceleration formulae and $F = ma$. Everything on this page is recall."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Draw a displacement-time graph from a written journey.\nRead a velocity as the gradient of one section, with its sign.\nGive a speed as the size of that velocity.\nUse each section's own rise and run, not the clock reading."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The drawing is usually two marks: one for any two correct segments, one for the rest, so a partly right graph still scores. Mark the joints as coordinates before you rule anything. A velocity part follows, and it is read from one section's own rise and run. Stuck: draw the sections you are sure of and label the joints."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.displacement-time-graphs.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.displacement-time-graphs.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.displacement-time-graphs.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.displacement-time-graphs.06"
+  }
+]

@@ -1,0 +1,400 @@
+# fm.u1.laws-of-logarithms — Laws of logarithms: simplifying and combining expressions  [H, difficulty 5]
+unit FM1 · tier untiered · specRefs []
+note: Laws of logarithms: simplifying and combining expressions v1 [verified]
+verification statuses: {"verified":20}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Three laws that work both ways
+- [p] 
+- [figure] Three laws. Everything on this page is one of them.
+- [choice] 
+- [h] 1. Adding logarithms multiplies inside
+- [p] 
+- [figure] Added outside, multiplied inside.
+- [why] Why adding turns into multiplying
+- [choice] 
+- [h] 2. Subtracting logarithms divides inside
+- [p] 
+- [figure] Subtracted outside, divided inside.
+- [choice] 
+- [h] 3. A number in front becomes a power
+- [p] 
+- [figure] The coefficient inside is cubed too.
+- [examiner] Summer 2024, Unit 1, Question 6
+- [choice] 
+- [h] 4. Combining, one law at a time
+- [p] 
+- [figure] Coefficients, then add, then subtract.
+- [choice] 
+- [h] 5. A lone number is a logarithm too
+- [p] 
+- [figure] Write the number as a logarithm, then combine.
+- [choice] 
+- [h] 6. The same laws, read backwards
+- [p] 
+- [figure] Split at the product, then bring each power down.
+- [video] LOGS - Laws of Logs CCEA GCSE Further Mathematics
+- [choice] 
+- [h] 7. Equal logarithms, equal arguments
+- [p] 
+- [figure] One logarithm each side, then drop them both.
+- [number] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.laws-of-logarithms.01 [verified] paper FM1 calc
+STEM: Express $\log a + 3\log b - 2\log c$ as a single logarithm.
+  FIG: svg — Four lines combining log a plus 3 log b minus 2 log c into a single logarithm, one law at a time.
+  1. Deal with the coefficients first: $3\log b = \log b^{3}$ and $2\log c = \log c^{2}$.   — Coefficients always go first. A term with a number in front cannot join a product or a quotient until that number is inside as a power.  (M1)  WHY: ✔Because $n \log a = \log a^{n}$, so the coefficient becomes an index | ✘Because the coefficient can be cancelled from every term | ✘Because a coefficient multiplies the argument
+  2. The expression is now $\log a + \log b^{3} - \log c^{2}$.   — Rewriting the whole line before combining anything keeps the three terms visible, so nothing is lost when the laws start to act.  (M2)
+  3. Add the first two: $\log a + \log b^{3} = \log(ab^{3})$.   — Added logarithms multiply inside. Doing the addition before the subtraction keeps the subtracted term where it belongs.  (M3)
+  4. Subtract the last: $\log(ab^{3}) - \log c^{2} = \log\frac{ab^{3}}{c^{2}}$.   — The subtracted term goes underneath. Putting it on top is the slip the Summer 2025 report names, and it is invisible unless you check which term had the minus.  (W1)
+  FINAL: $\log\frac{ab^{3}}{c^{2}}$
+  TWIN: Express $2\log p + \log q - 3\log r$ as a single logarithm.  → algebraic \log\frac{p^{2}q}{r^{3}} (equivalent)
+
+### we.fm.u1.laws-of-logarithms.02 [verified] paper FM1 calc
+STEM: Express $3\log 2x$ as a single logarithm.
+  FIG: svg — The power law applied to 3 log 2x: the whole of 2x is cubed, giving log 8x cubed.
+  1. Write the bracket first: $3\log 2x = \log\left((2x)^{3}\right)$.   — The bracket is the whole point. Written without it, the cube looks as though it belongs to the x alone, and that is exactly what the examiners report happening.  (M1)
+  2. Expand the bracket: $(2x)^{3} = 2^{3} \times x^{3} = 8x^{3}$.   — Every factor inside the bracket is cubed, so the $2$ becomes $8$. Check it on a number if you are unsure: at $x = 1.5$ both $3\log 2x$ and $\log 8x^{3}$ come to $1.431364$.  (M2)  WHY: ✔Because the index applies to everything inside the bracket | ✘Because only the letter can carry an index | ✘Because the coefficient stays outside the bracket
+  3. So $3\log 2x = \log 8x^{3}$.   — Compare it with $\log 2x^{3}$, which is what the slip produces: at $x = 1.5$ that comes to $0.829304$, not $1.431364$.  (W1)
+  FINAL: $\log 8x^{3}$
+  TWIN: Express $2\log 5x$ as a single logarithm, with the bracket multiplied out.  → algebraic \log 25x^{2} (equivalent)
+
+### we.fm.u1.laws-of-logarithms.03 [verified] paper FM1 calc
+STEM: It is given that $\log 3 = p$ and $\log 5 = q$, with logarithms to base $10$.
+Express $\log 7.5$ in terms of $p$ and $q$.
+  FIG: svg — A constant rewritten as a logarithm: 1 equals log 10, so a missing logarithm can be built from the ones you are given.
+  1. Write $7.5$ using only the numbers you have logarithms for: $7.5 = \frac{15}{2} = \frac{3 \times 5}{2}$.   — Factorising the number is the whole question. Until it is written in threes, fives and twos, none of the three laws has anything to act on.  (M1)
+  2. Apply the laws: $\log 7.5 = \log 3 + \log 5 - \log 2 = p + q - \log 2$.   — The product becomes a sum and the division becomes a subtraction. What is left is one logarithm with no letter of its own.  (M2)
+  3. Build the missing one: $2 = \frac{10}{5}$, so $\log 2 = \log 10 - \log 5 = 1 - q$.   — To base $10$, $\log 10 = 1$. That is what lets a logarithm you were not given be built from the ones you were.  (M3)  WHY: ✔Because $10^{1} = 10$, so $\log 10 = 1$ | ✘Because every logarithm of a whole number is 1 | ✘Because $\log 2$ cannot be written down at all
+  4. Substitute, keeping the bracket: $p + q - (1 - q) = p + q - 1 + q = p + 2q - 1$.   — The bracket changes the sign of both terms inside it. Dropping it leaves $p + q - 1$, which is short of a whole $q$.  (W1)
+  FINAL: $p + 2q - 1$
+  TWIN: It is given that $\log 2 = m$ and $\log 3 = n$. Express $\log 18$ in terms of $m$ and $n$.  → algebraic m + 2n (equivalent)
+
+## DIAGNOSTICS
+### dx.fm.u1.laws-of-logarithms.pre (pre) [draft]
+- p1 (A power applied to a bracket): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+What is $(2x)^{3}$?
+    ✔ $8x^{3}$ — Everything inside the bracket is cubed, so the $2$ becomes $8$.
+    ✘ $2x^{3}$ — Only the $x$ has been cubed. The bracket means the $2$ is cubed as well.
+    ✘ $6x^{3}$ — The $2$ has been multiplied by $3$ rather than cubed.
+- p2 (Evaluating a logarithm from a power): What is $\log_{10} 100$?
+    ✔ $2$ — $10^{2} = 100$, so the logarithm is $2$. That fact is what lets a constant be written as a logarithm.
+    ✘ $10$ — That is the base. The logarithm is the index on the base.
+    ✘ $100$ — That is the number inside. The answer is the index that reaches it.
+- p3 (Turning a decimal into a fraction): Write $7.5$ as a fraction, fully simplified.
+    ✔ $\frac{15}{2}$ — $7.5 = \frac{15}{2}$, and $15 = 3 \times 5$, which is where the given logarithms come in.
+    ✘ $\frac{7}{5}$ — The digits have been read as a fraction. $7.5$ is seven and a half.
+    ✘ $\frac{75}{100}$ — That is $0.75$. The number here is larger than $7$.
+
+### dx.fm.u1.laws-of-logarithms.post (post) [draft]
+- d1 (The product law): What is $\log 5 + \log 6$ as a single logarithm?
+    ✔ $\log 30$ — Adding logarithms multiplies the arguments.
+    ✘ $\log 11$ [fm.logs.sum-inside-the-log] — The plus has gone inside unchanged. Added outside means multiplied inside.
+    ✘ $\log 5 \times \log 6$ [fm.logs.product-to-sum] — The logarithms themselves are not multiplied. One logarithm of the product is what the law gives.
+- d2 (The quotient law): What is $\log 20 - \log 4$ as a single logarithm?
+    ✔ $\log 5$ — Subtracting outside divides inside: $\log\frac{20}{4} = \log 5$.
+    ✘ $\log 16$ [fm.logs.sum-inside-the-log] — The minus has gone inside unchanged. Subtracted outside means divided inside.
+    ✘ $\frac{\log 20}{\log 4}$ [fm.logs.quotient-as-divided-logs] — Dividing the two logarithms is a different calculation, and it is not the logarithm of anything here.
+- d3 (The power law with a coefficient inside): What is $4\log 3x$ as a single logarithm?
+    ✔ $\log 81x^{4}$ — $(3x)^{4} = 81x^{4}$: the fourth power reaches the $3$ as well.
+    ✘ $\log 3x^{4}$ [fm.logs.coefficient-not-raised] — The power reached the $x$ but not the $3$. Write the bracket $(3x)^{4}$ first.
+    ✘ $\log 12x$ [fm.logs.power-as-multiplier-inside] — The $4$ has gone inside as a multiplier rather than as a power.
+- d4 (Which term goes underneath): Where does the $c$ go when $\log a + \log b - \log c$ is written as a single logarithm?
+    ✔ In the denominator, giving $\log\frac{ab}{c}$ — A subtracted logarithm divides, so its argument goes underneath.
+    ✘ In the numerator, giving $\log\frac{ac}{b}$ [fm.logs.subtraction-rule-misapplied] — The subtracted term is $c$, so $c$ is the one that divides. Check which term carries the minus.
+    ✘ Outside, giving $\frac{\log ab}{c}$ [fm.logs.quotient-as-divided-logs] — The division happens inside one logarithm, not outside it.
+- d5 (A constant written as a logarithm): To base $10$, what is $1 + \log x$ as a single logarithm?
+    ✔ $\log 10x$ — $1 = \log 10$, and then the product law gives $\log 10x$.
+    ✘ $\log(x + 1)$ [fm.logs.sum-inside-the-log] — The $1$ has gone inside as an addition. It first has to become $\log 10$.
+    ✘ $\log x$ [fm.logs.power-as-multiplier-inside] — The $1$ cannot simply be dropped. It is $\log 10$, and it multiplies inside.
+- d6 (Equal logarithms, equal arguments): An equation has reached $\log 4x = \log 20$. What comes next?
+    ✔ $4x = 20$ — Equal logarithms have equal arguments, so the logarithms are dropped together.
+    ✘ $4x = \frac{\log 20}{\log 4}$ [fm.logs.quotient-as-divided-logs] — Nothing needs dividing here. Both sides are already single logarithms.
+    ✘ It cannot be taken any further without a calculator [fm.logs.cannot-remove-logs] — Once both sides are one logarithm, they can be dropped and the equation is linear.
+- d7 (Expanding, the laws backwards): What is $\log(m^{4}n)$ written as separate logarithms?
+    ✔ $4\log m + \log n$ — The product splits into a sum and the power drops down in front.
+    ✘ $\log 4m + \log n$ [fm.logs.power-as-multiplier-inside] — The index has become a multiplier inside instead of a coefficient outside.
+    ✘ $4\log m \times \log n$ [fm.logs.product-to-sum] — A product inside becomes a sum of logarithms, never a product of them.
+- d8 (Dropping logarithms from both sides): It is given that $2\log y = 3\log x$. What is the next line?
+    ✔ $\log y^{2} = \log x^{3}$ — Both coefficients go inside as powers, and then the logarithms can be dropped.
+    ✘ $y = \frac{3\log x}{2}$ [fm.logs.cannot-remove-logs] — A logarithm has been left on one side. Take both coefficients inside first.
+    ✘ $2y = 3x$ [fm.logs.cannot-remove-logs] — The logarithms cannot be dropped while coefficients are still outside them.
+
+## QUESTIONS
+### q.fm.u1.laws-of-logarithms.0001 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (main)express2 · The product law on its own, as the first line of a logarithm question
+  (main) [2] Express $\log a + \log b$ as a single logarithm.
+      ANSWER: algebraic \log(ab) (equivalent)
+      MW1 MW1: the product law used
+      W1 W1: $\log(ab)$
+      SOLUTION: Adding two logarithms multiplies their arguments, so $\log a + \log b = \log(ab)$.
+      ERR [fm.logs.sum-inside-the-log] {"kind":"algebraic","latex":"\\log(a + b)"} → The plus sign has gone inside unchanged. Adding logarithms multiplies the arguments, so it is $\log(ab)$. (0)
+      HINTS: Adding outside multiplies inside.
+
+### q.fm.u1.laws-of-logarithms.0002 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (main)express2 · The quotient law on its own
+  (main) [2] Express $\log x - \log y$ as a single logarithm.
+      ANSWER: algebraic \log\frac{x}{y} (equivalent)
+      MW1 MW1: the quotient law used
+      W1 W1: $\log\frac{x}{y}$
+      SOLUTION: Subtracting two logarithms divides their arguments, so $\log x - \log y = \log\frac{x}{y}$.
+      ERR [fm.logs.sum-inside-the-log] {"kind":"algebraic","latex":"\\log(x - y)"} → The minus sign has gone inside unchanged. Subtracting logarithms divides the arguments, so it is $\log\frac{x}{y}$. (0)
+      HINTS: Subtracting outside divides inside.
+
+### q.fm.u1.laws-of-logarithms.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)express2 · The power law with a single letter inside
+  (main) [2] Express $3\log m$ as a single logarithm.
+      ANSWER: algebraic \log m^{3} (equivalent)
+      MW1 MW1: the coefficient written as a power
+      W1 W1: $\log m^{3}$
+      SOLUTION: The power law takes the coefficient inside as an index: $3\log m = \log m^{3}$.
+      ERR [fm.logs.power-as-multiplier-inside] {"kind":"algebraic","latex":"\\log 3m"} → The $3$ has gone inside as a multiplier. A coefficient becomes a power, so it is $\log m^{3}$. (0)
+      HINTS: A number in front becomes an index.
+
+### q.fm.u1.laws-of-logarithms.0004 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)express3 · The power law with a coefficient inside, the step the 2024 report names
+  (main) [3] Express $3\log 2x$ as a single logarithm.
+Give your answer as a single logarithm, with the bracket multiplied out.
+      ANSWER: algebraic \log 8x^{3} (equivalent)
+      M1 M1: $\log\left((2x)^{3}\right)$
+      M1 M2: $(2x)^{3} = 8x^{3}$ expanded
+      W1 W1: $\log 8x^{3}$ ft
+      SOLUTION: $3\log 2x = \log\left((2x)^{3}\right)$. Expanding the bracket, $(2x)^{3} = 8x^{3}$. So the single logarithm is $\log 8x^{3}$.
+      ERR [fm.logs.coefficient-not-raised] {"kind":"algebraic","latex":"\\log 2x^{3}"} → The cube reached the $x$ but not the $2$. The whole bracket is cubed, and $(2x)^{3} = 8x^{3}$, so the answer is $\log 8x^{3}$. (1)
+      ERR [fm.logs.power-as-multiplier-inside] {"kind":"algebraic","latex":"\\log 6x"} → The $3$ has gone inside as a multiplier rather than as a power. It becomes an index on everything inside. (0)
+      HINTS: Write the bracket before you expand it. || The cube lands on the $2$ as well as on the $x$.
+
+### q.fm.u1.laws-of-logarithms.0005 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)express3 · Three terms with coefficients, combined into one logarithm
+  (main) [3] Express $2\log p + \log q - 3\log r$ as a single logarithm.
+Give your answer as a single logarithm.
+      ANSWER: algebraic \log\frac{p^{2}q}{r^{3}} (equivalent)
+      M1 M1: $\log p^{2}$ and $\log r^{3}$
+      M1 M2: $\log(p^{2}q)$
+      W1 W1: $\log\frac{p^{2}q}{r^{3}}$ ft
+      SOLUTION: Coefficients first: $2\log p = \log p^{2}$ and $3\log r = \log r^{3}$. Adding: $\log p^{2} + \log q = \log(p^{2}q)$. Subtracting: $\log(p^{2}q) - \log r^{3} = \log\frac{p^{2}q}{r^{3}}$.
+      ERR [fm.logs.subtraction-rule-misapplied] {"kind":"algebraic","latex":"\\log\\frac{p^{2}r^{3}}{q}"} → The subtracted term has gone on top and the added one underneath. A subtracted logarithm divides, so $r^{3}$ belongs in the denominator. (1)
+      ERR [fm.logs.coefficient-not-raised] {"kind":"algebraic","latex":"\\log\\frac{2pq}{3r}"} → The coefficients have gone inside as multipliers. Each one becomes a power, giving $\log\frac{p^{2}q}{r^{3}}$. (0)
+      HINTS: Deal with every coefficient first. || Then add, then subtract.
+
+### q.fm.u1.laws-of-logarithms.0006 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)express3 · A constant combined with a logarithm
+  (main) [3] Logarithms in this question are to base $10$.
+Express $2 + \log x$ as a single logarithm.
+Give your answer as a single logarithm.
+      ANSWER: algebraic \log 100x (equivalent)
+      M1 M1: $2 = \log 100$
+      M1 M2: $\log 100 + \log x$
+      W1 W1: $\log 100x$ ft
+      SOLUTION: To base $10$, $2 = \log 100$. So $2 + \log x = \log 100 + \log x$. The product law gives $\log 100x$.
+      ERR [fm.logs.sum-inside-the-log] {"kind":"algebraic","latex":"\\log(x + 2)"} → The $2$ has gone inside as an addition. It first has to be written as $\log 100$, and then the product law gives $\log 100x$. (0)
+      ERR [fm.logs.power-as-multiplier-inside] {"kind":"algebraic","latex":"\\log 2x"} → The $2$ has gone inside as a multiplier. A constant becomes a logarithm of a power of ten, so here it is $\log 100$. (0)
+      HINTS: A number has to become a logarithm before it can be combined. || $10^{2} = 100$.
+
+### q.fm.u1.laws-of-logarithms.0007 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)express3 · Expanding one logarithm into separate logarithms
+  (main) [3] Express $\log(x^{3}y^{2})$ as separate logarithms.
+Give your answer as separate logarithms.
+      ANSWER: algebraic 3\log x + 2\log y (equivalent)
+      M1 M1: $\log x^{3} + \log y^{2}$
+      W1 W1: $3\log x$ ft
+      W1 W2: $2\log y$ ft
+      SOLUTION: The product splits into a sum: $\log(x^{3}y^{2}) = \log x^{3} + \log y^{2}$. Each power drops out in front: $3\log x + 2\log y$.
+      ERR [fm.logs.product-to-sum] {"kind":"algebraic","latex":"\\log x^{3} \\times \\log y^{2}"} → The product inside has become a product of logarithms. It becomes a sum: $\log x^{3} + \log y^{2}$. (0)
+      HINTS: Split at the product first. || Then bring each power down in front.
+
+### q.fm.u1.laws-of-logarithms.0008 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)express4 · Expanding a quotient with a power and a root
+  (main) [4] Express $\log\frac{m^{4}\sqrt{n}}{t}$ as separate logarithms.
+Give your answer as separate logarithms.
+      ANSWER: algebraic 4\log m + \frac{1}{2}\log n - \log t (equivalent)
+      M1 M1: $\log(m^{4}\sqrt{n}) - \log t$
+      M1 M2: $\log m^{4} + \log n^{\frac{1}{2}} - \log t$
+      W1 W1: $4\log m$ ft
+      W1 W2: $\frac{1}{2}\log n$ ft
+      SOLUTION: The division splits off first: $\log(m^{4}\sqrt{n}) - \log t$. The product splits next: $\log m^{4} + \log n^{\frac{1}{2}} - \log t$. Bringing each power down: $4\log m + \frac{1}{2}\log n - \log t$.
+      ERR [fm.logs.quotient-as-divided-logs] {"kind":"algebraic","latex":"\\frac{4\\log m + \\frac{1}{2}\\log n}{\\log t}"} → The division has been carried out on the logarithms. A quotient inside becomes a subtraction outside, so the last term is $-\log t$. (2)
+      HINTS: The division becomes a minus. || A square root is a power of $\frac{1}{2}$.
+
+### q.fm.u1.laws-of-logarithms.0009 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)express2 · A number built from two given logarithms
+  (main) [2] It is given that $\log 2 = a$ and $\log 5 = b$.
+Express $\log 40$ in terms of $a$ and $b$.
+      ANSWER: algebraic 3a + b (equivalent)
+      M1 M1: $40 = 2^{3} \times 5$
+      W1 W1: $3a + b$ ft
+      SOLUTION: $40 = 2^{3} \times 5$. So $\log 40 = \log 2^{3} + \log 5 = 3\log 2 + \log 5 = 3a + b$.
+      ERR [fm.logs.power-as-multiplier-inside] {"kind":"algebraic","latex":"a^{3} + b"} → The index has stayed where it was. The power law brings it down in front, so $\log 2^{3} = 3\log 2 = 3a$. (1)
+      HINTS: Factorise $40$ into twos and fives.
+
+### q.fm.u1.laws-of-logarithms.0010 [verified] practice · diff 5 · untiered · FM1 calc · 3 marks · (main)express3 · A number that needs a division as well as a product, the discriminating version
+  (main) [3] It is given that $\log 3 = p$ and $\log 5 = q$, with logarithms to base $10$.
+Express $\log 7.5$ in terms of $p$ and $q$.
+      ANSWER: algebraic p + 2q - 1 (equivalent)
+      M1 M1: $7.5 = \frac{3 \times 5}{2}$
+      M1 M2: $\log 2 = 1 - q$
+      W1 W1: $p + 2q - 1$ ft
+      SOLUTION: $7.5 = \frac{15}{2} = \frac{3 \times 5}{2}$. So $\log 7.5 = \log 3 + \log 5 - \log 2 = p + q - \log 2$. Since $2 = \frac{10}{5}$, $\log 2 = \log 10 - \log 5 = 1 - q$. So $\log 7.5 = p + q - (1 - q) = p + 2q - 1$.
+      ERR [fm.logs.subtraction-rule-misapplied] {"kind":"algebraic","latex":"p + q - 1"} → The bracket round $1 - q$ was dropped, so only the $1$ changed sign. Taking away $1 - q$ adds a second $q$, giving $p + 2q - 1$. (2)
+      HINTS: Write $7.5$ using only threes, fives and twos. || There is no letter for $\log 2$, but $2 = \frac{10}{5}$.
+
+### q.fm.u1.laws-of-logarithms.0011 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)solve3 · An equation finished by dropping equal logarithms
+  (main) [3] Solve the equation
+$\log x + \log 4 = \log 20$
+      ANSWER: numeric 5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $\log 4x = \log 20$
+      M1 M2: $4x = 20$
+      W1 W1: $5$ ft
+      SOLUTION: Combining the left side: $\log 4x = \log 20$. Equal logarithms have equal arguments, so $4x = 20$. Therefore $x = 5$.
+      ERR [fm.logs.sum-inside-the-log] {"kind":"numeric","value":16,"tolerance":{"type":"absolute","value":0.0005}} → The left side was read as $\log(x + 4)$. Adding logarithms multiplies inside, so it is $\log 4x$ and $x = 5$. (0)
+      HINTS: Combine the left-hand side into one logarithm first. || Equal logarithms have equal arguments.
+
+### q.fm.u1.laws-of-logarithms.0012 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)solve4 · An equation whose combination is a quotient
+  (main) [4] Solve the equation
+$\log(x + 5) - \log(x - 1) = \log 3$
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $\log\frac{x + 5}{x - 1} = \log 3$
+      M1 M2: $x + 5 = 3(x - 1)$
+      M1 M3: $8 = 2x$
+      W1 W1: $4$ ft
+      SOLUTION: The left side combines to $\log\frac{x + 5}{x - 1} = \log 3$. Equal logarithms have equal arguments, so $\frac{x + 5}{x - 1} = 3$ and $x + 5 = 3(x - 1)$. Expanding: $x + 5 = 3x - 3$, so $8 = 2x$ and $x = 4$.
+      HINTS: Subtracting logarithms divides inside. || Multiply both sides by the denominator.
+
+### q.fm.u1.laws-of-logarithms.0013 [verified] practice · diff 5 · untiered · FM1 calc · 3 marks · (main)express3 · Two logarithmic expressions set equal, then one letter written in terms of the other
+  (main) [3] It is given that $2\log y = 3\log x$.
+Express $y$ in terms of $x$.
+      ANSWER: algebraic y = x^{\frac{3}{2}} (equivalent)
+      M1 M1: $\log y^{2} = \log x^{3}$
+      M1 M2: $y^{2} = x^{3}$
+      W1 W1: $y = x^{\frac{3}{2}}$ ft
+      SOLUTION: The power law gives $\log y^{2} = \log x^{3}$. Equal logarithms have equal arguments, so $y^{2} = x^{3}$. Taking the square root, $y = x^{\frac{3}{2}}$.
+      ERR [fm.logs.cannot-remove-logs] {"kind":"algebraic","latex":"y = \\frac{3\\log x}{2\\log y}"} → The working stopped at a ratio of logarithms. Once both sides are single logarithms they can be dropped, leaving $y^{2} = x^{3}$. (1)
+      HINTS: Take each coefficient inside as a power. || Equal logarithms have equal arguments, then take the square root.
+
+### q.fm.u1.laws-of-logarithms.0014 [verified] exam-style · diff 4 · untiered · FM1 calc · 6 marks · (a)express3|(b)solve3 · A single-logarithm part and an equation, the shape a Unit 1 logarithm question takes
+  (a) [3] Express $\log a + 2\log b - \log c$ as a single logarithm.
+Give your answer as a single logarithm.
+      ANSWER: algebraic \log\frac{ab^{2}}{c} (equivalent)
+      M1 M1: $2\log b = \log b^{2}$
+      M1 M2: $\log(ab^{2})$
+      W1 W1: $\log\frac{ab^{2}}{c}$ ft
+      SOLUTION: The coefficient becomes a power: $2\log b = \log b^{2}$. Adding: $\log a + \log b^{2} = \log(ab^{2})$. Subtracting: $\log(ab^{2}) - \log c = \log\frac{ab^{2}}{c}$.
+      ERR [fm.logs.subtraction-rule-misapplied] {"kind":"algebraic","latex":"\\log\\frac{ac}{b^{2}}"} → The subtracted term has gone on top and the squared one underneath. It is $c$ that is subtracted, so $c$ is the denominator. (1)
+      ERR [fm.logs.coefficient-not-raised] {"kind":"algebraic","latex":"\\log\\frac{2ab}{c}"} → The $2$ went inside as a multiplier. A coefficient becomes a power, so $2\log b = \log b^{2}$. (1)
+      HINTS: Coefficient first, then add, then subtract.
+  (b) [3] Solve the equation
+$\log(2x - 1) = \log 3 + \log 4$
+      ANSWER: numeric 6.5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $\log 12$ on the right
+      M1 M2: $2x - 1 = 12$
+      W1 W1: $6.5$ ft
+      SOLUTION: The right side combines to $\log 12$, so $\log(2x - 1) = \log 12$. Equal logarithms have equal arguments, so $2x - 1 = 12$. Therefore $2x = 13$ and $x = 6.5$.
+      ERR [fm.logs.sum-inside-the-log] {"kind":"numeric","value":4,"tolerance":{"type":"absolute","value":0.0005}} → The right side was read as $\log 7$, adding inside instead of multiplying. It combines to $\log 12$, and the answer is $6.5$. (1)
+      HINTS: Combine the right-hand side first. || Then drop the logarithms.
+
+### q.fm.u1.laws-of-logarithms.0015 [verified] exam-style · diff 5 · untiered · FM1 calc · 5 marks · (a)express2|(b)express3 · Two numbers built from the same pair of given logarithms, the second needing a division
+  (a) [2] It is given that $\log 2 = m$ and $\log 3 = n$.
+Express $\log 18$ in terms of $m$ and $n$.
+      ANSWER: algebraic m + 2n (equivalent)
+      M1 M1: $18 = 2 \times 3^{2}$
+      W1 W1: $m + 2n$ ft
+      SOLUTION: $18 = 2 \times 3^{2}$. So $\log 18 = \log 2 + \log 3^{2} = m + 2n$.
+      ERR [fm.logs.power-as-multiplier-inside] {"kind":"algebraic","latex":"m + n^{2}"} → The index stayed inside. The power law brings it down, so $\log 3^{2} = 2\log 3 = 2n$. (1)
+      HINTS: Factorise $18$ into twos and threes.
+  (b) [3] Express $\log 0.75$ in terms of $m$ and $n$.
+      ANSWER: algebraic n - 2m (equivalent)
+      M1 M1: $0.75 = \frac{3}{4}$
+      M1 M2: $\log 3 - \log 2^{2}$
+      W1 W1: $n - 2m$ ft
+      SOLUTION: $0.75 = \frac{3}{4} = \frac{3}{2^{2}}$. So $\log 0.75 = \log 3 - \log 2^{2} = n - 2m$.
+      ERR [fm.logs.subtraction-rule-misapplied] {"kind":"algebraic","latex":"2m - n"} → The subtraction is the wrong way round. The $3$ is on top, so it is $\log 3 - \log 4$, which is $n - 2m$. (1)
+      HINTS: Write $0.75$ as a fraction first. || $4 = 2^{2}$.
+
+### q.fm.u1.laws-of-logarithms.0016 [verified] exam-style · diff 5 · untiered · FM1 calc · 9 marks · (a)express3|(b)express2|(c)solve4 · An expansion, a rearrangement and an equation with a root to reject
+  (a) [3] Express $\log\frac{x^{2}\sqrt{y}}{z^{3}}$ as separate logarithms.
+Give your answer as separate logarithms.
+      ANSWER: algebraic 2\log x + \frac{1}{2}\log y - 3\log z (equivalent)
+      M1 M1: $\log(x^{2}\sqrt{y}) - \log z^{3}$
+      W1 W1: $2\log x + \frac{1}{2}\log y$ ft
+      W1 W2: $-3\log z$ ft
+      SOLUTION: The division splits first: $\log(x^{2}\sqrt{y}) - \log z^{3}$. The product splits next, and each power drops down: $2\log x + \frac{1}{2}\log y - 3\log z$.
+      ERR [fm.logs.root-not-brought-down] {"kind":"algebraic","latex":"2\\log x + \\log y - 3\\log z"} → The square root has been dropped rather than brought down as a half. A root is a power of $\frac{1}{2}$, so that term is $\frac{1}{2}\log y$. (2)
+      HINTS: Split the division first. || A square root is a power of $\frac{1}{2}$.
+  (b) [2] It is given that $3\log x = 2\log z$.
+Express $x$ in terms of $z$.
+      ANSWER: algebraic x = z^{\frac{2}{3}} (equivalent)
+      M1 M1: $x^{3} = z^{2}$
+      W1 W1: $x = z^{\frac{2}{3}}$ ft
+      SOLUTION: The power law gives $\log x^{3} = \log z^{2}$, so $x^{3} = z^{2}$. Taking the cube root, $x = z^{\frac{2}{3}}$.
+      ERR [fm.logs.cannot-remove-logs] {"kind":"algebraic","latex":"x = \\frac{2\\log z}{3}"} → The logarithm was left on one side. Once both sides are single logarithms they can be dropped, giving $x^{3} = z^{2}$. (1)
+      HINTS: Take both coefficients inside as powers, then drop the logarithms.
+  (c) [4] Solve the equation
+$\log(x + 2) + \log(x - 2) = \log 12$
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $\log\left((x + 2)(x - 2)\right) = \log 12$
+      M1 M2: $x^{2} - 4 = 12$
+      M1 M3: $x^{2} = 16$
+      W1 W1: $4$ only, with $-4$ rejected ft
+      SOLUTION: Combining the left side: $\log\left((x + 2)(x - 2)\right) = \log 12$. Equal logarithms have equal arguments, so $(x + 2)(x - 2) = 12$ and $x^{2} - 4 = 12$. So $x^{2} = 16$ and $x = 4$ or $x = -4$. At $x = -4$ the expression $\log(x - 2)$ has a negative argument, so that root is rejected and $x = 4$.
+      ERR [fm.logs.sum-inside-the-log] {"kind":"numeric","value":6,"tolerance":{"type":"absolute","value":0.0005}} → The left side was read as $\log(2x)$, adding inside instead of multiplying. Multiplying the brackets gives $x^{2} - 4 = 12$ and $x = 4$. (0)
+      HINTS: Combine the left side into one logarithm. || Both roots of $x^{2} = 16$ must be tested in the original equation.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.laws-of-logarithms.01 [draft] fm.logs.coefficient-not-raised · earned M1 · ccea-cer:further-maths:2024-summer:FM1:Q6
+STEM: Aoife was asked to express $3\log 2x$ as a single logarithm. Her working:
+    1. 3 log 2x
+    2. = log((2x)^3)
+  ✘ 3. = log 2x^3
+  WRONG: Lines 1 and 2 are exactly right: the coefficient is inside and the bracket is there, which is the first mark.
+Line 3 expands the bracket as though the cube belonged to the $x$ alone. $(2x)^{3}$ means $2x \times 2x \times 2x$, so the $2$ is cubed as well: $(2x)^{3} = 8x^{3}$.
+Check it on a number. At $x = 1.5$, $3\log 2x = 1.431364$ and $\log 8x^{3} = 1.431364$, while $\log 2x^{3} = 0.829304$.
+  FIX: = log 8x^3
+  FEEDBACK: The bracket was written, so the first mark stands. What went are the last two marks, and the step that lost them is the one the Summer 2024 report says the majority got wrong. When you expand a bracket with a power, say the coefficient out loud first: two cubed is eight.
+
+### ftm.fm.u1.laws-of-logarithms.02 [draft] fm.logs.quotient-as-divided-logs · earned M2,M3,W1 · ccea-cer:further-maths:2025-summer:FM1:Q9
+STEM: Ruairí was asked to solve $\log(x + 5) - \log(x - 1) = \log 3$. His working:
+    1. log(x + 5) - log(x - 1) = log 3
+  ✘ 2. log(x + 5) / log(x - 1) = log 3
+    3. (x + 5) / (x - 1) = 3
+    4. x + 5 = 3x - 3
+    5. 8 = 2x, so x = 4
+  WRONG: Lines 3, 4 and 5 are all correct work, and the final answer happens to be right.
+Line 2 is not. It divides one logarithm by the other, which is a different quantity from $\log\frac{x + 5}{x - 1}$. The line that belongs there is $\log\frac{x + 5}{x - 1} = \log 3$: subtracting logarithms divides inside one logarithm, not outside.
+A right answer reached through a wrong line still loses the method mark, because the examiner marks the working.
+  FIX: log((x + 5) / (x - 1)) = log 3 / (x + 5) / (x - 1) = 3
+  FEEDBACK: Everything after line 2 is sound, so most of the marks stand. The quotient law puts the division inside the logarithm, and the difference matters: $\log 100 - \log 4$ is $\log 25$, while $\log 100 \div \log 4$ is about $3.321928$. Write the single logarithm before you drop it.
+
+### ftm.fm.u1.laws-of-logarithms.03 [draft] fm.logs.subtraction-rule-misapplied · earned M1 · ccea-cer:further-maths:2025-summer:FM1:Q9
+STEM: Méabh was asked to express $\log a + 2\log b - \log c$ as a single logarithm. Her working:
+    1. log a + 2 log b - log c
+    2. = log a + log b^2 - log c
+  ✘ 3. = log(a c) - log b^2
+    4. = log(ac / b^2)
+  WRONG: Lines 1 and 2 are right: the coefficient has gone inside as a power, which is the first mark.
+Line 3 gathers the wrong pair. The minus sign belongs to $\log c$, so it is $c$ that divides, and $b^{2}$ that multiplies. The line should read $\log(ab^{2}) - \log c$.
+The finished single logarithm is $\log\frac{ab^{2}}{c}$, with the subtracted term underneath.
+  FIX: = log(a b^2) - log c / = log(a b^2 / c)
+  FEEDBACK: The power law was applied correctly and that mark stands. Before you combine, underline the term that carries the minus: that one, and only that one, goes underneath. The Summer 2025 report names this swap directly.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.laws-of-logarithms.01 [draft] (formula) Write the three laws of logarithms.  →  $\log a + \log b = \log(ab)$, $\log a - \log b = \log\frac{a}{b}$, and $n\log a = \log a^{n}$.
+- rp.fm.u1.laws-of-logarithms.02 [draft] (trap) What is $\log a + \log b$, and what is it not?  →  It is $\log(ab)$. It is not $\log(a + b)$: the plus outside becomes a times inside.
+- rp.fm.u1.laws-of-logarithms.03 [draft] (trap) What is $\log a - \log b$, and what is it not?  →  It is $\log\frac{a}{b}$. It is not $\frac{\log a}{\log b}$: the division happens inside one logarithm.
+- rp.fm.u1.laws-of-logarithms.04 [draft] (procedure) In what order do you combine several logarithms into one?  →  Coefficients first, turning each into a power; then add the terms to multiply inside; then subtract, putting that argument underneath.
+- rp.fm.u1.laws-of-logarithms.05 [draft] (trap) Write $3\log 2x$ as a single logarithm.  →  $\log\left((2x)^{3}\right) = \log 8x^{3}$. The cube reaches the $2$ as well as the $x$, and the bracket is multiplied out.
+- rp.fm.u1.laws-of-logarithms.06 [draft] (qa) To base $10$, how do you write the number $2$ as a logarithm?  →  $2 = \log 100$, because $10^{2} = 100$. A constant has to become a logarithm before the laws can combine it.
+- rp.fm.u1.laws-of-logarithms.07 [draft] (procedure) How do you expand $\log\frac{x^{3}}{y}$ into separate logarithms?  →  The division becomes a subtraction and the power drops down: $3\log x - \log y$.
+- rp.fm.u1.laws-of-logarithms.08 [draft] (qa) An equation has reached $\log P = \log Q$. What can you do?  →  Drop both logarithms: $P = Q$. Each side must be a single logarithm first.
+- rp.fm.u1.laws-of-logarithms.09 [draft] (trap) You are told $\log 3 = p$ and $\log 5 = q$ but you need $\log 2$. What do you do?  →  Build it: $2 = \frac{10}{5}$, so $\log 2 = \log 10 - \log 5 = 1 - q$, because $\log 10 = 1$ to base ten.
+- rp.fm.u1.laws-of-logarithms.10 [draft] (trap) From $2\log y = 3\log x$, how do you reach $y$ in terms of $x$?  →  Take both coefficients inside: $\log y^{2} = \log x^{3}$, so $y^{2} = x^{3}$ and $y = x^{\frac{3}{2}}$.
+
+## INSIGHT
+RULE: log a + log b = log ab, log a - log b = log(a/b), n log a = log a to the n (apply the power to the whole argument, coefficient included); once you have log P = log Q, write P = Q.
+A*: Combining constants, roots and coefficients into one log, or expressing a number like 10.5 in given logs.
+- ccea-cer:further-maths:2018-summer:FM1:Q6: asked A standard log equation. | went wrong: Mostly right; careless bracket omission (2x - 1 log 3), and bases other than 10 produced more slips; isolating x was the hurdle for the rest. | rule: Write (2x - 1) log 3 with brackets; keep calculator work to the last step.
+- ccea-cer:further-maths:2019-summer:FM1:Q9: asked Combine logs to express y in terms of x; solve an indicial equation. | went wrong: Many wrote the ratio of logs instead of combining; some reached log y squared = log x cubed and y squared = x cubed but almost none finished with y = x to the three halves. In (b) indices were rarely used and the log route stalled. | rule: n log a = log a to the n; equal logs mean equal arguments.
+- ccea-cer:further-maths:2022-summer:FM1:Q5: asked Split the log of a product/quotient into separate logs; solve a log equation. | went wrong: Very few could separate the expression into a sum of logs even when they knew a sum was expected. The equation was fine, apart from moving the x terms. | rule: log(ab) = log a + log b; log(a/b) = log a - log b.
+- ccea-cer:further-maths:2023-summer:FM1:Q7: asked Express a log of a number in terms of given logs. | went wrong: Only the best saw how to build 10.5 from 2, 3 and 7. | rule: Factorise the number into the given bases (10.5 = 3 x 7 / 2).
+- ccea-cer:further-maths:2024-summer:FM1:Q6: asked Simplify a log expression involving 3 log 2x. | went wrong: Good candidates got two of three; the majority forgot to cube the 2 when writing 3 log 2x as a single log. | rule: 3 log(2x) = log((2x) cubed) = log(8x cubed).
+- ccea-cer:further-maths:2025-summer:FM1:Q9: asked Write an expression as a single log; solve a log equation. | went wrong: Constants and roots were combined wrongly, a subtracted term's variable was put in the denominator incorrectly (or an added one), and the subtraction rule was misapplied; the equation part was strong. | rule: Added logs multiply inside; subtracted logs divide; coefficients become powers first.

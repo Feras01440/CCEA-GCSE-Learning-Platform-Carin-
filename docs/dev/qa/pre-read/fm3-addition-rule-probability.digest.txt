@@ -1,0 +1,198 @@
+# fm.u3.addition-rule-probability — Addition rule and non-mutually-exclusive events  [L, difficulty 2]
+unit FM3 · tier untiered · specRefs []
+note: The addition rule: counting 'or' without counting twice v1 [verified]
+verification statuses: {"verified":18}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Some hands go up twice
+- [p] 
+- [figure] The overlap holds the 8 students in both groups. Every student sits in exactly one region, so the four regions total 40.
+- [number] 
+- [h] 1. What 'or' means in a probability question
+- [p] 
+- [figure] Adding the totals reaches 37, which is 8 too many. Taking the overlap off once leaves 29.
+- [choice] 
+- [h] 2. The rule your formula sheet gives you
+- [p] 
+- [why] Why subtract once and not twice?
+- [number] 
+- [h] 3. When there is no overlap to take off
+- [p] 
+- [figure] Mutually exclusive events are circles that do not overlap, so there is nothing to subtract.
+- [choice] 
+- [h] 4. A worked example, start to finish
+- [p] 
+- [video] The OR Rule
+- [number] 
+- [h] 5. 'Or' adds, 'and' multiplies
+- [p] 
+- [examiner] The commonest way this is lost
+- [choice] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u3.addition-rule-probability.01 [verified] paper FM3 calc
+STEM: A leisure centre has 50 members. 31 of them swim, 24 use the gym and 12 do both.
+One member is chosen at random. Calculate the probability that this member swims or uses the gym.
+  FIG: svg — A two-circle Venn diagram for 50 members showing 19 who swim only, 12 who do both, 12 who use the gym only and 7 outside both circles.
+  1. $S$ is 'swims', $G$ is 'uses the gym'. $P(S) = \dfrac{31}{50}$, $P(G) = \dfrac{24}{50}$, $P(S \cap G) = \dfrac{12}{50}$.   — Name the events and write all three probabilities over the same total. The rule on the sheet is written in letters, so the letters have to mean something before it can be used.  (M1)
+  2. $P(S \cup G) = \dfrac{31}{50} + \dfrac{24}{50} - \dfrac{12}{50}$   — Substitute into $P(A \cup B) = P(A) + P(B) - P(A \cap B)$. The last term is there because the 12 members who do both were counted in each of the first two.  (MW1)  WHY: ✔Subtract $\dfrac{12}{50}$ once, because those members were counted twice | ✘Subtract $\dfrac{12}{50}$ twice, because they appear in two circles | ✘Add $\dfrac{12}{50}$, because they belong to the group as well
+  3. $= \dfrac{31 + 24 - 12}{50} = \dfrac{43}{50}$   — The denominators already match, so only the numerators need combining. Keep the unreduced fraction until the end; the scheme accepts it either way.  (W1)
+  4. $P(S \cup G) = \dfrac{43}{50} = 0.86$   — Simplify or convert, and check the answer is between 0 and 1. 0.86 is under 1, which the un-subtracted version 1.10 would not have been.  (W1)
+  FINAL: $P(S \cup G) = \dfrac{43}{50}$, which is 0.86
+  TWIN: A drama club has 200 raffle tickets on sale, of which 45 are blue and 32 are green. No ticket is both colours.
+One ticket is drawn at random. Calculate the probability that it is blue or green.  → numeric 0.385 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+
+## DIAGNOSTICS
+### dx.fm.u3.addition-rule-probability.pre (pre) [verified]
+- p1 (Probability from equally likely outcomes (from GCSE Mathematics)): Before the lesson, a check on something you already know. A bag holds 5 red and 3 green beads. What is the probability that one bead taken at random is red?
+    ✔ $\dfrac{5}{8}$ — Yes: 5 red out of 8 beads altogether. Every probability in this topic is built from a count like this.
+    ✘ $\dfrac{5}{3}$ — That compares red with green rather than with the whole bag. The denominator is always the total number of outcomes, which is 8.
+    ✘ $\dfrac{3}{8}$ — That is the probability of green. The question asked for red, so the numerator is 5.
+- p2 (The complement of an event (from GCSE Mathematics)): Another check on earlier work. If $P(A) = 0.35$, what is the probability that $A$ does not happen?
+    ✔ $0.65$ — Yes: the two possibilities total 1, so the complement is $1 - 0.35$. You will use this to turn 'at least one' into 'neither'.
+    ✘ $-0.35$ — A probability is never negative. Take 0.35 away from 1 instead of from 0.
+    ✘ $0.35$ — That is the probability that $A$ does happen. The complement is what is left of the whole: $1 - 0.35$.
+- p3 (Writing a count as a fraction of a total and simplifying (from GCSE Mathematics)): One more from earlier work, before anything new. In a group of 30 people, 12 wear glasses. What fraction of the group wear glasses, in its simplest form?
+    ✔ $\dfrac{2}{5}$ — Yes: $\dfrac{12}{30}$ cancels by 6. Either form earns the mark in the exam, and the unsimplified one is often easier to keep working with.
+    ✘ $\dfrac{12}{18}$ — 18 is the number who do not wear glasses. The denominator of a probability is the whole group, which is 30.
+    ✘ $\dfrac{5}{2}$ — That is the fraction upside down, and it is larger than 1. A probability sits between 0 and 1.
+
+### dx.fm.u3.addition-rule-probability.post (post) [verified]
+- d1 (Counting a union from two totals and an overlap): In a class of 25, 14 play a team sport, 11 play an instrument and 6 do both. How many play at least one of the two?
+    ✔ $19$ — Yes: $14 + 11 - 6 = 19$. The 6 in both were counted in each total, so they come off once.
+    ✘ $25$ [fm.prob.overlap-not-subtracted] — That is $14 + 11$, with the 6 who do both counted twice. Taking them off once leaves 19.
+    ✘ $31$ [fm.prob.overlap-not-subtracted] — The 6 have been added rather than subtracted, so they are now counted three times. The rule subtracts the overlap: 19.
+- d2 (The addition rule when the overlap is empty): $P(A) = 0.6$, $P(B) = 0.3$ and the two events are mutually exclusive. What is $P(A \cup B)$?
+    ✔ $0.9$ — Yes. Mutually exclusive means $P(A \cap B) = 0$, so the rule's last term is zero and the two probabilities simply add.
+    ✘ $0.18$ [fm.prob.or-multiplied-instead-of-added] — That is $0.6 \times 0.3$, which answers 'both'. Mutually exclusive events cannot both happen, so multiplying is never the route here.
+    ✘ $0.3$ [fm.prob.overlap-not-subtracted] — $P(B)$ has been subtracted as if it were the overlap. When the events are mutually exclusive there is no overlap to take off, so the answer is $0.6 + 0.3$.
+- d3 (Recognising when two events can happen together): A card is drawn from an ordinary pack. Which pair of events is NOT mutually exclusive?
+    ✔ The card is a heart; the card is a queen — Yes: the queen of hearts is both, so the overlap is not empty and the addition rule needs its last term.
+    ✘ The card is a heart; the card is a spade [fm.prob.overlap-not-subtracted] — No card is in two suits at once, so these two cannot happen together and the overlap is empty.
+    ✘ The card is a king; the card is a seven [fm.prob.overlap-not-subtracted] — A card carries one value, so it cannot be a king and a seven. That overlap is empty too.
+- d4 (Telling an 'and' question from an 'or' question): A coin is tossed and a dice is rolled. Which calculation gives the probability of a head AND a six?
+    ✔ $\dfrac{1}{2} \times \dfrac{1}{6}$ — Yes: the two are independent, so 'and' multiplies. That gives $\dfrac{1}{12}$.
+    ✘ $\dfrac{1}{2} + \dfrac{1}{6}$ [fm.prob.add-instead-of-multiply] — Adding answers 'a head or a six'. Examiners report this exact swap every year: decide 'and' or 'or' in writing before calculating.
+    ✘ $\dfrac{1}{2} + \dfrac{1}{6} - \dfrac{1}{12}$ [fm.prob.add-instead-of-multiply] — That is the addition rule, which gives 'a head or a six'. For both together the two probabilities multiply.
+
+## QUESTIONS
+### q.fm.u3.addition-rule-probability.0001 [verified] practice · diff 1 · untiered · FM3 calc · 1 marks · (main)write-down1 · A form group asked about packed lunches and bus passes
+  FIG: svg — A two-circle Venn diagram for 40 students showing 14, 8, 7 and 11 outside.
+  (main) [1] The Venn diagram shows the 40 students in a form group.
+Write down how many students have a bus pass but do not bring a packed lunch.
+      ANSWER: numeric 7 students tol={"type":"exact"} forms=decimal
+      MW1 MW1: 7
+      SOLUTION: The bus-pass circle holds 8 in the overlap and 7 outside it, and 8 + 7 = 15. So 7 students have a bus pass only.
+      HINTS: The bus-pass circle holds two regions. || Use the region outside the overlap.
+
+### q.fm.u3.addition-rule-probability.0002 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · A form group asked about packed lunches and bus passes
+  (main) [2] In a form group of 40 students, 22 bring a packed lunch, 15 have a bus pass and 8 do both.
+One student is chosen at random.
+Calculate the probability that this student brings a packed lunch or has a bus pass.
+      ANSWER: numeric 0.725 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{22}{40} + \dfrac{15}{40} - \dfrac{8}{40}$, or 22 + 15 - 8 seen
+      W1 W1: 29/40 or 29/40 or 0.725
+      SOLUTION: $P(\text{packed}) + P(\text{bus}) - P(\text{both}) = \dfrac{22}{40} + \dfrac{15}{40} - \dfrac{8}{40}$. $= \dfrac{29}{40} = \dfrac{29}{40}$, which is 0.725.
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":0.925,"tolerance":{"type":"absolute","value":0.004}} → That is $\dfrac{22 + 15}{40}$, with the 8 students in both counted twice. The rule takes the overlap off once, leaving \dfrac{29}{40}. (1)
+      ERR [fm.prob.or-multiplied-instead-of-added] {"kind":"numeric","value":0.20625,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been multiplied, which answers 'brings a packed lunch and has a bus pass' for two independent picks. 'Or' adds and then takes the overlap off: \dfrac{29}{40}. (0)
+      HINTS: 'Or' includes the 8 who do both. || Add the two totals, then take the overlap off once.
+
+### q.fm.u3.addition-rule-probability.0003 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · A form group asked about packed lunches and bus passes
+  (main) [2] In the same form group of 40 students, 22 bring a packed lunch, 15 have a bus pass and 8 do both.
+Calculate the probability that a student chosen at random does neither.
+      ANSWER: numeric 0.275 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $1 - \dfrac{29}{40}$, or 40 - 29 seen
+      W1 W1: 11/40 or 11/40
+      SOLUTION: At least one: $\dfrac{22 + 15 - 8}{40} = \dfrac{29}{40}$. Neither is what is left: $1 - \dfrac{29}{40} = \dfrac{11}{40} = \dfrac{11}{40}$.
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":0.075,"tolerance":{"type":"absolute","value":0.004}} → Both totals have been taken off the class without the overlap being put back, so the 8 in both were removed twice. Find at least one first, $\dfrac{29}{40}$, then subtract from 1 to reach \dfrac{11}{40}. (1)
+      HINTS: Find the probability of at least one first. || Everything left over sits outside both circles.
+
+### q.fm.u3.addition-rule-probability.0004 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · Customers at a village bakery choosing a scone or a traybake
+  (main) [2] On one morning 50 customers came into a village bakery. 28 bought a scone, 20 bought a traybake and 11 bought both.
+One of those customers is picked at random.
+Calculate the probability that this customer bought a scone or a traybake.
+      ANSWER: numeric 0.74 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 28 + 20 - 11, or the three fractions over 50
+      W1 W1: 37/50 or 37/50 or 0.74
+      SOLUTION: $\dfrac{28}{50} + \dfrac{20}{50} - \dfrac{11}{50} = \dfrac{37}{50} = \dfrac{37}{50}$. As a decimal that is 0.74.
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":0.96,"tolerance":{"type":"absolute","value":0.004}} → The 11 customers who bought both are still counted twice. Taking them off once gives $\dfrac{37}{50} = \dfrac{37}{50}$. (1)
+      ERR [fm.prob.or-multiplied-instead-of-added] {"kind":"numeric","value":0.224,"tolerance":{"type":"absolute","value":0.004}} → Multiplying answers a different question. 'Or' means at least one of the two, so add the probabilities and take the overlap off: \dfrac{37}{50}. (0)
+      HINTS: The 11 who bought both appear in each total. || Add, then subtract the overlap once.
+
+### q.fm.u3.addition-rule-probability.0005 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · Two features of a randomly chosen library card record
+  (main) [2] For a library card chosen at random, $P(A) = 0.42$, $P(B) = 0.35$ and $P(A \cap B) = 0.18$.
+Calculate $P(A \cup B)$.
+      ANSWER: numeric 0.59 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: 0.42 + 0.35 - 0.18
+      W1 W1: 0.59
+      SOLUTION: $P(A \cup B) = P(A) + P(B) - P(A \cap B)$. $= 0.42 + 0.35 - 0.18 = 0.59$.
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":0.77,"tolerance":{"type":"absolute","value":0.004}} → That is $P(A) + P(B)$ with the intersection still counted twice. The rule's last term takes $0.18$ off once, giving $0.59$. (1)
+      ERR [fm.prob.or-multiplied-instead-of-added] {"kind":"numeric","value":0.147,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been multiplied. $P(A \cup B)$ adds them and then removes the overlap: $0.59$. (0)
+      HINTS: The rule is printed on page 2 of the booklet. || Substitute the three numbers straight in.
+
+### q.fm.u3.addition-rule-probability.0006 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)find2 · Two features of a randomly chosen sports-club membership
+  (main) [2] For a club member chosen at random, $P(A) = 0.5$, $P(B) = 0.4$ and $P(A \cup B) = 0.75$.
+Find $P(A \cap B)$.
+      ANSWER: numeric 0.15 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: 0.5 + 0.4 - 0.75, or the rule rearranged
+      W1 W1: 0.15
+      SOLUTION: $0.75 = 0.5 + 0.4 - P(A \cap B)$. So $P(A \cap B) = 0.5 + 0.4 - 0.75 = 0.15$.
+      ERR [fm.prob.or-multiplied-instead-of-added] {"kind":"numeric","value":0.2,"tolerance":{"type":"absolute","value":0.004}} → Multiplying $P(A)$ by $P(B)$ assumes the two events are independent, which this question never says. Rearranging the addition rule gives $0.15$. (0)
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":-0.15,"tolerance":{"type":"absolute","value":0.004}} → The signs have gone the wrong way round, and a probability can never be negative. Reading the rule as $0.75 = 0.5 + 0.4 - P(A \cap B)$ gives $0.15$. (1)
+      HINTS: Write the rule out with the numbers in and the overlap as the unknown. || Then rearrange.
+
+### q.fm.u3.addition-rule-probability.0007 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · A weather forecast for a gardening day
+  (main) [2] A forecast gives the probability of rain tomorrow as $0.3$ and the probability of a strong wind as $0.45$. The two are independent.
+Calculate the probability that tomorrow brings both rain and a strong wind.
+      ANSWER: numeric 0.135 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: 0.3 $\times$ 0.45
+      W1 W1: 0.135
+      SOLUTION: The events are independent, so $P(\text{rain and wind}) = 0.3 \times 0.45$. $= 0.135$.
+      ERR [fm.prob.add-instead-of-multiply] {"kind":"numeric","value":0.75,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been added. Adding answers 'rain or wind'; 'both' asks for the two together, so multiply: $0.135$. (0)
+      HINTS: 'Both' asks for two things to happen together. || Independent events multiply.
+
+### q.fm.u3.addition-rule-probability.0008 [verified] exam-style · diff 2 · untiered · FM3 calc · 4 marks · (a)calculate2|(b)calculate2 · Singers in a community choir who sing alto, soprano or both
+  (a) [2] A community choir has 60 singers. 27 sing alto, 38 sing soprano and 14 sing in both sections.
+One singer is chosen at random.
+Calculate the probability that this singer sings alto or soprano.
+You must show your working.
+      ANSWER: numeric 0.85 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 27 + 38 - 14, or the three fractions over 60
+      W1 W1: 17/20 or 51/60 or 0.85
+      SOLUTION: $P(A \cup S) = \dfrac{27}{60} + \dfrac{38}{60} - \dfrac{14}{60}$. $= \dfrac{51}{60} = \dfrac{17}{20}$, which is 0.85.
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":1.0833333333333333,"tolerance":{"type":"absolute","value":0.004}} → The answer is above 1, which no probability can be: the 14 singers in both sections were counted twice. Taking them off once gives \dfrac{17}{20}. (1)
+      ERR [fm.prob.or-multiplied-instead-of-added] {"kind":"numeric","value":0.285,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been multiplied. 'Or' adds them and removes the overlap once: \dfrac{17}{20}. (0)
+      HINTS: Name the events first. || Take the 14 in both sections off once.
+  (b) [2] Calculate the probability that the singer chosen sings in neither section.
+      ANSWER: numeric 0.15 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 1 - their answer to part (a) ft
+      W1 W1: 3/20 or 9/60
+      SOLUTION: $1 - \dfrac{17}{20} = \dfrac{9}{60} = \dfrac{3}{20}$. That is 0.15.
+      ERR [fm.prob.overlap-not-subtracted] {"kind":"numeric","value":-0.08333333333333333,"tolerance":{"type":"absolute","value":0.004}} → A negative answer means part (a) came out above 1, with the 14 in both sections counted twice. Fix the union first, then $1 - \dfrac{17}{20} = \dfrac{3}{20}$. (0)
+      HINTS: Everyone either sings in at least one section or in neither. || Subtract part (a) from 1.
+
+## FIND THE MISTAKE
+### ftm.fm.u3.addition-rule-probability.01 [verified] fm.prob.overlap-not-subtracted · earned M1 · ccea-cer:further-maths:2019-summer:FM3:Q7
+STEM: Niamh was asked for the probability that a student chosen from a form group of 40 brings a packed lunch or has a bus pass. 22 bring a packed lunch, 15 have a bus pass and 8 do both. Her working:
+    1. P(packed lunch) = 22/40, P(bus pass) = 15/40
+  ✘ 2. P(packed or bus) = 22/40 + 15/40 = 37/40
+    3. = 0.925
+  WRONG: Line 2 adds the two probabilities and stops. The 8 students who do both are inside each total, so they have been counted twice. The rule on the formula sheet has a third term for exactly this: subtract $P(\text{both}) = 8/40$ once.
+  FIX: P(packed lunch) = 22/40, P(bus pass) = 15/40, P(both) = 8/40 / P(packed or bus) = 22/40 + 15/40 - 8/40 = 29/40 / = 29/40 = 0.725
+  FEEDBACK: The two probabilities are right, so the method mark for identifying them is safe. The working mark goes at line 2, where the overlap stays counted twice. A quick check would have caught it: 0.925 is close to 1 for a group where 11 students do neither. The answer is \dfrac{29}{40}.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u3.addition-rule-probability.01 [verified] (formula) The addition rule for two events, as the Unit 3 formula sheet prints it.  →  $P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+- rp.fm.u3.addition-rule-probability.02 [verified] (definition) What does 'or' mean in a probability question, and what does it include?  →  At least one of the two events happens, and that includes the case where both happen.
+- rp.fm.u3.addition-rule-probability.03 [verified] (trap) Why does the addition rule subtract the overlap, and what happens if you leave it in?  →  Anyone in both events is counted once in P(A) and once in P(B), so the overlap is counted twice. Leaving it in makes the answer too large, and it can come out above 1.
+- rp.fm.u3.addition-rule-probability.04 [verified] (definition) What does it mean for two events to be mutually exclusive, and what does the addition rule become?  →  They cannot both happen, so the intersection is empty and P(A and B) = 0. The rule becomes P(A or B) = P(A) + P(B).
+- rp.fm.u3.addition-rule-probability.05 [verified] (trap) How do you decide whether to add or to multiply two probabilities?  →  Or means at least one, so add and take the overlap off once. And means both together, so for independent events multiply.

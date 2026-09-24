@@ -1,0 +1,206 @@
+[
+  {
+    "type": "hero",
+    "lede": "Every sequence you have met so far climbed in equal steps, and the rule came from the step. Some sequences refuse: their steps grow. No rule of the form $an+b$ can fit one of those, and the way in is to line the terms up against the square numbers and look at what is left over.",
+    "can": [
+      "Tell a growing-difference sequence from a linear one.",
+      "Line terms up against $n^{2}$ and read the leftover rule.",
+      "Handle a sequence of fractions as two sequences at once."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Sequences that are not built by adding"
+  },
+  {
+    "type": "p",
+    "md": "Take $4, 7, 12, 19, 28$. The differences are $3, 5, 7, 9$ — growing, so no amount of hunting for $an+b$ will work. Write the square numbers underneath instead, $1, 4, 9, 16, 25$, and the gap between the two rows is $3, 3, 3, 3, 3$. The rule is $n^{2} + 3$, and it was found by comparison rather than by trial."
+  },
+  {
+    "type": "figure",
+    "alt": "A four-row table. The first row is the position n: 1, 2, 3, 4, 5. The second row is the term: 4, 7, 12, 19, 28. The third row is n squared: 1, 4, 9, 16, 25. The fourth row is the term minus n squared: 3, 3, 3, 3, 3. A line underneath reads that the last row never changes, so the rule is n squared plus 3.",
+    "svg": "<svg viewBox=\"0 0 444 188\" xmlns=\"http://www.w3.org/2000/svg\"><g font-family=\"inherit\" font-size=\"12.5\" fill=\"currentColor\"><text x=\"8\" y=\"20\">Line the terms up against the square numbers and read off the gap.</text></g><path d=\"M8 34L436 34M8 64L436 64M8 94L436 94M8 124L436 124M8 154L436 154M118 34L118 154\" stroke=\"currentColor\" stroke-opacity=\"0.35\" stroke-width=\"0.9\" fill=\"none\"/><g font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\"><text x=\"14\" y=\"54\" text-anchor=\"start\">position n</text><text x=\"149\" y=\"54\" text-anchor=\"middle\">1</text><text x=\"211\" y=\"54\" text-anchor=\"middle\">2</text><text x=\"273\" y=\"54\" text-anchor=\"middle\">3</text><text x=\"335\" y=\"54\" text-anchor=\"middle\">4</text><text x=\"397\" y=\"54\" text-anchor=\"middle\">5</text><text x=\"14\" y=\"84\" text-anchor=\"start\">term</text><text x=\"149\" y=\"84\" text-anchor=\"middle\">4</text><text x=\"211\" y=\"84\" text-anchor=\"middle\">7</text><text x=\"273\" y=\"84\" text-anchor=\"middle\">12</text><text x=\"335\" y=\"84\" text-anchor=\"middle\">19</text><text x=\"397\" y=\"84\" text-anchor=\"middle\">28</text><text x=\"14\" y=\"114\" text-anchor=\"start\">n squared</text><text x=\"149\" y=\"114\" text-anchor=\"middle\">1</text><text x=\"211\" y=\"114\" text-anchor=\"middle\">4</text><text x=\"273\" y=\"114\" text-anchor=\"middle\">9</text><text x=\"335\" y=\"114\" text-anchor=\"middle\">16</text><text x=\"397\" y=\"114\" text-anchor=\"middle\">25</text><text x=\"14\" y=\"144\" text-anchor=\"start\">term minus n squared</text><text x=\"149\" y=\"144\" text-anchor=\"middle\">3</text><text x=\"211\" y=\"144\" text-anchor=\"middle\">3</text><text x=\"273\" y=\"144\" text-anchor=\"middle\">3</text><text x=\"335\" y=\"144\" text-anchor=\"middle\">3</text><text x=\"397\" y=\"144\" text-anchor=\"middle\">3</text></g><g font-family=\"inherit\" font-size=\"12.5\" fill=\"currentColor\"><text x=\"8\" y=\"178\">The last row never changes, so the rule is n squared + 3.</text></g></svg>",
+    "caption": "The bottom row is the whole answer. When it is constant, that constant is what is added to n squared."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "One tap to start. What is the fourth square number?",
+    "answer": "16",
+    "explain": "$4^{2} = 16$. The list $1, 4, 9, 16, 25, 36$ is the spine of this whole topic, so it needs to be instant."
+  },
+  {
+    "type": "h",
+    "text": "Line the terms up against the square numbers"
+  },
+  {
+    "type": "p",
+    "md": "Take $4, 7, 12, 19, 28$. The differences are $3, 5, 7, 9$ — growing, so the sequence is not linear and there is nothing to be gained from the step."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "blank",
+    "prompt": "The differences between the terms are growing. What is the first line you write?",
+    "answer": "the square numbers | square numbers | 1, 4, 9, 16, 25 | write the square numbers underneath | n squared | n^2",
+    "explain": "Write $1, 4, 9, 16, 25$ under the terms. It is the line the method mark is for, and it usually makes the rule obvious in the next few seconds."
+  },
+  {
+    "type": "p",
+    "md": "Write the square numbers underneath instead. Now every term sits above its own $n^{2}$, and you can ask one question: what has been done to the square number to get the term? Here it is the same thing every time, so the rule is $n^{2}+3$.\nThat is the whole method, and it is the method CCEA expects, because the alternative — second differences — is excluded by the specification."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Which rule generates $-1, 2, 7, 14, 23$?",
+    "options": [
+      "$n^{2}-2$",
+      "$3n-4$",
+      "$34$"
+    ],
+    "answer": "$n^{2}-2$",
+    "explain": "Subtract the square numbers from the terms: $-1 - 1 = -2$, $2 - 4 = -2$, $7 - 9 = -2$ — each term is 2 less than its square number, so the rule is $n^{2}-2$. The middle option is the linear rule the first difference suggests, and it fails by the third term; the last is the next term rather than a rule."
+  },
+  {
+    "type": "p",
+    "md": "Two variations turn up as often as the plain one. **Multiples of the squares**: if dividing each term by its square number gives the same number every time, the rule is that number times $n^{2}$. So $3, 12, 27, 48, 75$ divides to give 3 throughout, and the rule is $3n^{2}$.\n**Squares plus the position**: if the leftovers after subtracting $n^{2}$ are $1, 2, 3, 4, 5$ rather than a constant, they are the positions themselves, so the rule is $n^{2}+n$. The sequence $2, 6, 12, 20, 30$ is exactly that, and it can also be written $n(n+1)$."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "The $n$th term of a sequence is $2n^{2}$. What is the fifth term?",
+    "answer": "50",
+    "explain": "Square first, then double: $5^{2} = 25$ and $2 \\times 25 = 50$. Doubling first would give $10^{2} = 100$, which is a different rule altogether."
+  },
+  {
+    "type": "h",
+    "text": "Fractions are two sequences at once"
+  },
+  {
+    "type": "p",
+    "md": "A sequence of fractions is a numerator sequence and a denominator sequence travelling together, and each one gets its own rule. Split them onto two rows, solve each row, then write one over the other.\nIn $\\frac{2}{1}, \\; \\frac{5}{4}, \\; \\frac{8}{9}, \\; \\frac{11}{16}, \\; \\frac{14}{25}$ the numerators are $2, 5, 8, 11, 14$, climbing in threes, so their rule is $3n-1$. The denominators are $1, 4, 9, 16, 25$, the square numbers, so their rule is $n^{2}$. The $n$th term is $\\frac{3n-1}{n^{2}}$.\nThe answer is a fraction because the terms are fractions. That sounds obvious written down; it is the single most common way this question is half-answered."
+  },
+  {
+    "type": "figure",
+    "alt": "A three-row table. The first row is the position n: 1, 2, 3, 4, 5. The second row is the numerator: 2, 5, 8, 11, 14. The third row is the denominator: 1, 4, 9, 16, 25. A line underneath says the numerators go up in threes while the denominators are the square numbers, so one rule goes above the other.",
+    "svg": "<svg viewBox=\"0 0 444 158\" xmlns=\"http://www.w3.org/2000/svg\"><g font-family=\"inherit\" font-size=\"12.5\" fill=\"currentColor\"><text x=\"8\" y=\"20\">A sequence of fractions is two sequences stacked: numerators on one line, denominators on the next.</text></g><path d=\"M8 34L436 34M8 64L436 64M8 94L436 94M8 124L436 124M118 34L118 124\" stroke=\"currentColor\" stroke-opacity=\"0.35\" stroke-width=\"0.9\" fill=\"none\"/><g font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\"><text x=\"14\" y=\"54\" text-anchor=\"start\">position n</text><text x=\"149\" y=\"54\" text-anchor=\"middle\">1</text><text x=\"211\" y=\"54\" text-anchor=\"middle\">2</text><text x=\"273\" y=\"54\" text-anchor=\"middle\">3</text><text x=\"335\" y=\"54\" text-anchor=\"middle\">4</text><text x=\"397\" y=\"54\" text-anchor=\"middle\">5</text><text x=\"14\" y=\"84\" text-anchor=\"start\">numerator</text><text x=\"149\" y=\"84\" text-anchor=\"middle\">2</text><text x=\"211\" y=\"84\" text-anchor=\"middle\">5</text><text x=\"273\" y=\"84\" text-anchor=\"middle\">8</text><text x=\"335\" y=\"84\" text-anchor=\"middle\">11</text><text x=\"397\" y=\"84\" text-anchor=\"middle\">14</text><text x=\"14\" y=\"114\" text-anchor=\"start\">denominator</text><text x=\"149\" y=\"114\" text-anchor=\"middle\">1</text><text x=\"211\" y=\"114\" text-anchor=\"middle\">4</text><text x=\"273\" y=\"114\" text-anchor=\"middle\">9</text><text x=\"335\" y=\"114\" text-anchor=\"middle\">16</text><text x=\"397\" y=\"114\" text-anchor=\"middle\">25</text></g><g font-family=\"inherit\" font-size=\"12.5\" fill=\"currentColor\"><text x=\"8\" y=\"148\">Numerators go up in threes; denominators are the square numbers. Put one over the other.</text></g></svg>",
+    "caption": "Two rows, two rules, then one written above the other."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "In the sequence $\\frac{1}{5}, \\; \\frac{2}{9}, \\; \\frac{3}{13}, \\; \\frac{4}{17}, \\; \\frac{5}{21}$, what is the rule for the denominators?",
+    "answer": "4n+1 | 4n + 1 | 1+4n",
+    "explain": "The denominators are $5, 9, 13, 17, 21$, climbing in fours from 5, so their rule is $4n+1$. With the numerators being simply $n$, the $n$th term is $\\frac{n}{4n+1}$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why growing differences mean a square",
+    "md": "Adding the same amount each time makes a straight-line rule. When the additions themselves grow by a constant amount, the sequence has climbed one power higher, which is why the square numbers are the first thing to lay it against."
+  },
+  {
+    "type": "h",
+    "text": "See it done"
+  },
+  {
+    "type": "video",
+    "videoId": "AL-joUBnEIw",
+    "title": "Quadratic Sequences Version 1 - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 289,
+    "why": "Ten minutes of quadratic sequences worked out at writing speed. Watch it once for the rhythm of comparing with the square numbers, then answer the gate underneath without rewinding."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Without scrolling back: what is the $n$th term of $3, 8, 15, 24, 35$?",
+    "options": [
+      "$n^{2}+2n$",
+      "$5n-2$",
+      "$n^{2}+2$"
+    ],
+    "answer": "$n^{2}+2n$",
+    "explain": "Subtracting the square numbers leaves $2, 4, 6, 8, 10$, which is twice the position each time, so the rule is $n^{2}+2n$. It can also be written $n(n+2)$."
+  },
+  {
+    "type": "h",
+    "text": "Where the marks are actually lost"
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2023, M7 Paper 1 Q10",
+    "md": "A linear sequence in part (a), then the same numbers as the numerators of a fractional sequence in part (b). Part (a) went well, though $n+3$ appeared often for a rule that should have started with the step, and some candidates simply wrote the next term. Part (b) was the problem: many did not recognise the square numbers in the denominators, many did not see that part (a) had handed them the numerators, and many did not realise their answer had to be a fraction.",
+    "source": "ccea-cer:maths:2023-summer:M71:Q10"
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "You have found that the numerators follow $2n+1$. The terms are fractions. What goes on the answer line?",
+    "options": [
+      "The numerator rule written over the denominator rule",
+      "$2n+1$",
+      "The next term of the sequence"
+    ],
+    "answer": "The numerator rule written over the denominator rule",
+    "explain": "Half the rule earns the method mark and stops there. A fractional sequence needs a fractional answer, so find the denominator rule and write one above the other."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Sheet or memory?",
+    "md": "**On the M7 and M8 formula sheet (page 2):** nothing for sequences. It carries the prism, trapezium, sphere and cone formulae, the quadratic formula and the trigonometric rules.\n**Must be known:** the square numbers $1, 4, 9, 16, 25, 36$; that constant differences mean a linear rule and growing differences mean $n^{2}$ is involved; that a fractional sequence needs a rule for each line; and that second differences are not required at M7."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "The $n$th term of a sequence is $n^{2}+n$. Which position holds the term 56?",
+    "answer": "7",
+    "explain": "Try positions: $6^{2}+6 = 42$ is too small and $7^{2}+7 = 56$, so it is position 7. Working back from a term to its position is the standard third part of these questions."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Check the differences: growing means not linear.\nLay the terms against $n^{2}$ and read the leftover.\nTreat a fraction sequence as a top rule and a bottom rule."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Two marks for each $n$th term, usually halfway through the non-calculator paper, and often in two parts where the first leads into the second. The first mark is for the square part of the rule, the second for the whole rule in $n$. Stuck: write the square numbers underneath the sequence and subtract."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.nth-term-of-non-linear-sequences.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.nth-term-of-non-linear-sequences.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.nth-term-of-non-linear-sequences.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.nth-term-of-non-linear-sequences.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.nth-term-of-non-linear-sequences.08"
+  }
+]

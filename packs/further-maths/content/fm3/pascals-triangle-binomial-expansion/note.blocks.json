@@ -1,0 +1,228 @@
+[
+  {
+    "type": "hero",
+    "lede": "Start with a 1, and make every new row by adding the two numbers above. That is Pascal's triangle, and each row is a ready-made set of coefficients: row 5 expands (p + q)⁵ without multiplying out a single bracket. Build the triangle, pick the right row, and write the terms with their powers.",
+    "can": [
+      "Build Pascal's triangle to row 8 by adding pairs, and pick the row for any power",
+      "Expand (p + q)ⁿ with every coefficient and power, joined by plus signs",
+      "Handle a minus sign or a number inside the bracket, such as (p − q)⁴ or (1 + 2x)⁴"
+    ],
+    "minutes": 8
+  },
+  {
+    "type": "h",
+    "text": "A triangle made by adding",
+    "role": "idea"
+  },
+  {
+    "type": "p",
+    "md": "Start with 1 at the top. Each new row begins and ends with 1, and every number in between is the sum of the two numbers just above it. Keep going and you have Pascal's triangle."
+  },
+  {
+    "type": "figure",
+    "alt": "Pascal's triangle from row 0 to row 8, each number in a circle, with the rows numbered 0 to 8 down the left. Lines show 3 and 3 in row 3 adding to 6 in row 4, and 10 and 10 in row 5 adding to 20 in row 6.",
+    "svg": "<svg viewBox='0 0 400 336' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Pascal&apos;s triangle from row 0 to row 8, rows numbered down the left, with two of the additions drawn: 3 + 3 = 6 in row 4 and 10 + 10 = 20 in row 6'><title>Pascal&apos;s triangle from row 0 to row 8, rows numbered down the left, with two of the additions drawn: 3 + 3 = 6 in row 4 and 10 + 10 = 20 in row 6</title><circle cx='218' cy='24' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='60' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='237' cy='60' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='96' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='96' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='256' cy='96' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='161' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='237' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='275' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='142' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='256' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='294' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='123' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='161' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='237' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='275' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='313' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='104' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='142' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='256' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='294' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='332' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='85' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='123' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='161' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='237' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='275' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='313' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='351' cy='276' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='66' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='104' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='142' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='256' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='294' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='332' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='370' cy='312' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><path d='M 207 144 L 213 155 M 229 144 L 223 155' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 207 216 L 213 227 M 229 216 L 223 227' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='4' y='29' text-anchor='start' font-size='14'>row 0</text><text x='218' y='29' font-size='14'>1</text><text x='4' y='65' text-anchor='start' font-size='14'>row 1</text><text x='199' y='65' font-size='14'>1</text><text x='237' y='65' font-size='14'>1</text><text x='4' y='101' text-anchor='start' font-size='14'>row 2</text><text x='180' y='101' font-size='14'>1</text><text x='218' y='101' font-size='14'>2</text><text x='256' y='101' font-size='14'>1</text><text x='4' y='137' text-anchor='start' font-size='14'>row 3</text><text x='161' y='137' font-size='14'>1</text><text x='199' y='137' font-size='14'>3</text><text x='237' y='137' font-size='14'>3</text><text x='275' y='137' font-size='14'>1</text><text x='4' y='173' text-anchor='start' font-size='14'>row 4</text><text x='142' y='173' font-size='14'>1</text><text x='180' y='173' font-size='14'>4</text><text x='218' y='173' font-size='14'>6</text><text x='256' y='173' font-size='14'>4</text><text x='294' y='173' font-size='14'>1</text><text x='4' y='209' text-anchor='start' font-size='14'>row 5</text><text x='123' y='209' font-size='14'>1</text><text x='161' y='209' font-size='14'>5</text><text x='199' y='209' font-size='14'>10</text><text x='237' y='209' font-size='14'>10</text><text x='275' y='209' font-size='14'>5</text><text x='313' y='209' font-size='14'>1</text><text x='4' y='245' text-anchor='start' font-size='14'>row 6</text><text x='104' y='245' font-size='14'>1</text><text x='142' y='245' font-size='14'>6</text><text x='180' y='245' font-size='14'>15</text><text x='218' y='245' font-size='14'>20</text><text x='256' y='245' font-size='14'>15</text><text x='294' y='245' font-size='14'>6</text><text x='332' y='245' font-size='14'>1</text><text x='4' y='281' text-anchor='start' font-size='14'>row 7</text><text x='85' y='281' font-size='14'>1</text><text x='123' y='281' font-size='14'>7</text><text x='161' y='281' font-size='14'>21</text><text x='199' y='281' font-size='14'>35</text><text x='237' y='281' font-size='14'>35</text><text x='275' y='281' font-size='14'>21</text><text x='313' y='281' font-size='14'>7</text><text x='351' y='281' font-size='14'>1</text><text x='4' y='317' text-anchor='start' font-size='14'>row 8</text><text x='66' y='317' font-size='14'>1</text><text x='104' y='317' font-size='14'>8</text><text x='142' y='317' font-size='14'>28</text><text x='180' y='317' font-size='14'>56</text><text x='218' y='317' font-size='14'>70</text><text x='256' y='317' font-size='14'>56</text><text x='294' y='317' font-size='14'>28</text><text x='332' y='317' font-size='14'>8</text><text x='370' y='317' font-size='14'>1</text></g></svg>",
+    "caption": "Each number is the sum of the two above it; the lines show two of the sums."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "In Pascal's triangle, which two numbers from row 4 add to make the first 10 in row 5?",
+    "options": [
+      "4 and 6",
+      "5 and 5",
+      "1 and 4"
+    ],
+    "answer": "4 and 6",
+    "explain": "Row 4 is 1 4 6 4 1. The first 10 in row 5 sits below the 4 and the 6, and $4 + 6 = 10$."
+  },
+  {
+    "type": "h",
+    "text": "The rows are numbered from 0",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "Pascal's triangle to row 6 with row 5 shaded. Row 5 is 1 5 10 10 5 1: 6 numbers, the same read from either end, and a total of 32.",
+    "svg": "<svg viewBox='0 0 400 264' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Pascal&apos;s triangle to row 6 with row 5 shaded: 6 numbers, symmetric, adding up to 32'><title>Pascal&apos;s triangle to row 6 with row 5 shaded: 6 numbers, symmetric, adding up to 32</title><rect x='64' y='186' width='232' height='36' stroke='currentColor' stroke-width='1.4' fill='currentColor' fill-opacity='0.12'/><circle cx='180' cy='24' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='161' cy='60' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='60' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='142' cy='96' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='96' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='96' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='123' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='161' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='237' cy='132' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='104' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='142' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='256' cy='168' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='85' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='123' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='161' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='199' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='237' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='275' cy='204' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='66' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='104' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='142' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='180' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='218' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='256' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='294' cy='240' r='15' fill='none' stroke='currentColor' stroke-width='1.2'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='4' y='29' text-anchor='start' font-size='14'>row 0</text><text x='180' y='29' font-size='14'>1</text><text x='4' y='65' text-anchor='start' font-size='14'>row 1</text><text x='161' y='65' font-size='14'>1</text><text x='199' y='65' font-size='14'>1</text><text x='4' y='101' text-anchor='start' font-size='14'>row 2</text><text x='142' y='101' font-size='14'>1</text><text x='180' y='101' font-size='14'>2</text><text x='218' y='101' font-size='14'>1</text><text x='4' y='137' text-anchor='start' font-size='14'>row 3</text><text x='123' y='137' font-size='14'>1</text><text x='161' y='137' font-size='14'>3</text><text x='199' y='137' font-size='14'>3</text><text x='237' y='137' font-size='14'>1</text><text x='4' y='173' text-anchor='start' font-size='14'>row 4</text><text x='104' y='173' font-size='14'>1</text><text x='142' y='173' font-size='14'>4</text><text x='180' y='173' font-size='14'>6</text><text x='218' y='173' font-size='14'>4</text><text x='256' y='173' font-size='14'>1</text><text x='4' y='209' text-anchor='start' font-size='14'>row 5</text><text x='85' y='209' font-size='14'>1</text><text x='123' y='209' font-size='14'>5</text><text x='161' y='209' font-size='14'>10</text><text x='199' y='209' font-size='14'>10</text><text x='237' y='209' font-size='14'>5</text><text x='275' y='209' font-size='14'>1</text><text x='4' y='245' text-anchor='start' font-size='14'>row 6</text><text x='66' y='245' font-size='14'>1</text><text x='104' y='245' font-size='14'>6</text><text x='142' y='245' font-size='14'>15</text><text x='180' y='245' font-size='14'>20</text><text x='218' y='245' font-size='14'>15</text><text x='256' y='245' font-size='14'>6</text><text x='294' y='245' font-size='14'>1</text></g></svg>",
+    "caption": "Row 5, shaded, has 6 numbers, reads the same both ways and totals 32, which is 2⁵."
+  },
+  {
+    "type": "p",
+    "md": "The single 1 at the top is row 0, so row $n$ is the row that starts 1, $n$. Three facts check any row you build: row $n$ has $n + 1$ numbers, it reads the same from either end, and its numbers add up to $2^{n}$.\nThe exam gives you nothing here: the triangle is not on the formula sheet, so you build it every time."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "Row 7 of Pascal's triangle begins 1, 7, 21, 35, 35. What is the fourth number of row 8?",
+    "answer": "56",
+    "explain": "The fourth number of row 8 sits below the third and fourth numbers of row 7: $21 + 35 = 56$. Row 8 begins 1, 8, 28, 56."
+  },
+  {
+    "type": "h",
+    "text": "Why the numbers count routes",
+    "role": "why"
+  },
+  {
+    "type": "p",
+    "md": "In the PhET Plinko board a ball bounces left or right at each peg. To finish in a given bin it needs a certain number of right bounces, and the number of different paths with that many right bounces is exactly the entry of Pascal's triangle. With a fair board, the bins fill in the proportions of the row."
+  },
+  {
+    "type": "sim",
+    "provider": "phet",
+    "url": "https://phet.colorado.edu/sims/html/plinko-probability/latest/plinko-probability_en.html",
+    "title": "PhET: Plinko Probability",
+    "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)",
+    "licence": "CC BY-NC 4.0",
+    "task": "Open the Lab screen. Set 4 rows and a binary probability of 0.5, so the board is fair, and drop a few hundred balls. Before you start, use row 4 of the triangle to predict which bin will be fullest and roughly how its height compares with the two end bins."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "On a fair Plinko board with 4 rows, the five bins fill roughly in the ratio 1 : 4 : 6 : 4 : 1. Why?",
+    "options": [
+      "Each bin can be reached by as many different paths as its number in row 4",
+      "The pegs are placed closer together near the middle",
+      "Balls that land in the middle bins bounce fewer times"
+    ],
+    "answer": "Each bin can be reached by as many different paths as its number in row 4",
+    "explain": "Every ball bounces 4 times. There are 6 orders of 2 rights and 2 lefts, but only 1 order of 4 rights, so the middle bin collects about 6 times as many balls as an end bin."
+  },
+  {
+    "type": "h",
+    "text": "The powers fall and rise",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "The five terms of (p + q) to the power 4, p⁴, 4p³q, 6p²q², 4pq³ and q⁴, with a row underneath each for the coefficient (1, 4, 6, 4, 1), the power of p (4, 3, 2, 1, 0) and the power of q (0, 1, 2, 3, 4).",
+    "svg": "<svg viewBox='0 0 400 150' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The five terms of (p + q)⁴ with, under each, its coefficient from row 4, its power of p (4, 3, 2, 1, 0) and its power of q (0, 1, 2, 3, 4)'><title>The five terms of (p + q)⁴ with, under each, its coefficient from row 4, its power of p (4, 3, 2, 1, 0) and its power of q (0, 1, 2, 3, 4)</title><path d='M 6 40 L 394 40' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='6' y='76' width='388' height='66' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.06'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='12' y='28' text-anchor='start' font-weight='600' font-size='14'>term</text><text x='145.6' y='28' font-weight='600' font-size='16'>p⁴</text><text x='200.8' y='28' font-weight='600' font-size='16'>4p³q</text><text x='256' y='28' font-weight='600' font-size='16'>6p²q²</text><text x='311.2' y='28' font-weight='600' font-size='16'>4pq³</text><text x='366.4' y='28' font-weight='600' font-size='16'>q⁴</text><text x='12' y='62' text-anchor='start' font-size='14'>coefficient</text><text x='145.6' y='62'>1</text><text x='200.8' y='62'>4</text><text x='256' y='62'>6</text><text x='311.2' y='62'>4</text><text x='366.4' y='62'>1</text><text x='12' y='96' text-anchor='start' font-size='14'>power of p</text><text x='145.6' y='96'>4</text><text x='200.8' y='96'>3</text><text x='256' y='96'>2</text><text x='311.2' y='96'>1</text><text x='366.4' y='96'>0</text><text x='12' y='130' text-anchor='start' font-size='14'>power of q</text><text x='145.6' y='130'>0</text><text x='200.8' y='130'>1</text><text x='256' y='130'>2</text><text x='311.2' y='130'>3</text><text x='366.4' y='130'>4</text></g></svg>",
+    "caption": "Read across: the power of p falls from 4 to 0 as the power of q rises from 0 to 4."
+  },
+  {
+    "type": "p",
+    "md": "Row $n$ gives the coefficients of $(p + q)^{n}$ in order. From term to term the power of $p$ falls by 1, from $n$ down to 0, while the power of $q$ rises from 0 to $n$, so in every term the two powers add up to $n$. There are $n + 1$ terms, one for each number in the row."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the triangle's numbers",
+    "md": "Multiplying out $(p + q)^{4}$ means choosing $p$ or $q$ from each of the four brackets. Choosing $q$ from exactly two of them gives $p^{2}q^{2}$, and there are 6 ways to pick those two brackets. The 6 in row 4 counts them, and every entry counts choices the same way."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "Which of these is the expansion of $(p + q)^{3}$?",
+    "options": [
+      "$p^{3} + 3p^{2}q + 3pq^{2} + q^{3}$",
+      "$p^{3} + q^{3}$",
+      "$p^{3} + 2p^{2}q + 2pq^{2} + q^{3}$"
+    ],
+    "answer": "$p^{3} + 3p^{2}q + 3pq^{2} + q^{3}$",
+    "explain": "Row 3 is 1 3 3 1, so there are four terms with coefficients 1, 3, 3, 1. Leaving out the middle terms, or using 2s from row 2, loses the coefficient marks."
+  },
+  {
+    "type": "h",
+    "text": "A minus sign in the bracket",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "For $(p - q)^{n}$, think of it as $(p + (-q))^{n}$. The coefficients and the powers are exactly as before, but every odd power of $-q$ is negative, so the signs alternate:\n$(p - q)^{4} = p^{4} - 4p^{3}q + 6p^{2}q^{2} - 4pq^{3} + q^{4}$"
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "In the expansion of $(p - q)^{5}$, what is the coefficient of $p^{2}q^{3}$? Give its sign.",
+    "answer": "-10 | −10",
+    "explain": "Row 5 gives 10 for the term in $p^{2}q^{3}$, and $(-q)^{3}$ is negative, so the term is $-10p^{2}q^{3}$."
+  },
+  {
+    "type": "h",
+    "text": "A number in the bracket",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "For $(1 + 2x)^{4}$, use row 4 with 1 in place of $p$ and $2x$ in place of $q$. Every power acts on the whole of $2x$, the 2 as well as the $x$:\n$6(2x)^{2} = 24x^{2}$, not $12x^{2}$\n$(1 + 2x)^{4} = 1 + 8x + 24x^{2} + 32x^{3} + 16x^{4}$"
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Beyond what CCEA sets",
+    "md": "Unit 3 has only set $(p + q)^{n}$ with letters. The same rule covers a minus sign or a number in the bracket, and in Unit 1 most candidates once lost a mark by not cubing the 2 in $(2x)^{3}$."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "In the expansion of $(1 + 3x)^{4}$, what is the coefficient of $x^{2}$?",
+    "answer": "54",
+    "explain": "The $x^{2}$ term is $6 \\times (3x)^{2} = 6 \\times 9x^{2}$\n$= 54x^{2}$. Squaring the $x$ but not the 3 would give 18."
+  },
+  {
+    "type": "h",
+    "text": "See it done",
+    "role": "see"
+  },
+  {
+    "type": "p",
+    "md": "**Question.** Complete Pascal's triangle as far as row 6. Hence expand $(p + q)^{6}$."
+  },
+  {
+    "type": "p",
+    "md": "**Line 1.** Write the triangle out from row 0 to row 6. It earns a mark of its own.\n**Line 2.** Row 6 is 1 6 15 20 15 6 1: seven numbers, because $n + 1 = 7$.\n**Line 3.** $(p + q)^{6} = p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3}$\n$+ 15p^{2}q^{4} + 6pq^{5} + q^{6}$\n**Check.** Seven terms, plus signs between, powers adding to 6 in each."
+  },
+  {
+    "type": "video",
+    "videoId": "9Y4bhtNSW8w",
+    "title": "Pascal's Triangle / Binomial / Probability",
+    "channel": "P McAleavey",
+    "why": "A Northern Ireland teacher takes Pascal's triangle, the expansion and binomial probability for CCEA Further Mathematics. As you watch, write the triangle out alongside and check each row with the three facts above."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "In the expansion of $(p + q)^{7}$, what is the coefficient of the term $p^{2}q^{5}$?",
+    "answer": "21",
+    "explain": "Row 7 is 1, 7, 21, 35, then the same four in reverse. The term with $q^{5}$ is the sixth term, and its coefficient is 21; the powers $2 + 5 = 7$ check it."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Build Pascal's triangle to row 8 by adding pairs, starting from row 0.\nCheck a row: $n + 1$ numbers, symmetric, total $2^{n}$.\nExpand $(p + q)^{n}$: row $n$ for the coefficients, the power of $p$ falling and $q$ rising, plus signs between.\nKeep the signs and the whole bracket when the second term is negative or has a number."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The binomial question usually opens with this: complete the triangle for 1 mark, then expand $(p + q)^{n}$ for 1 or 2 marks. In 2026 the grid gave the triangle down to row 6 and asked for rows 7 and 8 first, so build every row you need. Write the triangle out in full, because it is a mark in itself, and join the terms with plus signs."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.04"
+  }
+]

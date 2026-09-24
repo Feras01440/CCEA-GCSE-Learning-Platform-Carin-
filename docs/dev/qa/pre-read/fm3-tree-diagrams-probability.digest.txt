@@ -1,0 +1,274 @@
+# fm.u3.tree-diagrams-probability — Tree diagrams (with and without replacement)  [S, difficulty 3]
+unit FM3 · tier untiered · specRefs []
+note: Tree diagrams: multiply along, add across v1 [verified]
+verification statuses: {"verified":23}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] One branch for every way it can go
+- [p] 
+- [figure] The second-stage denominators are 10, not 11: one pen has gone. The four end probabilities add to 1.
+- [choice] 
+- [h] 1. Without replacement changes the second stage
+- [p] 
+- [why] Why the second stage depends on the first
+- [number] 
+- [h] 2. Multiply along, add across
+- [p] 
+- [figure] Reading the top path: $\dfrac{7}{11} \times \dfrac{3}{5}$. Each path ends in one outcome of the pair.
+- [number] 
+- [h] 3. An event that needs more than one branch
+- [p] 
+- [examiner] What the reports keep finding
+- [choice] 
+- [h] 4. 'One of each' has two orders
+- [p] 
+- [video] Tree Diagrams
+- [number] 
+- [h] 5. 'At least one' is easier backwards
+- [p] 
+- [figure] With replacement, or with two independent days, the second stage repeats the first: both branches carry 0.15 and 0.85.
+- [number] 
+- [h] 6. Three stages, same two rules
+- [p] 
+- [figure] Eight paths. The denominators fall 11, 10, 9, because a pen leaves the case at each draw.
+- [number] 
+- [h] 7. Keep the fractions exact
+- [p] 
+- [figure] A second bag, same shape: 5 red and 3 white among 8, so the second stage is over 7.
+- [number] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u3.tree-diagrams-probability.01 [verified] paper FM3 calc
+STEM: A bag holds 8 counters: 5 red and 3 white. Two counters are taken out one after the other, without replacement.
+Calculate the probability that the two counters are of different colours.
+  FIG: svg — A two-stage probability tree for two counters taken without replacement from 8 counters, 5 red and 3 white, with second-stage denominators of 7.
+  1. First stage: $P(\text{red}) = \dfrac{5}{8}$, $P(\text{white}) = \dfrac{3}{8}$.   — Nothing has been taken yet, so both denominators are 8. Writing the first stage down before the second keeps the two apart.  (M1)
+  2. Second stage after red: $\dfrac{4}{7}$ red, $\dfrac{3}{7}$ white. After white: $\dfrac{5}{7}$ red, $\dfrac{2}{7}$ white.   — One counter has gone, so every second denominator is 7. Only the colour already taken loses one from its numerator.  (MW1)  WHY: ✔7, because one counter has been taken and not put back | ✘8, because the bag is the same bag | ✘6, because two counters are being taken altogether
+  3. Red then white: $\dfrac{5}{8} \times \dfrac{3}{7} = \dfrac{15}{56}$. White then red: $\dfrac{3}{8} \times \dfrac{5}{7} = \dfrac{15}{56}$.   — Multiply along each branch. Two different colours can come out in either order, so both branches belong to the event.  (M1)
+  4. $P(\text{different colours}) = \dfrac{15}{56} + \dfrac{15}{56} = \dfrac{15}{28}$   — Add across the branches. The check is \dfrac{15}{28} together with the same-colour answer \dfrac{13}{28}, which come to 1.  (W1)
+  FINAL: $P(\text{different colours}) = \dfrac{15}{28}$
+  TWIN: Using the same bag of 8 counters, calculate the probability that both counters taken are white.  → numeric 0.10714285714285714 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+
+### we.fm.u3.tree-diagrams-probability.02 [verified] paper FM3 calc
+STEM: Two seeds are planted. Each grows, independently of the other, with probability $0.8$.
+Calculate the probability that exactly one of the two seeds grows.
+  FIG: svg — A two-stage probability tree for two seeds, each growing with probability 0.8 and failing with probability 0.2.
+  1. $P(\text{grows}) = 0.8$, so $P(\text{fails}) = 1 - 0.8 = 0.2$.   — Find the second branch of each pair by subtracting from 1. The two branches leaving a point always total 1, which is the quickest check on a tree.  (MW1)
+  2. The seeds are independent, so the second stage carries the same two probabilities as the first.   — Independent means the first outcome changes nothing. That is what makes this different from a without-replacement tree, where the second stage has to be recalculated.  (M1)
+  3. Grows then fails: $0.8 \times 0.2 = 0.16$. Fails then grows: $0.2 \times 0.8 = 0.16$.   — Exactly one is two different paths, not one. Writing both down before adding is what stops the answer being halved.  (M1)
+  4. $P(\text{exactly one}) = 0.16 + 0.16 = 0.32$   — Add the two branches. A check: the four paths come to 0.64 + 0.32 + 0.04 = 1.  (W1)
+  FINAL: $P(\text{exactly one grows}) = 0.32$
+  TWIN: With the same two seeds, calculate the probability that at least one of them grows.  → numeric 0.96 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u3.tree-diagrams-probability.pre (pre) [verified]
+- p1 (Multiplying two fractions (from GCSE Mathematics)): Before the lesson, a check on something you already know. What is $\dfrac{2}{5} \times \dfrac{3}{4}$, in its simplest form?
+    ✔ $\dfrac{3}{10}$ — Yes: $\dfrac{6}{20}$, which cancels by 2. Every branch of a tree is a product like this.
+    ✘ $\dfrac{5}{9}$ — The numerators and the denominators have been added separately. Multiplying fractions multiplies top by top and bottom by bottom.
+    ✘ $\dfrac{8}{15}$ — The two fractions have been crossed over. Multiply straight across: $2 \times 3$ over $5 \times 4$.
+- p2 (Adding fractions with different denominators (from GCSE Mathematics)): Another check on earlier work. What is $\dfrac{1}{6} + \dfrac{1}{3}$?
+    ✔ $\dfrac{1}{2}$ — Yes: $\dfrac{1}{6} + \dfrac{2}{6} = \dfrac{3}{6}$. Adding branch results needs a common denominator.
+    ✘ $\dfrac{2}{9}$ — The numerators and denominators have been added separately, which is not how fractions add. Rewrite both over 6 first.
+    ✘ $\dfrac{1}{18}$ — That is the product, not the sum. Adding needs a common denominator.
+- p3 (Tracking a total after one item is removed (from GCSE Mathematics)): One more from earlier work, before anything new. A bag holds 7 red and 3 green beads. One bead is taken and kept. How many beads are left in the bag?
+    ✔ $9$ — Yes: one of the 10 has gone. Without replacement, that 9 becomes the next denominator.
+    ✘ $10$ — The bead was kept, not put back, so the bag is one smaller.
+    ✘ $8$ — Only one bead has been taken, so the total drops by one, not two.
+
+### dx.fm.u3.tree-diagrams-probability.post (post) [verified]
+- d1 (The second-stage denominator without replacement): A bag holds 4 lemon and 6 lime sweets. One is eaten, then another is taken. What is the probability that the second is lemon, given the first was lemon?
+    ✔ $\dfrac{3}{9}$ — Yes: one lemon has gone, so 3 lemon are left among 9 sweets.
+    ✘ $\dfrac{4}{9}$ [fm.prob.replacement-denominator-not-reduced] — The total dropped but the lemon count did not. The sweet eaten was lemon, so the numerator falls too.
+    ✘ $\dfrac{4}{10}$ [fm.prob.replacement-denominator-not-reduced] — That is the probability for the first sweet, or for a sweet put back. One sweet has gone, so the denominator is 9.
+- d2 (Counting both orders): On a tree, $P(\text{A then B}) = 0.3$ and $P(\text{B then A}) = 0.3$. What is the probability of one A and one B, in either order?
+    ✔ $0.6$ — Yes: the two branches are separate ways for the same event, so they add.
+    ✘ $0.3$ [fm.prob.both-orders-not-counted] — Only one order has been counted, which halves the answer. Examiners report this exact slip.
+    ✘ $0.09$ [fm.prob.multiply-instead-of-add-mutually-exclusive] — The two branch results have been multiplied. Multiplying would ask for both orders at once, which cannot happen.
+- d3 (Adding across branches rather than multiplying): On a two-stage tree, one path gives $P = \dfrac{1}{6}$ and another gives $P = \dfrac{1}{3}$. The event happens on either path. What is its probability?
+    ✔ $\dfrac{1}{2}$ — Yes: two separate branches add. $\dfrac{1}{6} + \dfrac{2}{6} = \dfrac{1}{2}$.
+    ✘ $\dfrac{1}{18}$ [fm.prob.multiply-instead-of-add-mutually-exclusive] — Multiplying asks for both paths to happen together, and a pair of outcomes only travels one path.
+    ✘ $\dfrac{1}{6}$ [fm.prob.both-orders-not-counted] — Only one of the two paths has been counted. Both satisfy the event, so both are added.
+- d4 (Using the complement for 'at least one'): $P(\text{no sixes in three rolls}) = 0.579$. What is $P(\text{at least one six in three rolls})$, to 3 decimal places?
+    ✔ $0.421$ — Yes: $1 - 0.579$. 'At least one' is everything except 'none', which is one line rather than seven branches.
+    ✘ $0.579$ [fm.prob.complement-not-used] — That is the probability of no sixes at all, which is the opposite event. Take it from 1.
+    ✘ $1.579$ [fm.prob.complement-not-used] — The complement has been added to 1 rather than subtracted from it, and a probability is never above 1.
+- d5 (Telling 'along a branch' from 'across branches'): Two events happen one after the other and both must occur. What do you do with the two branch probabilities?
+    ✔ Multiply them — Yes: along a branch every stage has to happen, so the probabilities multiply.
+    ✘ Add them [fm.prob.add-instead-of-multiply] — Adding is for separate branches that cannot both happen. Examiners report this swap on straightforward openers.
+    ✘ Subtract the smaller from the larger [fm.prob.add-instead-of-multiply] — Subtracting has no meaning here. Along a branch the rule is to multiply.
+- d6 (Denominators on a three-stage without-replacement tree): Three counters are taken from a bag of 8 without replacement. What are the three denominators on the top path of the tree?
+    ✔ $8$, then $7$, then $6$ — Yes: one counter leaves the bag at each draw.
+    ✘ $8$, then $8$, then $8$ [fm.prob.replacement-denominator-not-reduced] — That is the with-replacement tree. Here the counters are kept, so the bag shrinks.
+    ✘ $8$, then $7$, then $7$ [fm.prob.replacement-denominator-not-reduced] — The third draw follows two removals, so the denominator has dropped twice.
+
+## QUESTIONS
+### q.fm.u3.tree-diagrams-probability.0001 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)complete2 · Two pens taken from a pencil case without replacement
+  FIG: svg — A two-stage probability tree for two pens taken without replacement from 11 pens. The first-stage branches carry 7/11 and 4/11; the four second-stage branches are marked (i) to (iv).
+  (main) [2] A pencil case holds 11 pens: 7 blue and 4 black. Two pens are taken out, one after the other, without replacement.
+Complete the tree diagram by choosing the probability for each of the branches (i) to (iv).
+      ANSWER: label {"kind":"label","targets":[{"id":"i","accepted":["6/10","3/5"],"position":[200,60]},{"id":"ii","accepted":["4/10","2/5"],"position":[200,100]},{"id":"iii","accepted":["7/10"],"position":[200,150]},{"i
+      MW1 MW1: the two branches after a blue pen: 6/10 and 4/10
+      MW1 MW2: the two branches after a black pen: 7/10 and 3/10
+      SOLUTION: After a blue pen: 6 blue and 4 black among 10, so (i) is 6/10 and (ii) is 4/10. After a black pen: 7 blue and 3 black among 10, so (iii) is 7/10 and (iv) is 3/10.
+      HINTS: One pen has gone, so every second denominator is 10. || Only the colour already taken loses one from its numerator.
+
+### q.fm.u3.tree-diagrams-probability.0002 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · Two pens taken from a pencil case without replacement
+  FIG: svg — A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10
+  (main) [2] Using the tree diagram, calculate the probability that both pens taken are blue.
+      ANSWER: numeric 0.38181818181818183 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{7}{11} \times \dfrac{3}{5}$
+      W1 W1: 21/55 or 42/110
+      SOLUTION: $P(\text{blue, blue}) = \dfrac{7}{11} \times \dfrac{3}{5} = \dfrac{42}{110} = \dfrac{21}{55}$.
+      ERR [fm.prob.replacement-denominator-not-reduced] {"kind":"numeric","value":0.34710743801652894,"tolerance":{"type":"absolute","value":0.004}} → The second denominator is still 11, which is the answer for a pen put back. Without replacement the case holds 10 pens for the second draw, so the answer is \dfrac{21}{55}. (1)
+      ERR [fm.prob.add-instead-of-multiply] {"kind":"numeric","value":1.2363636363636363,"tolerance":{"type":"absolute","value":0.004}} → The two branch probabilities have been added. Along a branch both things have to happen, so they multiply: \dfrac{21}{55}. Adding also gives an answer above 1, which no probability can be. (0)
+      HINTS: Follow the top path of the tree. || The second denominator is 10.
+
+### q.fm.u3.tree-diagrams-probability.0003 [verified] practice · diff 3 · untiered · FM3 calc · 3 marks · (main)calculate3 · Two pens taken from a pencil case without replacement
+  FIG: svg — A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10
+  (main) [3] Calculate the probability that the two pens taken are the same colour.
+      ANSWER: numeric 0.4909090909090909 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{7}{11} \times \dfrac{3}{5}$ and $\dfrac{4}{11} \times \dfrac{3}{10}$ both attempted
+      MW1 MW1: 21/55 and 6/55
+      W1 W1: 27/55 or 54/110
+      SOLUTION: $P(\text{blue, blue}) = \dfrac{21}{55}$ and $P(\text{black, black}) = \dfrac{6}{55}$. The two branches cannot both happen, so add: $\dfrac{21}{55} + \dfrac{6}{55} = \dfrac{27}{55}$.
+      ERR [fm.prob.multiply-instead-of-add-mutually-exclusive] {"kind":"numeric","value":0.04165289256198347,"tolerance":{"type":"absolute","value":0.004}} → The two branch results have been multiplied. Multiplying would ask for both pairs at once, which cannot happen. Separate branches add: \dfrac{27}{55}. (2)
+      ERR [fm.prob.replacement-denominator-not-reduced] {"kind":"numeric","value":0.4462809917355372,"tolerance":{"type":"absolute","value":0.004}} → The two branches were added correctly, but each was worked with the first pen replaced. With the pen kept out the second denominator is 10, and the answer is \dfrac{27}{55}. (1)
+      HINTS: Two branches give the same colour. || Work each out, then add.
+
+### q.fm.u3.tree-diagrams-probability.0004 [verified] practice · diff 3 · untiered · FM3 calc · 3 marks · (main)calculate3 · Two pens taken from a pencil case without replacement
+  FIG: svg — A two-stage probability tree for two pens taken without replacement from 11 pens, 7 blue and 4 black. The first stage branches 7/11 to blue and 4/11 to black; the second-stage denominators are all 10
+  (main) [3] Calculate the probability that one pen of each colour is taken.
+      ANSWER: numeric 0.509090909090909 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: both orders attempted, or $1 - P(\text{same colour})$
+      MW1 MW1: 14/55 twice, or 27/55 subtracted from 1
+      W1 W1: 28/55 or 56/110
+      SOLUTION: $\dfrac{7}{11} \times \dfrac{2}{5} + \dfrac{4}{11} \times \dfrac{7}{10} = \dfrac{28}{55}$. The quicker route is $1 - \dfrac{27}{55} = \dfrac{28}{55}$.
+      ERR [fm.prob.both-orders-not-counted] {"kind":"numeric","value":0.2545454545454545,"tolerance":{"type":"absolute","value":0.004}} → Only the blue-then-black branch has been counted, which is half the answer. Black-then-blue is just as much 'one of each', so both branches are added: \dfrac{28}{55}. (1)
+      HINTS: Blue then black, and black then blue. || Or take the same-colour answer 27/55 from 1.
+
+### q.fm.u3.tree-diagrams-probability.0005 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · Two counters taken from a bag without replacement
+  FIG: svg — A two-stage probability tree for two counters taken without replacement from 8 counters, 5 red and 3 white, with second-stage denominators of 7.
+  (main) [2] A bag holds 8 counters: 5 red and 3 white. Two counters are taken out without replacement.
+Calculate the probability that both are red.
+      ANSWER: numeric 0.35714285714285715 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{5}{8} \times \dfrac{4}{7}$
+      W1 W1: 5/14 or 20/56
+      SOLUTION: $\dfrac{5}{8} \times \dfrac{4}{7} = \dfrac{20}{56} = \dfrac{5}{14}$.
+      ERR [fm.prob.replacement-denominator-not-reduced] {"kind":"numeric","value":0.3125,"tolerance":{"type":"absolute","value":0.004}} → The second denominator has stayed at 8, which answers the question with the counter put back. Without replacement it is 7, and the answer is \dfrac{5}{14}. (1)
+      HINTS: After one red counter, 4 red are left among 7. || Multiply along the branch.
+
+### q.fm.u3.tree-diagrams-probability.0006 [verified] practice · diff 3 · untiered · FM3 calc · 3 marks · (main)calculate3 · Two counters taken from a bag without replacement
+  FIG: svg — A two-stage probability tree for two counters taken without replacement from 8 counters, 5 red and 3 white.
+  (main) [3] Calculate the probability that the two counters taken are the same colour.
+      ANSWER: numeric 0.4642857142857143 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: both same-colour branches attempted
+      MW1 MW1: 5/14 and 3/28
+      W1 W1: 13/28 or 26/56
+      SOLUTION: $P(\text{red, red}) = \dfrac{5}{14}$ and $P(\text{white, white}) = \dfrac{3}{28}$. $\dfrac{5}{14} + \dfrac{3}{28} = \dfrac{13}{28}$.
+      ERR [fm.prob.multiply-instead-of-add-mutually-exclusive] {"kind":"numeric","value":0.03826530612244898,"tolerance":{"type":"absolute","value":0.004}} → The two results have been multiplied. Two separate branches cannot both happen, so their probabilities add: \dfrac{13}{28}. (2)
+      ERR [fm.prob.replacement-denominator-not-reduced] {"kind":"numeric","value":0.40625,"tolerance":{"type":"absolute","value":0.004}} → The branches were added, but each was worked with the first counter replaced. Dropping the second denominator to 7 gives \dfrac{13}{28}. (1)
+      HINTS: Red-red and white-white. || Add the two results.
+
+### q.fm.u3.tree-diagrams-probability.0007 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · A contestant playing two rounds of a quiz
+  FIG: svg — A two-stage probability tree for two independent quiz rounds, with 0.7 and 0.3 on the first stage and 0.6 and 0.4 on every branch of the second.
+  (main) [2] A contestant wins the first round of a quiz with probability $0.7$ and the second with probability $0.6$, independently.
+Calculate the probability that the contestant wins both rounds.
+      ANSWER: numeric 0.42 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: 0.7 $\times$ 0.6
+      W1 W1: 0.42
+      SOLUTION: $P(\text{wins both}) = 0.7 \times 0.6 = 0.42$.
+      ERR [fm.prob.add-instead-of-multiply] {"kind":"numeric","value":1.3,"tolerance":{"type":"absolute","value":0.004}} → The two probabilities have been added, which gives a number above 1. Along a branch both rounds must be won, so multiply: $0.42$. (0)
+      HINTS: Follow the top path of the tree. || Independent rounds multiply.
+
+### q.fm.u3.tree-diagrams-probability.0008 [verified] practice · diff 3 · untiered · FM3 calc · 3 marks · (main)calculate3 · A contestant playing two rounds of a quiz
+  FIG: svg — A two-stage probability tree for two independent quiz rounds, with 0.7 and 0.3 on the first stage and 0.6 and 0.4 on every branch of the second.
+  (main) [3] Calculate the probability that the contestant wins exactly one of the two rounds.
+      ANSWER: numeric 0.46 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: both orders identified: win then lose, and lose then win
+      MW1 MW1: 0.28 and 0.18
+      W1 W1: 0.46
+      SOLUTION: Win then lose: $0.7 \times 0.4 = 0.28$. Lose then win: $0.3 \times 0.6 = 0.18$. Adding gives $0.46$.
+      ERR [fm.prob.both-orders-not-counted] {"kind":"numeric","value":0.28,"tolerance":{"type":"absolute","value":0.004}} → Only the win-then-lose branch has been counted. Losing the first round and winning the second is also exactly one win, so both branches are added: $0.46$. (1)
+      HINTS: Exactly one means win-lose or lose-win. || Two branches, so two products to add.
+
+### q.fm.u3.tree-diagrams-probability.0009 [verified] exam-style · diff 3 · untiered · FM3 calc · 5 marks · (a)calculate2|(b)calculate3 · A school bus that may be late on either of two mornings
+  FIG: svg — A two-stage probability tree for two mornings, each with probability 0.15 that the bus is late and 0.85 that it is on time.
+  (a) [2] The probability that a school bus is late on any morning is $0.15$, independently of other mornings.
+Calculate the probability that the bus is late on both of two mornings.
+      ANSWER: numeric 0.0225 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: 0.15 $\times$ 0.15
+      W1 W1: 0.0225
+      SOLUTION: $P(\text{late, late}) = 0.15 \times 0.15 = 0.0225$.
+      HINTS: The mornings are independent, so the second stage repeats the first. || Multiply along the branch.
+  (b) [3] Calculate the probability that the bus is late on at least one of the two mornings.
+      ANSWER: numeric 0.2775 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: $1 - (0.85)^{2}$, or the three qualifying branches added
+      MW1 MW1: 0.7225 seen
+      W1 W1: 0.2775
+      SOLUTION: $P(\text{on time both mornings}) = 0.85 \times 0.85 = 0.7225$. $P(\text{at least one late}) = 1 - 0.7225 = 0.2775$.
+      ERR [fm.prob.complement-not-used] {"kind":"numeric","value":0.7225,"tolerance":{"type":"absolute","value":0.004}} → That is the probability that the bus is on time on both mornings, which is the opposite event. Taking it from 1 gives $0.2775$. (2)
+      ERR [fm.prob.add-instead-of-multiply] {"kind":"numeric","value":0.3,"tolerance":{"type":"absolute","value":0.004}} → The two single-morning probabilities have been added, which counts the both-late case twice. Either add the three qualifying branches or take the on-time-twice branch from 1: $0.2775$. (0)
+      HINTS: 'At least one' is everything except 'neither'. || On-time twice is 0.85 squared.
+
+### q.fm.u3.tree-diagrams-probability.0010 [verified] exam-style · diff 4 · untiered · FM3 calc · 7 marks · (a)write-down1|(b)calculate3|(c)calculate3 · Three pens taken from a pencil case without replacement
+  FIG: svg — A three-stage probability tree for three pens taken without replacement from 11. The denominators fall from 11 to 10 to 9 stage by stage, and the top path reads 7/11, 6/10, 5/9
+  (a) [1] A pencil case holds 11 pens: 7 blue and 4 black. Three pens are taken out one after the other, without replacement.
+The first two pens taken are blue.
+Write down the probability that the third pen is also blue.
+      ANSWER: numeric 0.5555555555555556 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      W1 W1: 5/9 or 5/9
+      SOLUTION: 5 blue pens are left among 9, so the probability is $\dfrac{5}{9}$.
+      HINTS: Two blue pens have already gone. || Two pens have gone altogether, so 9 are left.
+  (b) [3] Calculate the probability that all three pens taken are blue.
+      ANSWER: numeric 0.21212121212121213 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{7}{11} \times \dfrac{3}{5} \times \dfrac{5}{9}$
+      MW1 MW1: $\dfrac{210}{990}$ or equivalent
+      W1 W1: 7/33
+      SOLUTION: $\dfrac{7}{11} \times \dfrac{3}{5} \times \dfrac{5}{9} = \dfrac{210}{990} = \dfrac{7}{33}$.
+      ERR [fm.prob.replacement-denominator-not-reduced] {"kind":"numeric","value":0.2577009767092412,"tolerance":{"type":"absolute","value":0.004}} → Every denominator has stayed at 11, which answers the question with each pen put back. Without replacement they fall to 10 and then 9, giving \dfrac{7}{33}. (1)
+      ERR [fm.prob.add-instead-of-multiply] {"kind":"numeric","value":1.791919191919192,"tolerance":{"type":"absolute","value":0.004}} → The three branch probabilities have been added, which gives a number above 1. Along a path every stage must happen, so they multiply: \dfrac{7}{33}. (0)
+      HINTS: Follow the top path of the three-stage tree. || The denominators are 11, 10 and 9.
+  (c) [3] Calculate the probability that at least one of the three pens taken is black.
+      ANSWER: numeric 0.7878787878787878 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $1 - P(\text{all three blue})$ ft
+      MW1 MW1: 7/33 subtracted from 1
+      W1 W1: 26/33
+      SOLUTION: The only path with no black pen is blue, blue, blue, which is $\dfrac{7}{33}$. $P(\text{at least one black}) = 1 - \dfrac{7}{33} = \dfrac{26}{33}$.
+      ERR [fm.prob.complement-not-used] {"kind":"numeric","value":0.21212121212121213,"tolerance":{"type":"absolute","value":0.004}} → That is the probability that all three are blue, which is the opposite event. 'At least one black' is everything else: $1 - \dfrac{7}{33} = \dfrac{26}{33}$. (1)
+      HINTS: Only one of the eight paths has no black pen at all. || Take part (b) from 1.
+
+## FIND THE MISTAKE
+### ftm.fm.u3.tree-diagrams-probability.01 [verified] fm.prob.multiply-instead-of-add-mutually-exclusive · earned M1,MW1 · ccea-cer:further-maths:2019-summer:FM3:Q2
+STEM: Conor was asked for the probability that two pens taken from a case of 11 (7 blue, 4 black), without replacement, are the same colour. His working:
+    1. P(blue, blue) = 7/11 x 6/10 = 21/55
+    2. P(black, black) = 4/11 x 3/10 = 6/55
+  ✘ 3. P(same colour) = 21/55 x 6/55 = 126/3025
+  WRONG: Lines 1 and 2 are both right, denominators and all. Line 3 multiplies them. Multiplying asks for both branches to happen at once, and a single pair of pens travels one branch only. Two separate branches add.
+  FIX: P(blue, blue) = 7/11 x 6/10 = 21/55 / P(black, black) = 4/11 x 3/10 = 6/55 / P(same colour) = 21/55 + 6/55 = 27/55
+  FEEDBACK: Both branch products are correct, so the method mark and the working mark for them stand. The final mark is lost at line 3. A quick sense check would have caught it: 126/3025 is far smaller than either branch on its own, and adding two chances can never make the result smaller. The answer is \dfrac{27}{55}.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u3.tree-diagrams-probability.01 [verified] (procedure) The two rules for reading a probability tree.  →  Multiply along a branch, because every stage has to happen. Add across branches, because they are separate ways for the same event.
+- rp.fm.u3.tree-diagrams-probability.02 [verified] (trap) What changes on the second stage of a tree when there is no replacement?  →  The denominator drops by one, and the numerator drops by one too on the branches where an item of that kind has already gone.
+- rp.fm.u3.tree-diagrams-probability.03 [verified] (trap) A question asks for one of each colour. Why is one branch product not enough?  →  Either colour can come out first, so two branches satisfy the event and counting one of them halves the answer.
+- rp.fm.u3.tree-diagrams-probability.04 [verified] (procedure) What is the quickest way to answer 'at least one', and why?  →  Work out the probability of none and subtract it from 1, because none is a single branch while at least one is several.
+- rp.fm.u3.tree-diagrams-probability.05 [verified] (trap) Why should tree answers stay as exact fractions?  →  Rounding to decimals part-way through loses accuracy, and marks have been lost that way; multiply the fractions and cancel at the end.
+- rp.fm.u3.tree-diagrams-probability.06 [verified] (qa) What do the two probabilities leaving one point of a tree always add to, and what is that useful for?  →  They add to 1, which is the quickest check that a branch has been filled in correctly.
+- rp.fm.u3.tree-diagrams-probability.07 [verified] (trap) Three items are taken from ten without replacement. What are the three denominators?  →  10, then 9, then 8, because one item leaves at each draw.
+
+## INSIGHT
+RULE: Draw the tree, write the probability on every branch (denominators drop by one without replacement), multiply along a branch for 'and', add the qualifying branches for 'or', count both orders, and leave the answer as an exact fraction.
+A*: Setting up a without-replacement tree in one line and reading conditional probabilities straight off it - P(A given B) as the branch product over the probability of the condition.
+- ccea-cer:further-maths:2019-summer:FM3:Q2: asked Probability that two (then three) beads drawn without replacement are the same colour. | went wrong: Most understood a sum of pair products and of triple products, but a few multiplied P(BB) and P(GG) instead of adding them; some who switched to decimals lost accuracy through rounding. | rule: Along a branch multiply; across mutually exclusive branches add; stay in fractions.
+- ccea-cer:further-maths:2022-summer:FM3:Q1: asked Probability that two independent events both happen. | went wrong: A straightforward opener that many got wrong: the two probabilities were identified and then added instead of multiplied (some even added numerators and denominators separately). | rule: 'Both' or 'and' means multiply the probabilities; adding is only for 'either/or' of outcomes that cannot happen together.
+- ccea-cer:further-maths:2022-summer:FM3:Q6: asked Two students chosen, in either order, from a table of percentages. | went wrong: Only one order was counted, giving half the answer (0.014); this followed a conditional-probability part where the whole population was used as the denominator. | rule: For 'one of each' count both orders: multiply along each branch, then add the two branches.

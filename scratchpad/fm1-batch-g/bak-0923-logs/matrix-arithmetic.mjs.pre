@@ -1,0 +1,1071 @@
+/**
+ * FM1 batch G — topic 1: matrix-arithmetic (difficulty 2 -> L).
+ * Every sum, difference, scalar multiple and product is computed in exact rational arithmetic by
+ * matlib.mjs; every distractor matrix is produced by executing the route its feedback describes.
+ */
+import {
+  OUT, PAPER, check, log as verLog, writeJson, lintTree, figure, svgWrap, svgText, svgPath, num,
+  shingleClash, corpusFiles,
+} from "./lib.mjs";
+import {
+  mat, dims, mAdd, mSub, mMul, mScale, mEq, mTex, mPlain, matrixRowSvg, matrixBox, routes, matrixAnswer, matrixError, MATRIX_NOTE, fPlain, fVal,
+} from "./matlib.mjs";
+
+const SLUG = "matrix-arithmetic";
+const TOPIC = "fm.u1.matrix-arithmetic";
+const REFS = ["FM1-MAT-01"];
+const CER19 = "ccea-cer:further-maths:2019-summer:FM1:Q1";
+const CER22 = "ccea-cer:further-maths:2022-summer:FM1:Q3";
+const CER23 = "ccea-cer:further-maths:2023-summer:FM1:Q8";
+const CER24 = "ccea-cer:further-maths:2024-summer:FM1:Q7";
+const CER25 = "ccea-cer:further-maths:2025-summer:FM1:Q1";
+
+/* ---- the matrices, and everything built from them ---------------------------------------------- */
+
+const A = mat([[3, -1], [2, 4]]);
+const B = mat([[5, 2], [-1, 0]]);
+const C = mat([[1, 4, -2], [3, 0, 5]]);
+
+const SUM = mAdd(A, B);
+const DIFF = mSub(A, B);
+const TRIPLE = mScale(3, A);
+const AB = mMul(A, B);
+const BA = mMul(B, A);
+const ASQ = mMul(A, A);
+const AC = mMul(A, C);
+const TWO_A_MINUS_B = mSub(mScale(2, A), B);
+
+if (mEq(AB, BA)) throw new Error("AB and BA came out equal, so the non-commutativity example does not work");
+
+/** Three sample entries of every product, recomputed by hand-style summation as a check. */
+const PRODUCT_CHECKS = [
+  { name: "AB row 1 column 1", got: fVal(AB[0][0]), want: fVal(A[0][0]) * fVal(B[0][0]) + fVal(A[0][1]) * fVal(B[1][0]) },
+  { name: "AB row 2 column 1", got: fVal(AB[1][0]), want: fVal(A[1][0]) * fVal(B[0][0]) + fVal(A[1][1]) * fVal(B[1][0]) },
+  { name: "AC row 2 column 3", got: fVal(AC[1][2]), want: fVal(A[1][0]) * fVal(C[0][2]) + fVal(A[1][1]) * fVal(C[1][2]) },
+];
+for (const c of PRODUCT_CHECKS) if (Math.abs(c.got - c.want) > 1e-12) throw new Error(`${c.name}: ${c.got} vs ${c.want}`);
+
+/* ---- error routes, executed ---------------------------------------------------------------------- */
+
+const E = {
+  abElementwise: routes.elementwise(A, B),
+  abSwapped: routes.rowsAndColumnsSwapped(A, B),
+  aSquaredElementwise: routes.elementwise(A, A),
+  sumSubtracted: mSub(A, B),
+  diffWrongWay: mSub(B, A),
+};
+for (const [k, v] of Object.entries(E)) if (!v) throw new Error(`route ${k} reached no matrix`);
+if (mEq(E.abElementwise, AB) || mEq(E.abSwapped, AB)) throw new Error("a product route lands on the right answer");
+if (mEq(E.aSquaredElementwise, ASQ)) throw new Error("the elementwise square equals the matrix square");
+
+/* ---- figures --------------------------------------------------------------------------------------- */
+
+const GIVENS_SVG = matrixRowSvg(
+  [{ M: A, label: "A" }, { M: B, label: "B" }, { M: C, label: "C", cell: 46 }],
+  {
+    title: `The three matrices used in this lesson: A and B are 2 by 2 and C is 2 by 3`,
+    note: `A and B are 2 by 2; C is 2 by 3`,
+  },
+);
+
+const ADD_SVG = matrixRowSvg(
+  [{ M: A, label: "A" }, "+", { M: B, label: "B" }, "=", { M: SUM }],
+  {
+    title: `Matrix A added to matrix B, each pair of entries in matching positions added to give the sum`,
+    note: "each entry added to the entry in the same position",
+  },
+);
+
+function rowByColumnSvg() {
+  const out = [];
+  const boxA = matrixBox(A, { x: 24, y: 48, label: "A" });
+  out.push(boxA.svg);
+  out.push(svgText(24 + boxA.w + 15, 48 + 34, "×", { size: 18 }));
+  const boxB = matrixBox(B, { x: 24 + boxA.w + 34, y: 48, label: "B" });
+  out.push(boxB.svg);
+  const eqX = 24 + boxA.w + 34 + boxB.w + 18;
+  out.push(svgText(eqX, 48 + 34, "=", { size: 18 }));
+  const boxP = matrixBox(AB, { x: eqX + 16, y: 48 });
+  out.push(boxP.svg);
+  // the first row of A swept against the first column of B, and where that entry lands
+  out.push(`<rect x='${num(24)}' y='${num(48)}' width='${num(boxA.w)}' height='${num(34)}' fill='currentColor' fill-opacity='0.12' stroke='none'/>`);
+  out.push(`<rect x='${num(24 + boxA.w + 34)}' y='${num(48)}' width='${num(44)}' height='${num(68)}' fill='currentColor' fill-opacity='0.12' stroke='none'/>`);
+  out.push(`<rect x='${num(eqX + 16)}' y='${num(48)}' width='${num(44)}' height='${num(34)}' stroke='currentColor' stroke-width='1.4' fill='none'/>`);
+  out.push(svgText(300, 150, `row 1 of A against column 1 of B gives the entry in row 1, column 1`, { size: 11.5 }));
+  out.push(
+    svgText(
+      300,
+      168,
+      `(${fPlain(A[0][0])})(${fPlain(B[0][0])}) + (${fPlain(A[0][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[0][0])}`,
+      { size: 12.5 },
+    ),
+  );
+  return svgWrap(
+    "0 0 600 184",
+    `The product of A and B with the first row of A and the first column of B shaded, and the entry they produce outlined in the answer matrix`,
+    out.join(""),
+  );
+}
+
+function shapeRuleSvg() {
+  const out = [];
+  out.push(svgText(300, 30, "the two middle numbers must match", { size: 12 }));
+  const show = (x, label, m, n) => {
+    out.push(svgText(x, 72, `${m} × ${n}`, { size: 20 }));
+    out.push(svgText(x, 92, label, { size: 11 }));
+  };
+  show(150, "A", 2, 2);
+  show(300, "C", 2, 3);
+  out.push(svgText(225, 72, "×", { size: 16 }));
+  out.push(`<path d='M 178 84 L 178 106 L 272 106 L 272 84' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/>`);
+  out.push(svgText(225, 122, "these two are both 2, so the product exists", { size: 11 }));
+  out.push(svgPath("M 350 72 L 392 72 M 382 65 L 392 72 L 382 79", { width: 1.4 }));
+  out.push(svgText(432, 72, `${dims(AC)[0]} × ${dims(AC)[1]}`, { size: 20 }));
+  out.push(svgText(432, 92, "the product", { size: 11 }));
+  out.push(`<path d='M 128 56 L 128 40 L 462 40 L 462 56' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/>`);
+  out.push(svgText(300, 150, "the outer two numbers give the shape of the answer", { size: 11.5 }));
+  return svgWrap(
+    "0 0 600 166",
+    `The shape rule: a 2 by 2 multiplied by a 2 by 3, with the two inner numbers joined to show they match and the two outer numbers joined to show they give the product's shape`,
+    out.join(""),
+  );
+}
+
+const ROWCOL_SVG = rowByColumnSvg();
+const SHAPE_SVG = shapeRuleSvg();
+const ORDER_SVG = matrixRowSvg(
+  [{ M: AB, label: "AB" }, "≠", { M: BA, label: "BA" }],
+  {
+    title: `The product of A and B beside the product of B and A, showing that the two are different matrices`,
+    note: "the same two matrices, multiplied the other way round",
+  },
+);
+const SQUARE_SVG = matrixRowSvg(
+  [{ M: ASQ, label: "A × A" }, "≠", { M: E.aSquaredElementwise, label: "each entry squared" }],
+  {
+    title: `A multiplied by itself beside the matrix made by squaring each entry of A, showing that the two are different`,
+    note: "squaring a matrix means multiplying it by itself",
+  },
+);
+
+/* ---- note -------------------------------------------------------------------------------------------- */
+
+const blocks = [
+  {
+    type: "hero",
+    lede: "A matrix is a rectangle of numbers kept together so it can be worked with as one object. Adding and subtracting behave exactly as you would guess. Multiplying does not: it pairs a row with a column, and the order you multiply in changes the answer.",
+    can: [
+      "Add, subtract and scale matrices entry by entry, and say when you cannot",
+      "Multiply two matrices by pairing each row with each column",
+      "Decide from the shapes whether a product exists, and what shape it will be",
+    ],
+    minutes: 12,
+  },
+  { type: "h", text: "Numbers kept in a rectangle" },
+  {
+    type: "p",
+    md: `A matrix is written inside brackets and described by its shape: **rows first, then columns**. Here $A$ and $B$ are $2 \\times 2$, and $C$ is $2 \\times 3$.\nThe shape is not decoration. It decides what you are allowed to do: two matrices can only be added if they are the same shape, and can only be multiplied if the shapes fit together in one particular way.`,
+  },
+  {
+    type: "figure",
+    alt: `Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.`,
+    svg: GIVENS_SVG,
+    caption: `$A$ and $B$ are $2 \\times 2$; $C$ is $2 \\times 3$. Rows first, then columns.`,
+  },
+  {
+    type: "gate",
+    id: "g1",
+    kind: "choice",
+    prompt: `One tap to begin. The matrix $C$ shown above has two rows and three columns. What is its shape called?`,
+    options: ["$2 \\times 3$", "$3 \\times 2$", "$6$"],
+    answer: "$2 \\times 3$",
+    explain: `Rows first, then columns, so $C$ is $2 \\times 3$. Getting that order the wrong way round is what makes the multiplication rule look impossible later.`,
+  },
+  { type: "h", text: "1. Adding, subtracting and scaling" },
+  {
+    type: "p",
+    md: `These three are the easy ones. To add, add the entries in matching positions. To subtract, subtract them. To multiply by a number, multiply **every** entry by it.\nThe only rule is shape: $A + B$ works because both are $2 \\times 2$, but $A + C$ does not exist at all, because the third column of $C$ has nothing in $A$ to pair with.`,
+  },
+  {
+    type: "figure",
+    alt: `Matrix A added to matrix B, with each pair of entries in matching positions added to give the sum.`,
+    svg: ADD_SVG,
+    caption: `Position by position, and nothing moves.`,
+  },
+  {
+    type: "gate",
+    id: "g2",
+    kind: "number",
+    prompt: `In the addition shown above, $A$ has $${fPlain(A[1][0])}$ in row 2, column 1 and $B$ has $${fPlain(B[1][0])}$ in the same place. What is the entry in row 2, column 1 of $A + B$?`,
+    answer: fPlain(SUM[1][0]),
+    explain: `$${fPlain(A[1][0])} + (${fPlain(B[1][0])}) = ${fPlain(SUM[1][0])}$. Every entry of a sum comes from the one position it sits in.`,
+  },
+  { type: "h", text: "2. Multiplying: a row meets a column" },
+  {
+    type: "p",
+    md: `Multiplication does not work position by position. To find the entry in **row $i$, column $j$** of $AB$, take row $i$ of $A$ and column $j$ of $B$, multiply term by term and add.\nWhy not entry by entry? Because a matrix stands for a whole set of combinations at once, and each row of the first has to meet every column of the second.`,
+  },
+  {
+    type: "figure",
+    alt: `The product of A and B, with the first row of A and the first column of B shaded and the entry they produce outlined in the answer matrix.`,
+    svg: ROWCOL_SVG,
+    caption: `Row 1 against column 1 lands in row 1, column 1.`,
+  },
+  {
+    type: "callout",
+    kind: "why",
+    title: "Why entry by entry is not multiplication",
+    md: `Multiplying matching entries would leave each number of the answer resting on one number from each matrix. Row by column makes every entry rest on a whole row and a whole column, which is what lets one matrix stand for a system of equations later in this unit.`,
+  },
+  {
+    type: "gate",
+    id: "g3",
+    kind: "number",
+    prompt: `Using $A$ and $B$ from this lesson, row 2 of $A$ is $${fPlain(A[1][0])}$, $${fPlain(A[1][1])}$ and column 1 of $B$ is $${fPlain(B[0][0])}$, $${fPlain(B[1][0])}$. What is the entry in row 2, column 1 of $AB$?`,
+    answer: fPlain(AB[1][0]),
+    explain: `$(${fPlain(A[1][0])})(${fPlain(B[0][0])}) + (${fPlain(A[1][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[1][0])}$. Term by term along the row and down the column, then add.`,
+  },
+  { type: "h", text: "3. The shape rule" },
+  {
+    type: "p",
+    md: `Write the two shapes side by side. The product exists only when the **inner** two numbers match, and then the **outer** two give the shape of the answer.\nSo $2 \\times 2$ times $2 \\times 3$ works and gives a $2 \\times 3$ answer. The other way round, $2 \\times 3$ times $2 \\times 2$, has inner numbers $3$ and $2$, so that product does not exist.`,
+  },
+  {
+    type: "figure",
+    alt: `The shape rule: a 2 by 2 multiplied by a 2 by 3, with the inner numbers joined to show they match and the outer numbers joined to show they give the product's shape.`,
+    svg: SHAPE_SVG,
+    caption: `Inner numbers match, outer numbers give the answer's shape.`,
+  },
+  {
+    type: "gate",
+    id: "g4",
+    kind: "choice",
+    prompt: `Using the shape rule shown above, what shape is the product of a $2 \\times 2$ matrix and a $2 \\times 3$ matrix, in that order?`,
+    options: ["$2 \\times 3$", "$2 \\times 2$", "$3 \\times 2$"],
+    answer: "$2 \\times 3$",
+    explain: `The inner numbers are both $2$, so the product exists, and the outer numbers $2$ and $3$ give its shape.`,
+  },
+  { type: "h", text: "4. Two things that catch people out" },
+  {
+    type: "p",
+    md: `**The order matters.** $AB$ and $BA$ are different matrices, and often only one of them exists. Never swap them to make the arithmetic easier.\n**Squaring means multiplying.** $A^{2}$ is $A \\times A$, worked out row by column. It is not the matrix you get by squaring each entry, and that is the slip examiners report most often on this topic.`,
+  },
+  {
+    type: "figure",
+    alt: `The product AB beside the product BA, showing that the two are different matrices.`,
+    svg: ORDER_SVG,
+    caption: `Same two matrices, opposite order, different answer.`,
+  },
+  {
+    type: "callout",
+    kind: "examiner",
+    title: "Summer 2024, Unit 1, Question 7",
+    md: "Candidates who squared each entry instead of multiplying the matrix by itself lost the whole part. The same slip is reported in Summer 2019 and Summer 2023, so it is worth one deliberate check: write the multiplication out before you start.",
+    source: CER24,
+  },
+  {
+    type: "video",
+    videoId: "X66YHxuGUvE",
+    title: "Multiplying Matrices 2x2 by 2x2 - Corbettmaths",
+    channel: "corbettmaths",
+    why: "The row-by-column sweep worked through slowly on several pairs of matrices.",
+  },
+  {
+    type: "gate",
+    id: "g5",
+    kind: "number",
+    prompt: `For the matrix $A$ in this lesson, $A^{2}$ means $A \\times A$. Row 1 of $A$ is $${fPlain(A[0][0])}$, $${fPlain(A[0][1])}$ and column 1 of $A$ is $${fPlain(A[0][0])}$, $${fPlain(A[1][0])}$. What is the entry in row 1, column 1 of $A^{2}$?`,
+    answer: fPlain(ASQ[0][0]),
+    explain: `$(${fPlain(A[0][0])})(${fPlain(A[0][0])}) + (${fPlain(A[0][1])})(${fPlain(A[1][0])}) = ${fPlain(ASQ[0][0])}$. Squaring the entry alone would give $${fPlain(E.aSquaredElementwise[0][0])}$, which is a different matrix.`,
+  },
+  { type: "h", text: "You can now" },
+  {
+    type: "p",
+    md: `Add, subtract and scale entry by entry, and say when the shapes forbid it.\nMultiply by pairing each row of the first with each column of the second.\nUse the shape rule to decide whether a product exists and what shape it is.\nTreat $AB$ and $BA$ as different matrices.\nWork out $A^{2}$ as $A \\times A$, never by squaring the entries.`,
+  },
+  { type: "h", text: "In the exam" },
+  {
+    type: "p",
+    md: `Matrix arithmetic is a short question, usually $4$ to $6$ marks across two or three parts: a scalar multiple or a sum, then a product. It opened the paper in Summer 2019 and Summer 2025. The first mark is the row-by-column working written out; the last is every entry right. Stuck on a product? Write the shapes down first — they tell you whether to start at all, and how many entries the answer needs.`,
+  },
+  { type: "prompt", promptId: `rp.${TOPIC}.01` },
+  { type: "prompt", promptId: `rp.${TOPIC}.03` },
+  { type: "prompt", promptId: `rp.${TOPIC}.04` },
+  { type: "prompt", promptId: `rp.${TOPIC}.06` },
+];
+
+/* ---- items ------------------------------------------------------------------------------------------- */
+
+/**
+ * Whole-matrix answers use the engine's `matrix` kind (suite 1064), which accepts pmatrix, bmatrix,
+ * a bare grid and a name in front, marks entry by entry and names a transpose. Entries are marked as
+ * written, so the answer-line sentence asks for every entry worked out.
+ */
+const ENTRY_NOTE = MATRIX_NOTE;
+
+const numAns = (value) => ({
+  kind: "numeric",
+  value,
+  tolerance: { type: "absolute", value: 0.0005 },
+  unitRequired: false,
+  acceptForms: ["decimal", "fraction"],
+});
+
+const ce = (misconception, value, feedback, marks, source) => ({
+  misconception,
+  pattern: { kind: "numeric", value },
+  feedback,
+  marksTypicallyEarned: marks,
+  source,
+});
+
+const opt = (id, M, correct, feedback, misconception) => ({
+  id,
+  text: `$${mTex(M)}$`,
+  correct,
+  feedback,
+  ...(misconception ? { misconception } : {}),
+});
+
+const questions = [
+  {
+    id: `q.${TOPIC}.0001`,
+    difficulty: 1,
+    style: "practice",
+    commandWords: ["Work out"],
+    setting: "A sum of two square matrices, the opening part of a matrix question",
+    figures: [figure(GIVENS_SVG, `Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.`)],
+    parts: [
+      {
+        id: "main",
+        stem: `The diagram shows the matrices $A$, $B$ and $C$, where $A = ${mTex(A)}$ and $B = ${mTex(B)}$.\nWork out $A + B$.\n${ENTRY_NOTE}`,
+        marks: 2,
+        answer: matrixAnswer(SUM),
+        scheme: [
+          { id: "MW1", code: "MW", marks: 1, for: "adding the entries in matching positions" },
+          { id: "W1", code: "W", marks: 1, for: `$${mTex(SUM)}$` },
+        ],
+        hints: ["Add the two entries that sit in the same position."],
+        workedSolution: `Adding position by position: $${mTex(A)} + ${mTex(B)} = ${mTex(SUM)}$.`,
+        commonErrors: [
+          matrixError("fm.matrix.elementwise-product", E.abElementwise, `The entries in matching positions have been multiplied rather than added. Adding them gives $${mTex(SUM)}$.`, 0, CER23),
+          // 22 Sep: the A - B common error is gone. Subtracting where a sum was asked is not a subtraction taken the
+          // wrong way round, no registry id describes it, and the engine's entry-by-entry line already answers it.
+        ],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0002`,
+    difficulty: 1,
+    style: "practice",
+    commandWords: ["Work out"],
+    setting: "A scalar multiple, where every entry is multiplied",
+    parts: [
+      {
+        id: "main",
+        stem: `The matrix $A = ${mTex(A)}$.\nWork out $3A$.\n${ENTRY_NOTE}`,
+        marks: 2,
+        answer: matrixAnswer(TRIPLE),
+        scheme: [
+          { id: "MW1", code: "MW", marks: 1, for: "every entry multiplied by $3$" },
+          { id: "W1", code: "W", marks: 1, for: `$${mTex(TRIPLE)}$` },
+        ],
+        hints: ["A number outside the brackets multiplies every entry inside."],
+        workedSolution: `Multiplying every entry by $3$: $3${mTex(A)} = ${mTex(TRIPLE)}$.`,
+        commonErrors: [
+          matrixError("fm.matrix.scalar-multiple-squared", E.aSquaredElementwise, `Each entry has been squared instead of multiplied by $3$. A number outside the brackets multiplies every entry, giving $${mTex(TRIPLE)}$.`, 0, CER25),
+        ],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0003`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Identify"],
+    setting: "Whether an operation is possible at all, decided from the shapes",
+    figures: [figure(GIVENS_SVG, `Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.`)],
+    parts: [
+      {
+        id: "main",
+        stem: `The diagram shows $A$, which is $2 \\times 2$, and $C$, which is $2 \\times 3$.\nIdentify the correct statement about $A + C$.`,
+        marks: 1,
+        answer: {
+          kind: "mcq",
+          shuffle: true,
+          options: [
+            { id: "a", text: "It does not exist, because the two matrices are different shapes", correct: true, feedback: `Adding pairs entries in matching positions, and $C$ has a third column with nothing opposite it.` },
+            { id: "b", text: "It is a $2 \\times 3$ matrix, with the extra column of $C$ copied across", correct: false, misconception: "fm.matrix.dimensions-not-conformable", feedback: `Nothing is copied across in an addition. With no entry of $A$ opposite that third column, the sum does not exist.` },
+            { id: "c", text: "It is a $2 \\times 2$ matrix, using the first two columns of $C$", correct: false, misconception: "fm.matrix.dimensions-not-conformable", feedback: `A matrix cannot be trimmed to fit. Addition needs the two shapes to be identical.` },
+          ],
+        },
+        scheme: [{ id: "W1", code: "W", marks: 1, for: "it does not exist: the shapes differ" }],
+        hints: ["Compare the two shapes before anything else."],
+        workedSolution: `$A$ is $2 \\times 2$ and $C$ is $2 \\times 3$.\nAddition pairs entries in matching positions, so it needs identical shapes. $A + C$ does not exist.`,
+        commonErrors: [],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0004`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Work out"],
+    setting: "A product of two square matrices, worked row by column",
+    parts: [
+      {
+        id: "main",
+        stem: `The matrices $A = ${mTex(A)}$ and $B = ${mTex(B)}$.\nWork out $AB$.\n${ENTRY_NOTE}`,
+        marks: 3,
+        answer: matrixAnswer(AB),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: "at least one entry from a row of $A$ against a column of $B$" },
+          { id: "M2", code: "M", marks: 1, for: "all four entries attempted row by column", dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$${mTex(AB)}$`, ft: true },
+        ],
+        hints: ["Row 1 of $A$ with column 1 of $B$ gives the entry in row 1, column 1.", "Work along the row and down the column, then add."],
+        workedSolution: `Row by column: $${mTex(A)}${mTex(B)} = ${mTex(AB)}$.\nFor example row 2, column 1 is $(${fPlain(A[1][0])})(${fPlain(B[0][0])}) + (${fPlain(A[1][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[1][0])}$.`,
+        commonErrors: [
+          matrixError("fm.matrix.elementwise-product", E.abElementwise, `The entries in matching positions have been multiplied. Each entry of a product is a whole row against a whole column, which gives $${mTex(AB)}$.`, 0, CER23),
+          matrixError("fm.matrix.rows-and-columns-swapped", E.abSwapped, `Rows of $A$ have been paired with rows of $B$. It is a row of the first against a column of the second, which gives $${mTex(AB)}$.`, 1, CER23),
+          matrixError("fm.matrix.inverse-order", BA, `That is $BA$. The order of a matrix product changes the answer, and $AB$ is $${mTex(AB)}$.`, 1, CER24),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0005`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Write down"],
+    setting: "One named entry of a product, so the row-by-column rule is used on its own",
+    parts: [
+      {
+        id: "main",
+        stem: `The matrices $A = ${mTex(A)}$ and $B = ${mTex(B)}$.\nWrite down the entry in row 2, column 1 of $AB$.`,
+        marks: 2,
+        answer: numAns(fVal(AB[1][0])),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$(${fPlain(A[1][0])})(${fPlain(B[0][0])}) + (${fPlain(A[1][1])})(${fPlain(B[1][0])})$` },
+          { id: "W1", code: "W", marks: 1, for: `$${fPlain(AB[1][0])}$`, ft: true },
+        ],
+        hints: ["Row 2 of $A$, column 1 of $B$."],
+        workedSolution: `Row 2 of $A$ is $${fPlain(A[1][0])}$, $${fPlain(A[1][1])}$ and column 1 of $B$ is $${fPlain(B[0][0])}$, $${fPlain(B[1][0])}$.\n$(${fPlain(A[1][0])})(${fPlain(B[0][0])}) + (${fPlain(A[1][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[1][0])}$.`,
+        commonErrors: [
+          ce("fm.matrix.elementwise-product", fVal(E.abElementwise[1][0]), `That is the entry of $A$ multiplied by the entry of $B$ in the same position. A product pairs a whole row with a whole column, which gives $${fPlain(AB[1][0])}$.`, 0, CER23),
+          ce("fm.matrix.rows-and-columns-swapped", fVal(E.abSwapped[1][0]), `That came from taking row 2 of $A$ against row 1 of $B$. It is a row of the first against a column of the second, which gives $${fPlain(AB[1][0])}$.`, 0, CER23),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0006`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Identify"],
+    setting: "The shape of a product, read from the shape rule alone",
+    parts: [
+      {
+        id: "main",
+        stem: `The matrix $A$ is $2 \\times 2$ and the matrix $C$ is $2 \\times 3$.\nIdentify the shape of the product $AC$.`,
+        marks: 1,
+        answer: {
+          kind: "mcq",
+          shuffle: true,
+          options: [
+            { id: "a", text: `$${dims(AC)[0]} \\times ${dims(AC)[1]}$`, correct: true, feedback: `The inner numbers are both $2$, so the product exists, and the outer numbers give the shape.` },
+            { id: "b", text: "$3 \\times 2$", correct: false, misconception: "fm.matrix.dimensions-not-conformable", feedback: `The outer numbers are read in order: rows of the first, then columns of the second.` },
+            { id: "c", text: "$2 \\times 2$", correct: false, misconception: "fm.matrix.dimensions-not-conformable", feedback: `The columns of the answer come from $C$, which has three of them.` },
+          ],
+        },
+        scheme: [{ id: "W1", code: "W", marks: 1, for: `$${dims(AC)[0]} \\times ${dims(AC)[1]}$` }],
+        hints: ["Write the two shapes side by side and look at the inner and outer numbers."],
+        workedSolution: `$2 \\times 2$ times $2 \\times 3$: the inner numbers are both $2$, so the product exists.\nThe outer numbers give the shape, so $AC$ is $${dims(AC)[0]} \\times ${dims(AC)[1]}$.`,
+        commonErrors: [],
+        requiresWorking: false,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0007`,
+    difficulty: 3,
+    style: "practice",
+    commandWords: ["Identify"],
+    setting: "A squared matrix, the slip the reports name most often on this topic",
+    parts: [
+      {
+        id: "main",
+        stem: `The matrix $A = ${mTex(A)}$.\nIdentify $A^{2}$.`,
+        marks: 2,
+        answer: {
+          kind: "mcq",
+          shuffle: true,
+          options: [
+            opt("a", ASQ, true, `$A^{2}$ means $A \\times A$, worked row by column.`),
+            opt("b", E.aSquaredElementwise, false, `Each entry has been squared. Squaring a matrix means multiplying it by itself, which gives $${mTex(ASQ)}$.`, "fm.matrix.scalar-multiple-squared"),
+            opt("c", mScale(2, A), false, `That is $2A$, every entry doubled. A power is a repeated product, not a repeated sum.`, "fm.matrix.scalar-multiple-squared"),
+            opt("d", routes.rowsAndColumnsSwapped(A, A), false, `That came from pairing rows with rows. A product pairs a row of the first with a column of the second.`, "fm.matrix.rows-and-columns-swapped"),
+          ],
+        },
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$A \\times A$ attempted row by column` },
+          { id: "W1", code: "W", marks: 1, for: `$${mTex(ASQ)}$` },
+        ],
+        hints: [`$A^{2}$ is $A$ multiplied by $A$.`],
+        workedSolution: `$A^{2} = A \\times A = ${mTex(A)}${mTex(A)} = ${mTex(ASQ)}$.\nRow 1, column 1 is $(${fPlain(A[0][0])})(${fPlain(A[0][0])}) + (${fPlain(A[0][1])})(${fPlain(A[1][0])}) = ${fPlain(ASQ[0][0])}$.`,
+        commonErrors: [],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0008`,
+    difficulty: 3,
+    style: "exam-style",
+    commandWords: ["Work out", "Explain"],
+    setting: "A combined expression, then a non-square product, then a conformability explanation",
+    figures: [figure(GIVENS_SVG, `Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.`)],
+    parts: [
+      {
+        id: "a",
+        stem: `The diagram shows the matrices $A$, $B$ and $C$.\nWork out $2A - B$.\n${ENTRY_NOTE}`,
+        marks: 2,
+        answer: matrixAnswer(TWO_A_MINUS_B),
+        scheme: [
+          { id: "MW1", code: "MW", marks: 1, for: `$2A = ${mTex(mScale(2, A))}$` },
+          { id: "W1", code: "W", marks: 1, for: `$${mTex(TWO_A_MINUS_B)}$`, ft: true },
+        ],
+        hints: ["Double every entry of $A$ first, then subtract position by position."],
+        workedSolution: `$2A = ${mTex(mScale(2, A))}$.\nSubtracting position by position: $2A - B = ${mTex(TWO_A_MINUS_B)}$.`,
+        commonErrors: [
+          matrixError("fm.matrix.subtract-wrong-way", mSub(B, mScale(2, A)), `The subtraction is the wrong way round: that is $B - 2A$. Every entry changes sign, and $2A - B$ is $${mTex(TWO_A_MINUS_B)}$.`, 1, CER24),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `Work out $AC$.\n${ENTRY_NOTE}`,
+        marks: 3,
+        answer: matrixAnswer(AC),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: "row of $A$ against column of $C$ for at least one entry" },
+          { id: "M2", code: "M", marks: 1, for: "all six entries attempted", dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$${mTex(AC)}$`, ft: true },
+        ],
+        hints: ["The shapes are $2 \\times 2$ and $2 \\times 3$, so the answer has six entries.", "Each row of $A$ meets each of the three columns of $C$."],
+        workedSolution: `$AC = ${mTex(A)}${mTex(C)} = ${mTex(AC)}$.\nFor example row 2, column 3 is $(${fPlain(A[1][0])})(${fPlain(C[0][2])}) + (${fPlain(A[1][1])})(${fPlain(C[1][2])}) = ${fPlain(AC[1][2])}$.`,
+        // No common error here: the answer field is a 2 by 3 grid, so a 2 by 2 response cannot be
+        // submitted at all, and the engine already names the shape it was expecting.
+        commonErrors: [],
+        requiresWorking: true,
+      },
+      {
+        id: "c",
+        stem: `Explain why the product $CA$ cannot be worked out.`,
+        marks: 1,
+        answer: {
+          kind: "text",
+          accepted: [
+            "C has 3 columns and A has 2 rows, and they are not equal, so the product does not exist",
+            "the number of columns of C is 3 and the number of rows of A is 2, so they do not match",
+            "3 and 2 are not equal",
+            "the inner numbers differ",
+          ],
+          // Three ideas share the one mark, so the word "columns" alone cannot buy it and the
+          // scheme's own accepts are not refused.
+          keyWords: [
+            { any: ["columns of c", "3 columns", "three columns", "columns in c", "c has 3"], marks: 1 },
+            { any: ["rows of a", "2 rows", "two rows", "rows in a", "a has 2"], marks: 1 },
+            { any: ["do not match", "does not match", "not match", "are not equal", "is not equal", "not the same", "differ", "different"], marks: 1 },
+          ],
+          listingRule: false,
+        },
+        scheme: [
+          { id: "W1", code: "W", marks: 1, for: "the columns of $C$ and the rows of $A$ do not match", accept: ["3 and 2 are not equal", "the inner numbers differ"] },
+        ],
+        hints: ["Write the two shapes side by side, $C$ first."],
+        workedSolution: `$C$ is $2 \\times 3$ and $A$ is $2 \\times 2$, so the product $CA$ has inner numbers $3$ and $2$.\nC has 3 columns and A has 2 rows, and they are not equal, so the product does not exist.`,
+        commonErrors: [],
+        requiresWorking: false,
+      },
+    ],
+  },
+];
+
+function buildQuestion(q) {
+  const totalMarks = q.parts.reduce((s, p) => s + p.marks, 0);
+  const verbFor = (p) => (p.stem.includes("Explain") ? "explain" : p.stem.includes("Identify") ? "identify" : p.stem.includes("Write down") ? "write-down" : "work-out");
+  return {
+    id: q.id,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    tier: "untiered",
+    style: q.style,
+    difficulty: q.difficulty,
+    ao: q.style === "exam-style" ? ["AO1", "AO2"] : ["AO1"],
+    commandWords: q.commandWords,
+    emphasis: [],
+    context: { setting: q.setting, original: true },
+    figures: q.figures ?? [],
+    parts: q.parts,
+    totalMarks,
+    timeAllowanceSec: Math.round(totalMarks * 1.2 * 60),
+    skeleton: q.parts.map((p) => `(${p.id})${verbFor(p)}${p.marks}`).join("|"),
+    examinerSources: [CER23, CER24, CER25],
+    solutionProgram: q.parts.map((p) => `${p.id}: ${p.workedSolution.replace(/\n/g, " ")}`).join(" || "),
+    verification: `ver.${q.id}`,
+    version: 1,
+  };
+}
+
+const builtQuestions = questions.map(buildQuestion);
+
+const workedExamples = [
+  {
+    id: `we.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `The matrices $A = ${mTex(A)}$ and $B = ${mTex(B)}$.\nWork out $AB$.`,
+    figure: figure(ROWCOL_SVG, `The product of A and B with the first row of A and the first column of B shaded, and the entry they produce outlined in the answer matrix.`),
+    steps: [
+      {
+        n: 1,
+        working: `Check the shapes: $A$ is $2 \\times 2$ and $B$ is $2 \\times 2$, so the inner numbers match and the answer is $2 \\times 2$.`,
+        decision: "Two seconds of checking tells you the product exists and how many entries to produce. It also stops you starting a product that cannot be done. No mark is going for it; it protects the ones below.",
+      },
+      {
+        n: 2,
+        working: `Row 1 of $A$ against column 1 of $B$: $(${fPlain(A[0][0])})(${fPlain(B[0][0])}) + (${fPlain(A[0][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[0][0])}$.`,
+        decision: "Work along the row and down the column at the same time, and write the sum out before evaluating it. Sign slips live in this line.",
+        whyMenu: {
+          options: [
+            "Because the entry in row 1, column 1 comes from row 1 of the first and column 1 of the second",
+            "Because the entries in the same position are multiplied together",
+            "Because the first row of each matrix is multiplied term by term",
+          ],
+          correct: 0,
+          explain: `The position of the entry names the row to take from the first matrix and the column to take from the second.`,
+        },
+        earns: ["M1"],
+      },
+      {
+        n: 3,
+        working: `Row 1 against column 2: $(${fPlain(A[0][0])})(${fPlain(B[0][1])}) + (${fPlain(A[0][1])})(${fPlain(B[1][1])}) = ${fPlain(AB[0][1])}$.`,
+        decision: "Same row, next column. Keeping the row fixed while the column moves is what stops entries landing in the wrong place.",
+      },
+      {
+        n: 4,
+        working: `Row 2 against column 1: $(${fPlain(A[1][0])})(${fPlain(B[0][0])}) + (${fPlain(A[1][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[1][0])}$. Row 2 against column 2: $(${fPlain(A[1][0])})(${fPlain(B[0][1])}) + (${fPlain(A[1][1])})(${fPlain(B[1][1])}) = ${fPlain(AB[1][1])}$.`,
+        decision: "Move to the second row and repeat. Four entries, four sums, in the same order every time. The second method mark is for all four being attempted, so it lands here.",
+        earns: ["M2"],
+      },
+      {
+        n: 5,
+        working: `So $AB = ${mTex(AB)}$.`,
+        decision: `Check the shape against step 1: four entries in a $2 \\times 2$ matrix, which is what the shape rule promised.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$AB = ${mTex(AB)}$`,
+    twin: {
+      stem: `Using the same matrices, work out $BA$.`,
+      answer: matrixAnswer(BA),
+    },
+    faded: [
+      { showSteps: 2, studentSupplies: [3, 4, 5] },
+      { showSteps: 1, studentSupplies: [2, 3, 4, 5] },
+    ],
+    verification: `ver.we.${TOPIC}.01`,
+    version: 1,
+  },
+];
+
+const diagnostics = [
+  {
+    id: `dx.${TOPIC}.pre`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "pre",
+    items: [
+      {
+        id: "p1",
+        stem: `Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is $(${fPlain(A[1][0])}) \\times (${fPlain(B[0][0])}) + (${fPlain(A[1][1])}) \\times (${fPlain(B[1][0])})$?`,
+        skill: "Multiply and add with negatives",
+        options: [
+          { id: "a", text: `$${fPlain(AB[1][0])}$`, correct: true, feedback: `$${fVal(A[1][0]) * fVal(B[0][0])}$ and $${fVal(A[1][1]) * fVal(B[1][0])}$ add to $${fPlain(AB[1][0])}$.` },
+          { id: "b", text: `$${fVal(A[1][0]) * fVal(B[0][0]) + Math.abs(fVal(A[1][1]) * fVal(B[1][0]))}$`, correct: false, feedback: `The second product is negative, because one of its two numbers is negative.` },
+          { id: "c", text: `$${fVal(A[1][0]) * fVal(B[0][0])}$`, correct: false, feedback: `Only the first product has been used. Both products are added together.` },
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "p2",
+        stem: "A rectangle of numbers has 2 rows and 3 columns. Which description is right?",
+        skill: "Reading a shape as rows by columns",
+        options: [
+          { id: "a", text: "It has 6 numbers in it", correct: true, feedback: `Two rows of three, so six numbers. That count is worth doing before you start writing an answer.` },
+          { id: "b", text: "It has 5 numbers in it", correct: false, feedback: `The rows and columns are multiplied, not added.` },
+          { id: "c", text: "It has 2 numbers in it", correct: false, feedback: `Each of the two rows holds three numbers.` },
+        ],
+        secondsExpected: 20,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "p3",
+        stem: `What is $3 \\times (${fPlain(A[0][1])})$?`,
+        skill: "Multiplying a negative by a positive",
+        options: [
+          { id: "a", text: `$${fPlain(TRIPLE[0][1])}$`, correct: true, feedback: `A negative multiplied by a positive stays negative.` },
+          { id: "b", text: `$${Math.abs(fVal(TRIPLE[0][1]))}$`, correct: false, feedback: `The sign has been dropped. Three lots of a negative number is negative.` },
+          { id: "c", text: `$${fVal(A[0][1]) + 3}$`, correct: false, feedback: `That is $3$ added rather than multiplied.` },
+        ],
+        secondsExpected: 20,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+    ],
+  },
+  {
+    id: `dx.${TOPIC}.post`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "post",
+    items: [
+      {
+        id: "d1",
+        stem: `Which of these is $A + B$, for $A = ${mTex(A)}$ and $B = ${mTex(B)}$?`,
+        skill: "Adding matrices",
+        options: [
+          opt("a", SUM, true, `Each entry added to the entry in the same position.`),
+          opt("b", E.abElementwise, false, `The entries have been multiplied rather than added.`, "fm.matrix.elementwise-product"),
+          opt("c", E.diffWrongWay, false, `That is $B - A$. The question asked for the sum.`),
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d2",
+        stem: `Which of these is $AB$, for $A = ${mTex(A)}$ and $B = ${mTex(B)}$?`,
+        skill: "Multiplying row by column",
+        options: [
+          opt("a", AB, true, `Each entry is a row of $A$ paired with a column of $B$.`),
+          opt("b", E.abElementwise, false, `The entries in matching positions have been multiplied. A product pairs a whole row with a whole column.`, "fm.matrix.elementwise-product"),
+          opt("c", E.abSwapped, false, `Rows have been paired with rows. It is a row of the first against a column of the second.`, "fm.matrix.rows-and-columns-swapped"),
+          opt("d", BA, false, `That is $BA$. The order of a matrix product changes the answer.`, "fm.matrix.inverse-order"),
+        ],
+        secondsExpected: 40,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d3",
+        // The shapes are the pair the note teaches, so the mark never turns on a 3 by 3 product,
+        // which the Teacher Guidance and this bundle's own notOnThisSpec both exclude.
+        stem: `A matrix $P$ is $2 \\times 2$ and a matrix $Q$ is $2 \\times 3$. Which products exist?`,
+        skill: "The shape rule",
+        options: [
+          { id: "a", text: "$PQ$ only", correct: true, feedback: `For $PQ$ the inner numbers are $2$ and $2$, so it exists and comes out $2 \\times 3$. For $QP$ they are $3$ and $2$, which do not match.` },
+          { id: "b", text: "Both $PQ$ and $QP$", correct: false, misconception: "fm.matrix.dimensions-not-conformable", feedback: `$QP$ has inner numbers $3$ and $2$. They do not match, so that product does not exist.` },
+          { id: "c", text: "Neither, because the shapes are different", correct: false, misconception: "fm.matrix.dimensions-not-conformable", feedback: `Multiplication does not need identical shapes. It needs the inner two numbers to match, and for $PQ$ they do.` },
+        ],
+        secondsExpected: 35,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d4",
+        stem: `For a matrix $M$, what does $M^{2}$ mean?`,
+        skill: "Squaring a matrix",
+        options: [
+          { id: "a", text: `$M \\times M$, worked row by column`, correct: true, feedback: `A power is a repeated product, and matrix products are row by column.` },
+          { id: "b", text: "Each entry of $M$ squared", correct: false, misconception: "fm.matrix.scalar-multiple-squared", feedback: `That is the slip the reports name most often here. It gives a different matrix entirely.` },
+          { id: "c", text: `$2M$, with every entry doubled`, correct: false, misconception: "fm.matrix.scalar-multiple-squared", feedback: `Doubling is $2M$. Squaring is multiplying the matrix by itself.` },
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+    ],
+  },
+];
+
+const findTheMistake = [
+  {
+    id: `ftm.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    stem: `Seán was asked to work out $AB$, where $A = ${mTex(A)}$ and $B = ${mTex(B)}$. His working:`,
+    studentWorking: [
+      `A is 2 x 2 and B is 2 x 2, so AB is 2 x 2`,
+      `row 1, column 1: (${fPlain(A[0][0])})(${fPlain(B[0][0])}) = ${fPlain(E.abElementwise[0][0])}`,
+      `row 1, column 2: (${fPlain(A[0][1])})(${fPlain(B[0][1])}) = ${fPlain(E.abElementwise[0][1])}`,
+      `row 2, column 1: (${fPlain(A[1][0])})(${fPlain(B[1][0])}) = ${fPlain(E.abElementwise[1][0])}`,
+      `row 2, column 2: (${fPlain(A[1][1])})(${fPlain(B[1][1])}) = ${fPlain(E.abElementwise[1][1])}`,
+      `AB = ${mPlain(E.abElementwise)}`,
+    ],
+    mistakeLine: 2,
+    misconception: "fm.matrix.elementwise-product",
+    whatWentWrong: `Line 1 is right, and the shape he predicted is the shape he produced, so nothing looks wrong on the page.\nLine 2 multiplies the two entries sitting in the same position. A matrix product pairs a whole row of the first with a whole column of the second, so that entry is $(${fPlain(A[0][0])})(${fPlain(B[0][0])}) + (${fPlain(A[0][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[0][0])}$.\nEvery line after it repeats the same pairing, so the whole matrix is wrong even though the arithmetic in each line is right.`,
+    correction: [
+      `row 1, column 1: (${fPlain(A[0][0])})(${fPlain(B[0][0])}) + (${fPlain(A[0][1])})(${fPlain(B[1][0])}) = ${fPlain(AB[0][0])}`,
+      `row 1, column 2: (${fPlain(A[0][0])})(${fPlain(B[0][1])}) + (${fPlain(A[0][1])})(${fPlain(B[1][1])}) = ${fPlain(AB[0][1])}`,
+      `AB = ${mPlain(AB)}`,
+    ],
+    // The scheme for this task is M1, M2, W1, and pairing matching positions earns none of them;
+    // writing the shapes down carries no mark of its own.
+    marksEarnedAsWritten: [],
+    feedback: `The shape you predicted is right and the arithmetic is accurate, so this is a method problem rather than a careless one. Each entry of a product is a sum of two products, never a single one: if a line of your working has no plus sign in it, you have paired the wrong things. Say "row of the first, column of the second" as you write each line.`,
+    source: CER23,
+  },
+];
+
+const prompts = [
+  {
+    id: `rp.${TOPIC}.01`,
+    kind: "procedure",
+    prompt: "How do you find the entry in row 2, column 1 of a matrix product?",
+    answer: "Take row 2 of the first matrix and column 1 of the second, multiply them term by term and add the results.",
+    keyWords: ["row 2", "column 1", "add"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.02`,
+    kind: "qa",
+    prompt: "When can two matrices be added, and when can they be multiplied?",
+    answer: "Added only when they are the same shape. Multiplied only when the columns of the first match the rows of the second.",
+    keyWords: ["same shape", "columns", "rows"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.03`,
+    kind: "formula",
+    prompt: "A matrix that is $m \\times n$ is multiplied by one that is $n \\times p$. What shape is the answer?",
+    answer: "It is $m \\times p$: the inner numbers match, and the outer two give the shape of the product.",
+    keyWords: ["inner", "outer"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.04`,
+    kind: "trap",
+    prompt: "What does $M^{2}$ mean for a matrix $M$, and what does it not mean?",
+    answer: "It means $M \\times M$, worked row by column. It does not mean squaring each entry.",
+    keyWords: ["multiplied by itself", "not"],
+    difficultyPrior: 5,
+  },
+  {
+    id: `rp.${TOPIC}.05`,
+    kind: "trap",
+    prompt: "Is $AB$ the same as $BA$?",
+    answer: "No. Matrix multiplication depends on the order, and often only one of the two products exists at all.",
+    keyWords: ["no", "order"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.06`,
+    kind: "procedure",
+    prompt: "What is the first thing to write down before multiplying two matrices?",
+    answer: "The two shapes, side by side. They say whether the product exists and how many entries the answer needs.",
+    keyWords: ["shapes", "exists"],
+    difficultyPrior: 3,
+  },
+];
+
+/* ---- bundle --------------------------------------------------------------------------------------------- */
+
+const noteChecks = [
+  check("schema", "Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, gate ids g1 to g5 are unique, every prompt block names a prompt in this bundle, and every gate restates the rows and columns it uses so it reads alone in the review inbox."),
+  check("scope-tier", "FM1 is untiered and calculator-allowed. The FM1-MAT-01 teacher guidance allows non-square matrices for addition and subtraction and caps multiplication at 3 rows or 3 columns while excluding 3 by 3 matrices: the largest matrix here is 2 by 3 and the largest product is 2 by 3. Transformations of the unit square, which AQA 8365 examines at 5.3 and 5.4, are not on this specification and appear nowhere."),
+  check("formula-sheet", "The Unit 1 sheet carries nothing about matrices, so the row-by-column rule and the shape rule are both must-know. The note says so."),
+  check("command-words", "Work out, Write down, Identify and Explain are the command words, with the tariffs from packs/further-maths/exam-true/command-words.json (Write down 1-1-2, Identify 1-1-2, Calculate 2-3-6). The stems keep the shape of the matrix openers read in the Summer 2019, 2023 and 2025 FM1 papers while every matrix, entry and sentence is our own."),
+  check("tariff", "2 marks for a sum or a scalar multiple, 3 for a product, 1 for a shape or a conformability statement, and 2 + 3 + 1 for the exam-style question, matching the 4 to 6 marks matrices carry at the start of a Unit 1 paper."),
+  check("maths-numeric", `Every sum, difference, scalar multiple and product is computed in exact rational arithmetic by matlib.mjs and three product entries were recomputed independently as a check: ${PRODUCT_CHECKS.map((c) => `${c.name} = ${c.got}`).join("; ")}. AB and BA were compared and found different, so the non-commutativity example holds.`),
+  check("examiner-alignment", "One examiner callout stands in the body beside the squaring step (Summer 2024 Q7). Every other finding is a Sheet trap. Gates g1 and g4 fix the shapes, g2 the entry-by-entry operations, g3 the row-by-column rule and g5 the squared matrix."),
+  check("copy-shingle", "An 8-word shingle scan of the note and the bundle against every text file of the private FM corpus (scratchpad/fm1-batch-g/lib.mjs shingleClash) returns nothing; every matrix and every entry here is new."),
+  check("style-lint", "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. Six inline SVG figures, every one drawn from the computed matrices, and one embeddable video from data/links/media-map.json followed immediately by a gate. The closing panel is a pointer of under 80 words followed by the prompts."),
+];
+
+const itemChecks = (detail) => [
+  check("schema", "Validated by pipeline/build-content.mts against the Zod Question / WorkedExample / DiagnosticSet / FindTheMistake schema; every scheme sums to its part's marks and the skeleton matches the parts."),
+  check("maths-numeric", detail),
+  check("command-words", "Command words and tariffs taken from packs/further-maths/exam-true/command-words.json; the wording is ours."),
+  check("examiner-alignment", "Every common error and every tagged distractor carries a registry misconception naming the error its route executes, evidenced by the Summer 2019 Q1, Summer 2022 Q3, Summer 2023 Q8, Summer 2024 Q7 or Summer 2025 Q1 report block; the post-check distractor that subtracts where a sum was asked carries no tag, because no registry misconception describes it."),
+  check("copy-shingle", "8-word shingle scan against the private FM corpus returns nothing."),
+  check("style-lint", "KaTeX segments paired and prose-free; British English; no exclamation marks. Every matrix answer is a table spec, one input per entry, because the marker accepts no typed form of a matrix (probe-matrix.mts)."),
+];
+
+const verification = [
+  verLog(`ver.note.${TOPIC}`, `note.${TOPIC}`, noteChecks),
+  verLog(`ver.we.${TOPIC}.01`, `we.${TOPIC}.01`, itemChecks(`The worked example multiplies ${mPlain(A)} by ${mPlain(B)} to give ${mPlain(AB)}; each of the four entries is printed from the exact sum the generator computed. The twin multiplies them the other way round, giving ${mPlain(BA)}, which is a different matrix.`)),
+  ...builtQuestions.map((q) =>
+    verLog(
+      `ver.${q.id}`,
+      q.id,
+      itemChecks(
+        `Every matrix was computed by matlib.mjs: ${q.parts
+          .map((p) => `${p.id} -> ${p.answer.kind === "table" ? p.answer.cells.map((c) => c.value).join(", ") : p.answer.kind === "numeric" ? p.answer.value : "the option the scheme names"}`)
+          .join("; ")}. Each distractor matrix was produced by executing the route its feedback describes (routes.* in matlib.mjs) and re-checked against the published JSON by verify-published.mjs.`,
+      ),
+    ),
+  ),
+];
+
+const bundle = {
+  $schema: "../../../../../pipeline/schema/topic-bundle.schema.json",
+  topic: {
+    id: TOPIC,
+    slug: SLUG,
+    title: "Adding, subtracting and multiplying matrices",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    strand: "Matrices",
+    statementIds: REFS,
+    prerequisites: [],
+    order: 45,
+    hardness: "L",
+    difficulty: 2,
+    examinerFlagged: true,
+    examinerSources: [CER19, CER22, CER23, CER24, CER25],
+    examWeightHint:
+      "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. Matrix arithmetic comes as a short question, first on the paper in Summer 2019 and Summer 2025: Summer 2025 Q1 (a scalar multiple, then a 2 by 2 times a 2 by 3), Summer 2019 Q1, Summer 2023 Q8 and Summer 2024 Q7(a) all set two or three short parts worth 4 to 6 marks in total. The Summer 2025 scheme gave M1 for each operation carried out correctly and W1 for every entry right, with follow-through into later parts.",
+    mustMemorise: [
+      "Add and subtract entry by entry, and only between matrices of the same shape",
+      "A number outside the brackets multiplies every entry",
+      "The entry in row i, column j of a product is row i of the first against column j of the second",
+      "(m × n)(n × p) gives m × p: the inner numbers must match",
+      "AB and BA are different; A² means A × A, not each entry squared",
+    ],
+    onFormulaSheet: [],
+    notOnThisSpec: [
+      "3 × 3 matrices, which the Teacher Guidance excludes",
+      "Matrices representing transformations of the unit square, and combinations of transformations",
+      "The transpose of a matrix",
+      "Matrix division as an operation in its own right",
+    ],
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "X66YHxuGUvE",
+        channel: "corbettmaths",
+        credit: "Multiplying Matrices 2x2 by 2x2, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+      {
+        kind: "youtube",
+        videoId: "msRyXRdFoyI",
+        channel: "corbettmaths",
+        credit: "Adding Matrices, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+      {
+        kind: "ccea-doc",
+        docType: "cer",
+        url: "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-further-mathematics-2017/reports",
+        asOf: "2026-09-20",
+      },
+    ],
+    keywords: ["matrix", "dimensions", "product", "scalar multiple", "row by column"],
+  },
+  note: {
+    id: `note.${TOPIC}`,
+    topic: TOPIC,
+    title: "Adding, subtracting and multiplying matrices",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    specRefs: REFS,
+    calculator: true,
+    formulaSheet: {
+      given: [
+        "Quadratic formula x = (−b ± √(b² − 4ac)) / 2a",
+        "Differentiation y = axⁿ ⇒ dy/dx = naxⁿ⁻¹",
+        "Integration ∫axⁿ dx = axⁿ⁺¹/(n + 1) + c",
+        "Logarithm aˣ = n ⇒ x = log_a n",
+      ],
+      mustKnow: [
+        "Add and subtract entry by entry, same shape only",
+        "Row by column for every entry of a product",
+        "(m × n)(n × p) gives m × p",
+        "AB ≠ BA, and A² = A × A",
+      ],
+    },
+    notOnThisSpec: [
+      "3 × 3 matrices",
+      "Matrices as transformations of the unit square",
+      "The transpose of a matrix",
+      "Matrix division",
+    ],
+    hardness: "L",
+    examinerFlagged: true,
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "X66YHxuGUvE",
+        channel: "corbettmaths",
+        credit: "Multiplying Matrices 2x2 by 2x2, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+    ],
+    sheet: {
+      mustBeAbleTo: [
+        "Name a matrix's shape as rows by columns",
+        "Add and subtract matrices of the same shape, entry by entry",
+        "Multiply a matrix by a number, reaching every entry",
+        "Work out any entry of a product as a row of the first against a column of the second",
+        "Multiply a 2 × 2 by a 2 × 2, and a 2 × 2 by a 2 × 3",
+        "Use the shape rule to say whether a product exists and what shape it is",
+        "Explain why a particular sum or product cannot be worked out",
+        "Work out A² as A × A",
+      ],
+      howExamined:
+        "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. Matrix arithmetic is a short question, first on the paper in Summer 2019 and Summer 2025: Summer 2025 Q1 (a scalar multiple, then a 2 by 2 times a 2 by 3, generally well done), Summer 2019 Q1, Summer 2023 Q8 and Summer 2024 Q7(a), each two or three short parts worth 4 to 6 marks in total. The Summer 2025 scheme gave M1 for each operation carried out correctly and W1 for every entry right; later parts of the same question are marked on follow-through from the matrix produced here.",
+      traps: [
+        "Squaring each entry instead of multiplying the matrix by itself (Summer 2019 FM1 Q1, Summer 2023 FM1 Q8, Summer 2024 FM1 Q7)",
+        "Squaring the matrix where a scalar multiple was asked for (Summer 2025 FM1 Q1)",
+        "Multiplying the entries in matching positions instead of row by column (Summer 2023 FM1 Q8)",
+        "A product that does not come out the right shape, so a 2 by 2 answer was never reached (Summer 2023 FM1 Q8)",
+        "Subtracting matrices of different sizes (Summer 2023 FM1 Q8)",
+        "Uncertainty about which products are allowed when the matrices are not square (Summer 2022 FM1 Q3)",
+        "Sign slips inside an otherwise correct product, even with a calculator to hand (Summer 2025 FM1 Q1)",
+      ],
+    },
+    verification: `ver.note.${TOPIC}`,
+    version: 1,
+    updated: "2026-09-20",
+  },
+  workedExamples,
+  diagnostics,
+  questions: builtQuestions,
+  findTheMistake,
+  prompts: prompts.map((p) => ({ ...p, topic: TOPIC, specRefs: REFS, examUnit: "FM1" })),
+  verification,
+};
+
+/* ---- checks and write ------------------------------------------------------------------------------------ */
+
+lintTree(bundle, `${SLUG}/bundle.json`);
+lintTree(blocks, `${SLUG}/note.blocks.json`);
+
+const allText = [JSON.stringify(bundle), JSON.stringify(blocks)].join(" ");
+const clashes = shingleClash(allText, corpusFiles());
+if (clashes.length) throw new Error(`shingle clash:\n  ${clashes.slice(0, 10).join("\n  ")}`);
+
+const a = writeJson(OUT(SLUG, "bundle.json"), bundle);
+const b = writeJson(OUT(SLUG, "note.blocks.json"), blocks);
+console.log(
+  `${SLUG}: we=${workedExamples.length} dx=${diagnostics.reduce((s, d) => s + d.items.length, 0)} q=${builtQuestions.length} ftm=${findTheMistake.length} rp=${prompts.length} gates=${blocks.filter((x) => x.type === "gate").length}`,
+);
+console.log(`  bundle.json  sha256:${a.sha}  ${a.bytes} bytes`);
+console.log(`  note.blocks.json  sha256:${b.sha}  ${b.bytes} bytes`);
+console.log(`  shingle clashes: ${clashes.length}`);
+console.log(`  AB=${mPlain(AB)}  BA=${mPlain(BA)}  A^2=${mPlain(ASQ)}  AC=${mPlain(AC)}`);
+console.log(`  routes: elementwise=${mPlain(E.abElementwise)} swapped=${mPlain(E.abSwapped)} entrySquares=${mPlain(E.aSquaredElementwise)}`);

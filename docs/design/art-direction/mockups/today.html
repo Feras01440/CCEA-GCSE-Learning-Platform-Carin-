@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cairn — Today (art-direction mockup)</title>
+<link rel="stylesheet" href="../tokens.css">
+<style>
+/* ------------------------------------------------------------------
+   Mockup-only shims. The real app gets these from next/font and
+   Tailwind; here they are declared so the page stands alone.
+------------------------------------------------------------------ */
+@font-face{font-family:"Literata";font-style:normal;font-weight:400 600;font-display:swap;
+  src:url("../../../../public/fonts/literata-latin.woff2") format("woff2");}
+@font-face{font-family:"Literata";font-style:italic;font-weight:400 600;font-display:swap;
+  src:url("../../../../public/fonts/literata-italic-latin.woff2") format("woff2");}
+:root{--font-inter:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;}
+
+*{box-sizing:border-box;}
+html{color-scheme:light;}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--font-inter);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;}
+.tnum{font-variant-numeric:tabular-nums slashed-zero;}
+
+/* ---------- shell ---------- */
+.app{display:flex;min-height:100vh;}
+.rail{display:none;}
+.main{flex:1;min-width:0;padding:20px 16px 92px;}
+.col{max-width:720px;margin:0 auto;}
+
+@media (min-width:768px){
+  .rail{display:flex;flex-direction:column;gap:2px;width:200px;flex:none;
+    padding:20px 12px;border-right:1px solid var(--line);background:var(--ground);}
+  .main{padding:32px 32px 48px;}
+  .tabs{display:none;}
+}
+.brand{display:flex;align-items:center;gap:9px;padding:6px 10px 18px;font-size:19px;font-weight:600;letter-spacing:-.01em;}
+.navitem{display:flex;align-items:center;gap:11px;min-height:44px;padding:0 10px;
+  border-radius:var(--radius-sm);font-size:15px;color:var(--ink-2);}
+.navitem svg{color:var(--ink-3);}
+.navitem[aria-current]{background:var(--accent-3);color:var(--ink);font-weight:500;}
+.navitem[aria-current] svg{color:var(--accent);}
+
+/* bottom tabs, phone only */
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;
+  border-top:1px solid var(--line);background:var(--surface);
+  padding-bottom:env(safe-area-inset-bottom);}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;min-height:56px;font-size:var(--fs-micro);font-weight:500;color:var(--ink-3);}
+.tab[aria-current]{color:var(--ink);font-weight:500;}
+
+/* ---------- page furniture ---------- */
+.datum{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--ink-2);}
+h1{margin:2px 0 0;font-size:var(--fs-h1);line-height:var(--lh-h1);font-weight:600;letter-spacing:-.01em;}
+
+/* the three surfaces */
+.object{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--radius);padding:20px;}
+.recess{background:var(--surface-2);border-radius:var(--radius-sm);padding:16px;}
+@media (min-width:768px){.object{padding:24px;}}
+
+.section-rule{border-top:1px solid var(--line);padding-top:14px;margin-top:var(--gap-section);}
+.label{font-size:var(--fs-meta);line-height:var(--lh-meta);font-weight:500;color:var(--ink-2);}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:52px;padding:0 22px;border-radius:var(--radius-sm);
+  font-size:var(--fs-ui);font-weight:600;transition:transform var(--dur-fast) var(--ease-out);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--accent);color:var(--accent-ink);}
+.btn-secondary{background:var(--surface);color:var(--ink);border:1px solid var(--line-3);font-weight:500;min-height:44px;padding:0 16px;}
+
+/* ---------- Tonight ---------- */
+.count{font-size:30px;line-height:1.1;font-weight:600;letter-spacing:-.02em;margin:8px 0 0;}
+.count .soft{color:var(--ink-2);font-weight:400;}
+.said{margin:6px 0 0;font-size:var(--fs-ui);line-height:var(--lh-ui);color:var(--ink-2);max-width:var(--measure-tight);}
+/* Rowan's nightly line, in the Tonight object, before any answer field */
+.rowan{margin:8px 0 0;font-family:var(--serif-lesson);font-size:17px;line-height:1.55;
+  color:var(--ink-2);max-width:var(--measure-tight);}
+/* the object's only ornament: the cairn, no number */
+.tonight{position:relative;}
+.tonight .stones{position:absolute;top:18px;right:20px;color:var(--ink-3);line-height:0;}
+
+/* ---------- Rowan ---------- */
+.letter{margin-top:12px;}
+.letter .hair{height:1px;background:var(--line-2);}
+.letter .eyebrow{margin:14px 0 0;font-size:var(--fs-meta);font-weight:500;color:var(--ink-2);}
+.letter p.say{margin:8px 0 0;font-family:var(--serif-lesson);font-size:17px;line-height:1.55;
+  color:var(--ink);max-width:var(--measure-tight);}
+.sig{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;}
+.sig .who{display:flex;align-items:center;gap:8px;font-size:var(--fs-meta);color:var(--ink-2);}
+
+/* ---------- the plan rows ---------- */
+.rows{margin-top:12px;}
+.row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-top:1px solid var(--line);}
+.row:first-child{border-top:0;}
+.row .k{flex:none;width:98px;font-size:var(--fs-meta);color:var(--ink-2);padding-top:1px;}
+.row .v{flex:1;min-width:0;font-size:var(--fs-ui);line-height:1.45;}
+.row .v .why{display:block;margin-top:3px;font-size:var(--fs-meta);color:var(--ink-2);}
+.row .end{flex:none;font-size:var(--fs-meta);color:var(--ink-2);padding-top:2px;}
+.rowlink{display:flex;align-items:flex-start;gap:16px;width:100%;text-align:left;min-height:44px;}
+
+.dots{display:flex;gap:7px;align-items:center;}
+.stack{display:inline-block;vertical-align:-2px;}
+
+/* ---------- coming up ---------- */
+.up{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:var(--fs-ui);}
+.up + .up{border-top:1px solid var(--line);}
+.up .when{color:var(--ink-2);}
+
+/* the phone tab bar is hidden from md up — declared last so it wins on order */
+@media (min-width:768px){ .tabs{display:none;} }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== desktop rail ===== -->
+  <nav class="rail" aria-label="Sections">
+    <div class="brand">
+      <svg width="21" height="14" viewBox="0 0 21 14" aria-hidden><rect x="0" y="10.3" width="21" height="3.7" rx="1.85" fill="currentColor" opacity=".85"/><rect x="1.9" y="5.4" width="17.2" height="3.7" rx="1.85" fill="currentColor" opacity=".77"/><rect x="4" y=".5" width="13" height="3.7" rx="1.85" fill="currentColor" opacity=".69"/></svg>
+      Cairn
+    </div>
+    <a class="navitem" aria-current="page" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>Today</a>
+    <a class="navitem" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M12 6.5S10 4.5 3 4.5v13c7 0 9 2 9 2s2-2 9-2v-13c-7 0-9 2-9 2Z"/><path d="M12 6.5v13"/></svg>Learn</a>
+    <a class="navitem" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M17 3.5 20.5 7 8 19.5 3.5 20.5 4.5 16Z"/></svg>Practise</a>
+    <a class="navitem" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7Z"/><path d="M14 3v4h4"/></svg>Papers</a>
+    <a class="navitem" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><circle cx="12" cy="12" r="9"/><path d="m15 9-4.5 1.5L9 15l4.5-1.5Z"/></svg>Map</a>
+  </nav>
+
+  <main class="main">
+   <div class="col">
+
+    <header>
+      <p class="datum">Sunday 20 September</p>
+      <h1>Today</h1>
+    </header>
+
+    <!-- ===== THE FIFTH EVENING. The one she will meet two hundred times. =====
+         The sub-line is Rowan's today-open line and is different every night;
+         the stone stack is the object's only ornament and the only stone on the
+         screen. See today-first.html for the evening with the Letter. -->
+    <section class="object tonight" style="margin-top:20px;" aria-labelledby="tonight">
+      <span class="stones" aria-hidden>
+        <svg width="36" height="24" viewBox="0 0 21 14"><rect x="0" y="10.3" width="21" height="3.7" rx="1.85" fill="currentColor" opacity=".85"/><rect x="1.9" y="5.4" width="17.2" height="3.7" rx="1.85" fill="currentColor" opacity=".77"/><rect x="4" y=".5" width="13" height="3.7" rx="1.85" fill="currentColor" opacity=".69"/></svg>
+      </span>
+      <p class="label" id="tonight">Tonight</p>
+      <p class="count tnum">9 back <span class="soft">· about 7 minutes</span></p>
+      <p class="rowan" data-companion="today-open">Two are the ones you were sure about on Tuesday.</p>
+      <a class="btn btn-primary" href="#" style="margin-top:18px;">
+        Start
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M5 12h13m-6-6 6 6-6 6"/></svg>
+      </a>
+    </section>
+
+    <!-- ===== the plan: page rows, not four cards ===== -->
+    <section class="section-rule" aria-labelledby="plan">
+      <p class="label" id="plan">The plan</p>
+      <div class="rows">
+
+        <div class="row">
+          <span class="k">Next step</span>
+          <a class="rowlink" href="#">
+            <span class="v">
+              M3 · Simplifying, multiplying and dividing algebraic fractions
+              <span class="why">November 2025, M4 Q22(b): dividing algebraic fractions — 5% got full marks.</span>
+            </span>
+            <span class="end" aria-hidden>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-6-6 6 6-6 6"/></svg>
+            </span>
+          </a>
+        </div>
+
+        <div class="row">
+          <span class="k">This week</span>
+          <!-- What was done, never what was not — and in words, because the stone
+               is already on the Tonight object and appears once per screen. -->
+          <span class="v">Two evenings this week.</span>
+        </div>
+
+        <div class="row">
+          <span class="k">Next paper</span>
+          <span class="v">Biology Unit 1 · Higher
+            <span class="why">Tuesday 11 May 2027, 09:15 · 1 h</span>
+          </span>
+          <span class="end tnum">233 days</span>
+        </div>
+
+        <div class="row">
+          <span class="k">Your cairn</span>
+          <span class="v">
+            <span class="tnum" style="font-size:18px;font-weight:600;">6</span> stones
+            <span class="why">One for every topic proved in a later mixed set. Nothing here is ever taken away.</span>
+          </span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== coming up: a recess. She consults it; she does not act on it. ===== -->
+    <section class="section-rule" aria-labelledby="coming">
+      <p class="label" id="coming">Coming up</p>
+      <div class="recess" style="margin-top:12px;">
+        <div class="up"><span>Biology Unit 1</span><span class="when tnum">Tue 11 May 2027 · 09:15</span></div>
+        <div class="up"><span>M4 · Higher</span><span class="when tnum">Fri 14 May 2027 · 09:15</span></div>
+        <div class="up"><span>Chemistry Unit 1</span><span class="when tnum">Mon 17 May 2027 · 09:15</span></div>
+      </div>
+      <p style="margin:12px 0 0;font-size:var(--fs-meta);color:var(--ink-2);">Eleven papers, on CCEA's own dates. Everything here counts back from them.</p>
+    </section>
+
+   </div>
+  </main>
+</div>
+
+<!-- ===== phone tabs ===== -->
+<nav class="tabs" aria-label="Sections">
+  <a class="tab" aria-current="page" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>Today</a>
+  <a class="tab" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M12 6.5S10 4.5 3 4.5v13c7 0 9 2 9 2s2-2 9-2v-13c-7 0-9 2-9 2Z"/><path d="M12 6.5v13"/></svg>Learn</a>
+  <a class="tab" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M17 3.5 20.5 7 8 19.5 3.5 20.5 4.5 16Z"/></svg>Practise</a>
+  <a class="tab" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7Z"/><path d="M14 3v4h4"/></svg>Papers</a>
+  <a class="tab" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden><circle cx="12" cy="12" r="9"/><path d="m15 9-4.5 1.5L9 15l4.5-1.5Z"/></svg>Map</a>
+  <a class="tab" href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden><circle cx="5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>More</a>
+</nav>
+</body>
+</html>

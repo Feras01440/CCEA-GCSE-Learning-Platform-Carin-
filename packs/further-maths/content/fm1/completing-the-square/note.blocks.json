@@ -1,0 +1,172 @@
+[
+  {
+    "type": "hero",
+    "lede": "$x^{2} + 8x + 3$ hides its shape. The same expression written as $(x + 4)^{2} - 13$ tells you everything at a glance: where the curve turns, how far above or below the axis it sits, and how to solve it exactly. Getting from one form to the other takes two lines and one idea.",
+    "can": [
+      "Write $x^{2} + bx + c$ as $(x + a)^{2} + b$ in two lines.",
+      "Say why the number in the bracket is half the coefficient of $x$.",
+      "Say why the square of that half is subtracted rather than added."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Completing the square"
+  },
+  {
+    "type": "p",
+    "md": "Start from what you are aiming at. Expanding $(x + 4)^{2}$ gives $x^{2} + 8x + 16$, so the squared bracket already carries the $8x$ you want — it just drags a 16 with it. Take that 16 away and the expression has changed its clothes, not its value. Because $(x + a)^{2} = x^{2} + 2ax + a^{2}$, the middle term is always twice $a$, so $a$ is half the number in front of $x$."
+  },
+  {
+    "type": "figure",
+    "alt": "A square of side x with two shaded strips added to it, one of width 4 along the right-hand edge and one of height 4 along the bottom, each of area 4x. Together the square and the two strips make an L-shape of area x squared plus 8x. A dashed square of side 4 fills the missing corner, area 16. The whole completed square has side x plus 4.",
+    "svg": "<svg viewBox=\"0 0 440 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"The area model for completing the square\"><title>The area model for completing the square</title><rect x=\"56\" y=\"44\" width=\"150\" height=\"150\" fill=\"currentColor\" fill-opacity=\"0.06\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"131\" y=\"124\" font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"middle\">x²</text><rect x=\"206\" y=\"44\" width=\"62\" height=\"150\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"237\" y=\"124\" font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"middle\">4x</text><rect x=\"56\" y=\"194\" width=\"150\" height=\"62\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"131\" y=\"230\" font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"middle\">4x</text><rect x=\"206\" y=\"194\" width=\"62\" height=\"62\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"/><text x=\"237\" y=\"230\" font-family=\"inherit\" font-size=\"13\" fill=\"currentColor\" text-anchor=\"middle\">16</text><text x=\"131\" y=\"32\" font-family=\"inherit\" font-size=\"13\" fill=\"currentColor\" text-anchor=\"middle\">x</text><text x=\"237\" y=\"32\" font-family=\"inherit\" font-size=\"13\" fill=\"currentColor\" text-anchor=\"middle\">4</text><text x=\"44\" y=\"124\" font-family=\"inherit\" font-size=\"13\" fill=\"currentColor\" text-anchor=\"end\">x</text><text x=\"44\" y=\"230\" font-family=\"inherit\" font-size=\"13\" fill=\"currentColor\" text-anchor=\"end\">4</text><text x=\"20\" y=\"22\" font-family=\"inherit\" font-size=\"13\" fill=\"currentColor\" text-anchor=\"start\">x² + 8x is the shaded L-shape. The dashed corner completes the square.</text></svg>",
+    "caption": "The $8x$ is split into two strips of $4x$ so the picture stays square. The dashed corner is the $16$ you add, and then take away again."
+  },
+  {
+    "type": "callout",
+    "kind": "spec",
+    "title": "What the statement asks for",
+    "md": "**FM1-CSQ-01** — complete the square where the coefficient of $x^{2}$ will always be 1.\nThe Teacher Guidance gives the shape of the question: rewrite a quadratic as $(x + a)^{2} + b$.",
+    "source": "CCEA GCSE Further Mathematics specification, statement FM1-CSQ-01 and its Teacher Guidance (page 7)"
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "One tap to start. Half of 8 is what?",
+    "answer": "4",
+    "explain": "That is the whole of the first step. Everything else in this lesson is bookkeeping built on halving the number in front of $x$."
+  },
+  {
+    "type": "h",
+    "text": "Why halving the coefficient works"
+  },
+  {
+    "type": "p",
+    "md": "Start from the thing you are aiming at. Expanding $(x + 4)^{2}$ gives $x^{2} + 8x + 16$, so the bracket already carries the $8x$ you want — but it drags 16 along with it.\nThat is the whole idea. **The squared bracket is nearly right; the correction is the 16 it brought with it.** Because $(x + a)^{2} = x^{2} + 2ax + a^{2}$, the middle term is always **twice** $a$, so $a$ has to be half of the number in front of $x$."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Expand $(x + 4)^{2}$. Which is right?",
+    "options": [
+      "$x^{2} + 8x + 16$",
+      "$x^{2} + 16$",
+      "$x^{2} + 4x + 16$"
+    ],
+    "answer": "$x^{2} + 8x + 16$",
+    "explain": "The middle term is $2 \\times 4 \\times x = 8x$. Squaring the two terms on their own and forgetting the middle term is the slip that makes the rest of the method look wrong when it is not."
+  },
+  {
+    "type": "p",
+    "md": "So the method is three short steps, and each one has a reason.\n**1. Halve the coefficient of $x$.** Half of $8$ is $4$, so the bracket is $(x + 4)$. The reason: expanding doubles it again."
+  },
+  {
+    "type": "gate",
+    "id": "g2b",
+    "kind": "number",
+    "prompt": "In $x^{2} + 10x + 1$, what number goes inside the bracket?",
+    "answer": "5",
+    "explain": "Half of 10. Expanding $(x + 5)^{2}$ doubles it back to the $10x$ you need."
+  },
+  {
+    "type": "p",
+    "md": "**2. Subtract the square of that half.** $(x + 4)^{2}$ carries a spare $16$, so write $-16$ to cancel it. The reason: you are not allowed to change the value of the expression, only its clothes.\n**3. Combine the constants.** Here $-16 + 3 = -13$."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Not on the formula sheet",
+    "md": "$x^{2} + bx + c = \\left(x + \\dfrac{b}{2}\\right)^{2} + c - \\dfrac{b^{2}}{4}$\nThe Unit 1 sheet gives you the quadratic formula, the differentiation rule, the integration rule and the definition of a logarithm. This identity is not on it, so it has to be in your head."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "blank",
+    "prompt": "Finish it: $x^{2} + 8x + 3 = (x + 4)^{2}$ + ___ (one number).",
+    "answer": "-13",
+    "explain": "$(x + 4)^{2}$ carries a spare $16$, so take it away: $-16 + 3 = -13$. The finished form is $(x + 4)^{2} - 13$."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Where the two marks go",
+    "md": "Summer 2024: the examiners called this question very well answered, then named the two errors that cost marks — **adding** the square instead of subtracting it, and losing the minus sign on the value of $x$ at the end.\nSummer 2025: most candidates completed the square, and the marks that went were lost on the constant after a slip with the half-coefficient.",
+    "source": "ccea-cer:further-maths:2024-summer:FM1:Q2; ccea-cer:further-maths:2025-summer:FM1:Q3"
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Which is $x^{2} - 8x + 5$ in completed-square form?",
+    "options": [
+      "$(x - 4)^{2} - 11$",
+      "$(x - 4)^{2} + 21$",
+      "$(x + 4)^{2} - 11$"
+    ],
+    "answer": "$(x - 4)^{2} - 11$",
+    "explain": "Half of $-8$ is $-4$, so the bracket is $(x - 4)$, and $(x - 4)^{2}$ carries a spare $16$. Taking it away gives $-16 + 5 = -11$."
+  },
+  {
+    "type": "video",
+    "videoId": "qEzdgFQ8BVM",
+    "title": "Completing the Square - CCEA GCSE Further Mathematics",
+    "channel": "P McAleavey",
+    "why": "A Northern Ireland teacher working straight from the FM1 statement, with the layout the paper uses."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why a fraction is the right answer here",
+    "md": "When the coefficient of $x$ is odd, half of it is a fraction and the square of that is a quarter. Unit 1 is a calculator paper and the scheme prints those fractions, so $\\left(x + \\tfrac{3}{2}\\right)^{2} + \\tfrac{11}{4}$ is the expected form, not a decimal."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Odd number in front of $x$: which is $x^{2} + 3x + 5$ in completed-square form?",
+    "options": [
+      "$(x + \\frac{3}{2})^{2} + \\frac{11}{4}$",
+      "$(x + \\frac{3}{2})^{2} + 5$",
+      "$(x + 3)^{2} - 4$"
+    ],
+    "answer": "$(x + \\frac{3}{2})^{2} + \\frac{11}{4}$",
+    "explain": "Half of 3 is $\\frac{3}{2}$, and $\\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$, so the constant is $5 - \\frac{9}{4} = \\frac{11}{4}$. Fractions are normal here; the calculator is allowed, so there is nothing to fear in them."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Halve the coefficient of $x$ to get the bracket.\nSubtract the square of that half, then combine the constants.\nExpand your answer back to check the sign."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The wording barely changes from year to year: **use the method of completing the square** to reach $(x + a)^{2} + b$, two marks, near the front of the paper. The first mark is the bracket, with the right half of the coefficient and the right sign; the second is the constant, and it depends on the first. Stuck: write the bracket anyway, then check by expanding in the margin."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "You will never be given $2x^{2} + \\ldots$ here",
+    "md": "FM1-CSQ-01 fixes the coefficient of $x^{2}$ at 1, so no Unit 1 paper asks you to complete the square on $3x^{2} + 12x + 5$. If you meet one elsewhere, take the 3 out first and work inside the bracket. Learn it for interest, not for this paper."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.completing-the-square.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.completing-the-square.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.completing-the-square.04"
+  }
+]

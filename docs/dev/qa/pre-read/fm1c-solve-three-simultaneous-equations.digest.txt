@@ -1,0 +1,277 @@
+# fm.u1.solve-three-simultaneous-equations — Solving three linear equations in three unknowns  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Solving three equations in three unknowns v1 [verified]
+verification statuses: {"verified":17}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Solving three equations in three unknowns
+- [p] 
+- [figure] 
+- [number] 
+- [h] 1 Why taking a letter out works
+- [figure] Adding two true statements gives a third true statement.
+- [p] 
+- [why] Why the same letter has to go twice
+- [choice] 
+- [h] 2 Pick the letter, then pick the pairs
+- [figure] 
+- [p] 
+- [choice] 
+- [h] 3 One solve, start to finish
+- [p] 
+- [figure] 
+- [number] 
+- [video] Simultaneous Equations with Three Unknowns
+- [choice] 
+- [h] 4 Put the values back, then check
+- [p] 
+- [figure] 
+- [number] 
+- [h] 5 The slip that costs the answer
+- [figure] The letters agree; only the number after the equals sign has moved.
+- [examiner] What actually goes wrong here
+- [choice] 
+- [mustknow] You can now
+- [choice] 
+- [h] In the exam
+- [figure] Eight marks, and only two of them are the values themselves.
+- [examiner] How this question is set, and where its marks are
+- [choice] 
+- [spec] The statement
+- [mustknow] Sheet or memory?
+- [choice] 
+- [notonspec] Not on this specification
+- [choice] 
+- [choice] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.solve-three-simultaneous-equations.01 [verified] paper FM1 calc
+STEM: Solve the equations below, showing clearly each stage of your solution.
+$2x + 3y + z = 13$
+$x - y + 2z = 10$
+$3x + 2y - z = 7$
+  FIG: svg — Two boxes showing the two eliminations: equation 1 plus equation 3 gives 5x + 5y = 20, and twice equation 1 minus equation 2 gives 3x + 7y = 16.
+  1. Number the equations $(1)$, $(2)$ and $(3)$, then look down the $z$ column: $1$, $2$, $-1$.   — Choosing the letter before you start is the whole plan. A column holding a 1 and a negative 1 is the cheapest to clear, because those two equations can simply be added.  (M1)
+  2. $(1) + (3)$ gives $5x + 5y = 20$, which becomes equation $(4)$.   — Add the like terms in order: x terms, then y terms, then the numbers on the right. Saying that last part out loud is what stops the commonest slip in this topic.  (W1)  WHY: ✔Because $+z$ and $-z$ add to zero | ✘Because equation (3) is the last one | ✘Because both equations contain a 3
+  3. $2 \times (1) - (2)$ gives $3x + 7y = 16$, which becomes equation $(5)$.   — The same letter has to go a second time, from a different pair. Doubling equation (1) makes both z terms match, and doubling an equation reaches its right-hand side too.  (M2)
+  4. Dividing $(4)$ by $5$ gives $x + y = 4$, and solving that with $(5)$ gives $x = 3$ and $y = 1$.   — This is an ordinary pair now. Making the numbers smaller first costs one line and saves several.  (W2)
+  5. Substituting into $(1)$: $2(3) + 3(1) + z = 13$, so $z = 4$.   — Go back to an original equation, because (4) and (5) no longer contain z. Pick the one whose z term is simplest.  (MW1)
+  6. Check in $(2)$: $3 - 1 + 2(4) = 10$.   — Equation (2) only ever entered the working through a doubled copy of equation (1), so it still tests the answer. If it agrees, all three values are right.  (W3)
+  FINAL: $x = 3$, $y = 1$, $z = 4$
+  TWIN: Solve the equations below, showing clearly each stage of your solution.
+$x + 2y + 3z = 15$
+$3x + y - z = 10$
+$x + y + 2z = 9$
+Give the first two unknowns as $(x, y)$.  → algebraic (2, 5) (equivalent)
+
+## DIAGNOSTICS
+### dx.fm.u1.solve-three-simultaneous-equations.pre (pre) [verified]
+- p1 (Multiply out a bracket, constant term included): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+What is $3(2x - 5)$?
+    ✔ $6x - 15$ — Both terms are multiplied by 3, which is exactly what scaling a whole equation does.
+    ✘ $6x - 5$ [fm.simeq.multiplier-not-applied-to-constant] — The 5 is multiplied as well. Leaving a constant untouched is the slip that quietly breaks an elimination later on.
+    ✘ $5x - 15$ [fm.simeq.multiplier-not-applied-to-constant] — The 3 multiplies the 2 to give $6x$; adding them instead is a different operation.
+- p2 (Subtract one equation from another with a negative term): Take $2x - 5y = 1$ away from $2x + 3y = 17$. What is left?
+    ✔ $8y = 16$ — $3y - (-5y) = 8y$ and $17 - 1 = 16$. Both sides change together.
+    ✘ $-2y = 16$ [fm.simeq.elimination-sign-slip] — Taking away $-5y$ adds $5y$. Two minus signs beside each other turn into a plus.
+    ✘ $8y = 18$ [fm.simeq.elimination-sign-slip] — The letters are handled correctly and the right-hand side was added instead of subtracted: $17 - 1 = 16$.
+- p3 (Substitute a negative value): If $x = 4$ and $y = -1$, what is $3x + 2y$?
+    ✔ $10$ — $12 + (-2) = 10$. Carrying a negative value through a substitution is half of the last step of this topic.
+    ✘ $14$ [fm.simeq.elimination-sign-slip] — $2 \times (-1)$ is $-2$, so it comes off the 12 rather than going on.
+    ✘ $5$ [fm.simeq.elimination-sign-slip] — Multiply before adding: $3 \times 4 = 12$ and $2 \times (-1) = -2$.
+
+### dx.fm.u1.solve-three-simultaneous-equations.post (post) [verified]
+- q1 (Choose the letter to eliminate from the coefficients): In the system $2x + 3y + z = 13$, $x - y + 2z = 10$, $3x + 2y - z = 7$, which letter is cheapest to clear first?
+    ✔ $z$, because its coefficients are $1$, $2$ and $-1$ — Small coefficients, and a pair that are already equal and opposite, so equations (1) and (3) can simply be added.
+    ✘ $x$, because it always goes first [fm.simeq.different-letter-eliminated] — No letter goes first by rule. Read the columns and choose the one that needs least scaling.
+    ✘ $y$, because it has the largest numbers [fm.simeq.different-letter-eliminated] — Large coefficients mean more scaling and more chances to slip. Clearing $y$ would work, but it is the slowest route here.
+- q2 (Keep the two new equations in the same pair of unknowns): You have cleared $z$ from equations $(1)$ and $(2)$. What should the second elimination do?
+    ✔ Clear $z$ from equations $(1)$ and $(3)$ — Same letter, different pair. Both new equations are then in x and y and can be solved together.
+    ✘ Clear $x$ from equations $(2)$ and $(3)$ [fm.simeq.different-letter-eliminated] — That leaves one equation in x and y and one in y and z. Two equations in three unknowns cannot be finished.
+    ✘ Solve equation $(3)$ on its own [fm.simeq.different-letter-eliminated] — A single equation in three unknowns has endless solutions. All three equations are needed before anything is pinned down.
+- q3 (Scale a whole equation): Doubling $2x + 3y + z = 13$ gives which equation?
+    ✔ $4x + 6y + 2z = 26$ — Every term doubles, the right-hand side with them.
+    ✘ $4x + 6y + 2z = 13$ [fm.simeq.multiplier-not-applied-to-constant] — The letters were doubled and the $13$ was not, so the equation is no longer true. Both sides always move together.
+    ✘ $4x + 3y + z = 26$ [fm.simeq.multiplier-not-applied-to-constant] — Only the first term was doubled. Multiplying an equation reaches every term in it.
+- q4 (Recognise that the third value needs an original equation): A candidate reaches $x = 3$ and $y = 1$, then writes $z = 1$. What has gone wrong?
+    ✔ The value of $y$ has been copied onto the $z$ line — Equations (4) and (5) no longer contain z, so z has to come from an original equation. Here it is $4$.
+    ✘ The value of $x$ is wrong [fm.simeq.stopped-at-the-pair] — $x = 3$ is right. The trouble is the last line, where z has not been found at all.
+    ✘ Nothing, the answer is complete [fm.simeq.stopped-at-the-pair] — Substituting into equation (1) gives $z = 4$, so the last line is not the answer yet.
+- q5 (Check in the equation that was not used): Which of these is worth the last twenty seconds of a solve?
+    ✔ Substituting all three values into all three original equations — Two of them built the answer, so the third is a genuine test, and it catches an arithmetic slip while the marks are still there.
+    ✘ Rubbing out the eliminations to leave a tidy page [fm.presentation.calculator-no-method] — The eliminations carry most of the marks. A page holding only three values earns almost nothing.
+    ✘ Writing the three values out again underneath [fm.simeq.no-check-in-third-equation] — Copying them out tests nothing. Substituting them into an equation you did not use does.
+- q6 (Know what an unsupported answer earns): A calculator gives the three values in seconds. What is that page worth in Further Mathematics?
+    ✔ Nothing, because no method is shown — The Teacher Guidance says so directly and the reports repeat it. Use the calculator to check values you have already found on paper.
+    ✘ Full marks, because the values are right [fm.presentation.calculator-no-method] — Most of the marks here are for the eliminations, and right values with no working have been reported as earning nothing.
+    ✘ Half the marks [fm.presentation.calculator-no-method] — There is no half credit for an unsupported answer here; the instruction to show each stage is printed with the question.
+
+## QUESTIONS
+### q.fm.u1.solve-three-simultaneous-equations.0001 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (main)find2 · A single elimination step lifted out of a full solve
+  (main) [2] Two equations of a system are
+$(1)$ $2x + 3y + z = 13$
+$(3)$ $3x + 2y - z = 7$
+Add them to remove $z$, and find the equation in $x$ and $y$ that is left.
+      ANSWER: algebraic 5x + 5y = 20 (equivalent)
+      M1 M1: adding the two equations term by term, so that the two $z$ terms cancel
+      W1 W1: $5x + 5y = 20$, or any equation equivalent to it such as $x + y = 4$
+      SOLUTION: The $z$ terms are $+z$ and $-z$, so adding removes $z$ with no scaling at all. The $x$ terms give $2 + 3 = 5$, the $y$ terms give $3 + 2 = 5$, and the right-hand side gives $13 + 7 = 20$. So the equation is $5x + 5y = 20$. Dividing by $5$ turns it into $x + y = 4$, which is easier to carry forward.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"algebraic","latex":"5x + 5y = 6"} → The letters are added correctly, so the method mark stands. The number on the right was subtracted instead of added: $13 + 7 = 20$. (1)
+      ERR [fm.simeq.added-instead-of-subtracted] {"kind":"algebraic","latex":"-x + y + 2z = 6"} → That is equation $(3)$ taken away from equation $(1)$, which leaves $2z$ behind instead of removing $z$. Terms that are equal and opposite are added away, not subtracted away. (0)
+      HINTS: The two $z$ terms are $+z$ and $-z$. || Add the $x$ terms, then the $y$ terms, then the two numbers on the right.
+
+### q.fm.u1.solve-three-simultaneous-equations.0002 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A single elimination that needs one equation doubled first
+  (main) [2] Two equations of a system are
+$(1)$ $2x + 3y + z = 13$
+$(2)$ $x - y + 2z = 10$
+Double equation $(1)$, subtract equation $(2)$, and find the equation in $x$ and $y$ that is left.
+      ANSWER: algebraic 3x + 7y = 16 (equivalent)
+      M1 M1: doubling every term of $(1)$, the right-hand side included: $4x + 6y + 2z = 26$
+      W1 W1: $3x + 7y = 16$
+      SOLUTION: Double every term of $(1)$: $4x + 6y + 2z = 26$. Both equations now carry $2z$, so subtracting $(2)$ removes $z$. The $x$ terms give $4 - 1 = 3$, the $y$ terms give $6 - (-1) = 7$, and the right-hand side gives $26 - 10 = 16$. So the equation is $3x + 7y = 16$.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"algebraic","latex":"3x + 7y = 36"} → The letters are right, so the elimination itself earned its mark. The right-hand side went the other way: $26 - 10 = 16$, not $36$. (1)
+      ERR [fm.simeq.multiplier-not-applied-to-constant] {"kind":"algebraic","latex":"3x + 7y = 3"} → Every letter in $(1)$ was doubled but the $13$ was left alone, so the equation being used is no longer true. Doubling an equation doubles both of its sides. (0)
+      ERR [fm.simeq.added-instead-of-subtracted] {"kind":"algebraic","latex":"5x + 5y + 4z = 36"} → Both equations carry $+2z$, so adding gives $4z$ and $z$ is still there. Matching signs are subtracted away; opposite signs are added away. (0)
+      HINTS: Doubling an equation means doubling the number on the right as well. || Doubled, $(1)$ reads $4x + 6y + 2z = 26$. || Both equations now carry $2z$, so subtracting removes it.
+
+### q.fm.u1.solve-three-simultaneous-equations.0003 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)solve3 · The pair of equations left after both eliminations
+  (main) [3] Removing $z$ twice from a system has left this pair.
+$(4)$ $5x + 5y = 20$
+$(5)$ $3x + 7y = 16$
+Solve them. Give your answer as $(x, y)$.
+      ANSWER: algebraic (3, 1) (equivalent)
+      M1 M1: dividing $(4)$ by $5$, or scaling either equation so that one letter matches
+      MW1 MW1: eliminating and reaching $y = 1$
+      W1 W1: $x = 3$ ft
+      SOLUTION: Divide $(4)$ by $5$: $x + y = 4$. Multiply that by $3$: $3x + 3y = 12$. Subtract it from $(5)$: $4y = 4$, so $y = 1$. Then $x + 1 = 4$, so $x = 3$. Check in $(5)$: $3(3) + 7(1) = 16$.
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"algebraic","latex":"(1, 3)"} → Both numbers are right and they are the wrong way round. The first slot is $x$, and $x = 1$ does not fit equation $(4)$. (2)
+      HINTS: Every term of $(4)$ divides by $5$, giving $x + y = 4$. || Multiply that by $3$ so the $x$ terms match equation $(5)$. || Subtract, find $y$, then go back for $x$.
+
+### q.fm.u1.solve-three-simultaneous-equations.0004 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)calculate2 · The back-substitution step alone, with a negative z coefficient
+  (main) [2] A system has been solved as far as $x = 5$ and $y = -2$.
+One of its original equations is $4x + 3y - 2z = 8$.
+Calculate the value of $z$.
+      ANSWER: numeric 3 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting both values: $4(5) + 3(-2) -2z = 8$
+      W1 W1: $z = 3$
+      SOLUTION: Substitute both values: $4(5) + 3(-2) -2z = 8$. The numbers give $20 - 6 = 14$, so $14 -2z = 8$. Then $-2z = -6$, and dividing by $-2$ gives $z = 3$. Check: $20 - 6 -2(3) = 8$.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"numeric","value":-3} → The substitution earned its method mark. The last division was by $2$ rather than by $-2$, which flips the sign of the answer. (1)
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"numeric","value":9} → The value of $y$ is negative, so $3y$ is $-6$, not $6$. Keeping that minus sign through the substitution is where this one is won. (1)
+      HINTS: $4 \times 5 = 20$ and $3 \times (-2) = -6$. || Collect those two numbers, then deal with the $-2z$ term. || A negative coefficient means the last division is by a negative number.
+
+### q.fm.u1.solve-three-simultaneous-equations.0005 [verified] practice · diff 2 · untiered · FM1 calc · 8 marks · (a)solve4|(b)state2|(c)state2 · Pure algebra with a whole-number solution
+  (a) [4] Solve this system of three equations.
+$x + y + z = 9$
+$2x - y + 3z = 15$
+$3x + 2y - z = 13$
+Set out every stage of your solution, and give the value of $x$.
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: removing one letter from a pair of the equations, for example $3 \times (1) - (2)$
+      W1 W1: a correct two-unknown equation, $x + 4y = 12$
+      M1 M2: a second two-unknown equation in the same letters, for example $(1) + (3)$
+      W1 W2: solving the pair to reach $x = 4$ ft
+      SOLUTION: Number them $(1)$, $(2)$ and $(3)$. $3 \times (1) - (2)$ clears $z$: $x + 4y = 12$, call it $(4)$. $(1) + (3)$ clears $z$ again: $4x + 3y = 22$, call it $(5)$. Solving $(4)$ and $(5)$ together gives $x = 4$.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"numeric","value":-2.92} → The elimination is set up correctly, so the first method mark stands. One right-hand side was combined the wrong way: in $3 \times (1) - (2)$ it becomes $27 - 15 = 12$. A value this far from the others is also a signal in itself, so check it in the third equation. (1)
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"numeric","value":2} → That is the value of $y$. The three answer slots run $x$, then $y$, then $z$, so label each value as you find it. (3)
+      HINTS: Number the equations $(1)$, $(2)$ and $(3)$ before you touch them. || Look down the $z$ column: it reads $1$, $3$ and $-1$, so $z$ is the letter to clear. || Clear the same letter from a second pair, then solve the two equations you are left with.
+  (b) [2] From your working, write down the value of $y$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting your value of $x$ into either two-unknown equation
+      W1 W1: $y = 2$ ft
+      SOLUTION: Substituting $x = 4$ into $(5)$ $4x + 3y = 22$ gives $y = 2$.
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"numeric","value":3} → That is the value of $z$. Substituting $x = 4$ into equation $(5)$ gives $y$ directly. (1)
+      HINTS: Put your value of $x$ back into equation $(4)$ or equation $(5)$. || One substitution is enough, and the other equation is then a free check.
+  (c) [2] From your working, write down the value of $z$.
+      ANSWER: numeric 3 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting both known values into one of the original equations
+      W1 W1: $z = 3$ ft
+      SOLUTION: Substituting $x = 4$ and $y = 2$ into $(1)$ $x + y + z = 9$ gives $z = 3$. Check in $(2)$: $2(4) - 2 + 3(3) = 15$.
+      ERR [fm.simeq.stopped-at-the-pair] {"kind":"numeric","value":2} → That is the value of $y$ again. Equations $(4)$ and $(5)$ no longer contain $z$, so the last value has to come from an original equation. (0)
+      HINTS: Go back to an original equation, because $(4)$ and $(5)$ no longer contain $z$. || Choose the original whose $z$ term is simplest.
+
+### q.fm.u1.solve-three-simultaneous-equations.0006 [verified] practice · diff 3 · untiered · FM1 calc · 8 marks · (a)solve4|(b)state2|(c)state2 · Pure algebra, with a letter absent from two equations
+  (a) [4] Solve this system, in which one letter is missing from two of the equations.
+$3x + 2y = 16$
+$2y + 5z = 20$
+$x + y + z = 9$
+Set out every stage of your solution, and give the value of $x$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: removing one letter from a pair of the equations, for example noticing that $(1)$ already contains no $z$
+      W1 W1: a correct two-unknown equation, $3x + 2y = 16$
+      M1 M2: a second two-unknown equation in the same letters, for example $5 \times (3) - (2)$
+      W1 W2: solving the pair to reach $x = 2$ ft
+      SOLUTION: Equation $(1)$ $3x + 2y = 16$ contains no $z$, so it can serve as $(4)$ without any work. $5 \times (3) - (2)$ clears $z$ from the other two: $5x + 3y = 25$, call it $(5)$. Solving $(4)$ and $(5)$ together gives $x = 2$.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"numeric","value":82} → The elimination itself is right, so the method mark is safe. The number on the right of the scaled equation was combined the wrong way; rebuild $(5)$ slowly, right-hand side included, and notice how far this value sits from a sensible one. (1)
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"numeric","value":5} → That is the value of $y$. Label each line as you finish it, because the three values are asked for as $x$, then $y$, then $z$. (3)
+      HINTS: Number the equations $(1)$, $(2)$ and $(3)$ before you touch them. || Equation $(1)$ has no $z$ in it at all, so it is already a two-unknown equation; you need only one more. || Clear the same letter from a second pair, then solve the two equations you are left with.
+  (b) [2] From your working, write down the value of $y$.
+      ANSWER: numeric 5 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting your value of $x$ into either two-unknown equation
+      W1 W1: $y = 5$ ft
+      SOLUTION: Substituting $x = 2$ into $(1)$ $3x + 2y = 16$ gives $y = 5$.
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"numeric","value":2} → That is the value of $z$. Equation $(1)$ contains only $x$ and $y$, so it gives $y$ straight away once $x$ is known. (1)
+      HINTS: Put your value of $x$ back into equation $(4)$ or equation $(5)$. || One substitution is enough, and the other equation is then a free check.
+  (c) [2] From your working, write down the value of $z$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting both known values into one of the original equations
+      W1 W1: $z = 2$ ft
+      SOLUTION: Substituting into $(3)$ $x + y + z = 9$ gives $z = 2$. Check in $(2)$: $2(5) + 5(2) = 20$.
+      ERR [fm.simeq.stopped-at-the-pair] {"kind":"numeric","value":5} → That is $y$ once more. Take an original equation that still contains $z$, such as $(2)$ or $(3)$, and substitute what you already know. (0)
+      HINTS: Go back to an original equation, because $(4)$ and $(5)$ no longer contain $z$. || Choose the original whose $z$ term is simplest.
+
+### q.fm.u1.solve-three-simultaneous-equations.0007 [verified] exam-style · diff 3 · untiered · FM1 calc · 8 marks · (a)solve4|(b)state2|(c)state2 · Pure algebra whose answers are not whole numbers, as CCEA sets it
+  (a) [4] Solve the equations below to find the value of each unknown.
+$2x + 4y + z = 14$
+$4x + 2y - z = 10$
+$x + 3y + 2z = 13$
+Set out every stage of your solution, and give the value of $x$.
+      ANSWER: numeric 2.5 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: removing one letter from a pair of the equations, for example $(1) + (2)$
+      W1 W1: a correct two-unknown equation, $6x + 6y = 24$
+      M1 M2: a second two-unknown equation in the same letters, for example $2 \times (1) - (3)$
+      W1 W2: solving the pair to reach $x = 2.5$ ft
+      SOLUTION: $(1) + (2)$ clears $z$: $6x + 6y = 24$, which divides by $6$ to give $x + y = 4$. Call it $(4)$. $2 \times (1) - (3)$ clears $z$ again: $3x + 5y = 15$, call it $(5)$. Solving $(4)$ and $(5)$ together gives $x = 2.5$. An answer that is not a whole number is perfectly normal here.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"numeric","value":-5.83} → The elimination plan is right, so the method marks stand. One right-hand side was combined the wrong way; redo that step with the numbers written underneath each other. (2)
+      ERR [fm.simeq.multiplier-not-applied-to-constant] {"kind":"numeric","value":9.5} → An equation was scaled and its right-hand side was left as it was. Multiplying an equation by $2$ multiplies both of its sides by $2$. (1)
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"numeric","value":1.5} → That is the value of $y$. The answer lines run $x$, then $y$, then $z$. (3)
+      HINTS: Number the equations $(1)$, $(2)$ and $(3)$ before you touch them. || The $z$ column reads $1$, $-1$ and $2$, so $(1)$ and $(2)$ can simply be added. || Clear the same letter from a second pair, then solve the two equations you are left with.
+  (b) [2] From your working, write down the value of $y$.
+      ANSWER: numeric 1.5 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting your value of $x$ into either two-unknown equation
+      W1 W1: $y = 1.5$ ft
+      SOLUTION: Substituting $x = 2.5$ into $(4)$ $x + y = 4$ gives $y = 1.5$.
+      ERR [fm.simeq.values-in-wrong-slots] {"kind":"numeric","value":3} → That is the value of $z$. Check which letter each number belongs to before filling in the slots. (1)
+      HINTS: Put your value of $x$ back into equation $(4)$ or equation $(5)$. || One substitution is enough, and the other equation is then a free check.
+  (c) [2] From your working, write down the value of $z$.
+      ANSWER: numeric 3 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting both known values into one of the original equations
+      W1 W1: $z = 3$ ft
+      SOLUTION: Substituting both values into $(1)$ $2x + 4y + z = 14$ gives $z = 3$. Check in $(3)$: $2.5 + 3(1.5) + 2(3) = 13$.
+      ERR [fm.simeq.elimination-sign-slip] {"kind":"numeric","value":-0.33} → The substitution earned its method mark and carried a slip from earlier into the answer. Put your three values into all three equations; the one you did not use will find it. (1)
+      HINTS: Go back to an original equation, because $(4)$ and $(5)$ no longer contain $z$. || Choose the original whose $z$ term is simplest.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.solve-three-simultaneous-equations.01 [verified] fm.simeq.elimination-sign-slip · earned M1,W1,M2 · ccea-cer:further-maths:2019-summer:FM1:Q7
+STEM: Niamh was asked to solve $2x + 3y + z = 13$, $x - y + 2z = 10$ and $3x + 2y - z = 7$. Her working:
+    1. (1) + (3): 5x + 5y = 20
+    2. 2 x (1): 4x + 6y + 2z = 26
+  ✘ 3. 2 x (1) - (2): 3x + 7y = 36
+    4. Solving the pair: x = -2, y = 6
+    5. From (1): z = -1
+  WRONG: Lines 1 and 2 are exactly right, and line 3 clears $z$ correctly as well: $4 - 1 = 3$ and $6 - (-1) = 7$.
+The number to the right of the equals sign was added instead of subtracted: $26 + 10 = 36$, where the subtraction gives $16$.
+Because every letter looks tidy, nothing on the page looks wrong, and lines 4 and 5 are careful work on a false equation.
+  FIX: 2 x (1) - (2): 3x + 7y = 16 / (4) divided by 5: x + y = 4 / Solving the pair: x = 3, y = 1 / From (1): z = 4 / Check in (2): 3 - 1 + 2(4) = 10
+  FEEDBACK: Nothing here is careless, and that is the point: an elimination can be right in every letter and still be wrong by a number. Say the right-hand side out loud as you write it, and finish by substituting all three values into the equation you did not use. Niamh's values fail that check in $(3)$, which is where twenty seconds would have saved four marks.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.solve-three-simultaneous-equations.01 [verified] (procedure) Give the five steps for solving three linear equations in three unknowns.  →  Number the equations; clear one letter from a pair; clear the same letter from a second pair; solve the two-unknown pair that is left; substitute back into an original equation and check all three values.
+- rp.fm.u1.solve-three-simultaneous-equations.02 [verified] (trap) Why must both eliminations clear the same letter?  →  So that the two new equations are in the same two unknowns and can be solved together.
+- rp.fm.u1.solve-three-simultaneous-equations.03 [verified] (qa) When you multiply an equation by 3, what happens to the number on the right of the equals sign?  →  It is multiplied by 3 as well, because both sides of an equation always change together.
+- rp.fm.u1.solve-three-simultaneous-equations.04 [verified] (trap) Which equation do you substitute into for the third unknown, and why not equation (4) or (5)?  →  One of the three original equations, because equations (4) and (5) no longer contain the letter that was eliminated.
+- rp.fm.u1.solve-three-simultaneous-equations.05 [verified] (trap) What does a page showing only the three correct values earn in Further Mathematics, and why?  →  Nothing, because the eliminations carry the method marks and sole use of a calculator gains no marks.

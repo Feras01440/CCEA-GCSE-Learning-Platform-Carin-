@@ -1,0 +1,258 @@
+[
+  {
+    "type": "hero",
+    "lede": "A measurement is never exact. A crate weighed as 50 kg to the nearest 5 kg is anywhere from 47.5 kg up to 52.5 kg: half of that 5 either side of what is written. This topic asks how far a calculation can drift once every number going into it is rounded like that.",
+    "can": [
+      "Write the half unit for any stated accuracy, then both bounds.",
+      "Write the interval of a truncated value.",
+      "Pair an upper bound with a lower one for a difference or a quotient."
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "Upper and lower bounds in subtraction and division"
+  },
+  {
+    "type": "p",
+    "md": "A rounded measurement stands for an interval, not a point: 50 kg to the nearest 5 kg means anywhere from 47.5 kg up to 52.5 kg. Put intervals into a calculation and the answer becomes an interval too. Adding and multiplying keep it simple, all the uppers together and all the lowers together, but subtracting and dividing cross over, because a smaller number taken away leaves a bigger answer."
+  },
+  {
+    "type": "figure",
+    "alt": "A number line from 45 to 55 with a band drawn from 47.5 to 52.5. The end at 47.5 is a filled circle, the end at 52.5 is an open circle. Labels read lower bound 47.5 included, upper bound 52.5 not reached, and every mass in the band rounds to 50 kg.",
+    "svg": "<svg viewBox=\"0 0 600 180\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"nlt\"><title id=\"nlt\">The interval of masses that round to 50 kg to the nearest 5 kg</title><g stroke=\"currentColor\" fill=\"none\"><path d=\"M180 106 H420\" stroke-width=\"10\" opacity=\"0.3\"/><path d=\"M30 106 H570\" stroke-width=\"2\"/><path d=\"M60 98 V114\" stroke-width=\"2\"/><path d=\"M180 94 V118\" stroke-width=\"2\"/><path d=\"M300 98 V114\" stroke-width=\"2\"/><path d=\"M420 94 V118\" stroke-width=\"2\"/><path d=\"M540 98 V114\" stroke-width=\"2\"/><circle cx=\"420\" cy=\"106\" r=\"7\" stroke-width=\"2\"/></g><circle cx=\"180\" cy=\"106\" r=\"7\" fill=\"currentColor\"/><g font-family=\"sans-serif\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"middle\"><text x=\"60\" y=\"140\">45</text><text x=\"180\" y=\"140\">47.5</text><text x=\"300\" y=\"140\">50</text><text x=\"420\" y=\"140\">52.5</text><text x=\"540\" y=\"140\">55</text><text x=\"180\" y=\"40\">lower bound</text><text x=\"180\" y=\"60\">47.5, included</text><text x=\"420\" y=\"40\">upper bound</text><text x=\"420\" y=\"60\">52.5, not reached</text><text x=\"300\" y=\"170\" font-size=\"13\">every mass in the band rounds to 50 kg — half of 5 is 2.5</text></g></svg>",
+    "caption": "Filled end included, open end not reached; half of 5 is 2.5, so 47.5 to 52.5."
+  },
+  {
+    "type": "p",
+    "md": "The rule behind all of it: **the half unit is half of the rounding unit**, and the bounds sit that far either side of the stated value."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "A bag of sand is $25$ kg, correct to the nearest kilogram. What is the half unit?",
+    "options": [
+      "0.5 kg",
+      "1 kg",
+      "25 kg"
+    ],
+    "answer": "0.5 kg",
+    "explain": "The rounding unit is 1 kg, and half of 1 is 0.5."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "Error-interval notation such as $47.5 \\le m < 52.5$ is never asked for: no CCEA Mathematics statement mentions error intervals, and every M4 bounds item in the corpus asks for a maximum, a minimum or a named bound **as a value**. Percentage error, absolute error and relative error appear in no statement. Bounds of an addition or a multiplication alone are M3-NA-03, and are assumed here."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Which of these will an M4 bounds question actually ask you for?",
+    "options": [
+      "The greatest possible value of a calculation",
+      "The error interval, written with inequality signs",
+      "The percentage error in a measurement"
+    ],
+    "answer": "The greatest possible value of a calculation",
+    "explain": "CCEA asks for a maximum, a minimum or a named bound as a value."
+  },
+  {
+    "type": "p",
+    "md": "The rounding unit is whatever the question names, so read it rather than the number.\n**nearest 2** → half unit $1$\n**nearest 0.5** → half unit $0.25$\n**nearest 50** → half unit $25$\n**1 decimal place** → half unit $0.05$\n**2 s.f. in 3400** → the last significant figure is the $4$, worth $400$, so the rounding unit is $100$ and the half unit is $50$\n**3 s.f. in 4.68** → the last significant figure is the $8$, in the hundredths, so the half unit is $0.005$\nFor significant figures, find the place value of the last significant figure first."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "A side is $4.68$ cm, correct to $3$ significant figures. Its upper bound is",
+    "answer": "4.685",
+    "explain": "The 8 sits in the hundredths, so the half unit is 0.005 and 4.68 + 0.005 = 4.685."
+  },
+  {
+    "type": "p",
+    "md": "One exception. A display that **cuts off** rather than rounds — a truncated value — is never above the true value, so its interval runs upwards from the number shown: a timer truncating at 1 d.p. and reading $9.4$ means $9.4 \\le t < 9.5$. The word truncate appears in no CCEA Mathematics paper in the corpus; every item says *correct to*. Knowing the difference costs one sentence."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "A digital gauge truncates at $1$ decimal place and reads $6.3$. Which interval is right?",
+    "options": [
+      "6.3 ≤ x < 6.4",
+      "6.25 ≤ x < 6.35",
+      "6.2 < x ≤ 6.3"
+    ],
+    "answer": "6.3 ≤ x < 6.4",
+    "explain": "Cutting the digits off can only lose size, so the reading is the lower bound."
+  },
+  {
+    "type": "h",
+    "text": "Subtraction and division mix an upper with a lower"
+  },
+  {
+    "type": "p",
+    "md": "Addition and multiplication are comfortable because both quantities push the same way. Subtraction does not. In $a - b$ the $b$ is taken away, so **taking away less leaves more**:\ngreatest $a - b = \\text{UB}(a) - \\text{LB}(b)$, least $a - b = \\text{LB}(a) - \\text{UB}(b)$.\nDivision behaves the same way, because the bottom of a fraction works against you:\ngreatest $a \\div b = \\text{UB}(a) \\div \\text{LB}(b)$, least $a \\div b = \\text{LB}(a) \\div \\text{UB}(b)$.\nWrite all four bounds down before you choose a pair."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "$a = 7.6$ and $b = 3.2$, each correct to $1$ d.p. The greatest possible value of $a - b$ is",
+    "answer": "4.5",
+    "explain": "7.65 − 3.15 = 4.5. Most of a, least of b."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why subtraction swaps the bounds",
+    "md": "Taking away a bigger number leaves less, so the largest $a - b$ comes from the smallest $b$ paired with the largest $a$. Division behaves the same way, because dividing by a smaller number gives a bigger answer."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "To make $a \\div b$ as **small** as possible you use",
+    "options": [
+      "the lower bound of a and the upper bound of b",
+      "the lower bound of a and the lower bound of b",
+      "the upper bound of a and the lower bound of b"
+    ],
+    "answer": "the lower bound of a and the upper bound of b",
+    "explain": "A smaller top and a larger bottom both shrink a fraction."
+  },
+  {
+    "type": "h",
+    "text": "Bounds inside a formula"
+  },
+  {
+    "type": "p",
+    "md": "CCEA usually hands you the formula and asks for one bound. Read it symbol by symbol before you substitute. In $h = \\dfrac{u^2}{2a}$ the $u$ is squared and the $a$ is doubled, and $u$ is on top while $a$ is on the bottom, so\n$h_{\\max} = \\dfrac{\\text{UB}(u)^2}{2 \\times \\text{LB}(a)}$.\nSubstitute once, and round nothing on the way: the scheme prints the long value, so the stored display is the answer."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2024 M4 Q16 and November 2024 M4 Q16",
+    "md": "Both papers put bounds into a formula of this shape. The bounds themselves were mostly right; the marks went on the formula — the letter on top not squared, the letter underneath not doubled — and then on rounding the final display.",
+    "source": "ccea-cer:maths:2024-summer:M4:Q16; ccea-cer:maths:2024-november:M4:Q16"
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "$h = \\dfrac{u^2}{2a}$ with $u = 4.2$ and $a = 2.5$, each to $1$ d.p. The upper bound of $h$, to $3$ d.p., is",
+    "answer": "3.686",
+    "explain": "4.25² ÷ (2 × 2.45) = 18.0625 ÷ 4.9 = 3.68622449…"
+  },
+  {
+    "type": "h",
+    "text": "Times, counts and the display"
+  },
+  {
+    "type": "p",
+    "md": "**A time in hours and minutes.** Change the whole time to minutes, bound it, then divide by $60$. One hour eleven minutes is $71$ minutes, so the shortest is $70.5$ minutes, which is $70.5 \\div 60 = 1.175$ h. Writing $1$ h $10.5$ min as $1.105$ h is not a small slip: it moves the speed by about $12$ km/h."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "A journey takes $1$ h $45$ min, correct to the nearest minute. The shortest possible time, in hours, is",
+    "options": [
+      "104.5 ÷ 60 = 1.74166… h",
+      "1.445 h",
+      "1.75 h"
+    ],
+    "answer": "104.5 ÷ 60 = 1.74166… h",
+    "explain": "105 minutes, lower bound 104.5 minutes, then divide by 60."
+  },
+  {
+    "type": "p",
+    "md": "**A count of whole objects.** A greatest possible number is rounded **down**, because the next item would not fit under any allowed load. A decimal left on the answer line scores nothing."
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "A greatest possible number of crates works out as $17.92$. What goes on the answer line?",
+    "answer": "17",
+    "explain": "An 18th crate would be over the allowance, so a maximum count is rounded down."
+  },
+  {
+    "type": "h",
+    "text": "A suitable degree of accuracy"
+  },
+  {
+    "type": "p",
+    "md": "When a question asks for a value to a **suitable degree of accuracy**, the two bounds decide it. Round both to $1$ significant figure, then $2$, then $3$, and stop at the last accuracy where they still agree; that is how many figures you actually know. A density with bounds $2.7158\\ldots$ and $2.6757\\ldots$ gives $2.7$ and $2.7$ at $2$ significant figures, but $2.72$ and $2.68$ at $3$. So the honest answer is $2.7$ g/cm$^3$, and the reason — both bounds round to it — earns the second mark."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "A length has bounds $8.4713\\ldots$ m and $8.4749\\ldots$ m. To a suitable degree of accuracy it is",
+    "options": [
+      "8.47 m",
+      "8.471 m",
+      "8.4731 m"
+    ],
+    "answer": "8.47 m",
+    "explain": "Both bounds give 8.47 to 3 s.f.; at 4 s.f. they give 8.471 and 8.475, which disagree."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Sheet or memory?",
+    "md": "**On the Higher sheet:** volume of a prism, area of a trapezium, sphere and cone formulae, the quadratic formula, the sine and cosine rules. No bounds rule of any kind is printed.\n**Must be known:** half unit $=$ half the rounding unit; greatest $a-b = \\text{UB}(a)-\\text{LB}(b)$; greatest $a \\div b = \\text{UB}(a) \\div \\text{LB}(b)$; speed $=$ distance $\\div$ time; density $=$ mass $\\div$ volume; $a^2+b^2=c^2$; area of a circle $\\pi r^2$; minutes $\\div\\,60 =$ decimal hours."
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "Which of these is printed on the Higher formula sheet?",
+    "options": [
+      "Area of a trapezium",
+      "Speed = distance ÷ time",
+      "Pythagoras' theorem"
+    ],
+    "answer": "Area of a trapezium",
+    "explain": "Speed and Pythagoras are memory, and both turn up in bounds questions."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Turn any rounding instruction into a half unit.\nWrite all four bounds before choosing a pair.\nUse the upper over the lower for the greatest subtraction or quotient.\nSubstitute bounds into a formula without rounding on the way.\nGive an answer to an accuracy both bounds agree on."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "One bounds item per paper. Three marks when the bounds drop straight into a subtraction or a division, four when a formula or a unit change comes first. The first mark is the four bounds written down; the last is the value, left unrounded unless an accuracy is named. Stuck: write the half unit and all four bounds."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.09"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.10"
+  }
+]

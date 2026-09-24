@@ -1,0 +1,717 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Literata is the lesson voice: the note, its headings and the hero.
+   Self-hosted (public/fonts, SIL OFL, licence beside the files) so the
+   lesson reads the same offline and no request leaves the device.
+   Two files per style, both variable across the weights we use, so 400,
+   500 and 600 cost one download; latin-ext only downloads if the page
+   needs a character from it. Inter still carries every control.
+------------------------------------------------------------------- */
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/literata-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/literata-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/literata-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/literata-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ====================================================================
+   Cairn design tokens — art direction, 20 September 2026.
+   Source of record: docs/design/art-direction/tokens.css, amended after
+   04-critique.md. Three variables generate every theme (Linear's model):
+   --base-h (neutral hue), --accent-h (the one accent), --contrast.
+   Light is the default: exam papers are black on white.
+   Contrast ratios in the comments are arithmetic from the LCH lightness
+   (Y = ((L + 16) / 116)^3), not an estimate.
+==================================================================== */
+:root {
+  /* --base-h 80 -> 85: off yellow-green, towards warm paper. At chroma
+     2-4 this is not a colour you can name; it is the difference between
+     "grey app" and "paper".
+     --accent-h 270 -> 266 and --accent-c 60 -> 12: the hue barely moves,
+     the CHROMA is the whole story. 270 at chroma 60 is the violet-blue
+     every SaaS product ships; 266 at chroma 12 is wet slate. */
+  --base-h: 85;
+  --accent-h: 266;
+  --contrast: 1;
+
+  /* GROUND / SURFACE / RECESS — the three surfaces. The ground gains
+     chroma (1 -> 2.4) so it reads as warm paper and the surface stays
+     pure white; that gap is what lets an object sit on the page with a
+     hairline and NO shadow. surface-2 is the recess: reference she
+     consults, never acts on. */
+  --ground: lch(97.5% 2.4 var(--base-h));
+  --surface: lch(100% 0 0);
+  --surface-2: lch(95% 2.2 var(--base-h));
+
+  /* INK, three levels.
+     ink 12% -> 18%: pure black on white is a printing error. 13.1:1.
+     ink-3 60% -> 46%: at 60% it was 2.98:1 and carried every caption,
+     label and meta line — a live WCAG 1.4.3 failure and the cause of
+     "washed out". At 46% it is 4.87:1 on ground, 4.57:1 on the recess,
+     and it cannot go lighter: the recess pins it.
+     ink-2 40% -> 36% (R1), not 42%. At 42% it sat four lightness units
+     from ink-3 and the product had two inks, not three. 36% is 7.0:1 on
+     the ground; the steps are now 18 and 10.
+
+     THE TWO-GREY RULE. Below 18 px, at most TWO text greys appear on any
+     one surface: --ink and --ink-2. --ink-3 has exactly three legal uses
+     and no fourth — the page locator, a figure caption, and the minutes
+     in the spine. Anywhere else, quiet means ink-2. */
+  --ink: lch(18% 3 var(--base-h));
+  --ink-2: lch(36% 4 var(--base-h));
+  --ink-3: lch(46% 4 var(--base-h));
+
+  /* LINES.
+     --line    a rule: between rows, under a section label.
+     --line-2  the boundary of a container (a tile, a question).
+     --line-3  NEW. The boundary of a control she types in or taps. WCAG
+               1.4.11 wants 3:1 where the boundary is the only thing
+               identifying a control; --line-2 is 2.0:1, so fieldCls and
+               btnOption failed. --line-3 is 3.1:1 against white. */
+  --line: lch(90% 2 var(--base-h));
+  --line-2: lch(80% 3 var(--base-h));
+  --line-3: lch(60% 6 var(--base-h));
+
+  /* ACCENT — "the one thing to do next", and nothing else. On a page
+     with no subject (Today, Papers, Map, Flashcards, Settings) it is a
+     near-ink slate: L30, chroma 12, 9.3:1 with white. The only
+     genuinely COLOURED buttons in the product are inside a subject, and
+     the colour tells her which subject she is in. The accent is NEVER a
+     selected state: selection is ink. */
+  --accent-l: 30%;
+  --accent-c: 12;
+  --accent-ink-l: 100%;
+  --accent-ink-c: 0;
+  --accent-2-l: 93%;
+  --accent-2-c: 10;
+  --accent-3-l: 97%;
+  --accent-3-c: 4;
+
+  /* SEMANTIC COLOUR — three outcomes that never shame.
+     --ok 55/45/145 -> 45/42/148: 5.05:1 on ground (it was 3.5:1).
+     --warn 70/60/80 -> 46/48/66: the old amber was 2.0:1 on white.
+     --miss is no longer red, and no longer blue either (R2): it was
+     lch(40% 8 252) against a maths accent of lch(40% 22 266) — same
+     lightness, fourteen degrees apart — so "not yet" and "the thing to
+     do next" were one colour twice. It is now the warm neutral of the
+     ink itself, chroma 3: 6.1:1 on the ground.
+     THE RULE THAT DEPENDS ON IT: the accent never appears as a rule
+     inside an object. A rule inside an object is always a verdict.
+     --danger NEW: the only red in the product, for destructive controls
+     only. Splitting it out is what allows --miss to go calm. */
+  --ok: lch(45% 42 148);
+  --warn: lch(46% 48 66);
+  --miss: lch(40% 3 var(--base-h));
+  --danger: lch(45% 58 28);
+
+  /* SUBJECT TINTS — the recess wash for a subject's own chrome. Hues
+     re-picked to match the new accents; two jobs only (the spine's
+     unfilled track and the wash behind an active row). */
+  --tint-maths: lch(95% 5 266);
+  --tint-fm: lch(95% 5 330);
+  --tint-bio: lch(95% 5 160);
+  --tint-chem: lch(95% 5 66);
+  --tint-phys: lch(95% 5 238);
+
+  /* FIGURES — the computed SVGs are the only artwork the product owns.
+     These are tokens so dark mode can raise the fills without
+     re-authoring 264 SVGs. Opacities and widths, not colours, because
+     an SVG needs a bare number for stroke-width. */
+  --fig-grid: 0.12;
+  --fig-fill: 0.08;
+  --fig-fill-accent: 0.16;
+  --fig-stroke: 1.75px;
+  --fig-stroke-accent: 2.25px;
+  /* Label size in VIEWBOX UNITS, not CSS pixels (R3). generated.tsx has
+     W = 640 rendered w-full, so at 390 px the SVG is 358 px wide — a
+     scale of 0.56, and fontSize={13} lands at 7.3 rendered pixels. 24
+     viewBox units renders at 13.4 px there; 14 is right from md. The
+     generator takes these in pass 2. */
+  --fig-label: 24;
+  --fig-label-md: 14;
+
+  /* The lesson voice, unchanged. */
+  --serif-lesson: "Literata", Georgia, "Times New Roman", serif;
+
+  /* TYPE SCALE. --fs-meta 13 -> 14 and --fs-micro NEW at 13: below 13 px
+     nothing exists. --fs-micro has three legal uses and no fourth —
+     tabular numerals (a mark-code chip, a UMS figure), the page locator,
+     and a label under a tab-bar icon. Never prose, never a caption,
+     never a form label.
+     --fs-h1 32 -> 26 on phones, 32 from md: a 32 px serif h1 spends 40%
+     of a 390 px screen on a spec statement.
+     --fs-display NEW: the topic's short plain-English title, the one
+     thing that must land in the first second. */
+  --fs-display: 30px;
+  --lh-display: 1.15;
+  --fs-h1: 26px;
+  --lh-h1: 1.2;
+  --fs-h2: 21px;
+  --lh-h2: 1.3;
+  --fs-h3: 18px;
+  --lh-h3: 1.35;
+  --fs-prose: 17px;
+  --lh-prose: 1.62;
+  --fs-ui: 15px;
+  --lh-ui: 1.5;
+  --fs-meta: 14px;
+  --lh-meta: 1.45;
+  --fs-micro: 13px;
+  --lh-micro: 1.4;
+  /* 66ch -> 60ch: `ch` is the width of "0" and Literata's zero is narrow,
+     so 66ch measured out at ~80 characters. 60ch lands at ~72. */
+  --measure: 60ch;
+  --measure-tight: 42ch;
+  /* The halo behind a label drawn on top of a figure: the colour of the
+     surface the figure sits on, which for a lesson figure is the page. */
+  --fig-halo: var(--ground);
+
+  /* SHAPE. 14 -> 12 and 10 -> 8: a shade less round reads as exact
+     rather than friendly. --radius-xs for mark-code chips and option
+     letters; --radius-pill for the two pill components. */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 5px;
+  --radius-pill: 999px;
+
+  /* ELEVATION. --shadow-1 is now `none`: it was applied to 91
+     containers, and a page of nine faintly floating boxes is exactly
+     what "intense" looks like. An object is carried by pure white on
+     warm paper plus a --line-2 hairline. --shadow-2 is kept and
+     softened for the two things that genuinely float above content. */
+  --shadow-1: none;
+  --shadow-2: 0 10px 30px -14px lch(0% 0 0 / 0.28), 0 2px 6px -3px lch(0% 0 0 / 0.12);
+
+  /* MOTION. Nothing outside 120-300 ms exists. */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 300ms;
+
+  /* LESSON RHYTHM. The lesson is a document, not a stack of cards, so
+     its vertical rhythm is stated where both the note renderer and the
+     spine can read it. */
+  --gap-para: 20px;
+  --gap-section: 40px;
+  --gap-stage: 64px;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --fs-display: 40px;
+    --lh-display: 1.1;
+    --fs-h1: 32px;
+    --fs-h2: 24px;
+    --fs-h3: 19px;
+    --fs-prose: 18px;
+    --gap-section: 48px;
+    --gap-stage: 80px;
+  }
+}
+
+/* --------------------------------------------------------------------
+   SUBJECT HUE. Three stones, not three spectrum colours.
+   maths          H266 C22  wet slate — Mourne basalt after rain
+   further-maths  H330 C26  heather   — the hill in August
+   science        H160 C24  lichen    — the grey-green on the cairn
+
+   WHERE IT SITS, AND WHY (04-critique §4). `data-subject` is on <html>,
+   the same element as `data-theme` (set before first paint by
+   themeInitScript and kept in step by SubjectScope, both in
+   src/lib/theme/ThemeProvider.tsx). It used to sit on a descendant
+   `display: contents` div in each Learn page, and custom properties
+   inherit: a lightness declared there beat the dark theme's value
+   inherited from <html> whatever the selectors looked like, which put
+   dark text (accent-ink L14) on a dark button (L40) at about 2.4:1 on
+   every dark subject page and flattened high contrast's chroma. Now the
+   theme and the subject are resolved on one element, and every
+   theme-scoped subject rule below restates the accent lightness and the
+   accent-ink as well as the chroma, in both the compound form (both
+   attributes on <html>) and the descendant form, so the button is right
+   wherever a subject scope is ever declared.
+
+   LIGHTNESS. On light and evening paper a subject's accent is L40, one
+   value for all three hues. tokens.css reasoned that "at a single L40
+   all three still clear 6.4:1 with white text" but then left the
+   lightness to the root's L30, so every subject button read as the
+   near-black of Today's. Measured in the browser (canvas sRGB, WCAG
+   ratio) with white text: maths lch(40 22 266) 6.40:1, further-maths
+   lch(40 26 330) 6.45:1, science lch(40 24 160) 6.46:1; against the
+   ground 6.03, 6.08 and 6.08:1. L30 would be 9.3:1 and indistinguishable
+   from ink at arm's length: basalt on maths, heather on further maths
+   and lichen on science is the point of the subject accent.
+
+   Science is pulled to hue 160 (pine) while --ok stays at 148 (grass)
+   and is five steps lighter, so "science" and "correct" cannot be
+   mistaken for one another. -------------------------------------- */
+[data-subject="maths"] { --accent-h: 266; --accent-c: 22; --accent-l: 40%; }
+[data-subject="further-maths"] { --accent-h: 330; --accent-c: 26; --accent-l: 40%; }
+[data-subject="science"] { --accent-h: 160; --accent-c: 24; --accent-l: 40%; }
+
+/* Derived wherever the hue can change. A custom property is resolved on
+   the element that declares it, so a root-declared --accent would
+   ignore a descendant's --accent-h. */
+:root,
+[data-subject] {
+  --accent: lch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --accent-ink: lch(var(--accent-ink-l) var(--accent-ink-c) var(--accent-h));
+  --accent-2: lch(var(--accent-2-l) var(--accent-2-c) var(--accent-h));
+  --accent-3: lch(var(--accent-3-l) var(--accent-3-c) var(--accent-h));
+}
+
+/* ====================================================================
+   DARK. Not an inversion: a different paper.
+   ground 10% -> 13%, surface 14% -> 17%, surface-2 18% -> 21%.
+   Near-black on OLED makes white serif text bloom; 13% removes the
+   halation and gives the three surfaces room to separate now that no
+   shadow helps them. ink 94% -> 93% (glare), ink-3 55% -> 62% (5.4:1 on
+   the new ground). Figure fills are raised, because a 0.08 wash of
+   light ink on a dark ground disappears.
+==================================================================== */
+[data-theme="dark"] {
+  --ground: lch(13% 3 var(--base-h));
+  --surface: lch(17% 3 var(--base-h));
+  --surface-2: lch(21% 3 var(--base-h));
+  --ink: lch(93% 2 var(--base-h));
+  --ink-2: lch(74% 3 var(--base-h));
+  --ink-3: lch(62% 3 var(--base-h));
+  --line: lch(26% 3 var(--base-h));
+  --line-2: lch(34% 3 var(--base-h));
+  --line-3: lch(48% 5 var(--base-h));
+
+  --accent-l: 74%;
+  --accent-c: 16;
+  --accent-ink-l: 14%;
+  --accent-ink-c: 3;
+  --accent-2-l: 30%;
+  --accent-2-c: 16;
+  --accent-3-l: 22%;
+  --accent-3-c: 8;
+
+  --ok: lch(74% 44 148);
+  --warn: lch(76% 46 66);
+  --miss: lch(70% 3 var(--base-h));
+  --danger: lch(68% 50 28);
+
+  --tint-maths: lch(22% 7 266);
+  --tint-fm: lch(22% 7 330);
+  --tint-bio: lch(22% 7 160);
+  --tint-chem: lch(22% 7 66);
+  --tint-phys: lch(22% 7 238);
+
+  --fig-grid: 0.18;
+  --fig-fill: 0.14;
+  --fig-fill-accent: 0.26;
+
+  --shadow-1: none;
+  --shadow-2: 0 10px 30px -14px lch(0% 0 0 / 0.75), 0 2px 6px -3px lch(0% 0 0 / 0.5);
+}
+
+/* Dark keeps each subject's hue but needs more chroma at L74: a pale
+   tint on a dark ground loses saturation to the eye. The accent
+   lightness and the accent-ink lightness are restated here as well, so
+   a dark subject page can never end up with dark text on a dark button
+   (04-critique §4). */
+[data-theme="dark"] [data-subject="maths"],
+[data-theme="dark"][data-subject="maths"] { --accent-c: 30; --accent-l: 74%; --accent-ink-l: 14%; --accent-ink-c: 3; }
+[data-theme="dark"] [data-subject="further-maths"],
+[data-theme="dark"][data-subject="further-maths"] { --accent-c: 32; --accent-l: 74%; --accent-ink-l: 14%; --accent-ink-c: 3; }
+[data-theme="dark"] [data-subject="science"],
+[data-theme="dark"][data-subject="science"] { --accent-c: 30; --accent-l: 74%; --accent-ink-l: 14%; --accent-ink-c: 3; }
+
+/* ====================================================================
+   EVENING. A warmer paper for a late desk, not a dimmer one. The
+   companion contract (binding condition 2) forbids dimming as a time
+   signal, so evening changes the paper's temperature and nothing about
+   contrast: ink stays at 11:1 and the Start button is untouched.
+==================================================================== */
+[data-theme="evening"] {
+  --base-h: 48;
+  --ground: lch(96% 5 var(--base-h));
+  --surface: lch(99% 3 var(--base-h));
+  --surface-2: lch(93.5% 5 var(--base-h));
+  --ink: lch(19% 4 var(--base-h));
+  --ink-2: lch(37% 5 var(--base-h));
+  --ink-3: lch(47% 5 var(--base-h));
+  --line: lch(88% 4 var(--base-h));
+  --line-2: lch(78% 4 var(--base-h));
+  --line-3: lch(59% 7 var(--base-h));
+  --tint-maths: lch(93% 6 266);
+  --tint-fm: lch(93% 6 330);
+  --tint-bio: lch(93% 6 160);
+  --tint-chem: lch(93% 6 66);
+  --tint-phys: lch(93% 6 238);
+}
+
+/* ====================================================================
+   HIGH CONTRAST. Paper white, true black ink, borders that are
+   unambiguously borders. line 60% -> 45% and line-2 45% -> 30% so a
+   container edge is 7:1; accent chroma raised, because at this contrast
+   a muted accent stops reading as an accent at all.
+==================================================================== */
+[data-theme="hc"] {
+  --ground: lch(100% 0 0);
+  --surface: lch(100% 0 0);
+  --surface-2: lch(96% 0 0);
+  --ink: lch(0% 0 0);
+  --ink-2: lch(22% 0 0);
+  --ink-3: lch(34% 0 0);
+  --line: lch(45% 0 0);
+  --line-2: lch(30% 0 0);
+  --line-3: lch(24% 0 0);
+  --accent-l: 32%;
+  --accent-c: 60;
+  --accent-ink-l: 100%;
+  --accent-ink-c: 0;
+  --accent-2-l: 90%;
+  --accent-2-c: 14;
+  --accent-3-l: 95%;
+  --accent-3-c: 7;
+  --ok: lch(38% 50 148);
+  --warn: lch(40% 52 66);
+  --miss: lch(22% 2 var(--base-h));
+  --danger: lch(38% 62 28);
+  --tint-maths: lch(90% 14 266);
+  --tint-fm: lch(90% 14 330);
+  --tint-bio: lch(90% 14 160);
+  --tint-chem: lch(90% 14 66);
+  --tint-phys: lch(90% 14 238);
+  --fig-grid: 0.3;
+  --fig-fill: 0.14;
+  --fig-fill-accent: 0.26;
+}
+
+/* High contrast raises accent chroma on <html>; the subject rules must
+   not flatten it back, and they restate the lightness for the same
+   reason the dark rules do. */
+[data-theme="hc"] [data-subject="maths"],
+[data-theme="hc"][data-subject="maths"] { --accent-c: 58; --accent-l: 32%; --accent-ink-l: 100%; --accent-ink-c: 0; }
+[data-theme="hc"] [data-subject="further-maths"],
+[data-theme="hc"][data-subject="further-maths"] { --accent-c: 62; --accent-l: 32%; --accent-ink-l: 100%; --accent-ink-c: 0; }
+[data-theme="hc"] [data-subject="science"],
+[data-theme="hc"][data-subject="science"] { --accent-c: 58; --accent-l: 32%; --accent-ink-l: 100%; --accent-ink-c: 0; }
+
+/* ====================================================================
+   TAILWIND THEME MAP. The new names are added so they are usable as
+   utilities (text-ink-3, border-line-3, text-danger, text-display,
+   text-micro, rounded-pill).
+==================================================================== */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* font-serif-lesson: the note, its headings and the topic hero. Never controls. */
+  --font-serif-lesson: var(--serif-lesson);
+  /* The companion's own voice, already referenced by CompanionLine as
+     var(--font-companion, ui-serif, …). Pointing it at the lesson serif
+     makes Rowan sound like the notes rather than like a system font. */
+  --font-companion: var(--serif-lesson);
+
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-miss: var(--miss);
+  --color-danger: var(--danger);
+  --color-tint-maths: var(--tint-maths);
+  --color-tint-fm: var(--tint-fm);
+  --color-tint-bio: var(--tint-bio);
+  --color-tint-chem: var(--tint-chem);
+  --color-tint-phys: var(--tint-phys);
+
+  --text-display: var(--fs-display);
+  --text-display--line-height: var(--lh-display);
+  --text-h1: var(--fs-h1);
+  --text-h1--line-height: var(--lh-h1);
+  --text-h2: var(--fs-h2);
+  --text-h2--line-height: var(--lh-h2);
+  --text-h3: var(--fs-h3);
+  --text-h3--line-height: var(--lh-h3);
+  --text-prose: var(--fs-prose);
+  --text-prose--line-height: var(--lh-prose);
+  --text-ui: var(--fs-ui);
+  --text-ui--line-height: var(--lh-ui);
+  --text-meta: var(--fs-meta);
+  --text-meta--line-height: var(--lh-meta);
+  --text-micro: var(--fs-micro);
+  --text-micro--line-height: var(--lh-micro);
+
+  --radius-card: var(--radius);
+  --radius-field: var(--radius-sm);
+  --radius-xs: 5px;
+  --radius-pill: 999px;
+  --shadow-card: var(--shadow-1);
+  --shadow-float: var(--shadow-2);
+}
+
+html { color-scheme: light; scroll-behavior: auto; }
+[data-theme="dark"] { color-scheme: dark; }
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Numbers that must line up: scores, UMS, timers */
+.tnum { font-variant-numeric: tabular-nums slashed-zero; }
+
+/* Long-form notes: the learning-prose size, the measure from the token,
+   and the paragraph rhythm from --gap-para rather than an em guess. */
+.prose-note { max-width: var(--measure); font-size: var(--fs-prose); line-height: var(--lh-prose); font-family: var(--serif-lesson); }
+.prose-note p { margin-block: var(--gap-para); }
+.prose-note strong { font-weight: 600; }
+/* Inter carries everything she operates or counts, inside the note as everywhere else. */
+.prose-note :where(button, input, select, textarea, label, .tnum) {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The section rule: a numbered lesson section is opened by a hairline
+   across the measure and a sentence-case label under it. This is the one
+   piece of furniture that replaces 52 uppercase eyebrows. */
+.section-rule { border-top: 1px solid var(--line); padding-top: 14px; margin-top: var(--gap-section); }
+
+/* KaTeX themed through the same tokens.
+   INLINE: 1.1em, settled by measurement as 01 §3.4 asks ("try 1.1 by eye on
+   the 0 < t <= 10 stem at 390 px before settling"). Measured in the browser
+   with canvas text metrics on the loaded faces (22 Sep 2026):
+     digit height  Literata 0.75em, KaTeX_Main 0.67em  -> match at 1.12
+     x-height      Literata 0.52em, KaTeX_Math 0.45em  -> match at 1.16
+     cap height    Literata 0.73em, KaTeX_Main 0.69em  -> match at 1.06
+   Inline maths is mostly digits and italic lower-case beside Literata's own
+   digits ("A class 0 < t <= 10 has frequency 20"): at 1.06 the maths digits
+   sat 5% short of the prose digits beside them, at 1.1 they are within 2%.
+   And the floor: a superscript or inline \frac is scriptstyle, 0.7 of this,
+   so on 17 px prose 1.06 gave 12.6 px and 1.1 gives 13.1 px.
+   Stacked fractions inline stay a content lint (\tfrac at most; a solidus
+   or ÷ preferred), because scriptscriptstyle is under the floor at any size.
+   DISPLAY: 1.1em of the surrounding text, i.e. 18.7 px on 17 px prose, as
+   01 §3.4 specifies. The inner .katex is reset to 1em so the two scales do
+   not compound (1.1 x 1.1 = 1.21, 20.6 px, would push every display wider).
+   Display maths steps down before it scrolls (pass 2). */
+.katex { font-size: 1.1em; color: var(--ink); }
+.katex-display { font-size: 1.1em; margin: 0.7em 0; overflow-x: auto; overflow-y: hidden; padding-block: 2px; }
+.katex-display > .katex { font-size: 1em; }
+
+/* Focus is never hidden (WCAG 2.4.11) and always visible */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Motion: transform/opacity only, 120-300 ms, honours reduced motion */
+.rise-in { animation: rise-in var(--dur) var(--ease-out) both; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .rise-in { animation: none; }
+  *, *::before, *::after { transition-property: none !important; animation-duration: 0.01ms !important; }
+}
+
+/* A stone settling on the cairn: 300 ms, transform/opacity only */
+.stone-settle { animation: stone-settle var(--dur-slow) var(--ease-out) both; }
+@keyframes stone-settle { from { opacity: 0; transform: translateY(-6px) scale(0.96); } to { opacity: 0.85; transform: none; } }
+
+/* Quiet loading pulse */
+.skeleton { animation: skeleton 1.4s ease-in-out infinite; }
+@keyframes skeleton { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .stone-settle, .skeleton { animation: none; } }
+
+/* Answer targets: 44 px is the floor, 52 px for anything she taps
+   hundreds of times (grading buttons, options, the Check button). */
+.tap { min-height: 44px; min-width: 44px; }
+.tap-lg { min-height: 52px; min-width: 52px; }
+
+/* Wide content scrolls inside its own box; the page never scrolls sideways (flex/grid min-width reset) */
+main :where(div, section, article, li, h1, h2, h3, p, figure) { min-width: 0; }
+main :where(.prose-note, article, section) table:not(.data-table) { display: block; overflow-x: auto; max-width: 100%; }
+main .katex-display { max-width: 100%; }
+
+/* ====================================================================
+   ART DIRECTION V2 — 23 September 2026 (docs/design/2026-09-23-art-direction-v2.md).
+   Appended by the slides agent for the trial on fm1/algebraic-fractions-simplify;
+   nothing above this line changes. Four groups:
+     §2.2  the illustration tints per subject (--tint-wash, --tint-mid), the outcome
+           washes, gorse, the stones, the hills' scene, the hare
+     §8.4  the rhythm of a stem, its maths and the answer
+     §5    the five named motions as tokens and keyframes
+     §2.2  the subject accents at real chroma, scoped to [data-palette="v2"]: a
+           surface built to the v2 direction sets that attribute on its root and
+           takes Mourne blue, heather or sea-glass; everything else keeps pass 1.
+   Every colour is LCH (D50) as the document states it; the hex in its table is
+   the sRGB rendering of these values.
+==================================================================== */
+:root {
+  /* The illustration tints: the card's top wash and a figure's stage (wash), the
+     middle step of a drawing and the track's unfilled segments (mid). With no
+     subject they follow the root accent's hue at low chroma. */
+  --tint-wash: lch(94% 4 var(--accent-h));
+  --tint-mid: lch(80% 10 var(--accent-h));
+  /* The outcome washes: the lit correct option's fill, her missed option's fill. */
+  --ok-wash: lch(94% 12 148);
+  --miss-wash: lch(94% 2 var(--base-h));
+  /* Gorse: the one warm accent for drawings. Never a control, never text. */
+  --gorse: lch(80% 72 90);
+  --gorse-deep: lch(68% 68 85);
+  /* Drawn stones, lichen and heather: the cairn's own colours, in every theme. */
+  --stone-top: lch(85% 5 85);
+  --stone-light: lch(78% 5 85);
+  --stone-mid: lch(66% 6 85);
+  --stone-dark: lch(52% 6 82);
+  --lichen: lch(74% 30 125);
+  --lichen-shade: lch(62% 28 122);
+  --heather: lch(58% 44 330);
+  --heather-light: lch(72% 34 330);
+  /* The close card's scene. Evening is a warmer sky, never a dimmer screen, so
+     these hold in dark mode too. */
+  --sky: lch(94% 8 235);
+  --sky-deep: lch(88% 12 240);
+  --hill: lch(70% 30 135);
+  --hill-light: lch(76% 30 132);
+  --hill-dark: lch(58% 28 135);
+  --hill-far: lch(80% 16 145);
+  --eve-sky: lch(88% 12 60);
+  --eve-haze: lch(92% 9 62);
+  --eve-sky-deep: lch(80% 18 55);
+  --moon: lch(88% 30 90);
+  /* The hare (§7): the same hare at night. */
+  --fur: lch(60% 36 62);
+  --fur-shade: lch(50% 34 60);
+  --fur-light: lch(68% 32 64);
+  --cream: lch(91% 12 85);
+  --ear-rose: lch(74% 28 28);
+  --nose: lch(45% 30 40);
+
+  /* §8.4 The rhythm: the stem, its maths and the answer. Phone values; md below. */
+  --fs-stem: 20px;
+  --lh-stem: 1.4;
+  --gap-stem-maths: 16px;
+  --fs-stem-maths: 28px;
+  --gap-maths-field: 20px;
+  --gap-option: 10px;
+  --h-option: 52px;
+  --fs-option: 18px;
+  --fs-verdict: 21px;
+  --fs-card-title: 24px;
+  --fs-card-prose: 20px;
+
+  /* §5 Motion: five names, five tokens. Card advance is 200 ms. */
+  --motion-arrival: 240ms;
+  --motion-reveal: 200ms;
+  --motion-place: 300ms;
+  --motion-react: 250ms;
+  --motion-dismiss: 160ms;
+  --motion-card: 200ms;
+  --ease-react: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (min-width: 48rem) {
+  :root {
+    --gap-stem-maths: 20px;
+    --fs-stem: 22px;
+    --fs-stem-maths: 32px;
+    --gap-maths-field: 24px;
+    --fs-card-title: 28px;
+    --fs-card-prose: 22px;
+  }
+}
+
+/* The tints per subject: Mourne blue, heather, sea-glass. */
+[data-subject="maths"] { --tint-wash: lch(94% 8 255); --tint-mid: lch(80% 20 255); }
+[data-subject="further-maths"] { --tint-wash: lch(94% 9 330); --tint-mid: lch(80% 22 330); }
+[data-subject="science"] { --tint-wash: lch(94% 9 195); --tint-mid: lch(80% 20 195); }
+
+/* Dark: the washes become 24 % lightness tints; the mid step keeps its chroma. */
+[data-theme="dark"] { --ok-wash: lch(24% 14 148); --miss-wash: lch(24% 3 var(--base-h)); --tint-wash: lch(24% 5 var(--accent-h)); --tint-mid: lch(40% 12 var(--accent-h)); }
+[data-theme="dark"][data-subject="maths"], [data-theme="dark"] [data-subject="maths"] { --tint-wash: lch(24% 10 255); --tint-mid: lch(40% 22 255); }
+[data-theme="dark"][data-subject="further-maths"], [data-theme="dark"] [data-subject="further-maths"] { --tint-wash: lch(24% 10 330); --tint-mid: lch(40% 24 330); }
+[data-theme="dark"][data-subject="science"], [data-theme="dark"] [data-subject="science"] { --tint-wash: lch(24% 10 195); --tint-mid: lch(40% 22 195); }
+
+/* High contrast: the washes stay light and clearly tinted; the outcome washes stay readable under black ink. */
+[data-theme="hc"] { --ok-wash: lch(90% 18 148); --miss-wash: lch(94% 0 0); --tint-wash: lch(92% 8 var(--accent-h)); --tint-mid: lch(70% 24 var(--accent-h)); }
+[data-theme="hc"][data-subject="maths"], [data-theme="hc"] [data-subject="maths"] { --tint-wash: lch(92% 12 255); --tint-mid: lch(70% 30 255); }
+[data-theme="hc"][data-subject="further-maths"], [data-theme="hc"] [data-subject="further-maths"] { --tint-wash: lch(92% 12 330); --tint-mid: lch(70% 32 330); }
+[data-theme="hc"][data-subject="science"], [data-theme="hc"] [data-subject="science"] { --tint-wash: lch(92% 12 195); --tint-mid: lch(70% 30 195); }
+
+/* The subject accents at real chroma (§2.2, §10), for a surface that declares
+   data-palette="v2" on its root. Declared as the resolved --accent on that
+   root, because the derived --accent is computed on <html> and a descendant's
+   --accent-c would not reach it. Light and evening: L 44–46; dark: L 74–76 with
+   the dark accent ink; high contrast keeps its own raised chroma untouched. */
+[data-palette="v2"] { --accent: lch(32% 14 255); --accent-ink: lch(100% 0 0); }
+[data-subject="maths"] [data-palette="v2"] { --accent: lch(44% 34 255); --accent-ink: lch(100% 0 0); }
+[data-subject="further-maths"] [data-palette="v2"] { --accent: lch(46% 46 330); --accent-ink: lch(100% 0 0); }
+[data-subject="science"] [data-palette="v2"] { --accent: lch(44% 32 195); --accent-ink: lch(100% 0 0); }
+[data-theme="dark"] [data-palette="v2"] { --accent: lch(74% 16 255); --accent-ink: lch(14% 3 var(--base-h)); }
+[data-theme="dark"][data-subject="maths"] [data-palette="v2"] { --accent: lch(74% 34 255); --accent-ink: lch(14% 3 var(--base-h)); }
+[data-theme="dark"][data-subject="further-maths"] [data-palette="v2"] { --accent: lch(76% 40 330); --accent-ink: lch(14% 3 var(--base-h)); }
+[data-theme="dark"][data-subject="science"] [data-palette="v2"] { --accent: lch(74% 30 195); --accent-ink: lch(14% 3 var(--base-h)); }
+[data-theme="hc"] [data-palette="v2"] { --accent: lch(var(--accent-l) var(--accent-c) var(--accent-h)); --accent-ink: lch(var(--accent-ink-l) var(--accent-ink-c) var(--accent-h)); }
+
+/* §8.4 Display maths lifted out of a stem: its own line at --fs-stem-maths,
+   left-aligned with the stem, 4 px above and below, in Slides and in Read
+   alike. KaTeX's display wrapper carries its own 1.1em and centring, so the
+   rule is written against it here rather than as a utility. */
+[data-stem-maths] .katex-display { font-size: var(--fs-stem-maths); margin: 0; text-align: left; padding-block: 4px; }
+[data-stem-maths] .katex-display > .katex { font-size: 1em; }
+[data-stem-maths] .katex-display > .katex > .katex-html { text-align: left; }
+
+/* §5 The five motions and the card advance. Fill mode is `backwards`, never
+   `both`: a finished animation with a forwards fill stays "in effect" and would
+   still be listed by document.getAnimations() at rest. Transform and opacity
+   only; every one is static under reduced motion. */
+@keyframes motion-arrival { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes motion-reveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes motion-place { from { opacity: 0; transform: translateY(-6px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes motion-dismiss { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-4px); } }
+@keyframes motion-card-forward { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes motion-card-back { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+.motion-arrival { animation: motion-arrival var(--motion-arrival) var(--ease-out) backwards; }
+.motion-reveal { animation: motion-reveal var(--motion-reveal) var(--ease-out) backwards; }
+.motion-place { animation: motion-place var(--motion-place) var(--ease-out) backwards; }
+.motion-dismiss { animation: motion-dismiss var(--motion-dismiss) ease-in forwards; }
+.motion-card-forward { animation: motion-card-forward var(--motion-card) var(--ease-out) backwards; }
+.motion-card-back { animation: motion-card-back var(--motion-card) var(--ease-out) backwards; }
+@media (prefers-reduced-motion: reduce) {
+  .motion-arrival, .motion-reveal, .motion-place, .motion-dismiss, .motion-card-forward, .motion-card-back { animation: none; }
+  /* Static means static: the reduced-motion rule above sets every element's transition-duration to 0.01 ms, and with
+     the default transition-property of `all` a focus outline then becomes seven running transitions that
+     document.getAnimations() lists (measured 23 Sep on the focused card title). Inside Slides nothing transitions
+     or animates under reduced motion, so the acceptance count is the page's own. */
+  [data-slides], [data-slides] *, [data-slides] *::before, [data-slides] *::after { transition-property: none !important; animation-name: none !important; }
+}

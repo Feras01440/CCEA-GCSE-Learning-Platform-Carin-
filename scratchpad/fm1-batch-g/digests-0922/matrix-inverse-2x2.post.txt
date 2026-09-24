@@ -1,0 +1,233 @@
+# fm.u1.matrix-inverse-2x2 — Determinant and inverse of a 2 × 2 matrix  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Determinant and inverse of a 2 × 2 matrix v1 [verified]
+verification statuses: {"verified":12}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] The matrix that undoes the other one
+- [p] 
+- [figure] That is the definition: $A^{-1}A$ gives the identity.
+- [choice] 
+- [h] 1. The determinant, on a line of its own
+- [p] 
+- [figure] Leading diagonal times, take away the other diagonal times.
+- [number] 
+- [h] 2. When there is no inverse at all
+- [p] 
+- [figure] The sentence to write, with the matrix named.
+- [number] 
+- [h] 3. Three actions, in order
+- [p] 
+- [figure] Swap the leading diagonal, negate the other, divide by $ad - bc$.
+- [why] Why the formula is not on your sheet
+- [choice] 
+- [h] 4. A worked inverse, and the check
+- [p] 
+- [figure] Keep the $\frac{1}{5}$ outside, or share it through every entry — but not half and half.
+- [examiner] Summer 2025, Unit 1, Question 5
+- [video] Inverse of a 2x2 Matrix - Corbettmaths
+- [number] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.matrix-inverse-2x2.01 [verified] paper FM1 calc
+STEM: The matrix $A = \begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix}$.
+Find $A^{-1}$.
+  FIG: svg — Matrix A turned into its inverse in two moves: swapped and negated, then every entry divided by the determinant.
+  1. $\det A = (4)(2) - (1)(3) = 5$.   — On its own line, before the matrix is touched. It earns the first mark, and it tells you straight away whether an inverse exists at all.  (MW1)
+  2. Swap the leading diagonal and negate the other one: $\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix}$.   — Two separate actions, done in that order. The leading diagonal moves and keeps its signs; the other diagonal stays put and changes sign.  (M2)  WHY: ✔Because swapping and negating is what makes the product come out as the identity | ✘Because every entry of an inverse is the reciprocal of the original entry | ✘Because the two diagonals are always interchangeable
+  3. Divide every entry by the determinant: $A^{-1} = \frac{1}{5}\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix} = \begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$.   — Keep the $\frac{1}{5}$ outside the brackets or share it through all four entries, but do not do half of each. A determinant with a minus sign keeps it here.  (W1)
+  4. Check: $A^{-1}A = \begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}\begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix} = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}$.   — It earns no mark of its own. It takes twenty seconds on a calculator paper, and it catches every sign slip in the three actions above.
+  FINAL: $A^{-1} = \begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$
+  TWIN: Find $B^{-1}$ for $B = \begin{pmatrix}2 & 6 \\ 1 & 4\end{pmatrix}$.  → matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["2","-3"],["-1/2","1"]],"tolerance":{"type":"absolute","value":0.0005}}
+
+### we.fm.u1.matrix-inverse-2x2.02 [verified] paper FM1 calc
+STEM: The matrix $N = \begin{pmatrix}-3 & 2 \\ 4 & -1\end{pmatrix}$.
+Find $N^{-1}$.
+  FIG: svg — The determinant of matrix N worked out on its own line as ad minus bc, coming out negative.
+  1. $\det N = (-3)(-1) - (2)(4) = 3 - 8 = -5$.   — The leading diagonal holds two negatives, so write each product out rather than doing it in your head: $(-3)(-1)$ is $3$, not $-3$. The determinant is negative, and that sign has to survive.  (MW1)
+  2. Swap and negate: $\begin{pmatrix}-1 & -2 \\ -4 & -3\end{pmatrix}$.   — Negating an entry that is already negative makes it positive. Write each one down rather than trusting the pattern.  (M2)
+  3. Divide by $-5$, with brackets round it: $N^{-1} = \frac{1}{-5}\begin{pmatrix}-1 & -2 \\ -4 & -3\end{pmatrix} = \begin{pmatrix}\frac{1}{5} & \frac{2}{5} \\ \frac{4}{5} & \frac{3}{5}\end{pmatrix}$.   — This is the step the reports name. Writing $\frac{1}{5}$ instead would give $\begin{pmatrix}-\frac{1}{5} & -\frac{2}{5} \\ -\frac{4}{5} & -\frac{3}{5}\end{pmatrix}$, with every sign wrong.  (W1)  WHY: ✔Because the reciprocal of a negative number is negative | ✘Because a determinant is always written as a positive number | ✘Because the minus signs in the matrix cancel it out
+  4. Check: $N^{-1}N = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}$.   — It earns no mark of its own. If the check gives anything other than the identity, the sign of the determinant is the first place to look.
+  FINAL: $N^{-1} = \begin{pmatrix}\frac{1}{5} & \frac{2}{5} \\ \frac{4}{5} & \frac{3}{5}\end{pmatrix}$
+  TWIN: Find $F^{-1}$ for $F = \begin{pmatrix}7 & 3 \\ 4 & 2\end{pmatrix}$.  → matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["1","-3/2"],["-2","7/2"]],"tolerance":{"type":"absolute","value":0.0005}}
+
+## DIAGNOSTICS
+### dx.fm.u1.matrix-inverse-2x2.pre (pre) [draft]
+- p1 (Multiplying two negatives): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+What is $(-3) \times (-1)$?
+    ✔ $3$ — Two negatives multiply to a positive.
+    ✘ $-3$ — The two minus signs cancel, so the product is positive.
+    ✘ $-4$ — That is the sum. The determinant multiplies along each diagonal.
+- p2 (Dividing a negative by a whole number): What is $\frac{1}{4}$ of $-3$, written as a decimal?
+    ✔ $-0.75$ — Dividing a negative number leaves it negative.
+    ✘ $0.75$ — The sign is unchanged by dividing, so the answer stays negative.
+    ✘ $-1.33$ — That is $-4$ divided by $3$. Here it is $-3$ divided by $4$.
+- p3 (Recognising the identity): Which matrix is the identity for two by two multiplication?
+    ✔ $\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}$ — Ones on the leading diagonal, zeros elsewhere. Multiplying by it changes nothing.
+    ✘ $\begin{pmatrix}1 & 1 \\ 1 & 1\end{pmatrix}$ — Every entry is one, which is not the identity: multiplying by it changes the matrix.
+    ✘ $\begin{pmatrix}0 & 0 \\ 0 & 0\end{pmatrix}$ — That is the zero matrix. It sends everything to zero.
+
+### dx.fm.u1.matrix-inverse-2x2.post (post) [draft]
+- d1 (The determinant): What is $\det A$ for $A = \begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix}$?
+    ✔ $5$ — $ad - bc$, with the leading diagonal first.
+    ✘ $-5$ [fm.matrix.determinant-sign-reversed] — That is $bc - ad$, taken the other way round.
+    ✘ $11$ [fm.matrix.determinant-products-added] — That is $ad + bc$, with the two products added. The determinant subtracts them: $8 - 3 = 5$.
+- d2 (The singular case): A matrix has determinant $0$. What follows?
+    ✔ It has no inverse, and it is called singular — The formula divides by the determinant, so there is nothing to divide by.
+    ✘ Its inverse is the zero matrix [fm.matrix.singular-not-recognised] — No matrix at all multiplies it to give the identity, so there is no inverse to name.
+    ✘ Its inverse is the identity [fm.matrix.singular-not-recognised] — The identity is its own inverse. A singular matrix has none.
+- d3 (The three actions): Which of these is $A^{-1}$ for $A = \begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix}$, where $\det A = 5$?
+    ✔ $\begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$ — Swapped, negated and then divided by $5$.
+    ✘ $\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix}$ [fm.matrix.inverse-not-divided-by-det] — Swapped and negated, and then never divided by the determinant.
+    ✘ $\begin{pmatrix}\frac{4}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{2}{5}\end{pmatrix}$ [fm.matrix.adjugate-not-swapped] — The signs changed but the leading diagonal never swapped.
+    ✘ $\begin{pmatrix}\frac{2}{5} & -1 \\ -3 & 4\end{pmatrix}$ [fm.matrix.det-factor-on-one-entry-only] — Only the first entry was divided by the determinant; the other three were left as they were.
+- d4 (Keeping the sign of a negative determinant): A matrix has determinant $-5$. What factor goes in front of the swapped and negated matrix?
+    ✔ $\frac{1}{-5}$ — The reciprocal of a negative number is negative, and the brackets keep it that way.
+    ✘ $\frac{1}{5}$ [fm.matrix.reciprocal-sign-dropped] — The minus sign has been dropped. That single slip changes all four entries, and the reports name it directly.
+    ✘ $-5$ [fm.matrix.inverse-not-divided-by-det] — The determinant multiplies rather than divides here. The factor is its reciprocal.
+- d5 (The check): How do you check that a matrix you have written down really is the inverse?
+    ✔ Multiply it by the original matrix and look for the identity — That is the definition of an inverse, and it catches sign slips in seconds.
+    ✘ Add it to the original matrix and look for the zero matrix — An inverse undoes a multiplication, not an addition.
+    ✘ Check that every entry is the reciprocal of the original entry [fm.matrix.elementwise-product] — An inverse is not built entry by entry; the whole matrix works together.
+
+## QUESTIONS
+### q.fm.u1.matrix-inverse-2x2.0001 [verified] practice · diff 1 · untiered · FM1 calc · 1 marks · (main)calculate1 · A determinant on its own, the line every inverse question opens with
+  (main) [1] The matrix $A = \begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix}$.
+Calculate $\det A$.
+      ANSWER: numeric 5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $5$ accept ["$(4)(2) - (1)(3)$ seen"]
+      SOLUTION: $\det A = (4)(2) - (1)(3) = 5$.
+      ERR [fm.matrix.determinant-sign-reversed] {"kind":"numeric","value":-5,"tolerance":{"type":"absolute","value":0.0005}} → That is $bc - ad$, the subtraction the other way round. The determinant is $ad - bc$, which gives $5$. (0)
+      HINTS: Leading diagonal multiplied, take away the other diagonal multiplied.
+
+### q.fm.u1.matrix-inverse-2x2.0002 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)calculate1 · A determinant that comes out negative, where the reports say the marks go
+  (main) [1] The matrix $N = \begin{pmatrix}-3 & 2 \\ 4 & -1\end{pmatrix}$.
+Calculate $\det N$.
+      ANSWER: numeric -5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $-5$
+      SOLUTION: $\det N = (-3)(-1) - (2)(4) = 3 - 8 = -5$. The leading diagonal holds two negatives, and their product is positive: $(-3)(-1) = 3$.
+      ERR [fm.matrix.determinant-sign-reversed] {"kind":"numeric","value":5,"tolerance":{"type":"absolute","value":0.0005}} → That is $bc - ad$. Taken as $ad - bc$ the determinant is $-5$, and its minus sign has to survive into the inverse. (0)
+      HINTS: Take care with the signs of the entries as well as with the subtraction.
+
+### q.fm.u1.matrix-inverse-2x2.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)identify2 · A singular matrix, recognised from its determinant
+  (main) [2] The matrix $S = \begin{pmatrix}3 & 6 \\ 2 & 4\end{pmatrix}$.
+Identify the correct statement about $S$.
+      ANSWER: mcq ✔$\det S = 0$, so $S$ has no inverse | ✘$\det S = 0$, so $S^{-1}$ is the zero matrix [fm.matrix.singular-not-recognised] | ✘$\det S = 12 + 12 = 24$, so the inverse exists [fm.matrix.determinant-products-added]
+      MW1 MW1: $\det S = 0$
+      W1 W1: $S$ has no inverse accept ["$S$ is singular"]
+      SOLUTION: $\det S = (3)(4) - (6)(2) = 12 - 12 = 0$. The inverse formula divides by the determinant, so $S$ has no inverse: $S$ is singular.
+      HINTS: Work the determinant out first.
+
+### q.fm.u1.matrix-inverse-2x2.0004 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · An inverse whose determinant is one, so the three actions stand alone
+  (main) [2] The matrix $G = \begin{pmatrix}1 & 4 \\ 2 & 9\end{pmatrix}$.
+Find $G^{-1}$.
+Write the answer as a matrix. A fraction, a decimal or a fraction in front of the brackets is accepted.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["9","-4"],["-2","1"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: $\det G = 1$
+      W1 W1: $\begin{pmatrix}9 & -4 \\ -2 & 1\end{pmatrix}$ ft
+      SOLUTION: $\det G = (1)(9) - (4)(2) = 1$. Swapping and negating gives $\begin{pmatrix}9 & -4 \\ -2 & 1\end{pmatrix}$, and dividing by $1$ leaves it unchanged. So $G^{-1} = \begin{pmatrix}9 & -4 \\ -2 & 1\end{pmatrix}$, and $G^{-1}G$ gives the identity.
+      ERR [fm.matrix.adjugate-not-swapped] {"kind":"matrix","entries":[["1","-4"],["-2","9"]]} → The signs on the other diagonal changed, and the leading diagonal never swapped. With $a$ and $d$ exchanged as well, the inverse is $\begin{pmatrix}9 & -4 \\ -2 & 1\end{pmatrix}$. (1)
+      ERR [fm.matrix.adjugate-not-negated] {"kind":"matrix","entries":[["9","4"],["2","1"]]} → The leading diagonal swapped, and $b$ and $c$ kept their signs. The other diagonal changes sign, which gives $\begin{pmatrix}9 & -4 \\ -2 & 1\end{pmatrix}$. (1)
+      HINTS: Determinant first. || Swap the leading diagonal, negate the other one.
+
+### q.fm.u1.matrix-inverse-2x2.0005 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · An inverse with fractional entries, with the determinant, the arranged matrix and the division each earning a mark
+  (main) [3] The matrix $A = \begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix}$.
+Find $A^{-1}$.
+Write the answer as a matrix. A fraction, a decimal or a fraction in front of the brackets is accepted.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["2/5","-1/5"],["-3/5","4/5"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: $\det A = 5$
+      M1 M2: $\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix}$
+      W1 W1: $\frac{1}{5}\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix}$ ft
+      SOLUTION: $\det A = 5$. Swapping and negating gives $\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix}$. Dividing every entry by $5$: $A^{-1} = \frac{1}{5}\begin{pmatrix}2 & -1 \\ -3 & 4\end{pmatrix} = \begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$.
+      ERR [fm.matrix.inverse-not-divided-by-det] {"kind":"matrix","entries":[["2","-1"],["-3","4"]]} → Swapped and negated correctly, and then handed in without the division. Every entry still has to be divided by $5$, which gives $\begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$. (2)
+      ERR [fm.matrix.det-factor-on-one-entry-only] {"kind":"matrix","entries":[["2/5","-1"],["-3","4"]]} → Only the first entry was divided by the determinant. The factor of $\frac{1}{5}$ reaches all four, giving $\begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$. (1)
+      ERR [fm.matrix.adjugate-not-swapped] {"kind":"matrix","entries":[["4/5","-1/5"],["-3/5","2/5"]]} → The signs changed but the leading diagonal never swapped. With $a$ and $d$ exchanged the inverse is $\begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$. (1)
+      ERR [fm.matrix.adjugate-not-negated] {"kind":"matrix","entries":[["2/5","1/5"],["3/5","4/5"]]} → The leading diagonal swapped and the other diagonal kept its signs. Negating $b$ and $c$ gives $\begin{pmatrix}\frac{2}{5} & -\frac{1}{5} \\ -\frac{3}{5} & \frac{4}{5}\end{pmatrix}$. (1)
+      HINTS: Determinant on its own line first. || Swap, negate, then divide every entry.
+
+### q.fm.u1.matrix-inverse-2x2.0006 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)write-down2 · One named entry of an inverse, so each action is tested on its own
+  (main) [2] The matrix $A = \begin{pmatrix}4 & 1 \\ 3 & 2\end{pmatrix}$ has $\det A = 5$.
+Write down the entry in row 1, column 2 of $A^{-1}$.
+      ANSWER: numeric -0.2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $-1$ after swapping and negating
+      W1 W1: $-1/5$ ft
+      SOLUTION: Row 1, column 2 holds $b = 1$, which changes sign to $-1$. Dividing by $\det A = 5$ gives $-1/5$.
+      ERR [fm.matrix.inverse-not-divided-by-det] {"kind":"numeric","value":-1,"tolerance":{"type":"absolute","value":0.0005}} → The sign was changed but the entry was never divided by the determinant. Dividing $-1$ by $5$ gives $-1/5$. (1)
+      ERR [fm.matrix.adjugate-not-negated] {"kind":"numeric","value":0.2,"tolerance":{"type":"absolute","value":0.0005}} → The entry was divided by the determinant but never negated. The other diagonal changes sign, so the answer is $-1/5$. (1)
+      HINTS: That entry is $b$, which changes sign and stays where it is. || Then divide by the determinant.
+
+### q.fm.u1.matrix-inverse-2x2.0007 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)identify2 · Choosing the inverse from four arrangements, each a different action gone wrong
+  (main) [2] The matrix $B = \begin{pmatrix}2 & 6 \\ 1 & 4\end{pmatrix}$.
+Identify $B^{-1}$.
+      ANSWER: mcq ✔$\begin{pmatrix}2 & -3 \\ -\frac{1}{2} & 1\end{pmatrix}$ | ✘$\begin{pmatrix}4 & -6 \\ -1 & 2\end{pmatrix}$ [fm.matrix.inverse-not-divided-by-det] | ✘$\begin{pmatrix}1 & -3 \\ -\frac{1}{2} & 2\end{pmatrix}$ [fm.matrix.adjugate-not-swapped] | ✘$\begin{pmatrix}2 & 3 \\ \frac{1}{2} & 1\end{pmatrix}$ [fm.matrix.adjugate-not-negated]
+      MW1 MW1: $\det B = 2$
+      W1 W1: $\begin{pmatrix}2 & -3 \\ -\frac{1}{2} & 1\end{pmatrix}$
+      SOLUTION: $\det B = (2)(4) - (6)(1) = 2$. Swapping and negating gives $\begin{pmatrix}4 & -6 \\ -1 & 2\end{pmatrix}$, and dividing every entry by $2$ gives $\begin{pmatrix}2 & -3 \\ -\frac{1}{2} & 1\end{pmatrix}$.
+      HINTS: Work the determinant out, then apply the three actions in order.
+
+### q.fm.u1.matrix-inverse-2x2.0008 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)find2 · The value that makes a matrix singular, which is the determinant read as an equation
+  (main) [2] The matrix $M = \begin{pmatrix}k & 4 \\ 3 & 6\end{pmatrix}$ has no inverse.
+Find the value of $k$.
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $6k - 12 = 0$
+      W1 W1: $2$ ft
+      SOLUTION: $\det M = 6k - (4)(3) = 6k - 12$. There is no inverse when the determinant is zero, so $6k - 12 = 0$. Therefore $k = 2$.
+      ERR [fm.matrix.determinant-products-added] {"kind":"numeric","value":-2,"tolerance":{"type":"absolute","value":0.0005}} → Setting the determinant to zero is right, but $6k + 12$ adds the two diagonal products. The determinant subtracts them: $ad - bc = 6k - 12$, and $6k - 12 = 0$ gives $k = 2$. (1)
+      HINTS: A matrix has no inverse exactly when its determinant is zero. || Write the determinant in terms of $k$ and set it to zero.
+
+### q.fm.u1.matrix-inverse-2x2.0009 [verified] exam-style · diff 3 · untiered · FM1 calc · 6 marks · (a)find3|(b)write-down1|(c)explain2 · A determinant, an inverse and a singular matrix named, the shape part (i) of a matrix question takes
+  (a) [3] The matrix $F = \begin{pmatrix}7 & 3 \\ 4 & 2\end{pmatrix}$.
+Find $F^{-1}$.
+Write the answer as a matrix. A fraction, a decimal or a fraction in front of the brackets is accepted.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["1","-3/2"],["-2","7/2"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: $\det F = 2$
+      M1 M2: $\begin{pmatrix}2 & -3 \\ -4 & 7\end{pmatrix}$
+      W1 W1: $\frac{1}{2}\begin{pmatrix}2 & -3 \\ -4 & 7\end{pmatrix}$ ft
+      SOLUTION: $\det F = (7)(2) - (3)(4) = 2$. Swapping and negating gives $\begin{pmatrix}2 & -3 \\ -4 & 7\end{pmatrix}$. Dividing by $2$: $F^{-1} = \begin{pmatrix}1 & -\frac{3}{2} \\ -2 & \frac{7}{2}\end{pmatrix}$.
+      ERR [fm.matrix.inverse-not-divided-by-det] {"kind":"matrix","entries":[["2","-3"],["-4","7"]]} → Swapped and negated correctly, and then not divided by the determinant. Dividing every entry by $2$ gives $\begin{pmatrix}1 & -\frac{3}{2} \\ -2 & \frac{7}{2}\end{pmatrix}$. (2)
+      ERR [fm.matrix.adjugate-not-negated] {"kind":"matrix","entries":[["1","3/2"],["2","7/2"]]} → The leading diagonal swapped and $b$ and $c$ kept their signs. The other diagonal changes sign, giving $\begin{pmatrix}1 & -\frac{3}{2} \\ -2 & \frac{7}{2}\end{pmatrix}$. (1)
+      HINTS: Determinant on its own line first. || Swap, negate, divide.
+  (b) [1] Write down the matrix $F^{-1}F$.
+Write the answer as a matrix. A fraction, a decimal or a fraction in front of the brackets is accepted.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["1","0"],["0","1"]],"tolerance":{"type":"absolute","value":0.0005}}
+      W1 W1: the identity matrix $\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}$ ft
+      SOLUTION: An inverse multiplied by its own matrix gives the identity, so $F^{-1}F = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}$. Multiplying it out is also a check on part (a).
+      HINTS: An inverse undoes the matrix it came from.
+  (c) [2] The matrix $H = \begin{pmatrix}6 & 9 \\ 2 & 3\end{pmatrix}$.
+Explain why $H$ has no inverse.
+      ANSWER: text accepted=["det H = 0, so H has no inverse because the formula divides by the determinant","the determinant of H is zero, so H is singular and has no inverse"] keyWords=[{"any":["determinant","det"],"marks":1,"reject":["not zero","not 0","non zero","nonzero","isnt zero","isnt 0","not equal","doesnt equal","does not equal","≠ 0","≠ zero"]},{"any":["0","zero","singular"],"marks":1,"reject":["not zero","not 0","non zero","nonzero","isnt zero","isnt 0","not equal","doesnt equal","does not equal","≠ 0","≠ zero","not singular"]},{"any":["matrix H","H"],"marks":1}]
+      MW1 MW1: $\det H = 18 - 18 = 0$
+      W1 W1: $H$ named as the matrix with no inverse accept ["$H$ is singular"]
+      SOLUTION: $\det H = (6)(3) - (9)(2) = 18 - 18 = 0$. The determinant of H is zero, so H is singular and has no inverse.
+      HINTS: Work out the determinant. || Name the matrix as well as the reason.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.matrix-inverse-2x2.01 [draft] fm.matrix.reciprocal-sign-dropped · earned MW1,M2 · ccea-cer:further-maths:2025-summer:FM1:Q5
+STEM: Daithí was asked to find $N^{-1}$, where $N = \begin{pmatrix}-3 & 2 \\ 4 & -1\end{pmatrix}$. His working:
+    1. det N = (-3)(-1) - (2)(4) = -5
+    2. swap and negate: (-1 -2 ; -4 -3)
+  ✘ 3. N inverse = 1/5 x (-1 -2 ; -4 -3)
+    4. N inverse = (-1/5 -2/5 ; -4/5 -3/5)
+  WRONG: Lines 1 and 2 are both right, and they carry most of the marks: the determinant is correct, sign included, and the swapping and negating is exactly right.
+Line 3 writes the reciprocal as $\frac{1}{5}$, dropping the minus sign that line 1 had already found. The factor is $\frac{1}{-5}$.
+Because the factor multiplies all four entries, one dropped sign makes every entry wrong: the answer should be $(1/5 2/5 ; 4/5 3/5)$.
+  FIX: N inverse = 1/(-5) x (-1 -2 ; -4 -3) / N inverse = (1/5 2/5 ; 4/5 3/5)
+  FEEDBACK: The determinant and the arrangement are both right, so the method marks stand. The fix is a pair of brackets: write the factor as one over the determinant in brackets, sign attached, straight after you work the determinant out. Then check by multiplying back — the identity will not appear if a sign is wrong.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.matrix-inverse-2x2.01 [draft] (formula) How is the determinant of a two by two matrix worked out?  →  It is $ad - bc$: the leading diagonal multiplied, take away the other diagonal multiplied.
+- rp.fm.u1.matrix-inverse-2x2.02 [draft] (formula) Give the three actions that turn a two by two matrix into its inverse.  →  Swap the leading diagonal, change the signs on the other diagonal, and divide every entry by the determinant.
+- rp.fm.u1.matrix-inverse-2x2.03 [draft] (qa) When does a matrix have no inverse, and what is it called?  →  When its determinant is zero, because the formula divides by the determinant. Such a matrix is called singular.
+- rp.fm.u1.matrix-inverse-2x2.04 [draft] (trap) A determinant comes out as $-5$. What is the factor in front of the swapped and negated matrix?  →  $\frac{1}{-5}$, with the minus sign kept. Writing $\frac{1}{5}$ changes the sign of all four entries.
+- rp.fm.u1.matrix-inverse-2x2.05 [draft] (procedure) How do you check an inverse you have just written down?  →  Multiply it by the original matrix. The answer should be the identity, with ones on the leading diagonal and zeros elsewhere.
+- rp.fm.u1.matrix-inverse-2x2.06 [draft] (trap) What does the Unit 1 formula sheet give you about matrices?  →  Nothing. The determinant and the inverse formula are both recall, which is why they are worth holding as a picture of three actions.
+- rp.fm.u1.matrix-inverse-2x2.07 [draft] (procedure) A question asks why an equation involving a matrix cannot be solved. What two things does the answer need?  →  That the determinant is zero, and the name of the matrix whose determinant it is: for example, B has no inverse because det B = 0.

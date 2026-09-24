@@ -1,0 +1,192 @@
+[
+  {
+    "type": "hero",
+    "lede": "Put a list in order and the median cuts it in half. Cut each half in half again and you have the quartiles: three marks that split the data into four equal groups. The gap between the outer two is the interquartile range, the width of the middle half.",
+    "can": [
+      "Order a list and work the three quartile positions out from $n$.",
+      "Read a quartile whose position falls halfway between two values.",
+      "Use the interquartile range to say which set is more consistent."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Quartiles: three cuts, four equal groups"
+  },
+  {
+    "type": "p",
+    "md": "The median splits ordered data in half. Two more cuts, one halfway down each half, split it into four groups of equal size. Those two extra cuts are the **lower quartile** and the **upper quartile**, and the distance between them is the **interquartile range**, the width of the middle half. That width is the point of the idea, because the range is decided by the two most unusual values in the set."
+  },
+  {
+    "type": "figure",
+    "alt": "Eleven waiting times in order from 2 to 14 minutes, numbered 1 to 11, with markers under position 3 labelled LQ, position 6 labelled median and position 9 labelled UQ.",
+    "svg": "<svg viewBox='0 0 580 132' xmlns='http://www.w3.org/2000/svg' font-family='inherit' fill='currentColor'><text x='290' y='18' font-size='12.5' text-anchor='middle'>Eleven waiting times in order; the three quartiles cut the data into four equal groups</text><rect x='37' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='60' y='53' font-size='13' text-anchor='middle'>2</text><text x='60' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>1</text><rect x='83' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='106' y='53' font-size='13' text-anchor='middle'>3</text><text x='106' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>2</text><rect x='129' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='152' y='53' font-size='13' text-anchor='middle'>4</text><text x='152' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>3</text><rect x='175' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='198' y='53' font-size='13' text-anchor='middle'>5</text><text x='198' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>4</text><rect x='221' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='244' y='53' font-size='13' text-anchor='middle'>5</text><text x='244' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>5</text><rect x='267' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='290' y='53' font-size='13' text-anchor='middle'>6</text><text x='290' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>6</text><rect x='313' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='336' y='53' font-size='13' text-anchor='middle'>7</text><text x='336' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>7</text><rect x='359' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='382' y='53' font-size='13' text-anchor='middle'>8</text><text x='382' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>8</text><rect x='405' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='428' y='53' font-size='13' text-anchor='middle'>9</text><text x='428' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>9</text><rect x='451' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='474' y='53' font-size='13' text-anchor='middle'>11</text><text x='474' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>10</text><rect x='497' y='30' width='46' height='34' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.5'/><text x='520' y='53' font-size='13' text-anchor='middle'>14</text><text x='520' y='79' font-size='10.5' text-anchor='middle' fill-opacity='0.65'>11</text><path d='M152 86V100' stroke='currentColor' stroke-width='1.6'/><text x='152' y='114' font-size='12' text-anchor='middle'>LQ</text><path d='M290 86V100' stroke='currentColor' stroke-width='1.6'/><text x='290' y='114' font-size='12' text-anchor='middle'>median</text><path d='M428 86V100' stroke='currentColor' stroke-width='1.6'/><text x='428' y='114' font-size='12' text-anchor='middle'>UQ</text></svg>",
+    "caption": "Waiting times at a post office: LQ $= 4$, median $= 6$, UQ $= 9$, so the middle half is 5 minutes wide."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "How many values lie between the lower quartile and the upper quartile?",
+    "options": [
+      "A quarter of them",
+      "Half of them",
+      "Three quarters of them"
+    ],
+    "answer": "Half of them",
+    "explain": "The quartiles are the first and third cuts, so the middle two groups, half of the data, sit between them."
+  },
+  {
+    "type": "h",
+    "text": "Finding them: positions, then values"
+  },
+  {
+    "type": "p",
+    "md": "A quartile is a **position** in the ordered data, so the order comes first and the counting second.\n\n1. Write the values out again from smallest to largest.\n2. Count them: that is $n$.\n3. Lower quartile at position $\\tfrac{1}{4}(n+1)$, median at $\\tfrac{1}{2}(n+1)$, upper quartile at $\\tfrac{3}{4}(n+1)$.\n4. Read the value at each position.\n5. Interquartile range $=$ upper quartile $-$ lower quartile.\n\nWith $n = 11$ the positions are $3$, $6$ and $9$: three whole numbers, because $n+1$ divides by four."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "A list has 15 values in order. At which position is the upper quartile?",
+    "answer": "12",
+    "explain": "$\\tfrac{3}{4}(15 + 1) = 12$, so the upper quartile is the 12th value."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Not on the formula sheet",
+    "md": "$\\text{LQ at } \\tfrac{1}{4}(n+1), \\quad \\text{median at } \\tfrac{1}{2}(n+1), \\quad \\text{UQ at } \\tfrac{3}{4}(n+1)$\n\n$\\text{IQR} = \\text{UQ} - \\text{LQ}$\n\nThe page-2 Higher formula sheet carries no statistics formulae at all, so all four of these are recall."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "Using the picture above, what is the interquartile range of the waiting times, in minutes?",
+    "answer": "5",
+    "explain": "UQ $-$ LQ $= 9 - 4 = 5$ minutes."
+  },
+  {
+    "type": "h",
+    "text": "When the position is not a whole number"
+  },
+  {
+    "type": "p",
+    "md": "With $n = 9$ the lower quartile position is $\\tfrac{1}{4}(9+1) = 2.5$. There is no 2.5th value, so read it the way you read a point between two marks on a ruler: go halfway from the 2nd value to the 3rd, which is their mean.\n\nFor the seed potatoes $12, 14, 15, 18, 20, 23, 25, 28, 34$: the 2nd and 3rd masses are $14$ and $15$, so LQ $= 14.5$ kg. Rounding the position to 2 or to 3 is the common slip, and it moves the answer."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "For the same nine masses ($12, 14, 15, 18, 20, 23, 25, 28, 34$) the upper quartile is at position 7.5. What is the upper quartile, in kg?",
+    "answer": "26.5",
+    "explain": "Halfway between the 7th and 8th masses: $\\dfrac{25 + 28}{2} = 26.5$ kg."
+  },
+  {
+    "type": "video",
+    "videoId": "WYJBdAPyFmg",
+    "title": "Quartiles from a List",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 57,
+    "why": "Five minutes of worked lists at different sizes of n. Watch how the positions are written down before any value is read; that line is what earns the first mark."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "In the video, what is written down before any quartile value is read off?",
+    "answer": "The positions of the quartiles",
+    "explain": "Yes. The positions come from n, and the values are only read once the positions are settled.",
+    "options": [
+      "The positions of the quartiles",
+      "The range",
+      "The mean of the list"
+    ]
+  },
+  {
+    "type": "h",
+    "text": "What the interquartile range is for"
+  },
+  {
+    "type": "p",
+    "md": "Two data sets can share a median and still be nothing alike. A **smaller** interquartile range means the middle half of the values sit closer together, so the data is more **consistent**.\n\nIt also survives an extreme value. Eleven trains leave late by $3, 4, 4, 5, 5, 5, 6, 6, 7, 8$ and $58$ minutes. The range is $55$ minutes, which describes no ordinary morning. The quartiles are the 3rd and 9th values, $4$ and $7$, so the interquartile range is $3$ minutes: the honest picture of a typical delay."
+  },
+  {
+    "type": "gate",
+    "id": "g5b",
+    "kind": "number",
+    "prompt": "Eleven trains are late by $3, 4, 4, 5, 5, 5, 6, 6, 7, 8$ and $58$ minutes. What is the range, in minutes?",
+    "answer": "55",
+    "explain": "$58 - 3 = 55$, which describes no ordinary morning. The interquartile range of 3 minutes is the honest picture of a typical delay."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the extreme value cannot reach the quartiles",
+    "md": "The range is built from positions $1$ and $n$, the two ends. The quartiles sit a quarter and three quarters of the way in, so changing the largest value to $58$, or to $580$, moves it further out but never changes which value sits at position 9."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "Two bakeries have the same median loaf mass. Bakery A has an interquartile range of 6 g and bakery B one of 21 g. Which statement earns the mark?",
+    "options": [
+      "Bakery A is more consistent, because the middle half of its loaves vary by only 6 g",
+      "Bakery A has heavier loaves on average",
+      "Bakery B bakes more loaves"
+    ],
+    "answer": "Bakery A is more consistent, because the middle half of its loaves vary by only 6 g",
+    "explain": "The medians are equal, so neither is heavier on average. The interquartile range is a measure of spread, and the smaller one means less variation."
+  },
+  {
+    "type": "h",
+    "text": "Where marks are lost"
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "A reason has to point at this data",
+    "md": "November 2025 M3 Q26(b) asked why the interquartile range represented a data set better than the range, and it was the poorest-answered item on the paper. General contrasts of range and interquartile range scored nothing. The mark needed the observation that one very high value, 98%, had inflated the range. Name the value in front of you.",
+    "source": "ccea-cer:maths:2025-november:M3:Q26"
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "blank",
+    "prompt": "Fill the gap: interquartile range = upper quartile − ______ quartile.",
+    "answer": "lower",
+    "explain": "Upper quartile minus lower quartile. Subtracting the median instead measures only half the middle."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Order the list, then work the three positions out from $n$.\nRead a quartile whose position falls between two values.\nSubtract for the interquartile range, and say what it shows."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The wording is short: Calculate, the statistic named in full, then a bare list and a two-mark answer line. The first mark is the two quartiles, the second the subtraction. Write three lines every time — the ordered list, the two quartiles, then the subtraction with its unit. Stuck: order the list and write the positions; a correct position line with one quartile beats a blank."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.quartiles-and-interquartile-range-from-a-list.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.quartiles-and-interquartile-range-from-a-list.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.quartiles-and-interquartile-range-from-a-list.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.quartiles-and-interquartile-range-from-a-list.07"
+  }
+]

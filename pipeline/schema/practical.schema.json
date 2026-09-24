@@ -1,0 +1,702 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "practical.schema.json",
+  "title": "Practical",
+  "$ref": "#/$defs/Practical",
+  "$defs": {
+    "Practical": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/PracticalId"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[BCP][1-6]$"
+        },
+        "specRef": {
+          "type": "string",
+          "pattern": "^DA-PRAC-[BCP][1-6]$"
+        },
+        "attachedLOs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "apparatus": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "apparatusDiagram": {
+          "$ref": "#/$defs/FigureSpec"
+        },
+        "variables": {
+          "type": "object",
+          "properties": {
+            "independent": {
+              "type": "string",
+              "minLength": 1
+            },
+            "dependent": {
+              "type": "string",
+              "minLength": 1
+            },
+            "control": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "independent",
+            "dependent",
+            "control"
+          ],
+          "additionalProperties": false
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "hazard": {
+                "type": "string",
+                "minLength": 1
+              },
+              "control": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "hazard",
+              "control"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "resultsTable": {
+          "type": "object",
+          "properties": {
+            "columns": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "heading": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "unit": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "heading",
+                  "unit"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "repeats": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "columns",
+            "repeats"
+          ],
+          "additionalProperties": false
+        },
+        "graph": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "string",
+              "minLength": 1
+            },
+            "y": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expected": {
+              "type": "string",
+              "enum": [
+                "straight-through-origin",
+                "straight",
+                "curve"
+              ]
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "expected",
+            "note"
+          ],
+          "additionalProperties": false
+        },
+        "calculations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "vocabulary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "term": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ourDefinition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "keyWords": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "term",
+              "ourDefinition",
+              "keyWords"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "bookletBItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestionId"
+          }
+        },
+        "bookletAChecklist": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "examinerSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExaminerSource"
+          }
+        },
+        "externalRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalRef"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "specRef",
+        "attachedLOs",
+        "title",
+        "method",
+        "apparatus",
+        "apparatusDiagram",
+        "variables",
+        "hypothesis",
+        "risks",
+        "resultsTable",
+        "calculations",
+        "vocabulary",
+        "bookletBItems",
+        "bookletAChecklist",
+        "examinerSources",
+        "externalRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Prescribed-practical trainer: method, apparatus, variables, results table, graph, vocabulary, Booklet B items"
+    },
+    "PracticalId": {
+      "type": "string",
+      "pattern": "^prac\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "SpecRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{0,4}(-[A-Za-z0-9.]+){1,3}$",
+      "description": "Learning-outcome statement id from data/spec/*.json"
+    },
+    "FigureSpec": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "svg-gen"
+            },
+            "generator": {
+              "type": "string",
+              "enum": [
+                "histogram",
+                "cf-curve",
+                "box-plot",
+                "bar",
+                "pie",
+                "scatter",
+                "table",
+                "number-line",
+                "axes"
+              ]
+            },
+            "data": {},
+            "options": {}
+          },
+          "required": [
+            "kind",
+            "generator",
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "jsxgraph"
+            },
+            "script": {
+              "type": "string",
+              "minLength": 1
+            },
+            "static": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "script",
+            "static"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "mafs"
+            },
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "props": {}
+          },
+          "required": [
+            "kind",
+            "component",
+            "props"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "svg"
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "alt"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "photo"
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "licence": {
+              "type": "string",
+              "minLength": 1
+            },
+            "credit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "alt",
+            "licence",
+            "credit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "apparatus"
+            },
+            "parts": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "style": {
+              "type": "string",
+              "const": "ccea-2d"
+            }
+          },
+          "required": [
+            "kind",
+            "parts",
+            "style"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "QuestionId": {
+      "type": "string",
+      "pattern": "^q\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "ExaminerSource": {
+      "type": "string",
+      "pattern": "^ccea-cer:[a-z][a-z0-9-]*:\\d{4}-(?:summer|november|march|january):[A-Za-z0-9]+:Q\\d{1,2}(?:[a-z]|\\([a-z]\\))?(?:\\([ivx]{1,4}\\))?$",
+      "description": "Chief Examiner report citation: ccea-cer:<subject>:<yyyy>-<series>:<unit>:Q<n>"
+    },
+    "ExternalRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "corbettmaths"
+            },
+            "videos": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "playlistId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "practiceUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "textbookUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "kind",
+            "videos"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "bitesize"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "articleId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "youtube"
+            },
+            "videoId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{6,}$"
+            },
+            "channel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start": {
+              "type": "number",
+              "minimum": 0
+            },
+            "end": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "credit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "checkpoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "at": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "promptId": {
+                    "$ref": "#/$defs/RetrievalPromptId"
+                  }
+                },
+                "required": [
+                  "at",
+                  "promptId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "videoId",
+            "channel",
+            "credit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "ccea-doc"
+            },
+            "docType": {
+              "type": "string",
+              "enum": [
+                "spec",
+                "teacher-guidance",
+                "factfile",
+                "glossary",
+                "practical-manual",
+                "qa-booklet",
+                "data-leaflet",
+                "cer",
+                "pastpaper",
+                "markscheme"
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "page": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "asOf": {
+              "$ref": "#/$defs/IsoDateLike"
+            }
+          },
+          "required": [
+            "kind",
+            "docType",
+            "url",
+            "asOf"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "phet"
+            },
+            "sim": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "licence": {
+              "type": "string",
+              "enum": [
+                "CC BY 4.0 (pre-2026-03-29)",
+                "CC BY-NC 4.0"
+              ]
+            },
+            "attribution": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "sim",
+            "url",
+            "licence",
+            "attribution"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "geogebra"
+            },
+            "materialId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "attribution": {
+              "type": "string",
+              "const": "Made with GeoGebra®"
+            }
+          },
+          "required": [
+            "kind",
+            "materialId",
+            "attribution"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "pastpaper-question"
+            },
+            "paperId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1
+            },
+            "page": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "kind",
+            "paperId",
+            "question",
+            "page"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "Outbound link to Corbettmaths, Bitesize, YouTube, a CCEA document, PhET, GeoGebra or a past-paper question (metadata only)"
+    },
+    "RetrievalPromptId": {
+      "type": "string",
+      "pattern": "^rp\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "IsoDateLike": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d))|(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?)$"
+        }
+      ],
+      "description": "ISO 8601 date (2026-09-05) or date-time (2026-09-05T10:00:00Z)"
+    }
+  }
+}

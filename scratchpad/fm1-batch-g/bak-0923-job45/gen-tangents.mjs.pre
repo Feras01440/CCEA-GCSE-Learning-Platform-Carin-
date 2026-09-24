@@ -1,0 +1,2319 @@
+/**
+ * fm.u1.tangents-and-normals — the H bundle for FM1-DIF-02 (tangents and normals).
+ * Every gradient, point, line and distractor is computed exactly in calc.mjs / tanlib.mjs.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { M, dataFigure, tableSvg, wrap, esc, assertClean } from "./lib.mjs";
+import {
+  P, deriv, latex, plain, route, graphSvg, moveSvg, atNum,
+  fr, fadd, fsub, fmul, fdiv, fneg, finv, fval, feq, at, flatex, fplain,
+  lineLatex, linePlain, lineThrough, pointLatex, pointPlain, assertTerminating,
+} from "./calc.mjs";
+import { tangent, normal, perp, normalRoutes, constantSlip, meetsAgain, solveDerivEquals, solveReciprocalDeriv } from "./tanlib.mjs";
+import { AT, UPDATED, PAPER, FORMULA_GIVEN, CCEA_DOC, PHET, src, verLog, emit, assertLogs, assertDistinctErrors, timeFor, OUT , pointerPanel, assertTrapsCoverPanel, recapCard} from "./shared.mjs";
+
+const SLUG = "tangents-and-normals";
+const TOPIC = "fm.u1.tangents-and-normals";
+const SPEC = ["FM1-DIF-02"];
+const id = (kind, n) => `${kind}.fm.u1.${SLUG}.${n}`;
+
+// ---------------------------------------------------------------------------
+// curves
+// ---------------------------------------------------------------------------
+
+const K = {
+  we1: P([[1, 2], [-6, 1], [11, 0]]),
+  we1Twin: P([[1, 2], [2, 1], [-5, 0]]),
+  we2: P([[2, 1], [-3, -1]]),
+  we2Twin: P([[3, 1], [4, -1]]),
+  we3: P([[1, 3], [-12, 1]]),
+  we3Twin: P([[1, 3], [-3, 1]]),
+  p1: P([[1, 2], [5, 1]]),
+  p2: P([[1, 2]]),
+  p3: P([[1, 2], [-2, 1], [4, 0]]),
+  p5: P([[3, 2], [-1, 1]]),
+  p6: P([[1, 2], [-8, 1], [3, 0]]),
+  p7: P([[1, 3], [2, 1]]),
+  p8: P([[8, -1]]),
+  p9: P([[2, 1], [-12, -1]]),
+  p10: P([[1, 2], [-3, 1], [4, 0]]),
+  p11: P([[2, 2], [-1, 1], [3, 0]]),
+  p12: P([[1, 3], [-4, 1]]),
+  exA: P([[1, 3], [2, 2], [-4, 1], [1, 0]]),
+  exC: P([[1, 2], [-2, 1], [5, 0]]),
+  exD: P([[2, 2], [-3, 1], [1, 0]]),
+};
+
+const T = {
+  we1: tangent(K.we1, fr(4)),
+  we1Twin: tangent(K.we1Twin, fr(1)),
+  we2: normal(K.we2, fr(1)),
+  we2Twin: normal(K.we2Twin, fr(2)),
+  we3: tangent(K.we3, fr(1)),
+  we3Twin: tangent(K.we3Twin, fr(2)),
+  p1: tangent(K.p1, fr(1)),
+  p2: tangent(K.p2, fr(3)),
+  p3: tangent(K.p3, fr(2)),
+  p5: normal(K.p5, fr(1)),
+  p6: normal(K.p6, fr(5)),
+  p7: normal(K.p7, fr(1)),
+  p8: tangent(K.p8, fr(2)),
+  p9: normal(K.p9, fr(2)),
+  p12: tangent(K.p12, fr(-1)),
+  exA: normal(K.exA, fr(-1)),
+  exC: tangent(K.exC, fr(4)),
+};
+const MEET = { we3: meetsAgain(K.we3, fr(1)), we3Twin: meetsAgain(K.we3Twin, fr(2)), p12: meetsAgain(K.p12, fr(-1)) };
+
+// p10: the point where the tangent gradient is 5
+const P10_X = solveDerivEquals(K.p10, fr(5))[0];
+const P10_P = { x: P10_X, y: at(K.p10, P10_X) };
+const P10_ZERO_X = solveDerivEquals(K.p10, fr(0))[0];
+const P10_ZERO = { x: P10_ZERO_X, y: at(K.p10, P10_ZERO_X) };
+// p11: the point where the NORMAL gradient is -1/7, so the tangent gradient is 7
+const P11_G = fr(-1, 5);
+const P11_M = perp(P11_G);
+const P11_X = solveDerivEquals(K.p11, P11_M)[0];
+const P11_P = { x: P11_X, y: at(K.p11, P11_X) };
+/*
+ * 22 Sep (FM1 finisher, lead's decision 2): q0011's worked line printed "y = 8 - 2 + 3 = 6", the curve's terms at
+ * x = 2, while A has x = 1.5. The line is now the substitution itself, each term computed from the curve at A's x
+ * and the terms asserted to add to A's y.
+ */
+if (JSON.stringify(K.p11) !== JSON.stringify(P([[2, 2], [-1, 1], [3, 0]]))) throw new Error("q0011: the substitution line below is written for y = 2x^2 - x + 3");
+const P11_TERMS = K.p11.map((t) => at([t], P11_P.x));   // exact, term by term: 2x^2, -x, 3 at A's x
+const P11_SUM = P11_TERMS.reduce((s, v) => fadd(s, v), fr(0));
+if (P11_SUM.n !== P11_P.y.n || P11_SUM.d !== P11_P.y.d) throw new Error("q0011: the terms do not add to A's y");
+const P11_SIGNED = P11_TERMS.map((v, i) => (i === 0 ? fplain(v) : v.n < 0 ? `- ${fplain(fneg(v))}` : `+ ${fplain(v)}`)).join(" ");
+const P11_SUBST = `y = 2(${fplain(P11_P.x)})^{2} - ${fplain(P11_P.x)} + 3 = ${P11_SIGNED} = ${fplain(P11_P.y)}`;
+const P11_WRONG_M = normalRoutes.notReciprocated(P11_G); // uses -g as the tangent gradient
+const P11_WRONG_X = solveDerivEquals(K.p11, P11_WRONG_M)[0];
+const P11_WRONG = { x: P11_WRONG_X, y: at(K.p11, P11_WRONG_X) };
+const P11_FLIP_M = normalRoutes.signNotFlipped(P11_G);
+const P11_FLIP_X = solveDerivEquals(K.p11, P11_FLIP_M)[0];
+const P11_FLIP = { x: P11_FLIP_X, y: at(K.p11, P11_FLIP_X) };
+
+// exam B: y = 3 + a/x^2, tangent at x = -2 parallel to y = 2x - 7
+const EXB = {
+  base: 3,
+  x0: fr(-2),
+  lineM: fr(2),
+  lineC: fr(-7),
+};
+/** dy/dx of 3 + a x^-2 at x0 is -2a/x0^3, so a = m x0^3 / (-2). */
+const exbA = (m) => fdiv(fmul(m, fmul(EXB.x0, fmul(EXB.x0, EXB.x0))), fr(-2));
+const EXB_A = exbA(EXB.lineM);                                   // 8
+const EXB_CURVE = P([[EXB.base, 0], [EXB_A.n, -2]]);
+const EXB_T = tangent(EXB_CURVE, EXB.x0);
+const EXB_N = normal(EXB_CURVE, EXB.x0);
+/** Route: the index is not stepped down, so dy/dx is read as -2a/x^2 and a comes out differently. */
+const EXB_A_POWERKEPT = fdiv(fmul(EXB.lineM, fmul(EXB.x0, EXB.x0)), fr(-2));
+/** Route: the sign of the derivative is lost, giving +2a/x^3. */
+const EXB_A_SIGNKEPT = fneg(EXB_A);
+/** Route: the line is set equal to the curve instead of differentiating. */
+const EXB_A_EQUATED = (() => {
+  const rhs = fadd(fmul(EXB.lineM, EXB.x0), EXB.lineC);          // the line's y at x0
+  return fmul(fsub(rhs, fr(EXB.base)), fmul(EXB.x0, EXB.x0));    // a = (y - 3) x0^2
+})();
+
+// exam C(b): the normal at A has gradient 1/8
+const EXC_G = fr(1, 8);
+const EXC_M = perp(EXC_G);
+const EXC_X = solveDerivEquals(K.exC, EXC_M)[0];
+const EXC_A = { x: EXC_X, y: at(K.exC, EXC_X) };
+const EXC_FLIP_X = solveDerivEquals(K.exC, normalRoutes.signNotFlipped(EXC_G))[0];
+const EXC_FLIP = { x: EXC_FLIP_X, y: at(K.exC, EXC_FLIP_X) };
+const EXC_ZERO_X = solveDerivEquals(K.exC, fr(0))[0];
+const EXC_ZERO = { x: EXC_ZERO_X, y: at(K.exC, EXC_ZERO_X) };
+const EXC_A_TANGENT = lineThrough(EXC_M, EXC_A.x, EXC_A.y);
+
+// exam D: tangent gradient 5 at P; Q has the perpendicular tangent
+const EXD_M = fr(5);
+const EXD_X = solveDerivEquals(K.exD, EXD_M)[0];
+const EXD_P = { x: EXD_X, y: at(K.exD, EXD_X) };
+const EXD_T = lineThrough(EXD_M, EXD_P.x, EXD_P.y);
+const EXD_QM = perp(EXD_M);
+const EXD_QX = solveDerivEquals(K.exD, EXD_QM)[0];
+const EXD_Q = { x: EXD_QX, y: at(K.exD, EXD_QX) };
+const EXD_Q_TANGENT = lineThrough(EXD_QM, EXD_Q.x, EXD_Q.y);
+const EXD_NOTRECIP_X = solveDerivEquals(K.exD, normalRoutes.notReciprocated(EXD_M))[0];
+const EXD_NOTRECIP = { x: EXD_NOTRECIP_X, y: at(K.exD, EXD_NOTRECIP_X) };
+const EXD_FLIP_X = solveDerivEquals(K.exD, normalRoutes.signNotFlipped(EXD_M))[0];
+const EXD_FLIP = { x: EXD_FLIP_X, y: at(K.exD, EXD_FLIP_X) };
+const EXD_ZERO_X = solveDerivEquals(K.exD, fr(0))[0];
+const EXD_ZERO = { x: EXD_ZERO_X, y: at(K.exD, EXD_ZERO_X) };
+
+for (const [name, p] of Object.entries({
+  P10_P, P10_ZERO, P11_P, P11_WRONG, P11_FLIP, EXC_A, EXC_FLIP, EXC_ZERO,
+  EXD_P, EXD_Q, EXD_NOTRECIP, EXD_FLIP, EXD_ZERO,
+  meet3: MEET.we3, meet3t: MEET.we3Twin, meet12: MEET.p12,
+})) {
+  assertTerminating(name, p.x, p.y);
+}
+
+// ---------------------------------------------------------------------------
+// depth pass, 23 Sep 2026 (the depth standard, band H4): every number the new sections and items print, exact
+// ---------------------------------------------------------------------------
+
+const same = (a, b, what) => {
+  if (!feq(a, b)) throw new Error(`${what}: ${fplain(a)} is not ${fplain(b)}`);
+};
+const lineAt = (L, x) => fadd(fmul(L.m, x), L.c);
+
+// variant 4 in the note: the tangent to y = ax^2 - 5x at x = 2 is parallel to y = 7x + 1, so 4a - 5 = 7 and a = 3
+const V4 = { x0: fr(2), b: fr(-5), lineM: fr(7), lineC: fr(1) };
+const V4_A = fdiv(fsub(V4.lineM, V4.b), fmul(fr(2), V4.x0));
+same(at(deriv(P([[V4_A.n, 2], [V4.b.n, 1]])), V4.x0), V4.lineM, "the note's coefficient example");
+// gate g10: the tangent to y = ax^2 + x at x = 1 has gradient 9, so 2a + 1 = 9 and a = 4
+const G10 = { x0: fr(1), b: fr(1), m: fr(9) };
+const G10_A = fdiv(fsub(G10.m, G10.b), fmul(fr(2), G10.x0));
+same(at(deriv(P([[G10_A.n, 2], [G10.b.n, 1]])), G10.x0), G10.m, "gate g10");
+
+// going further: on y = x^2 the tangent at A (x = 2) and the normal at B (x = -1) cross at x = 11/7
+const KF = P([[1, 2]]);
+const TF = tangent(KF, fr(2));
+const NF = normal(KF, fr(-1));
+const CF_X = fdiv(fsub(NF.line.c, TF.line.c), fsub(TF.line.m, NF.line.m));
+const CF = { x: CF_X, y: lineAt(TF.line, CF_X) };
+same(lineAt(NF.line, CF_X), CF.y, "the further section's crossing");
+// gate g12: y = 2x + 1 and y = -x/2 + 6 are perpendicular and cross at x = 2
+const G12 = { t: { m: fr(2), c: fr(1) }, n: { m: fr(-1, 2), c: fr(6) } };
+same(fmul(G12.t.m, G12.n.m), fr(-1), "gate g12's lines are perpendicular");
+const G12_X = fdiv(fsub(G12.n.c, G12.t.c), fsub(G12.t.m, G12.n.m));
+same(lineAt(G12.t, G12_X), lineAt(G12.n, G12_X), "gate g12's crossing");
+// the derivation and gate g13: a step 1 across and m up, turned a quarter turn, is m back and 1 up: gradient -1/m
+const G13_M = fr(3);
+const G13 = fdiv(fr(1), fneg(G13_M));
+same(G13, perp(G13_M), "the turned step is the negative reciprocal");
+
+// worked example 04 (the Summer 2025 shape): the tangent at P has gradient 3 on y = x^2 - 5x + 2
+const K4 = P([[1, 2], [-5, 1], [2, 0]]);
+const WE4_M = fr(3);
+const WE4_X = solveDerivEquals(K4, WE4_M)[0];
+const WE4_T = tangent(K4, WE4_X);
+same(WE4_T.m, WE4_M, "worked example 04's gradient");
+const K4T = P([[1, 2], [3, 1], [-1, 0]]);
+const WE4T_M = fr(7);
+const WE4T_T = tangent(K4T, solveDerivEquals(K4T, WE4T_M)[0]);
+same(WE4T_T.m, WE4T_M, "worked example 04's twin gradient");
+
+// q0017 (difficulty 5): the normal to y = ax^2 - 3x at x = 1 has gradient -1/5, so the tangent's is 5 and a = 4
+const Q17 = { x0: fr(1), b: fr(-3), g: fr(-1, 5) };
+const aFrom17 = (m) => fdiv(fsub(m, Q17.b), fmul(fr(2), Q17.x0));
+const Q17_M = perp(Q17.g);
+const Q17_A = aFrom17(Q17_M);
+same(fmul(Q17_M, Q17.g), fr(-1), "q0017's gradients are perpendicular");
+const Q17_ROUTES = {
+  flip: aFrom17(normalRoutes.signNotFlipped(Q17.g)), // turned over, sign kept: -5
+  notRecip: aFrom17(normalRoutes.notReciprocated(Q17.g)), // sign changed, not turned over: 1/5
+  same: aFrom17(normalRoutes.unchanged(Q17.g)), // the normal's own gradient used for dy/dx
+  zero: aFrom17(fr(0)), // dy/dx = 0 out of habit
+};
+{
+  const seen = new Set([fplain(Q17_A)]);
+  for (const [k, v] of Object.entries(Q17_ROUTES)) {
+    if (seen.has(fplain(v))) throw new Error(`q0017 route ${k} reaches a value already used`);
+    seen.add(fplain(v));
+    assertTerminating(`q0017 ${k}`, v, v);
+  }
+}
+
+// q0018 (difficulty 1): dy/dx = 2x - 5 at x = 4
+const Q18_D = P([[2, 1], [-5, 0]]);
+const Q18_M = at(Q18_D, fr(4));
+
+// q0019 (difficulty 4, the Summer 2018 horizontal tangent): y = 2x + 8/x, x > 0, where dy/dx = 0
+const K19 = P([[2, 1], [8, -1]]);
+const Q19_ROOTS = solveReciprocalDeriv(K19, fr(0));
+const Q19_X = Q19_ROOTS.find((r) => r.n > 0);
+const Q19_P = { x: Q19_X, y: at(K19, Q19_X) };
+const Q19_NEG_X = Q19_ROOTS.find((r) => r.n < 0);
+const Q19_NEG = { x: Q19_NEG_X, y: at(K19, Q19_NEG_X) }; // the root the condition x > 0 rules out
+same(at(deriv(K19), Q19_X), fr(0), "q0019's tangent is horizontal");
+
+// find-the-mistake 04 (Summer 2025 Q13): the tangent at P to y = x^2 - 6x + 4 has gradient 2
+const KM = P([[1, 2], [-6, 1], [4, 0]]);
+const FTM4_M = fr(2);
+const FTM4_P = { x: solveDerivEquals(KM, FTM4_M)[0] };
+FTM4_P.y = at(KM, FTM4_P.x);
+const FTM4_ZERO = { x: solveDerivEquals(KM, fr(0))[0] };
+FTM4_ZERO.y = at(KM, FTM4_ZERO.x);
+
+for (const [name, p] of Object.entries({ CF, WE4P: { x: WE4_T.x0, y: WE4_T.y0 }, Q19_P, Q19_NEG, FTM4_P, FTM4_ZERO })) {
+  if (name === "CF") continue; // the further section's crossing is an exact fraction on purpose (11/7), never typed
+  assertTerminating(name, p.x, p.y);
+}
+
+// ---------------------------------------------------------------------------
+// answers and errors
+// ---------------------------------------------------------------------------
+
+const ansNum = (f) => ({
+  kind: "numeric",
+  value: fval(f),
+  tolerance: { type: "absolute", value: 0.0005 },
+  unitRequired: false,
+  acceptForms: ["decimal", "fraction"],
+});
+const ansLine = (L, demandForm = false) => ({
+  kind: "algebraic",
+  latex: lineLatex(L),
+  equivalence: "equivalent",
+  variables: ["x", "y"],
+  ...(demandForm ? { form: "y=mx+c" } : {}),
+});
+const ansPoint = (p) => ({ kind: "algebraic", latex: pointLatex(p.x, p.y), equivalence: "equivalent", variables: ["x", "y"] });
+const ansPoly = (terms) => ({ kind: "algebraic", latex: latex(terms), equivalence: "equivalent", variables: ["x"] });
+
+const errNum = (misconception, f, feedback, marks, source) => ({
+  misconception, pattern: { kind: "numeric", value: fval(f) }, feedback, marksTypicallyEarned: marks, ...(source ? { source } : {}),
+});
+const errAlg = (misconception, latexText, feedback, marks, source) => ({
+  misconception, pattern: { kind: "algebraic", latex: latexText }, feedback, marksTypicallyEarned: marks, ...(source ? { source } : {}),
+});
+
+/**
+ * The constant-slip common error, with the quantity AND the direction of the mistake computed.
+ * c is y1 - m x1, so the slip adds m x1 where it should take it away. When m x1 is itself negative
+ * the learner sees the magnitude being taken away where it should be added, and the sentence has to
+ * say so: naming the verb by hand is how the fm1-d-1 pre-read found three of these back to front.
+ */
+function constantSlipError(m, x0, y0, lead, marks, source) {
+  const q = fmul(m, x0);
+  const mag = fr(Math.abs(q.n), q.d);
+  const correct = fsub(y0, q);
+  const verb = q.n > 0 ? "added instead of taken away" : "taken away instead of added";
+  return errAlg(
+    "fm.calc.tangent-constant-slip",
+    lineLatex(constantSlip(m, x0, y0)),
+    `${lead} In the last line ${M(flatex(mag))} was ${verb}, so the constant should be ${M(flatex(correct))}.`,
+    marks,
+    source,
+  );
+}
+
+// ---------------------------------------------------------------------------
+// figures
+// ---------------------------------------------------------------------------
+
+const asFn = (poly) => (x) => atNum(poly, x);
+const lineFn = (L) => (x) => fval(L.m) * x + fval(L.c);
+
+// Depth pass, 23 Sep: every figure is drawn phone-native (graphSvg's phone option, a 400-unit viewBox, labels of 14 to
+// 15 units, so the smallest renders at 12.5 px or more in the 358 px phone column), one idea each, its caption left to
+// the note block. The two text cards of 20 Sep (the four steps; the gradient table) are prose in the note now, and the
+// mark-scheme table went with the closing panel, which is a pointer.
+const PHONE = { phone: true, width: 400 };
+
+const heroSvg = graphSvg({
+  ...PHONE,
+  title: "A parabola with the tangent and the normal both drawn at the point (4, 3), meeting there at a right angle",
+  height: 300,
+  xMin: 0.6,
+  xMax: 7.4,
+  yMin: -2,
+  yMax: 11,
+  xStep: 1,
+  yStep: 2,
+  curves: [
+    { f: asFn(K.we1), width: 2 },
+    { f: lineFn(T.we1.line), dash: true, width: 1.4, label: "tangent", labelAt: 6.5 },
+    { f: lineFn(normal(K.we1, fr(4)).line), dash: true, width: 1.4, label: "normal", labelAt: 7.0 },
+  ],
+  points: [{ x: 4, y: 3, label: pointPlain(fr(4), T.we1.y0), dx: 10, dy: 20 }],
+});
+
+const pointSvg = graphSvg({
+  ...PHONE,
+  title: "The parabola with dashed lines from the point (4, 3) to each axis, showing where the coordinates come from",
+  height: 280,
+  xMin: 0.6,
+  xMax: 7.4,
+  yMin: -1,
+  yMax: 11,
+  xStep: 1,
+  yStep: 2,
+  curves: [{ f: asFn(K.we1), width: 2 }],
+  drops: [{ x: 4, y: 3 }],
+  hLines: [{ at: 3, label: "y = 3, from the curve" }],
+  points: [{ x: 4, y: 3, label: pointPlain(fr(4), T.we1.y0), dx: 10, dy: 20 }],
+});
+
+const we1Svg = graphSvg({
+  ...PHONE,
+  title: "The worked example: the parabola with its tangent drawn at the point (4, 3) and the tangent's equation labelled",
+  height: 290,
+  xMin: 1.4,
+  xMax: 7.4,
+  yMin: -3,
+  yMax: 11,
+  xStep: 1,
+  yStep: 2,
+  curves: [
+    { f: asFn(K.we1), width: 2 },
+    { f: lineFn(T.we1.line), dash: true, width: 1.4, label: linePlain(T.we1.line), labelAt: 6.8, labelBelow: true },
+  ],
+  points: [{ x: 4, y: 3, label: pointPlain(fr(4), T.we1.y0), dx: -12, dy: -10, anchor: "end" }],
+});
+
+const we2Svg = graphSvg({
+  ...PHONE,
+  title: "The curve y = 2x - 3 over x with its normal drawn at the point (1, -1)",
+  height: 290,
+  xMin: 0.2,
+  xMax: 4.4,
+  yMin: -6,
+  yMax: 8,
+  xStep: 1,
+  yStep: 2,
+  curves: [
+    { f: asFn(K.we2), width: 2 },
+    { f: lineFn(T.we2.line), dash: true, width: 1.4, label: linePlain(T.we2.line), labelAt: 3.2, labelBelow: true },
+  ],
+  points: [{ x: 1, y: -1, label: pointPlain(fr(1), T.we2.y0), dx: 12, dy: 20 }],
+});
+
+const givenSvg = graphSvg({
+  ...PHONE,
+  title: "A curve with a tangent drawn parallel to a given straight line, both lines marked with the same gradient",
+  height: 290,
+  xMin: -4.2,
+  xMax: -0.4,
+  yMin: 0,
+  yMax: 14,
+  xStep: 1,
+  yStep: 2,
+  curves: [
+    { f: asFn(EXB_CURVE), width: 2 },
+    { f: lineFn(EXB_T.line), dash: true, width: 1.4, label: "tangent", labelAt: -3.8 },
+    { f: lineFn({ m: EXB.lineM, c: fadd(EXB.lineC, fr(14)) }), dash: true, width: 1.2, opacity: 0.8, label: "parallel", labelAt: -1.2, labelBelow: true },
+  ],
+  points: [{ x: fval(EXB.x0), y: fval(EXB_T.y0), label: "P", dx: 10, dy: -10 }],
+});
+
+const meetSvg = graphSvg({
+  ...PHONE,
+  title: "A cubic with the tangent drawn at x = 1, touching there and crossing the curve again further left",
+  height: 300,
+  xMin: -3.4,
+  xMax: 3.4,
+  yMin: -20,
+  yMax: 22,
+  xStep: 1,
+  yStep: 5,
+  curves: [
+    { f: asFn(K.we3), width: 2 },
+    { f: lineFn(T.we3.line), dash: true, width: 1.4 },
+  ],
+  points: [
+    { x: 1, y: fval(T.we3.y0), label: "touches", dx: -10, dy: 18, anchor: "end" },
+    { x: fval(MEET.we3.x), y: fval(MEET.we3.y), label: "crosses", dx: 10, dy: -12 },
+  ],
+});
+
+/** The same tangent and cubic with the second crossing marked but not named: the example finds it. */
+const meetPlainSvg = graphSvg({
+  ...PHONE,
+  title: "A cubic with its tangent drawn, touching at one point and crossing the curve at another",
+  height: 300,
+  xMin: -3.4,
+  xMax: 3.4,
+  yMin: -20,
+  yMax: 22,
+  xStep: 1,
+  yStep: 5,
+  curves: [
+    { f: asFn(K.we3), width: 2 },
+    { f: lineFn(T.we3.line), dash: true, width: 1.4 },
+  ],
+  points: [
+    { x: 1, y: fval(T.we3.y0), label: "touches", dx: -10, dy: 18, anchor: "end" },
+    { x: fval(MEET.we3.x), y: fval(MEET.we3.y), label: "crosses", dx: 10, dy: -12 },
+  ],
+});
+
+/** Going further: the tangent at A and the normal at B on y = x^2, crossing at C. */
+const furtherSvg = graphSvg({
+  ...PHONE,
+  title: "The parabola y = x squared with the tangent at A, where x = 2, and the normal at B, where x = -1, crossing at the point C",
+  height: 300,
+  xMin: -2.6,
+  xMax: 3.4,
+  yMin: -1,
+  yMax: 9,
+  xStep: 1,
+  yStep: 2,
+  curves: [
+    { f: asFn(KF), width: 2 },
+    { f: lineFn(TF.line), dash: true, width: 1.4, from: 0.6, to: 3.2 },
+    { f: lineFn(NF.line), dash: true, width: 1.4, from: -2.6, to: 3.2 },
+  ],
+  points: [
+    { x: 2, y: fval(TF.y0), label: "A", dx: 10, dy: 4 },
+    { x: -1, y: fval(NF.y0), label: "B", dx: -10, dy: -8, anchor: "end" },
+    { x: fval(CF.x), y: fval(CF.y), label: "C", dx: -10, dy: -8, anchor: "end" },
+  ],
+});
+
+/** The derivation: a gradient step of 1 across and m up, turned through a right angle, is m back and 1 up. */
+const derivSvg = (() => {
+  const O = { x: 200, y: 196 };
+  const u = 50; // one unit
+  const m = 2; // the gradient drawn
+  const B = { x: O.x + u, y: O.y - m * u }; // along the tangent
+  const D = { x: O.x - m * u, y: O.y - u }; // along the normal
+  const ext = (a, b, k) => ({ x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k });
+  const r = (v) => Math.round(v * 10) / 10;
+  const path = (pts, attrs = "", w = 1.5) => `<path d='${pts.map((p, i) => `${i ? "L" : "M"} ${r(p.x)} ${r(p.y)}`).join(" ")}' stroke='currentColor' stroke-width='${w}' fill='none'${attrs}/>`;
+  const text = (x, y, s, anchor = "middle") => `<text x='${r(x)}' y='${r(y)}' font-family='inherit' font-size='15' fill='currentColor' text-anchor='${anchor}'>${esc(s)}</text>`;
+  const dash = " stroke-dasharray='5 4'";
+  // unit vectors along the two lines, for the right-angle mark at O
+  const len = (p) => Math.hypot(p.x - O.x, p.y - O.y);
+  const t = { x: (B.x - O.x) / len(B), y: (B.y - O.y) / len(B) };
+  const n = { x: (D.x - O.x) / len(D), y: (D.y - O.y) / len(D) };
+  const k = 12;
+  const body = [
+    path([ext(O, B, -0.35), ext(O, B, 1.4)], "", 2),
+    path([ext(O, D, -0.3), ext(O, D, 1.35)], "", 2),
+    path([O, { x: O.x + u, y: O.y }, B], dash),
+    path([O, { x: O.x, y: O.y - u }, D], dash),
+    path([{ x: O.x + t.x * k, y: O.y + t.y * k }, { x: O.x + (t.x + n.x) * k, y: O.y + (t.y + n.y) * k }, { x: O.x + n.x * k, y: O.y + n.y * k }]),
+    text(O.x + u / 2, O.y + 22, "1"),
+    text(B.x + 12, (O.y + B.y) / 2 + 5, "m", "start"),
+    text(O.x - 10, O.y - u / 2 + 5, "1", "end"),
+    text((O.x + D.x) / 2, D.y - 10, "m"),
+    text(ext(O, B, 1.4).x - 8, ext(O, B, 1.4).y + 4, "tangent", "end"),
+    text(ext(O, D, 1.35).x + 2, ext(O, D, 1.35).y - 14, "normal", "start"),
+  ].join("");
+  const svg = wrap({ width: 400, height: 250, title: "A gradient step of 1 across and m up on the tangent, and the same step turned through a right angle on the normal: m back and 1 up", body });
+  assertClean(svg);
+  return svg;
+})();
+
+// ---------------------------------------------------------------------------
+// note
+// ---------------------------------------------------------------------------
+
+// Depth pass, 23 Sep: twelve teaching sections, each heading carrying its role, in the standard's order: idea, why,
+// variants (the tangent, the normal, a gradient instead of a point, an unknown coefficient, meeting the curve again)
+// with a "see it done" after the first two, then the twists, going further and the derivation. Gates g1 to g8 keep
+// their ids, prompts and answers; g9 to g13 are new. The recap and the closing panel are still produced by recapCard
+// and pointerPanel below.
+const blocks = [
+  {
+    type: "hero",
+    lede: "A tangent touches a curve and travels in exactly the direction the curve is going. A normal cuts across it at a right angle. Both are straight lines, so both have an equation, and the only new idea is where their gradients come from.",
+    can: [
+      "Find the equation of the tangent to a curve at a named point, in four steps",
+      "Turn a tangent gradient into a normal gradient by taking the negative reciprocal",
+      "Use a gradient the question gives you, instead of setting dy/dx to zero",
+    ],
+    minutes: 0, // set from the minute model once the blocks are complete (below)
+  },
+
+  // idea
+  { type: "h", text: "Touching, and crossing at right angles", role: "idea" },
+  {
+    type: "p",
+    md: "Rest a ruler against a curve so that it just touches: that is the **tangent**. Stand a second ruler upright against the first at the same place: that is the **normal**.\nBoth are ordinary straight lines with an equation $y = mx + c$. Everything in this topic is about finding their two numbers, $m$ and $c$.",
+  },
+  {
+    type: "figure",
+    alt: "A parabola drawn on axes with two dashed straight lines through the point (4, 3): one touching the curve, labelled tangent, and one crossing it at right angles, labelled normal.",
+    svg: heroSvg,
+    caption: "The tangent goes the way the curve goes. The normal cuts across it at $90^{\\circ}$.",
+  },
+  {
+    type: "gate",
+    id: "g1",
+    kind: "choice",
+    prompt: "One tap to start. Which of the two lines in the picture just touches the curve?",
+    options: ["The tangent", "The normal", "Both of them"],
+    answer: "The tangent",
+    explain: "The tangent touches and travels with the curve. The normal is at right angles to it, so it cuts straight through.",
+  },
+
+  // why
+  { type: "h", text: "Why the derivative gives the tangent", role: "why" },
+  {
+    type: "p",
+    md: `Zoom in on a smooth curve and it straightens out: close enough to any point, the curve and one straight line cannot be told apart. That line is the tangent.\nThe derivative measures how steep the curve is at every point, so at the point of contact the tangent's gradient is ${M("\\frac{dy}{dx}")} there. That is the only reason calculus is needed at all.`,
+  },
+  {
+    type: "gate",
+    id: "g9",
+    kind: "choice",
+    prompt: "Zoom in far enough at a point on a smooth curve and the curve looks like a straight line. Which straight line?",
+    options: ["The tangent at that point", "The normal at that point", "The line from that point to the origin"],
+    answer: "The tangent at that point",
+    explain: `Close up, the curve runs along its tangent, so the tangent's gradient is the curve's gradient there: ${M("\\frac{dy}{dx}")} at that point.`,
+  },
+
+  // variant 1: the tangent at a given point
+  { type: "h", text: "The tangent at a given point", role: "variant" },
+  {
+    type: "p",
+    md: `To write ${M("y - y_{1} = m(x - x_{1})")} you need a gradient and a point.\n**Differentiate**, because the derivative is the gradient rule.\n**Substitute** the ${M("x")} of the point, to get ${M("m")} there and nowhere else.\n**Find ${M("y")} from the curve.**\n**Put all three into the line formula.**`,
+  },
+  {
+    type: "gate",
+    id: "g2",
+    kind: "number",
+    prompt: `The curve is $y = ${latex(K.we1)}$, so $\\frac{dy}{dx} = ${latex(deriv(K.we1))}$. What is the gradient of the tangent at $x = 4$?`,
+    answer: fplain(T.we1.m),
+    explain: `$2(4) - 6 = ${fplain(T.we1.m)}$. That number is the $m$ of the tangent, and everything else is built on it.`,
+  },
+  {
+    type: "figure",
+    alt: "The parabola with a dashed vertical line from the point (4, 3) down to the x-axis and a dashed horizontal line across to the y-axis, showing that the height 3 is read from the curve.",
+    svg: pointSvg,
+    caption: "$x = 4$ goes into the curve, and $y = 3$ comes back out.",
+  },
+  {
+    type: "p",
+    md: `The tangent and the curve share the point of contact, so its ${M("y")} comes from the curve. Substituting into ${M("\\frac{dy}{dx}")} gives the gradient a second time, not the height, and a straight line named in the question gives a third number again.`,
+  },
+  {
+    type: "callout",
+    kind: "why",
+    title: "Why the point matters as much as the gradient",
+    md: `A gradient alone names a whole family of parallel lines. The point is what picks one of them out, and ${M("c")} is where that choice is recorded.`,
+  },
+  {
+    type: "gate",
+    id: "g3",
+    kind: "number",
+    prompt: `Same curve, $y = ${latex(K.we1)}$. What is $y$ when $x = 4$?`,
+    answer: fplain(T.we1.y0),
+    explain: `$16 - 24 + 11 = ${fplain(T.we1.y0)}$. Substituting 4 into the derivative instead would have given ${M(fplain(T.we1.m))}, which is the gradient.`,
+  },
+
+  // see it done: a tangent
+  { type: "h", text: "See it done: a tangent", role: "see" },
+  {
+    type: "figure",
+    alt: "The parabola with its tangent drawn as a dashed line touching at the point (4, 3), the tangent labelled with its equation.",
+    svg: we1Svg,
+    caption: `The finished tangent, $${lineLatex(T.we1.line)}$, touching at $${pointLatex(fr(4), T.we1.y0)}$.`,
+  },
+  {
+    type: "p",
+    md: `Find the equation of the tangent to ${M(latex(K.we1, { lhs: "y" }))} at the point where ${M("x = 4")}.\n**Step 1.** ${M(latex(deriv(K.we1), { lhs: "\\frac{dy}{dx}" }))}.\n**Step 2.** At ${M("x = 4")}, ${M(`m = ${fplain(T.we1.m)}`)}.\n**Step 3.** From the curve, ${M(`y = ${fplain(T.we1.y0)}`)}, so the point is ${M(pointLatex(fr(4), T.we1.y0))}.\n**Step 4.** ${M(`y - ${fplain(T.we1.y0)} = ${fplain(T.we1.m)}(x - 4)`)}, which tidies to ${M(lineLatex(T.we1.line))}.`,
+  },
+  {
+    type: "gate",
+    id: "g4",
+    kind: "blank",
+    prompt: `Finish step 4: $y - ${fplain(T.we1.y0)} = ${fplain(T.we1.m)}(x - 4)$ tidies to $y = ${fplain(T.we1.m)}x + \\square$. The missing constant is ___`,
+    answer: fplain(T.we1.line.c),
+    explain: `Expanding gives ${M(`y - ${fplain(T.we1.y0)} = ${fplain(T.we1.m)}x - 8`)}, so ${M(lineLatex(T.we1.line))}. Adding the 3 to the other side instead is the slip the examiners call the constant.`,
+  },
+
+  // variant 2: the normal at a given point
+  { type: "h", text: "The normal at a given point", role: "variant" },
+  {
+    type: "p",
+    md: `Perpendicular gradients multiply to ${M("-1")}, so the normal's gradient is ${M("-\\frac{1}{m}")}. Two moves again: **turn the fraction over**, then **change the sign**. Doing only one of them is the single commonest loss in this topic.\nA tangent gradient of ${M("5")} gives a normal gradient of ${M("-\\frac{1}{5}")}; a tangent gradient of ${M("-4")} gives ${M("\\frac{1}{4}")}, positive, because the sign changed.`,
+  },
+  {
+    type: "gate",
+    id: "g5",
+    kind: "number",
+    prompt: "The tangent to a curve at $A$ has gradient $5$. What is the gradient of the normal at $A$?",
+    answer: `${fplain(perp(fr(5)))} | ${perp(fr(5)).n}/${perp(fr(5)).d}`,
+    explain: `Turn 5 over to get $\\frac{1}{5}$, then change the sign: $${flatex(perp(fr(5)))}$. Answering $-5$ means the sign changed but the fraction never turned over.`,
+  },
+
+  // see it done: a normal
+  { type: "h", text: "See it done: a normal", role: "see" },
+  {
+    type: "figure",
+    alt: "The curve y = 2x minus 3 over x drawn on axes with its normal at the point (1, minus 1) shown as a dashed line sloping gently downwards.",
+    svg: we2Svg,
+    caption: `The normal at $${pointLatex(fr(1), T.we2.y0)}$ is $${lineLatex(T.we2.line)}$.`,
+  },
+  {
+    type: "p",
+    md: `Find the equation of the normal to ${M(latex(K.we2, { lhs: "y" }))} at the point where ${M("x = 1")}.\n**Step 1.** ${M(latex(deriv(K.we2), { lhs: "\\frac{dy}{dx}" }))}, so at ${M("x = 1")} the tangent gradient is ${M(fplain(T.we2.m))}.\n**Step 2.** The normal gradient is ${M(flatex(T.we2.g))}.\n**Step 3.** From the curve, ${M(`y = ${fplain(T.we2.y0)}`)}.\n**Step 4.** ${M(lineLatex(T.we2.line))}.`,
+  },
+  {
+    type: "gate",
+    id: "g6",
+    kind: "choice",
+    prompt: `The normal has gradient $${flatex(T.we2.g)}$ and passes through $${pointLatex(fr(1), T.we2.y0)}$. Which equation is it?`,
+    options: [`$${lineLatex(T.we2.line)}$`, `$${lineLatex(constantSlip(T.we2.g, fr(1), T.we2.y0))}$`, `$${lineLatex(lineThrough(T.we2.m, fr(1), T.we2.y0))}$`],
+    answer: `$${lineLatex(T.we2.line)}$`,
+    explain: `Substituting gives ${M(`${fplain(T.we2.y0)} = ${flatex(T.we2.g)}(1) + c`)}, so ${M(`c = ${flatex(T.we2.line.c)}`)}. The third option is the tangent, not the normal.`,
+  },
+
+  // variant 3: a gradient instead of a point
+  { type: "h", text: "A gradient instead of a point", role: "variant" },
+  {
+    type: "figure",
+    alt: "A curve with a dashed tangent drawn parallel to a second dashed straight line, the point of contact marked P.",
+    svg: givenSvg,
+    caption: "Parallel lines share a gradient, so the given line's gradient becomes the value of $\\frac{dy}{dx}$.",
+  },
+  {
+    type: "p",
+    md: `Questions often give the gradient instead of the point. *Parallel to ${M("y = 3x - 4")}* means ${M("\\frac{dy}{dx} = 3")}. *The gradient of the normal is ${M("\\frac{1}{2}")}* means ${M("\\frac{dy}{dx} = -2")}.\nEither way you solve an equation rather than evaluate one, then find ${M("y")} from the curve.`,
+  },
+  {
+    type: "callout",
+    kind: "examiner",
+    title: "Summer 2025, Unit 1, Question 13",
+    md: `A frequent slip was solving ${M("\\frac{dy}{dx} = 0")} instead of setting the derivative equal to the gradient the question stated; the report puts it down to habit. Read the question for the number ${M("\\frac{dy}{dx}")} must equal.`,
+    source: src("2025-summer", 13),
+  },
+  {
+    type: "video",
+    videoId: "fPElVHyk_XI",
+    title: "Differentiation Tangents and Normals - CCEA GCSE Further Mathematics",
+    channel: "P McAleavey",
+    why: "A Northern Ireland teacher running the whole method against this specification, tangent then normal.",
+  },
+  {
+    type: "gate",
+    id: "g7",
+    kind: "number",
+    prompt: "The normal to a curve at $B$ has gradient $\\frac{1}{2}$. What is $\\frac{dy}{dx}$ at $B$?",
+    answer: `${fplain(perp(fr(1, 2)))}`,
+    explain: `The tangent gradient is the negative reciprocal of the normal's: turn $\\frac{1}{2}$ over to get 2, then change the sign. Answering $\\frac{1}{2}$ or $-\\frac{1}{2}$ means one of the two moves was skipped.`,
+  },
+
+  // variant 4: an unknown coefficient
+  { type: "h", text: "An unknown coefficient in the curve", role: "variant" },
+  {
+    type: "p",
+    md: `Sometimes the curve carries a letter, and the gradient condition is what finds it. The tangent to ${M(`y = ax^{2} ${V4.b.n < 0 ? "-" : "+"} ${Math.abs(V4.b.n)}x`)} at ${M(`x = ${fplain(V4.x0)}`)} is parallel to ${M(lineLatex({ m: V4.lineM, c: V4.lineC }))}.\n${M(`\\frac{dy}{dx} = 2ax ${V4.b.n < 0 ? "-" : "+"} ${Math.abs(V4.b.n)}`)}, which is ${M(`${2 * V4.x0.n}a - ${Math.abs(V4.b.n)}`)} at ${M(`x = ${fplain(V4.x0)}`)}.\nParallel means equal gradients: ${M(`${2 * V4.x0.n}a - ${Math.abs(V4.b.n)} = ${fplain(V4.lineM)}`)}, so ${M(`a = ${fplain(V4_A)}`)}. Only then can the point and the tangent be found.`,
+  },
+  {
+    type: "gate",
+    id: "g10",
+    kind: "number",
+    prompt: `The tangent to $y = ax^{2} + x$ at $x = ${fplain(G10.x0)}$ has gradient $${fplain(G10.m)}$. What is $a$?`,
+    answer: fplain(G10_A),
+    explain: `$\\frac{dy}{dx} = 2ax + 1$, which is $2a + 1$ at $x = 1$. Setting $2a + 1 = ${fplain(G10.m)}$ gives $a = ${fplain(G10_A)}$.`,
+  },
+
+  // variant 5: where the tangent meets the curve again
+  { type: "h", text: "Where the tangent meets the curve again", role: "variant" },
+  {
+    type: "figure",
+    alt: "A cubic curve with a dashed tangent that touches it on the right and crosses it again on the left, the two points marked touches and crosses.",
+    svg: meetSvg,
+    caption: `The tangent at $${pointLatex(fr(1), T.we3.y0)}$ meets the curve again at $${pointLatex(MEET.we3.x, MEET.we3.y)}$.`,
+  },
+  {
+    type: "p",
+    md: `A tangent to a cubic touches at one point and usually crosses somewhere else. To find where, set the tangent equal to the curve and solve.\nThe point of contact is always a **repeated** root, so if you know it you can divide it out twice, and what is left gives the other crossing straight away.`,
+  },
+  {
+    type: "gate",
+    id: "g8",
+    kind: "number",
+    prompt: `Setting $${latex(K.we3)} = ${lineLatex(T.we3.line).replace("y = ", "")}$ gives $x^{3} - 3x + 2 = 0$, which factorises as $(x - 1)^{2}(x + 2) = 0$. At what value of $x$ does the tangent cross the curve?`,
+    answer: fplain(MEET.we3.x),
+    explain: `The repeated factor $(x - 1)^{2}$ is the touching point, so the crossing is at ${M(`x = ${fplain(MEET.we3.x)}`)}, where ${M(`y = ${fplain(MEET.we3.y)}`)}.`,
+  },
+
+  // exam twists, from the 2018 to 2026 papers, the most frequent first
+  { type: "h", text: "Exam twists", role: "twists" },
+  {
+    type: "p",
+    md: `**A gradient, not a point** (2018, 2022, 2024, 2025). Horizontal, parallel to a line, equal to a number, or a normal's gradient: each becomes an equation for ${M("\\frac{dy}{dx}")}. Solve it for ${M("x")}, then find ${M("y")} from the curve.`,
+  },
+  {
+    type: "p",
+    md: `**Two tangents compared** (2025, 2026). Parallel tangents at two points have equal gradients; perpendicular ones have gradients that multiply to ${M("-1")}. Work out both gradients before you compare them.`,
+  },
+  {
+    type: "p",
+    md: `**A power of ${M("x")} underneath** (2019, 2026). Rewrite ${M("\\frac{6}{x}")} as ${M("6x^{-1}")} before differentiating; the power rule then gives ${M("-6x^{-2}")}.`,
+  },
+  {
+    type: "gate",
+    id: "g11",
+    kind: "choice",
+    prompt: "A question says that the tangent to a curve at $P$ is horizontal. Which equation do you solve first?",
+    options: ["$\\frac{dy}{dx} = 0$", "$y = 0$", "$x = 0$"],
+    answer: "$\\frac{dy}{dx} = 0$",
+    explain: "Horizontal means a gradient of zero, so the derivative is set equal to $0$ and solved for $x$. Then $y$ comes from the curve.",
+  },
+
+  // going further: the hardest shape, two lines from two points and where they cross (Summer 2021 Q12)
+  { type: "h", text: "Going further: where a tangent meets a normal", role: "further" },
+  {
+    type: "figure",
+    alt: "The parabola y = x squared with the tangent at A, where x = 2, and the normal at B, where x = -1, drawn as dashed lines that cross at the point C.",
+    svg: furtherSvg,
+    caption: "The tangent at A and the normal at B are two different lines, and C is where they cross.",
+  },
+  {
+    type: "p",
+    md: `The hardest shape asks for two lines from two different points, then where they cross. On ${M("y = x^{2}")}, the tangent at ${M(`A${pointLatex(fr(2), TF.y0)}`)} is ${M(lineLatex(TF.line))} and the normal at ${M(`B${pointLatex(fr(-1), NF.y0)}`)} is ${M(lineLatex(NF.line))}.\nSetting them equal gives ${M(`${flatex(fsub(TF.line.m, NF.line.m))}x = ${flatex(fsub(NF.line.c, TF.line.c))}`)}, so ${M(`x = ${flatex(CF.x)}`)} exactly.`,
+  },
+  {
+    type: "callout",
+    kind: "notonspec",
+    title: "Where the specification stops",
+    md: "Tangents to trigonometric, exponential or logarithmic curves, vertical tangents and implicit differentiation are not on this specification.",
+  },
+  {
+    type: "gate",
+    id: "g12",
+    kind: "number",
+    prompt: `The tangent $${lineLatex(G12.t)}$ and the normal $${lineLatex(G12.n)}$ are drawn on the same axes. At what value of $x$ do they cross?`,
+    answer: fplain(G12_X),
+    explain: `Setting them equal: $${lineLatex(G12.t).replace("y = ", "")} = ${lineLatex(G12.n).replace("y = ", "")}$, so $${flatex(fsub(G12.t.m, G12.n.m))}x = ${flatex(fsub(G12.n.c, G12.t.c))}$ and $x = ${fplain(G12_X)}$.`,
+  },
+
+  // derivation: why the normal's gradient is -1/m
+  { type: "h", text: "Why perpendicular gradients multiply to −1", role: "derivation" },
+  {
+    type: "figure",
+    alt: "A step of 1 across and m up drawn on the tangent, and the same step turned through a right angle on the normal, where it becomes m back and 1 up.",
+    svg: derivSvg,
+    caption: "Turn the tangent's step through a right angle and it becomes the normal's step.",
+  },
+  {
+    type: "p",
+    md: `Draw the tangent's gradient as a step: ${M("1")} across and ${M("m")} up. Turn that step through a right angle and it becomes ${M("m")} back and ${M("1")} up.\nSo the normal's gradient is ${M("\\frac{1}{-m} = -\\frac{1}{m}")}, and the two gradients multiply to ${M("m \\times -\\frac{1}{m} = -1")}. Every normal in this topic rests on that one turn.`,
+  },
+  {
+    type: "gate",
+    id: "g13",
+    kind: "choice",
+    prompt: `A step of $1$ across and $${fplain(G13_M)}$ up is turned through a right angle. What is the gradient of the turned step?`,
+    options: [`$${flatex(G13)}$`, `$${flatex(fneg(G13_M))}$`, `$${flatex(finv(G13_M))}$`],
+    answer: `$${flatex(G13)}$`,
+    explain: `Turned, the step goes $${fplain(G13_M)}$ back and $1$ up, so its gradient is $\\frac{1}{-${fplain(G13_M)}} = ${flatex(G13)}$: the negative reciprocal of $${fplain(G13_M)}$.`,
+  },
+
+  {
+    type: "callout",
+    kind: "mustknow",
+    title: "You can now",
+    md: "Build a tangent: differentiate, substitute, take $y$ from the curve, write the line.\nBuild a normal the same way with $-\\frac{1}{m}$: turned over, sign changed.\nTurn a stated gradient, a parallel line or a normal's gradient into an equation for $\\frac{dy}{dx}$.\nFind an unknown coefficient, or where a tangent meets the curve again.\nSpot the twists: horizontal, two tangents compared, a power of $x$ underneath.",
+  },
+  { type: "h", text: "In the exam", role: "pointer" },
+  { type: "p", md: "The closing paragraph is written by pointerPanel below." },
+  { type: "prompt", promptId: id("rp", "01") },
+  { type: "prompt", promptId: id("rp", "02") },
+  { type: "prompt", promptId: id("rp", "03") },
+  { type: "prompt", promptId: id("rp", "05") },
+  { type: "prompt", promptId: id("rp", "07") },
+  { type: "prompt", promptId: id("rp", "11") },
+];
+
+// ---------------------------------------------------------------------------
+// worked examples
+// ---------------------------------------------------------------------------
+
+const MWs = (n, marks, forText, extra = {}) => ({ id: `MW${n}`, code: "MW", marks, for: forText, ...extra });
+const Ws = (n, marks, forText, extra = {}) => ({ id: `W${n}`, code: "W", marks, for: forText, ...extra });
+const Ms = (n, marks, forText, extra = {}) => ({ id: `M${n}`, code: "M", marks, for: forText, ...extra });
+
+const we01 = {
+  id: id("we", "01"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  paper: PAPER,
+  stem: `A curve has the equation ${M(latex(K.we1, { lhs: "y" }))}\nFind the equation of the tangent to this curve at the point where ${M("x = 4")}.`,
+  figure: dataFigure(we1Svg, "A parabola with its tangent drawn as a dashed line touching at the point (4, 3), labelled with the tangent's equation."),
+  steps: [
+    {
+      n: 1,
+      working: `Differentiate: ${M(latex(deriv(K.we1), { lhs: "\\frac{dy}{dx}" }))}.`,
+      decision: "This line is the first mark and it is available before anything can go wrong. Write it even if the rest of the question defeats you.",
+      earns: ["MW1"],
+    },
+    {
+      n: 2,
+      working: `Substitute ${M("x = 4")}: ${M(`2(4) - 6 = ${fplain(T.we1.m)}`)}. The tangent's gradient is ${M(fplain(T.we1.m))}.`,
+      decision: "The derivative is a rule; this turns it into the one number the straight line needs.",
+      whyMenu: {
+        options: ["Because the tangent has the curve's gradient at that point", "Because 4 is the gradient", "Because the tangent passes through the origin"],
+        correct: 0,
+        explain: "A tangent travels in the direction the curve is going, so at the point of contact the two gradients are the same number.",
+      },
+      earns: ["M1"],
+    },
+    {
+      n: 3,
+      working: `Find the point: substituting ${M("x = 4")} into the **curve** gives ${M(`16 - 24 + 11 = ${fplain(T.we1.y0)}`)}, so the point is ${M(pointLatex(fr(4), T.we1.y0))}.`,
+      decision: "The height comes from the curve. Substituting into the derivative here would hand you the gradient a second time and leave the line unplaced.",
+      earns: ["W1"],
+    },
+    {
+      n: 4,
+      working: `Put the gradient and the point into ${M("y - y_{1} = m(x - x_{1})")}: ${M(`y - ${fplain(T.we1.y0)} = ${fplain(T.we1.m)}(x - 4)`)}.`,
+      decision: "Writing the formula out before substituting keeps the signs of the point where they belong, which is where the constant usually goes wrong.",
+      earns: ["M2"],
+    },
+    {
+      n: 5,
+      working: `Tidy: ${M(`y - ${fplain(T.we1.y0)} = ${fplain(T.we1.m)}x - 8`)}, so ${M(lineLatex(T.we1.line))}.`,
+      decision: "Leave it as y = mx + c unless the question asks for another form. Check the point: putting x = 4 into the tangent gives 3, which is the height you found.",
+      earns: ["W2"],
+    },
+  ],
+  finalAnswer: `$${lineLatex(T.we1.line)}$`,
+  twin: {
+    stem: `Find the equation of the tangent to ${M(latex(K.we1Twin, { lhs: "y" }))} at the point where ${M("x = 1")}.`,
+    answer: ansLine(T.we1Twin.line),
+  },
+  faded: [
+    { showSteps: 2, studentSupplies: [3, 4, 5] },
+    { showSteps: 1, studentSupplies: [2, 3, 4, 5] },
+  ],
+  verification: `ver.${id("we", "01")}`,
+  version: 1,
+};
+
+const we02 = {
+  id: id("we", "02"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  paper: PAPER,
+  stem: `A curve has the equation ${M(latex(K.we2, { lhs: "y" }))}\nFind the equation of the normal to this curve at the point where ${M("x = 1")}.`,
+  figure: dataFigure(we2Svg, "The curve y = 2x minus 3 over x with its normal at the point (1, minus 1) drawn as a dashed line."),
+  steps: [
+    {
+      n: 1,
+      working: `Rewrite the fraction and differentiate: ${M("y = 2x - 3x^{-1}")}, so ${M(latex(deriv(K.we2), { lhs: "\\frac{dy}{dx}" }))}.`,
+      decision: "The negative power has to come up before the rule can reach it, and multiplying -3 by -1 makes that term positive.",
+      earns: ["MW1"],
+    },
+    {
+      n: 2,
+      working: `At ${M("x = 1")}: ${M(`2 + 3 = ${fplain(T.we2.m)}`)}, so the tangent's gradient is ${M(fplain(T.we2.m))}.`,
+      decision: "One substitution into the derivative. This is the tangent's gradient, not the normal's, and mixing the two up here costs three marks downstream.",
+      earns: ["M1"],
+    },
+    {
+      n: 3,
+      working: `Normal gradient: ${M(`-\\frac{1}{m} = -\\frac{1}{${fplain(T.we2.m)}} = ${flatex(T.we2.g)}`)}.`,
+      decision: "Turn the number over, then change its sign. CCEA gives a mark for this step on its own, even when the gradient before it was wrong.",
+      whyMenu: {
+        options: ["Because perpendicular gradients multiply to -1", "Because the normal is always negative", "Because the curve is falling there"],
+        correct: 0,
+        explain: "Two perpendicular lines have gradients whose product is -1, which is exactly what taking the negative reciprocal arranges.",
+      },
+      earns: ["W1"],
+    },
+    {
+      n: 4,
+      working: `The point: ${M(`2 - 3 = ${fplain(T.we2.y0)}`)}, from the curve, so the normal passes through ${M(pointLatex(fr(1), T.we2.y0))}.`,
+      decision: "The tangent and the normal share this point, so it is found once and used twice.",
+      earns: ["M2"],
+    },
+    {
+      n: 5,
+      working: `Substitute: ${M(`${fplain(T.we2.y0)} = ${flatex(T.we2.g)}(1) + c`)}, so ${M(`c = ${flatex(T.we2.line.c)}`)} and ${M(lineLatex(T.we2.line))}.`,
+      decision: "Fractions in the constant are normal on this paper. Leaving the answer as a decimal is fine, and so is clearing the fraction if the question asks for whole numbers.",
+      earns: ["W2"],
+    },
+  ],
+  finalAnswer: `$${lineLatex(T.we2.line)}$`,
+  twin: {
+    stem: `Find the equation of the normal to ${M(latex(K.we2Twin, { lhs: "y" }))} at the point where ${M("x = 2")}.`,
+    answer: ansLine(T.we2Twin.line),
+  },
+  faded: [
+    { showSteps: 2, studentSupplies: [3, 4, 5] },
+    { showSteps: 1, studentSupplies: [2, 3, 4, 5] },
+  ],
+  verification: `ver.${id("we", "02")}`,
+  version: 1,
+};
+
+const we03 = {
+  id: id("we", "03"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  paper: PAPER,
+  stem: `The tangent to ${M(latex(K.we3, { lhs: "y" }))} at the point where ${M("x = 1")} meets that curve a second time.\nFind the coordinates of that second point.`,
+  figure: dataFigure(meetPlainSvg, "A cubic curve with a dashed tangent touching it on the right and crossing it again on the left, the two places marked but not named."),
+  steps: [
+    {
+      n: 1,
+      working: `The tangent first: ${M(latex(deriv(K.we3), { lhs: "\\frac{dy}{dx}" }))}, so at ${M("x = 1")} the gradient is ${M(fplain(T.we3.m))} and the point is ${M(pointLatex(fr(1), T.we3.y0))}.`,
+      decision: "Nothing can be solved until the tangent has an equation, so the first half of this question is the ordinary four-step method.",
+      earns: ["MW1"],
+    },
+    {
+      n: 2,
+      working: `So the tangent is ${M(lineLatex(T.we3.line))}.`,
+      decision: "Check it against the point: -9 times 1, take away 2, gives -11, which is the height you found.",
+      earns: ["W1"],
+    },
+    {
+      n: 3,
+      working: `Set the curve equal to the tangent: ${M(`${latex(K.we3)} = ${lineLatex(T.we3.line).replace("y = ", "")}`)}.`,
+      decision: "Where a line meets a curve, their y values agree. Every crossing is a solution of this one equation, the touching point included.",
+      earns: ["M1"],
+    },
+    {
+      n: 4,
+      working: `Collect everything on one side: ${M("x^{3} - 3x + 2 = 0")}.`,
+      decision: "Bring it to zero before factorising. The cubic is about to show you the answer for free.",
+      earns: ["W2"],
+    },
+    {
+      n: 5,
+      working: `${M("x = 1")} is a repeated root because the line is a tangent there, so ${M("(x - 1)^{2}")} is a factor: ${M("(x - 1)^{2}(x + 2) = 0")}.`,
+      decision: "Touching means the root appears twice. Knowing that turns a cubic you would have to solve into one you can simply read.",
+      whyMenu: {
+        options: ["Because a tangent touches rather than crosses at that point", "Because cubics always have repeated roots", "Because x = 1 was in the question"],
+        correct: 0,
+        explain: "A crossing gives a single root; touching gives a double one. That is what lets you factor out the point of contact twice.",
+      },
+      earns: ["M2"],
+    },
+    {
+      n: 6,
+      working: `The remaining root is ${M(`x = ${fplain(MEET.we3.x)}`)}, and the curve gives ${M(`y = ${fplain(MEET.we3.y)}`)}. So the second point is ${M(pointLatex(MEET.we3.x, MEET.we3.y))}.`,
+      decision: "Find the height from the curve or from the tangent: they agree here, because this is a point both pass through. The curve is the safer habit.",
+      earns: ["W3"],
+    },
+  ],
+  finalAnswer: `$${pointLatex(MEET.we3.x, MEET.we3.y)}$`,
+  twin: {
+    stem: `The tangent to ${M(latex(K.we3Twin, { lhs: "y" }))} at the point where ${M("x = 2")} meets that curve a second time. Find the coordinates of that second point.`,
+    answer: ansPoint(MEET.we3Twin),
+  },
+  faded: [
+    { showSteps: 3, studentSupplies: [4, 5, 6] },
+    { showSteps: 2, studentSupplies: [3, 4, 5, 6] },
+  ],
+  verification: `ver.${id("we", "03")}`,
+  version: 1,
+};
+
+/** Depth pass, 23 Sep: the variant that had no worked example, a stated gradient (the Summer 2025 Q13(i) shape). */
+const we04 = {
+  id: id("we", "04"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  paper: PAPER,
+  stem: `A curve has the equation ${M(latex(K4, { lhs: "y" }))}\nThe tangent to this curve at the point ${M("P")} has gradient ${M(fplain(WE4_M))}.\nFind the equation of that tangent.`,
+  steps: [
+    {
+      n: 1,
+      working: `Differentiate: ${M(latex(deriv(K4), { lhs: "\\frac{dy}{dx}" }))}.`,
+      decision: "The gradient rule comes first, as always; the question has only moved the unknown from m to x.",
+      earns: ["MW1"],
+    },
+    {
+      n: 2,
+      working: `Set it equal to the stated gradient: ${M(`${latex(deriv(K4))} = ${fplain(WE4_M)}`)}.`,
+      decision: "The gradient at P is given, so dy/dx equals that number there. Writing = 0 here is the slip the Summer 2025 report puts down to habit.",
+      whyMenu: {
+        options: [
+          `Because the tangent's gradient at ${M("P")} is ${M("\\frac{dy}{dx}")} there, and it is given as ${M(fplain(WE4_M))}`,
+          "Because every tangent to this curve has that gradient",
+          `Because ${M("\\frac{dy}{dx} = 0")} at every point of contact`,
+        ],
+        correct: 0,
+        explain: "The derivative gives the gradient at each x. Setting it equal to the stated gradient picks out the x where the tangent has that gradient.",
+      },
+      earns: ["M1"],
+    },
+    {
+      n: 3,
+      working: `Solve: ${M(`x = ${fplain(WE4_T.x0)}`)}.`,
+      decision: "A linear derivative gives one point; a quadratic one can give two, and then the question tells you which.",
+      earns: ["W1"],
+    },
+    {
+      n: 4,
+      working: `Find the height from the curve: ${M(`y = ${fplain(WE4_T.y0)}`)}, so ${M("P")} is ${M(pointLatex(WE4_T.x0, WE4_T.y0))}.`,
+      decision: "The point sits on the curve, so its y comes from the curve, not from the gradient.",
+      earns: ["W2"],
+    },
+    {
+      n: 5,
+      working: `The tangent: ${M(`y ${WE4_T.y0.n < 0 ? "+" : "-"} ${fplain(WE4_T.y0.n < 0 ? fneg(WE4_T.y0) : WE4_T.y0)} = ${fplain(WE4_M)}(x - ${fplain(WE4_T.x0)})`)}, which is ${M(lineLatex(WE4_T.line))}.`,
+      decision: `Check it at P: ${fplain(WE4_M)} times ${fplain(WE4_T.x0)}, then the constant, gives ${fplain(WE4_T.y0)}, the height you found.`,
+      earns: ["W3"],
+    },
+  ],
+  finalAnswer: `$${lineLatex(WE4_T.line)}$`,
+  twin: {
+    stem: `A curve has the equation ${M(latex(K4T, { lhs: "y" }))} The tangent to this curve at the point ${M("Q")} has gradient ${M(fplain(WE4T_M))}. Find the equation of that tangent.`,
+    answer: ansLine(WE4T_T.line),
+  },
+  // backward fading: the last step first, then the last two
+  faded: [
+    { showSteps: 4, studentSupplies: [5] },
+    { showSteps: 3, studentSupplies: [4, 5] },
+  ],
+  verification: `ver.${id("we", "04")}`,
+  version: 1,
+};
+
+// ---------------------------------------------------------------------------
+// diagnostics
+// ---------------------------------------------------------------------------
+
+const dxPre = {
+  id: `dx.fm.u1.${SLUG}.pre`,
+  topic: TOPIC,
+  specRefs: SPEC,
+  when: "pre",
+  items: [
+    {
+      id: "p1",
+      stem: "Four quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is the gradient of a line perpendicular to $y = 3x + 1$?",
+      skill: "Perpendicular gradients",
+      options: [
+        { id: "a", text: `$${flatex(perp(fr(3)))}$`, correct: true, feedback: "Turn 3 over and change the sign. The two gradients multiply to $-1$, which is what perpendicular means." },
+        { id: "b", text: "$-3$", correct: false, misconception: "fm.calc.normal-gradient-not-reciprocated", feedback: "The sign changed but the number never turned over. Both moves are needed." },
+        { id: "c", text: `$${flatex(fr(1, 3))}$`, correct: false, misconception: "fm.calc.normal-sign-not-flipped", feedback: "The number turned over but the sign stayed positive. A perpendicular gradient is the negative reciprocal." },
+      ],
+      secondsExpected: 25,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "p2",
+      stem: "A straight line has gradient $4$ and passes through $(2, 5)$. What is its equation?",
+      skill: "Equation of a line from a gradient and a point",
+      options: [
+        { id: "a", text: `$${lineLatex(lineThrough(fr(4), fr(2), fr(5)))}$`, correct: true, feedback: "$5 = 4(2) + c$ gives $c = -3$. That substitution is the last step of every tangent and normal question." },
+        { id: "b", text: `$${lineLatex(constantSlip(fr(4), fr(2), fr(5)))}$`, correct: false, misconception: "fm.calc.tangent-constant-slip", feedback: "The $8$ was added instead of taken away. From $5 = 8 + c$, $c$ is $-3$." },
+        { id: "c", text: "$y = 2x + 5$", correct: false, misconception: "fm.calc.tangent-constant-slip", feedback: "The coordinates have been used as the gradient and the intercept. The gradient was given as 4." },
+      ],
+      secondsExpected: 30,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "p3",
+      stem: `Differentiate $y = ${latex(K.we1)}$.`,
+      skill: "Differentiate a quadratic (the earlier topic)",
+      options: [
+        { id: "a", text: `$${latex(deriv(K.we1))}$`, correct: true, feedback: "Multiply by the power, step the power down, and the constant goes to zero." },
+        { id: "b", text: `$${latex(route("constantKept", K.we1))}$`, correct: false, misconception: "fm.calc.constant-term-kept", feedback: "The constant differentiates to zero, so it should not appear in the gradient rule." },
+        { id: "c", text: `$${latex(route("coefficientNotMultiplied", K.we1))}$`, correct: false, misconception: "fm.calc.coefficient-not-multiplied", feedback: "The powers stepped down correctly. Each coefficient is multiplied by its own power as well." },
+      ],
+      secondsExpected: 25,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "p4",
+      stem: `If $y = ${latex(K.we1)}$, what is $y$ when $x = 4$?`,
+      skill: "Substitute into a quadratic",
+      options: [
+        { id: "a", text: `$${fplain(T.we1.y0)}$`, correct: true, feedback: "$16 - 24 + 11 = 3$. This is the height of the point, and it comes from the curve." },
+        { id: "b", text: `$${fplain(T.we1.m)}$`, correct: false, misconception: "fm.calc.y-from-line-not-curve", feedback: "That is what the derivative gives at $x = 4$, so it is the gradient rather than the height." },
+        { id: "c", text: "$51$", correct: false, misconception: "fm.calc.tangent-constant-slip", feedback: "The middle term was added instead of subtracted: $16 - 24 + 11$, not $16 + 24 + 11$." },
+      ],
+      secondsExpected: 25,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+  ],
+};
+
+const dxPost = {
+  id: `dx.fm.u1.${SLUG}.post`,
+  topic: TOPIC,
+  specRefs: SPEC,
+  when: "post",
+  items: [
+    {
+      id: "q1",
+      stem: `A curve has $\\frac{dy}{dx} = ${latex(deriv(K.p5))}$. What is the gradient of the **tangent** at the point where $x = 1$?`,
+      skill: "Read a tangent gradient from the derivative",
+      options: [
+        { id: "a", text: `$${fplain(T.p5.m)}$`, correct: true, feedback: "$6(1) - 1 = 5$. The tangent shares the curve's gradient at the point of contact." },
+        { id: "b", text: `$${flatex(T.p5.g)}$`, correct: false, misconception: "fm.calc.normal-gradient-not-reciprocated", feedback: "That is the gradient of the normal. The tangent's gradient is the derivative itself, with no reciprocal taken." },
+        { id: "c", text: "$-5$", correct: false, misconception: "fm.calc.normal-gradient-not-reciprocated", feedback: "The sign has been changed for no reason. Substituting 1 gives a positive 5." },
+      ],
+      secondsExpected: 30,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q2",
+      stem: "Where does the $y$-coordinate of the point of contact come from?",
+      skill: "Identify which expression gives the height",
+      options: [
+        { id: "a", text: "From the equation of the curve", correct: true, feedback: "The point sits on the curve, so substituting its $x$ into the curve gives its height." },
+        { id: "b", text: "From $\\frac{dy}{dx}$", correct: false, misconception: "fm.calc.y-from-line-not-curve", feedback: "The derivative gives the gradient a second time. The height only comes from the curve." },
+        { id: "c", text: "From any straight line named in the question", correct: false, misconception: "fm.calc.y-from-line-not-curve", feedback: "A line mentioned in the question usually passes somewhere else entirely. Take the height from the curve." },
+      ],
+      secondsExpected: 25,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q3",
+      stem: "The tangent to a curve at $P$ has gradient $5$. What is the gradient of the normal at $P$?",
+      skill: "Form a negative reciprocal",
+      options: [
+        { id: "a", text: `$${flatex(perp(fr(5)))}$`, correct: true, feedback: "Turn it over, change the sign. $5 \\times -\\frac{1}{5} = -1$, which is what perpendicular means." },
+        { id: "b", text: `$${flatex(normalRoutes.notReciprocated(fr(5)))}$`, correct: false, misconception: "fm.calc.normal-gradient-not-reciprocated", feedback: "The sign changed but the number never turned over. $5 \\times -5$ is $-25$, not $-1$." },
+        { id: "c", text: `$${flatex(normalRoutes.signNotFlipped(fr(5)))}$`, correct: false, misconception: "fm.calc.normal-sign-not-flipped", feedback: "The number turned over but kept its sign. $5 \\times \\frac{1}{5}$ is $1$, not $-1$." },
+      ],
+      secondsExpected: 30,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q4",
+      stem: `A tangent has gradient $${fplain(T.we1.m)}$ and touches at $${pointLatex(fr(4), T.we1.y0)}$. What is its equation?`,
+      skill: "Assemble the line from a gradient and a point",
+      options: [
+        { id: "a", text: `$${lineLatex(T.we1.line)}$`, correct: true, feedback: "$3 = 2(4) + c$ gives $c = -5$." },
+        { id: "b", text: `$${lineLatex(constantSlip(T.we1.m, fr(4), T.we1.y0))}$`, correct: false, misconception: "fm.calc.tangent-constant-slip", feedback: "The $8$ was added instead of taken away. From $3 = 8 + c$, $c$ is $-5$." },
+        { id: "c", text: "$y = 4x + 3$", correct: false, misconception: "fm.calc.tangent-constant-slip", feedback: "The coordinates have been used as the gradient and the intercept. The gradient is the number you found from $\\frac{dy}{dx}$." },
+      ],
+      secondsExpected: 35,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q5",
+      stem: `A curve has $\\frac{dy}{dx} = ${latex(deriv(K.p7))}$. What is the gradient of the **normal** at the point where $x = 1$?`,
+      skill: "Combine a substitution with a negative reciprocal",
+      options: [
+        { id: "a", text: `$${flatex(T.p7.g)}$`, correct: true, feedback: "The tangent gradient is $3 + 2 = 5$, so the normal's is $-\\frac{1}{5}$." },
+        { id: "b", text: `$${fplain(T.p7.m)}$`, correct: false, misconception: "fm.calc.normal-gradient-not-reciprocated", feedback: "That is the tangent's gradient. The normal is perpendicular to it, so it still needs the negative reciprocal." },
+        { id: "c", text: `$${flatex(normalRoutes.signNotFlipped(T.p7.m))}$`, correct: false, misconception: "fm.calc.normal-sign-not-flipped", feedback: "The number turned over but the sign did not change." },
+      ],
+      secondsExpected: 40,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q6",
+      stem: "The tangent to a curve at $P$ is **parallel** to the line $y = 3x - 4$. Which equation do you solve to find $P$?",
+      skill: "Turn a parallel condition into an equation",
+      options: [
+        { id: "a", text: "$\\frac{dy}{dx} = 3$", correct: true, feedback: "Parallel lines have equal gradients, so the derivative is set equal to the line's gradient." },
+        { id: "b", text: "$\\frac{dy}{dx} = 0$", correct: false, misconception: "fm.calc.default-to-derivative-zero", feedback: "Zero belongs there only when the question asks for a flat or stationary point. Here a gradient was given." },
+        { id: "c", text: `$\\frac{dy}{dx} = ${flatex(perp(fr(3)))}$`, correct: false, misconception: "fm.calc.normal-sign-not-flipped", feedback: "That is the perpendicular gradient. Parallel means the same gradient, not the negative reciprocal." },
+      ],
+      secondsExpected: 35,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q7",
+      stem: "The normal to a curve at $A$ has gradient $\\frac{1}{2}$. What is $\\frac{dy}{dx}$ at $A$?",
+      skill: "Work backwards from a normal gradient",
+      options: [
+        { id: "a", text: `$${fplain(perp(fr(1, 2)))}$`, correct: true, feedback: "The relationship works both ways: the tangent gradient is the negative reciprocal of the normal's." },
+        { id: "b", text: `$${flatex(fr(1, 2))}$`, correct: false, misconception: "fm.calc.normal-gradient-not-reciprocated", feedback: "That is the normal's own gradient copied across. The tangent is perpendicular to it." },
+        { id: "c", text: `$${flatex(fr(-1, 2))}$`, correct: false, misconception: "fm.calc.normal-sign-not-flipped", feedback: "The sign changed but the fraction never turned over. $\\frac{1}{2} \\times -\\frac{1}{2}$ is not $-1$." },
+      ],
+      secondsExpected: 35,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+    {
+      id: "q8",
+      stem: "To find where a tangent meets its curve a second time, what do you do?",
+      skill: "Choose the method for a second intersection",
+      options: [
+        { id: "a", text: "Set the tangent's equation equal to the curve's and solve", correct: true, feedback: "Both graphs share a $y$ wherever they meet, so that single equation finds every crossing, the point of contact included." },
+        { id: "b", text: "Set $\\frac{dy}{dx} = 0$ and solve", correct: false, misconception: "fm.calc.default-to-derivative-zero", feedback: "That finds where the curve is flat, which is a different question entirely." },
+        { id: "c", text: "Set the curve equal to zero and solve", correct: false, misconception: "fm.calc.equate-line-and-curve-instead-of-differentiate", feedback: "That finds where the curve meets the $x$-axis. The tangent is the other graph in this question." },
+      ],
+      secondsExpected: 30,
+      confidence: true,
+      hypercorrectionQueue: true,
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// questions
+// ---------------------------------------------------------------------------
+
+const single = (n, o) => ({
+  id: id("q", n),
+  topic: TOPIC,
+  specRefs: SPEC,
+  tier: "untiered",
+  paper: PAPER,
+  style: o.style ?? "practice",
+  difficulty: o.difficulty ?? 3,
+  ao: o.ao ?? ["AO1", "AO2"],
+  commandWords: o.commandWords ?? ["Find"],
+  emphasis: o.emphasis ?? [],
+  context: { setting: o.setting, original: true },
+  figures: o.figures ?? [],
+  parts: [{ id: "main", stem: o.stem, marks: o.marks, answer: o.answer, scheme: o.scheme, hints: o.hints, workedSolution: o.worked, commonErrors: o.errors, requiresWorking: true }],
+  totalMarks: o.marks,
+  timeAllowanceSec: timeFor(o.marks),
+  skeleton: `(main)${o.verb ?? "find"}${o.marks}`,
+  examinerSources: o.sources ?? [],
+  ...(o.program ? { solutionProgram: o.program } : {}),
+  verification: `ver.${id("q", n)}`,
+  version: 1,
+});
+
+const tangentScheme = (t, { normalStep = false } = {}) => {
+  const s = [
+    MWs(1, 1, `${M(latex(deriv(normalStep ? t.curve : t.curve), { lhs: "\\frac{dy}{dx}" }))}`),
+  ];
+  return s;
+};
+
+const questions = [];
+
+questions.push(
+  single("0001", {
+    difficulty: 2,
+    setting: "The tangent gradient on its own, as the opening part of a longer question",
+    stem: `A curve has the equation ${M(latex(K.p1, { lhs: "y" }))}\nFind the gradient of the tangent to this curve at the point where ${M("x = 1")}.`,
+    marks: 2,
+    answer: ansNum(T.p1.m),
+    scheme: [MWs(1, 1, `${M(latex(deriv(K.p1), { lhs: "\\frac{dy}{dx}" }))}`), Ws(1, 1, `${M(fplain(T.p1.m))}`, { ft: true })],
+    hints: ["Differentiate first.", "The tangent's gradient is the curve's gradient at the point of contact."],
+    worked: `${M(latex(deriv(K.p1), { lhs: "\\frac{dy}{dx}" }))}.\nAt ${M("x = 1")}: ${M(`2(1) + 5 = ${fplain(T.p1.m)}`)}.\nSo the tangent has gradient ${M(fplain(T.p1.m))}.`,
+    errors: [
+      errNum("fm.calc.normal-gradient-not-reciprocated", perp(T.p1.m), "That is the gradient of the normal. The tangent's gradient is the derivative itself, with no reciprocal and no sign change.", 1, src("2019-summer", 11)),
+      errNum("fm.calc.gradient-read-as-coefficient", fr(5), "That is the coefficient of $x$ in the curve, read as though the graph were a straight line. A curve's gradient always comes from $\\frac{dy}{dx}$.", 0, src("2019-summer", 11)),
+    ],
+    sources: [src("2019-summer", 11)],
+    program: `d/dx ${plain(K.p1)} = ${plain(deriv(K.p1))}; at x = 1 -> ${fplain(T.p1.m)}`,
+  }),
+);
+
+questions.push(
+  single("0002", {
+    difficulty: 2,
+    setting: "The simplest possible tangent, so the four steps can be seen whole",
+    emphasis: ["in the form $y = mx + c$"],
+    stem: `A curve has the equation ${M(latex(K.p2, { lhs: "y" }))}\nFind the equation of the tangent to this curve at the point where ${M("x = 3")}.\nGive your answer in the form ${M("y = mx + c")}.`,
+    marks: 3,
+    answer: ansLine(T.p2.line, true),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p2), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p2.m)}`)}`),
+      Ms(1, 1, `the point ${M(pointLatex(fr(3), T.p2.y0))} and a substitution into ${M("y - y_{1} = m(x - x_{1})")}`),
+      Ws(1, 1, `${M(lineLatex(T.p2.line))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["Differentiate, then substitute 3.", "Find the height from the curve.", "Then use $y - y_{1} = m(x - x_{1})$."],
+    worked: `${M(latex(deriv(K.p2), { lhs: "\\frac{dy}{dx}" }))}, so at ${M("x = 3")} the gradient is ${M(fplain(T.p2.m))}.\nFrom the curve, ${M(`y = ${fplain(T.p2.y0)}`)}.\n${M(`y - ${fplain(T.p2.y0)} = ${fplain(T.p2.m)}(x - 3)`)}, so ${M(lineLatex(T.p2.line))}.`,
+    errors: [
+      constantSlipError(T.p2.m, fr(3), T.p2.y0, "The gradient and the point are both right, so most of the method is secure.", 2, src("2023-summer", 10)),
+      errAlg("fm.calc.y-from-line-not-curve", lineLatex(lineThrough(T.p2.m, fr(3), T.p2.m)), "The gradient is right. The height of the point was taken as the gradient rather than from the curve; substituting 3 into $y = x^{2}$ gives 9.", 1, src("2024-summer", 9)),
+    ],
+    sources: [src("2023-summer", 10)],
+    program: `tangent to ${plain(K.p2)} at x = 3 -> ${linePlain(T.p2.line)}`,
+  }),
+);
+
+questions.push(
+  single("0003", {
+    difficulty: 3,
+    setting: "A tangent whose constant turns out to be zero, so the answer looks unusual but is right",
+    stem: `A curve has the equation ${M(latex(K.p3, { lhs: "y" }))}\nFind the equation of the tangent to this curve at the point where ${M("x = 2")}.`,
+    marks: 3,
+    answer: ansLine(T.p3.line),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p3), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p3.m)}`)}`),
+      Ms(1, 1, `the point ${M(pointLatex(fr(2), T.p3.y0))}`),
+      Ws(1, 1, `${M(lineLatex(T.p3.line))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["The gradient at $x = 2$ is $2(2) - 2$.", "The height is $4 - 4 + 4$.", "A constant of zero is a perfectly good answer."],
+    worked: `${M(latex(deriv(K.p3), { lhs: "\\frac{dy}{dx}" }))}, so ${M(`m = ${fplain(T.p3.m)}`)} at ${M("x = 2")}.\nFrom the curve, ${M(`y = ${fplain(T.p3.y0)}`)}.\n${M(`y - ${fplain(T.p3.y0)} = ${fplain(T.p3.m)}(x - 2)`)} gives ${M(lineLatex(T.p3.line))}, a line through the origin.`,
+    errors: [
+      constantSlipError(T.p3.m, fr(2), T.p3.y0, "The gradient and the point are right.", 2, src("2023-summer", 10)),
+      errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(perp(T.p3.m), fr(2), T.p3.y0)), "That is the normal at the same point. The question asked for the tangent, which keeps the gradient the derivative gave you.", 1, src("2019-summer", 11)),
+    ],
+    sources: [src("2022-summer", 8)],
+    program: `tangent to ${plain(K.p3)} at x = 2 -> ${linePlain(T.p3.line)}`,
+  }),
+);
+
+questions.push(
+  single("0004", {
+    difficulty: 2,
+    verb: "write",
+    commandWords: ["Write down"],
+    setting: "The negative reciprocal on its own, which CCEA credits as a step of its own",
+    stem: "The tangent to a curve at the point $A$ has gradient $4$.\nWrite down the gradient of the normal to the curve at $A$.",
+    marks: 1,
+    answer: ansNum(perp(fr(4))),
+    scheme: [Ws(1, 1, `${M(flatex(perp(fr(4))))} or ${M(fplain(perp(fr(4))))}`)],
+    hints: ["Turn the 4 over, then change the sign."],
+    worked: `Perpendicular gradients multiply to ${M("-1")}, so the normal's gradient is ${M(`-\\frac{1}{4} = ${fplain(perp(fr(4)))}`)}.`,
+    errors: [
+      errNum("fm.calc.normal-gradient-not-reciprocated", normalRoutes.notReciprocated(fr(4)), "The sign changed but the number never turned over. Check with the product: $4 \\times -4$ is $-16$, and it needs to be $-1$.", 0, src("2019-summer", 11)),
+      errNum("fm.calc.normal-sign-not-flipped", normalRoutes.signNotFlipped(fr(4)), "The number turned over but the sign stayed positive. $4 \\times \\frac{1}{4}$ is $1$, and a perpendicular pair multiplies to $-1$.", 0, src("2024-summer", 9)),
+    ],
+    sources: [src("2019-summer", 11)],
+    program: `perp(4) = ${fplain(perp(fr(4)))}`,
+  }),
+);
+
+questions.push(
+  single("0005", {
+    difficulty: 3,
+    setting: "A normal gradient reached in two steps, the shape CCEA uses as a part (i)",
+    stem: `A curve has the equation ${M(latex(K.p5, { lhs: "y" }))}\nFind the gradient of the normal to this curve at the point where ${M("x = 1")}.`,
+    marks: 2,
+    answer: ansNum(T.p5.g),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p5), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p5.m)}`)}`),
+      Ws(1, 1, `${M(flatex(T.p5.g))}`, { ft: true }),
+    ],
+    hints: ["Differentiate and substitute 1 to get the tangent's gradient.", "Then take the negative reciprocal."],
+    worked: `${M(latex(deriv(K.p5), { lhs: "\\frac{dy}{dx}" }))}, so at ${M("x = 1")} the tangent's gradient is ${M(fplain(T.p5.m))}.\nThe normal's gradient is ${M(`-\\frac{1}{m} = -\\frac{1}{${fplain(T.p5.m)}} = ${flatex(T.p5.g)}`)}.`,
+    errors: [
+      errNum("fm.calc.normal-gradient-not-reciprocated", normalRoutes.notReciprocated(T.p5.m), "The tangent gradient is right, so the method mark stands. The sign changed but the number never turned over.", 1, src("2019-summer", 11)),
+      errNum("fm.calc.normal-sign-not-flipped", normalRoutes.signNotFlipped(T.p5.m), "The tangent gradient is right and the number turned over. The sign still has to change, because the product must be $-1$.", 1, src("2024-summer", 9)),
+      errNum("fm.calc.normal-gradient-not-reciprocated", T.p5.m, "That is the tangent's gradient. The normal is perpendicular to the tangent, so it needs the negative reciprocal.", 1, src("2019-summer", 11)),
+    ],
+    sources: [src("2019-summer", 11)],
+    program: `normal gradient of ${plain(K.p5)} at x = 1 -> ${fplain(T.p5.g)}`,
+  }),
+);
+
+questions.push(
+  single("0006", {
+    difficulty: 3,
+    setting: "A full normal on a quadratic, the four steps plus the reciprocal",
+    stem: `A curve has the equation ${M(latex(K.p6, { lhs: "y" }))}\nFind the equation of the normal to this curve at the point where ${M("x = 5")}.`,
+    marks: 4,
+    answer: ansLine(T.p6.line),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p6), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p6.m)}`)}`),
+      Ws(1, 1, `normal gradient ${M(flatex(T.p6.g))}`, { ft: true }),
+      Ms(1, 1, `the point ${M(pointLatex(fr(5), T.p6.y0))} substituted into the line formula`),
+      Ws(2, 1, `${M(lineLatex(T.p6.line))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["Differentiate and substitute 5.", "Take the negative reciprocal for the normal.", "Find the height from the curve, then build the line."],
+    worked: `${M(latex(deriv(K.p6), { lhs: "\\frac{dy}{dx}" }))}, so ${M(`m = ${fplain(T.p6.m)}`)} at ${M("x = 5")}.\nThe normal's gradient is ${M(flatex(T.p6.g))}.\nFrom the curve, ${M(`y = 25 - 40 + 3 = ${fplain(T.p6.y0)}`)}.\n${M(`${fplain(T.p6.y0)} = ${flatex(T.p6.g)}(5) + c`)} gives ${M(`c = ${flatex(T.p6.line.c)}`)}, so ${M(lineLatex(T.p6.line))}.`,
+    errors: [
+      errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(normalRoutes.notReciprocated(T.p6.m), fr(5), T.p6.y0)), "The tangent gradient and the point are both right, so two marks stand. The normal's gradient needs the number turned over as well as the sign changed.", 2, src("2019-summer", 11)),
+      errAlg("fm.calc.normal-sign-not-flipped", lineLatex(lineThrough(normalRoutes.signNotFlipped(T.p6.m), fr(5), T.p6.y0)), "The reciprocal is there and the point is right. The sign still has to change, because perpendicular gradients multiply to $-1$.", 2, src("2024-summer", 9)),
+      constantSlipError(T.p6.g, fr(5), T.p6.y0, "Gradient, reciprocal and point are all right, so three marks stand.", 3, src("2023-summer", 10)),
+    ],
+    sources: [src("2023-summer", 10)],
+    program: `normal to ${plain(K.p6)} at x = 5 -> ${linePlain(T.p6.line)}`,
+  }),
+);
+
+questions.push(
+  single("0007", {
+    difficulty: 3,
+    setting: "A normal on a cubic, where the derivative is itself a quadratic",
+    stem: `A curve has the equation ${M(latex(K.p7, { lhs: "y" }))}\nFind the equation of the normal to this curve at the point where ${M("x = 1")}.`,
+    marks: 4,
+    answer: ansLine(T.p7.line),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p7), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p7.m)}`)}`),
+      Ws(1, 1, `normal gradient ${M(flatex(T.p7.g))}`, { ft: true }),
+      Ms(1, 1, `the point ${M(pointLatex(fr(1), T.p7.y0))} substituted into the line formula`),
+      Ws(2, 1, `${M(lineLatex(T.p7.line))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["The derivative of $x^{3}$ is $3x^{2}$.", "Substitute 1 for the tangent gradient, then take the negative reciprocal.", "The height comes from the curve."],
+    worked: `${M(latex(deriv(K.p7), { lhs: "\\frac{dy}{dx}" }))}, so ${M(`m = 3 + 2 = ${fplain(T.p7.m)}`)}.\nNormal gradient ${M(flatex(T.p7.g))}.\nFrom the curve, ${M(`y = 1 + 2 = ${fplain(T.p7.y0)}`)}.\n${M(`${fplain(T.p7.y0)} = ${flatex(T.p7.g)}(1) + c`)} gives ${M(`c = ${flatex(T.p7.line.c)}`)}, so ${M(lineLatex(T.p7.line))}.`,
+    errors: [
+      errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(normalRoutes.notReciprocated(T.p7.m), fr(1), T.p7.y0)), "The tangent gradient and the point are right. The normal's gradient needs the reciprocal as well as the sign change.", 2, src("2019-summer", 11)),
+      errAlg("fm.calc.normal-sign-not-flipped", lineLatex(lineThrough(normalRoutes.signNotFlipped(T.p7.m), fr(1), T.p7.y0)), "The reciprocal is there. The sign still has to change for the two gradients to multiply to $-1$.", 2, src("2024-summer", 9)),
+      constantSlipError(T.p7.g, fr(1), T.p7.y0, "Everything up to the last line is right.", 3, src("2023-summer", 10)),
+    ],
+    sources: [src("2023-summer", 10)],
+    program: `normal to ${plain(K.p7)} at x = 1 -> ${linePlain(T.p7.line)}`,
+  }),
+);
+
+questions.push(
+  single("0008", {
+    difficulty: 4,
+    setting: "A tangent to a curve written as a fraction, the shape the 2019 report singled out",
+    stem: `A curve has the equation ${M(latex(K.p8, { lhs: "y" }))}\nFind the equation of the tangent to this curve at the point where ${M("x = 2")}.`,
+    marks: 4,
+    answer: ansLine(T.p8.line),
+    scheme: [
+      Ms(1, 1, `writing the curve as ${M("y = 8x^{-1}")}`),
+      MWs(1, 1, `${M(latex(deriv(K.p8), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p8.m)}`)}`, { dependsOn: ["M1"] }),
+      Ms(2, 1, `the point ${M(pointLatex(fr(2), T.p8.y0))}`),
+      Ws(1, 1, `${M(lineLatex(T.p8.line))}`, { dependsOn: ["M2"], ft: true }),
+    ],
+    hints: ["Rewrite $\\frac{8}{x}$ as $8x^{-1}$ first.", "The derivative is $-8x^{-2}$.", "The height at $x = 2$ is $\\frac{8}{2}$."],
+    worked: `Rewrite: ${M(latex(K.p8, { lhs: "y", style: "index" }))}, so ${M(latex(deriv(K.p8), { lhs: "\\frac{dy}{dx}" }))}.\nAt ${M("x = 2")}: ${M(`m = -\\frac{8}{4} = ${fplain(T.p8.m)}`)}.\nFrom the curve, ${M(`y = ${fplain(T.p8.y0)}`)}.\n${M(`y - ${fplain(T.p8.y0)} = ${fplain(T.p8.m)}(x - 2)`)} gives ${M(lineLatex(T.p8.line))}.`,
+    errors: [
+      errAlg("fm.calc.negative-power-differentiation", lineLatex(lineThrough(at(route("negPowerSignKept", K.p8), fr(2)), fr(2), T.p8.y0)), "The point is right and the index stepped down correctly. Multiplying 8 by the power $-1$ makes the gradient negative, so the tangent slopes down.", 2, src("2019-summer", 11)),
+      errAlg("fm.calc.index-moved-to-numerator", lineLatex(lineThrough(at(route("indexMovedUp", K.p8), fr(2)), fr(2), T.p8.y0)), "The curve was lifted to the top line as $8x$ before it was differentiated. Crossing the line changes the sign of the index.", 1, src("2024-summer", 1)),
+      constantSlipError(T.p8.m, fr(2), T.p8.y0, "Gradient and point are both right.", 3, src("2023-summer", 10)),
+    ],
+    sources: [src("2019-summer", 11)],
+    program: `tangent to ${plain(K.p8)} at x = 2 -> ${linePlain(T.p8.line)}`,
+  }),
+);
+
+questions.push(
+  single("0009", {
+    difficulty: 4,
+    setting: "A normal to a curve with a negative power, the 2019 discriminator rebuilt",
+    stem: `A curve has the equation ${M(latex(K.p9, { lhs: "y" }))}\nFind the equation of the normal to this curve at the point where ${M("x = 2")}.`,
+    marks: 4,
+    answer: ansLine(T.p9.line),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p9), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p9.m)}`)}`),
+      Ws(1, 1, `normal gradient ${M(flatex(T.p9.g))}`, { ft: true }),
+      Ms(1, 1, `the point ${M(pointLatex(fr(2), T.p9.y0))}`),
+      Ws(2, 1, `${M(lineLatex(T.p9.line))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["Rewrite the fraction as $-12x^{-1}$ before differentiating.", "Two negatives make the second term of the derivative positive.", "Then the negative reciprocal, then the point."],
+    worked: `Rewrite: ${M(latex(K.p9, { lhs: "y", style: "index" }))}, so ${M(latex(deriv(K.p9), { lhs: "\\frac{dy}{dx}" }))}.\nAt ${M("x = 2")}: ${M(`2 + 3 = ${fplain(T.p9.m)}`)}, so the normal's gradient is ${M(flatex(T.p9.g))}.\nFrom the curve, ${M(`4 - 6 = ${fplain(T.p9.y0)}`)}.\n${M(`${fplain(T.p9.y0)} = ${flatex(T.p9.g)}(2) + c`)} gives ${M(`c = ${flatex(T.p9.line.c)}`)}, so ${M(lineLatex(T.p9.line))}.`,
+    errors: [
+      errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(normalRoutes.notReciprocated(T.p9.m), fr(2), T.p9.y0)), "The derivative, the substitution and the point are all right. The normal's gradient needs the number turned over as well as the sign changed.", 2, src("2019-summer", 11)),
+      errAlg("fm.calc.negative-power-differentiation", lineLatex(lineThrough(perp(at(route("negPowerSignKept", K.p9), fr(2))), fr(2), T.p9.y0)), "The reciprocal and the point are right. In the derivative, $-12$ multiplied by the power $-1$ gives $+12$, so that term is added.", 1, src("2019-summer", 11)),
+      constantSlipError(T.p9.g, fr(2), T.p9.y0, "Everything up to the last line is right.", 3, src("2023-summer", 10)),
+    ],
+    sources: [src("2019-summer", 11)],
+    program: `normal to ${plain(K.p9)} at x = 2 -> ${linePlain(T.p9.line)}`,
+  }),
+);
+
+questions.push(
+  single("0010", {
+    difficulty: 3,
+    setting: "A stated tangent gradient, so the derivative becomes an equation",
+    stem: `A curve has the equation ${M(latex(K.p10, { lhs: "y" }))}\nAt the point ${M("B")} on this curve the tangent has gradient ${M("5")}.\nFind the coordinates of ${M("B")}.`,
+    marks: 3,
+    answer: ansPoint(P10_P),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p10), { lhs: "\\frac{dy}{dx}" }))}`),
+      Ms(1, 1, `setting ${M(`${latex(deriv(K.p10))} = 5`)}`),
+      Ws(1, 1, `${M(pointLatex(P10_P.x, P10_P.y))} as a coordinate pair`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["The gradient is given, so it belongs on the right of an equation.", "Solve for $x$.", "Then find $y$ from the curve and write the pair."],
+    worked: `${M(latex(deriv(K.p10), { lhs: "\\frac{dy}{dx}" }))}.\nSet it equal to the given gradient: ${M("2x - 3 = 5")}, so ${M(`x = ${fplain(P10_P.x)}`)}.\nFrom the curve, ${M(`y = 16 - 12 + 4 = ${fplain(P10_P.y)}`)}.\nSo ${M("B")} is ${M(pointLatex(P10_P.x, P10_P.y))}.`,
+    errors: [
+      errAlg("fm.calc.default-to-derivative-zero", pointLatex(P10_ZERO.x, P10_ZERO.y), "That is the point where the gradient is zero. The question stated a gradient of 5, so the equation to solve is $\\frac{dy}{dx} = 5$.", 1, src("2025-summer", 13)),
+      errAlg("fm.calc.stationary-y-from-derivative", pointLatex(P10_P.x, fr(5)), "The $x$-coordinate is right, so two of the three marks stand. The second coordinate is the height of the curve there, not the gradient you were given.", 2, src("2025-summer", 11)),
+    ],
+    sources: [src("2025-summer", 13)],
+    program: `solve ${plain(deriv(K.p10))} = 5 -> ${pointPlain(P10_P.x, P10_P.y)}`,
+  }),
+);
+
+questions.push(
+  single("0011", {
+    difficulty: 4,
+    setting: "A stated normal gradient, so the negative reciprocal has to be taken backwards",
+    stem: `A curve has the equation ${M(latex(K.p11, { lhs: "y" }))}\nAt the point ${M("A")} on this curve the normal has gradient ${M(flatex(P11_G))}.\nFind the coordinates of ${M("A")}.`,
+    marks: 3,
+    answer: ansPoint(P11_P),
+    scheme: [
+      Ws(1, 1, `the tangent gradient ${M(fplain(P11_M))} from the negative reciprocal`),
+      Ms(1, 1, `setting ${M(`${latex(deriv(K.p11))} = ${fplain(P11_M)}`)}`),
+      Ws(2, 1, `${M(pointLatex(P11_P.x, P11_P.y))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["The relationship works both ways: turn the normal's gradient over and change its sign.", "That gives $\\frac{dy}{dx}$ at $A$.", "Solve, then find $y$ from the curve."],
+    worked: `The normal has gradient ${M(flatex(P11_G))}, so the tangent has gradient ${M(fplain(P11_M))}.\n${M(latex(deriv(K.p11), { lhs: "\\frac{dy}{dx}" }))}, so ${M(`4x - 1 = ${fplain(P11_M)}`)} and ${M(`x = ${fplain(P11_P.x)}`)}.\nFrom the curve, ${M(P11_SUBST)}.\nSo ${M("A")} is ${M(pointLatex(P11_P.x, P11_P.y))}.`,
+    errors: [
+      errAlg("fm.calc.normal-gradient-not-reciprocated", pointLatex(P11_WRONG.x, P11_WRONG.y), "The method is right, so the structure of the answer is sound. The tangent gradient was taken as the normal's with the sign changed; it also has to be turned over.", 1, src("2024-summer", 9)),
+      errAlg("fm.calc.normal-sign-not-flipped", pointLatex(P11_FLIP.x, P11_FLIP.y), "The reciprocal was taken but the sign was left alone. The two gradients must multiply to $-1$.", 1, src("2024-summer", 9)),
+      errAlg("fm.calc.stationary-y-from-derivative", pointLatex(P11_P.x, P11_M), "The $x$-coordinate is right. The second coordinate comes from substituting into the curve, not from the gradient.", 2, src("2025-summer", 11)),
+    ],
+    sources: [src("2024-summer", 9)],
+    program: `perp(${fplain(P11_G)}) = ${fplain(P11_M)}; solve ${plain(deriv(K.p11))} = ${fplain(P11_M)} -> ${pointPlain(P11_P.x, P11_P.y)}`,
+  }),
+);
+
+questions.push(
+  single("0012", {
+    difficulty: 4,
+    setting: "A tangent to a cubic that crosses the curve a second time",
+    stem: `The tangent to ${M(latex(K.p12, { lhs: "y" }))} at the point where ${M("x = -1")} meets that curve a second time, at the point ${M("C")}.\nFind the coordinates of ${M("C")}.`,
+    marks: 4,
+    answer: ansPoint(MEET.p12),
+    scheme: [
+      MWs(1, 1, `${M(latex(deriv(K.p12), { lhs: "\\frac{dy}{dx}" }))} and ${M(`m = ${fplain(T.p12.m)}`)}`),
+      Ws(1, 1, `the tangent ${M(lineLatex(T.p12.line))}`, { ft: true }),
+      Ms(1, 1, `setting the curve equal to the tangent and collecting to zero`),
+      Ws(2, 1, `${M(pointLatex(MEET.p12.x, MEET.p12.y))}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["Find the tangent first, in the usual four steps.", "Then set the curve equal to the tangent.", "$x = -1$ is a repeated root, so $(x + 1)^{2}$ is a factor."],
+    worked: `${M(latex(deriv(K.p12), { lhs: "\\frac{dy}{dx}" }))}, so at ${M("x = -1")} the gradient is ${M(fplain(T.p12.m))} and the point is ${M(pointLatex(fr(-1), T.p12.y0))}.\nThe tangent is ${M(lineLatex(T.p12.line))}.\nSetting the curve equal to it: ${M("x^{3} - 3x - 2 = 0")}, and since the line touches at ${M("x = -1")} that root repeats: ${M("(x + 1)^{2}(x - 2) = 0")}.\nSo ${M(`x = ${fplain(MEET.p12.x)}`)} and ${M(`y = ${fplain(MEET.p12.y)}`)}, giving ${M(pointLatex(MEET.p12.x, MEET.p12.y))}.`,
+    errors: [
+      errAlg("fm.calc.default-to-derivative-zero", pointLatex(fr(-1), T.p12.y0), "That is the point the tangent touches at, which the question already gave you. The second point is the other root of the equation where the two graphs meet.", 2, src("2025-summer", 13)),
+      errAlg("fm.calc.equate-line-and-curve-instead-of-differentiate", pointLatex(fr(2), fr(0)).replace(pointLatex(fr(2), fr(0)), lineLatex(T.p12.line)), "That is the equation of the tangent, and it is correct. The question asked where that tangent meets the curve again, so it has to be set equal to the curve and solved.", 2, src("2024-summer", 9)),
+    ],
+    sources: [src("2024-summer", 9)],
+    program: `tangent to ${plain(K.p12)} at x = -1 -> ${linePlain(T.p12.line)}; meets again at ${pointPlain(MEET.p12.x, MEET.p12.y)}`,
+  }),
+);
+
+// --- depth pass, 23 Sep: new rungs with new ids (the first rung, a difficulty-5 rung, and the horizontal tangent) ---
+
+questions.push(
+  single("0017", {
+    difficulty: 5,
+    setting: "A stated normal gradient that fixes an unknown coefficient: the 2022 and 2024 findings in one part",
+    stem: `A curve has the equation ${M(`y = ax^{2} - ${Math.abs(Q17.b.n)}x`)}, where ${M("a")} is a constant.\nThe normal to this curve at the point where ${M(`x = ${fplain(Q17.x0)}`)} has gradient ${M(flatex(Q17.g))}.\nFind the value of ${M("a")}.`,
+    marks: 3,
+    answer: ansNum(Q17_A),
+    scheme: [
+      Ws(1, 1, `the tangent gradient ${M(fplain(Q17_M))}, the negative reciprocal of ${M(flatex(Q17.g))}`),
+      Ms(1, 1, `${M(`\\frac{dy}{dx} = 2ax - ${Math.abs(Q17.b.n)}`)} set equal to ${M(fplain(Q17_M))} at ${M(`x = ${fplain(Q17.x0)}`)}`),
+      Ws(2, 1, `${M(`a = ${fplain(Q17_A)}`)}`, { dependsOn: ["M1"], ft: true }),
+    ],
+    hints: ["Turn the normal's gradient into the tangent's first.", `Differentiate with the letter in place: $\\frac{dy}{dx} = 2ax - ${Math.abs(Q17.b.n)}$.`, "Substitute $x = 1$ and solve for $a$."],
+    worked: `The normal has gradient ${M(flatex(Q17.g))}, so the tangent has gradient ${M(fplain(Q17_M))}.\n${M(`\\frac{dy}{dx} = 2ax - ${Math.abs(Q17.b.n)}`)}, which is ${M(`2a - ${Math.abs(Q17.b.n)}`)} at ${M(`x = ${fplain(Q17.x0)}`)}.\n${M(`2a - ${Math.abs(Q17.b.n)} = ${fplain(Q17_M)}`)}, so ${M(`a = ${fplain(Q17_A)}`)}.`,
+    errors: [
+      errNum("fm.calc.normal-sign-not-flipped", Q17_ROUTES.flip, `The normal's gradient was turned over but kept its sign, so the tangent's gradient came out as ${M(flatex(normalRoutes.signNotFlipped(Q17.g)))}. The two gradients must multiply to ${M("-1")}, so it is ${M(fplain(Q17_M))}.`, 1, src("2022-summer", 8)),
+      errNum("fm.calc.normal-gradient-not-reciprocated", Q17_ROUTES.notRecip, `The sign changed but the fraction never turned over. The tangent's gradient is the negative reciprocal of ${M(flatex(Q17.g))}, which is ${M(fplain(Q17_M))}.`, 1, src("2022-summer", 8)),
+      errNum("fm.calc.normal-gradient-not-reciprocated", Q17_ROUTES.same, `The normal's own gradient was used for ${M("\\frac{dy}{dx}")}. The derivative gives the tangent's gradient, so turn ${M(flatex(Q17.g))} into ${M(fplain(Q17_M))} first.`, 1, src("2022-summer", 8)),
+      errNum("fm.calc.default-to-derivative-zero", Q17_ROUTES.zero, `The derivative was set equal to zero. The question gave the normal's gradient, so ${M("\\frac{dy}{dx}")} equals the tangent's gradient, ${M(fplain(Q17_M))}.`, 0, src("2025-summer", 13)),
+    ],
+    sources: [src("2022-summer", 8), src("2024-summer", 9)],
+    program: `perp(${fplain(Q17.g)}) = ${fplain(Q17_M)}; 2a - ${Math.abs(Q17.b.n)} = ${fplain(Q17_M)} -> a = ${fplain(Q17_A)}`,
+  }),
+);
+
+questions.push(
+  single("0018", {
+    difficulty: 1,
+    verb: "write",
+    commandWords: ["Write down"],
+    setting: "The tangent's gradient read straight from a gradient function, the first rung",
+    stem: `A curve has gradient function ${M(latex(Q18_D, { lhs: "\\frac{dy}{dx}" }))}.\nWrite down the gradient of the tangent to this curve at the point where ${M("x = 4")}.`,
+    marks: 1,
+    answer: ansNum(Q18_M),
+    scheme: [Ws(1, 1, `${M(fplain(Q18_M))}`)],
+    hints: ["The tangent's gradient is the value of $\\frac{dy}{dx}$ at the point."],
+    worked: `Substitute ${M("x = 4")} into the gradient function: ${M(`2(4) - 5 = ${fplain(Q18_M)}`)}.`,
+    errors: [
+      errNum("fm.calc.normal-gradient-not-reciprocated", perp(Q18_M), "That is the gradient of the normal. The tangent's gradient is the value of $\\frac{dy}{dx}$ itself, with no reciprocal taken.", 0, src("2019-summer", 11)),
+    ],
+    sources: [src("2019-summer", 11)],
+    program: `${plain(Q18_D)} at x = 4 -> ${fplain(Q18_M)}`,
+  }),
+);
+
+questions.push(
+  single("0019", {
+    difficulty: 4,
+    setting: "A horizontal tangent on a curve with a power of x underneath, the Summer 2018 shape",
+    stem: `A curve has the equation ${M(latex(K19, { lhs: "y" }))}, where ${M("x > 0")}.\nFind the coordinates of the point on the curve at which the tangent is horizontal.`,
+    marks: 4,
+    answer: ansPoint(Q19_P),
+    scheme: [
+      Ms(1, 1, `writing the curve as ${M(latex(K19, { lhs: "y", style: "index" }))}`),
+      MWs(1, 1, `${M(latex(deriv(K19), { lhs: "\\frac{dy}{dx}" }))}`, { dependsOn: ["M1"] }),
+      Ms(2, 1, `setting ${M("\\frac{dy}{dx} = 0")} and reaching ${M(`x^{2} = ${fplain(fmul(Q19_P.x, Q19_P.x))}`)}`),
+      Ws(1, 1, `${M(pointLatex(Q19_P.x, Q19_P.y))}`, { dependsOn: ["M2"], ft: true }),
+    ],
+    hints: ["Horizontal means $\\frac{dy}{dx} = 0$.", "Rewrite $\\frac{8}{x}$ as $8x^{-1}$ before differentiating.", "Multiply through by $x^{2}$ to clear the negative power."],
+    worked: `Rewrite: ${M(latex(K19, { lhs: "y", style: "index" }))}, so ${M(latex(deriv(K19), { lhs: "\\frac{dy}{dx}" }))}.\nHorizontal means ${M("\\frac{dy}{dx} = 0")}, so ${M(`x^{2} = ${fplain(fmul(Q19_P.x, Q19_P.x))}`)}.\nSince ${M("x > 0")}, ${M(`x = ${fplain(Q19_P.x)}`)}, and the curve gives ${M(`y = ${fplain(Q19_P.y)}`)}.\nSo the point is ${M(pointLatex(Q19_P.x, Q19_P.y))}.`,
+    errors: [
+      errAlg("fm.calc.stationary-y-from-derivative", pointLatex(Q19_P.x, fr(0)), "The $x$-coordinate is right, so three marks stand. The second coordinate is the height of the curve there, not the gradient of zero.", 3, src("2025-summer", 11)),
+      errAlg("fm.qin.context-not-applied", pointLatex(Q19_NEG.x, Q19_NEG.y), `The working is right, and ${M("x^{2} = 4")} has two roots. The question says ${M("x > 0")}, so ${M(`x = ${fplain(Q19_NEG.x)}`)} is ruled out and the point is ${M(pointLatex(Q19_P.x, Q19_P.y))}.`, 3),
+    ],
+    sources: [src("2018-summer", 7)],
+    program: `solve ${plain(deriv(K19))} = 0 with x > 0 -> ${pointPlain(Q19_P.x, Q19_P.y)}`,
+  }),
+);
+
+// --- exam-style ------------------------------------------------------------
+
+const exA = single("0013", {
+  style: "exam-style",
+  difficulty: 4,
+  ao: ["AO1", "AO2", "AO3"],
+  setting: "A single seven-mark normal on a cubic, the shape of Summer 2023 Question 10",
+  emphasis: ["in the form $y = mx + c$"],
+  stem: `A curve has the equation ${M(latex(K.exA, { lhs: "y" }))}\nFind the equation of the normal to this curve at the point ${M(pointLatex(fr(-1), T.exA.y0))}.\nGive your answer in the form ${M("y = mx + c")}.`,
+  marks: 7,
+  answer: ansLine(T.exA.line, true),
+  scheme: [
+    MWs(1, 1, `${M(latex(deriv(K.exA), { lhs: "\\frac{dy}{dx}" }))}`),
+    Ms(1, 1, `substituting ${M("x = -1")} into ${M("\\frac{dy}{dx}")}`),
+    Ws(1, 1, `the tangent gradient ${M(fplain(T.exA.m))}`, { dependsOn: ["M1"] }),
+    Ws(2, 1, `the normal gradient ${M(flatex(T.exA.g))}`, { ft: true }),
+    Ms(2, 1, `checking or using ${M(`y = ${fplain(T.exA.y0)}`)} at ${M("x = -1")}`),
+    Ms(3, 1, `substituting the point into ${M("y - y_{1} = m(x - x_{1})")}`),
+    Ws(3, 1, `${M(lineLatex(T.exA.line))}`, { dependsOn: ["M3"], ft: true }),
+  ],
+  hints: [
+    "Differentiate the cubic first: the derivative is a quadratic.",
+    "Substitute $-1$ carefully, with brackets.",
+    "Turn the tangent gradient over and change its sign.",
+    "The point is given, so go straight to $y - y_{1} = m(x - x_{1})$.",
+  ],
+  worked: `${M(latex(deriv(K.exA), { lhs: "\\frac{dy}{dx}" }))}.\nAt ${M("x = -1")}: ${M(`3(-1)^{2} + 4(-1) - 4 = 3 - 4 - 4 = ${fplain(T.exA.m)}`)}.\nThe normal's gradient is ${M(`-\\frac{1}{${fplain(T.exA.m)}} = ${flatex(T.exA.g)}`)}.\nThe point is ${M(pointLatex(fr(-1), T.exA.y0))}, which the curve confirms: ${M(`-1 + 2 + 4 + 1 = ${fplain(T.exA.y0)}`)}.\n${M(`${fplain(T.exA.y0)} = ${flatex(T.exA.g)}(-1) + c`)} gives ${M(`c = ${flatex(T.exA.line.c)}`)}, so ${M(lineLatex(T.exA.line))}.`,
+  errors: [
+    errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(normalRoutes.notReciprocated(T.exA.m), fr(-1), T.exA.y0)), "The derivative and the substitution are right, so four marks stand. The normal's gradient needs the number turned over as well as the sign changed.", 4, src("2019-summer", 11)),
+    errAlg("fm.calc.normal-sign-not-flipped", lineLatex(lineThrough(normalRoutes.signNotFlipped(T.exA.m), fr(-1), T.exA.y0)), "The reciprocal is there and the point is right. The sign still has to change, because the two gradients multiply to $-1$.", 4, src("2024-summer", 9)),
+    constantSlipError(T.exA.g, fr(-1), T.exA.y0, "Gradient, reciprocal and point are all right, so six marks stand.", 6, src("2023-summer", 10)),
+    errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(T.exA.m, fr(-1), T.exA.y0)), "That is the tangent at the point, and the working behind it is sound. The question asked for the normal, which is perpendicular to it.", 4, src("2019-summer", 11)),
+  ],
+  sources: [src("2019-summer", 11), src("2023-summer", 10)],
+  program: `normal to ${plain(K.exA)} at x = -1 -> ${linePlain(T.exA.line)}`,
+  figures: [],
+});
+
+const exB = {
+  id: id("q", "0014"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  tier: "untiered",
+  paper: PAPER,
+  style: "exam-style",
+  difficulty: 5,
+  ao: ["AO1", "AO2", "AO3"],
+  commandWords: ["Find"],
+  emphasis: ["parallel to the straight line"],
+  context: { setting: "A gradient condition that fixes an unknown coefficient, then the tangent and normal that follow", original: true },
+  figures: [dataFigure(givenSvg, "A curve drawn on axes with a dashed tangent parallel to a second dashed straight line, the point of contact marked P.")],
+  parts: [
+    {
+      id: "a",
+      stem: `At the point ${M("P")}, where ${M("x = -2")}, the tangent to ${M(latex(EXB_CURVE, { lhs: "y" }).replace(String(EXB_A.n), "a"))} runs parallel to the straight line ${M(lineLatex({ m: EXB.lineM, c: EXB.lineC }))}\nFind the value of ${M("a")}.`,
+      marks: 4,
+      answer: ansNum(EXB_A),
+      scheme: [
+        Ms(1, 1, `writing the curve as ${M("y = 3 + ax^{-2}")}`),
+        MWs(1, 1, `${M("\\frac{dy}{dx} = -2ax^{-3}")}`, { dependsOn: ["M1"] }),
+        Ms(2, 1, `setting ${M("\\frac{dy}{dx}")} at ${M("x = -2")} equal to ${M(fplain(EXB.lineM))}`),
+        Ws(1, 1, `${M(`a = ${fplain(EXB_A)}`)}`, { dependsOn: ["M2"], ft: true }),
+      ],
+      hints: [
+        "Parallel lines have equal gradients, so $\\frac{dy}{dx}$ at $P$ is the line's gradient.",
+        "Write the curve with a negative index before differentiating.",
+        "$\\frac{dy}{dx} = -2ax^{-3}$, and $(-2)^{3} = -8$.",
+      ],
+      workedSolution: `Write the curve as ${M("y = 3 + ax^{-2}")}, so ${M("\\frac{dy}{dx} = -2ax^{-3}")}.\nAt ${M("x = -2")}: ${M("\\frac{-2a}{-8} = \\frac{a}{4}")}.\nParallel to ${M(lineLatex({ m: EXB.lineM, c: EXB.lineC }))} means that gradient is ${M(fplain(EXB.lineM))}, so ${M(`\\frac{a}{4} = ${fplain(EXB.lineM)}`)} and ${M(`a = ${fplain(EXB_A)}`)}.`,
+      commonErrors: [
+        errNum("fm.calc.equate-line-and-curve-instead-of-differentiate", EXB_A_EQUATED, "The curve was set equal to the line instead of being differentiated. Parallel is a statement about gradients, so the derivative is what the line's gradient is compared with.", 0, src("2024-summer", 9)),
+        errNum("fm.calc.negative-power-differentiation", EXB_A_SIGNKEPT, "The index stepped down correctly. Multiplying $a$ by the power $-2$ makes the derivative negative, which changes the sign of the answer.", 2, src("2025-summer", 8)),
+        errNum("fm.calc.power-not-reduced", EXB_A_POWERKEPT, "The coefficient is handled correctly. The index still has to step down, from $-2$ to $-3$, before $-2$ is substituted.", 2, src("2025-summer", 8)),
+      ],
+      requiresWorking: true,
+    },
+    {
+      id: "b",
+      stem: `Find the equation of the tangent to this curve at ${M("P")}.`,
+      marks: 3,
+      answer: ansLine(EXB_T.line),
+      scheme: [
+        MWs(1, 1, `${M(`y = ${fplain(EXB_T.y0)}`)} at ${M("x = -2")}, from the curve`),
+        Ms(1, 1, `substituting the point and ${M(`m = ${fplain(EXB_T.m)}`)} into the line formula`),
+        Ws(1, 1, `${M(lineLatex(EXB_T.line))}`, { dependsOn: ["M1"], ft: true }),
+      ],
+      hints: ["The gradient is the one the question gave you.", "Find the height by substituting $-2$ into the curve with your value of $a$.", "Then build the line."],
+      workedSolution: `With ${M(`a = ${fplain(EXB_A)}`)} the curve is ${M(latex(EXB_CURVE, { lhs: "y" }))}, so at ${M("x = -2")}, ${M(`y = 3 + \\frac{8}{4} = ${fplain(EXB_T.y0)}`)}.\nThe tangent's gradient is ${M(fplain(EXB_T.m))}, so ${M(`${fplain(EXB_T.y0)} = ${fplain(EXB_T.m)}(-2) + c`)} and ${M(`c = ${fplain(EXB_T.line.c)}`)}.\nThe tangent is ${M(lineLatex(EXB_T.line))}.`,
+      commonErrors: [
+        errAlg("fm.calc.y-from-line-not-curve", lineLatex({ m: EXB.lineM, c: EXB.lineC }), "The height of $P$ was taken from the given straight line rather than from the curve, which reproduces that line exactly. Substitute $-2$ into the curve instead.", 1, src("2024-summer", 9)),
+        constantSlipError(EXB_T.m, EXB.x0, EXB_T.y0, "The gradient and the point are right.", 2, src("2023-summer", 10)),
+      ],
+      requiresWorking: true,
+      followThrough: { fromPart: "a", rule: "use-candidate-value" },
+    },
+    {
+      id: "c",
+      stem: `Find the equation of the normal to this curve at ${M("P")}.\nGive your answer in the form ${M("y = mx + c")}.`,
+      marks: 2,
+      answer: ansLine(EXB_N.line, true),
+      scheme: [
+        Ws(1, 1, `the normal gradient ${M(flatex(EXB_N.g))}`, { ft: true }),
+        Ws(2, 1, `${M(lineLatex(EXB_N.line))}`, { ft: true }),
+      ],
+      hints: ["Turn the tangent's gradient over and change the sign.", "The point is the same one you used in part (b)."],
+      workedSolution: `The tangent's gradient is ${M(fplain(EXB_T.m))}, so the normal's is ${M(flatex(EXB_N.g))}.\nThrough ${M(pointLatex(EXB.x0, EXB_T.y0))}: ${M(`${fplain(EXB_T.y0)} = ${flatex(EXB_N.g)}(-2) + c`)} gives ${M(`c = ${fplain(EXB_N.line.c)}`)}.\nThe normal is ${M(lineLatex(EXB_N.line))}.`,
+      commonErrors: [
+        errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(normalRoutes.notReciprocated(EXB_T.m), EXB.x0, EXB_T.y0)), "The point is right. The normal's gradient needs the number turned over as well as the sign changed; here only the sign changed.", 1, src("2024-summer", 9)),
+        errAlg("fm.calc.normal-sign-not-flipped", lineLatex(lineThrough(normalRoutes.signNotFlipped(EXB_T.m), EXB.x0, EXB_T.y0)), "The reciprocal is there. The sign still has to change for the two gradients to multiply to $-1$.", 1, src("2024-summer", 9)),
+      ],
+      requiresWorking: true,
+      followThrough: { fromPart: "b", rule: "use-candidate-value" },
+    },
+  ],
+  totalMarks: 9,
+  timeAllowanceSec: timeFor(9),
+  skeleton: "(a)find4|(b)find3|(c)find2",
+  examinerSources: [src("2024-summer", 9)],
+  solutionProgram: `a = ${fplain(EXB_A)}; tangent ${linePlain(EXB_T.line)}; normal ${linePlain(EXB_N.line)}`,
+  verification: `ver.${id("q", "0014")}`,
+  version: 1,
+};
+
+const exC = {
+  id: id("q", "0015"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  tier: "untiered",
+  paper: PAPER,
+  style: "exam-style",
+  difficulty: 4,
+  ao: ["AO1", "AO2"],
+  commandWords: ["Find"],
+  emphasis: ["the gradient of the normal is"],
+  context: { setting: "One curve, a tangent at a named point and a point found from a stated normal gradient", original: true },
+  figures: [],
+  parts: [
+    {
+      id: "a",
+      stem: `A curve has the equation ${M(latex(K.exC, { lhs: "y" }))}\nFind the equation of the tangent to this curve at the point where ${M("x = 4")}.`,
+      marks: 4,
+      answer: ansLine(T.exC.line),
+      scheme: [
+        MWs(1, 1, `${M(latex(deriv(K.exC), { lhs: "\\frac{dy}{dx}" }))}`),
+        Ws(1, 1, `${M(`m = ${fplain(T.exC.m)}`)}`, { ft: true }),
+        Ms(1, 1, `the point ${M(pointLatex(fr(4), T.exC.y0))} substituted into the line formula`),
+        Ws(2, 1, `${M(lineLatex(T.exC.line))}`, { dependsOn: ["M1"], ft: true }),
+      ],
+      hints: ["Differentiate, then substitute 4.", "Find the height from the curve.", "$y - y_{1} = m(x - x_{1})$."],
+      workedSolution: `${M(latex(deriv(K.exC), { lhs: "\\frac{dy}{dx}" }))}, so at ${M("x = 4")} the gradient is ${M(fplain(T.exC.m))}.\nFrom the curve, ${M(`y = 16 - 8 + 5 = ${fplain(T.exC.y0)}`)}.\n${M(`y - ${fplain(T.exC.y0)} = ${fplain(T.exC.m)}(x - 4)`)} gives ${M(lineLatex(T.exC.line))}.`,
+      commonErrors: [
+        constantSlipError(T.exC.m, fr(4), T.exC.y0, "The gradient and the point are right, so three marks stand.", 3, src("2023-summer", 10)),
+        errAlg("fm.calc.normal-gradient-not-reciprocated", lineLatex(lineThrough(perp(T.exC.m), fr(4), T.exC.y0)), "That is the normal at the same point. The question asked for the tangent, which keeps the gradient the derivative gave you.", 2, src("2019-summer", 11)),
+      ],
+      requiresWorking: true,
+    },
+    {
+      id: "b",
+      stem: `At the point ${M("A")} on this curve the normal has gradient ${M(flatex(EXC_G))}.\nFind the coordinates of ${M("A")}.`,
+      marks: 3,
+      answer: ansPoint(EXC_A),
+      scheme: [
+        Ws(1, 1, `the tangent gradient ${M(fplain(EXC_M))}`),
+        Ms(1, 1, `setting ${M(`${latex(deriv(K.exC))} = ${fplain(EXC_M)}`)}`),
+        Ws(2, 1, `${M(pointLatex(EXC_A.x, EXC_A.y))}`, { dependsOn: ["M1"], ft: true }),
+      ],
+      hints: ["Work the negative reciprocal backwards to get the tangent's gradient.", "Set $\\frac{dy}{dx}$ equal to it.", "Then find $y$ from the curve and write the coordinates."],
+      workedSolution: `The normal has gradient ${M(flatex(EXC_G))}, so the tangent has gradient ${M(fplain(EXC_M))}.\n${M(`2x - 2 = ${fplain(EXC_M)}`)} gives ${M(`x = ${fplain(EXC_A.x)}`)}.\nFrom the curve, ${M(`y = 9 + 6 + 5 = ${fplain(EXC_A.y)}`)}.\nSo ${M("A")} is ${M(pointLatex(EXC_A.x, EXC_A.y))}.`,
+      commonErrors: [
+        errAlg("fm.calc.normal-sign-not-flipped", pointLatex(EXC_FLIP.x, EXC_FLIP.y), "The reciprocal was taken but the sign was left alone, so the tangent gradient came out positive. Perpendicular gradients multiply to $-1$.", 1, src("2024-summer", 9)),
+        errAlg("fm.calc.default-to-derivative-zero", pointLatex(EXC_ZERO.x, EXC_ZERO.y), "That is the point where the curve is flat. A gradient was stated here, so $\\frac{dy}{dx}$ is set equal to it rather than to zero.", 1, src("2025-summer", 13)),
+        errAlg("fm.calc.answers-equation-not-coordinates", lineLatex(EXC_A_TANGENT), "That is the equation of the tangent at $A$, and the gradient inside it is right. The question asked for the coordinates of $A$, so give the pair.", 2, src("2025-summer", 13)),
+      ],
+      requiresWorking: true,
+    },
+  ],
+  totalMarks: 7,
+  timeAllowanceSec: timeFor(7),
+  skeleton: "(a)find4|(b)find3",
+  examinerSources: [src("2022-summer", 8), src("2024-summer", 9)],
+  solutionProgram: `tangent ${linePlain(T.exC.line)}; perp(${fplain(EXC_G)}) = ${fplain(EXC_M)} -> A ${pointPlain(EXC_A.x, EXC_A.y)}`,
+  verification: `ver.${id("q", "0015")}`,
+  version: 1,
+};
+
+const exD = {
+  id: id("q", "0016"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  tier: "untiered",
+  paper: PAPER,
+  style: "exam-style",
+  difficulty: 5,
+  ao: ["AO1", "AO2", "AO3"],
+  commandWords: ["Find"],
+  emphasis: ["is equal to", "is perpendicular to"],
+  context: { setting: "A stated tangent gradient, then a second point whose tangent is perpendicular to the first", original: true },
+  figures: [],
+  parts: [
+    {
+      id: "a",
+      stem: `A curve has the equation ${M(latex(K.exD, { lhs: "y" }))}\nAt the point ${M("P")} the gradient of the tangent to this curve is equal to ${M(fplain(EXD_M))}.\nFind the equation of the tangent to this curve at ${M("P")}.`,
+      marks: 5,
+      answer: ansLine(EXD_T),
+      scheme: [
+        MWs(1, 1, `${M(latex(deriv(K.exD), { lhs: "\\frac{dy}{dx}" }))}`),
+        Ms(1, 1, `setting ${M(`${latex(deriv(K.exD))} = ${fplain(EXD_M)}`)}`),
+        Ws(1, 1, `${M(`x = ${fplain(EXD_P.x)}`)}`, { dependsOn: ["M1"], ft: true }),
+        Ws(2, 1, `${M(`y = ${fplain(EXD_P.y)}`)} from the curve`, { ft: true }),
+        Ws(3, 1, `${M(lineLatex(EXD_T))}`, { ft: true }),
+      ],
+      hints: [
+        "The gradient is given, so $\\frac{dy}{dx}$ goes equal to it.",
+        "Solve for $x$, then find $y$ from the curve.",
+        "Finally assemble $y - y_{1} = m(x - x_{1})$.",
+      ],
+      workedSolution: `${M(latex(deriv(K.exD), { lhs: "\\frac{dy}{dx}" }))}.\nSet it equal to the stated gradient: ${M(`4x - 3 = ${fplain(EXD_M)}`)}, so ${M(`x = ${fplain(EXD_P.x)}`)}.\nFrom the curve, ${M(`y = 8 - 6 + 1 = ${fplain(EXD_P.y)}`)}, so ${M("P")} is ${M(pointLatex(EXD_P.x, EXD_P.y))}.\n${M(`${fplain(EXD_P.y)} = ${fplain(EXD_M)}(${fplain(EXD_P.x)}) + c`)} gives ${M(`c = ${fplain(EXD_T.c)}`)}, so ${M(lineLatex(EXD_T))}.`,
+      commonErrors: [
+        errAlg("fm.calc.default-to-derivative-zero", lineLatex(lineThrough(fr(0), EXD_ZERO.x, EXD_ZERO.y)), "The derivative was set equal to zero out of habit, which finds the flat point instead. The question stated a gradient of 5, so that is what $\\frac{dy}{dx}$ equals.", 1, src("2025-summer", 13)),
+        constantSlipError(EXD_M, EXD_P.x, EXD_P.y, "Gradient and point are both right, so four marks stand.", 4, src("2023-summer", 10)),
+      ],
+      requiresWorking: true,
+    },
+    {
+      id: "b",
+      stem: `The point ${M("Q")} also lies on this curve.\nThe two tangents, at ${M("P")} and at ${M("Q")}, are perpendicular to each other.\nFind the coordinates of ${M("Q")}.`,
+      marks: 3,
+      answer: ansPoint(EXD_Q),
+      scheme: [
+        Ws(1, 1, `the gradient at ${M("Q")} is ${M(flatex(EXD_QM))}`),
+        Ms(1, 1, `setting ${M(`${latex(deriv(K.exD))} = ${flatex(EXD_QM)}`)}`),
+        Ws(2, 1, `${M(pointLatex(EXD_Q.x, EXD_Q.y))}`, { dependsOn: ["M1"], ft: true }),
+      ],
+      hints: ["Perpendicular tangents have gradients whose product is $-1$.", "Set $\\frac{dy}{dx}$ equal to that new gradient.", "Then find $y$ from the curve and write the pair."],
+      workedSolution: `Perpendicular to a gradient of ${M(fplain(EXD_M))} means a gradient of ${M(flatex(EXD_QM))}.\n${M(`4x - 3 = ${flatex(EXD_QM)}`)} gives ${M(`x = ${fplain(EXD_Q.x)}`)}.\nFrom the curve, ${M(`y = ${fplain(EXD_Q.y)}`)}.\nSo ${M("Q")} is ${M(pointLatex(EXD_Q.x, EXD_Q.y))}.`,
+      commonErrors: [
+        errAlg("fm.calc.normal-gradient-not-reciprocated", pointLatex(EXD_NOTRECIP.x, EXD_NOTRECIP.y), "The method is right and the point is found properly, so a mark stands. The perpendicular gradient needs the number turned over as well as the sign changed.", 1, src("2019-summer", 11)),
+        errAlg("fm.calc.normal-sign-not-flipped", pointLatex(EXD_FLIP.x, EXD_FLIP.y), "The reciprocal was taken but the sign was left alone, so the gradient used was positive. The product of two perpendicular gradients is $-1$.", 1, src("2024-summer", 9)),
+        errAlg("fm.calc.stopped-at-the-gradient", flatex(EXD_QM), "The perpendicular gradient is right, and that is the hardest step. The question asks for the coordinates of $Q$, so carry on: set $\\frac{dy}{dx}$ equal to it, solve, then find $y$ from the curve.", 1, src("2025-summer", 13)),
+        errAlg("fm.calc.answers-equation-not-coordinates", lineLatex(EXD_Q_TANGENT), "That is the equation of the tangent at $Q$, built correctly from the right gradient. The answer line wanted the coordinates of $Q$ instead.", 2, src("2025-summer", 13)),
+      ],
+      requiresWorking: true,
+      followThrough: { fromPart: "a", rule: "use-candidate-value" },
+    },
+  ],
+  totalMarks: 8,
+  timeAllowanceSec: timeFor(8),
+  skeleton: "(a)find5|(b)find3",
+  examinerSources: [src("2025-summer", 13)],
+  solutionProgram: `solve ${plain(deriv(K.exD))} = 5 -> P ${pointPlain(EXD_P.x, EXD_P.y)}; tangent ${linePlain(EXD_T)}; perp -> Q ${pointPlain(EXD_Q.x, EXD_Q.y)}`,
+  verification: `ver.${id("q", "0016")}`,
+  version: 1,
+};
+
+/**
+ * Depth pass, 23 Sep: the practice ladder runs rung by rung (difficulty 1 to 5), then the exam-style set. Ids are
+ * unchanged; only the order in which the practice flow meets the questions moves.
+ */
+const LADDER = ["0018", "0001", "0002", "0004", "0003", "0005", "0006", "0007", "0010", "0008", "0009", "0011", "0012", "0019", "0017", "0013", "0015", "0014", "0016"];
+const allQuestions = (() => {
+  const all = [...questions, exA, exB, exC, exD];
+  if (LADDER.length !== all.length || new Set(LADDER).size !== LADDER.length) throw new Error("the ladder must name every question once");
+  const out = LADDER.map((n) => {
+    const q = all.find((x) => x.id === id("q", n));
+    if (!q) throw new Error(`the ladder names q ${n}, which does not exist`);
+    return q;
+  });
+  const practice = out.filter((q) => q.style === "practice");
+  practice.forEach((q, i) => {
+    if (i > 0 && q.difficulty < practice[i - 1].difficulty) throw new Error(`the ladder steps down at ${q.id}`);
+  });
+  if (out.slice(out.findIndex((q) => q.style === "exam-style")).some((q) => q.style === "practice")) throw new Error("a practice question sits among the exam-style set");
+  return out;
+})();
+
+// ---------------------------------------------------------------------------
+// find the mistake
+// ---------------------------------------------------------------------------
+
+const ftmA = lineThrough(normalRoutes.notReciprocated(T.p6.m), fr(5), T.p6.y0);
+const ftm01 = {
+  id: id("ftm", "01"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  stem: `Eimear was asked for the equation of the normal to ${M(latex(K.p6, { lhs: "y" }))} at the point where ${M("x = 5")}. Her working:`,
+  studentWorking: [
+    `dy/dx = ${plain(deriv(K.p6))}`,
+    `at x = 5: m = ${fplain(T.p6.m)}`,
+    `gradient of normal = ${fplain(normalRoutes.notReciprocated(T.p6.m))}`,
+    `y = 25 - 40 + 3 = ${fplain(T.p6.y0)}`,
+    `${fplain(T.p6.y0)} = ${fplain(normalRoutes.notReciprocated(T.p6.m))}(5) + c, so c = ${fplain(ftmA.c)}`,
+    `normal: ${linePlain(ftmA)}`,
+  ],
+  mistakeLine: 3,
+  misconception: "fm.calc.normal-gradient-not-reciprocated",
+  whatWentWrong: `Lines 1, 2 and 4 are all right, and lines 5 and 6 are accurate work on the number line 3 handed them.\nLine 3 changed the sign of the tangent's gradient but never turned it over. The normal's gradient is ${M(`-\\frac{1}{${fplain(T.p6.m)}}`)}, which is ${M(flatex(T.p6.g))}, not ${M(fplain(normalRoutes.notReciprocated(T.p6.m)))}.\nThe quickest check is the product: perpendicular gradients multiply to ${M("-1")}, and ${M(`${fplain(T.p6.m)} \\times ${fplain(normalRoutes.notReciprocated(T.p6.m))} = -4`)}.`,
+  correction: [
+    `gradient of normal = ${fplain(T.p6.g)}`,
+    `${fplain(T.p6.y0)} = ${fplain(T.p6.g)}(5) + c, so c = ${fplain(T.p6.line.c)}`,
+    `normal: ${linePlain(T.p6.line)}`,
+  ],
+  marksEarnedAsWritten: ["MW1", "M1"],
+  feedback: `The derivative, the substitution and the point are all right, so the method marks stand and CCEA marks the rest on follow-through. Say the two moves out loud as you write the normal's gradient: turn it over, then change the sign. Then multiply the two gradients together; if the answer is not ${M("-1")}, one of the moves was missed.`,
+  source: src("2019-summer", 11),
+};
+
+const ftmB = lineThrough(normalRoutes.signNotFlipped(T.p9.m), fr(2), T.p9.y0);
+const ftm02 = {
+  id: id("ftm", "02"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  stem: `Ruairi was asked for the equation of the normal to ${M(latex(K.p9, { lhs: "y" }))} at the point where ${M("x = 2")}. His working:`,
+  studentWorking: [
+    "y = 2x - 12x^-1",
+    `dy/dx = ${plain(deriv(K.p9))}`,
+    `at x = 2: m = 2 + 3 = ${fplain(T.p9.m)}`,
+    `gradient of normal = ${fplain(normalRoutes.signNotFlipped(T.p9.m))}`,
+    `y = 4 - 6 = ${fplain(T.p9.y0)}`,
+    `normal: ${linePlain(ftmB)}`,
+  ],
+  mistakeLine: 4,
+  misconception: "fm.calc.normal-sign-not-flipped",
+  whatWentWrong: `Line 1 is the rewrite most candidates forget, and line 2 gets the sign of the second term right, which is the hard part of this derivative.\nLine 4 turned the gradient over but left it positive. A normal is perpendicular, and perpendicular gradients multiply to ${M("-1")}, so ${M(flatex(T.p9.g))} is needed rather than ${M(fplain(normalRoutes.signNotFlipped(T.p9.m)))}.\nEverything after line 4 is careful work on a gradient that points the wrong way.`,
+  correction: [
+    `gradient of normal = ${fplain(T.p9.g)}`,
+    `${fplain(T.p9.y0)} = ${fplain(T.p9.g)}(2) + c, so c = ${fplain(T.p9.line.c)}`,
+    `normal: ${linePlain(T.p9.line)}`,
+  ],
+  marksEarnedAsWritten: ["MW1", "M1"],
+  feedback: `Two of the four marks are safe, and the differentiation here is better than most. The reciprocal on its own only makes the two lines equally steep, not perpendicular; the minus sign is what turns one of them through ${M("90^{\\circ}")}. Multiply the two gradients as a check before you go on.`,
+  source: src("2024-summer", 9),
+};
+
+const ftm03 = {
+  id: id("ftm", "03"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  stem: `Sinead was asked for the equation of the tangent at ${M("P")}, where ${M("x = -2")}, to the curve ${M(latex(EXB_CURVE, { lhs: "y" }))}, knowing the tangent there is parallel to ${M(lineLatex({ m: EXB.lineM, c: EXB.lineC }))}. Her working:`,
+  studentWorking: [
+    "tangent is parallel to the line, so m = 2",
+    "at x = -2 the line gives y = 2(-2) - 7 = -11",
+    "y - (-11) = 2(x - (-2))",
+    "tangent: y = 2x - 7",
+  ],
+  mistakeLine: 2,
+  misconception: "fm.calc.y-from-line-not-curve",
+  whatWentWrong: `Line 1 is exactly right, and it is the step the reports say most candidates miss: parallel means the same gradient, so ${M(`m = ${fplain(EXB.lineM)}`)}.\nLine 2 then took the height of ${M("P")} from the **straight line** instead of from the curve. ${M("P")} lies on the curve, so ${M("x = -2")} has to go into ${M(latex(EXB_CURVE, { lhs: "y" }))}, which gives ${M(fplain(EXB_T.y0))}.\nBecause the wrong height came from the line itself, line 4 simply reproduces that line, which is why the answer looks tidy and is worth nothing.`,
+  correction: [
+    `at x = -2 the curve gives y = 3 + 8/4 = ${fplain(EXB_T.y0)}`,
+    `${fplain(EXB_T.y0)} = 2(-2) + c, so c = ${fplain(EXB_T.line.c)}`,
+    `tangent: ${linePlain(EXB_T.line)}`,
+  ],
+  marksEarnedAsWritten: ["W1"],
+  feedback: `Reading the parallel condition correctly is worth a mark, and it is the half of the question the examiners report as the hard one. The other half is knowing which graph the point belongs to: ${M("P")} is on the curve, so every coordinate of ${M("P")} comes from the curve. When your tangent turns out to be the line the question gave you, that is the signal.`,
+  source: src("2024-summer", 9),
+};
+
+/** Depth pass, 23 Sep: a fourth finding, from the Summer 2025 Q13 report (dy/dx set to zero out of habit). */
+const ftm04 = {
+  id: id("ftm", "04"),
+  topic: TOPIC,
+  specRefs: SPEC,
+  stem: `Sorcha was told that the tangent to ${M(latex(KM, { lhs: "y" }))} at the point ${M("P")} has gradient ${M(fplain(FTM4_M))}, and asked for the coordinates of ${M("P")}. Her working:`,
+  studentWorking: [
+    `dy/dx = ${plain(deriv(KM))}`,
+    `${plain(deriv(KM))} = 0`,
+    `x = ${fplain(FTM4_ZERO.x)}`,
+    `y = ${fplain(FTM4_ZERO.y)}, so P = ${pointPlain(FTM4_ZERO.x, FTM4_ZERO.y)}`,
+  ],
+  mistakeLine: 2,
+  misconception: "fm.calc.default-to-derivative-zero",
+  whatWentWrong: `Line 1 is right: the derivative is the gradient rule.\nLine 2 sets it equal to zero, which finds where the curve is flat. The question gave the gradient at ${M("P")} as ${M(fplain(FTM4_M))}, so the equation is ${M(`${latex(deriv(KM))} = ${fplain(FTM4_M)}`)}, giving ${M(`x = ${fplain(FTM4_P.x)}`)} and, from the curve, ${M(`y = ${fplain(FTM4_P.y)}`)}.\nLines 3 and 4 are careful work on the wrong equation.`,
+  correction: [`${plain(deriv(KM))} = ${fplain(FTM4_M)}`, `x = ${fplain(FTM4_P.x)}`, `P = ${pointPlain(FTM4_P.x, FTM4_P.y)}`],
+  marksEarnedAsWritten: ["MW1"],
+  feedback: `The derivative is right, and that mark stands. Before you write "= 0", find the number the question says the gradient is: here it was ${fplain(FTM4_M)}. The Summer 2025 report found this slip common and put it down to habit; zero belongs only to a horizontal tangent.`,
+  source: src("2025-summer", 13),
+};
+
+// ---------------------------------------------------------------------------
+// prompts
+// ---------------------------------------------------------------------------
+
+const prompts = [
+  { id: id("rp", "01"), kind: "procedure", prompt: "Give the four steps for the equation of a tangent at a named point.", answer: "Differentiate; substitute the $x$ of the point to get $m$; substitute the same $x$ into the curve to get $y$; put $m$ and the point into $y - y_{1} = m(x - x_{1})$.", keyWords: ["differentiate", "substitute", "curve", "y - y1"], difficultyPrior: 4 },
+  { id: id("rp", "02"), kind: "formula", prompt: "How is the gradient of a normal found from the gradient of the tangent?", answer: "Take the negative reciprocal: turn the gradient over, then change the sign, so the two gradients multiply to $-1$.", keyWords: ["negative reciprocal", "turn it over", "change the sign"], difficultyPrior: 3 },
+  { id: id("rp", "03"), kind: "trap", prompt: "Where does the $y$-coordinate of the point of contact come from?", answer: "From the curve. Not from $\\frac{dy}{dx}$, and not from any straight line the question mentions.", keyWords: ["curve", "not the derivative"], difficultyPrior: 5 },
+  { id: id("rp", "04"), kind: "trap", prompt: "A tangent is parallel to $y = 3x - 4$. What equation do you solve?", answer: "$\\frac{dy}{dx} = 3$, because parallel lines have equal gradients.", keyWords: ["3", "equal gradients"], difficultyPrior: 5 },
+  { id: id("rp", "05"), kind: "trap", prompt: "The normal at $A$ has gradient $\\frac{1}{2}$. What is $\\frac{dy}{dx}$ at $A$?", answer: "$-2$, the negative reciprocal, because the relationship works in both directions.", keyWords: ["-2", "negative reciprocal"], difficultyPrior: 6 },
+  { id: id("rp", "06"), kind: "procedure", prompt: "How do you find where a tangent meets its curve again?", answer: "Set the tangent's equation equal to the curve's, collect to zero and solve; the point of contact is a repeated root.", keyWords: ["equal", "repeated root", "solve"], difficultyPrior: 7 },
+  { id: id("rp", "07"), kind: "trap", prompt: "Why must a term such as $\\frac{3}{x}$ be rewritten before you differentiate it?", answer: "The power rule is written for powers of $x$, so it becomes $3x^{-1}$ first.", keyWords: ["power rule", "3x"], difficultyPrior: 5 },
+  { id: id("rp", "08"), kind: "qa", prompt: "Which single line earns a mark even when the gradient before it is wrong?", answer: "The normal's gradient written as the negative reciprocal of your own tangent gradient; CCEA credits it on follow-through.", keyWords: ["negative reciprocal", "follow-through"], difficultyPrior: 6 },
+  { id: id("rp", "09"), kind: "trap", prompt: "A question asks for the coordinates of $Q$ and you have found the perpendicular gradient. What is still to do?", answer: "Set $\\frac{dy}{dx}$ equal to that gradient, solve for $x$, then find $y$ from the curve and write the pair.", keyWords: ["solve", "curve", "pair"], difficultyPrior: 7 },
+  { id: id("rp", "10"), kind: "definition", prompt: "In one sentence each, what are a tangent and a normal?", answer: "A tangent is the straight line that touches the curve and travels in its direction; a normal is the straight line through the same point at right angles to the tangent.", keyWords: ["touches", "right angles", "straight line"], difficultyPrior: 3 },
+  // depth pass, 23 Sep: the derivation
+  { id: id("rp", "11"), kind: "qa", prompt: "Why is the gradient of a normal $-\\frac{1}{m}$?", answer: "Draw the tangent's gradient as a step of $1$ across and $m$ up. Turned through a right angle it becomes $m$ back and $1$ up, so the normal's gradient is $\\frac{1}{-m} = -\\frac{1}{m}$.", keyWords: ["right angle", "step"], difficultyPrior: 6 },
+].map((p) => ({ ...p, topic: TOPIC, specRefs: SPEC, examUnit: "FM1" }));
+
+// ---------------------------------------------------------------------------
+// insight
+// ---------------------------------------------------------------------------
+
+const insight = JSON.parse(fs.readFileSync(path.join(OUT, "..", "..", "insights", "u1.tangents-and-normals.json"), "utf8"));
+
+// ---------------------------------------------------------------------------
+// verification
+// ---------------------------------------------------------------------------
+
+const COMMON = {
+  "scope-tier":
+    "FM1 is untiered and calculator-allowed. Every curve is a sum of integer powers of x, so the differentiation stays inside FM1-DIF-01, and the second sub-item of FM1-DIF-02 is the one this topic teaches. No question needs a product, quotient or chain rule, a fractional index, or a vertical tangent (every tangent gradient used is non-zero, so every normal exists).",
+  "formula-sheet":
+    "The Unit 1 sheet gives only the differentiation rule (fs.fm1.differentiation). The negative reciprocal is must-know and is listed as mk.fm1.tangent-normal in packs/further-maths/exam-true/formula-sheets.json; y - y1 = m(x - x1) is must-know as well. The note says which is which.",
+  "command-words":
+    "Find and Write down are the command words (typicalTariff 2-3-5 and 1-1-2 in packs/further-maths/exam-true/command-words.json); the entry for Find records the trap that a normal needs the tangent gradient first and then the negative reciprocal. The stems keep the shape and the vocabulary of the phrasings read in the papers (an instruction to find an equation, a named point, a stated gradient, a parallel line) while every eight-word run is our own: an 8-word shingle scan of all four bundles against the 61 text files of the private corpus (scratchpad/fm1-batch-d/shingle.mjs) returns nothing.",
+  "copy-shingle":
+    "Compared by hand against the FM1 papers and mark schemes read for this batch (Summer 2019 Q11, Summer 2022 Q8, Summer 2023 Q10, Summer 2024 Q9, Summer 2025 Q13) and the Chief Examiner reports for those series. Every curve, coefficient, point, name and sentence here is new, and no eight-word sequence is shared with any paper, scheme or report.",
+  "style-lint": `British English, second person, calm; no exclamation marks; the banned verdict word is never used about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintDollars before the files were written. The note has ${blocks.filter((b) => b.type === "gate").length} gates, ${blocks.filter((b) => b.type === "figure").length} phone-native inline SVG figures drawn from computed values (a 400-unit viewBox, labels of 14 to 15 units) and one embeddable video from data/links/media-map.json followed immediately by a gate; every teaching stretch is inside the 120-word limit of lesson template v2.`,
+};
+
+/** Depth pass, 23 Sep: a log whose checks carry the day they were run (the 19 Sep logs keep theirs). */
+const DEPTH_AT = "2026-09-23T17:00:00Z";
+const depthLog = (itemId, details, version = 1) => {
+  const l = verLog(itemId, details);
+  return { ...l, version, checks: l.checks.map((c) => ({ ...c, at: DEPTH_AT })) };
+};
+const NEW_Q = {
+  [id("q", "0017")]: {
+    tariff: "3 marks, the shape of Summer 2022 Q8(ii) (a point from a stated normal gradient, 3 marks) with the unknown coefficient of Summer 2024 Q9(i): W1 for the tangent gradient from the normal's, M1 for dy/dx set equal to it, W1 for a.",
+    "examiner-alignment": `Every distractor is a route executed on the item's numbers: normalRoutes.signNotFlipped (a = ${fplain(Q17_ROUTES.flip)}), normalRoutes.notReciprocated (a = ${fplain(Q17_ROUTES.notRecip)}), normalRoutes.unchanged (a = ${fplain(Q17_ROUTES.same)}) and dy/dx = 0 (a = ${fplain(Q17_ROUTES.zero)}), tagged to the Summer 2022 Q8 and Summer 2025 Q13 findings.`,
+  },
+  [id("q", "0018")]: {
+    tariff: "1 mark, the first rung: the tangent's gradient as the value of a given gradient function.",
+    "examiner-alignment": "The one distractor is the normal's gradient, the Summer 2019 Q11 confusion of the two lines.",
+  },
+  [id("q", "0019")]: {
+    tariff: "4 marks, after Summer 2018 Q7 (a horizontal tangent on a curve with a negative power, 6 marks there): M1 for the rewrite, MW1 for dy/dx, M1 for dy/dx = 0 and x squared = 4, W1 for the point.",
+    "examiner-alignment": "Summer 2018 Q7: most knew to differentiate and set the derivative to zero, but few could then rearrange the equation that followed; here that equation is x squared = 4. The distractors are the y taken from the derivative (Summer 2025 Q11 finding) and the root the condition x > 0 rules out.",
+  },
+};
+
+const NUMERIC_DETAIL = `Every gradient, point and line is computed in exact rational arithmetic (calc.mjs / tanlib.mjs) and each line was checked at three sample points against the curve and its derivative. Worked examples: tangent ${linePlain(T.we1.line)} at ${pointPlain(fr(4), T.we1.y0)}; normal ${linePlain(T.we2.line)} at ${pointPlain(fr(1), T.we2.y0)}; the tangent ${linePlain(T.we3.line)} meets the cubic again at ${pointPlain(MEET.we3.x, MEET.we3.y)}. Exam-style: normal ${linePlain(T.exA.line)}; a = ${fplain(EXB_A)} with tangent ${linePlain(EXB_T.line)} and normal ${linePlain(EXB_N.line)}; tangent ${linePlain(T.exC.line)} with A at ${pointPlain(EXC_A.x, EXC_A.y)}; tangent ${linePlain(EXD_T)} with Q at ${pointPlain(EXD_Q.x, EXD_Q.y)}. assertTerminating() refuses any coordinate whose decimal does not terminate, because the marker rejects a rounded pair.`;
+
+const ERROR_DETAIL =
+  "Every distractor is the output of a named route executed on the item's own numbers: normalRoutes.notReciprocated (-m), normalRoutes.signNotFlipped (1/m), normalRoutes.unchanged (m), constantSlip (c found by adding mx1), the y taken from the given line, the line set equal to the curve, solveDerivEquals with 0 instead of the stated gradient, and the polynomial routes powerNotReduced, negPowerSignKept and indexMovedUp from calc.mjs. assertDistinctErrors() refuses any route that reaches the part's own answer or another route's value, and verify-published.mjs re-executes every route against the published JSON.";
+
+const verification = [
+  depthLog(
+    `note.fm.u1.${SLUG}`,
+    {
+      ...COMMON,
+      schema: "Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, gate ids are unique, every heading carries a role from the depth standard, and every prompt block names a prompt in this bundle.",
+      tariff: "The sheet's howExamined records the tariffs read from the papers: 6 for a horizontal tangent (Summer 2018 Q7), 5 for a normal where the curve cuts the x-axis (Summer 2019 Q11), 3 + 2 + 2 for a tangent, a normal and where they cross (Summer 2021 Q12), 4 + 3 (Summer 2022 Q8), 7 for a normal on its own (Summer 2023 Q10), 4 + 3 + 2 (Summer 2024 Q9), 5 + 3 (Summer 2025 Q13) and 5 + 4 for parallel tangents then a normal (Summer 2026 Q12).",
+      "maths-numeric": `${NUMERIC_DETAIL} The depth pass's numbers are computed the same way: a = ${fplain(V4_A)} in the coefficient section and ${fplain(G10_A)} in its gate; the tangent ${linePlain(TF.line)} and the normal ${linePlain(NF.line)} on y = x^2 cross at x = ${fplain(CF.x)}; gate g12's lines cross at x = ${fplain(G12_X)}; the turned step's gradient is ${fplain(G13)}.`,
+      "examiner-alignment":
+        "One examiner callout stands in the body, beside the gradient-instead-of-a-point section (Summer 2025 Q13); every other finding is a Sheet trap. The Exam twists section cites the series for each twist from the 2018 to 2026 papers, most frequent first. Gates g2 to g4 build the tangent, g5 and g7 work the negative reciprocal in both directions, g8 is the second intersection, g9 to g13 test the why, the coefficient, a twist, the crossing and the derivation.",
+    },
+    2,
+  ),
+  verLog(we01.id, {
+    ...COMMON,
+    schema: "Steps numbered 1..5 in order; both faded versions name only steps after the ones shown; the twin carries its own algebraic spec.",
+    tariff: "Five steps carrying MW1, M1, W1, M2 and W2, the 3-to-4 mark shape of a tangent part (Summer 2024 Q9(ii), Summer 2022 Q8(i)).",
+    "maths-numeric": `y = ${plain(K.we1)} has derivative ${plain(deriv(K.we1))}, gradient ${fplain(T.we1.m)} at x = 4 and point ${pointPlain(fr(4), T.we1.y0)}, giving ${linePlain(T.we1.line)}; the twin gives ${linePlain(T.we1Twin.line)}. Both lines were checked through the point of contact.`,
+    "maths-symbolic": "The twin's line was fed to the app's own engine as y = mx + c, as a rearrangement and with the decimal constant; all were accepted because the spec uses equivalence 'equivalent' with no form demanded.",
+    "examiner-alignment": "Step 3 is the height-from-the-curve step the Summer 2024 Q9 report shows candidates taking from the given line; step 5 is the constant the Summer 2023 Q10 report names.",
+  }),
+  verLog(we02.id, {
+    ...COMMON,
+    schema: "Steps numbered 1..5 in order; both faded versions name only steps after the ones shown.",
+    tariff: "Five steps carrying MW1, M1, W1, M2 and W2, the shape of the 7-mark normal in Summer 2023 Q10 compressed to its five decisions.",
+    "maths-numeric": `y = ${plain(K.we2)} has derivative ${plain(deriv(K.we2))}, tangent gradient ${fplain(T.we2.m)} at x = 1, normal gradient ${fplain(T.we2.g)} and point ${pointPlain(fr(1), T.we2.y0)}, giving ${linePlain(T.we2.line)}; the twin gives ${linePlain(T.we2Twin.line)}.`,
+    "examiner-alignment": "Step 1 is the negative power the Summer 2019 Q11 report singles out; step 3 is the negative reciprocal CCEA credits on its own.",
+  }),
+  verLog(we03.id, {
+    ...COMMON,
+    schema: "Steps numbered 1..6 in order; both faded versions name only steps after the ones shown.",
+    tariff: "Six steps carrying MW1, W1, M1, W2, M2 and W3, which is the 4-mark 'meets again' part built on a 3-mark tangent.",
+    "maths-numeric": `The tangent to ${plain(K.we3)} at x = 1 is ${linePlain(T.we3.line)}; meetsAgain() gives the second point ${pointPlain(MEET.we3.x, MEET.we3.y)} from the repeated-root factorisation, and substituting it into both the curve and the tangent gives the same y. The twin gives ${pointPlain(MEET.we3Twin.x, MEET.we3Twin.y)}.`,
+    "examiner-alignment": "Exercises the finding that candidates set the line equal to the curve in the wrong place (Summer 2024 Q9): here that is exactly the right move, and step 3 says why.",
+  }),
+  depthLog(we04.id, {
+    ...COMMON,
+    schema: "Steps numbered 1..5 in order; both faded versions hide steps from the end (the last, then the last two); the twin carries its own algebraic spec.",
+    tariff: "Five steps carrying MW1, M1, W1, W2 and W3, the 5-mark first part of Summer 2025 Q13, so the twin is out of 5.",
+    "maths-numeric": `y = ${plain(K4)} has derivative ${plain(deriv(K4))}; setting it equal to ${fplain(WE4_M)} gives x = ${fplain(WE4_T.x0)}, the curve gives y = ${fplain(WE4_T.y0)}, and the tangent is ${linePlain(WE4_T.line)}. The twin: ${plain(K4T)} with gradient ${fplain(WE4T_M)} gives ${linePlain(WE4T_T.line)}. Both lines were checked through the point of contact.`,
+    "examiner-alignment": "Step 2 is the step the Summer 2025 Q13 report found candidates replacing with dy/dx = 0 out of habit; step 4 is the height from the curve (Summer 2024 Q9).",
+  }),
+  verLog(dxPre.id, {
+    ...COMMON,
+    schema: "Four items, one correct option each, a misconception on every distractor; when is pre.",
+    "maths-numeric": "Each stem is a prerequisite fact recomputed by the generator: the perpendicular gradient of a named line, the line through a given point, the derivative of the worked example's curve and its value at x = 4.",
+    "examiner-alignment": "The four prerequisites are the four places the reports show the method failing: the reciprocal, the constant, the differentiation and the height.",
+  }),
+  verLog(dxPost.id, {
+    ...COMMON,
+    schema: "Eight items, one correct option each, a named misconception on every distractor; when is post.",
+    "maths-numeric": "Every option is the output of a route executed on the item's own numbers (normalRoutes.notReciprocated, normalRoutes.signNotFlipped, constantSlip, perp) or of the correct computation. No distractor is typed.",
+    "examiner-alignment": "q1, q3, q5 and q7 exercise the negative reciprocal in both directions (Summer 2019 Q11, Summer 2024 Q9); q2 the height from the curve (Summer 2024 Q9); q4 the constant (Summer 2023 Q10); q6 the parallel condition (Summer 2024 Q9); q8 the second intersection.",
+  }),
+  ...allQuestions.map((q) =>
+    (NEW_Q[q.id] ? depthLog : verLog)(q.id, {
+      ...COMMON,
+      schema: "Part ids, skeleton, scheme totals and mark totals are machine-checked by pipeline/build-content.mts against the Zod TopicBundle.",
+      tariff:
+        NEW_Q[q.id]?.tariff ??
+        (q.style === "exam-style"
+          ? "Tariffs taken from the papers read: 7 for a normal on its own (Summer 2023 Q10), 4 + 3 + 2 for a gradient condition with a tangent and a normal (Summer 2024 Q9), 4 + 3 for a tangent and a point from a normal gradient (Summer 2022 Q8), 5 + 3 for a stated tangent gradient and a perpendicular point (Summer 2025 Q13). FM1 perPart median is 3 and p90 is 6, and only the single-part normal reaches 7, as the paper does."
+          : "1 mark for the negative reciprocal alone, 2 for a gradient, 3 for a tangent equation and 4 for a full normal, matching the per-part tariffs in Summer 2022 Q8, Summer 2024 Q9 and the Find typicalTariff in command-words.json."),
+      "maths-numeric": NUMERIC_DETAIL,
+      "maths-symbolic":
+        "Line answers are algebraic specs with equivalence 'equivalent'; where the stem says 'in the form y = mx + c' the spec adds form 'y=mx+c', and only there, because the Summer 2023 scheme accepts the rearranged form as well. Coordinate answers are algebraic tuples, which the engine marks as pairs: the bracketed, assignment and decimal spellings were all fed to the app's own marker and accepted, and a crossed pair was rejected.",
+      "examiner-alignment": NEW_Q[q.id]?.["examiner-alignment"] ?? ERROR_DETAIL,
+    }),
+  ),
+  ...[ftm01, ftm02, ftm03].map((f) =>
+    verLog(f.id, {
+      ...COMMON,
+      schema: "mistakeLine names a line that exists; the misconception is in the registry; every correction line is generated from the correct route.",
+      "maths-numeric": `The wrong lines are the outputs of normalRoutes.notReciprocated, normalRoutes.signNotFlipped and the y-from-the-line route executed on the item's own curve; the corrected lines are ${linePlain(T.p6.line)}, ${linePlain(T.p9.line)} and ${linePlain(EXB_T.line)}.`,
+      "examiner-alignment": "Seeded from the three findings the reports name for this topic: the normal's gradient not reciprocated (Summer 2019 Q11), the sign not changed (Summer 2024 Q9), and the height taken from the given line rather than the curve (Summer 2024 Q9).",
+    }),
+  ),
+  depthLog(ftm04.id, {
+    ...COMMON,
+    schema: "mistakeLine names the first wrong line; the misconception is in the registry; every correction line is generated from the correct route.",
+    "maths-numeric": `The wrong line is dy/dx = 0 on the item's own curve, which leads to ${pointPlain(FTM4_ZERO.x, FTM4_ZERO.y)}; the corrected lines solve dy/dx = ${fplain(FTM4_M)} and reach ${pointPlain(FTM4_P.x, FTM4_P.y)}. The app's own fix box (markFix) refuses every line of her working typed back and accepts the corrections (scratchpad/fm1-batch-g/depth-pilot/probe-depth-tangents.mts).`,
+    "examiner-alignment": "Seeded from the Summer 2025 Q13 report: solving dy/dx = 0 rather than setting the derivative equal to the stated gradient, put down to habit. None of ftm 01 to 03 uses that finding.",
+  }),
+  ...prompts.map((p) =>
+    (p.id === id("rp", "11") ? depthLog : verLog)(p.id, {
+      ...COMMON,
+      schema: "Kind, prompt, answer and key words validated against the Zod RetrievalPrompt.",
+      "maths-numeric": "Each answer states a rule the generator also uses in the items, so the prompts and the questions cannot drift apart.",
+      "examiner-alignment": `The ${prompts.length} prompts cover the four steps, the negative reciprocal in both directions, the height from the curve, the parallel condition, the rewrite of a negative power, the follow-through mark, the second intersection and the derivation of the negative reciprocal.`,
+    }),
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// bundle
+// ---------------------------------------------------------------------------
+
+const HOW_EXAMINED =
+  "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. Tangents and normals are a late-paper discriminator and appear almost every year: Summer 2019 Q11 (a normal on a curve with a negative power), Summer 2022 Q8 (a 4-mark tangent then a 3-mark point from a stated normal gradient), Summer 2023 Q10 (a single 7-mark normal), Summer 2024 Q9 (4 + 3 + 2: an unknown coefficient from a parallel line, then the tangent, then the normal) and Summer 2025 Q13 (5 + 3: a stated tangent gradient, then a point whose tangent is perpendicular). The other papers set it too: Summer 2018 Q7 (6 marks for the point where the tangent is horizontal), Summer 2021 Q12 (a tangent, a normal, then where they cross, 3 + 2 + 2) and Summer 2026 Q12 (tangents shown parallel at two points, then a normal, 5 + 4). Schemes run MW1 for dy/dx, M1 for the substitution, W1 for the tangent gradient, W1 for the negative reciprocal, M1 for the point and W1 for the finished equation; the reciprocal mark is given on follow-through even when the gradient before it is wrong.";
+
+const bundle = {
+  $schema: "../../../../../pipeline/schema/topic-bundle.schema.json",
+  topic: {
+    id: TOPIC,
+    slug: SLUG,
+    title: "Equations of tangents and normals",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    strand: "Calculus",
+    statementIds: SPEC,
+    prerequisites: ["fm.u1.gradient-at-a-point", "fm.u1.differentiation-integer-powers"],
+    order: 32,
+    hardness: "H",
+    difficulty: 4,
+    examinerFlagged: true,
+    examinerSources: [src("2018-summer", 7), src("2019-summer", 11), src("2022-summer", 8), src("2023-summer", 10), src("2024-summer", 9), src("2025-summer", 13)],
+    examWeightHint: HOW_EXAMINED,
+    mustMemorise: [
+      "Tangent gradient m = dy/dx at the point; normal gradient = −1/m",
+      "y − y₁ = m(x − x₁), with the point taken from the curve",
+      "Parallel to a line means dy/dx equals that line's gradient",
+      "Perpendicular to a line means dy/dx is that line's negative reciprocal",
+      "A tangent touches at a repeated root, so (x − x₁)² divides out when it meets the curve again",
+    ],
+    onFormulaSheet: ["If y = axⁿ then dy/dx = naxⁿ⁻¹ (Unit 1 formula sheet, page 2)"],
+    notOnThisSpec: [
+      "Tangents and normals to trigonometric, exponential or logarithmic curves, which are not on this specification",
+      "Vertical tangents and the normal at a stationary point, which would need an undefined gradient",
+      "Parametric or implicit differentiation",
+      "The distance from a point to a line, or the length of a normal chord",
+    ],
+    externalRefs: [
+      { kind: "youtube", videoId: "fPElVHyk_XI", channel: "P McAleavey", credit: "Differentiation Tangents and Normals - CCEA GCSE Further Mathematics, P McAleavey (embeddable id verified in data/links/media-map.json)" },
+      { kind: "youtube", videoId: "N_FM6aON2z8", channel: "corbettmaths", credit: "Equation of a Tangent to a Curve, corbettmaths (embeddable id verified in data/links/media-map.json)" },
+      PHET,
+      CCEA_DOC,
+    ],
+    keywords: ["tangent", "normal", "perpendicular", "negative reciprocal", "equation of line", "point of contact"],
+  },
+  note: {
+    id: `note.fm.u1.${SLUG}`,
+    topic: TOPIC,
+    title: "Equations of tangents and normals",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    specRefs: SPEC,
+    calculator: true,
+    formulaSheet: {
+      given: FORMULA_GIVEN,
+      mustKnow: [
+        "Normal gradient = −1 ÷ tangent gradient",
+        "y − y₁ = m(x − x₁)",
+        "Perpendicular gradients multiply to −1",
+        "The point of contact is taken from the curve",
+      ],
+    },
+    notOnThisSpec: [
+      "Tangents to trigonometric, exponential or logarithmic curves",
+      "Vertical tangents, and normals at stationary points",
+      "Parametric or implicit differentiation",
+      "Distances and lengths along a normal",
+    ],
+    hardness: "H",
+    examinerFlagged: true,
+    externalRefs: [
+      { kind: "youtube", videoId: "fPElVHyk_XI", channel: "P McAleavey", credit: "Differentiation Tangents and Normals - CCEA GCSE Further Mathematics, P McAleavey (embeddable id verified in data/links/media-map.json)" },
+      PHET,
+      CCEA_DOC,
+    ],
+    sheet: {
+      mustBeAbleTo: [
+        "Differentiate the curve and substitute to get the tangent's gradient at a named point",
+        "Take the y-coordinate of the point of contact from the curve",
+        "Assemble y − y₁ = m(x − x₁) and tidy it to y = mx + c",
+        "Turn a tangent gradient into a normal gradient by taking the negative reciprocal",
+        "Work the negative reciprocal backwards when the normal's gradient is the thing given",
+        "Read 'parallel to' as dy/dx equal to that gradient, and 'perpendicular to' as its negative reciprocal",
+        "Handle a curve containing a negative power, rewriting it before differentiating",
+        "Find where a tangent meets its curve again, using the repeated root",
+        "Answer in the form asked: an equation, or coordinates",
+        "Read 'horizontal' as dy/dx = 0, then clear any negative power to solve",
+        "Find an unknown coefficient in the curve from a stated gradient",
+        "Find where a tangent and a normal cross, giving an exact value when asked",
+      ],
+      howExamined: HOW_EXAMINED,
+      traps: [
+        "Changing the sign of the tangent gradient without turning it over (Summer 2019 FM1 Q11)",
+        "Turning it over without changing the sign (Summer 2024 FM1 Q9)",
+        "Setting the line equal to the curve instead of differentiating (Summer 2024 FM1 Q9)",
+        "Using the given line's gradient where the perpendicular one belonged (Summer 2024 FM1 Q9)",
+        "Solving dy/dx = 0 out of habit when a gradient was stated (Summer 2025 FM1 Q13)",
+        "Stopping at the perpendicular gradient, or giving a line equation where coordinates were asked (Summer 2025 FM1 Q13)",
+        "An arithmetic slip in the gradient at a negative x, or in the constant (Summer 2023 FM1 Q10)",
+        "Failing to differentiate a term with a negative power, even after doing it earlier in the same paper (Summer 2019 FM1 Q11)",
+        "Reading the gradient off a coefficient as though the curve were y = mx + c (Summer 2019 FM1 Q11)",
+        // 22 Sep (FM1 finisher, lead's decision 2): the 2022 source had no trap. From the report: few candidates
+        // could write the tangent's gradient from the normal's, so most could not start the part.
+        "Given the normal's gradient, not turning it into the tangent's gradient first, so the rest cannot start: a normal gradient of 1/8 means a tangent gradient of −8 (Summer 2022 FM1 Q8)",
+        // 23 Sep depth pass: the 2018 source, now cited. From the report: most set the derivative to zero, but few
+        // could rearrange the equation that followed.
+        "Setting dy/dx = 0 for a horizontal tangent, then being unable to rearrange the equation that follows when the curve has a negative power (Summer 2018 FM1 Q7)",
+      ],
+    },
+    verification: `ver.note.fm.u1.${SLUG}`,
+    version: 2,
+    updated: "2026-09-23",
+  },
+  workedExamples: [we01, we02, we03, we04],
+  diagnostics: [dxPre, dxPost],
+  questions: allQuestions,
+  findTheMistake: [ftm01, ftm02, ftm03, ftm04],
+  prompts,
+  insight,
+  // Depth pass, 23 Sep: the mixed tail. The variants shuffled and unannounced, with q0019 (a horizontal tangent, so
+  // dy/dx = 0: the stationary-point lesson's method) as the neighbouring topic's item.
+  sets: [
+    {
+      id: `set.${TOPIC}.mixed`,
+      topic: TOPIC,
+      kind: "mixed",
+      title: "Mixed practice: tangent, normal or neither",
+      subject: "further-maths",
+      units: ["FM1"],
+      itemIds: ["0010", "0006", "0019", "0012", "0008", "0017"].map((n) => id("q", n)),
+      showTopicLabels: false,
+      version: 1,
+    },
+  ],
+  verification,
+};
+for (const qid of bundle.sets[0].itemIds) if (!allQuestions.some((q) => q.id === qid)) throw new Error(`the mixed set names ${qid}, which does not exist`);
+
+recapCard(blocks);
+const droppedCallouts = pointerPanel(blocks, String.raw`A late-paper discriminator: **7 marks** for a normal on its own, or **4 + 3 + 2** across a tangent, a normal and a gradient condition. The first mark is $\frac{dy}{dx}$; a further mark is given just for writing the normal's gradient as the negative reciprocal of your own, even when that gradient is wrong, so write that line whatever else has happened. The last mark is the finished equation.`);
+assertTrapsCoverPanel(droppedCallouts, bundle.note.sheet, "gen-tangents.mjs");
+assertLogs(bundle);
+assertDistinctErrors(bundle);
+
+// Depth pass, 23 Sep: the hero's minutes are the note's own figure by the app's model (lesson-plan.ts: 180 words a
+// minute and 40 seconds a gate), counted as scripts/qa/lesson-v2.mjs counts them.
+{
+  const wordsIn = (s) => String(s ?? "").split(/\s+/).filter(Boolean).length;
+  const proseOf = (b) => (b.type === "p" || b.type === "callout" ? b.md : b.type === "h" ? b.text : "");
+  const noteWords = blocks.reduce((a, b) => a + wordsIn(proseOf(b)), 0);
+  const recapAt = blocks.findIndex((b) => b.type === "h" && b.text === "You can now");
+  const gates = blocks.slice(0, recapAt).filter((b) => b.type === "gate").length;
+  blocks[0].minutes = Math.max(1, Math.round(noteWords / 180 + (gates * 40) / 60));
+  console.log(`  note: ${noteWords} words, ${gates} gates, hero minutes ${blocks[0].minutes}`);
+}
+emit(SLUG, bundle, blocks);

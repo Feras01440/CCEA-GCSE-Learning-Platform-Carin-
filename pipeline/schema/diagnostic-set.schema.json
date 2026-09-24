@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "diagnostic-set.schema.json",
+  "title": "DiagnosticSet",
+  "$ref": "#/$defs/DiagnosticSet",
+  "$defs": {
+    "DiagnosticSet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/DiagnosticSetId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "pre",
+            "post",
+            "both"
+          ]
+        },
+        "items": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DiagnosticItem"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "when",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "DiagnosticSetId": {
+      "type": "string",
+      "pattern": "^dx\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "TopicId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[a-z0-9]+\\.[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Teachable-topic id \"<subject>.<unit>.<slug>\", e.g. \"maths.m4.histograms\""
+    },
+    "SpecRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{0,4}(-[A-Za-z0-9.]+){1,3}$",
+      "description": "Learning-outcome statement id from data/spec/*.json"
+    },
+    "DiagnosticItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skill": {
+          "type": "string",
+          "minLength": 1
+        },
+        "figure": {
+          "$ref": "#/$defs/FigureSpec"
+        },
+        "options": {
+          "minItems": 2,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/McqOption"
+          }
+        },
+        "secondsExpected": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 90
+        },
+        "confidence": {
+          "type": "boolean",
+          "const": true
+        },
+        "hypercorrectionQueue": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "id",
+        "stem",
+        "skill",
+        "options",
+        "secondsExpected",
+        "confidence",
+        "hypercorrectionQueue"
+      ],
+      "additionalProperties": false,
+      "description": "Single-skill multiple-choice item; every distractor names a misconception"
+    },
+    "FigureSpec": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "svg-gen"
+            },
+            "generator": {
+              "type": "string",
+              "enum": [
+                "histogram",
+                "cf-curve",
+                "box-plot",
+                "bar",
+                "pie",
+                "scatter",
+                "table",
+                "number-line",
+                "axes"
+              ]
+            },
+            "data": {},
+            "options": {}
+          },
+          "required": [
+            "kind",
+            "generator",
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "jsxgraph"
+            },
+            "script": {
+              "type": "string",
+              "minLength": 1
+            },
+            "static": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "kind",
+            "script",
+            "static"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "mafs"
+            },
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "props": {}
+          },
+          "required": [
+            "kind",
+            "component",
+            "props"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "svg"
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "alt"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "photo"
+            },
+            "src": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "licence": {
+              "type": "string",
+              "minLength": 1
+            },
+            "credit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "src",
+            "alt",
+            "licence",
+            "credit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "apparatus"
+            },
+            "parts": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "style": {
+              "type": "string",
+              "const": "ccea-2d"
+            }
+          },
+          "required": [
+            "kind",
+            "parts",
+            "style"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "McqOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correct": {
+          "type": "boolean"
+        },
+        "misconception": {
+          "$ref": "#/$defs/MisconceptionId"
+        },
+        "feedback": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "correct",
+        "feedback"
+      ],
+      "additionalProperties": false
+    },
+    "MisconceptionId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9]+(-[a-z0-9]+)*)+$"
+    }
+  }
+}

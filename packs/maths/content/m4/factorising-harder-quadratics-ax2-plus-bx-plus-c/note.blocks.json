@@ -1,0 +1,195 @@
+[
+  {
+    "type": "hero",
+    "lede": "Factorising is multiplying out in reverse: you are given $6x^2 + 11x - 10$ and asked for the two brackets it came from. You have done it with $x^2 + 7x + 12$ already. The only new thing here is a number in front of the $x^2$, and what it does to the pair you look for.",
+    "can": [
+      "Split the middle term with a pair that multiplies to $ac$ and adds to $b$.",
+      "Group the four terms in pairs so the brackets match.",
+      "Take out the highest common factor first, numbers and letters together."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Factorising ax² + bx + c and harder expressions"
+  },
+  {
+    "type": "p",
+    "md": "You already turn $x^2 + 7x + 12$ into $(x + 3)(x + 4)$ by finding two numbers that multiply to 12 and add to 7. Put a number in front of the $x^2$ and that pair changes: it has to multiply to $ac$ now, not to $c$. Find it, split the middle term in two, and the four terms group into the brackets you were after."
+  },
+  {
+    "type": "figure",
+    "alt": "A two by two grid area model. The columns are headed 2x and plus 5, the rows are headed 3x and minus 2, and the four cells contain 6x squared, plus 15x, minus 4x and minus 10.",
+    "svg": "<svg viewBox=\"0 0 340 250\" xmlns=\"http://www.w3.org/2000/svg\" width=\"340\" height=\"250\" role=\"img\" aria-labelledby=\"gridfig\"><title id=\"gridfig\">A two by two grid area model showing six x squared, fifteen x, minus four x and minus ten</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><rect x=\"90\" y=\"60\" width=\"210\" height=\"140\"/><path d=\"M220 60 V200\"/><path d=\"M90 140 H300\"/></g><g fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"none\"><rect x=\"90\" y=\"60\" width=\"130\" height=\"80\"/></g><g fill=\"currentColor\" font-family=\"system-ui,sans-serif\" font-size=\"15\"><text x=\"155\" y=\"107\" text-anchor=\"middle\">6x²</text><text x=\"260\" y=\"107\" text-anchor=\"middle\">+15x</text><text x=\"155\" y=\"177\" text-anchor=\"middle\">−4x</text><text x=\"260\" y=\"177\" text-anchor=\"middle\">−10</text></g><g fill=\"currentColor\" font-family=\"system-ui,sans-serif\" font-size=\"15\" font-weight=\"600\"><text x=\"155\" y=\"48\" text-anchor=\"middle\">2x</text><text x=\"260\" y=\"48\" text-anchor=\"middle\">+5</text><text x=\"78\" y=\"107\" text-anchor=\"end\">3x</text><text x=\"78\" y=\"177\" text-anchor=\"end\">−2</text></g><g fill=\"currentColor\" font-family=\"system-ui,sans-serif\" font-size=\"12\"><text x=\"90\" y=\"228\">6x² + 15x − 4x − 10 = 6x² + 11x − 10</text></g></svg>",
+    "caption": "The grid holds the four pieces. Reading the edges gives $(3x - 2)(2x + 5)$."
+  },
+  {
+    "type": "gate",
+    "id": "g0",
+    "kind": "number",
+    "prompt": "Warm-up. For $x^2 + 7x + 12$, what do the two numbers in the brackets multiply to give?",
+    "answer": "12",
+    "explain": "12, the constant term, because the coefficient of x² is 1. Everything below is about what changes when it is not."
+  },
+  {
+    "type": "h",
+    "text": "The number in front of x² changes one thing"
+  },
+  {
+    "type": "p",
+    "md": "For $x^2 + bx + c$ you look for two numbers that multiply to $c$ and add to $b$. As soon as there is an $a$ in front, that rule breaks: the pair must multiply to **$ac$**.\nTake $6x^2 + 11x - 10$. Here $ac = 6 \\times (-10) = -60$ and $b = 11$, so the pair is $15$ and $-4$. Split the middle term with them, then group in twos."
+  },
+  {
+    "type": "gate",
+    "id": "g0a",
+    "kind": "number",
+    "prompt": "For $2x^2 + 7x + 6$, what is $ac$?",
+    "answer": "12",
+    "explain": "$2 \\times 6 = 12$. The pair you then want multiplies to 12 and adds to 7, so it is 3 and 4."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why ac and not c",
+    "md": "Expand $(px + m)(qx + n)$: the $x^2$ term is $pq\\,x^2$, the constant is $mn$, and the middle is $(pn + mq)x$. Multiply the outer coefficient by the constant: $pq \\times mn$, which is the same as $(pn) \\times (mq)$ — the product of the two pieces of the middle term. So the pair you want multiplies to $ac$."
+  },
+  {
+    "type": "gate",
+    "id": "g0b",
+    "kind": "blank",
+    "prompt": "For $6x^2 + 11x - 10$, which pair multiplies to $-60$ and adds to $11$?",
+    "answer": "15 and −4",
+    "explain": "The factor pairs of 60 that differ by 11 are 15 and 4, and the larger takes the sign of b."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "For $6x^2 - 19x + 10$, what is $ac$?",
+    "answer": "60",
+    "explain": "6 × 10 = 60. The pair then needs product 60 and sum −19: that is −15 and −4."
+  },
+  {
+    "type": "p",
+    "md": "**Grouping, and the sign that decides it.** Once the middle term is split,\n$6x^2 + 15x - 4x - 10 = 3x(2x + 5) - 2(2x + 5) = (3x - 2)(2x + 5)$\nThe second common factor is $-2$, not $+2$, because $+2$ would give $2(-2x - 5)$ and the brackets would not match. Matching brackets is the signal that everything so far is right; if yours differ, the pair came from $c$ instead of $ac$."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Factorise $6mn + 9m - 4n - 6$ by grouping.",
+    "options": [
+      "(3m − 2)(2n + 3)",
+      "(3m + 2)(2n + 3)",
+      "(3m − 2)(2n − 3)"
+    ],
+    "answer": "(3m − 2)(2n + 3)",
+    "explain": "3m(2n + 3) − 2(2n + 3). Taking out −2 is what makes the second bracket match."
+  },
+  {
+    "type": "h",
+    "text": "Fully means keep going"
+  },
+  {
+    "type": "p",
+    "md": "The late question almost always has the same shape: **a common factor with a letter in it, then a difference of two squares.**\n$12x^2 - 27y^2 = 3(4x^2 - 9y^2) = 3(2x + 3y)(2x - 3y)$\nThe common factor is one mark. The two marks after it are for noticing that $4x^2 - 9y^2$ is $(2x)^2 - (3y)^2$ and finishing. Before you write an answer, look at every bracket you have and ask whether it still factorises."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "blank",
+    "prompt": "Factorise fully $5p^2 - 45q^2$.",
+    "answer": "5(p + 3q)(p − 3q)",
+    "explain": "Take out 5, then p² − 9q² is a difference of two squares."
+  },
+  {
+    "type": "h",
+    "text": "When a and b are not simple letters"
+  },
+  {
+    "type": "p",
+    "md": "$a^2 - b^2 = (a + b)(a - b)$ is true for **any** $a$ and $b$. That is the whole A-grade idea here.\n**A fraction can be a square.** $\\tfrac{9}{16}x^2 = \\left(\\tfrac{3}{4}x\\right)^2$, because you square-root the top and the bottom separately. So $\\tfrac{9}{16}x^2 - 49 = \\left(\\tfrac{3}{4}x + 7\\right)\\left(\\tfrac{3}{4}x - 7\\right)$.\n**A product of letters can be a square.** $4x^2y^2 = (2xy)^2$, so $4x^2y^2 - 9 = (2xy + 3)(2xy - 3)$.\n**Two variables.** $x^2 + 2xy - 15y^2 = (x + 5y)(x - 3y)$ — the $y$ stays in both brackets, or the $y^2$ term cannot appear."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "$\\dfrac{1}{9}x^2$ is the square of what?",
+    "answer": "x/3",
+    "explain": "√(1/9) = 1/3, so it is (x/3)². Square-root the numerator and the denominator separately."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Factorise $x^2 - 6xy + 8y^2$.",
+    "options": [
+      "(x − 2y)(x − 4y)",
+      "(x − 2)(x − 4)",
+      "(x + 2y)(x − 4y)"
+    ],
+    "answer": "(x − 2y)(x − 4y)",
+    "explain": "−2y and −4y: they give −6xy in the middle and +8y² at the end. Without the y there is no y² term at all."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "Which is $4p^2 - 20pq + 25q^2$?",
+    "options": [
+      "(2p − 5q)²",
+      "(2p + 5q)(2p − 5q)",
+      "(4p − 5q)(p − 5q)"
+    ],
+    "answer": "(2p − 5q)²",
+    "explain": "A middle term of −20pq means it is a perfect square, not a difference of two squares — the second option has no middle term at all."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Sheet or memory?",
+    "md": "**On the Higher formula sheet:** nothing for this topic.\n**Must be known:** pair with product $ac$ and sum $b$, then split and group; $a^2 - b^2 = (a + b)(a - b)$ for any $a$ and $b$; the highest common factor includes letters; $a^2 - 2ab + b^2 = (a - b)^2$."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Find the pair that multiplies to $ac$ and adds to $b$.\nSplit the middle term and group in twos to reach the brackets.\nTake out the highest common factor, letters included, first.\nSpot a difference of two squares inside a bracket and finish it.\nTreat a fraction, a product of letters or a second variable as a square."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The wording is bare: **Factorise** or **Factorise fully**, with two or three marks. The first mark is the common factor, or the split of the middle term; the last is the complete product with nothing left to take out. Stuck: write $ac$ down and list the pairs that multiply to it."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "**Completing the square is excluded at M4** by the Teacher Guidance, so you will never be asked to factorise or solve that way. The factor theorem and cubics are A level."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.factorising-harder-quadratics-ax2-plus-bx-plus-c.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.factorising-harder-quadratics-ax2-plus-bx-plus-c.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.factorising-harder-quadratics-ax2-plus-bx-plus-c.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.factorising-harder-quadratics-ax2-plus-bx-plus-c.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m4.factorising-harder-quadratics-ax2-plus-bx-plus-c.09"
+  }
+]

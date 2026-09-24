@@ -1,0 +1,240 @@
+[
+  {
+    "type": "hero",
+    "lede": "Two numbers fix a straight line completely: how steep it is, and where it crosses the vertical axis. Call them $m$ and $c$ and every point on the line obeys $y = mx + c$. A van hire with a fixed charge and a price per day is the same rule with different names.",
+    "can": [
+      "Read $m$ and $c$ off an equation, once a single $y$ is on the left.",
+      "Find the gradient between two points, sign included.",
+      "Write the equation of a line through two points, or parallel to a given one."
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "Straight lines: y = mx + c and parallel lines"
+  },
+  {
+    "type": "p",
+    "md": "Two numbers fix a straight line: its steepness, and its height where it crosses the $y$-axis. That is all $y = mx + c$ says. Finding the equation through two given points is three lines of work — the gradient, then $c$, then the equation written out — and what goes wrong is almost never the arithmetic. It is answering a different question, or losing a minus sign."
+  },
+  {
+    "type": "figure",
+    "alt": "Coordinate axes with a straight line rising from lower left to upper right through (2, 1) and (6, 13) and crossing the y-axis at (0, -5). A dashed right-angled triangle joins the two points, with the horizontal side labelled run 4 and the vertical side labelled rise 12. A caption gives gradient = 12 over 4 = 3 and the equation y = 3x - 5.",
+    "svg": "<svg viewBox=\"0 0 540 416\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"line-gradient-triangle\"><title id=\"line-gradient-triangle\">The gradient triangle: rise 12 over run 4 gives m = 3, and the line crosses the y-axis at −5</title>\n<g stroke=\"currentColor\" stroke-width=\"0.6\" stroke-opacity=\"0.35\" fill=\"none\">\n  <path d=\"M60 40 L60 376\"/><path d=\"M110 40 L110 376\"/><path d=\"M160 40 L160 376\"/><path d=\"M210 40 L210 376\"/><path d=\"M260 40 L260 376\"/><path d=\"M310 40 L310 376\"/><path d=\"M360 40 L360 376\"/><path d=\"M410 40 L410 376\"/><path d=\"M460 40 L460 376\"/><path d=\"M510 40 L510 376\"/>\n  <path d=\"M60 334 L510 334\"/><path d=\"M60 264 L510 264\"/><path d=\"M60 194 L510 194\"/><path d=\"M60 124 L510 124\"/><path d=\"M60 54 L510 54\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\">\n  <path d=\"M60 264 L510 264\"/>\n  <path d=\"M110 40 L110 376\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"2.2\" fill=\"none\">\n  <path d=\"M85 355 L460 40\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\" fill=\"none\">\n  <path d=\"M210 250 L410 250 L410 82\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\">\n  <circle cx=\"210\" cy=\"250\" r=\"4.5\"/>\n  <circle cx=\"410\" cy=\"82\" r=\"4.5\"/>\n  <circle cx=\"110\" cy=\"334\" r=\"4.5\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\">\n  <text x=\"164\" y=\"255\">(2, 1)</text>\n  <text x=\"420\" y=\"87\">(6, 13)</text>\n  <text x=\"120\" y=\"352\">(0, -5)</text>\n  <text x=\"286\" y=\"272\">run 4</text>\n  <text x=\"420\" y=\"166\">rise 12</text>\n  <text x=\"58\" y=\"400\">gradient = rise / run = 12 / 4 = 3, and the line crosses the y-axis at -5, so y = 3x - 5</text>\n  <text x=\"504\" y=\"284\">x</text>\n  <text x=\"118\" y=\"52\">y</text>\n</g></svg>",
+    "caption": "The gradient triangle: rise 12 over run 4 gives m = 3, and the line crosses the y-axis at −5"
+  },
+  {
+    "type": "gate",
+    "id": "g0a",
+    "kind": "blank",
+    "prompt": "In the picture above, where does the line cross the $y$-axis?",
+    "answer": "-5 | −5 | (0, -5)",
+    "explain": "At $-5$, so $c = -5$. That is what $c$ stands for in $y = mx + c$."
+  },
+  {
+    "type": "h",
+    "text": "What m and c actually are"
+  },
+  {
+    "type": "p",
+    "md": "$y = mx + c$ is a rule that every point on the line obeys. $m$ is the **gradient**: how much $y$ changes for each 1 that $x$ increases. $c$ is the **$y$-intercept**: the $y$ value where the line crosses the $y$-axis, which is simply what $y$ equals when $x = 0$.\nWatch the order. $y = 7 - 3x$ is $y = -3x + 7$: the gradient is $-3$ and the intercept is 7. The minus belongs to the gradient."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "blank",
+    "prompt": "What is the gradient of $y = 9 - 4x$?",
+    "answer": "−4",
+    "explain": "Rewrite as $y = -4x + 9$. The coefficient of $x$, sign included, is the gradient."
+  },
+  {
+    "type": "h",
+    "text": "Through two points: three lines of work"
+  },
+  {
+    "type": "p",
+    "md": "Take $(2, 1)$ and $(6, 13)$. The gradient triangle shows exactly what the formula is measuring."
+  },
+  {
+    "type": "p",
+    "md": "**1 Gradient.** $m = \\dfrac{y_2 - y_1}{x_2 - x_1} = \\dfrac{13 - 1}{6 - 2} = \\dfrac{12}{4} = 3$. Change in $y$ **on top** — the rise, divided by the run."
+  },
+  {
+    "type": "gate",
+    "id": "g1b",
+    "kind": "choice",
+    "prompt": "The gradient is 3. What is the next step towards $c$?",
+    "options": [
+      "Substitute one of the points into $y = 3x + c$",
+      "Add the two $y$ values",
+      "Take the midpoint of the two points"
+    ],
+    "answer": "Substitute one of the points into $y = 3x + c$",
+    "explain": "Either point lies on the line, so its coordinates leave $c$ as the only unknown."
+  },
+  {
+    "type": "p",
+    "md": "**2 Intercept.** Substitute either point into $y = 3x + c$. Using $(2, 1)$: $1 = 6 + c$, so $c = -5$.\n**3 Write the equation.** $y = 3x - 5$. Then check with the other point: $3(6) - 5 = 13$. Correct.\nTaking both differences with the points in the same order is what keeps the signs right. If you start with the 13, start with the 6."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "The gradient of the line through $(1, 2)$ and $(5, 14)$ is",
+    "answer": "3",
+    "explain": "$\\dfrac{14 - 2}{5 - 1} = \\dfrac{12}{4} = 3$."
+  },
+  {
+    "type": "h",
+    "text": "The midpoint is not the answer"
+  },
+  {
+    "type": "p",
+    "md": "This is the single biggest loss on the topic. The midpoint of $(2, 1)$ and $(6, 13)$ is $(4, 7)$ — a correct calculation, and a complete answer to a different question.\nAn **equation** is a rule and starts with $y =$. A **midpoint** is a point and comes in brackets. Read the answer line before you start: a gap for coordinates wants a point; a long blank line wants an equation.\nUseful as a check, though: the midpoint always lies on the line, and $3(4) - 5 = 7$."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "'Find the equation of the line through $(1, 3)$ and $(5, 15)$.' Which is the answer?",
+    "options": [
+      "$y = 3x$",
+      "$(3, 9)$",
+      "$m = 3$"
+    ],
+    "answer": "$y = 3x$",
+    "explain": "$(3, 9)$ is the midpoint; $m = 3$ is only half the work."
+  },
+  {
+    "type": "h",
+    "text": "Signs, and the point that gives you c for free"
+  },
+  {
+    "type": "p",
+    "md": "**Falling means negative.** Through $(-2, 9)$ and $(3, -1)$: $m = \\dfrac{-1 - 9}{3 - (-2)} = \\dfrac{-10}{5} = -2$. Notice $3 - (-2) = 5$ — subtracting a negative adds. Sketch the two points if you are unsure: downhill from left to right is always a negative gradient.\n**A point on the $y$-axis gives $c$ immediately.** If the line passes through $(0, 5)$, then $c = 5$ and no substitution is needed at all. Missing that turns a two-step question into a four-step one, with two extra chances to slip."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "A line passes through $(0, 5)$ and $(4, -7)$. Write its equation.",
+    "answer": "y = −3x + 5",
+    "explain": "$c = 5$ from the first point; $m = \\dfrac{-12}{4} = -3$."
+  },
+  {
+    "type": "h",
+    "text": "Rearrange before you read"
+  },
+  {
+    "type": "p",
+    "md": "You can only read $m$ and $c$ off an equation that has a **single $y$** on the left.\n$2y = 6x + 5$ → divide everything by 2 → $y = 3x + 2.5$. The gradient is 3, not 6.\n$3x + 4y = 24$ → $4y = -3x + 24$ → $y = -\\tfrac{3}{4}x + 6$. Gradient $-\\tfrac{3}{4}$, intercept 6.\nThat second form is also the quickest to **draw**: put $x = 0$ to get $(0, 6)$, put $y = 0$ to get $(8, 0)$, plot both and rule the line. A third point is worth finding as a check."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "What is the gradient of $3y = 12x + 5$?",
+    "answer": "4",
+    "explain": "Divide every term by 3: $y = 4x + \\tfrac{5}{3}$."
+  },
+  {
+    "type": "h",
+    "text": "Parallel lines"
+  },
+  {
+    "type": "p",
+    "md": "Two lines are parallel when they have the **same gradient** and **different intercepts** — same steepness, different starting height, so they never meet."
+  },
+  {
+    "type": "figure",
+    "alt": "Coordinate axes with two parallel straight lines of gradient 2, one labelled y = 2x + 1 and the other y = 2x - 3. A caption says: same gradient, different intercept, so the lines never meet.",
+    "svg": "<svg viewBox=\"0 0 470 400\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"parallel-lines\"><title id=\"parallel-lines\">Parallel lines: equal gradients, different intercepts</title>\n<g stroke=\"currentColor\" stroke-width=\"0.6\" stroke-opacity=\"0.35\" fill=\"none\">\n  <path d=\"M60 30 L60 350\"/><path d=\"M115 30 L115 350\"/><path d=\"M170 30 L170 350\"/><path d=\"M225 30 L225 350\"/><path d=\"M280 30 L280 350\"/><path d=\"M335 30 L335 350\"/><path d=\"M390 30 L390 350\"/><path d=\"M445 30 L445 350\"/>\n  <path d=\"M60 350 L445 350\"/><path d=\"M60 270 L445 270\"/><path d=\"M60 190 L445 190\"/><path d=\"M60 110 L445 110\"/><path d=\"M60 30 L445 30\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\">\n  <path d=\"M60 270 L445 270\"/>\n  <path d=\"M115 30 L115 350\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"2.2\" fill=\"none\">\n  <path d=\"M60 290 L417.5 30\"/>\n  <path d=\"M142.5 310 L445 90\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\">\n  <text x=\"204\" y=\"102\">y = 2x + 1</text>\n  <text x=\"360\" y=\"190\">y = 2x - 3</text>\n  <text x=\"58\" y=\"386\">same gradient, different intercept: the lines never meet</text>\n</g></svg>",
+    "caption": "Parallel lines: equal gradients, different intercepts"
+  },
+  {
+    "type": "p",
+    "md": "So 'write down an equation for any line parallel to $y = 3 - 2x$' is a one-mark gift: the gradient is $-2$, so $y = -2x + 7$ will do, or any other constant except 3.\nA parallel line **through a given point** is the same three-step method with the gradient handed to you. Parallel to $2y = 6x + 5$ through $(1, 4)$: rearrange to get $m = 3$, write $y = 3x + c$, substitute to get $c = 1$, and the line is $y = 3x + 1$."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "blank",
+    "prompt": "Find the line parallel to $y = 4x - 1$ through $(2, 11)$.",
+    "answer": "y = 4x + 3",
+    "explain": "Gradient 4; $11 = 8 + c$ gives $c = 3$."
+  },
+  {
+    "type": "h",
+    "text": "Real-life graphs: use the scales"
+  },
+  {
+    "type": "p",
+    "md": "When the axes are 'days' and 'pounds', a gradient is still rise over run — but a square across and a square up are different amounts, so counting squares gives a number that means nothing."
+  },
+  {
+    "type": "figure",
+    "alt": "A real-life straight-line graph of hire cost in pounds against days hired. The line starts at 25 pounds when no days are hired and reaches 85 pounds at 5 days. A dashed triangle spans 3 days horizontally and 36 pounds vertically, and a caption gives gradient = 36 over 3 = 12 pounds per day, read with the scales rather than by counting squares.",
+    "svg": "<svg viewBox=\"0 0 560 400\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"real-life-gradient\"><title id=\"real-life-gradient\">Read two points using the axis values, then divide the change in cost by the change in days</title>\n<g stroke=\"currentColor\" stroke-width=\"0.6\" stroke-opacity=\"0.35\" fill=\"none\">\n  <path d=\"M80 60 L80 340\"/><path d=\"M148 60 L148 340\"/><path d=\"M216 60 L216 340\"/><path d=\"M284 60 L284 340\"/><path d=\"M352 60 L352 340\"/><path d=\"M420 60 L420 340\"/>\n  <path d=\"M80 340 L420 340\"/><path d=\"M80 284 L420 284\"/><path d=\"M80 228 L420 228\"/><path d=\"M80 172 L420 172\"/><path d=\"M80 116 L420 116\"/><path d=\"M80 60 L420 60\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\">\n  <path d=\"M80 340 L420 340\"/>\n  <path d=\"M80 340 L80 60\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"2.2\" fill=\"none\">\n  <path d=\"M80 270 L420 102\"/>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"5 4\" fill=\"none\">\n  <path d=\"M148 236.4 L352 236.4 L352 135.6\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\">\n  <circle cx=\"80\" cy=\"270\" r=\"4\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"14\" text-anchor=\"middle\">\n  <text x=\"80\" y=\"360\">0</text><text x=\"148\" y=\"360\">1</text><text x=\"216\" y=\"360\">2</text><text x=\"284\" y=\"360\">3</text><text x=\"352\" y=\"360\">4</text><text x=\"420\" y=\"360\">5</text>\n  <text x=\"250\" y=\"384\">days hired</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"14\" text-anchor=\"end\">\n  <text x=\"72\" y=\"345\">0</text><text x=\"72\" y=\"289\">20</text><text x=\"72\" y=\"233\">40</text><text x=\"72\" y=\"177\">60</text><text x=\"72\" y=\"121\">80</text><text x=\"72\" y=\"65\">100</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"14\">\n  <text x=\"22\" y=\"46\">cost (pounds)</text>\n  <text x=\"230\" y=\"256.4\">3 days</text>\n  <text x=\"360\" y=\"186\">36 pounds</text>\n  <text x=\"90\" y=\"260\">fixed charge 25</text>\n  <text x=\"30\" y=\"386\">gradient = 36 / 3 = 12 pounds per day, read with the scales - not by counting squares</text>\n</g></svg>",
+    "caption": "Read two points using the axis values, then divide the change in cost by the change in days"
+  },
+  {
+    "type": "p",
+    "md": "Choose two points that are **far apart** and sit on grid intersections: $(1, 37)$ and $(4, 73)$. Then $m = \\dfrac{73 - 37}{4 - 1} = \\dfrac{36}{3} = 12$.\nThe interpretation needs the units of **both** axes: 'the cost rises by £12 for each extra day'. And the intercept has a meaning too — it is the fixed charge of £25 paid before any days are counted, so $C = 12d + 25$."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "With $C = 12d + 25$, the cost of a 3-day hire, in pounds, is",
+    "answer": "61",
+    "explain": "$12 \\times 3 + 25 = 61$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the intercept has a meaning too",
+    "md": "On a hire-cost graph the gradient is what one more day costs and the intercept is what you pay before any days are counted. Reading both with their units turns a line into a sentence."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Read $m$ and $c$ once a single $y$ is on the left.\nFind a gradient between two points, sign included.\nWrite the equation through two points, or parallel to one."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Expect a three-mark find the equation through two points among the last five questions, and often a real-life graph earlier. The first mark is the gradient formula with the numbers in it, so write the fraction down. The last is the complete equation starting with $y =$, its gradient sign checked against the direction of the line. Stuck: find the gradient — two of the three marks live there."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "**Perpendicular** lines and the negative reciprocal gradient are M4, not M3. The equation of a circle and its tangent, and the gradient of a curve, are M8."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.straight-lines-y-mx-c-equation-of-a-line-and-parallel-lines.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.straight-lines-y-mx-c-equation-of-a-line-and-parallel-lines.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.straight-lines-y-mx-c-equation-of-a-line-and-parallel-lines.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.straight-lines-y-mx-c-equation-of-a-line-and-parallel-lines.07"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.straight-lines-y-mx-c-equation-of-a-line-and-parallel-lines.09"
+  }
+]

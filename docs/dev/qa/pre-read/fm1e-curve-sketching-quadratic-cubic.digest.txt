@@ -1,0 +1,336 @@
+# fm.u1.curve-sketching-quadratic-cubic — Sketching quadratic and cubic curves  [S, difficulty 3]
+unit FM1 · tier untiered · specRefs []
+note: Sketching quadratic and cubic curves v1 [verified]
+verification statuses: {"verified":24}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Five facts, then a picture
+- [p] 
+- [figure] Four points fix this curve: $(1, 0)$, $(5, 0)$, $(0, 5)$ and $(3, -4)$.
+- [choice] 
+- [h] 1. The two crossings need no calculus
+- [p] 
+- [figure] Rows 1 and 2 are algebra. Rows 3 and 4 are where calculus starts.
+- [choice] 
+- [why] Why the answers are coordinates, not numbers
+- [blank] 
+- [h] 2. Turning points come from dy/dx = 0
+- [p] 
+- [figure] The gradient itself is a graph. It crosses zero once, at $x = 3$.
+- [p] 
+- [number] 
+- [h] 3. Peak or dip, decided by the second derivative
+- [p] 
+- [figure] The sign of the highest power decides which way the ends of the curve go.
+- [choice] 
+- [h] 4. The whole route on one quadratic
+- [p] 
+- [video] Differentiation - Curve Sketching CCEA GCSE Further Mathematics
+- [number] 
+- [h] 5. Cubics: three crossings and two turns
+- [p] 
+- [figure] A cubic turns twice: a maximum at $(2, 36)$ and a minimum at $\left(\frac{20}{3}, -\frac{400}{27}\right)$.
+- [number] 
+- [p] 
+- [why] Why one maximum and one minimum
+- [choice] 
+- [h] 6. Drawing it, and labelling it
+- [p] 
+- [figure] A repeated factor makes the curve touch the axis at $(2, 0)$ and turn there.
+- [notonspec] What you are never asked to sketch
+- [choice] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.curve-sketching-quadratic-cubic.01 [verified] paper FM1 calc
+STEM: A curve is defined by the equation $y = x^{2} - 6x + 5$
+Find where it meets each axis, find its turning point, say whether that point is a maximum or a minimum, and sketch the curve.
+  FIG: svg — The curve y equals x^2 - 6x + 5 with its two x-axis crossings, its y-axis crossing and its turning point labelled with coordinates
+  1. Set $y = 0$: $x^2 - 6x + 5 = 0$, which factorises to $(x - 1)(x - 5) = 0$, so $x = 1$ or $x = 5$.   — Every point on the x-axis has height zero, so the crossings are the solutions of the equation itself. No calculus belongs in this line.  (MW1)  WHY: ✔Because a point on the x-axis has y = 0 | ✘Because the turning point sits on the x-axis | ✘Because dy/dx = 0 there
+  2. Write the crossings as coordinates: $(1, 0)$ and $(5, 0)$.   — The question asks where the curve meets the axis, and a place on the page needs two numbers. Bare values of x lose the accuracy mark.  (W1)
+  3. Set $x = 0$: $y = 5$, so the curve meets the y-axis at $(0, 5)$.   — The constant term is the height at x = 0, so this crossing can be read straight off the equation once you know why.  (W1)
+  4. Differentiate: $\frac{dy}{dx} = 2x - 6$.   — The turning point is where the curve is momentarily level, and the gradient function is what tells you that. This is where calculus starts.  (MW1)
+  5. Set the gradient to zero: $2x - 6 = 0$, so $x = 3$.   — Solving the derivative gives only the x of the turning point. It says nothing yet about how high the curve is there.  (M1)
+  6. Substitute into the curve: $y = (3)^{2} - 6(3) + 5 = -4$, so the turning point is $(3, -4)$.   — Into the curve, never into the derivative. The derivative is zero there by construction, so it would hand back a height of nothing.  (W1)  WHY: ✔Because the height comes from y, not from the gradient | ✘Because dy/dx gives the height | ✘Because both give the same number
+  7. Differentiate again: $\frac{d^{2}y}{dx^{2}} = 2$, which is positive, so $(3, -4)$ is a minimum.   — A positive second derivative means the gradient is climbing through zero: down, level, up. That is a dip.  (MW1)
+  8. Sketch: mark $(1, 0)$, $(5, 0)$, $(0, 5)$ and $(3, -4)$, then draw one U through them with the coefficient of $x^{2}$ positive.   — Label every point you calculated. The sketch mark is for a picture that agrees with your own numbers, not for a neat curve.  (W2)
+  FINAL: Crossings $(1, 0)$, $(5, 0)$ and $(0, 5)$; turning point $(3, -4)$, a minimum because $\frac{d^{2}y}{dx^{2}} = 2$.
+  TWIN: A curve is defined by the equation $y = x^{2} + 2x - 15$
+Find the coordinates of its turning point.  → algebraic (-1, -16) (equivalent)
+
+### we.fm.u1.curve-sketching-quadratic-cubic.02 [verified] paper FM1 calc
+STEM: A curve is defined by the equation $y = x(x - 5)(x - 8)$
+Find where it meets the x-axis, find both turning points and say which is which.
+  FIG: svg — The cubic y equals x times (x minus 5) times (x minus 8), crossing the x-axis at 0, 5 and 8, with a maximum and a minimum marked
+  1. The product is zero when any bracket is zero, so $x = 0$, $x = 5$ or $x = 8$, giving $(0, 0), (5, 0), (8, 0)$.   — A factorised cubic hands you its crossings. Expanding first and then trying to factorise again would only make work.  (MW1)
+  2. Expand for the calculus: $x(x - 5)(x - 8) = x^{3} - 13x^{2} + 40x$.   — The power rule needs separate terms, so the brackets have to come apart before you differentiate. Multiply the last two first, then bring in the x.  (MW1)
+  3. Differentiate: $\frac{dy}{dx} = 3x^{2} - 26x + 40$.   — Each term on its own: multiply by the power, then step the power down.  (MW1)
+  4. Set it to zero: $(3x - 20)(x - 2) = 0$, so $x = \frac{20}{3}$ or $x = 2$.   — A cubic's derivative is a quadratic, so there are two answers here, not one. Finding only one is a sign that a factor has been dropped.  (M1,W1)
+  5. Heights: $y = 36$ at $x = 2$, and $y = -\frac{400}{27}$ at $x = \frac{20}{3}$.   — Both go back into the curve. The second one is a fraction, and it stays a fraction in the answer; the decimal is only for placing the point on the sketch.  (W1)
+  6. Second derivative: $\frac{d^{2}y}{dx^{2}} = 6x - 26$. At $x = 2$ it is $-14$, so $(2, 36)$ is a maximum. At $x = \frac{20}{3}$ it is $14$, so that point is a minimum.   — Test each point separately. On a cubic the second derivative changes sign between them, which is why one of each always appears.  (MW1)  WHY: ✔Because the second derivative is negative at one and positive at the other | ✘Because the first x found is always the maximum | ✘Because a cubic has two maxima
+  7. Sketch: mark the three crossings, the maximum $(2, 36)$ and the minimum at about $(6.67, -14.81)$, then draw a curve rising away to the right.   — The coefficient of x cubed is positive, so the curve comes up from the bottom left and leaves at the top right. Label every point.  (W1)
+  FINAL: Crossings $(0, 0), (5, 0), (8, 0)$; maximum $(2, 36)$; minimum $\left(\frac{20}{3}, -\frac{400}{27}\right)$.
+  TWIN: A curve is defined by the equation $y = x(x - 3)(x + 4)$
+Write down the coordinates of the points where the curve meets the x-axis.  → algebraic (-4, 0), (0, 0), (3, 0) (equivalent)
+
+## DIAGNOSTICS
+### dx.fm.u1.curve-sketching-quadratic-cubic.pre (pre) [verified]
+- p1 (Factorise a quadratic with unit leading coefficient): Three checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+Factorise $x^{2} + x - 12$.
+    ✔ $(x + 4)(x - 3)$ — The two numbers multiply to $-12$ and add to $+1$. That is the step a crossings question rests on.
+    ✘ $(x - 4)(x + 3)$ — Those multiply to $-12$ but add to $-1$, so the middle term would come out as $-x$.
+    ✘ $(x + 6)(x - 2)$ — Those multiply to $-12$ but add to $+4$. Check the sum as well as the product.
+- p2 (Read the solutions from a factorised equation): Solve $(x - 2)(x + 5) = 0$.
+    ✔ $x = 2$ or $x = -5$ — Each bracket is set to zero in turn, and the sign flips as you solve it.
+    ✘ $x = -2$ or $x = 5$ [fm.sketch.factor-signs-not-reversed] — The signs inside the brackets have been copied straight out. Solving $x - 2 = 0$ gives $x = 2$, not $x = -2$.
+    ✘ $x = -10$ — That is the product of the two constants. A product is zero when one factor is zero, which gives two separate answers.
+- p3 (Differentiate a quadratic term by term): Differentiate $y = x^{2} - 6x + 5$.
+    ✔ $2x - 6$ — Multiply by the power, step the power down, and the constant goes to zero.
+    ✘ $2x - 6x$ — The middle term $-6x$ has power 1, so its derivative is the number $-6$, with no $x$ left.
+    ✘ $2x - 6 + 5$ — The constant $5$ differentiates to zero, so it does not appear in the gradient function at all.
+
+### dx.fm.u1.curve-sketching-quadratic-cubic.post (post) [verified]
+- d1 (Find the x-axis crossings of a factorised quadratic): Where does the curve $y = (x - 4)(x + 7)$ meet the $x$-axis?
+    ✔ $(-7, 0), (4, 0)$ — Each bracket set to zero, then both answers written as coordinates.
+    ✘ $(7, 0), (-4, 0)$ [fm.sketch.factor-signs-not-reversed] — The constants have been copied out of the brackets without solving. $x - 4 = 0$ gives $x = 4$ and $x + 7 = 0$ gives $x = -7$.
+    ✘ $x = 4$ or $x = -7$ [fm.sketch.x-value-not-coordinate] — The algebra is right. The question asks where the curve meets the axis, which is a place, so each answer needs its $y$ value as well.
+- d2 (Find the height of a turning point): The curve $y = x^{2} + 2x - 15$ has $\frac{dy}{dx} = 2x + 2$, which is zero at $x = -1$. What is the turning point?
+    ✔ $(-1, -16)$ — Substituting $-1$ into the curve gives $-16$.
+    ✘ $(-1, 0)$ [fm.calc.turning-y-from-derivative] — That height came from substituting into $\frac{dy}{dx}$, which is zero at a turning point by definition. The height has to come from the curve.
+    ✘ $(-16, -1)$ [fm.sketch.coordinates-swapped] — Both numbers are right and they are the wrong way round. The value you solved for is the $x$, and the height you worked out is the $y$.
+- d3 (Name a turning point from the sign of the second derivative): At a turning point a curve has $\frac{d^{2}y}{dx^{2}} = 8$. What kind of point is it?
+    ✔ A minimum — A positive second derivative means the gradient is rising through zero, so the curve falls to the point and climbs away.
+    ✘ A maximum [fm.calc.second-derivative-sign-misread] — The test runs the other way: positive is a minimum and negative is a maximum. Picture the gradient going down, level, up.
+    ✘ It cannot be decided without the sketch [fm.optim.nature-not-shown] — The second derivative settles it on its own, which is why the examiners ask for it rather than for a drawing.
+- d4 (Find the crossings of a factorised cubic): Where does the curve $y = (x + 1)(x - 3)(x - 6)$ meet the $x$-axis?
+    ✔ $(-1, 0), (3, 0), (6, 0)$ — Three brackets, three crossings, each written as a coordinate.
+    ✘ $(-1, 0), (0, 0), (3, 0), (6, 0)$ [fm.calc.origin-assumed-on-cubic] — The origin has been added out of habit. Putting $x = 0$ into this cubic gives $y = 18$, so the curve passes well above $(0, 0)$.
+    ✘ $(1, 0), (-3, 0), (-6, 0)$ [fm.sketch.factor-signs-not-reversed] — Each constant has been copied out with its printed sign. Solving $x + 1 = 0$ gives $x = -1$, and $x - 3 = 0$ gives $x = 3$.
+
+## QUESTIONS
+### q.fm.u1.curve-sketching-quadratic-cubic.0001 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)find2 · A quadratic curve whose crossings are wanted before any calculus
+  (main) [2] A curve is defined by the equation $y = x^{2} - 8x + 12$
+Find the coordinates of the points where the curve meets the $x$-axis.
+      ANSWER: algebraic (2, 0), (6, 0) (equivalent)
+      M1 M1: setting $y = 0$ and factorising to $(x - 2)(x - 6) = 0$
+      W1 W1: $(2, 0), (6, 0)$
+      SOLUTION: Set $y = 0$: $x^2 - 8x + 12 = 0$. Factorise: $(x - 2)(x - 6) = 0$, so $x = 2$ or $x = 6$. The curve meets the $x$-axis at $(2, 0), (6, 0)$.
+      ERR [fm.calc.differentiate-when-intercepts-asked] {"kind":"algebraic","latex":"(4, 0)"} → That point came from differentiating and solving $2x - 8 = 0$, which finds the turning point. The crossings come from setting $y$ itself to zero. (0)
+      ERR [fm.sketch.factor-signs-not-reversed] {"kind":"algebraic","latex":"(-2, 0), (-6, 0)"} → The factorising is right. The constants have then been copied out with their printed signs: $x - 2 = 0$ gives $x = 2$, not $x = -2$. (1)
+      ERR [fm.sketch.x-value-not-coordinate] {"kind":"algebraic","latex":"x=2, x=6"} → Both values of $x$ are right, so the method mark stands. The question asks where the curve meets the axis, which is a place, so each answer needs its $y$ value beside it. (1)
+      HINTS: A point on the $x$-axis has $y = 0$. || Two numbers that multiply to $12$ and add to $-8$. || Each answer is a coordinate, so give the $y$ value too.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0002 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A quadratic whose turning point is wanted
+  (main) [3] A curve is defined by the equation $y = x^{2} + 2x - 15$
+Using calculus, find the coordinates of the turning point of the curve.
+      ANSWER: algebraic (-1, -16) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 2x + 2$
+      M1 M1: setting the derivative to zero and solving for $x = -1$
+      W1 W1: $(-1, -16)$ ft
+      SOLUTION: $\frac{dy}{dx} = 2x + 2$. Set it to zero: $2x + 2 = 0$, so $x = -1$. Substitute into the curve: $y = -16$. The turning point is $(-1, -16)$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"algebraic","latex":"(-1, 0)"} → The value of $x$ is right, so the method marks stand. The height came from putting $-1$ into $\frac{dy}{dx}$, which is zero there by definition; put it into the curve instead to get $-16$. (2)
+      ERR [fm.sketch.coordinates-swapped] {"kind":"algebraic","latex":"(-16, -1)"} → Both numbers are right and the pair is the wrong way round. The value you solved for from the derivative is the $x$ coordinate; the height you then worked out is the $y$. (2)
+      HINTS: Differentiate first, then set the result to zero. || Solving gives the $x$ of the turning point only. || Put that $x$ back into the curve for the height.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0003 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A quadratic with a coefficient in front of x squared
+  (main) [3] A curve is defined by the equation $y = 3x^{2} - 12x + 7$
+Using calculus, find the coordinates of the turning point of the curve.
+      ANSWER: algebraic (2, -5) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 6x - 12$
+      M1 M1: setting the derivative to zero and solving for $x = 2$
+      W1 W1: $(2, -5)$ ft
+      SOLUTION: $\frac{dy}{dx} = 6x - 12$. Set it to zero: $6x - 12 = 0$, so $x = 2$. Substitute into the curve: $y = -5$. The turning point is $(2, -5)$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"algebraic","latex":"(2, 0)"} → The $x$ is right. Substituting it into $\frac{dy}{dx}$ gives zero whatever the curve is, so the height must come from the curve, where it is $-5$. (2)
+      ERR [fm.sketch.coordinates-swapped] {"kind":"algebraic","latex":"(-5, 2)"} → The two numbers are right but they have changed places. Write the value of $x$ first and the height second. (2)
+      HINTS: Differentiate first, then set the result to zero. || Solving gives the $x$ of the turning point only. || Put that $x$ back into the curve for the height.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0004 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)write2 · A cubic printed in factorised form
+  (main) [2] A curve is defined by the equation $y = (x + 1)(x - 3)(x - 6)$
+Write down the coordinates of the points where the curve meets the $x$-axis.
+      ANSWER: algebraic (-1, 0), (3, 0), (6, 0) (equivalent)
+      M1 M1: setting each bracket to zero
+      W1 W1: $(-1, 0), (3, 0), (6, 0)$
+      SOLUTION: Each bracket is set to zero in turn: $x + 1 = 0$ gives $x = -1$, $x - 3 = 0$ gives $x = 3$ and $x - 6 = 0$ gives $x = 6$. The curve meets the $x$-axis at $(-1, 0), (3, 0), (6, 0)$.
+      ERR [fm.calc.origin-assumed-on-cubic] {"kind":"algebraic","latex":"(-1, 0), (0, 0), (3, 0), (6, 0)"} → The three crossings are all there, with $(0, 0)$ added on top. This cubic has no factor of $x$, and putting $x = 0$ into it gives $y = 18$, so the origin is not on the curve. (1)
+      ERR [fm.sketch.factor-signs-not-reversed] {"kind":"algebraic","latex":"(1, 0), (-3, 0), (-6, 0)"} → Each constant has been read straight out of its bracket. Solving reverses the sign every time, so $x + 1 = 0$ gives $x = -1$ and $x - 6 = 0$ gives $x = 6$. (0)
+      HINTS: A product is zero when one of its factors is zero. || Solve each bracket, watching the sign. || Three brackets give three points.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0005 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)find2 · The y-axis crossing of the same factorised cubic
+  (main) [2] A curve is defined by the equation $y = (x + 1)(x - 3)(x - 6)$
+Find the coordinates of the point where the curve meets the $y$-axis.
+      ANSWER: algebraic (0, 18) (equivalent)
+      M1 M1: substituting $x = 0$ into all three brackets
+      W1 W1: $(0, 18)$
+      SOLUTION: Put $x = 0$ into each bracket: $(0 + 1)(0 - 3)(0 - 6) = (1)(-3)(-6) = 18$. The curve meets the $y$-axis at $(0, 18)$.
+      ERR [fm.sketch.y-intercept-from-roots] {"kind":"algebraic","latex":"(0, -18)"} → That is the product of the three roots, $-1$, $3$ and $6$. The height at $x = 0$ comes from the value of each bracket at $x = 0$, which is $1$, $-3$ and $-6$. (0)
+      ERR [fm.sketch.x-value-not-coordinate] {"kind":"algebraic","latex":"18"} → The height is right, so the method mark stands. The answer asked for is a point, so it needs both numbers, with the $x$ value of $0$ in front. (1)
+      HINTS: A point on the $y$-axis has $x = 0$. || Work out each bracket at $x = 0$, then multiply. || Two negatives multiply to a positive.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0006 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A quadratic with a negative coefficient of x squared
+  (main) [3] A curve is defined by the equation $y = -2x^{2} + 8x$
+Using calculus, find the coordinates of the turning point of the curve.
+      ANSWER: algebraic (2, 8) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = -4x + 8$
+      M1 M1: setting the derivative to zero and solving for $x = 2$
+      W1 W1: $(2, 8)$ ft
+      SOLUTION: $\frac{dy}{dx} = -4x + 8$. Set it to zero: $-4x + 8 = 0$, so $x = 2$. Substitute into the curve: $y = 8$. The turning point is $(2, 8)$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"algebraic","latex":"(2, 0)"} → The $x$ is right. The height came from $\frac{dy}{dx}$, which is zero at the turning point; the curve gives $8$ there. (2)
+      HINTS: Differentiate first, then set the result to zero. || Solving gives the $x$ of the turning point only. || Put that $x$ back into the curve for the height.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0007 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)determine1 · Naming a turning point from the second derivative
+  (main) [1] The curve $y = -2x^{2} + 8x$ has a turning point at $(2, 8)$.
+Determine whether it is a maximum or a minimum.
+      ANSWER: mcq ✔A maximum, because $\frac{d^{2}y}{dx^{2}} = -4$, which is negative | ✘A minimum, because $\frac{d^{2}y}{dx^{2}} = -4$, which is negative [fm.calc.second-derivative-sign-misread] | ✘A minimum, because the turning point is above the $x$-axis [fm.calc.sketch-contradicts-results]
+      MW1 MW1: $\frac{d^{2}y}{dx^{2}} = -4$, which is negative, so the point is a maximum
+      SOLUTION: $\frac{dy}{dx} = -4x + 8$, so $\frac{d^{2}y}{dx^{2}} = -4$. That is negative, so $(2, 8)$ is a maximum.
+      HINTS: Differentiate twice. || Negative names a maximum; positive names a minimum.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0008 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)find4 · Both turning points of a cubic
+  (main) [4] A curve is defined by the equation $y = x^{3} - 6x^{2} + 9x$
+Using calculus, find the coordinates of the turning points of the curve.
+      ANSWER: algebraic (1, 4), (3, 0) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 3x^{2} - 12x + 9$
+      M1 M1: setting the derivative to zero and factorising it
+      W1 W1: $x = 1$ and $x = 3$
+      W1 W2: $(1, 4)$ and $(3, 0)$ ft
+      SOLUTION: $\frac{dy}{dx} = 3x^{2} - 12x + 9$. Set it to zero: $3(x - 1)(x - 3) = 0$, so $x = 1$ or $x = 3$. Substitute each into the curve: $y = 4$ and $y = 0$. The turning points are $(1, 4)$ and $(3, 0)$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"algebraic","latex":"(1, 0), (3, 0)"} → Both values of $x$ are right. The heights came from $\frac{dy}{dx}$, which is zero at each turning point; the curve gives $4$ and $0$. (3)
+      ERR [fm.sketch.second-turning-point-dropped] {"kind":"algebraic","latex":"(1, 4)"} → One turning point is right. A cubic's derivative is a quadratic, so it has two roots and the curve turns twice; the second factor gives the other one. (3)
+      HINTS: The derivative of a cubic is a quadratic, so expect two answers. || $3x^{2} - 12x + 9 = 3(x - 1)(x - 3)$. || Each value of $x$ goes back into the curve for its own height.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0009 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)sketch2 · Placing the key points of a simple quadratic on a grid
+  (main) [2] A curve is defined by the equation $y = x^{2} - 4$
+Sketch the curve by plotting the two points where it meets the $x$-axis and the point where it meets the $y$-axis.
+      ANSWER: graph {"kind":"graph","expect":{"plot":"curve","samples":[[-2,0],[0,-4],[2,0]],"tolerance":{"type":"absolute","value":0.1},"smooth":true,"noStraightSegments":true}}
+      MW1 MW1: the two $x$-axis crossings at $(-2, 0)$ and $(2, 0)$
+      W1 W1: the $y$-axis crossing at $(0, -4)$ and a U-shaped curve through all three
+      SOLUTION: Set $y = 0$: $x^{2} = 4$, so $x = 2$ or $x = -2$, giving $(-2, 0)$ and $(2, 0)$. Set $x = 0$: $y = -4$, giving $(0, -4)$. Plot those three points and draw one smooth U through them.
+      ERR [fm.sketch.y-intercept-sign-flipped] {"kind":"graph","test":"point plotted at (0, 4)"} → The two crossings are in the right places. The constant term is $-4$, so the curve dips below the axis at $x = 0$ rather than rising above it. (1)
+      HINTS: Set $y = 0$ for the two crossings. || Set $x = 0$ for the third point. || The coefficient of $x^{2}$ is positive, so the curve is a U.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0010 [verified] exam-style · diff 3 · untiered · FM1 calc · 9 marks · (a)find2|(b)write1|(c)find3|(d)show1|(e)sketch2 · A full curve-sketching question on a quadratic with a negative coefficient of x squared
+  (a) [2] A curve is defined by the equation $y = -x^{2} + 4x + 5$
+Find the coordinates of the points where the curve meets the $x$-axis.
+      ANSWER: algebraic (-1, 0), (5, 0) (equivalent)
+      M1 M1: factorising $-x^2 + 4x + 5 = 0$, for example as $-(x - 5)(x + 1) = 0$
+      W1 W1: $(-1, 0), (5, 0)$
+      SOLUTION: Set $y = 0$: $-x^2 + 4x + 5 = 0$. Multiply through by $-1$: $x^{2} - 4x - 5 = 0$, which factorises to $(x - 5)(x + 1) = 0$. So $x = -1$ or $x = 5$, and the curve meets the $x$-axis at $(-1, 0), (5, 0)$.
+      ERR [fm.calc.differentiate-when-intercepts-asked] {"kind":"algebraic","latex":"(2, 0)"} → That came from solving $-2x + 4 = 0$, which locates the turning point. This part is algebra: set $y$ to zero and factorise. (0)
+      ERR [fm.sketch.factor-signs-not-reversed] {"kind":"algebraic","latex":"(1, 0), (-5, 0)"} → The factorising is sound, so the method mark stands. Each bracket still has to be solved: $x - 5 = 0$ gives $x = 5$, and $x + 1 = 0$ gives $x = -1$. (1)
+      HINTS: Set $y = 0$ before anything else. || Take out the factor $-1$ so the quadratic has a positive $x^{2}$ term. || Give each answer as a coordinate.
+  (b) [1] Write down the coordinates of the point where the curve meets the $y$-axis.
+      ANSWER: algebraic (0, 5) (equivalent)
+      W1 W1: $(0, 5)$
+      SOLUTION: Put $x = 0$: $y = 5$. The curve meets the $y$-axis at $(0, 5)$.
+      ERR [fm.sketch.y-intercept-sign-flipped] {"kind":"algebraic","latex":"(0, -5)"} → The size is right and the sign is not. At $x = 0$ the two terms in $x$ vanish and the constant $5$ is left exactly as it is printed. (0)
+      HINTS: Put $x = 0$ into the equation. || The constant term is the height there.
+  (c) [3] Using calculus, find the coordinates of the turning point of the curve.
+      ANSWER: algebraic (2, 9) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = -2x + 4$
+      M1 M1: setting it to zero and solving for $x = 2$
+      W1 W1: $(2, 9)$ ft
+      SOLUTION: $\frac{dy}{dx} = -2x + 4$. Set it to zero: $-2x + 4 = 0$, so $x = 2$. Substitute into the curve: $y = -(2)^{2} + 4(2) + 5 = 9$. The turning point is $(2, 9)$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"algebraic","latex":"(2, 0)"} → The $x$ is right, so both method marks stand. The height came from $\frac{dy}{dx}$, which is zero at a turning point; the curve gives $9$. (2)
+      ERR [fm.sketch.coordinates-swapped] {"kind":"algebraic","latex":"(9, 2)"} → Both numbers are right and the pair is reversed. The value solved for from the derivative goes first. (2)
+      HINTS: Differentiate, then set the derivative to zero. || The derivative of $-x^{2}$ is $-2x$. || The height comes from the curve, not from the derivative.
+  (d) [1] Show clearly why this turning point is a maximum.
+      ANSWER: text accepted=["The second derivative is -2, which is negative, so the turning point is a maximum","d2y/dx2 = -2 and it is negative, so this is a maximum point"] keyWords=[{"any":["negative","less than zero","below zero"],"marks":1}]
+      MW1 MW1: $\frac{d^{2}y}{dx^{2}} = -2$, which is negative, so the point is a maximum
+      SOLUTION: Differentiating a second time gives $\frac{d^{2}y}{dx^{2}} = -2$. This is negative, so the gradient is falling as it passes through zero and the turning point is a maximum.
+      ERR [fm.calc.second-derivative-sign-misread] {"kind":"text","regex":"(positive|greater than zero|above zero)[^;\\n]*(maximum)|(maximum)[^;\\n]*(positive)"} → The second derivative has been found. The reading is reversed: a negative value names a maximum and a positive one names a minimum. (0)
+      HINTS: Differentiate a second time. || Say what the sign of that number tells you.
+  (e) [2] Hence sketch the curve by plotting the two $x$-axis crossings, the $y$-axis crossing and the turning point.
+      ANSWER: graph {"kind":"graph","expect":{"plot":"curve","samples":[[-1,0],[0,5],[2,9],[5,0]],"tolerance":{"type":"absolute","value":0.1},"smooth":true,"noStraightSegments":true}}
+      MW1 MW1: the four key points placed where parts (a) to (c) put them ft
+      W1 W1: one smooth curve through them, opening downwards, with the points labelled as coordinates
+      SOLUTION: Plot $(-1, 0), (5, 0)$, $(0, 5)$ and $(2, 9)$. Join them with one smooth curve that opens downwards, since the coefficient of $x^{2}$ is negative, and label each point with its coordinates.
+      ERR [fm.calc.sketch-contradicts-results] {"kind":"graph","test":"point plotted at (2, -9)"} → The crossings are right. The turning point has been placed below the axis, which contradicts the maximum you found in part (c); a curve through those crossings has to peak between them. (1)
+      HINTS: Use the answers you already have; nothing new needs calculating. || The coefficient of $x^{2}$ is negative, so the curve opens downwards. || Label each point with its coordinates.
+
+### q.fm.u1.curve-sketching-quadratic-cubic.0011 [verified] exam-style · diff 4 · untiered · FM1 calc · 13 marks · (a)write2|(b)find1|(c)show2|(d)find5|(e)show1|(f)sketch2 · A full curve-sketching question on a cubic with a repeated factor
+  (a) [2] A curve is defined by the equation $y = (x - 2)^{2}(x - 8)$
+Write down the coordinates of the points where the curve meets the $x$-axis.
+      ANSWER: algebraic (2, 0), (8, 0) (equivalent)
+      M1 M1: setting each factor to zero
+      W1 W1: $(2, 0), (8, 0)$, the repeated factor counted once
+      SOLUTION: Set each factor to zero: $(x - 2)^{2} = 0$ gives $x = 2$, and $x - 8 = 0$ gives $x = 8$. The curve meets the $x$-axis at $(2, 0), (8, 0)$. The repeated bracket means the curve touches the axis at $(2, 0)$ rather than crossing it.
+      ERR [fm.calc.origin-assumed-on-cubic] {"kind":"algebraic","latex":"(0, 0), (2, 0), (8, 0)"} → Both crossings are there, with the origin added on top. There is no factor of $x$ in this cubic, and at $x = 0$ the height is $-32$. (1)
+      ERR [fm.sketch.factor-signs-not-reversed] {"kind":"algebraic","latex":"(-2, 0), (-8, 0)"} → The factors have been read out with their printed signs. Solving $x - 2 = 0$ gives $x = 2$ and $x - 8 = 0$ gives $x = 8$. (0)
+      HINTS: A product is zero when a factor is zero. || The squared bracket gives one place, not two. || Each answer is a coordinate.
+  (b) [1] Find the coordinates of the point where the curve meets the $y$-axis.
+      ANSWER: algebraic (0, -32) (equivalent)
+      W1 W1: $(0, -32)$
+      SOLUTION: Put $x = 0$: $y = (0 - 2)^{2}(0 - 8) = 4 \times (-8) = -32$. The curve meets the $y$-axis at $(0, -32)$.
+      ERR [fm.sketch.y-intercept-from-roots] {"kind":"algebraic","latex":"(0, 16)"} → That is the product of the roots $2$ and $8$. The height at $x = 0$ comes from the value of each factor at $x = 0$, which here are $4$ and $-8$. (0)
+      HINTS: Put $x = 0$ into both factors. || $(-2)^{2}$ is positive.
+  (c) [2] Show that $y = x^{3} - 12x^{2} + 36x - 32$.
+      ANSWER: text accepted=["(x - 2)² = x² - 4x + 4, so y = (x² - 4x + 4)(x - 8) = x³ - 8x² - 4x² + 32x + 4x - 32 = x³ - 12x² + 36x - 32","x² - 4x + 4 times x - 8 gives x³ - 12x² + 36x - 32"] keyWords=[{"any":["x^2 - 4x + 4"],"marks":1},{"any":["x^3 - 8x^2 - 4x^2 + 32x + 4x - 32","(x^2 - 4x + 4)(x - 8)"],"marks":1}]
+      M1 M1: expanding the squared bracket to $x^{2} - 4x + 4$
+      W1 W1: multiplying by $(x - 8)$ and collecting to $x^3 - 12x^2 + 36x - 32$
+      SOLUTION: Expand the squared bracket: $(x - 2)^{2} = x^{2} - 4x + 4$. Multiply by $(x - 8)$: $(x^{2} - 4x + 4)(x - 8) = x^{3} - 8x^{2} - 4x^{2} + 32x + 4x - 32$. Collect: $x^{3} - 12x^{2} + 36x - 32$, which is the printed result.
+      ERR [fm.show-that.steps-missing] {"kind":"text","regex":"^[^=\\n]{0,40}(x\\^?3|x³)[^\\n]{0,60}$"} → The printed cubic has been copied down with nothing in front of it. A show-that question pays for the derivation, so write the expansion of the squared bracket and then the product, line by line. (0)
+      HINTS: Expand the squared bracket first. || Then multiply that quadratic by the remaining bracket, term by term. || Collect the two $x^{2}$ terms and the two $x$ terms.
+  (d) [5] Using calculus, find the coordinates of the turning points of the curve.
+      ANSWER: algebraic (2, 0), (6, -32) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 3x^{2} - 24x + 36$
+      M1 M1: setting the derivative to zero
+      W1 W1: factorising to $3(x - 2)(x - 6) = 0$, so $x = 2$ or $x = 6$
+      W1 W2: $y = 0$ at $x = 2$ ft
+      W1 W3: $y = -32$ at $x = 6$ ft
+      SOLUTION: $\frac{dy}{dx} = 3x^{2} - 24x + 36$. Set it to zero: $3(x - 2)(x - 6) = 0$, so $x = 2$ or $x = 6$. At $x = 2$: $y = 0$. At $x = 6$: $y = -32$. The turning points are $(2, 0)$ and $(6, -32)$.
+      ERR [fm.calc.turning-y-from-derivative] {"kind":"algebraic","latex":"(2, 0), (6, 0)"} → Both values of $x$ are right, so four of the five marks are safe. The heights came from $\frac{dy}{dx}$; the curve gives $0$ and $-32$. (3)
+      ERR [fm.sketch.second-turning-point-dropped] {"kind":"algebraic","latex":"(6, -32)"} → One turning point is right. The derivative is a quadratic with two roots, so there is a second turning point to report as well. (4)
+      HINTS: Differentiate the expanded cubic from part (c). || Take out the common factor of $3$ before you factorise. || Each value of $x$ goes back into the curve.
+  (e) [1] Show clearly why the turning point where $x = 6$ is a minimum.
+      ANSWER: text accepted=["The second derivative is 12, which is positive, so this turning point is a minimum","d2y/dx2 = 6x - 24, and at x = 6 that is 12, a positive value, so it is a minimum"] keyWords=[{"any":["positive","greater than zero","above zero"],"marks":1}]
+      MW1 MW1: $\frac{d^{2}y}{dx^{2}} = 6x - 24$, which is $12$ at $x = 6$, a positive value, so the point is a minimum
+      SOLUTION: $\frac{d^{2}y}{dx^{2}} = 6x - 24$. At $x = 6$ that is $12$. This is positive, so the gradient is rising through zero and the turning point is a minimum.
+      ERR [fm.calc.second-derivative-sign-misread] {"kind":"text","regex":"(negative|less than zero|below zero)[^;\\n]*(minimum)|(minimum)[^;\\n]*(negative)"} → The second derivative has been worked out, which is the method. The sign has been read the other way round: positive names a minimum and negative names a maximum. (0)
+      HINTS: Differentiate the derivative. || Put $x = 6$ into that second derivative. || Say what its sign means.
+  (f) [2] Sketch the curve by plotting the $y$-axis crossing, the two $x$-axis crossings and the minimum point.
+      ANSWER: graph {"kind":"graph","expect":{"plot":"curve","samples":[[0,-32],[2,0],[6,-32],[8,0]],"tolerance":{"type":"absolute","value":0.1},"smooth":true,"noStraightSegments":true}}
+      MW1 MW1: the four key points placed as parts (a), (b) and (d) give them ft
+      W1 W1: one smooth cubic through them, touching the axis at the repeated root and rising away to the right, with each point labelled
+      SOLUTION: Plot $(0, -32)$, $(2, 0), (8, 0)$ and the minimum $(6, -32)$. Draw one smooth curve that touches the axis at $(2, 0)$, dips to the minimum and rises through $(8, 0)$, and label every point.
+      ERR [fm.calc.sketch-contradicts-results] {"kind":"graph","test":"point plotted at (6, 32)"} → The crossings are right. The minimum has been placed above the axis, which cannot be: the curve is below the axis between the two crossings, so the minimum sits there too. (1)
+      HINTS: Nothing new needs calculating; use the answers above. || At the repeated root the curve touches the axis and turns. || The coefficient of $x^{3}$ is positive, so the curve rises to the right.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.curve-sketching-quadratic-cubic.01 [verified] fm.calc.differentiate-when-intercepts-asked · earned none · ccea-cer:further-maths:2024-summer:FM1:Q10
+STEM: Saoirse was asked to find the coordinates of the points where the curve $y = x^{2} - 10x + 21$ meets the $x$-axis. Her working:
+    1. y = x^2 - 10x + 21
+  ✘ 2. dy/dx = 2x - 10
+    3. 2x - 10 = 0
+    4. x = 5
+    5. The curve meets the x-axis at (5, 0)
+  WRONG: Line 2 is where it goes astray. Differentiating finds where the curve is level, which is the turning point, not where it meets the axis.
+The crossings come from setting $y$ itself to zero and factorising: this quadratic gives $(x - 3)(x - 7) = 0$.
+Everything after line 2 is correct arithmetic on the wrong equation, and line 5 also reports one point where there are two.
+  FIX: x^2 - 10x + 21 = 0 / (x - 3)(x - 7) = 0 / The curve meets the x-axis at (3, 0) and (7, 0)
+  FEEDBACK: The differentiating itself is accurate, and the same line would earn its mark in the next part of a real question. Here the word to read is "meets": a crossing is where the height is zero, so set $y = 0$ and factorise. The crossings are $(3, 0), (7, 0)$, and $x = 5$ is the turning point, which sits halfway between them.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.curve-sketching-quadratic-cubic.01 [verified] (procedure) How do you find where a curve meets the $x$-axis?  →  Set $y = 0$ and solve the equation, usually by factorising; each solution is the $x$ of a point whose $y$ is zero.
+- rp.fm.u1.curve-sketching-quadratic-cubic.02 [verified] (procedure) How do you find where a curve meets the $y$-axis?  →  Set $x = 0$ and work out the height; for a polynomial that is the constant term.
+- rp.fm.u1.curve-sketching-quadratic-cubic.03 [verified] (procedure) What are the two steps that give a turning point?  →  Solve $\frac{dy}{dx} = 0$ for $x$, then substitute that $x$ into the curve to find the height.
+- rp.fm.u1.curve-sketching-quadratic-cubic.04 [verified] (trap) You have solved $\frac{dy}{dx} = 0$. What do you substitute that value into?  →  The curve itself, never the derivative: the derivative is zero there by definition, so it would give a height of zero every time.
+- rp.fm.u1.curve-sketching-quadratic-cubic.05 [verified] (qa) How does the second derivative name a turning point?  →  A positive second derivative at the point means a minimum, and a negative one means a maximum.
+- rp.fm.u1.curve-sketching-quadratic-cubic.06 [verified] (qa) How many turning points can a cubic have, and of which kinds?  →  Two at most, and when there are two they are always one maximum and one minimum, because the derivative is a quadratic.
+- rp.fm.u1.curve-sketching-quadratic-cubic.07 [verified] (trap) What must be written on a sketch for the final mark?  →  The coordinates of every axis crossing and of every turning point, labelled on the curve.
+
+## INSIGHT
+RULE: Intercepts from y = 0 and x = 0 (no calculus); turning points from dy/dx = 0 with nature from the second derivative; the sketch must pass through your intercepts and turning points with all of them labelled as coordinates.
+- ccea-cer:further-maths:2018-summer:FM1:Q9: asked Intercepts, turning points, then sketch a cubic. | went wrong: Some differentiated in the intercepts part; sketches did not extend to all relevant regions. | rule: Intercepts: set y = 0 and x = 0 - no calculus yet.
+- ccea-cer:further-maths:2019-summer:FM1:Q8: asked Standard curve sketching. | went wrong: x-values given instead of coordinates; differentiation in the intercept part; errors in the y-value of a turning point; two maxima found without noticing the contradiction; sketches missing labelled points. | rule: A cubic has one maximum and one minimum - a contradiction means an error.
+- ccea-cer:further-maths:2022-summer:FM1:Q10: asked Turning points and nature, sketch, then area. | went wrong: Some wrote the derivatives without knowing what to do; some confused the axis crossings with turning points; a maximum below the x-axis confused the sketch. | rule: Plot the turning points you found and draw the curve through them regardless of where they sit.
+- ccea-cer:further-maths:2023-summer:FM1:Q12: asked Where a cubic meets the axes; expand; turning points; nature; sketch. | went wrong: (0, 0) was added as an intercept out of habit; brackets omitted in expansion; sketches sometimes had a maximum below a minimum or were not attempted. | rule: Read the intercepts from the factorised form; the sketch must match your own results.
+- ccea-cer:further-maths:2024-summer:FM1:Q10: asked Intercepts, turning points, sketch. | went wrong: Differentiating in part (i) again, which then spoiled the sketch shape. | rule: Part (i) is intercepts; calculus starts at the turning points.
+- ccea-cer:further-maths:2025-summer:FM1:Q11: asked Quadratic: intercepts, turning point, sketch, area. | went wrong: Some differentiated for the intercepts; the turning point was not written as a coordinate; a few drew cubics; key points unlabelled. | rule: Label intercepts and the turning point as coordinates on the sketch.

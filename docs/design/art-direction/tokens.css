@@ -1,0 +1,610 @@
+/* =====================================================================
+   Cairn — proposed token values
+   Art direction, 20 September 2026. Companion to 01-art-direction.md.
+
+   AMENDED 20 September 2026, after 04-critique.md. Five changes:
+     R1  --ink-2 42% -> 36%, so three inks exist again (18 and 10 steps
+         apart, not 24 and 4), plus a rule capping text greys per surface.
+     R2  --miss loses its blue: it was lch(40% 8 252) against a maths
+         accent of lch(40% 22 266) — same lightness, 14 degrees apart —
+         so "not yet" and "the thing to do next" were one colour twice.
+     R3  .katex returns to 1.06em (KaTeX_Main's x-height is smaller than
+         Literata's; 1em made symbols read a tenth small), and tab-bar
+         labels join the legal uses of --fs-micro.
+     §4  THE DARK-MODE SUBJECT LEAK, verified: data-subject sits on a
+         descendant div (app/learn/[subject]/[unit]/[topic]/page.tsx:90,
+         and [unit]/page.tsx:26), so any subject rule that declares
+         --accent-l overrides the theme's value inherited from <html>.
+         Fixed by construction: subject rules now set HUE AND CHROMA
+         ONLY. See the block below.
+   No disagreements with the critique in this file.
+
+   This file replaces the token block of app/globals.css (lines 51-196 and
+   the @theme inline map). It keeps every existing token NAME. Six names are
+   new; each is marked NEW with the reason it could not be expressed with an
+   existing one. Nothing else in globals.css changes: the @font-face rules,
+   the .prose-note rules, the focus rule, the motion rules and the .tap rule
+   are all correct as they stand and are reproduced at the end only where a
+   value moves.
+
+   Contrast is quoted as the computed WCAG ratio against the surface the
+   token is used on. Every ratio below is arithmetic from the LCH lightness
+   (Y = ((L + 16) / 116)^3), not an estimate.
+   ===================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------
+     THE THREE VARIABLES (Linear's model, unchanged in structure)
+     --base-h  80 -> 85. The neutral hue moves off yellow-green towards
+     a warm paper. At chroma 2-4 this is not a colour you can name; it
+     is the difference between "grey app" and "paper".
+     --accent-h 270 -> 266, and --accent-c 60 -> 12 at the root. The
+     hue barely moves; the CHROMA is the whole story. 270 at chroma 60
+     is the violet-blue every SaaS product ships. 266 at chroma 12 is
+     wet slate, and it stops the Start button looking borrowed.
+     (Swatched in sRGB before choosing: below chroma ~30 the blues
+     read as stone, above ~34 they clip towards teal.)
+     --------------------------------------------------------------- */
+  --base-h: 85;
+  --accent-h: 266;
+  --contrast: 1;
+
+  /* ---------------------------------------------------------------
+     GROUND / SURFACE / RECESS — the three surfaces.
+     CHANGED: ground gains chroma (1 -> 2.4) so it reads as warm paper,
+     and surface stays pure white. That gap is what lets an object sit
+     on the page with a hairline and NO shadow (see --shadow-1 below).
+     Today 91 containers carry a border AND a drop shadow; removing the
+     shadow is the single largest reduction in visual noise available.
+     surface-2 is the recess: reference she consults, never acts on.
+     --------------------------------------------------------------- */
+  --ground: lch(97.5% 2.4 var(--base-h));
+  --surface: lch(100% 0 0);
+  --surface-2: lch(95% 2.2 var(--base-h));
+
+  /* ---------------------------------------------------------------
+     INK, three levels.
+     CHANGED: ink 12% -> 18%. Pure-black text on white is a printing
+     error, not a design; 18% is ink on paper and reduces halation.
+     Contrast on ground: 13.1:1.
+     CHANGED: ink-3 60% -> 46%. THIS IS THE BIGGEST SINGLE FIX IN THE
+     FILE. ink-3 at 60% is 2.98:1 on ground and is currently used for
+     every eyebrow, every caption, every meta line and every licence
+     note — 52+ call sites of text below 4.5:1, a live WCAG 1.4.3
+     failure and the direct cause of the "washed out" feel. At 46% it
+     is 4.87:1 on ground and 4.57:1 on the recess: quiet, and legible.
+     ink-3 cannot go lighter: the recess pins it. Anything lighter than
+     this is not text — use --line.
+     AMENDED (R1): ink-2 40% -> 36%, not 42%. At 42% it sat four
+     lightness units from ink-3 and the product had two inks, not
+     three; every hierarchy this direction assigns to ink-2 against
+     ink-3 — captions, source lines, the locator, the spine's minutes,
+     the "why" line under a plan row — did not exist on the page, and
+     that is the mechanical reason the mockups read flatter than the
+     19 September showcase. 36% is 7.0:1 on the ground and 6.6:1 on
+     the recess, and the steps are now 18 and 10.
+
+     THE TWO-GREY RULE. Below 18 px, at most TWO text greys appear on
+     any one surface: --ink and --ink-2. --ink-3 has exactly three
+     legal uses and no fourth — the page locator, a figure caption,
+     and the minutes in the spine. Anywhere else, quiet means ink-2.
+     --------------------------------------------------------------- */
+  --ink: lch(18% 3 var(--base-h));
+  --ink-2: lch(36% 4 var(--base-h));
+  --ink-3: lch(46% 4 var(--base-h));
+
+  /* ---------------------------------------------------------------
+     LINES.
+     --line      decorative rule: between rows, under a section label.
+     --line-2    the boundary of a container (a tile, a question).
+     --line-3    NEW. The boundary of a control she types in or taps:
+                 an input, an option button, a segmented chip. WCAG
+                 1.4.11 requires 3:1 for a control whose boundary is
+                 the only thing that identifies it. --line-2 is 2.0:1,
+                 so `fieldCls` and `btnOption` fail today. --line-3 is
+                 3.1:1 against white. It could not be folded into
+                 --line-2 without making every card look wireframed.
+     --------------------------------------------------------------- */
+  --line: lch(90% 2 var(--base-h));
+  --line-2: lch(80% 3 var(--base-h));
+  --line-3: lch(60% 6 var(--base-h));
+
+  /* ---------------------------------------------------------------
+     ACCENT — "the one thing to do next", and nothing else.
+     CHANGED: on pages with NO subject (Today, Papers, Map, Flashcards,
+     Settings) the accent is a near-ink slate: L30, chroma 12, hue 266.
+     9.3:1 with white. The Start button there reads as dark stone, one
+     step warmer and softer than the ink it sits beside — so the only
+     genuinely COLOURED buttons in the product are inside a subject,
+     and the colour tells her which subject she is in.
+     The accent is NEVER used for a selected state: selection is ink
+     (see 01-art-direction.md, "one accent, one action").
+     --------------------------------------------------------------- */
+  --accent-l: 30%;
+  --accent-c: 12;
+  --accent-ink-l: 100%;
+  --accent-ink-c: 0;
+  --accent-2-l: 93%;
+  --accent-2-c: 10;
+  --accent-3-l: 97%;
+  --accent-3-c: 4;
+
+  /* ---------------------------------------------------------------
+     SEMANTIC COLOUR — three outcomes that never shame.
+     CHANGED: --ok 55/45/145 -> 45/42/148. 5.05:1 on ground (it was
+     3.5:1, so "correct" text was failing too).
+     CHANGED: --warn 70/60/80 -> 46/48/66. The old amber was 2.0:1 on
+     white: unusable as text. Burnt ochre at 4.87:1 carries the
+     "Part way there" line.
+     CHANGED IN MEANING: --miss is no longer red. Red is shame, and
+     emotional-design.md rule 4 already says a miss is "a hairline
+     outline ... never a red flash". A not-yet is judged in INK.
+     AMENDED (R2): --miss was lch(40% 8 252) — a blue slate. The maths
+     accent is lch(40% 22 266). Same lightness, fourteen degrees of hue
+     apart, and on the not-yet card the miss rule sits forty pixels
+     above a "Fix it now" button in that accent. "Not yet" and "the
+     thing to do next" were the same colour at the same weight, and
+     the two meanings in the margin-rule table were being carried by
+     position alone. --miss is now the warm neutral of the ink itself,
+     chroma 3, no blue: 6.1:1 on the ground.
+     THE RULE THAT DEPENDS ON IT: the accent never appears as a rule
+     inside an object. A rule inside an object is always a verdict.
+     --danger  NEW. Destructive controls ("Forget everything",
+     "Delete backup") genuinely need red, and that is the only thing
+     --miss was carrying red for. Splitting them is what allows --miss
+     to go calm. One call site today (CompanionMemory), more later.
+     --------------------------------------------------------------- */
+  --ok: lch(45% 42 148);
+  --warn: lch(46% 48 66);
+  --miss: lch(40% 3 var(--base-h));
+  --danger: lch(45% 58 28);
+
+  /* ---------------------------------------------------------------
+     SUBJECT TINTS — the recess wash for a subject's own chrome.
+     Defined since July, used by zero components. 01-art-direction.md
+     gives them exactly three jobs: the 3px rail beside a unit's name,
+     the spine's unfilled track, and the wash behind an active row.
+     CHANGED: hues re-picked to match the new accents (248 / 322 /
+     160 / 66 / 238) and chroma raised 6 -> 5 at a higher lightness so
+     ink-2 stays at 5.3:1 on them.
+     --------------------------------------------------------------- */
+  --tint-maths: lch(95% 5 266);
+  --tint-fm: lch(95% 5 330);
+  --tint-bio: lch(95% 5 160);
+  --tint-chem: lch(95% 5 66);
+  --tint-phys: lch(95% 5 238);
+
+  /* ---------------------------------------------------------------
+     FIGURES — the computed SVGs are the platform's own artwork and
+     the only imagery it owns. These four values are what make a
+     figure two-colour instead of flat grey, and they are tokens so
+     that dark mode can raise the fills without re-authoring 264 SVGs.
+     --fig-grid / --fig-fill / --fig-fill-accent  NEW (opacities)
+     --fig-stroke / --fig-stroke-accent           NEW (widths)
+     They could not reuse --line/--ink because an SVG needs a bare
+     number for stroke-opacity and stroke-width, not a colour.
+     --------------------------------------------------------------- */
+  --fig-grid: 0.12;
+  --fig-fill: 0.08;
+  --fig-fill-accent: 0.16;
+  --fig-stroke: 1.75px;
+  --fig-stroke-accent: 2.25px;
+  /* AMENDED (R3): label size in VIEWBOX UNITS, not CSS pixels. The
+     generator is src/components/figures/generated.tsx with W = 640
+     (line 16) rendered w-full, so at 390 px with 16 px gutters the SVG
+     is 358 px wide: a scale of 0.56, and the fontSize={13} at line 55
+     lands at 7.3 RENDERED PIXELS — half the type floor, on the one
+     artwork the product owns, on every figure on every phone.
+     24 viewBox units at W=640 renders at 13.4 px on a 358 px phone;
+     14 is right from md, where the figure gets its full width.
+     Also note for the generator: fillOpacity={0.18} is hard-coded at
+     line 106, so --fig-fill is not read yet and the dark-mode fix
+     depends on that line being changed. */
+  --fig-label: 24;
+  --fig-label-md: 14;
+
+  /* The lesson voice, unchanged. */
+  --serif-lesson: "Literata", Georgia, "Times New Roman", serif;
+
+  /* ---------------------------------------------------------------
+     TYPE SCALE.
+     CHANGED: --fs-meta 13px -> 14px. 13px is the single most common
+     size in the app (162 uses, ahead of 14px at 147 and 12px at 100);
+     562 arbitrary text-[Npx] classes exist against 9 uses of the
+     scale tokens. Raising the floor to 14px and deleting 12px from
+     the vocabulary is most of the "not very nice" fix.
+     CHANGED: --fs-h1 32 -> 26 on phones, 32 from md. A 32px serif h1
+     spends four lines and 40% of a 390px screen on a spec statement.
+     CHANGED: --lh-prose 1.6 -> 1.62, --lh-h2 1.25 -> 1.3.
+     --fs-display  NEW. The topic's short plain-English title, the one
+     thing that must land in the first second. It is a different role
+     from h1 (which is a page title) and needs its own leading.
+     --fs-micro    NEW. 13px. THREE legal uses and no fourth: tabular
+     numerals (a mark-code chip, a UMS figure in a table), the page
+     locator, and a LABEL UNDER A TAB-BAR ICON. Never prose, never a
+     caption, never a form label.
+     AMENDED (R3): the tab-bar label is the third use. The live nav
+     sets text-[11px] (Nav.tsx:151 and :169) and every mockup copied
+     it; the plan deletes 11px without saying what replaces it, and a
+     numerals-only 13px left a tab label with no legal size at all.
+     13px Inter 500 is the answer.
+     --measure / --measure-tight  NEW. The reading measure as a token
+     so the hero, the note and a feedback card agree.
+     --------------------------------------------------------------- */
+  --fs-display: 30px;
+  --lh-display: 1.15;
+  --fs-h1: 26px;
+  --lh-h1: 1.2;
+  --fs-h2: 21px;
+  --lh-h2: 1.3;
+  --fs-h3: 18px;
+  --lh-h3: 1.35;
+  --fs-prose: 17px;
+  --lh-prose: 1.62;
+  --fs-ui: 15px;
+  --lh-ui: 1.5;
+  --fs-meta: 14px;
+  --lh-meta: 1.45;
+  --fs-micro: 13px;
+  --lh-micro: 1.4;
+  /* CHANGED: 66ch -> 60ch. `ch` is the width of "0", and Literata's
+     zero is narrower than its average letter, so 66ch measured out at
+     ~80 characters a line — above the 65-75 our own research asks for.
+     60ch lands at ~72. */
+  --measure: 60ch;
+  --measure-tight: 42ch;
+  /* NEW: the halo behind a label drawn on top of a figure. It takes
+     the colour of the surface the figure sits on, which for a lesson
+     figure is the page, not a card. */
+  --fig-halo: var(--ground);
+
+  /* ---------------------------------------------------------------
+     SHAPE.
+     CHANGED: radius 14 -> 12, radius-sm 10 -> 8. A shade less round
+     reads as exact rather than friendly, which is the difference
+     between a revision app and a study tool.
+     --radius-xs  NEW: mark-code chips and option letters at 5px.
+     --radius-pill NEW: the one pill shape (mastery chip, paper chip).
+     --------------------------------------------------------------- */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 5px;
+  --radius-pill: 999px;
+
+  /* ---------------------------------------------------------------
+     ELEVATION.
+     CHANGED: --shadow-1 is now `none`. It is applied to 91 containers;
+     a page of 9 faintly floating boxes is exactly what "intense"
+     looks like. An object is now carried by pure white on warm paper
+     plus a --line-2 hairline. Nothing that rests on the page has a
+     shadow.
+     --shadow-2 is kept and softened, for the two things that genuinely
+     float ABOVE content: the section sheet and the sticky Check bar.
+     --------------------------------------------------------------- */
+  --shadow-1: none;
+  --shadow-2: 0 10px 30px -14px lch(0% 0 0 / 0.28), 0 2px 6px -3px lch(0% 0 0 / 0.12);
+
+  /* ---------------------------------------------------------------
+     MOTION. 220ms was a touch slow for a gate reveal she triggers
+     eight times a lesson. --dur-fast is for a press; --dur-slow is
+     the stone. Nothing outside 120-300ms exists.
+     --------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 300ms;
+
+  /* ---------------------------------------------------------------
+     LESSON RHYTHM. NEW, three values. The lesson is a document, not a
+     stack of cards, so its vertical rhythm has to be stated somewhere
+     both the note renderer and the spine can read it.
+     --------------------------------------------------------------- */
+  --gap-para: 20px;
+  --gap-section: 40px;
+  --gap-stage: 64px;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --fs-display: 40px;
+    --lh-display: 1.1;
+    --fs-h1: 32px;
+    --fs-h2: 24px;
+    --fs-h3: 19px;
+    --fs-prose: 18px;
+    --gap-section: 48px;
+    --gap-stage: 80px;
+  }
+}
+
+/* ---------------------------------------------------------------
+   SUBJECT HUE. Three stones, not three spectrum colours. Each value
+   was swatched in sRGB and chosen by eye against the warm ground.
+   maths          H266 C22  wet slate — Mourne basalt after rain
+   further-maths  H330 C26  heather   — the hill in August
+   science        H160 C24  lichen    — the grey-green on the cairn
+
+   *** THE RULE, AND IT IS A LINT: a [data-subject] rule sets
+   --accent-h and --accent-c ONLY. It must never declare --accent-l,
+   --accent-ink-l or --accent-ink-c. ***
+
+   Why, and it is not style. `data-subject` is NOT on <html>; it is on
+   a descendant div (app/learn/[subject]/[unit]/[topic]/page.tsx:90 and
+   app/learn/[subject]/[unit]/page.tsx:26). Custom properties inherit,
+   so a declaration on that div beats the value inherited from <html>
+   regardless of which selector "looks" more specific. An earlier draft
+   of this file set --accent-l: 40% per subject; on a dark subject page
+   that overrode the dark theme's --accent-l: 74% while --accent-ink-l
+   stayed at 14%, producing dark text on a dark button at about 2.4:1
+   on EVERY topic page in dark mode. It flattened high contrast's
+   raised chroma the same way. Confining subject rules to hue and
+   chroma removes the whole class of bug rather than patching three
+   instances of it.
+
+   The cost is the per-subject lightness tuning (maths 40, fm 42,
+   science 38) that the earlier draft used to equalise presence across
+   three hues. At a single L40 all three still clear 6.4:1 with white
+   text, so two lightness units are not worth a cascade bug that ships
+   a 2.4:1 button.
+
+   Chroma still varies per theme, because a pale tint on a dark ground
+   loses saturation to the eye — but chroma is safe to restate, since
+   the theme-scoped rule below is more specific than the bare one here.
+
+   Science is pulled to hue 160 (pine) while --ok stays at 148 (grass)
+   and is five steps lighter, so "science" and "correct" cannot be
+   mistaken for one another. Belt and braces: --ok never appears in a
+   subject's chrome, and a subject hue never appears inside a marking
+   surface.
+   --------------------------------------------------------------- */
+[data-subject="maths"] { --accent-h: 266; --accent-c: 22; }
+[data-subject="further-maths"] { --accent-h: 330; --accent-c: 26; }
+[data-subject="science"] { --accent-h: 160; --accent-c: 24; }
+
+/* Derived wherever the hue can change. Unchanged mechanism. */
+:root,
+[data-subject] {
+  --accent: lch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --accent-ink: lch(var(--accent-ink-l) var(--accent-ink-c) var(--accent-h));
+  --accent-2: lch(var(--accent-2-l) var(--accent-2-c) var(--accent-h));
+  --accent-3: lch(var(--accent-3-l) var(--accent-3-c) var(--accent-h));
+}
+
+/* =====================================================================
+   DARK. Not an inversion: a different paper.
+   CHANGED: ground 10% -> 13%, surface 14% -> 17%, surface-2 18% -> 21%.
+   Near-black on OLED makes white serif text bloom; 13% removes the
+   halation and gives the three surfaces room to separate now that
+   there is no shadow to help them.
+   CHANGED: ink 94% -> 93% (glare), ink-3 55% -> 62% (5.4:1 on the new
+   ground; at 55% on a 13% ground it would have been 4.0:1).
+   CHANGED: figure fills are raised, because a 0.08 wash of light ink
+   on a dark ground disappears. This is why the histogram currently
+   reads as dark-grey bars on black.
+   ===================================================================== */
+[data-theme="dark"] {
+  --ground: lch(13% 3 var(--base-h));
+  --surface: lch(17% 3 var(--base-h));
+  --surface-2: lch(21% 3 var(--base-h));
+  --ink: lch(93% 2 var(--base-h));
+  --ink-2: lch(74% 3 var(--base-h));
+  --ink-3: lch(62% 3 var(--base-h));
+  --line: lch(26% 3 var(--base-h));
+  --line-2: lch(34% 3 var(--base-h));
+  --line-3: lch(48% 5 var(--base-h));
+
+  --accent-l: 74%;
+  --accent-c: 16;
+  --accent-ink-l: 14%;
+  --accent-ink-c: 3;
+  --accent-2-l: 30%;
+  --accent-2-c: 16;
+  --accent-3-l: 22%;
+  --accent-3-c: 8;
+
+  --ok: lch(74% 44 148);
+  --warn: lch(76% 46 66);
+  --miss: lch(70% 3 var(--base-h));
+  --danger: lch(68% 50 28);
+
+  --tint-maths: lch(22% 7 266);
+  --tint-fm: lch(22% 7 330);
+  --tint-bio: lch(22% 7 160);
+  --tint-chem: lch(22% 7 66);
+  --tint-phys: lch(22% 7 238);
+
+  --fig-grid: 0.18;
+  --fig-fill: 0.14;
+  --fig-fill-accent: 0.26;
+
+  --shadow-1: none;
+  --shadow-2: 0 10px 30px -14px lch(0% 0 0 / 0.75), 0 2px 6px -3px lch(0% 0 0 / 0.5);
+}
+
+/* Dark keeps each subject's hue but needs more chroma at L74: a pale
+   tint on a dark ground loses saturation to the eye. CHROMA ONLY —
+   these rules must never restate --accent-l or --accent-ink-l either,
+   for the same reason as the bare subject rules above. The lightness
+   comes from [data-theme="dark"] on <html> and is inherited down. */
+[data-theme="dark"] [data-subject="maths"] { --accent-c: 30; }
+[data-theme="dark"] [data-subject="further-maths"] { --accent-c: 32; }
+[data-theme="dark"] [data-subject="science"] { --accent-c: 30; }
+
+/* =====================================================================
+   EVENING. A warmer paper for a late desk, not a dimmer one.
+   The companion contract (binding condition 2) forbids dimming as a
+   time signal, so evening changes the paper's temperature and nothing
+   about contrast: ink stays at 11:1 and the Start button is untouched.
+   CHANGED: base-h 70 -> 48 (further into amber), ground 94% -> 96%
+   so the drop in contrast the old values caused is undone.
+   ===================================================================== */
+[data-theme="evening"] {
+  --base-h: 48;
+  --ground: lch(96% 5 var(--base-h));
+  --surface: lch(99% 3 var(--base-h));
+  --surface-2: lch(93.5% 5 var(--base-h));
+  --ink: lch(19% 4 var(--base-h));
+  --ink-2: lch(43% 5 var(--base-h));
+  --ink-3: lch(47% 5 var(--base-h));
+  --line: lch(88% 4 var(--base-h));
+  --line-2: lch(78% 4 var(--base-h));
+  --line-3: lch(59% 7 var(--base-h));
+  --tint-maths: lch(93% 6 266);
+  --tint-fm: lch(93% 6 330);
+  --tint-bio: lch(93% 6 160);
+  --tint-chem: lch(93% 6 66);
+  --tint-phys: lch(93% 6 238);
+}
+
+/* =====================================================================
+   HIGH CONTRAST. Paper white, true black ink, borders that are
+   unambiguously borders. CHANGED: line 60% -> 45% and line-2 45% ->
+   30% so that a container edge is 7:1; accent chroma raised because
+   at this contrast a muted accent stops reading as an accent at all.
+   ===================================================================== */
+[data-theme="hc"] {
+  --ground: lch(100% 0 0);
+  --surface: lch(100% 0 0);
+  --surface-2: lch(96% 0 0);
+  --ink: lch(0% 0 0);
+  --ink-2: lch(22% 0 0);
+  --ink-3: lch(34% 0 0);
+  --line: lch(45% 0 0);
+  --line-2: lch(30% 0 0);
+  --line-3: lch(24% 0 0);
+  --accent-l: 32%;
+  --accent-c: 60;
+  --accent-2-l: 90%;
+  --accent-2-c: 14;
+  --accent-3-l: 95%;
+  --accent-3-c: 7;
+  --ok: lch(38% 50 148);
+  --warn: lch(40% 52 66);
+  --miss: lch(22% 2 var(--base-h));
+  --danger: lch(38% 62 28);
+  --tint-maths: lch(90% 14 266);
+  --tint-fm: lch(90% 14 330);
+  --tint-bio: lch(90% 14 160);
+  --tint-chem: lch(90% 14 66);
+  --tint-phys: lch(90% 14 238);
+  --fig-grid: 0.3;
+  --fig-fill: 0.14;
+  --fig-fill-accent: 0.26;
+}
+
+/* High contrast raises accent chroma on <html>; the subject rules must
+   not flatten it back. Chroma only, same rule as dark. */
+[data-theme="hc"] [data-subject="maths"] { --accent-c: 58; }
+[data-theme="hc"] [data-subject="further-maths"] { --accent-c: 62; }
+[data-theme="hc"] [data-subject="science"] { --accent-c: 58; }
+
+/* =====================================================================
+   TAILWIND THEME MAP. Same shape as today; the six new names are added
+   so they are usable as utilities (text-ink-3, border-line-3,
+   text-danger, text-display, rounded-xs, rounded-pill).
+   ===================================================================== */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif-lesson: var(--serif-lesson);
+  /* NEW: the companion's own voice, already referenced by
+     CompanionLine.tsx as var(--font-companion, ui-serif, …). Pointing
+     it at the lesson serif makes Rowan sound like the notes rather
+     than like a system font. */
+  --font-companion: var(--serif-lesson);
+
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-miss: var(--miss);
+  --color-danger: var(--danger);
+  --color-tint-maths: var(--tint-maths);
+  --color-tint-fm: var(--tint-fm);
+  --color-tint-bio: var(--tint-bio);
+  --color-tint-chem: var(--tint-chem);
+  --color-tint-phys: var(--tint-phys);
+
+  --text-display: var(--fs-display);
+  --text-display--line-height: var(--lh-display);
+  --text-h1: var(--fs-h1);
+  --text-h1--line-height: var(--lh-h1);
+  --text-h2: var(--fs-h2);
+  --text-h2--line-height: var(--lh-h2);
+  --text-h3: var(--fs-h3);
+  --text-h3--line-height: var(--lh-h3);
+  --text-prose: var(--fs-prose);
+  --text-prose--line-height: var(--lh-prose);
+  --text-ui: var(--fs-ui);
+  --text-ui--line-height: var(--lh-ui);
+  --text-meta: var(--fs-meta);
+  --text-meta--line-height: var(--lh-meta);
+  --text-micro: var(--fs-micro);
+  --text-micro--line-height: var(--lh-micro);
+
+  --radius-card: var(--radius);
+  --radius-field: var(--radius-sm);
+  --radius-xs: var(--radius-xs);
+  --radius-pill: var(--radius-pill);
+  --shadow-card: var(--shadow-1);
+  --shadow-float: var(--shadow-2);
+}
+
+/* =====================================================================
+   RULES THAT MOVE WITH THE TOKENS
+   Three edits to the rest of globals.css that the values above assume.
+   ===================================================================== */
+
+/* AMENDED (R3): .katex STAYS at 1.06em. An earlier draft pulled it to
+   1em on the impression that inline fractions sat proud of the line.
+   That impression is the fraction's HEIGHT, not its size, and 1em does
+   not change it — it only shrinks every symbol. KaTeX_Main has a
+   smaller x-height than Literata, so at 1em an inline `x` reads about
+   a tenth small beside the words around it. 1.06 is right; try 1.1 by
+   eye on the `0 < t ⩽ 10` stem at 390 px before settling.
+
+   THE REAL FLOOR PROBLEM IS STACKING, AND IT IS NOT A RENDERER FIX.
+   An inline \frac sets its numerator and denominator at scriptstyle,
+   0.7em: 17 × 1.06 × 0.7 = 12.6 px, under the 13 px floor. So an
+   inline STACKED fraction is a CONTENT LINT, not a CSS rule:
+     - in running prose, prefer a solidus or ÷ ("frequency ÷ width");
+     - where a stack is unavoidable inline, \tfrac at most;
+     - \dfrac belongs in a stem or a display block, never in a line of
+       prose. (01-art-direction.md §3.4 previously instructed the
+       opposite and has been corrected.)
+   Playwright: the smallest computed font-size of any text inside
+   .katex is >= 13 px. */
+.katex { font-size: 1.06em; color: var(--ink); }
+.katex-display { font-size: 1.1em; margin: 0.7em 0; overflow-x: auto; overflow-y: hidden; padding-block: 2px; }
+
+/* CHANGED: the lesson measure comes from the token now, and the note
+   carries the paragraph rhythm rather than an em-relative guess. */
+.prose-note { max-width: var(--measure); font-size: var(--fs-prose); line-height: var(--lh-prose); font-family: var(--serif-lesson); }
+.prose-note p { margin-block: var(--gap-para); }
+.prose-note strong { font-weight: 600; }
+.prose-note :where(button, input, select, textarea, label, .tnum) {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* NEW: the section rule. A numbered lesson section is opened by a
+   hairline across the measure and a sentence-case label under it. This
+   is the one piece of furniture that replaces 52 uppercase eyebrows. */
+.section-rule { border-top: 1px solid var(--line); padding-top: 14px; margin-top: var(--gap-section); }
+
+/* CHANGED: 52px, not 44px, on anything she taps hundreds of times
+   (emotional-design.md rule 5 already says 52 for grading buttons; the
+   two numbers were inconsistent). .tap stays 44px as the floor for
+   everything else. */
+.tap { min-height: 44px; min-width: 44px; }
+.tap-lg { min-height: 52px; min-width: 52px; }

@@ -1,0 +1,232 @@
+[
+  {
+    "type": "hero",
+    "lede": "Two probabilities, one question, and only one of two operations is right. If the two things cannot both happen, you add. If one happening leaves the other's chance untouched, you multiply. Everything else in this topic follows from telling those two situations apart.",
+    "can": [
+      "Add two probabilities when the events cannot both happen.",
+      "Multiply two probabilities when neither event affects the other.",
+      "Find the probability that something does not happen."
+    ],
+    "minutes": 8
+  },
+  {
+    "type": "h",
+    "text": "Two rules, and the question of which"
+  },
+  {
+    "type": "p",
+    "md": "A spinner has 10 equal sections: 4 red, 3 blue, 2 green and 1 yellow. Every section is equally likely, so each probability is just a count out of 10."
+  },
+  {
+    "type": "figure",
+    "alt": "A strip of 10 equal sections standing for a spinner: 4 marked R for red, 3 marked B for blue, 2 marked G for green and 1 marked Y for yellow.",
+    "svg": "<svg viewBox='0 0 272 56' xmlns='http://www.w3.org/2000/svg' width='272' height='56'><rect x='6' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='19' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='32' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='45' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='58' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='71' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='84' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='97' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='110' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='123' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='136' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='149' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='162' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='175' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='188' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='201' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>G</text><rect x='214' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='227' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>G</text><rect x='240' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='253' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>Y</text></svg>",
+    "caption": "The 10 sections laid out in a row. Red fills 4 of them, so $P(\\text{red}) = \\tfrac{4}{10} = \\tfrac{2}{5}$."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "On the spinner strip above, how many of the 10 sections are blue?",
+    "answer": "3",
+    "explain": "3 sections carry a B, so $P(\\text{blue}) = \\tfrac{3}{10}$."
+  },
+  {
+    "type": "h",
+    "text": "Or: add, when they cannot both happen"
+  },
+  {
+    "type": "figure",
+    "alt": "The same strip of 10 sections with the 4 red sections and the 3 blue sections bracketed separately underneath.",
+    "svg": "<svg viewBox='0 0 272 96' xmlns='http://www.w3.org/2000/svg' width='272' height='96'><rect x='6' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='19' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='32' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='45' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='58' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='71' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='84' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='97' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='110' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='123' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='136' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='149' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='162' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='175' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='188' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='201' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>G</text><rect x='214' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='227' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>G</text><rect x='240' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='253' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>Y</text><path d='M6 48V53H110V48' fill='none' stroke='currentColor' stroke-width='1'/><text x='58' y='64' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>red, 4/10</text><path d='M110 68V73H188V68' fill='none' stroke='currentColor' stroke-width='1'/><text x='149' y='84' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>blue, 3/10</text></svg>",
+    "caption": "Two blocks of sections that do not overlap: 4 $+$ 3 $=$ 7 of the 10."
+  },
+  {
+    "type": "p",
+    "md": "One spin cannot be red **and** blue, so the two blocks of sections never overlap. Counting both blocks together is the same as adding the two probabilities.\n\n$P(\\text{red or blue}) = \\tfrac{2}{5} + \\tfrac{3}{10} = \\tfrac{7}{10}$\n\nTwo events that cannot both happen are called **mutually exclusive**. For those, and only those, \"or\" means add."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "blank",
+    "prompt": "On the same spinner, what is $P(\\text{green or yellow})$? Give a fraction.",
+    "answer": "3/10 | 3/10 | 0.3",
+    "explain": "$\\tfrac{1}{5} + \\tfrac{1}{10} = \\tfrac{3}{10}$. The sections do not overlap, so the probabilities add."
+  },
+  {
+    "type": "h",
+    "text": "When adding goes wrong"
+  },
+  {
+    "type": "figure",
+    "alt": "The numbers 1 to 12 in a row, with 2, 3, 4, 6, 8, 9, 10, 12 shaded: the even numbers and the multiples of three together.",
+    "svg": "<svg viewBox='0 0 324 56' xmlns='http://www.w3.org/2000/svg' width='324' height='56'><rect x='6' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='19' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>1</text><rect x='32' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='45' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>2</text><rect x='58' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='71' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>3</text><rect x='84' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='97' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>4</text><rect x='110' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='123' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>5</text><rect x='136' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='149' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>6</text><rect x='162' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='175' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>7</text><rect x='188' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='201' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>8</text><rect x='214' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='227' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>9</text><rect x='240' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='253' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>10</text><rect x='266' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='279' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>11</text><rect x='292' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='305' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>12</text></svg>",
+    "caption": "Even or a multiple of three: 8 of the 12 numbers are shaded, not 10."
+  },
+  {
+    "type": "p",
+    "md": "A card is taken from 12 numbered 1 to 12. There are 6 even numbers and 4 multiples of three, and adding gives $\\tfrac{1}{2} + \\tfrac{1}{3} = \\tfrac{5}{6}$.\n\nCount the shaded cards instead and there are only 8. The numbers 6 and 12 are even **and** multiples of three, so adding counts them twice. These events are not mutually exclusive, and the addition rule does not apply."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "Which pair of events could both happen on one go, so their probabilities must not simply be added?",
+    "options": [
+      "A card is even; the same card is a multiple of three",
+      "A spin lands on red; the same spin lands on blue",
+      "A coin lands heads; the same coin lands tails"
+    ],
+    "answer": "A card is even; the same card is a multiple of three",
+    "explain": "A card can be both: 6 and 12 are in both lists. The other two pairs cannot happen together, so those probabilities may be added."
+  },
+  {
+    "type": "h",
+    "text": "And: multiply, when one does not affect the other"
+  },
+  {
+    "type": "figure",
+    "alt": "A grid with two rows, Heads and Tails, and 10 columns for the spinner sections. The 4 cells in the Heads row above a red section are marked with a cross.",
+    "svg": "<svg viewBox='0 0 332 98' xmlns='http://www.w3.org/2000/svg' width='332' height='98'><path d='M62 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M88 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M114 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M140 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M166 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M192 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M218 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M244 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M270 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M296 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M322 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 20H322' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 42H322' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 64H322' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 86H322' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 20V86' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><text x='192' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>Spinner section</text><text x='6' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='start'>Coin</text><text x='75' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='101' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='127' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='153' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='179' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>B</text><text x='205' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>B</text><text x='231' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>B</text><text x='257' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>G</text><text x='283' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>G</text><text x='309' y='35' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Y</text><text x='10' y='57' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Heads</text><text x='75' y='57' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='101' y='57' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='127' y='57' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='153' y='57' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='79' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Tails</text></svg>",
+    "caption": "Every spin can meet either coin face, so there are 20 equally likely outcomes, and 4 of them are red with heads."
+  },
+  {
+    "type": "p",
+    "md": "Spin, then flip a coin. The coin knows nothing about the spinner, so the spin does not change $P(\\text{heads})$. Events like that are **independent**, and \"and\" means multiply.\n\n$P(\\text{red and heads}) = \\tfrac{2}{5} \\times \\tfrac{1}{2} = \\tfrac{1}{5}$\n\nThe grid shows why: the 4 crosses sit among 20 equally likely outcomes."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "blank",
+    "prompt": "The same spinner is spun and the same coin flipped. What is $P(\\text{green and tails})$? Give a fraction.",
+    "answer": "1/10 | 0.1",
+    "explain": "$\\tfrac{1}{5} \\times \\tfrac{1}{2} = \\tfrac{1}{10}$. Multiplying by a number below 1 makes the chance smaller, which is what \"both\" should do."
+  },
+  {
+    "type": "h",
+    "text": "See it worked through"
+  },
+  {
+    "type": "video",
+    "videoId": "mUDqgCe-PAo",
+    "title": "Independent Events - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 249,
+    "why": "Corbettmaths video 249 works through the multiplying rule on events that do not touch each other. Watch it once, then answer the check below."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Two events cannot both happen at the same time. Which calculation gives the probability that one or the other happens?",
+    "options": [
+      "Add the two probabilities",
+      "Multiply the two probabilities",
+      "Subtract the smaller from the larger"
+    ],
+    "answer": "Add the two probabilities",
+    "explain": "Events that cannot both happen are mutually exclusive, and their outcomes never overlap, so the two counts simply join together."
+  },
+  {
+    "type": "h",
+    "text": "The opposite of an event"
+  },
+  {
+    "type": "figure",
+    "alt": "The strip of 10 sections with every section that is not red shaded, and a bracket under them.",
+    "svg": "<svg viewBox='0 0 272 76' xmlns='http://www.w3.org/2000/svg' width='272' height='76'><rect x='6' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='19' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='32' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='45' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='58' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='71' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='84' y='14' width='26' height='26' fill='none' stroke='currentColor' stroke-width='1'/><text x='97' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>R</text><rect x='110' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='123' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='136' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='149' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='162' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='175' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>B</text><rect x='188' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='201' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>G</text><rect x='214' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='227' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>G</text><rect x='240' y='14' width='26' height='26' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1'/><text x='253' y='31' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>Y</text><path d='M110 48V53H266V48' fill='none' stroke='currentColor' stroke-width='1'/><text x='188' y='64' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>not red, 6/10</text></svg>",
+    "caption": "Red and not red fill the strip between them, so the two probabilities add to 1."
+  },
+  {
+    "type": "p",
+    "md": "An event either happens or it does not, and there is nothing in between. So the two probabilities fill the whole strip.\n\n$P(\\text{not red}) = 1 - P(\\text{red}) = 1 - \\tfrac{2}{5} = \\tfrac{3}{5}$\n\nThe same trick finds a missing outcome from a list: if a machine serves only tea, coffee or hot chocolate, then $P(\\text{hot chocolate}) = 1 - P(\\text{tea}) - P(\\text{coffee})$. Always subtract from 1, never from one of the other probabilities."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "blank",
+    "prompt": "$P(\\text{rain tomorrow}) = 0.35$. What is $P(\\text{no rain tomorrow})$?",
+    "answer": "0.65 | 13/20",
+    "explain": "$1 - 0.35 = 0.65$. Rain and no rain are the only two outcomes, so they add to 1."
+  },
+  {
+    "type": "h",
+    "text": "One of each, either way round"
+  },
+  {
+    "type": "figure",
+    "alt": "A grid of the 10 first-spin sections against the 10 second-spin sections, with the cells for red then green and for green then red marked with a cross.",
+    "svg": "<svg viewBox='0 0 272 204' xmlns='http://www.w3.org/2000/svg' width='272' height='204'><path d='M62 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M82 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M102 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M122 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M142 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M162 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M182 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M202 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M222 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M242 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M262 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 27H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 42H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 57H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 72H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 87H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 102H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 117H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 132H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 147H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 162H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 177H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 192H262' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><path d='M6 27V192' fill='none' stroke='currentColor' stroke-width='0.7' stroke-opacity='0.45'/><text x='162' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='middle'>Second spin</text><text x='6' y='12' font-family='inherit' font-size='9.5' fill='currentColor' fill-opacity='0.75' text-anchor='start'>First spin</text><text x='72' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='92' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='112' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='132' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>R</text><text x='152' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>B</text><text x='172' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>B</text><text x='192' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>B</text><text x='212' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>G</text><text x='232' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>G</text><text x='252' y='38.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='middle'>Y</text><text x='10' y='53.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>R</text><text x='212' y='53.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='232' y='53.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='68.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>R</text><text x='212' y='68.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='232' y='68.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='83.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>R</text><text x='212' y='83.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='232' y='83.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='98.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>R</text><text x='212' y='98.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='232' y='98.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='113.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>B</text><text x='10' y='128.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>B</text><text x='10' y='143.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>B</text><text x='10' y='158.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>G</text><text x='72' y='158.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='92' y='158.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='112' y='158.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='132' y='158.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='173.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>G</text><text x='72' y='173.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='92' y='173.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='112' y='173.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='132' y='173.5' font-family='inherit' font-size='9.5' fill='currentColor' text-anchor='middle'>x</text><text x='10' y='188.5' font-family='inherit' font-size='10' font-weight='600' fill='currentColor' text-anchor='start'>Y</text></svg>",
+    "caption": "Both orders are marked: red then green, and green then red. Together they are $\\tfrac{16}{100}$ of the 100 outcomes."
+  },
+  {
+    "type": "p",
+    "md": "Spin, then spin again. \"One red and one green\" does not say which comes first, so two different outcomes fit it.\n\nRed then green: $\\tfrac{2}{5} \\times \\tfrac{1}{5} = \\tfrac{2}{25}$. Green then red is the same product. Adding the two gives $\\tfrac{4}{25}$.\n\nMultiply within an order, then add the orders. If the question fixes the order — *the first is red and the second is green* — only one product counts."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why multiplying makes the answer smaller",
+    "md": "Every probability is between 0 and 1, so multiplying by one can only shrink a number. Both events happening is never more likely than either one alone, and an answer above 1 is not a probability at all."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "The spinner is spun and spun again. Which answer to $P(\\text{one red and one green})$ shows at once that something has gone wrong?",
+    "options": [
+      "$\\tfrac{3}{5}$",
+      "$\\tfrac{4}{25}$",
+      "$\\tfrac{2}{25}$"
+    ],
+    "answer": "$\\tfrac{3}{5}$",
+    "explain": "Two spins ought to make a fussy outcome rarer, not more likely than one red section on its own. $\\tfrac{3}{5}$ comes from adding where the rule multiplies."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2024 M7 Paper 2 Q16",
+    "md": "Two independent events combined. **Many candidates added the probabilities instead of multiplying them.** Of those who multiplied, some counted only one order of an outcome that could happen either way round.",
+    "source": "ccea-cer:maths:2024-summer:M72:Q16"
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Tell mutually exclusive events from independent ones, and pick add or multiply.\nAdd probabilities only when the events cannot both happen.\nMultiply probabilities when neither event changes the other.\nFind the opposite of an event by subtracting from 1.\nCount both orders when the question does not fix which comes first."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Usually one or two questions, two to four marks, spread over both papers. The first mark is the decision written as a calculation: the two probabilities joined by a plus or a times. The last mark is the value, as a fraction or a decimal but never a ratio. Stuck: write down every probability the question gives you, then ask whether the events can both happen at once."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.adding-and-multiplying-probabilities.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.adding-and-multiplying-probabilities.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.adding-and-multiplying-probabilities.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.adding-and-multiplying-probabilities.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.adding-and-multiplying-probabilities.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m7.adding-and-multiplying-probabilities.07"
+  }
+]

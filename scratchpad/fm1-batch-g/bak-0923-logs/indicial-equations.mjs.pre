@@ -1,0 +1,1087 @@
+/**
+ * FM1 batch F — topic 5: indicial-equations (difficulty 2 -> L).
+ * Every solution and every distractor is produced by solving the equation the route describes,
+ * in full precision, and rounded only when it is printed.
+ */
+import {
+  OUT, PAPER, check, log as verLog, writeJson, lintTree, figure, svgWrap, svgText, svgPath, svgRect, num,
+  shingleClash, corpusFiles,
+} from "./lib.mjs";
+
+const SLUG = "indicial-equations";
+const TOPIC = "fm.u1.indicial-equations";
+const REFS = ["FM1-LOG-03"];
+const CER18 = "ccea-cer:further-maths:2018-summer:FM1:Q6";
+const CER19 = "ccea-cer:further-maths:2019-summer:FM1:Q9";
+const CER22 = "ccea-cer:further-maths:2022-summer:FM1:Q5";
+const CER23 = "ccea-cer:further-maths:2023-summer:FM1:Q7";
+const CER25 = "ccea-cer:further-maths:2025-summer:FM1:Q9";
+
+/* ---- the mathematics, computed ---------------------------------------------------------------- */
+
+const L10 = (v) => Math.log10(v);
+const d2 = (v) => Math.round(v * 100) / 100;
+const d6 = (v) => Math.round(v * 1e6) / 1e6;
+
+/**
+ * Solves L^(m x + c) = R^(p x + q) exactly as the method does:
+ *   (m x + c) log L = (p x + q) log R
+ *   x (m log L - p log R) = q log R - c log L
+ */
+function solve({ L, m, c, R, p, q }) {
+  const denom = m * L10(L) - p * L10(R);
+  if (Math.abs(denom) < 1e-12) throw new Error("the x terms cancel, so this equation has no single solution");
+  const x = (q * L10(R) - c * L10(L)) / denom;
+  // checked by substitution at full precision
+  const lhs = L ** (m * x + c);
+  const rhs = R ** (p * x + q);
+  if (Math.abs(lhs - rhs) > 1e-6 * Math.max(1, Math.abs(lhs))) throw new Error(`substitution check failed: ${lhs} vs ${rhs}`);
+  return { ...arguments[0], x, denom, numer: q * L10(R) - c * L10(L), lhs, rhs };
+}
+
+/** The index expression m x + c, printed the way a paper prints it. */
+function idx(m, c) {
+  const mx = m === 1 ? "x" : m === -1 ? "-x" : `${m}x`;
+  if (c === 0) return mx;
+  return `${mx} ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
+}
+const eqTex = (e) => `${e.L}^{${idx(e.m, e.c)}} = ${e.R === Math.round(e.R) && e.p === 0 ? e.R : e.R}^{${e.p === 0 ? "" : idx(e.p, e.q)}}`;
+/** A ^ (linear) = plain number, or a ^ (linear) = b ^ (linear). */
+const printEq = (e) => (e.p === 0 && e.q === 1 ? `${e.L}^{${idx(e.m, e.c)}} = ${e.R}` : `${e.L}^{${idx(e.m, e.c)}} = ${e.R}^{${idx(e.p, e.q)}}`);
+
+const WE = solve({ L: 5, m: 3, c: -2, R: 40, p: 0, q: 1 });
+const Q1 = solve({ L: 2, m: 1, c: 0, R: 40, p: 0, q: 1 });
+const Q2 = solve({ L: 5, m: 1, c: 2, R: 90, p: 0, q: 1 });
+const Q3 = solve({ L: 7, m: 3, c: -1, R: 200, p: 0, q: 1 });
+const Q4 = solve({ L: 4, m: 1, c: 0, R: 2, p: 1, q: 3 }); // 4^x = 2^(x+3), exactly x = 3
+const Q5 = solve({ L: 5, m: 2, c: 0, R: 3, p: 1, q: 4 });
+const Q6 = solve({ L: 3, m: 1, c: 0, R: 11, p: 0, q: 1 });
+const TWIN = solve({ L: 4, m: 2, c: -3, R: 150, p: 0, q: 1 });
+const EXA = solve({ L: 2, m: 4, c: 1, R: 7, p: 1, q: 3 });
+const EXB = solve({ L: 8, m: 1, c: 0, R: 2, p: 1, q: 4 }); // 8^x = 2^(x+4), exactly x = 2
+
+if (Math.abs(Q4.x - 3) > 1e-9) throw new Error(`Q4 should be exactly 3, got ${Math.round(Q4.x)}`);
+if (Math.abs(EXB.x - 2) > 1e-9) throw new Error(`EXB should be exactly 2, got ${Math.round(EXB.x)}`);
+
+/** The log identity behind the method, checked at three sample points. */
+const IDENTITY = [
+  { a: 3, x: 4 },
+  { a: 7, x: 2.5 },
+  { a: 2, x: -1.5 },
+].map((s) => ({ ...s, lhs: d6(L10(s.a ** s.x)), rhs: d6(s.x * L10(s.a)) }));
+for (const s of IDENTITY) if (Math.abs(s.lhs - s.rhs) > 1e-6) throw new Error(`log a^x = x log a failed at a = ${s.a}, x = ${s.x}`);
+
+/* ---- error routes, executed --------------------------------------------------------------------- */
+
+const routes = {
+  /**
+   * The brackets are dropped where there was one to drop, so the logarithm multiplies only the
+   * constant term of that index (the slip the reports print as "2x - 1 log 3"). An index with no
+   * constant has no bracket, so that side is untouched.
+   */
+  bracketsOmitted: (e) => {
+    const leftBracket = e.c !== 0 && e.m !== 0;
+    const rightBracket = e.p !== 0 && e.q !== 0;
+    const lhsCoef = leftBracket ? e.m : e.m * L10(e.L);
+    const lhsConst = leftBracket ? e.c * L10(e.L) : 0;
+    const rhsCoef = e.p === 0 ? 0 : rightBracket ? e.p : e.p * L10(e.R);
+    const rhsConst = e.p === 0 ? e.q * L10(e.R) : e.q * L10(e.R);
+    const denom = lhsCoef - rhsCoef;
+    if (Math.abs(denom) < 1e-12) return null;
+    return (rhsConst - lhsConst) / denom;
+  },
+  /** An x term is moved across without its sign changing, so the two x terms add instead of subtract. */
+  termsNotCollected: (e) => {
+    const denom = e.m * L10(e.L) + e.p * L10(e.R);
+    if (Math.abs(denom) < 1e-12) return null;
+    return (e.q * L10(e.R) - e.c * L10(e.L)) / denom;
+  },
+  /** The difference of two logarithms in the numerator is carried out as a division. */
+  logsDividedNotSubtracted: (e) => {
+    if (e.c === 0) return null;
+    return (e.q * L10(e.R)) / (e.c * L10(e.L)) / (e.m * L10(e.L) - e.p * L10(e.R));
+  },
+  /** Every logarithm rounded to two decimal places before anything is combined. */
+  roundedTooEarly: (e) => {
+    const lL = d2(L10(e.L));
+    const lR = d2(L10(e.R));
+    return (e.q * lR - e.c * lL) / (e.m * lL - e.p * lR);
+  },
+  /** The power undone by dividing, as though the index were a multiplier. */
+  dividedNotLogged: (e) => e.R / e.L,
+  /** The quotient of two logarithms carried out as a subtraction. */
+  subtractedNotDivided: (e) => e.q * L10(e.R) - e.m * L10(e.L),
+};
+
+const E = {
+  q1Divided: routes.dividedNotLogged(Q1),
+  q1Subtracted: routes.subtractedNotDivided(Q1),
+  q2Brackets: routes.bracketsOmitted(Q2),
+  q3Brackets: routes.bracketsOmitted(Q3),
+  q4Brackets: routes.bracketsOmitted(Q4),
+  q5Collected: routes.termsNotCollected(Q5),
+  q6Rounded: routes.roundedTooEarly(Q6),
+  exaBrackets: routes.bracketsOmitted(EXA),
+  exaCollected: routes.termsNotCollected(EXA),
+  exaDivided: routes.logsDividedNotSubtracted(EXA),
+};
+for (const [key, v] of Object.entries(E)) if (v === null || !Number.isFinite(v)) throw new Error(`route ${key} reached no value`);
+
+/* ---- figures -------------------------------------------------------------------------------------- */
+
+const rr = (v) => num(Math.round(v * 10) / 10);
+
+function trappedSvg() {
+  const body = [
+    svgRect(40, 30, 220, 64, { width: 1.2, fill: "currentColor", opacity: 0.06 }),
+    svgText(150, 22, "the index is the unknown", { size: 10.5 }),
+    svgText(150, 72, `${Q1.L}^x = ${Q1.R}`, { size: 26 }),
+    svgPath("M 268 62 L 322 62 M 312 55 L 322 62 L 312 69", { width: 1.6 }),
+    svgText(295, 48, "take logs", { size: 10 }),
+    svgRect(330, 30, 220, 64, { width: 1.2, fill: "currentColor", opacity: 0.06 }),
+    svgText(440, 22, "now it is an ordinary factor", { size: 10.5 }),
+    svgText(440, 72, `x log ${Q1.L} = log ${Q1.R}`, { size: 20 }),
+    svgPath("M 150 100 L 150 118 M 143 108 L 150 118 L 157 108", { width: 1.1, dash: "4 3" }),
+    svgPath("M 440 100 L 440 118 M 433 108 L 440 118 L 447 108", { width: 1.1, dash: "4 3" }),
+    svgText(150, 134, "dividing by 2 does nothing here", { size: 11 }),
+    svgText(440, 134, "divide by log 2 and x is free", { size: 11 }),
+    svgText(295, 164, "a logarithm is the only tool that brings a power down", { size: 11.5 }),
+  ].join("");
+  return svgWrap(
+    "0 0 590 178",
+    `Two boxed equations side by side: 2 to the power x equals 40 on the left, and x times log 2 equals log 40 on the right, with an arrow labelled take logs running between them`,
+    body,
+  );
+}
+
+function routeSvg() {
+  // An SVG text node renders its characters literally, so the index is bracketed rather than braced:
+  // "5^{3x - 2}" stripped of its braces would read "53x - 2".
+  const lines = [
+    `${WE.L}^(${idx(WE.m, WE.c)}) = ${WE.R}`,
+    `log(${WE.L}^(${idx(WE.m, WE.c)})) = log ${WE.R}`,
+    `(${idx(WE.m, WE.c)}) log ${WE.L} = log ${WE.R}`,
+    `${idx(WE.m, WE.c)} = log ${WE.R} / log ${WE.L}`,
+    `x = ${d2(WE.x)}`,
+  ];
+  const notes = [
+    "the equation as printed",
+    "take logs of both sides",
+    "the power law brings the index down",
+    "divide by log 5, then tidy",
+    "only now reach for the calculator",
+  ];
+  const out = [];
+  lines.forEach((t, i) => {
+    // The caret is the exponent marker and must survive: stripping it turned "5^(3x - 2)" into "53x - 2".
+    out.push(svgText(30, 34 + i * 32, t, { size: 14, anchor: "start" }));
+    out.push(svgText(320, 34 + i * 32, notes[i], { size: 10.5, anchor: "start" }));
+  });
+  out.push(svgRect(20, 18 + 2 * 32, 280, 26, { width: 1.2, fill: "currentColor", opacity: 0.09 }));
+  return svgWrap(
+    "0 0 560 196",
+    `Five lines of working solving 5 to the power 3x minus 2 equals 40, each with a short note beside it, and the line where the power law is used highlighted`,
+    out.join(""),
+  );
+}
+
+function bracketSvg() {
+  const out = [
+    svgRect(20, 26, 250, 96, { width: 1.2, fill: "currentColor", opacity: 0.05 }),
+    svgText(145, 20, "with the brackets", { size: 10.5 }),
+    svgText(145, 56, `(${idx(EXA.m, EXA.c)}) log ${EXA.L}`, { size: 17 }),
+    svgText(145, 84, "every term inside is", { size: 10.5 }),
+    svgText(145, 100, `multiplied by log ${EXA.L}`, { size: 10.5 }),
+    svgRect(310, 26, 250, 96, { width: 1.2, fill: "currentColor", opacity: 0.05 }),
+    svgText(435, 20, "without them", { size: 10.5 }),
+    svgText(435, 56, `${EXA.m}x ${EXA.c < 0 ? "-" : "+"} ${Math.abs(EXA.c)} log ${EXA.L}`, { size: 17 }),
+    svgText(435, 84, `only the ${Math.abs(EXA.c)} is multiplied,`, { size: 10.5 }),
+    svgText(435, 100, "so the equation changes", { size: 10.5 }),
+    svgPath("M 272 74 L 306 74", { width: 1, dash: "3 3" }),
+    svgText(290, 140, "one pair of brackets, five marks", { size: 11.5 }),
+  ].join("");
+  return svgWrap(
+    "0 0 580 154",
+    `Two boxes: on the left the index written in brackets and multiplied by the logarithm, on the right the same line with the brackets missing so the logarithm multiplies only the constant`,
+    out,
+  );
+}
+
+function collectSvg() {
+  const lines = [
+    `(${idx(EXA.m, EXA.c)}) log ${EXA.L} = (${idx(EXA.p, EXA.q)}) log ${EXA.R}`,
+    `${EXA.m}x log ${EXA.L} + log ${EXA.L} = x log ${EXA.R} + ${EXA.q} log ${EXA.R}`,
+    `${EXA.m}x log ${EXA.L} - x log ${EXA.R} = ${EXA.q} log ${EXA.R} - log ${EXA.L}`,
+    `x(${EXA.m} log ${EXA.L} - log ${EXA.R}) = ${EXA.q} log ${EXA.R} - log ${EXA.L}`,
+    `x = ${d2(EXA.x)}`,
+  ];
+  const notes = ["logs of both sides, with brackets", "expand both sides", "x terms left, numbers right", "factorise x out", "divide, and only then evaluate"];
+  const out = [];
+  lines.forEach((t, i) => {
+    out.push(svgText(26, 32 + i * 32, t, { size: 12.5, anchor: "start" }));
+    out.push(svgText(360, 32 + i * 32, notes[i], { size: 10.5, anchor: "start" }));
+  });
+  out.push(svgRect(18, 16 + 3 * 32, 330, 26, { width: 1.2, fill: "currentColor", opacity: 0.09 }));
+  return svgWrap(
+    "0 0 580 196",
+    `Five lines of working solving 2 to the power 4x plus 1 equals 7 to the power x plus 3, each with a short note beside it, and the factorising line highlighted`,
+    out.join(""),
+  );
+}
+
+function accuracySvg() {
+  const early = d2(E.q6Rounded);
+  const out = [
+    svgRect(24, 28, 246, 104, { width: 1.2, fill: "currentColor", opacity: 0.05 }),
+    svgText(147, 22, "rounded on the way", { size: 10.5 }),
+    svgText(147, 56, `log ${Q6.R} ≈ ${d2(L10(Q6.R))}`, { size: 13 }),
+    svgText(147, 78, `log ${Q6.L} ≈ ${d2(L10(Q6.L))}`, { size: 13 }),
+    svgText(147, 110, `x = ${early.toFixed(2)}`, { size: 16 }),
+    svgRect(310, 28, 246, 104, { width: 1.2, fill: "currentColor", opacity: 0.05 }),
+    svgText(433, 22, "kept until the end", { size: 10.5 }),
+    svgText(433, 56, `log ${Q6.R} ÷ log ${Q6.L}`, { size: 13 }),
+    svgText(433, 78, "in one calculator step", { size: 10.5 }),
+    svgText(433, 110, `x = ${d2(Q6.x).toFixed(2)}`, { size: 16 }),
+    svgPath("M 274 80 L 306 80", { width: 1, dash: "3 3" }),
+    svgText(290, 152, "two decimal places apart, and one of them is the mark", { size: 11.5 }),
+  ].join("");
+  return svgWrap(
+    "0 0 580 166",
+    `Two boxes comparing the same equation solved with the logarithms rounded to two decimal places first and with them kept to full precision until the last step, giving different answers`,
+    out,
+  );
+}
+
+const TRAPPED_SVG = trappedSvg();
+const ROUTE_SVG = routeSvg();
+const BRACKET_SVG = bracketSvg();
+const COLLECT_SVG = collectSvg();
+const ACCURACY_SVG = accuracySvg();
+
+/* ---- note --------------------------------------------------------------------------------------- */
+
+const blocks = [
+  {
+    type: "hero",
+    lede: "Sometimes the unknown is the power itself. You cannot divide a power away, so the equation looks stuck. Taking logarithms of both sides brings the index down to the front, and what is left is an ordinary linear equation you already know how to solve.",
+    can: [
+      "Take logarithms of both sides and bring the index down with brackets",
+      "Expand, collect the x terms on one side and factorise to reach x",
+      "Keep full accuracy until the last step and answer to the accuracy asked for",
+    ],
+    minutes: 11,
+  },
+  { type: "h", text: "When the unknown has climbed into the power" },
+  {
+    type: "p",
+    md: `$${Q1.L}^{x} = ${Q1.R}$ looks like nothing you can rearrange. Dividing by $${Q1.L}$ does not touch the $x$, because the $x$ is an index rather than a multiplier.\nA logarithm is the tool that moves it. Take logs of both sides and the power law turns $\\log ${Q1.L}^{x}$ into $x \\log ${Q1.L}$, so the $x$ becomes an ordinary factor and the equation becomes linear.`,
+  },
+  {
+    type: "figure",
+    alt: `Two boxed equations: 2 to the power x equals 40 on the left, and x times log 2 equals log 40 on the right, joined by an arrow labelled take logs.`,
+    svg: TRAPPED_SVG,
+    caption: `Once the index is down at the front it is just a number multiplying $x$.`,
+  },
+  {
+    type: "gate",
+    id: "g1",
+    kind: "choice",
+    prompt: `One tap to begin. In the picture above, $${Q1.L}^{x} = ${Q1.R}$ becomes $x \\log ${Q1.L} = \\log ${Q1.R}$. Which law of logarithms did that?`,
+    options: ["The power law", "The product law", "The quotient law"],
+    answer: "The power law",
+    explain: `$\\log a^{n} = n \\log a$ is the power law. It is the only one that moves an index, and it is the first line of every question of this kind.`,
+  },
+  { type: "h", text: "1. The route, line by line" },
+  {
+    type: "p",
+    md: `Solve $${printEq(WE)}$.\n**Step 1.** Take logs of both sides.\n**Step 2.** The power law brings the whole index down, in brackets: $(${idx(WE.m, WE.c)}) \\log ${WE.L} = \\log ${WE.R}$.\n**Step 3.** Divide by $\\log ${WE.L}$, then tidy the linear equation.\n**Step 4.** Evaluate once, at the end: $x = ${d2(WE.x).toFixed(2)}$ to two decimal places.`,
+  },
+  {
+    type: "figure",
+    alt: `Five lines of working solving 5 to the power 3x minus 2 equals 40, each with a note beside it, and the power-law line highlighted.`,
+    svg: ROUTE_SVG,
+    caption: `Four moves, in the same order every time.`,
+  },
+  {
+    type: "callout",
+    kind: "why",
+    title: "Why taking logs frees the unknown",
+    md: `Every $\\log$ in these lines is just a number, so once the index is down at the front the equation is linear in $x$ and the ordinary rules apply. That is the whole purpose of the first line: it changes what kind of equation you are looking at.`,
+  },
+  {
+    type: "gate",
+    id: "g2",
+    kind: "number",
+    prompt: `Working on $${printEq(WE)}$: taking logs and dividing gives $${idx(WE.m, WE.c)} = \\frac{\\log ${WE.R}}{\\log ${WE.L}}$. What is $x$, correct to two decimal places?`,
+    answer: d2(WE.x).toFixed(2),
+    explain: `$\\frac{\\log ${WE.R}}{\\log ${WE.L}} = ${d6(L10(WE.R) / L10(WE.L))}$, so $${WE.m}x = ${d6(L10(WE.R) / L10(WE.L) + 2)}$ and $x = ${d2(WE.x).toFixed(2)}$.`,
+  },
+  { type: "h", text: "2. The brackets are the marks" },
+  {
+    type: "p",
+    md: `The index is a whole expression, so all of it comes down together and all of it needs a bracket: $(${idx(EXA.m, EXA.c)}) \\log ${EXA.L}$, never $${EXA.m}x ${EXA.c < 0 ? "-" : "+"} ${Math.abs(EXA.c)} \\log ${EXA.L}$.\nWithout the bracket the logarithm multiplies only the last term, and the equation being solved is no longer the one that was set. It is the single most reported slip on this topic.`,
+  },
+  {
+    type: "figure",
+    alt: `Two boxes: on the left the index inside brackets multiplied by the logarithm, on the right the same line with the brackets missing so only the constant is multiplied.`,
+    svg: BRACKET_SVG,
+    caption: `The bracket is what keeps the equation the same equation.`,
+  },
+  {
+    type: "callout",
+    kind: "examiner",
+    title: "Summer 2018, Unit 1, Question 6",
+    md: "Most candidates knew to take logarithms and the question was answered well. The marks that went were careless: the brackets left off the index, and bases other than ten producing extra slips. Isolating the unknown was the hurdle for everyone else.",
+    source: CER18,
+  },
+  {
+    type: "gate",
+    id: "g3",
+    kind: "choice",
+    prompt: `Taking logs of $${printEq(EXA)}$ gives which line?`,
+    options: [
+      `$(${idx(EXA.m, EXA.c)}) \\log ${EXA.L} = (${idx(EXA.p, EXA.q)}) \\log ${EXA.R}$`,
+      `$${EXA.m}x ${EXA.c < 0 ? "-" : "+"} ${Math.abs(EXA.c)} \\log ${EXA.L} = x ${EXA.q < 0 ? "-" : "+"} ${Math.abs(EXA.q)} \\log ${EXA.R}$`,
+      `$\\log ${EXA.m}x = \\log ${EXA.p}x$`,
+    ],
+    answer: `$(${idx(EXA.m, EXA.c)}) \\log ${EXA.L} = (${idx(EXA.p, EXA.q)}) \\log ${EXA.R}$`,
+    explain: `Each whole index comes down in front of its own logarithm, inside a bracket. Without the brackets the logarithms multiply only the constants.`,
+  },
+  { type: "h", text: "3. Collecting the x terms" },
+  {
+    type: "p",
+    md: `With logarithms on both sides there are two $x$ terms. Expand each bracket, move the $x$ terms to one side and the numbers to the other, then factorise $x$ out.\nEvery $\\log$ here is just a number, so treat them exactly as you would treat any letters in a linear equation. The sign is what goes wrong: a term that crosses the equals sign changes sign.`,
+  },
+  {
+    type: "figure",
+    alt: `Five lines of working solving 2 to the power 4x plus 1 equals 7 to the power x plus 3, each with a note beside it, and the factorising line highlighted.`,
+    svg: COLLECT_SVG,
+    caption: `Expand, collect, factorise, divide — then evaluate.`,
+  },
+  {
+    type: "gate",
+    id: "g4",
+    kind: "number",
+    prompt: `From the working shown above, $x(${EXA.m} \\log ${EXA.L} - \\log ${EXA.R}) = ${EXA.q} \\log ${EXA.R} - \\log ${EXA.L}$. What is $x$, correct to two decimal places?`,
+    answer: d2(EXA.x).toFixed(2),
+    explain: `The bracket on the left is $${d6(EXA.denom)}$ and the right-hand side is $${d6(EXA.numer)}$, so $x = ${d2(EXA.x).toFixed(2)}$.`,
+  },
+  { type: "h", text: "4. Evaluate once, at the end" },
+  {
+    type: "p",
+    md: `Keep the logarithms as logarithms all the way down the page and let the calculator do the whole expression in one step. Rounding $\\log ${Q6.R}$ and $\\log ${Q6.L}$ on the way changes the answer in the second decimal place, which is exactly where the mark is.\nUnless a question says otherwise, give two decimal places.`,
+  },
+  {
+    type: "figure",
+    alt: `Two boxes comparing the same equation solved with the logarithms rounded early and with them kept to full precision, giving answers that differ in the second decimal place.`,
+    svg: ACCURACY_SVG,
+    caption: `Same equation, same method, one rounded too soon.`,
+  },
+  {
+    type: "video",
+    videoId: "QI6U1QTkuaw",
+    title: "Solving Index Equations using Logs - Part 1 - Corbettmaths",
+    channel: "corbettmaths",
+    why: "The same four moves worked through on several equations, with the brackets written every time.",
+  },
+  {
+    type: "gate",
+    id: "g5",
+    kind: "number",
+    prompt: `Solve $${printEq(Q6)}$, giving your answer correct to two decimal places. Keep the logarithms in the calculator until the final step.`,
+    answer: d2(Q6.x).toFixed(2),
+    explain: `$x = \\frac{\\log ${Q6.R}}{\\log ${Q6.L}} = ${d6(Q6.x)}$, which is $${d2(Q6.x).toFixed(2)}$. Rounding each logarithm first would give $${d2(E.q6Rounded).toFixed(2)}$.`,
+  },
+  { type: "h", text: "You can now" },
+  {
+    type: "p",
+    md: `Recognise that an unknown in the index needs logarithms, not division.\nTake logs of both sides and bring each whole index down inside a bracket.\nExpand, collect the $x$ terms on one side and factorise $x$ out.\nDivide and evaluate in one calculator step at the end.\nSpot when both sides share a base, and solve by equating indices instead.`,
+  },
+  { type: "h", text: "In the exam" },
+  {
+    type: "p",
+    md: `This is a standard $4$ or $5$ mark part, usually the second half of a logarithm question. The first mark is taking logs of both sides; the last is the answer to two decimal places. Stuck? Write the logs of both sides and bring each index down in a bracket — that line alone earns the first two marks, whatever happens afterwards.`,
+  },
+  { type: "prompt", promptId: `rp.${TOPIC}.01` },
+  { type: "prompt", promptId: `rp.${TOPIC}.02` },
+  { type: "prompt", promptId: `rp.${TOPIC}.04` },
+  { type: "prompt", promptId: `rp.${TOPIC}.05` },
+];
+
+/* ---- items ----------------------------------------------------------------------------------------- */
+
+const numAns = (value, { dp = 2 } = {}) => ({
+  kind: "numeric",
+  value: Number(value.toFixed(dp)),
+  tolerance: { type: "dp", places: dp },
+  unitRequired: false,
+  acceptForms: ["decimal", "fraction"],
+});
+const exactAns = (value) => ({
+  kind: "numeric",
+  // a same-base solution is a whole number; the division that produced it leaves floating-point dust
+  value: Math.round(value * 1e6) / 1e6,
+  tolerance: { type: "absolute", value: 0.0005 },
+  unitRequired: false,
+  acceptForms: ["decimal", "fraction"],
+});
+
+const ce = (misconception, value, feedback, marks, source) => ({
+  misconception,
+  pattern: { kind: "numeric", value: Number(Number(value).toFixed(2)), tolerance: { type: "absolute", value: 0.005 } },
+  feedback,
+  marksTypicallyEarned: marks,
+  source,
+});
+
+const logScheme = (e, marks) => {
+  const s = [
+    { id: "M1", code: "M", marks: 1, for: `taking logarithms of both sides` },
+    { id: "MW1", code: "MW", marks: 1, for: `$(${idx(e.m, e.c)}) \\log ${e.L} = ${e.p === 0 ? `\\log ${e.R}` : `(${idx(e.p, e.q)}) \\log ${e.R}`}$, with brackets` },
+  ];
+  if (marks >= 4) s.push({ id: "M2", code: "M", marks: 1, for: "expanding and collecting the terms in $x$ on one side", dependsOn: ["MW1"] });
+  if (marks >= 5) s.push({ id: "M3", code: "M", marks: 1, for: "factorising $x$ out and dividing", dependsOn: ["M2"] });
+  s.push({ id: "W1", code: "W", marks: 1, for: `$${d2(e.x).toFixed(2)}$`, ft: true });
+  return s;
+};
+
+const questions = [
+  {
+    id: `q.${TOPIC}.0001`,
+    difficulty: 1,
+    style: "practice",
+    commandWords: ["Solve"],
+    setting: "The simplest indicial equation, with the unknown alone in the index",
+    parts: [
+      {
+        id: "main",
+        stem: `Solve the equation\n$${printEq(Q1)}$\nGive your answer correct to two decimal places.`,
+        marks: 3,
+        answer: numAns(Q1.x),
+        scheme: logScheme(Q1, 3),
+        hints: ["Take logarithms of both sides.", `The power law brings the $x$ down in front of $\\log ${Q1.L}$.`],
+        workedSolution: `Taking logs: $\\log ${Q1.L}^{x} = \\log ${Q1.R}$, so $x \\log ${Q1.L} = \\log ${Q1.R}$.\n$x = \\frac{\\log ${Q1.R}}{\\log ${Q1.L}} = ${d6(Q1.x)}$.\nTo two decimal places, $x = ${d2(Q1.x).toFixed(2)}$.`,
+        commonErrors: [
+          ce("fm.logs.unknown-base-divided", E.q1Divided, `That is $${Q1.R} \\div ${Q1.L}$. An index is not a multiplier, so it cannot be divided away; taking logarithms is what frees the $x$.`, 0, CER19),
+          ce("fm.logs.quotient-as-divided-logs", E.q1Subtracted, `The two logarithms have been subtracted where the method divides them. From $x \\log ${Q1.L} = \\log ${Q1.R}$ you divide, which gives $${d2(Q1.x).toFixed(2)}$.`, 1, CER25),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0002`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Solve"],
+    setting: "A linear index on one side, where the bracket first matters",
+    parts: [
+      {
+        id: "main",
+        stem: `Solve the equation\n$${printEq(Q2)}$\nGive your answer correct to two decimal places.`,
+        marks: 4,
+        answer: numAns(Q2.x),
+        scheme: logScheme(Q2, 4),
+        hints: ["Take logarithms of both sides.", "Put the whole index in a bracket before you multiply."],
+        workedSolution: `Taking logs: $(${idx(Q2.m, Q2.c)}) \\log ${Q2.L} = \\log ${Q2.R}$.\nDividing: $${idx(Q2.m, Q2.c)} = \\frac{\\log ${Q2.R}}{\\log ${Q2.L}} = ${d6(L10(Q2.R) / L10(Q2.L))}$.\nSo $x = ${d6(Q2.x)}$, which is $${d2(Q2.x).toFixed(2)}$ to two decimal places.`,
+        commonErrors: [
+          ce("fm.logs.brackets-omitted", E.q2Brackets, `The brackets were left off, so only the $${Math.abs(Q2.c)}$ was multiplied by $\\log ${Q2.L}$. With the bracket, $(${idx(Q2.m, Q2.c)}) \\log ${Q2.L} = \\log ${Q2.R}$ gives $${d2(Q2.x).toFixed(2)}$.`, 1, CER18),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0003`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Solve"],
+    setting: "A coefficient and a constant in the index, still with a plain number on the right",
+    parts: [
+      {
+        id: "main",
+        stem: `Solve the equation\n$${printEq(Q3)}$\nGive your answer correct to two decimal places.`,
+        marks: 4,
+        answer: numAns(Q3.x),
+        scheme: logScheme(Q3, 4),
+        hints: ["Brackets around the whole index.", "Divide first, then unpick the linear equation."],
+        workedSolution: `Taking logs: $(${idx(Q3.m, Q3.c)}) \\log ${Q3.L} = \\log ${Q3.R}$.\nDividing: $${idx(Q3.m, Q3.c)} = \\frac{\\log ${Q3.R}}{\\log ${Q3.L}} = ${d6(L10(Q3.R) / L10(Q3.L))}$.\nSo $${Q3.m}x = ${d6(L10(Q3.R) / L10(Q3.L) + 1)}$ and $x = ${d2(Q3.x).toFixed(2)}$ to two decimal places.`,
+        commonErrors: [
+          ce("fm.logs.brackets-omitted", E.q3Brackets, `Without the bracket the logarithm multiplied only the $${Math.abs(Q3.c)}$. Written as $(${idx(Q3.m, Q3.c)}) \\log ${Q3.L}$, the answer is $${d2(Q3.x).toFixed(2)}$.`, 1, CER18),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0004`,
+    difficulty: 3,
+    style: "practice",
+    commandWords: ["Solve"],
+    setting: "Both sides written as powers of the same base, where indices beat logarithms",
+    parts: [
+      {
+        id: "main",
+        stem: `By writing both sides as powers of $${Q4.R}$, solve the equation\n$${printEq(Q4)}$`,
+        marks: 3,
+        answer: exactAns(Q4.x),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${Q4.L} = ${Q4.R}^{2}$, so the left side is $${Q4.R}^{2x}$` },
+          { id: "M2", code: "M", marks: 1, for: `$2x = ${idx(Q4.p, Q4.q)}$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$${Math.round(Q4.x)}$`, ft: true },
+        ],
+        hints: [`$${Q4.L}$ is a power of $${Q4.R}$.`, "Equal powers of the same base have equal indices."],
+        workedSolution: `$${Q4.L} = ${Q4.R}^{2}$, so $${Q4.L}^{x} = ${Q4.R}^{2x}$.\nThe equation becomes $${Q4.R}^{2x} = ${Q4.R}^{${idx(Q4.p, Q4.q)}}$, so $2x = ${idx(Q4.p, Q4.q)}$.\nThat gives $x = ${Math.round(Q4.x)}$.`,
+        commonErrors: [
+          ce("fm.logs.brackets-omitted", E.q4Brackets, `Taking logs is a valid route here, but the brackets were left off, so $\\log ${Q4.R}$ multiplied only the $${Math.abs(Q4.q)}$. Matching powers of $${Q4.R}$ avoids the slip and gives $x = ${Math.round(Q4.x)}$.`, 0, CER18),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0005`,
+    difficulty: 3,
+    style: "practice",
+    commandWords: ["Solve"],
+    setting: "Different bases on both sides, so the x terms have to be gathered",
+    parts: [
+      {
+        id: "main",
+        stem: `Solve the equation\n$${printEq(Q5)}$\nGive your answer correct to two decimal places.`,
+        marks: 5,
+        answer: numAns(Q5.x),
+        scheme: logScheme(Q5, 5),
+        hints: ["Logs of both sides, with brackets.", `Every $\\log$ is a number, so collect the $x$ terms as usual.`],
+        workedSolution: `Taking logs: $${Q5.m}x \\log ${Q5.L} = (${idx(Q5.p, Q5.q)}) \\log ${Q5.R}$.\nExpanding: $${Q5.m}x \\log ${Q5.L} = x \\log ${Q5.R} + ${Q5.q} \\log ${Q5.R}$.\nCollecting: $x(${Q5.m} \\log ${Q5.L} - \\log ${Q5.R}) = ${Q5.q} \\log ${Q5.R}$.\nSo $x = ${d6(Q5.x)}$, which is $${d2(Q5.x).toFixed(2)}$ to two decimal places.`,
+        commonErrors: [
+          ce("fm.logs.terms-not-collected", E.q5Collected, `The $x$ term crossed the equals sign without changing sign, so the two $x$ terms were added instead of subtracted. With the sign changed, $x(${Q5.m} \\log ${Q5.L} - \\log ${Q5.R}) = ${Q5.q} \\log ${Q5.R}$ gives $${d2(Q5.x).toFixed(2)}$.`, 2, CER22),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0006`,
+    difficulty: 2,
+    style: "practice",
+    commandWords: ["Solve"],
+    setting: "The accuracy step on its own, where rounding early moves the answer",
+    parts: [
+      {
+        id: "main",
+        stem: `Solve the equation\n$${printEq(Q6)}$\nGive your answer correct to two decimal places.`,
+        marks: 3,
+        answer: numAns(Q6.x),
+        scheme: logScheme(Q6, 3),
+        hints: ["Take logs of both sides.", "Do the division in one calculator step."],
+        workedSolution: `Taking logs: $x \\log ${Q6.L} = \\log ${Q6.R}$.\n$x = \\frac{\\log ${Q6.R}}{\\log ${Q6.L}} = ${d6(Q6.x)}$.\nTo two decimal places, $x = ${d2(Q6.x).toFixed(2)}$.`,
+        commonErrors: [
+          ce("fm.logs.rounded-too-early", E.q6Rounded, `The method is right and the logarithms were rounded before they were divided. Keeping them in the calculator to the last step gives $${d2(Q6.x).toFixed(2)}$.`, 2, CER25),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0007`,
+    difficulty: 3,
+    style: "exam-style",
+    commandWords: ["Solve"],
+    setting: "The full two-sided equation, then a same-base pair, as a Unit 1 logarithm question closes",
+    parts: [
+      {
+        id: "a",
+        stem: `Solve the equation\n$${printEq(EXA)}$\nGive your answer correct to two decimal places.`,
+        marks: 5,
+        answer: numAns(EXA.x),
+        scheme: logScheme(EXA, 5),
+        hints: ["Take logarithms of both sides, keeping each index in a bracket.", "Expand, then gather the $x$ terms on one side.", "Factorise $x$ out before you divide."],
+        workedSolution: `Taking logs: $(${idx(EXA.m, EXA.c)}) \\log ${EXA.L} = (${idx(EXA.p, EXA.q)}) \\log ${EXA.R}$.\nExpanding: $${EXA.m}x \\log ${EXA.L} + \\log ${EXA.L} = x \\log ${EXA.R} + ${EXA.q} \\log ${EXA.R}$.\nCollecting: $x(${EXA.m} \\log ${EXA.L} - \\log ${EXA.R}) = ${EXA.q} \\log ${EXA.R} - \\log ${EXA.L}$.\nSo $x = ${d6(EXA.x)}$, which is $${d2(EXA.x).toFixed(2)}$ to two decimal places.`,
+        commonErrors: [
+          ce("fm.logs.brackets-omitted", E.exaBrackets, `The brackets were left off when the indices came down, so each logarithm multiplied only its constant. With brackets the answer is $${d2(EXA.x).toFixed(2)}$.`, 1, CER18),
+          ce("fm.logs.terms-not-collected", E.exaCollected, `The $x$ term crossed the equals sign with its sign unchanged, so the two $x$ terms were added. Subtracting gives $x(${EXA.m} \\log ${EXA.L} - \\log ${EXA.R})$ and the answer $${d2(EXA.x).toFixed(2)}$.`, 3, CER22),
+          ce("fm.logs.quotient-as-divided-logs", E.exaDivided, `The two logarithms on the top line were divided where the working subtracts them. The numerator is $${EXA.q} \\log ${EXA.R} - \\log ${EXA.L}$, which gives $${d2(EXA.x).toFixed(2)}$.`, 2, CER25),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `By writing both sides as powers of $${EXB.R}$, solve the equation\n$${printEq(EXB)}$`,
+        marks: 3,
+        answer: exactAns(EXB.x),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${EXB.L} = ${EXB.R}^{3}$, so the left side is $${EXB.R}^{3x}$` },
+          { id: "M2", code: "M", marks: 1, for: `$3x = ${idx(EXB.p, EXB.q)}$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$${Math.round(EXB.x)}$`, ft: true },
+        ],
+        hints: [`$${EXB.L}$ is a power of $${EXB.R}$.`, "Once both sides share a base, the indices are equal."],
+        workedSolution: `$${EXB.L} = ${EXB.R}^{3}$, so $${EXB.L}^{x} = ${EXB.R}^{3x}$.\nThe equation becomes $${EXB.R}^{3x} = ${EXB.R}^{${idx(EXB.p, EXB.q)}}$, so $3x = ${idx(EXB.p, EXB.q)}$.\nThat gives $2x = ${EXB.q}$ and $x = ${Math.round(EXB.x)}$.`,
+        commonErrors: [],
+        requiresWorking: true,
+      },
+    ],
+  },
+];
+
+function buildQuestion(q) {
+  const totalMarks = q.parts.reduce((s, p) => s + p.marks, 0);
+  return {
+    id: q.id,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    tier: "untiered",
+    style: q.style,
+    difficulty: q.difficulty,
+    ao: q.style === "exam-style" ? ["AO1", "AO2"] : ["AO1"],
+    commandWords: q.commandWords,
+    emphasis: [],
+    context: { setting: q.setting, original: true },
+    figures: [],
+    parts: q.parts,
+    totalMarks,
+    timeAllowanceSec: Math.round(totalMarks * 1.2 * 60),
+    skeleton: q.parts.map((p) => `(${p.id})solve${p.marks}`).join("|"),
+    examinerSources: [CER18, CER22, CER25],
+    solutionProgram: q.parts.map((p) => `${p.id}: ${p.workedSolution.replace(/\n/g, " ")}`).join(" || "),
+    verification: `ver.${q.id}`,
+    version: 1,
+  };
+}
+
+const builtQuestions = questions.map(buildQuestion);
+
+const workedExamples = [
+  {
+    id: `we.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `Solve the equation $${printEq(WE)}$, giving your answer correct to two decimal places.`,
+    figure: figure(ROUTE_SVG, `Five lines of working solving 5 to the power 3x minus 2 equals 40, each with a short note beside it.`),
+    steps: [
+      {
+        n: 1,
+        working: `Take logarithms of both sides: $\\log ${WE.L}^{${idx(WE.m, WE.c)}} = \\log ${WE.R}$.`,
+        decision: "Both sides, always. Taking logs of one side alone changes the equation, and this line is the first mark whatever happens next.",
+        earns: ["M1"],
+      },
+      {
+        n: 2,
+        working: `The power law brings the whole index down, in a bracket: $(${idx(WE.m, WE.c)}) \\log ${WE.L} = \\log ${WE.R}$.`,
+        decision: "The bracket is not decoration. Without it the logarithm multiplies only the constant, and the equation stops being the one that was set.",
+        whyMenu: {
+          options: [
+            `Because $\\log a^{n} = n \\log a$ applies to the whole index`,
+            `Because $\\log ${WE.L}$ can be cancelled from both sides`,
+            `Because the index can be divided out`,
+          ],
+          correct: 0,
+          explain: `The power law moves the entire index to the front. It is one expression, so it travels inside a bracket.`,
+        },
+        earns: ["MW1"],
+      },
+      {
+        n: 3,
+        working: `Divide both sides by $\\log ${WE.L}$: $${idx(WE.m, WE.c)} = \\frac{\\log ${WE.R}}{\\log ${WE.L}}$.`,
+        decision: `Leave it as a quotient of logarithms. Writing $\\log ${WE.R} - \\log ${WE.L}$ here is the slip the reports name, and it changes the answer.`,
+        earns: ["M2"],
+      },
+      {
+        n: 4,
+        working: `Now evaluate, once: $\\frac{\\log ${WE.R}}{\\log ${WE.L}} = ${d6(L10(WE.R) / L10(WE.L))}$, so $${WE.m}x = ${d6(L10(WE.R) / L10(WE.L) - WE.c)}$ and $x = ${d6(WE.x)}$.`,
+        decision: "One calculator step for the whole expression. Rounding the logarithms on the way in moves the second decimal place, which is where the last mark sits.",
+        earns: ["M3"],
+      },
+      {
+        n: 5,
+        working: `To two decimal places, $x = ${d2(WE.x).toFixed(2)}$.`,
+        decision: `Check it: $${WE.L}^{${WE.m}(${d2(WE.x).toFixed(2)}) ${WE.c < 0 ? "-" : "+"} ${Math.abs(WE.c)}} = ${d2(WE.L ** (WE.m * d2(WE.x) + WE.c)).toFixed(2)}$, which is the right-hand side to the accuracy carried.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$x = ${d2(WE.x).toFixed(2)}$`,
+    twin: {
+      stem: `Solve the equation $${printEq(TWIN)}$, giving your answer correct to two decimal places.`,
+      answer: numAns(TWIN.x),
+    },
+    faded: [
+      { showSteps: 2, studentSupplies: [3, 4, 5] },
+      { showSteps: 1, studentSupplies: [2, 3, 4, 5] },
+    ],
+    verification: `ver.we.${TOPIC}.01`,
+    version: 1,
+  },
+];
+
+const diagnostics = [
+  {
+    id: `dx.${TOPIC}.pre`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "pre",
+    items: [
+      {
+        id: "p1",
+        stem: `Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is $\\log a^{n}$ written another way?`,
+        skill: "The power law",
+        options: [
+          { id: "a", text: `$n \\log a$`, correct: true, feedback: `The power law brings the index down in front. It is the move this whole lesson rests on.` },
+          { id: "b", text: `$(\\log a)^{n}$`, correct: false, feedback: `The index belongs to $a$ inside the logarithm, not to the logarithm itself.` },
+          { id: "c", text: `$\\log n + \\log a$`, correct: false, feedback: `That would be $\\log(na)$. An index is not a factor inside the logarithm.` },
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "p2",
+        stem: `Solve $5x - 2 = 3x + 8$.`,
+        skill: "A linear equation with the unknown on both sides",
+        options: [
+          { id: "a", text: "$x = 5$", correct: true, feedback: `$2x = 10$, so $x = 5$. The last half of every indicial equation is exactly this.` },
+          { id: "b", text: "$x = 3$", correct: false, feedback: `The constant moved without changing sign. From $5x - 3x = 8 + 2$, $2x = 10$.` },
+          { id: "c", text: "$x = 1.25$", correct: false, feedback: `The $x$ terms were added rather than subtracted: $5x - 3x = 2x$, not $8x$.` },
+        ],
+        secondsExpected: 30,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "p3",
+        stem: `Write $${Q4.L}$ as a power of $${Q4.R}$.`,
+        skill: "Recognising a shared base",
+        options: [
+          { id: "a", text: `$${Q4.R}^{2}$`, correct: true, feedback: `$${Q4.R}^{2} = ${Q4.L}$. Spotting a shared base can finish a question without logarithms at all.` },
+          { id: "b", text: `$${Q4.R}^{4}$`, correct: false, feedback: `$${Q4.R}^{4} = ${Q4.R ** 4}$, which is too big. The index is the number of twos multiplied.` },
+          { id: "c", text: `$${Q4.R}^{1}$`, correct: false, feedback: `$${Q4.R}^{1} = ${Q4.R}$. One more factor of $${Q4.R}$ is needed.` },
+        ],
+        secondsExpected: 25,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+    ],
+  },
+  {
+    id: `dx.${TOPIC}.post`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "post",
+    items: [
+      {
+        id: "d1",
+        stem: `Taking logarithms of $${printEq(Q2)}$ gives which line?`,
+        skill: "Bringing the index down with a bracket",
+        options: [
+          { id: "a", text: `$(${idx(Q2.m, Q2.c)}) \\log ${Q2.L} = \\log ${Q2.R}$`, correct: true, feedback: `The whole index comes down together, inside a bracket.` },
+          { id: "b", text: `$${idx(Q2.m, Q2.c)} \\log ${Q2.L} = \\log ${Q2.R}$`, correct: false, misconception: "fm.logs.brackets-omitted", feedback: `Without the bracket only the $${Math.abs(Q2.c)}$ is multiplied by the logarithm, so the equation has changed.` },
+          { id: "c", text: `$\\log(${idx(Q2.m, Q2.c)}) + \\log ${Q2.L} = \\log ${Q2.R}$`, correct: false, misconception: "fm.logs.sum-inside-the-log", feedback: `An index does not become a separate logarithm. The power law multiplies, it does not add.` },
+        ],
+        secondsExpected: 30,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d2",
+        stem: `From $x \\log ${Q1.L} = \\log ${Q1.R}$, what is $x$?`,
+        skill: "Isolating x from a product of logarithms",
+        options: [
+          { id: "a", text: `$\\frac{\\log ${Q1.R}}{\\log ${Q1.L}}$`, correct: true, feedback: `Divide both sides by $\\log ${Q1.L}$, exactly as you would by any other number.` },
+          { id: "b", text: `$\\log ${Q1.R} - \\log ${Q1.L}$`, correct: false, misconception: "fm.logs.quotient-as-divided-logs", feedback: `Subtracting logarithms is what $\\log \\frac{${Q1.R}}{${Q1.L}}$ means, which is a different number. Here you divide the two logarithms.` },
+          { id: "c", text: `$\\log \\frac{${Q1.R}}{${Q1.L}}$`, correct: false, misconception: "fm.logs.quotient-as-divided-logs", feedback: `That is the logarithm of a quotient. What the equation needs is a quotient of logarithms.` },
+        ],
+        secondsExpected: 30,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d3",
+        stem: `In $${EXA.m}x \\log ${EXA.L} + \\log ${EXA.L} = x \\log ${EXA.R} + ${EXA.q} \\log ${EXA.R}$, what happens when the $x$ term on the right is moved to the left?`,
+        skill: "Collecting the x terms",
+        options: [
+          { id: "a", text: `It becomes $-x \\log ${EXA.R}$ on the left`, correct: true, feedback: `A term crossing the equals sign changes sign, which is what lets $x$ be factorised out.` },
+          { id: "b", text: `It stays as $+x \\log ${EXA.R}$ on the left`, correct: false, misconception: "fm.logs.terms-not-collected", feedback: `The sign has to change. Leaving it positive adds the two $x$ terms instead of subtracting them.` },
+          { id: "c", text: `It cancels with $\\log ${EXA.L}$`, correct: false, misconception: "fm.logs.terms-not-collected", feedback: `They are different numbers and one carries an $x$, so nothing cancels.` },
+        ],
+        secondsExpected: 35,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+      {
+        id: "d4",
+        stem: `Solving $${printEq(Q6)}$, a student rounds $\\log ${Q6.R}$ and $\\log ${Q6.L}$ to two decimal places before dividing. What happens?`,
+        skill: "Keeping accuracy to the last step",
+        options: [
+          { id: "a", text: `The answer comes out as $${d2(E.q6Rounded).toFixed(2)}$ instead of $${d2(Q6.x).toFixed(2)}$`, correct: true, feedback: `Rounding on the way in moves the second decimal place, and that is the place the mark is given for.` },
+          { id: "b", text: "Nothing changes, because rounding twice cancels out", correct: false, misconception: "fm.logs.rounded-too-early", feedback: `Two roundings do not cancel; here they move the answer by a hundredth.` },
+          { id: "c", text: "The answer is more accurate, because the numbers are simpler", correct: false, misconception: "fm.logs.rounded-too-early", feedback: `Simpler numbers are not more accurate ones. Keep the logarithms in the calculator until the last step.` },
+        ],
+        secondsExpected: 35,
+        confidence: true,
+        hypercorrectionQueue: true,
+      },
+    ],
+  },
+];
+
+const findTheMistake = [
+  {
+    id: `ftm.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    // The equation is printed as KaTeX so the index's extent is unambiguous: this item is *about*
+    // how far an index reaches, and "7^3x - 1" would read as 343x - 1.
+    stem: `Cara was asked to solve $${printEq(Q3)}$ correct to two decimal places. Her working:`,
+    studentWorking: [
+      `$\\log\\left(${Q3.L}^{${idx(Q3.m, Q3.c)}}\\right) = \\log ${Q3.R}$`,
+      `${idx(Q3.m, Q3.c)} log ${Q3.L} = log ${Q3.R}`,
+      `${Q3.m}x = log ${Q3.R} + log ${Q3.L}`,
+      `${Q3.m}x = ${d6(L10(Q3.R) + L10(Q3.L))}`,
+      `x = ${d2(E.q3Brackets).toFixed(2)}`,
+    ],
+    mistakeLine: 2,
+    misconception: "fm.logs.brackets-omitted",
+    whatWentWrong: `Line 1 is right: logarithms of both sides is always the first move.\nLine 2 brings the index down without a bracket, so $\\log ${Q3.L}$ multiplies only the $${Math.abs(Q3.c)}$ and no longer multiplies the $${Q3.m}x$. Everything after that solves a different equation, which is why the answer is out by more than a rounding.\nThe line should read $(${idx(Q3.m, Q3.c)}) \\log ${Q3.L} = \\log ${Q3.R}$, and then $x = ${d2(Q3.x).toFixed(2)}$.`,
+    correction: [
+      `(${idx(Q3.m, Q3.c)}) log ${Q3.L} = log ${Q3.R}`,
+      `${idx(Q3.m, Q3.c)} = log ${Q3.R} / log ${Q3.L} = ${d6(L10(Q3.R) / L10(Q3.L))}`,
+      `x = ${d2(Q3.x).toFixed(2)}`,
+    ],
+    marksEarnedAsWritten: ["M1"],
+    feedback: `Taking logarithms of both sides is the right first move and it earns its mark. The bracket is what the rest depends on: the index is one expression, so all of it multiplies the logarithm. Write the bracket as you bring the index down, every time, and the rest is a linear equation you can already do.`,
+    source: CER18,
+  },
+];
+
+const prompts = [
+  {
+    id: `rp.${TOPIC}.01`,
+    kind: "procedure",
+    prompt: "Give the first two lines of solving an equation with the unknown in the index.",
+    answer: "Take logarithms of both sides, then use the power law to bring each whole index down in front of its logarithm, inside a bracket.",
+    keyWords: ["logarithms of both sides", "power law", "bracket"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.02`,
+    kind: "trap",
+    prompt: "Why must the index be written in a bracket when it comes down?",
+    answer: "Because the whole index multiplies the logarithm. Without the bracket only the constant is multiplied, and the equation being solved is no longer the one that was set.",
+    keyWords: ["whole index", "constant", "bracket"],
+    difficultyPrior: 5,
+  },
+  {
+    id: `rp.${TOPIC}.03`,
+    kind: "procedure",
+    prompt: "With logarithms on both sides, how is $x$ found?",
+    answer: "Expand both brackets, move the $x$ terms to one side and the numbers to the other, factorise $x$ out, then divide.",
+    keyWords: ["expand", "factorise", "divide"],
+    difficultyPrior: 5,
+  },
+  {
+    id: `rp.${TOPIC}.04`,
+    kind: "trap",
+    prompt: "From $x \\log 2 = \\log 40$, what is the next line, and what is it not?",
+    answer: "It is $x = \\frac{\\log 40}{\\log 2}$, a quotient of the two logarithms. It is not $\\log 40 - \\log 2$, which is a different number.",
+    keyWords: ["quotient", "divide", "not"],
+    difficultyPrior: 6,
+  },
+  {
+    id: `rp.${TOPIC}.05`,
+    kind: "trap",
+    prompt: "When should the calculator be used in an indicial equation, and to what accuracy is the answer given?",
+    answer: "Only at the last step, on the whole expression at once. Give two decimal places unless the question says otherwise.",
+    keyWords: ["last step", "two decimal places"],
+    difficultyPrior: 4,
+  },
+  {
+    id: `rp.${TOPIC}.06`,
+    kind: "qa",
+    prompt: "When can an indicial equation be solved without logarithms at all?",
+    answer: "When both sides can be written as powers of the same base. Then the indices are equal and the equation is linear at once.",
+    keyWords: ["same base", "indices are equal"],
+    difficultyPrior: 5,
+  },
+];
+
+/* ---- bundle ----------------------------------------------------------------------------------------- */
+
+const noteChecks = [
+  check("schema", "Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, gate ids g1 to g5 are unique, every prompt block names a prompt in this bundle, and every gate restates the equation and the line it works from so it reads alone in the review inbox."),
+  check("scope-tier", "FM1 is untiered and calculator-allowed. Every index is a constant or a linear expression in x, which is exactly what the FM1-LOG-03 teacher guidance allows. The change-of-base rule, natural logarithms and equations whose indices are quadratic appear nowhere."),
+  check("formula-sheet", "The Unit 1 sheet gives a^x = n so x = log_a n. The power law that brings the index down is must-know, not given, and the note says so."),
+  check("command-words", "Solve is the command word (typicalTariff 2-4-6 in packs/further-maths/exam-true/command-words.json), with its trap that every solution must be produced with algebraic working. The stems keep the shape of the indicial parts read in the 2018, 2022, 2023, 2024 and 2025 FM1 papers while every eight-word run and every base and coefficient is our own."),
+  check("tariff", "3 to 5 marks for a single equation and 5 + 3 for the exam-style pair, matching Summer 2018 Q6 (5), Summer 2022 Q5(b) (4), Summer 2023 Q7(b) (4), Summer 2024 Q6(b) (5) and Summer 2025 Q9(b) (5)."),
+  check("maths-numeric", `Every solution is produced by solve(), which applies the method symbolically and then checks the answer by substituting it back into both sides at full precision (${[WE, Q1, Q2, Q3, Q4, Q5, Q6, EXA, EXB].map((e) => `${printEq(e).replace(/[{}$\\]/g, "")} -> ${d6(e.x)}`).join("; ")}). The identity log a^x = x log a was checked at three sample points: ${IDENTITY.map((s) => `a = ${s.a}, x = ${s.x} (${s.lhs} vs ${s.rhs})`).join("; ")}.`),
+  check("examiner-alignment", "One examiner callout stands in the body beside the bracket step (Summer 2018 Q6). Every other finding is a Sheet trap. Gates g1 and g2 run the one-sided route, g3 is the bracket, g4 the collecting, g5 the accuracy."),
+  check("copy-shingle", "An 8-word shingle scan of the note and the bundle against every text file of the private FM corpus (scratchpad/fm1-batch-f/lib.mjs shingleClash) returns nothing. Every base, coefficient and constant is new: the corpus equations were read only for tariff and part structure."),
+  check("style-lint", "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. Five inline SVG figures, all built from the computed working, and one embeddable video from data/links/media-map.json followed immediately by a gate. The closing panel is a pointer of under 80 words followed by the prompts."),
+];
+
+const itemChecks = (detail) => [
+  check("schema", "Validated by pipeline/build-content.mts against the Zod Question / WorkedExample / DiagnosticSet / FindTheMistake schema; every scheme sums to its part's marks and the skeleton matches the parts."),
+  check("maths-numeric", detail),
+  check("command-words", "Command words and tariffs taken from packs/further-maths/exam-true/command-words.json; the wording is ours."),
+  check("examiner-alignment", "Every distractor and common error carries a registry misconception evidenced by the Summer 2018 Q6, Summer 2019 Q9, Summer 2022 Q5 or Summer 2025 Q9 report block."),
+  check("copy-shingle", "8-word shingle scan against the private FM corpus returns nothing."),
+  check("style-lint", "KaTeX segments paired and prose-free; British English; no exclamation marks."),
+];
+
+const verification = [
+  verLog(`ver.note.${TOPIC}`, `note.${TOPIC}`, noteChecks),
+  verLog(`ver.we.${TOPIC}.01`, `we.${TOPIC}.01`, itemChecks(`The worked example solves ${printEq(WE).replace(/[{}$\\]/g, "")}: the quotient of logarithms is ${d6(L10(WE.R) / L10(WE.L))}, so x = ${d6(WE.x)} and the printed answer is ${d2(WE.x).toFixed(2)}. Substituting back gives ${d6(WE.lhs)} against ${d6(WE.rhs)}. The twin solves ${printEq(Q3).replace(/[{}$\\]/g, "")}, giving ${d2(Q3.x).toFixed(2)}.`)),
+  ...builtQuestions.map((q) =>
+    verLog(
+      `ver.${q.id}`,
+      q.id,
+      itemChecks(
+        `Every value was computed by solve() and checked by substitution: ${q.parts.map((p) => `${p.id} -> ${p.answer.value}`).join("; ")}. Each common-error value was produced by executing the route its feedback describes (routes.* in the generator) and re-checked against the published JSON by verify-published.mjs.`,
+      ),
+    ),
+  ),
+];
+
+const bundle = {
+  $schema: "../../../../../pipeline/schema/topic-bundle.schema.json",
+  topic: {
+    id: TOPIC,
+    slug: SLUG,
+    title: "Solving indicial (exponential) equations with logarithms",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    strand: "Logarithms",
+    statementIds: REFS,
+    prerequisites: ["fm.u1.laws-of-logarithms"],
+    order: 44,
+    hardness: "L",
+    difficulty: 2,
+    examinerFlagged: true,
+    examinerSources: [CER18, CER22, CER23, CER25],
+    examWeightHint:
+      "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. An indicial equation is the second half of the logarithm question almost every year, worth 4 or 5 marks: Summer 2018 Q6 (5), Summer 2022 Q5(b) (4), Summer 2023 Q7(b) (4), Summer 2024 Q6(b) (5), Summer 2025 Q9(b) (5). The scheme gives M for taking logarithms of both sides, MW for bringing each index down in a bracket, M for collecting the x terms, M for factorising and dividing, and W for the answer to two decimal places, with follow-through after a slip.",
+    mustMemorise: [
+      "An unknown in the index needs logarithms: division cannot reach it",
+      "log a^n = n log a brings the whole index down, inside a bracket",
+      "Expand, collect the x terms on one side, factorise x out, then divide",
+      "Keep the logarithms in the calculator until the final step; answer to 2 decimal places",
+      "If both sides share a base, equate the indices instead",
+    ],
+    onFormulaSheet: ["If aˣ = n then x = logₐ n (Unit 1 formula sheet, page 2). The power law is not given."],
+    notOnThisSpec: [
+      "The change of base rule, which the Teacher Guidance excludes",
+      "Natural logarithms and the number e",
+      "Indices that are quadratic or otherwise non-linear in x",
+      "Exponential growth and decay models, and their graphs",
+      "Equations needing a substitution such as a quadratic in a power",
+    ],
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "QI6U1QTkuaw",
+        channel: "corbettmaths",
+        credit: "Solving Index Equations using Logs - Part 1, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+      {
+        kind: "ccea-doc",
+        docType: "cer",
+        url: "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-further-mathematics-2017/reports",
+        asOf: "2026-09-20",
+      },
+    ],
+    keywords: ["exponential equation", "take logs", "unknown in the power", "brackets"],
+  },
+  note: {
+    id: `note.${TOPIC}`,
+    topic: TOPIC,
+    title: "Solving indicial (exponential) equations with logarithms",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    specRefs: REFS,
+    calculator: true,
+    formulaSheet: {
+      given: [
+        "Quadratic formula x = (−b ± √(b² − 4ac)) / 2a",
+        "Differentiation y = axⁿ ⇒ dy/dx = naxⁿ⁻¹",
+        "Integration ∫axⁿ dx = axⁿ⁺¹/(n + 1) + c",
+        "Logarithm aˣ = n ⇒ x = log_a n",
+      ],
+      mustKnow: [
+        "log a^n = n log a, the power law",
+        "The whole index comes down inside a bracket",
+        "A quotient of logarithms is not a difference of logarithms",
+        "Two decimal places unless the question says otherwise",
+      ],
+    },
+    notOnThisSpec: [
+      "The change of base rule",
+      "Natural logarithms and e",
+      "Indices that are not linear in x",
+      "Exponential growth and decay models",
+    ],
+    hardness: "L",
+    examinerFlagged: true,
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "QI6U1QTkuaw",
+        channel: "corbettmaths",
+        credit: "Solving Index Equations using Logs - Part 1, corbettmaths (embeddable id verified in data/links/media-map.json)",
+      },
+    ],
+    sheet: {
+      mustBeAbleTo: [
+        "Recognise that an unknown in the index cannot be divided away",
+        "Take logarithms of both sides as the first line",
+        "Bring each whole index down in front of its logarithm, inside a bracket",
+        "Expand both sides and collect the terms in x on one side",
+        "Factorise x out and divide by the bracket",
+        "Evaluate the whole expression in one calculator step at the end",
+        "Give the answer to two decimal places, or to the accuracy the question names",
+        "Spot a shared base and solve by equating indices instead",
+      ],
+      howExamined:
+        "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. An indicial equation is the second half of the logarithm question almost every year, worth 4 or 5 marks: Summer 2018 Q6 (5 marks, a two-sided equation), Summer 2022 Q5(b) (4), Summer 2023 Q7(b) (4, with a coefficient in front), Summer 2024 Q6(b) (5), Summer 2025 Q9(b) (5). The scheme gives M for taking logarithms of both sides, MW for the indices brought down in brackets, M for collecting the x terms, M for factorising and dividing, and W for the answer to two decimal places. Later marks are given on follow-through, so a slip early does not cost everything.",
+      traps: [
+        "Brackets left off the index, so the logarithm multiplies only the constant (Summer 2018 FM1 Q6)",
+        "Errors moving the x terms to one side, usually a sign that does not change (Summer 2022 FM1 Q5, Summer 2023 FM1 Q7)",
+        "A quotient of logarithms carried out as a difference (Summer 2025 FM1 Q9)",
+        "Bases other than ten producing extra slips in the working (Summer 2018 FM1 Q6)",
+        "The calculator used on the way rather than at the end, so the second decimal place moves (Summer 2018 FM1 Q6, Summer 2025 FM1 Q9)",
+        "Isolating the unknown attempted before the brackets are expanded (Summer 2018 FM1 Q6)",
+        "The index route overlooked when both sides share a base, so the question takes longer than it needs (Summer 2019 FM1 Q9)",
+      ],
+    },
+    verification: `ver.note.${TOPIC}`,
+    version: 1,
+    updated: "2026-09-20",
+  },
+  workedExamples,
+  diagnostics,
+  questions: builtQuestions,
+  findTheMistake,
+  prompts: prompts.map((p) => ({ ...p, topic: TOPIC, specRefs: REFS, examUnit: "FM1" })),
+  verification,
+};
+
+/* ---- checks and write ---------------------------------------------------------------------------------- */
+
+lintTree(bundle, `${SLUG}/bundle.json`);
+lintTree(blocks, `${SLUG}/note.blocks.json`);
+
+const allText = [JSON.stringify(bundle), JSON.stringify(blocks)].join(" ");
+const clashes = shingleClash(allText, corpusFiles());
+if (clashes.length) throw new Error(`shingle clash:\n  ${clashes.slice(0, 10).join("\n  ")}`);
+
+const a = writeJson(OUT(SLUG, "bundle.json"), bundle);
+const b = writeJson(OUT(SLUG, "note.blocks.json"), blocks);
+console.log(
+  `${SLUG}: we=${workedExamples.length} dx=${diagnostics.reduce((s, d) => s + d.items.length, 0)} q=${builtQuestions.length} ftm=${findTheMistake.length} rp=${prompts.length} gates=${blocks.filter((x) => x.type === "gate").length}`,
+);
+console.log(`  bundle.json  sha256:${a.sha}  ${a.bytes} bytes`);
+console.log(`  note.blocks.json  sha256:${b.sha}  ${b.bytes} bytes`);
+console.log(`  shingle clashes: ${clashes.length}`);
+console.log(`  solutions: ${[WE, Q1, Q2, Q3, Q4, Q5, Q6, EXA, EXB].map((e) => d6(e.x)).join(", ")}`);
+console.log(`  routes: ${Object.entries(E).map(([k, v]) => `${k}=${d6(v)}`).join(", ")}`);

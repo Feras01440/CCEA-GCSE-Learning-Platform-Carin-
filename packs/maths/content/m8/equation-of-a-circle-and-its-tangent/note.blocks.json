@@ -1,0 +1,283 @@
+[
+  {
+    "type": "hero",
+    "lede": "Pythagoras says the point $(x, y)$ is $\\sqrt{x^2 + y^2}$ from the origin. Keep that distance fixed and the point traces a circle, so every point on a circle of radius $r$ obeys $x^2 + y^2 = r^2$. A tangent is the line that just grazes it, and it always meets the radius at a right angle.",
+    "can": [
+      "Write the equation of a circle centred on the origin, and read its radius back.",
+      "Find the tangent at a point by turning the radius gradient over and changing the sign.",
+      "Work back from a tangent to the circle it touches."
+    ],
+    "minutes": 20
+  },
+  {
+    "type": "h",
+    "text": "The equation of a circle, and its tangent"
+  },
+  {
+    "type": "p",
+    "md": "A circle is every point the same distance from its centre. Put that centre at the origin and Pythagoras turns the sentence into an equation: the horizontal step squared plus the vertical step squared is the radius squared. Everything else in this topic is gradient work you have owned since M3, because a tangent and the radius it touches always cross at a right angle."
+  },
+  {
+    "type": "figure",
+    "alt": "A circle of radius 5 centred on the origin O of a set of axes. The point P at (3, 4) is on the circle. The radius OP is drawn as the hypotenuse of a right-angled triangle whose horizontal side runs from O to (3, 0) and is labelled x = 3, and whose vertical side runs from (3, 0) up to P and is labelled y = 4. The right angle at (3, 0) is marked, and the hypotenuse is labelled r = 5.",
+    "svg": "<svg viewBox='0 0 330 310' xmlns='http://www.w3.org/2000/svg' width='330' height='310'><defs><marker id='ara' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto'><path d='M0 0 L10 5 L0 10 z' fill='currentColor'/></marker></defs><path d='M42.3 290V20M62.7 290V20M83.2 290V20M103.6 290V20M124.1 290V20M144.5 290V20M165 290V20M185.5 290V20M205.9 290V20M226.4 290V20M246.8 290V20M267.3 290V20M287.7 290V20M30 277.7H300M30 257.3H300M30 236.8H300M30 216.4H300M30 195.9H300M30 175.5H300M30 155H300M30 134.5H300M30 114.1H300M30 93.6H300M30 73.2H300M30 52.7H300M30 32.3H300' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.2'/><g fill='none' stroke='currentColor' stroke-width='1.3'><path d='M30 155H300' marker-end='url(#ara)'/><path d='M165 290V20' marker-end='url(#ara)'/></g><g fill='currentColor' fill-opacity='0.75' font-family='system-ui,sans-serif' font-size='10.5'><text x='62.7' y='168' text-anchor='middle'>-5</text><text x='160' y='261.3' text-anchor='end'>-5</text></g><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12' font-style='italic'><text x='297' y='148' text-anchor='end'>x</text><text x='173' y='31'>y</text></g><circle cx='165' cy='155' r='102.3' fill='none' stroke='currentColor' stroke-width='1.7'/><path d='M165 155L226.4 73.2' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M226.4 155L226.4 73.2' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3.5'/><path d='M165 155L226.4 155' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3.5'/><path d='M218.4 155L218.4 147L226.4 147' fill='none' stroke='currentColor' stroke-width='1.1'/><circle cx='165' cy='155' r='3' fill='currentColor'/><circle cx='226.4' cy='73.2' r='3' fill='currentColor'/><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12.5'><text x='151' y='169' text-anchor='start' font-weight='600'>O</text><text x='234.4' y='66.2' text-anchor='start' font-weight='600'>P (3, 4)</text><text x='161.7' y='112.1' text-anchor='start'>r = 5</text><text x='189.7' y='170' text-anchor='start'>x = 3</text><text x='233.4' y='118.1' text-anchor='start'>y = 4</text></g></svg>",
+    "caption": "Drop a perpendicular from P to the x-axis and the radius becomes a hypotenuse: x² + y² = r²."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "A circle has centre the origin and radius 6. In $x^2 + y^2 = \\square$, what number goes in the box?",
+    "answer": "36",
+    "explain": "The equation stores $r^2$, not $r$: $6^2 = 36$. That is the whole of this first step, and it is worth a mark."
+  },
+  {
+    "type": "h",
+    "text": "Why the equation is $x^2 + y^2 = r^2$"
+  },
+  {
+    "type": "p",
+    "md": "A circle is every point a fixed distance $r$ from the centre. Put the centre at the origin and take any point $(x, y)$ on it. Drop a perpendicular from that point to the $x$-axis and a right-angled triangle appears: the horizontal side is $x$, the vertical side is $y$, and the hypotenuse is the radius. Pythagoras then says $x^2 + y^2 = r^2$, and that is the entire derivation. It is also why the equation has squares in it and no $mx + c$ anywhere."
+  },
+  {
+    "type": "gate",
+    "id": "g1b",
+    "kind": "number",
+    "prompt": "A point on a circle centred on the origin sits 3 to the right and 4 up from the centre. What is $r^2$?",
+    "answer": "25",
+    "explain": "$3^2 + 4^2 = 25$, so the circle is $x^2 + y^2 = 25$. The radius is 5, and it is the square of it that the equation carries."
+  },
+  {
+    "type": "p",
+    "md": "**The equation stores $r^2$, not $r$.** Read $x^2 + y^2 = 49$ and the radius is 7. Read $x^2 + y^2 = 50$ and the radius is $\\sqrt{50} = 5\\sqrt{2}$, which is a perfectly good answer on the non-calculator paper. Going the other way, a radius of 9 gives $x^2 + y^2 = 81$."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "blank",
+    "prompt": "In surd form, the radius of $x^2 + y^2 = 50$ is",
+    "answer": "5√2 | 5 √2 | √50 | 5 root 2 | 7.07",
+    "explain": "$\\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}$. Paper 1 has no calculator, so the surd is what the marker is looking for; a decimal is only safe where the question allows one."
+  },
+  {
+    "type": "p",
+    "md": "**Is this point on the circle?** Substitute and compare with $r^2$. For $x^2 + y^2 = 34$ and the point $(-5, 3)$: $(-5)^2 + 3^2 = 25 + 9 = 34$, so yes. A total smaller than $r^2$ puts the point inside the circle and a larger total puts it outside. Write the substitution line down: in a *show that* part, that line is the mark."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "Does $(6, -5)$ lie on the circle $x^2 + y^2 = 61$?",
+    "options": [
+      "Yes",
+      "No, it is inside the circle",
+      "No, it is outside the circle"
+    ],
+    "answer": "Yes",
+    "explain": "$6^2 + (-5)^2 = 36 + 25 = 61$, which is exactly $r^2$. Squaring removes the minus sign, so the sign of a coordinate never matters here."
+  },
+  {
+    "type": "h",
+    "text": "The tangent is perpendicular to the radius"
+  },
+  {
+    "type": "p",
+    "md": "A tangent touches the circle at one point and crosses it nowhere. The fact you need is the one you met in M4: **where the tangent touches, it crosses the radius at a right angle.** So the tangent's gradient is not a new idea — it is the negative reciprocal of the radius's gradient. For a point $P(x_1, y_1)$ the radius $OP$ runs from $(0, 0)$ to $(x_1, y_1)$, so its gradient is $\\dfrac{y_1}{x_1}$ and the tangent's gradient is $-\\dfrac{x_1}{y_1}$."
+  },
+  {
+    "type": "figure",
+    "alt": "The same circle of radius 5 centred on the origin. The radius OP to the point P at (3, 4) is drawn, and the tangent at P is drawn as a straight line touching the circle only at P and sloping downwards from left to right. A small square marks the right angle between the radius and the tangent at P.",
+    "svg": "<svg viewBox='0 0 340 320' xmlns='http://www.w3.org/2000/svg' width='340' height='320'><defs><marker id='arb' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto'><path d='M0 0 L10 5 L0 10 z' fill='currentColor'/></marker></defs><path d='M30 300V20M47 300V20M63.9 300V20M80.9 300V20M97.9 300V20M114.8 300V20M131.8 300V20M148.8 300V20M165.8 300V20M182.7 300V20M199.7 300V20M216.7 300V20M233.6 300V20M250.6 300V20M267.6 300V20M284.5 300V20M301.5 300V20M30 300H310M30 283H310M30 266.1H310M30 249.1H310M30 232.1H310M30 215.2H310M30 198.2H310M30 181.2H310M30 164.2H310M30 147.3H310M30 130.3H310M30 113.3H310M30 96.4H310M30 79.4H310M30 62.4H310M30 45.5H310M30 28.5H310' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.2'/><g fill='none' stroke='currentColor' stroke-width='1.3'><path d='M30 181.2H310' marker-end='url(#arb)'/><path d='M148.8 300V20' marker-end='url(#arb)'/></g><g fill='currentColor' fill-opacity='0.75' font-family='system-ui,sans-serif' font-size='10.5'><text x='63.9' y='194.2' text-anchor='middle'>-5</text><text x='233.6' y='194.2' text-anchor='middle'>5</text><text x='143.8' y='270.1' text-anchor='end'>-5</text><text x='143.8' y='100.4' text-anchor='end'>5</text></g><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12' font-style='italic'><text x='307' y='174.2' text-anchor='end'>x</text><text x='156.8' y='31'>y</text></g><circle cx='148.8' cy='181.2' r='84.8' fill='none' stroke='currentColor' stroke-width='1.7'/><path d='M148.8 181.2L199.7 113.3' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M310 196.1L75.3 20' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M193.7 121.3L201.7 127.3L207.7 119.3' fill='none' stroke='currentColor' stroke-width='1.1'/><circle cx='148.8' cy='181.2' r='3' fill='currentColor'/><circle cx='199.7' cy='113.3' r='3' fill='currentColor'/><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12.5'><text x='134.8' y='195.2' text-anchor='start' font-weight='600'>O</text><text x='208.7' y='127.3' text-anchor='start' font-weight='600'>P (3, 4)</text><text x='134.2' y='149.3' text-anchor='start'>radius</text><text x='259.4' y='156.6' text-anchor='start'>tangent</text></g></svg>",
+    "caption": "The tangent touches at P and meets the radius there at a right angle."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "The radius to $P$ has gradient $\\dfrac{2}{5}$. The gradient of the tangent at $P$ is",
+    "options": [
+      "−5/2",
+      "5/2",
+      "−2/5"
+    ],
+    "answer": "−5/2",
+    "explain": "Perpendicular gradients multiply to $-1$: turn the fraction upside down and change the sign. $\\tfrac{2}{5} \\times -\\tfrac{5}{2} = -1$."
+  },
+  {
+    "type": "p",
+    "md": "**Four moves, every time.**\n1 Gradient of the radius, $\\dfrac{y_1}{x_1}$, because the radius runs from the origin to the point.\n2 Gradient of the tangent, $-\\dfrac{x_1}{y_1}$, because perpendicular gradients multiply to $-1$."
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "A part says: give your answer in the form $y = mx + c$. You have reached $3x + 4y = 50$. What goes on the answer line?",
+    "options": [
+      "y = −0.75x + 12.5",
+      "3x + 4y = 50",
+      "m = −0.75"
+    ],
+    "answer": "y = −0.75x + 12.5",
+    "explain": "The two lines are the same line, but the part named the form, so rearrange before you write it down: $4y = 50 - 3x$, then divide by 4."
+  },
+  {
+    "type": "p",
+    "md": "3 Substitute the point into $y - y_1 = m(x - x_1)$, or into $y = mx + c$ to find $c$. The point is on the tangent, so its coordinates fit.\n4 Rearrange into the form the question named."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "For $x^2 + y^2 = 20$ the tangent at $(2, 4)$ is $y = -\\tfrac{1}{2}x + c$. What is $c$?",
+    "answer": "5",
+    "explain": "Substitute the point: $4 = -\\tfrac{1}{2}(2) + c$, so $4 = -1 + c$ and $c = 5$. That substitution is move 3, and it is a mark on its own."
+  },
+  {
+    "type": "figure",
+    "alt": "A circle centred on the origin passing through the point P at (2, 4). The tangent at P is drawn; it crosses the y-axis at (0, 5) and the x-axis at (10, 0), and is labelled y equals minus a half x plus 5. The right angle between the radius OP and the tangent is marked at P.",
+    "svg": "<svg viewBox='0 0 350 300' xmlns='http://www.w3.org/2000/svg' width='350' height='300'><defs><marker id='arc' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto'><path d='M0 0 L10 5 L0 10 z' fill='currentColor'/></marker></defs><path d='M28.2 272.4V27.6M44.5 272.4V27.6M60.8 272.4V27.6M77.1 272.4V27.6M93.4 272.4V27.6M109.7 272.4V27.6M126.1 272.4V27.6M142.4 272.4V27.6M158.7 272.4V27.6M175 272.4V27.6M191.3 272.4V27.6M207.6 272.4V27.6M223.9 272.4V27.6M240.3 272.4V27.6M256.6 272.4V27.6M272.9 272.4V27.6M289.2 272.4V27.6M305.5 272.4V27.6M321.8 272.4V27.6M20 264.2H330M20 247.9H330M20 231.6H330M20 215.3H330M20 198.9H330M20 182.6H330M20 166.3H330M20 150H330M20 133.7H330M20 117.4H330M20 101.1H330M20 84.7H330M20 68.4H330M20 52.1H330M20 35.8H330' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.2'/><g fill='none' stroke='currentColor' stroke-width='1.3'><path d='M20 166.3H330' marker-end='url(#arc)'/><path d='M126.1 272.4V27.6' marker-end='url(#arc)'/></g><g fill='currentColor' fill-opacity='0.75' font-family='system-ui,sans-serif' font-size='10.5'><text x='44.5' y='179.3' text-anchor='middle'>-5</text><text x='207.6' y='179.3' text-anchor='middle'>5</text><text x='289.2' y='179.3' text-anchor='middle'>10</text><text x='121.1' y='251.9' text-anchor='end'>-5</text><text x='121.1' y='88.7' text-anchor='end'>5</text></g><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12' font-style='italic'><text x='327' y='159.3' text-anchor='end'>x</text><text x='134.1' y='38.6'>y</text></g><circle cx='126.1' cy='166.3' r='73' fill='none' stroke='currentColor' stroke-width='1.7'/><path d='M126.1 166.3L158.7 101.1' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M20 31.7L330 186.7' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M154.7 109.1L162.7 113.1L166.7 105.1' fill='none' stroke='currentColor' stroke-width='1.1'/><circle cx='126.1' cy='166.3' r='3' fill='currentColor'/><circle cx='158.7' cy='101.1' r='3' fill='currentColor'/><circle cx='289.2' cy='166.3' r='3' fill='currentColor'/><circle cx='126.1' cy='84.7' r='3' fill='currentColor'/><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12.5'><text x='112.1' y='180.3' text-anchor='start' font-weight='600'>O</text><text x='152.7' y='92.1' text-anchor='start' font-weight='600'>P (2, 4)</text><text x='291.2' y='158.3' text-anchor='start' font-weight='600'>(10, 0)</text><text x='117.1' y='76.7' text-anchor='end' font-weight='600'>(0, 5)</text><text x='252.4' y='141.9' text-anchor='start'>y = −½x + 5</text></g></svg>",
+    "caption": "Set y = 0 for the x-axis crossing and x = 0 for the y-axis crossing."
+  },
+  {
+    "type": "p",
+    "md": "**Where the tangent meets the axes** is one substitution each way. Set $y = 0$ for the $x$-axis crossing and $x = 0$ for the $y$-axis crossing. For $y = -\\tfrac{1}{2}x + 5$: putting $y = 0$ gives $x = 10$, so $(10, 0)$; putting $x = 0$ gives $y = 5$, so $(0, 5)$. When the answer line shows two brackets, give the full coordinate pair, not just the number you worked out."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "The tangent $y = -2x + 20$ crosses the $x$-axis at $(k, 0)$. Then $k =$",
+    "answer": "10",
+    "explain": "On the $x$-axis $y = 0$, so $0 = -2k + 20$ and $k = 10$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "A ten-second check",
+    "md": "Because the tangent at $(x_1, y_1)$ has gradient $-\\dfrac{x_1}{y_1}$ and passes through that point, it always tidies up to $x_1 x + y_1 y = r^2$. For $(3, 4)$ on $x^2 + y^2 = 25$ that is $3x + 4y = 25$. Use it to check what you have written in a few seconds, but still set the gradient work out in full: the marks are attached to the steps, not to the result."
+  },
+  {
+    "type": "gate",
+    "id": "g6b",
+    "kind": "choice",
+    "prompt": "The radius to a point on a circle has gradient $\\tfrac{4}{3}$. What is the gradient of the tangent there?",
+    "options": [
+      "$-\\tfrac{3}{4}$",
+      "$\\tfrac{3}{4}$",
+      "$-\\tfrac{4}{3}$"
+    ],
+    "answer": "$-\\tfrac{3}{4}$",
+    "explain": "Turn it over and change the sign. Turning it over alone, or only changing the sign, is the usual slip."
+  },
+  {
+    "type": "h",
+    "text": "Backwards: from a tangent to the circle"
+  },
+  {
+    "type": "p",
+    "md": "The harder version gives you the tangent and hides the circle. The move that opens it is the same fact read the other way: **the radius that is perpendicular to the tangent and passes through the origin must meet the tangent at the point of contact.** So write that radius down, solve the two equations together, and the contact point falls out. Once you have the contact point, $r^2$ is one substitution away."
+  },
+  {
+    "type": "figure",
+    "alt": "A dashed circle centred on the origin whose radius is not yet known. A full straight line labelled y equals 2x plus 10 touches it at the point T in the second quadrant. A dashed line through the origin, labelled y equals minus a half x, is perpendicular to the tangent and passes through T. The right angle at T is marked.",
+    "svg": "<svg viewBox='0 0 340 320' xmlns='http://www.w3.org/2000/svg' width='340' height='320'><defs><marker id='ard' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto'><path d='M0 0 L10 5 L0 10 z' fill='currentColor'/></marker></defs><path d='M45.6 300V20M61.1 300V20M76.7 300V20M92.2 300V20M107.8 300V20M123.3 300V20M138.9 300V20M154.4 300V20M170 300V20M185.6 300V20M201.1 300V20M216.7 300V20M232.2 300V20M247.8 300V20M263.3 300V20M278.9 300V20M294.4 300V20M37.8 292.2H302.2M37.8 276.7H302.2M37.8 261.1H302.2M37.8 245.6H302.2M37.8 230H302.2M37.8 214.4H302.2M37.8 198.9H302.2M37.8 183.3H302.2M37.8 167.8H302.2M37.8 152.2H302.2M37.8 136.7H302.2M37.8 121.1H302.2M37.8 105.6H302.2M37.8 90H302.2M37.8 74.4H302.2M37.8 58.9H302.2M37.8 43.3H302.2M37.8 27.8H302.2' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.2'/><g fill='none' stroke='currentColor' stroke-width='1.3'><path d='M37.8 198.9H302.2' marker-end='url(#ard)'/><path d='M170 300V20' marker-end='url(#ard)'/></g><g fill='currentColor' fill-opacity='0.75' font-family='system-ui,sans-serif' font-size='10.5'><text x='92.2' y='211.9' text-anchor='middle'>-5</text><text x='247.8' y='211.9' text-anchor='middle'>5</text><text x='165' y='280.7' text-anchor='end'>-5</text><text x='165' y='125.1' text-anchor='end'>5</text></g><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12' font-style='italic'><text x='299.2' y='191.9' text-anchor='end'>x</text><text x='178' y='31'>y</text></g><circle cx='170' cy='198.9' r='69.6' fill='none' stroke='currentColor' stroke-width='1.7' stroke-dasharray='5 4'/><path d='M170 198.9L107.8 167.8' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M41.7 300L181.7 20' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M37.8 132.8L302.2 265' fill='none' stroke='currentColor' stroke-width='1.6' stroke-dasharray='4 3.5'/><path d='M115.8 171.8L119.9 163.8L111.8 159.7' fill='none' stroke='currentColor' stroke-width='1.1'/><circle cx='170' cy='198.9' r='3' fill='currentColor'/><circle cx='107.8' cy='167.8' r='3' fill='currentColor'/><g fill='currentColor' font-family='system-ui,sans-serif' font-size='12.5'><text x='177' y='212.9' text-anchor='start' font-weight='600'>O</text><text x='94.8' y='161.8' text-anchor='start' font-weight='600'>T</text><text x='139.8' y='96.2' text-anchor='start'>y = 2x + 10</text><text x='244' y='241.9' text-anchor='start'>y = −½x</text></g></svg>",
+    "caption": "The radius through O perpendicular to the tangent must hit the circle at the point of contact."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "Why must that perpendicular radius meet the tangent exactly at the point of contact?",
+    "options": [
+      "Because the tangent and the radius meet at a right angle there, and that is the only point the two lines share",
+      "Because every radius is perpendicular to every tangent",
+      "Because the radius and the tangent are the same length"
+    ],
+    "answer": "Because the tangent and the radius meet at a right angle there, and that is the only point the two lines share",
+    "explain": "Two straight lines that are not parallel cross exactly once. The radius to the point of contact is the one radius perpendicular to this tangent, so the crossing point is the contact point."
+  },
+  {
+    "type": "p",
+    "md": "Take the tangent $y = 2x + 10$ to a circle centred at the origin. The radius has gradient $-\\tfrac{1}{2}$ and passes through $(0, 0)$, so it is $y = -\\tfrac{1}{2}x$ with no constant. Where do they meet? $-\\tfrac{1}{2}x = 2x + 10$, so $-x = 4x + 20$, $-5x = 20$ and $x = -4$; then $y = 2$. The contact point is $(-4, 2)$, so $r^2 = (-4)^2 + 2^2 = 20$ and the circle is $x^2 + y^2 = 20$."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "Same method, new tangent. $y = 4x + 34$ touches a circle centred at the origin, and the radius to the contact point is $y = -\\tfrac{1}{4}x$. The $x$-coordinate of the contact point is",
+    "answer": "-8",
+    "explain": "$-\\tfrac{1}{4}x = 4x + 34$ gives $-x = 16x + 136$, so $17x = -136$ and $x = -8$. Multiplying through by 4 first is what keeps the fractions out of the way."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2024 Paper 2 Q10",
+    "md": "About a quarter proved the equation of the line through the two given points. Around one in ten found the gradient and stopped there. Only the strongest completed the last part, where the line had to be substituted into $x^2 + y^2 = r^2$ and the quadratic solved. A gradient on its own is one mark of several; the equation mark needs the point substituted as well.",
+    "source": "ccea-cer:maths:2024-summer:M82:Q10"
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "In the worked reverse problem the contact point came out as $(-10, 5)$. What is $r^2$ for that circle?",
+    "answer": "125",
+    "explain": "$(-10)^2 + 5^2 = 100 + 25 = 125$. The contact point is on the circle, so its coordinates give $r^2$ in one line — and that is the mark under one in five candidates reached in Summer 2025."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Sheet or memory?",
+    "md": "**On the Higher sheet:** nothing for this topic. The sheet gives the prism, the trapezium, the sphere, the cone, the quadratic formula, the sine and cosine rules and $\\tfrac{1}{2}ab\\sin C$.\n**Must be known:** $x^2 + y^2 = r^2$ for a circle centred at the origin; tangent and radius cross at a right angle where they touch, so $m_1 m_2 = -1$, so $m_{\\text{tangent}} = -\\dfrac{x_1}{y_1}$; and $y - y_1 = m(x - x_1)$.\nThe Higher papers of Summer 2022, November 2022 and Summer 2023 carried an extra facts list that printed the first two of those. It is no longer issued."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Which of these is given to you on the Higher formula sheet?",
+    "options": [
+      "None of them",
+      "$x^2 + y^2 = r^2$",
+      "The tangent/radius property"
+    ],
+    "answer": "None of them",
+    "explain": "All of it is recall. The sheet stops at the cosine rule and $\\tfrac{1}{2}ab\\sin C$; everything this topic needs has to come from memory."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write $x^2 + y^2 = r^2$ from a radius, and read the radius back.\nDecide whether a point is on, inside or outside the circle.\nTurn the radius gradient over and change the sign for the tangent.\nWork back from a tangent to the circle it touches."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Usually two parts: the circle's equation or its radius, then the tangent at a named point. The first mark is $x^2 + y^2 = r^2$ with the right $r^2$; the last is the tangent in the form the question names. Stuck: write the radius gradient down, turn it over and change its sign."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "Every circle in M8 is centred at the origin, so the equation is always $x^2 + y^2 = r^2$. You will not meet $(x - a)^2 + (y - b)^2 = r^2$, you will not complete the square to find a centre, and you are never asked to prove that the tangent meets the radius at a right angle — that proof is excluded along with the other circle-result proofs."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.equation-of-a-circle-and-its-tangent.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.equation-of-a-circle-and-its-tangent.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.equation-of-a-circle-and-its-tangent.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.equation-of-a-circle-and-its-tangent.09"
+  }
+]

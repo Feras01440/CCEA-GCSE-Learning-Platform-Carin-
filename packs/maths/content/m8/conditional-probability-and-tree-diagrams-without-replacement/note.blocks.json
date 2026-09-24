@@ -1,0 +1,186 @@
+[
+  {
+    "type": "hero",
+    "lede": "Take a sweet from a bag and eat it, and the bag you reach into next is a different bag: one fewer sweet, and one fewer of that colour. A tree diagram keeps track. You multiply along a branch for both things happening, and add branches for the different ways one description can come true.",
+    "can": [
+      "Write the second-pick probabilities after one item has been taken and kept.",
+      "Multiply along a branch and add across branches.",
+      "Reach an at-least-one answer by subtracting the opposite from 1."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Tree diagrams without replacement"
+  },
+  {
+    "type": "p",
+    "md": "Every probability you have met so far came from a bag that stayed the same. Here one counter is taken out and kept, so the second pick starts from a smaller bag: eleven counters instead of twelve, and one colour short by one. A tree diagram is the picture that holds both stages at once, and the whole method is read straight off it."
+  },
+  {
+    "type": "figure",
+    "alt": "A probability tree for two picks without replacement from 7 blue and 5 yellow. The first pair of branches carry 7/12 and 5/12. From blue the second branches carry 6/11 and 5/11; from yellow they carry 7/11 and 4/11.",
+    "svg": "<svg viewBox='0 0 368 220' xmlns='http://www.w3.org/2000/svg' width='368' height='220'><circle cx='14' cy='108' r='2.4' fill='currentColor'/><path d='M18 108L100 54' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='59' y='70.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>7</text><path d='M51.74 73H66.26' stroke='currentColor' stroke-width='0.8'/><text x='59' y='82' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>12</text><text x='106' y='57.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Blue</text><path d='M144 54L248 26' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='29.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>6</text><path d='M190.74 32H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='41' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='29.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Blue</text><text x='364' y='29.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>BB</text><path d='M144 54L248 82' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='75.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>5</text><path d='M190.74 78H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='87' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='85.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Yellow</text><text x='364' y='85.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>BY</text><path d='M18 108L100 162' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='59' y='142.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>5</text><path d='M51.74 145H66.26' stroke='currentColor' stroke-width='0.8'/><text x='59' y='154' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>12</text><text x='106' y='165.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Yellow</text><path d='M144 162L248 134' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='137.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>7</text><path d='M190.74 140H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='149' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='137.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Blue</text><text x='364' y='137.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>YB</text><path d='M144 162L248 190' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='183.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>4</text><path d='M190.74 186H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='195' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='193.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Yellow</text><text x='364' y='193.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>YY</text></svg>",
+    "caption": "Two picks without replacement from $7$ blue and $5$ yellow. Every second-pick denominator is $11$; only the numerators tell the two halves apart."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "A bag holds $7$ blue and $5$ yellow counters. One counter is taken and not replaced. How many counters are left?",
+    "answer": "11",
+    "explain": "There were $12$ and one has gone, so $11$ are left. Every second-pick denominator on the tree is that number."
+  },
+  {
+    "type": "h",
+    "text": "What changes on the second pick"
+  },
+  {
+    "type": "p",
+    "md": "Take the bag of $7$ blue and $5$ yellow counters. The first pick is easy: $P(\\text{blue}) = \\tfrac{7}{12}$ and $P(\\text{yellow}) = \\tfrac{5}{12}$.\n\nFor the second pick, two things can change:\n\n**The denominator always falls by one**, because one counter has left the bag whatever colour it was: $12 \\to 11$.\n**The numerator falls only if that colour was the one taken.** After a blue, there are $6$ blue left but still $5$ yellow. After a yellow, there are still $7$ blue but only $4$ yellow."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "blank",
+    "prompt": "On the tree above, what probability sits on the branch for yellow after a blue?",
+    "answer": "5/11 | 5 out of 11",
+    "explain": "A blue counter went, so all $5$ yellows are still there, out of $11$ counters: $\\tfrac{5}{11}$."
+  },
+  {
+    "type": "h",
+    "text": "Along a branch, across branches"
+  },
+  {
+    "type": "p",
+    "md": "**Along a branch: multiply.** Both things have to happen, one after the other. $P(\\text{both blue}) = \\tfrac{7}{12} \\times \\tfrac{6}{11} = \\tfrac{42}{132} = \\tfrac{7}{22}$.\n\n**Across branches: add.** Two different branches are two different ways for the same description to be true. One of each colour happens as blue-then-yellow, $\\tfrac{35}{132}$, or yellow-then-blue, $\\tfrac{35}{132}$, so $P(\\text{one of each}) = \\tfrac{70}{132} = \\tfrac{35}{66}$.\n\nA free check: the four branch products always add to 1."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "blank",
+    "prompt": "From the same bag, what is $P(\\text{both yellow})$? Give a fraction in its simplest form.",
+    "answer": "5/33 | 20/132",
+    "explain": "$\\tfrac{5}{12} \\times \\tfrac{4}{11} = \\tfrac{20}{132} = \\tfrac{5}{33}$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why both orders count",
+    "md": "*One of each* does not say which colour comes first, so two different branches fit it. Counting only one halves the answer, and a third of candidates did exactly that on a two-roll question in Summer 2024. If the question does fix the order — *the first is blue and the second is yellow* — then only one branch counts, so read the wording before you add anything."
+  },
+  {
+    "type": "h",
+    "text": "See it drawn"
+  },
+  {
+    "type": "video",
+    "videoId": "PYEvSuz1Dxo",
+    "title": "Tree Diagrams - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 252,
+    "why": "Corbettmaths video 252 builds the tree branch by branch and shows the multiplying and adding in the same picture. Watch it once, then answer the gate below."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Two counters are taken without replacement. Which pair of operations is right?",
+    "options": [
+      "Multiply along a branch, add the branches",
+      "Add along a branch, multiply the branches",
+      "Multiply along a branch, multiply the branches"
+    ],
+    "answer": "Multiply along a branch, add the branches",
+    "explain": "Along a branch both events happen, which is a multiplication. Across branches either will do, which is an addition."
+  },
+  {
+    "type": "h",
+    "text": "At least one"
+  },
+  {
+    "type": "p",
+    "md": "*At least one yellow* covers three of the four branches, so adding them is three chances to slip. There is a shorter route: the only outcome with **no** yellow at all is blue-then-blue.\n\n$P(\\text{at least one yellow}) = 1 - P(\\text{no yellow}) = 1 - \\tfrac{7}{22} = \\tfrac{15}{22}$\n\nOne branch instead of three. Two warnings: *at least one* is not *exactly one*, and the subtraction is always from 1, never from anything else."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "blank",
+    "prompt": "From the same bag, what is $P(\\text{at least one blue})$? Give a fraction in its simplest form.",
+    "answer": "28/33 | 112/132",
+    "explain": "The only outcome with no blue is yellow then yellow, $\\tfrac{5}{33}$, so the answer is $1 - \\tfrac{5}{33} = \\tfrac{28}{33}$."
+  },
+  {
+    "type": "sim",
+    "provider": "geogebra",
+    "url": "https://www.geogebra.org/classic/M85jmuEv",
+    "title": "GeoGebra: Probability Tree Diagrams",
+    "attribution": "GeoGebra applet by its author, hosted at https://www.geogebra.org/m/M85jmuEv",
+    "licence": "GeoGebra Non-Commercial Licence (user-created resource, free for classroom and personal use)",
+    "task": "Set up two picks without replacement and change the counts. Watch what the second-pick denominators do, and check every time that the four branch products still add to 1."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "Which answer to a probability question tells you straight away that something has gone wrong?",
+    "options": [
+      "$\\tfrac{13}{11}$",
+      "$\\tfrac{1}{30}$",
+      "$\\tfrac{5}{11}$"
+    ],
+    "answer": "$\\tfrac{13}{11}$",
+    "explain": "A probability cannot be greater than 1. That usually means two branch probabilities were added where they should have been multiplied."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2024, M8 Paper 1 Q9",
+    "md": "Three probabilities to multiply for a repeated event. **Many added instead of multiplying**, some could not multiply three simple fractions, and some did two repetitions instead of three. Three trials means three factors.",
+    "source": "ccea-cer:maths:2024-summer:M81:Q9"
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "Three counters are taken from a bag of $4$ dark and $6$ milk chocolates without replacement. How many fractions are multiplied together?",
+    "answer": "3",
+    "explain": "One factor per pick. Three picks, three factors, and the denominators fall 10, 9, 8."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write the second-pick probabilities after one counter has gone.\nMultiply along a branch, and add across branches.\nReach *at least one* by subtracting from 1.\nCheck a tree: the four branch products add to 1."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "A tree with a written stem, three or four marks, in the second half of the paper. The first mark is the second-pick probabilities written on the branches with the smaller total underneath; the last is the sum of the branches the description allows. Stuck: draw the tree and fill in what you can, because the branch labels score on their own."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.06"
+  }
+]

@@ -1,0 +1,412 @@
+# fm.u1.integration-as-inverse — Integration as the reverse of differentiation  [H, difficulty 4]
+unit FM1 · tier untiered · specRefs []
+note: Integration as the reverse of differentiation v1 [verified]
+verification statuses: {"verified":35}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Running the film backwards
+- [p] 
+- [figure] Down the card is differentiation. Up the card is integration.
+- [choice] 
+- [h] 1. Raise the power, divide by the new one
+- [p] 
+- [figure] Raise, divide, add $c$. The excluded case $n = -1$ never appears on this specification.
+- [why] Why dividing is the right move
+- [blank] 
+- [h] 2. Where the constant comes from
+- [p] 
+- [figure] One gradient function, a whole family of curves. Only $c$ tells them apart.
+- [choice] 
+- [examiner] The mark that goes most often
+- [choice] 
+- [h] 3. A full integration, term by term
+- [p] 
+- [video] Introduction to Integration for GCSE Further Maths
+- [blank] 
+- [h] 4. Negative powers
+- [p] 
+- [figure] The new power can be negative, and dividing by it changes the sign.
+- [notonspec] The one power that is excluded
+- [blank] 
+- [h] 5. One point picks one curve
+- [p] 
+- [figure] The point $(3, 1)$ selects one curve, and its equation is $y = x^{3} - 5x^{2} + 4x + 7$.
+- [number] 
+- [p] 
+- [number] 
+- [h] 6. The word that catches people out
+- [p] 
+- [why] How to tell which direction you are in
+- [choice] 
+- [h] 7. Presenting the answer
+- [p] 
+- [choice] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.integration-as-inverse.01 [verified] paper FM1 calc
+STEM: Find $\int \left(6x^{2} - 4x + 5\right) dx$
+  FIG: svg — A four-row card giving the integration rule: raise the power, divide by the new power, add the constant, and turn a constant term into a term in x
+  1. Take the first term. $6x^{2}$ raises to $x^{3}$, and $6 \div 3 = 2$, giving $2x^{3}$.   — Raise the power first, then divide by the power you have just made. Dividing by the old power is the commonest slip in this topic.  (MW1)  WHY: ✔Because you divide by the NEW power, which is 3 | ✘Because you divide by the old power, which is 2 | ✘Because you multiply by the new power
+  2. $-4x$ is $-4x^{1}$. It raises to $x^{2}$, and $-4 \div 2 = -2$, giving $-2x^{2}$.   — A plain term in x has power 1, so its new power is 2. Keeping the sign with the coefficient throughout avoids the usual second-term slip.  (MW1)
+  3. $5$ is $5x^{0}$. It raises to $x^{1}$, and $5 \div 1 = 5$, giving $5x$.   — A constant is not left alone. It becomes a term in x, which is exactly the term that would differentiate back to it.  (MW1)
+  4. Add the constant of integration: $\int \left(6x^{2} - 4x + 5\right) dx = 2x^{3} - 2x^{2} + 5x + c$.   — Without a point to pin it down, the height is unknown, so the answer is a family of curves and the letter says so. The integral sign is dropped now that the integrating is done.  (W1)
+  FINAL: $2x^{3} - 2x^{2} + 5x + c$
+  TWIN: Find $\int \left(12x^{2} - 6x\right) dx$. Use $c$ for the constant of integration.  → algebraic 4x^{3} - 3x^{2} + c (equivalent)
+
+### we.fm.u1.integration-as-inverse.02 [verified] paper FM1 calc
+STEM: The gradient function of a curve is $\frac{dy}{dx} = 3x^{2} - 10x + 4$, and the curve passes through the point $(3, 1)$.
+Express $y$ in terms of $x$.
+  FIG: svg — A single curve passing through the point (3, 1)
+  1. The gradient function is given, so $y$ is found by integrating: $y = x^{3} - 5x^{2} + 4x + c$.   — The word gradient describes what has been handed to you, not what to do with it. The differentiating has already happened, so the move here is backwards.  (MW1,MW2)  WHY: ✔Because dy/dx is given and y is wanted | ✘Because the word gradient means differentiate | ✘Because the point must be substituted first
+  2. Substitute the point: $x = 3$ and $y = 1$ give $-6 + c = 1$.   — The point goes into the integrated expression, never into the gradient function. The gradient function knows nothing about height.  (M1)
+  3. So $c = 7$.   — One point is exactly enough: the family of curves has one unknown, and one equation settles it.  (W1)
+  4. Write the curve as one equation: $y = x^{3} - 5x^{2} + 4x + 7$.   — The value of c goes inside the equation. Writing it beside the answer, or leaving the letter in place, loses the final mark.  (W2)
+  FINAL: $y = x^{3} - 5x^{2} + 4x + 7$
+  TWIN: The gradient function of a curve is $\frac{dy}{dx} = 8x - 3$, and the curve passes through $(1, 4)$.
+Express $y$ in terms of $x$.  → algebraic y = 4x^{2} - 3x + 3 (equivalent)
+
+### we.fm.u1.integration-as-inverse.03 [verified] paper FM1 calc
+STEM: A curve has $\frac{dy}{dx} = 8x^{3} - 5 + \frac{12}{x^{3}}$ and passes through the point $(1, 4)$.
+Find an expression for $y$.
+  FIG: svg — A four-row card taking a term with a negative power through the rewrite, the raised index, the division and the answer written back over the line
+  1. Rewrite the fraction as a power: $\frac{12}{x^{3}} = 12x^{-3}$.   — The rule only speaks about powers of x, so anything under a line comes up as a negative index before anything else happens.  (M1)
+  2. $8x^{3}$ raises to $x^{4}$ and $8 \div 4 = 2$, giving $2x^{4}$. The constant $-5$ becomes $-5x$.   — Two ordinary terms, done the ordinary way. Finish each one before moving on.  (MW1)
+  3. $12x^{-3}$ raises to $x^{-2}$, and $12 \div -2 = -6$, giving $-6x^{-2}$, which is $-\frac{6}{x^{2}}$.   — The index goes up, so -3 becomes -2, and the new power is negative, which is where the sign of the answer comes from.  (W1)  WHY: ✔Because the new power is -2 and dividing by it changes the sign | ✘Because the index goes down to -4 | ✘Because the sign of the coefficient never changes
+  4. So $y = 2x^{4} - 5x - \frac{6}{x^{2}} + c$.   — Collect the three terms and add the constant. The negative power can stay as an index or go back over the line, and CCEA prints it over the line.  (W2)
+  5. Substitute $(1, 4)$: $-9 + c = 4$, so $c = 13$ and $y = 2x^{4} - 5x + 13 - \frac{6}{x^{2}}$.   — A quick check: putting $x = 1$ into the finished curve gives $4$, which is the point you were given.  (M1,W3)
+  FINAL: $y = 2x^{4} - 5x + 13 - \frac{6}{x^{2}}$
+  TWIN: Find $\int \left(\frac{6}{x^{3}}\right) dx$. Use $c$ for the constant of integration.  → algebraic -\frac{3}{x^{2}} + c (equivalent)
+
+## DIAGNOSTICS
+### dx.fm.u1.integration-as-inverse.pre (pre) [verified]
+- p1 (Differentiate a single power of x): Three checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+Differentiate $y = 2x^{3}$.
+    ✔ $6x^{2}$ — Multiply by the power and step the power down. Integration is about to run this backwards.
+    ✘ $2x^{2}$ — The power steps down, and the coefficient is also multiplied by that power, so the $2$ becomes $6$.
+    ✘ $6x^{3}$ — The coefficient is right. The power has to step down as well, from $3$ to $2$.
+- p2 (Move a power from under the line to a negative index): Write $\frac{6}{x^{3}}$ using a single power of $x$.
+    ✔ $6x^{-3}$ — A power under the line changes sign as it comes up. That rewrite is what lets the integration rule reach the term.
+    ✘ $6x^{3}$ — Crossing the line changes the sign of the index, so the $3$ becomes $-3$.
+    ✘ $-6x^{3}$ — The sign that changes belongs to the index, not to the coefficient. The $6$ stays positive.
+- p3 (Divide by a negative number): What is $12 \div -2$?
+    ✔ $-6$ — A positive divided by a negative is negative. This exact division appears whenever a negative power is integrated.
+    ✘ $6$ — The sign of a quotient follows the signs of the two numbers, and here one of them is negative.
+    ✘ $-24$ — That is $12 \times -2$. The question divides.
+
+### dx.fm.u1.integration-as-inverse.post (post) [verified]
+- d1 (Integrate a single power of x): What is $\int 6x^{2}\,dx$?
+    ✔ $2x^{3} + c$ — The power rises to $3$ and $6 \div 3 = 2$.
+    ✘ $6x^{3} + c$ [fm.int.coefficient-not-divided] — The power has risen correctly. The coefficient still has to be divided by that new power of $3$.
+    ✘ $3x^{3} + c$ [fm.int.divided-by-original-power] — The division has used the old power of $2$. It is the new power, $3$, that the coefficient is divided by.
+- d2 (Remember the constant of integration): A candidate writes $\int \left(12x^{2} - 6x\right) dx = 4x^{3} - 3x^{2}$. What is missing?
+    ✔ $+ c$ — Every indefinite integral ends with the constant, because a constant differentiates away and cannot be recovered.
+    ✘ Nothing; the answer is complete [fm.int.constant-omitted] — The integrating is right and the answer is one mark short. Without a point to fix it, the height is unknown, so $+ c$ belongs there.
+    ✘ The integral sign in front of the answer [fm.int.constant-omitted] — The integral sign is dropped once the integrating is done; keeping it says the work is unfinished. What is missing is the constant.
+- d3 (Choose the direction from what the question gives): A question reads: the gradient function of a curve is $\frac{dy}{dx} = 6x + 1$ and the curve passes through $(2, 5)$. Find the equation of the curve. What is the first move?
+    ✔ Integrate $6x + 1$ — The derivative is given and the curve is wanted, so the journey is backwards.
+    ✘ Differentiate $6x + 1$ [fm.int.gradient-word-triggers-differentiation] — The word gradient describes what you have been handed, not what to do with it. Differentiating would give $6$, which is the second derivative.
+    ✘ Use $y = mx + c$ with the given point [fm.int.gradient-word-triggers-differentiation] — That formula is for a straight line of constant gradient. Here the gradient changes with $x$, so the curve is not a line.
+- d4 (Integrate a negative power): What is $\int \frac{6}{x^{3}}\,dx$?
+    ✔ $-\frac{3}{x^{2}} + c$ — The index rises from $-3$ to $-2$, and $6 \div -2 = -3$.
+    ✘ $-\frac{2}{x^{2}} + c$ [fm.int.divided-by-original-power] — The index has risen correctly. The division has used the old index $-3$ rather than the new one $-2$.
+    ✘ $-\frac{3}{x^{3}} + c$ [fm.int.power-not-raised] — The division by $-2$ is right, so the new power was worked out. The index itself still has to rise from $-3$ to $-2$.
+- d5 (Substitute the point into the integrated expression): A curve has $\frac{dy}{dx} = 6x + 1$, so $y = 3x^{2} + x + c$, and it passes through $(2, 5)$. Which substitution finds $c$?
+    ✔ $14 + c = 5$ — Putting $x = 2$ into the integrated expression and setting it equal to $y$ gives $c = -9$.
+    ✘ $13 + c = 5$ [fm.int.point-substituted-into-gradient] — That value came from the gradient function. The gradient function says nothing about height, so the point belongs in the integrated expression.
+    ✘ $c = 5$ [fm.int.constant-omitted] — That would only be true if the rest of the expression were zero at that point. Work out the integrated terms at $x = 2$ first.
+
+## QUESTIONS
+### q.fm.u1.integration-as-inverse.0001 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [2] Find $\int \left(8x^{3}\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic 2x^{4} + c (equivalent)
+      MW1 MW1: $2x^{4}$ from the term $8x^{3}$
+      W1 W1: $2x^{4} + c$ complete, with the constant of integration
+      SOLUTION: $8x^{3}$ raises to $x^{4}$ and $8 \div 4 = 2$, giving $2x^{4}$. So the integral is $2x^{4} + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"2x^{4}"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (1)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"8x^{4} + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (0)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"\\frac{8x^{4}}{3} + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (0)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0002 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [3] Find $\int \left(10x^{4} + 3\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic 2x^{5} + 3x + c (equivalent)
+      MW1 MW1: $2x^{5}$ from the term $10x^{4}$
+      MW1 MW2: $3x$ from the term $3$
+      W1 W1: $2x^{5} + 3x + c$ complete, with the constant of integration
+      SOLUTION: $10x^{4}$ raises to $x^{5}$ and $10 \div 5 = 2$, giving $2x^{5}$. $3$ raises to $x^{1}$ and $3 \div 1 = 3$, giving $3x$. So the integral is $2x^{5} + 3x + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"2x^{5} + 3x"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (2)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"10x^{5} + 3x + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (1)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"\\frac{5x^{5}}{2} + 3x + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (1)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [2] Find $\int \left(12x^{2} - 6x\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic 4x^{3} - 3x^{2} + c (equivalent)
+      MW1 MW1: $4x^{3}$ from the term $12x^{2}$
+      W1 W1: $4x^{3} - 3x^{2} + c$ complete, with the constant of integration
+      SOLUTION: $12x^{2}$ raises to $x^{3}$ and $12 \div 3 = 4$, giving $4x^{3}$. $-6x$ raises to $x^{2}$ and $-6 \div 2 = -3$, giving $-3x^{2}$. So the integral is $4x^{3} - 3x^{2} + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"4x^{3} - 3x^{2}"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (1)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"12x^{3} - 6x^{2} + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (0)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"6x^{3} - 6x^{2} + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (0)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0004 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [2] Find $\int \left(-2x + 5\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic -x^{2} + 5x + c (equivalent)
+      MW1 MW1: $-x^{2}$ from the term $-2x$
+      W1 W1: $-x^{2} + 5x + c$ complete, with the constant of integration
+      SOLUTION: $-2x$ raises to $x^{2}$ and $-2 \div 2 = -1$, giving $-x^{2}$. $5$ raises to $x^{1}$ and $5 \div 1 = 5$, giving $5x$. So the integral is $-x^{2} + 5x + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"-x^{2} + 5x"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (1)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"-2x^{2} + 5x + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (0)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0005 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)find3 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [3] Find $\int \left(\frac{9}{x^{4}}\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic -\frac{3}{x^{3}} + c (equivalent)
+      M1 M1: writing the term under the line with a negative index
+      MW1 MW1: $-\frac{3}{x^{3}}$ from the term $\frac{9}{x^{4}}$
+      W1 W1: $-\frac{3}{x^{3}} + c$ complete, with the constant of integration
+      SOLUTION: $\frac{9}{x^{4}}$ raises to $x^{-3}$ and $9 \div -3 = -3$, giving $-\frac{3}{x^{3}}$. So the integral is $-\frac{3}{x^{3}} + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"-\\frac{3}{x^{3}}"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (2)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"\\frac{9}{x^{3}} + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (1)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"-\\frac{9}{4x^{3}} + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (1)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0006 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)find3 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [3] Find $\int \left(\frac{6}{x^{3}}\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic -\frac{3}{x^{2}} + c (equivalent)
+      M1 M1: writing the term under the line with a negative index
+      MW1 MW1: $-\frac{3}{x^{2}}$ from the term $\frac{6}{x^{3}}$
+      W1 W1: $-\frac{3}{x^{2}} + c$ complete, with the constant of integration
+      SOLUTION: $\frac{6}{x^{3}}$ raises to $x^{-2}$ and $6 \div -2 = -3$, giving $-\frac{3}{x^{2}}$. So the integral is $-\frac{3}{x^{2}} + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"-\\frac{3}{x^{2}}"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (2)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"\\frac{6}{x^{2}} + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (1)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"-\\frac{2}{x^{2}} + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (1)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0007 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)find3 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [3] Find $\int \left(\frac{4}{x^{2}}\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic -\frac{4}{x} + c (equivalent)
+      M1 M1: writing the term under the line with a negative index
+      MW1 MW1: $-\frac{4}{x}$ from the term $\frac{4}{x^{2}}$
+      W1 W1: $-\frac{4}{x} + c$ complete, with the constant of integration
+      SOLUTION: $\frac{4}{x^{2}}$ raises to $x^{-1}$ and $4 \div -1 = -4$, giving $-\frac{4}{x}$. So the integral is $-\frac{4}{x} + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"-\\frac{4}{x}"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (2)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"\\frac{4}{x} + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (1)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"-\\frac{2}{x} + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (1)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0008 [verified] practice · diff 4 · untiered · FM1 calc · 3 marks · (main)find3 · A plain indefinite integral of the kind that opens a Unit 1 paper
+  (main) [3] Find $\int \left(x^{3} - 6x^{2} + 4\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic \frac{1x^{4}}{4} - 2x^{3} + 4x + c (equivalent)
+      MW1 MW1: $\frac{1x^{4}}{4}$ from the term $x^{3}$
+      MW1 MW2: $-2x^{3}$ from the term $-6x^{2}$
+      W1 W1: $\frac{1x^{4}}{4} - 2x^{3} + 4x + c$ complete, with the constant of integration
+      SOLUTION: $x^{3}$ raises to $x^{4}$ and $1 \div 4 = 1/4$, giving $\frac{1x^{4}}{4}$. $-6x^{2}$ raises to $x^{3}$ and $-6 \div 3 = -2$, giving $-2x^{3}$. $4$ raises to $x^{1}$ and $4 \div 1 = 4$, giving $4x$. So the integral is $\frac{1x^{4}}{4} - 2x^{3} + 4x + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"\\frac{1x^{4}}{4} - 2x^{3} + 4x"} → Every term is integrated correctly. The constant of integration is missing: without a point to fix the height, the answer is a family of curves, so it ends with $+ c$. (2)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"x^{4} - 6x^{3} + 4x + c"} → Each power has risen by one, which is the first half of the rule. The coefficient then has to be divided by that new power. (1)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"\\frac{1x^{4}}{3} - 3x^{3} + 4x + c"} → The powers have risen correctly and the division has used the power you started with. It is the new power that the coefficient is divided by. (1)
+      HINTS: Raise each power by one. || Then divide each coefficient by the power you have just made. || The answer ends with $+ c$.
+
+### q.fm.u1.integration-as-inverse.0009 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)express4 · A curve recovered from its gradient function and one point on it
+  (main) [4] The gradient function of a curve is $\frac{dy}{dx} = 6x + 1$, and the curve passes through the point $(2, 5)$.
+Express $y$ in terms of $x$.
+      ANSWER: algebraic y = 3x^{2} + x - 9 (equivalent)
+      MW1 MW1: recognising that the curve is found by integrating
+      W1 W1: $y = 3x^{2} + x + c$
+      M1 M1: substituting $x = 2$ and $y = 5$
+      W1 W2: $c = -9$ and the curve written as $y = 3x^{2} + x - 9$ ft
+      SOLUTION: Integrating: $y = 3x^{2} + x + c$. Substituting $x = 2$ and $y = 5$: $14 + c = 5$. So $c = -9$ and $y = 3x^{2} + x - 9$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"y = 3x^{2} + x + c"} → The integrating is right. The point $(2, 5)$ is there to fix the constant, so substitute it and write the number in place of the letter. (2)
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"algebraic","latex":"y = 3x^{2} + x - 8"} → The integrated terms are right. The constant came from substituting into $\frac{dy}{dx}$, which gives $13$ at that point; the substitution belongs in the integrated expression, where it gives $c = -9$. (2)
+      ERR [fm.int.differentiated-instead] {"kind":"algebraic","latex":"y = 6"} → That is $\frac{d^{2}y}{dx^{2}}$, so the given expression has been differentiated. A gradient function is already a derivative, so recovering $y$ means integrating. (0)
+      HINTS: The gradient function is already a derivative, so integrate it. || Do not forget $+ c$ at this stage. || Substitute the point into the integrated expression, then write one equation.
+
+### q.fm.u1.integration-as-inverse.0010 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)express4 · A curve recovered from its gradient function and one point on it
+  (main) [4] The gradient function of a curve is $\frac{dy}{dx} = 8x - 3$, and the curve passes through the point $(1, 4)$.
+Express $y$ in terms of $x$.
+      ANSWER: algebraic y = 4x^{2} - 3x + 3 (equivalent)
+      MW1 MW1: recognising that the curve is found by integrating
+      W1 W1: $y = 4x^{2} - 3x + c$
+      M1 M1: substituting $x = 1$ and $y = 4$
+      W1 W2: $c = 3$ and the curve written as $y = 4x^{2} - 3x + 3$ ft
+      SOLUTION: Integrating: $y = 4x^{2} - 3x + c$. Substituting $x = 1$ and $y = 4$: $1 + c = 4$. So $c = 3$ and $y = 4x^{2} - 3x + 3$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"y = 4x^{2} - 3x + c"} → The integrating is right. The point $(1, 4)$ is there to fix the constant, so substitute it and write the number in place of the letter. (2)
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"algebraic","latex":"y = 4x^{2} - 3x - 1"} → The integrated terms are right. The constant came from substituting into $\frac{dy}{dx}$, which gives $5$ at that point; the substitution belongs in the integrated expression, where it gives $c = 3$. (2)
+      ERR [fm.int.differentiated-instead] {"kind":"algebraic","latex":"y = 8"} → That is $\frac{d^{2}y}{dx^{2}}$, so the given expression has been differentiated. A gradient function is already a derivative, so recovering $y$ means integrating. (0)
+      HINTS: The gradient function is already a derivative, so integrate it. || Do not forget $+ c$ at this stage. || Substitute the point into the integrated expression, then write one equation.
+
+### q.fm.u1.integration-as-inverse.0011 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · Finding the constant of integration from a point
+  (main) [2] A curve has equation $y = 2x^{3} + c$ and passes through the point $(2, 20)$.
+Find the value of $c$.
+      ANSWER: numeric 4 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $x = 2$ and $y = 20$
+      W1 W1: $c = 4$
+      SOLUTION: Substituting: $2 \times 2^{3} + c = 20$, so $16 + c = 20$. Therefore $c = 4$.
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"numeric","value":-4} → That value comes from substituting into $\frac{dy}{dx} = 6x^{2}$, which is $24$ at $x = 2$. The point belongs in the equation of the curve. (0)
+      HINTS: Put both coordinates into the equation. || Work out the term in $x$ first, then solve for $c$.
+
+### q.fm.u1.integration-as-inverse.0012 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)identify1 · Choosing the direction from the wording of a stem
+  (main) [1] A question reads: the gradient function of a curve is $\frac{dy}{dx} = 6x + 1$, and the curve passes through $(2, 5)$. Find the equation of the curve.
+Identify the correct first step.
+      ANSWER: mcq ✔Integrate $6x + 1$, then use the point to find $c$ | ✘Differentiate $6x + 1$ [fm.int.gradient-word-triggers-differentiation] | ✘Substitute $x = 2$ into $6x + 1$ [fm.int.point-substituted-into-gradient]
+      W1 W1: integrating the gradient function, then using the point
+      SOLUTION: The question gives $\frac{dy}{dx}$ and asks for $y$, so the curve is recovered by integrating. The point $(2, 5)$ is then substituted into the integrated expression to find $c$.
+      HINTS: What has the question given you, and what does it want? || The gradient function is already a derivative.
+
+### q.fm.u1.integration-as-inverse.0013 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)identify1 · Why an indefinite integral carries a constant
+  (main) [1] Identify the reason an indefinite integral is written with $+ c$.
+      ANSWER: mcq ✔A constant differentiates to zero, so its value cannot be recovered from the gradient function | ✘The answer is only an approximation [fm.int.constant-omitted] | ✘$c$ stands for the coefficient of the first term [fm.int.constant-omitted]
+      W1 W1: a constant differentiates to zero, so it cannot be recovered
+      SOLUTION: Differentiating removes any constant term, because a constant has no gradient. So every curve $y = f(x) + k$ has the same gradient function, and going backwards cannot tell which one it was. The letter $c$ holds that place until a point on the curve is given.
+      HINTS: What happens to a constant when you differentiate? || Think about the family of curves with the same gradient.
+
+### q.fm.u1.integration-as-inverse.0014 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)express4 · A curve recovered from its gradient function and one point on it
+  (main) [4] The gradient function of a curve is $\frac{dy}{dx} = 4x - 9$, and the curve passes through the point $(3, 2)$.
+Express $y$ in terms of $x$.
+      ANSWER: algebraic y = 2x^{2} - 9x + 11 (equivalent)
+      MW1 MW1: recognising that the curve is found by integrating
+      W1 W1: $y = 2x^{2} - 9x + c$
+      M1 M1: substituting $x = 3$ and $y = 2$
+      W1 W2: $c = 11$ and the curve written as $y = 2x^{2} - 9x + 11$ ft
+      SOLUTION: Integrating: $y = 2x^{2} - 9x + c$. Substituting $x = 3$ and $y = 2$: $-9 + c = 2$. So $c = 11$ and $y = 2x^{2} - 9x + 11$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"y = 2x^{2} - 9x + c"} → The integrating is right. The point $(3, 2)$ is there to fix the constant, so substitute it and write the number in place of the letter. (2)
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"algebraic","latex":"y = 2x^{2} - 9x - 1"} → The integrated terms are right. The constant came from substituting into $\frac{dy}{dx}$, which gives $3$ at that point; the substitution belongs in the integrated expression, where it gives $c = 11$. (2)
+      ERR [fm.int.differentiated-instead] {"kind":"algebraic","latex":"y = 4"} → That is $\frac{d^{2}y}{dx^{2}}$, so the given expression has been differentiated. A gradient function is already a derivative, so recovering $y$ means integrating. (0)
+      HINTS: The gradient function is already a derivative, so integrate it. || Do not forget $+ c$ at this stage. || Substitute the point into the integrated expression, then write one equation.
+
+### q.fm.u1.integration-as-inverse.0015 [verified] exam-style · diff 4 · untiered · FM1 calc · 5 marks · (main)express5 · A curve recovered from its gradient function and one point on it
+  (main) [5] The gradient function of a curve is $\frac{dy}{dx} = 12x^{2} + 6x - 7$, and the curve passes through the point $(2, 9)$.
+Express $y$ in terms of $x$.
+      ANSWER: algebraic y = 4x^{3} + 3x^{2} - 7x - 21 (equivalent)
+      MW1 MW1: recognising that the curve is found by integrating
+      W2 W1: $y = 4x^{3} + 3x^{2} - 7x + c$
+      M1 M1: substituting $x = 2$ and $y = 9$
+      W1 W2: $c = -21$ and the curve written as $y = 4x^{3} + 3x^{2} - 7x - 21$ ft
+      SOLUTION: Integrating: $y = 4x^{3} + 3x^{2} - 7x + c$. Substituting $x = 2$ and $y = 9$: $30 + c = 9$. So $c = -21$ and $y = 4x^{3} + 3x^{2} - 7x - 21$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"y = 4x^{3} + 3x^{2} - 7x + c"} → The integrating is right. The point $(2, 9)$ is there to fix the constant, so substitute it and write the number in place of the letter. (3)
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"algebraic","latex":"y = 4x^{3} + 3x^{2} - 7x - 44"} → The integrated terms are right. The constant came from substituting into $\frac{dy}{dx}$, which gives $53$ at that point; the substitution belongs in the integrated expression, where it gives $c = -21$. (3)
+      ERR [fm.int.differentiated-instead] {"kind":"algebraic","latex":"y = 24x + 6"} → That is $\frac{d^{2}y}{dx^{2}}$, so the given expression has been differentiated. A gradient function is already a derivative, so recovering $y$ means integrating. (0)
+      HINTS: The gradient function is already a derivative, so integrate it. || Do not forget $+ c$ at this stage. || Substitute the point into the integrated expression, then write one equation.
+
+### q.fm.u1.integration-as-inverse.0016 [verified] exam-style · diff 5 · untiered · FM1 calc · 7 marks · (a)find4|(b)find3 · An integral with a negative power, then the curve through a point
+  (a) [4] Find $\int \left(5x^{4} + 3 - \frac{8}{x^{3}}\right) dx$
+Use $c$ for the constant of integration.
+      ANSWER: algebraic x^{5} + 3x + \frac{4}{x^{2}} + c (equivalent)
+      M1 M1: writing $\frac{8}{x^{3}}$ as $8x^{-3}$
+      MW1 MW1: $x^{5}$ from $5x^{4}$, and $3x$ from $3$
+      W1 W1: $\frac{4}{x^{2}}$ from $-\frac{8}{x^{3}}$
+      W1 W2: $x^{5} + 3x + \frac{4}{x^{2}} + c$ complete, with the constant of integration
+      SOLUTION: Rewrite: $\frac{8}{x^{3}} = 8x^{-3}$, so the integrand is $5x^{4} - 8x^{-3} + 3$. $5x^{4}$ raises to $x^{5}$ and $5 \div 5 = 1$, giving $x^{5}$. $-8x^{-3}$ raises to $x^{-2}$ and $-8 \div -2 = 4$, giving $4x^{-2}$, which is $\frac{4}{x^{2}}$. $3$ becomes $3x$. So the integral is $x^{5} + 3x + \frac{4}{x^{2}} + c$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"x^{5} + 3x + \\frac{4}{x^{2}}"} → All three terms are integrated correctly. The constant of integration is missing from the end. (3)
+      ERR [fm.int.divided-by-original-power] {"kind":"algebraic","latex":"\\frac{5x^{5}}{4} + 3x + \\frac{8}{3x^{2}} + c"} → Every index has risen correctly. Each coefficient has then been divided by the index it started from rather than by the new one. (1)
+      ERR [fm.int.coefficient-not-divided] {"kind":"algebraic","latex":"5x^{5} + 3x - \\frac{8}{x^{2}} + c"} → The indices are right. The second half of the rule is missing: divide each coefficient by the new power. (1)
+      HINTS: Rewrite the fraction with a negative index first. || The index rises, so $-3$ becomes $-2$. || Dividing by $-2$ changes the sign of that term.
+  (b) [3] A curve with $\frac{dy}{dx} = 5x^{4} + 3 - \frac{8}{x^{3}}$ passes through the point $(2, 6)$.
+Find the equation of the curve.
+      ANSWER: algebraic y = x^{5} + 3x - 33 + \frac{4}{x^{2}} (equivalent)
+      M1 M1: substituting $x = 2$ and $y = 6$ into the answer to part (a) ft
+      W1 W1: $c = -33$
+      W1 W2: $y = x^{5} + 3x - 33 + \frac{4}{x^{2}}$ written as one equation
+      SOLUTION: From part (a), $y = x^{5} + 3x + \frac{4}{x^{2}} + c$. At $x = 2$ the integrated terms give $39$, so $39 + c = 6$. Therefore $c = -33$ and $y = x^{5} + 3x - 33 + \frac{4}{x^{2}}$.
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"y = x^{5} + 3x + \\frac{4}{x^{2}} + c"} → The integrating is right and the point has not been used. Substitute it to replace the letter with its number. (0)
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"algebraic","latex":"y = x^{5} + 3x - 76 + \\frac{4}{x^{2}}"} → The constant has been found from $\frac{dy}{dx}$, which is $82$ at that point. The point has to go into the integrated expression instead, which gives $c = -33$. (1)
+      HINTS: Use the integral from part (a). || At $x = 2$ the integrated terms come to $39$. || Write the value of $c$ inside the equation.
+
+### q.fm.u1.integration-as-inverse.0017 [verified] exam-style · diff 5 · untiered · FM1 calc · 7 marks · (a)find2|(b)find5 · Both directions from one gradient function: the second derivative, then the curve
+  (a) [2] Given that $\frac{dy}{dx} = 9x^{2} + 2 - \frac{8}{x^{3}}$
+find an expression for $\frac{d^{2}y}{dx^{2}}$.
+      ANSWER: algebraic 18x + \frac{24}{x^{4}} (equivalent)
+      MW1 MW1: $18x$ from $9x^{2}$, and $0$ from the constant
+      W1 W1: $18x + \frac{24}{x^{4}}$ complete
+      SOLUTION: Rewrite: $\frac{dy}{dx} = 9x^{2} - 8x^{-3} + 2$. $9x^{2}$ gives $18x$; $-8x^{-3}$ gives $-8 \times -3 \times x^{-4} = 24x^{-4}$; the constant gives $0$. So $\frac{d^{2}y}{dx^{2}} = 18x + \frac{24}{x^{4}}$.
+      ERR [fm.int.differentiated-instead] {"kind":"algebraic","latex":"3x^{3} + 2x + \\frac{4}{x^{2}}"} → That is the integral of the given expression. This part asks for the second derivative, so the move here is forwards, not backwards. (0)
+      HINTS: This part goes forwards, so differentiate. || Rewrite $\frac{8}{x^{3}}$ as $8x^{-3}$ first. || The index steps down from $-3$ to $-4$.
+  (b) [5] Find an expression for $y$, given that $y = 5$ when $x = 2$.
+      ANSWER: algebraic y = 3x^{3} + 2x - 24 + \frac{4}{x^{2}} (equivalent)
+      MW1 MW1: recognising that $y$ is recovered by integrating, not by differentiating again
+      MW1 MW2: $3x^{3}$ from $9x^{2}$, and $2x$ from $2$
+      W1 W1: $\frac{4}{x^{2}}$ from $-\frac{8}{x^{3}}$
+      M1 M1: substituting $x = 2$ and $y = 5$ into the integrated expression
+      W1 W2: $c = -24$ and $y = 3x^{3} + 2x - 24 + \frac{4}{x^{2}}$ ft
+      SOLUTION: Integrating $9x^{2} - 8x^{-3} + 2$: $9x^{2}$ gives $3x^{3}$; $-8x^{-3}$ raises to $x^{-2}$ and $-8 \div -2 = 4$, giving $\frac{4}{x^{2}}$; $2$ gives $2x$. So $y = 3x^{3} + 2x + \frac{4}{x^{2}} + c$. At $x = 2$ the integrated terms give $29$, so $29 + c = 5$ and $c = -24$. Therefore $y = 3x^{3} + 2x - 24 + \frac{4}{x^{2}}$.
+      ERR [fm.int.differentiated-instead] {"kind":"algebraic","latex":"y = 18x + \\frac{24}{x^{4}}"} → That is the answer to part (a), the second derivative. To reach $y$ from $\frac{dy}{dx}$ you integrate. (0)
+      ERR [fm.int.constant-omitted] {"kind":"algebraic","latex":"y = 3x^{3} + 2x + \\frac{4}{x^{2}} + c"} → Every term is integrated correctly, which is three of the five marks. The point is there to fix the constant, so substitute it and write the number in. (3)
+      ERR [fm.int.point-substituted-into-gradient] {"kind":"algebraic","latex":"y = 3x^{3} + 2x - 32 + \\frac{4}{x^{2}}"} → The constant has come from the gradient function, which is $37$ at $x = 2$. Substituting into the integrated expression instead gives $c = -24$. (3)
+      HINTS: Integrate the expression you were given, not the answer to part (a). || The index rises, so $-3$ becomes $-2$, and dividing by $-2$ changes the sign. || Then substitute the point and write one equation.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.integration-as-inverse.01 [verified] fm.int.constant-omitted · earned MW1,MW2,MW3 · ccea-cer:further-maths:2022-summer:FM1:Q2
+STEM: Niamh was asked to find $\int \left(6x^{2} - 4x + 5\right) dx$. Her working:
+    1. 6x^2 - 4x + 5
+    2. 6x^2 becomes 2x^3
+    3. -4x becomes -2x^2
+    4. 5 becomes 5x
+  ✘ 5. 2x^3 - 2x^2 + 5x
+  WRONG: Lines 2, 3 and 4 are all correct, and each of them would earn its own mark.
+Line 5 collects them and stops. An indefinite integral has no single answer: every curve $y = 2x^3 - 2x^2 + 5x + k$ has the gradient function she started from.
+The constant of integration says so, and its absence costs the final mark.
+  FIX: 2x^3 - 2x^2 + 5x + c
+  FEEDBACK: The integrating is faultless, and that is most of the marks. One character is missing. A useful habit is to write $+ c$ as soon as you drop the integral sign, before you tidy anything else, so that it is never the thing you run out of time to add. The finished answer is $2x^{3} - 2x^{2} + 5x + c$.
+
+### ftm.fm.u1.integration-as-inverse.02 [verified] fm.int.gradient-word-triggers-differentiation · earned none · ccea-cer:further-maths:2025-summer:FM1:Q6
+STEM: Oisín was asked: the gradient function of a curve is $\frac{dy}{dx} = 6x + 1$ and the curve passes through $(2, 5)$. Find the equation of the curve. His working:
+    1. dy/dx = 6x + 1
+  ✘ 2. d2y/dx2 = 6
+    3. y = 6x + c
+    4. 5 = 12 + c so c = -7
+    5. y = 6x - 7
+  WRONG: Line 2 differentiates. The word gradient in the stem describes what was handed over, not what to do with it: $\frac{dy}{dx}$ is already the result of differentiating, so going forwards again reaches the second derivative and moves away from the curve.
+Everything after line 2 is careful work on the wrong expression, which is why the page looks orderly.
+Integrating instead gives $y = 3x^{2} + x + c$, and the point then makes $c = -9$.
+  FIX: y = 3x^2 + x + c / 5 = 14 + c so c = -9 / y = 3x^2 + x - 9
+  FEEDBACK: The substitution technique in lines 4 and 5 is exactly right, and it will earn its marks once it is applied to the correct expression. Before you start, ask what the question has given you and what it wants: here it gives $\frac{dy}{dx}$ and wants $y$, which is the backwards journey. The curve is $y = 3x^{2} + x - 9$.
+
+### ftm.fm.u1.integration-as-inverse.03 [verified] fm.int.divided-by-original-power · earned M1 · ccea-cer:further-maths:2023-summer:FM1:Q2
+STEM: Eabha was asked to find $\int \frac{9}{x^{4}}\,dx$. Her working:
+    1. 9x^-4
+    2. The new index is -3
+  ✘ 3. 9x^-3 / -4
+    4. = -(9/4)x^-3 + c
+  WRONG: Line 2 is right: raising $-4$ by one gives $-3$, and the index always rises here.
+Line 3 then divides by $-4$, the index she started from. The rule divides by the **new** power, which is $-3$.
+So the term is $9x^{-3} \div -3 = -3x^{-3}$, which is $-\frac{3}{x^{3}}$.
+  FIX: 9x^-3 / -3 / = -3x^-3 + c
+  FEEDBACK: Writing the new index on its own line, as in line 2, is a good habit, and it is what makes the slip visible: the number you divide by should be the one you have just written. A quick check settles it either way, since differentiating $-3x^{-3}$ gives $9x^{-4}$ back again. The integral is $-\frac{3}{x^{3}} + c$.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.integration-as-inverse.01 [verified] (formula) State the rule for integrating $ax^{n}$.  →  Raise the power by one and divide by that new power: $\frac{ax^{n+1}}{n+1} + c$, provided $n$ is not $-1$.
+- rp.fm.u1.integration-as-inverse.02 [verified] (qa) Why does an indefinite integral end with $+ c$?  →  Because a constant differentiates to zero, so the gradient function cannot say which member of the family of curves it came from.
+- rp.fm.u1.integration-as-inverse.03 [verified] (procedure) What does a constant term such as $7$ integrate to?  →  It becomes $7x$, because $7$ is $7x^{0}$ and raising the power gives $7x^{1}$.
+- rp.fm.u1.integration-as-inverse.04 [verified] (procedure) How do you integrate $\frac{12}{x^{3}}$?  →  Rewrite it as $12x^{-3}$, raise the index to $-2$ and divide by $-2$, giving $-6x^{-2}$.
+- rp.fm.u1.integration-as-inverse.05 [verified] (trap) You raise a power from $2$ to $3$. Which number do you divide the coefficient by?  →  The new power, which is $3$; dividing by the old power of $2$ is the usual slip.
+- rp.fm.u1.integration-as-inverse.06 [verified] (procedure) You have $y = 3x^{2} + c$ and the curve passes through a point. What do you do?  →  Substitute both coordinates into that equation and solve for $c$, then write the curve as one equation with the number in place of the letter.
+- rp.fm.u1.integration-as-inverse.07 [verified] (trap) Where does the given point go: into the gradient function or into the integrated expression?  →  Into the integrated expression, because the gradient function carries no information about height.
+- rp.fm.u1.integration-as-inverse.08 [verified] (trap) A stem says the gradient function of a curve is $\frac{dy}{dx} = \ldots$. What does that tell you to do?  →  Integrate, because the differentiating has already been done; the word gradient names what you were given.
+- rp.fm.u1.integration-as-inverse.09 [verified] (definition) Which power cannot be integrated by this rule, and why?  →  The power $-1$, because raising it gives zero and the rule would divide by zero; that integral is not on this specification.
+
+## INSIGHT
+RULE: Given dy/dx, integrate (power up, divide), add + c, substitute the given point to find c, and write the full equation y = ...; 'gradient function' means you are going backwards, not differentiating.
+A*: Recognising an integration task disguised by the word 'gradient' and presenting the curve as one simplified equation.
+- ccea-cer:further-maths:2019-summer:FM1:Q3: asked Differentiate, then integrate an expression. | went wrong: Signs of the second term went wrong and the constant of integration was omitted. | rule: Every indefinite integral ends with + c.
+- ccea-cer:further-maths:2022-summer:FM1:Q2: asked Basic integration. | went wrong: Errors in the second term; some still omitted the constant, though fewer than before. | rule: Raise the power, divide by the new power, add c.
+- ccea-cer:further-maths:2023-summer:FM1:Q2: asked Find the equation of a curve from its gradient function and a point. | went wrong: Many left out c or failed to find it; some kept the integral sign after integrating; some did definite integration between 2 and 7; a few found the second derivative. | rule: Integrate, add c, substitute the point to find c, write y = ....
+- ccea-cer:further-maths:2024-summer:FM1:Q1: asked Differentiate a term with a negative index; then find y from dy/dx. | went wrong: The index term was mishandled in differentiation; in (ii) many did not realise integration was needed, and c was missing or wrong. | rule: From dy/dx back to y is integration.
+- ccea-cer:further-maths:2025-summer:FM1:Q6: asked Find the equation of a curve given its gradient function and a point. | went wrong: The word 'gradient' triggered differentiation; some tried y = mx + c at x = 1; those who integrated left answers unsimplified or wrote c separately; some used limits 1 and 5. | rule: Given the gradient function, integrate; use the point to fix c; present one equation.

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "examiner-insight.schema.json",
+  "title": "ExaminerInsight",
+  "$ref": "#/$defs/ExaminerInsight",
+  "$defs": {
+    "ExaminerInsight": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ExaminerInsightId"
+        },
+        "topic": {
+          "$ref": "#/$defs/TopicId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "findings": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "$ref": "#/$defs/ExaminerSource"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "asked": {
+                "type": "string",
+                "minLength": 1
+              },
+              "wentWrong": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fullMarkAnswersDid": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rule": {
+                "type": "string",
+                "minLength": 1
+              },
+              "misconceptions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/MisconceptionId"
+                }
+              }
+            },
+            "required": [
+              "source",
+              "url",
+              "asked",
+              "wentWrong",
+              "rule",
+              "misconceptions"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ruleToRemember": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aStarSignal": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "topic",
+        "specRefs",
+        "findings",
+        "ruleToRemember"
+      ],
+      "additionalProperties": false,
+      "description": "Chief Examiner report findings for one topic, in our words, cited to series/unit/question"
+    },
+    "ExaminerInsightId": {
+      "type": "string",
+      "pattern": "^ins\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "TopicId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[a-z0-9]+\\.[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Teachable-topic id \"<subject>.<unit>.<slug>\", e.g. \"maths.m4.histograms\""
+    },
+    "SpecRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{0,4}(-[A-Za-z0-9.]+){1,3}$",
+      "description": "Learning-outcome statement id from data/spec/*.json"
+    },
+    "ExaminerSource": {
+      "type": "string",
+      "pattern": "^ccea-cer:[a-z][a-z0-9-]*:\\d{4}-(?:summer|november|march|january):[A-Za-z0-9]+:Q\\d{1,2}(?:[a-z]|\\([a-z]\\))?(?:\\([ivx]{1,4}\\))?$",
+      "description": "Chief Examiner report citation: ccea-cer:<subject>:<yyyy>-<series>:<unit>:Q<n>"
+    },
+    "MisconceptionId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9]+(-[a-z0-9]+)*)+$"
+    }
+  }
+}

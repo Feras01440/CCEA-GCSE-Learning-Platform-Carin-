@@ -1,0 +1,211 @@
+# fm.u1.matrix-arithmetic — Adding, subtracting and multiplying matrices  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Adding, subtracting and multiplying matrices v1 [verified]
+verification statuses: {"verified":10}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Numbers kept in a rectangle
+- [p] 
+- [figure] $A$ and $B$ are $2 \times 2$; $C$ is $2 \times 3$. Rows first, then columns.
+- [choice] 
+- [h] 1. Adding, subtracting and scaling
+- [p] 
+- [figure] Position by position, and nothing moves.
+- [number] 
+- [h] 2. Multiplying: a row meets a column
+- [p] 
+- [figure] Row 1 against column 1 lands in row 1, column 1.
+- [why] Why entry by entry is not multiplication
+- [number] 
+- [h] 3. The shape rule
+- [p] 
+- [figure] Inner numbers match, outer numbers give the answer's shape.
+- [choice] 
+- [h] 4. Two things that catch people out
+- [p] 
+- [figure] Same two matrices, opposite order, different answer.
+- [examiner] Summer 2024, Unit 1, Question 7
+- [video] Multiplying Matrices 2x2 by 2x2 - Corbettmaths
+- [number] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.matrix-arithmetic.01 [verified] paper FM1 calc
+STEM: The matrices $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$.
+Work out $AB$.
+  FIG: svg — The product of A and B with the first row of A and the first column of B shaded, and the entry they produce outlined in the answer matrix.
+  1. Check the shapes: $A$ is $2 \times 2$ and $B$ is $2 \times 2$, so the inner numbers match and the answer is $2 \times 2$.   — Two seconds of checking tells you the product exists and how many entries to produce. It also stops you starting a product that cannot be done.  (MW1)
+  2. Row 1 of $A$ against column 1 of $B$: $(3)(5) + (-1)(-1) = 16$.   — Work along the row and down the column at the same time, and write the sum out before evaluating it. Sign slips live in this line.  (M1)  WHY: ✔Because the entry in row 1, column 1 comes from row 1 of the first and column 1 of the second | ✘Because the entries in the same position are multiplied together | ✘Because the first row of each matrix is multiplied term by term
+  3. Row 1 against column 2: $(3)(2) + (-1)(0) = 6$.   — Same row, next column. Keeping the row fixed while the column moves is what stops entries landing in the wrong place.  (M2)
+  4. Row 2 against column 1: $(2)(5) + (4)(-1) = 6$. Row 2 against column 2: $(2)(2) + (4)(0) = 4$.   — Move to the second row and repeat. Four entries, four sums, in the same order every time.  (M3)
+  5. So $AB = \begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$.   — Check the shape against step 1: four entries in a $2 \times 2$ matrix, which is what the shape rule promised.  (W1)
+  FINAL: $AB = \begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$
+  TWIN: Using the same matrices, work out $BA$.  → matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["19","3"],["-3","1"]],"tolerance":{"type":"absolute","value":0.0005}}
+
+## DIAGNOSTICS
+### dx.fm.u1.matrix-arithmetic.pre (pre) [draft]
+- p1 (Multiply and add with negatives): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+What is $(2) \times (5) + (4) \times (-1)$?
+    ✔ $6$ — $10$ and $-4$ add to $6$.
+    ✘ $14$ — The second product is negative, because one of its two numbers is negative.
+    ✘ $10$ — Only the first product has been used. Both products are added together.
+- p2 (Reading a shape as rows by columns): A rectangle of numbers has 2 rows and 3 columns. Which description is right?
+    ✔ It has 6 numbers in it — Two rows of three, so six numbers. That count is worth doing before you start writing an answer.
+    ✘ It has 5 numbers in it — The rows and columns are multiplied, not added.
+    ✘ It has 2 numbers in it — Each of the two rows holds three numbers.
+- p3 (Multiplying a negative by a positive): What is $3 \times (-1)$?
+    ✔ $-3$ — A negative multiplied by a positive stays negative.
+    ✘ $3$ — The sign has been dropped. Three lots of a negative number is negative.
+    ✘ $2$ — That is $3$ added rather than multiplied.
+
+### dx.fm.u1.matrix-arithmetic.post (post) [draft]
+- d1 (Adding matrices): Which of these is $A + B$, for $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$?
+    ✔ $\begin{pmatrix}8 & 1 \\ 1 & 4\end{pmatrix}$ — Each entry added to the entry in the same position.
+    ✘ $\begin{pmatrix}15 & -2 \\ -2 & 0\end{pmatrix}$ [fm.matrix.elementwise-product] — The entries have been multiplied rather than added.
+    ✘ $\begin{pmatrix}2 & 3 \\ -3 & -4\end{pmatrix}$ [fm.matrix.subtract-wrong-way] — That is $B - A$. The question asked for the sum.
+- d2 (Multiplying row by column): Which of these is $AB$, for $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$?
+    ✔ $\begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$ — Each entry is a row of $A$ paired with a column of $B$.
+    ✘ $\begin{pmatrix}15 & -2 \\ -2 & 0\end{pmatrix}$ [fm.matrix.elementwise-product] — The entries in matching positions have been multiplied. A product pairs a whole row with a whole column.
+    ✘ $\begin{pmatrix}13 & -3 \\ 18 & -2\end{pmatrix}$ [fm.matrix.rows-and-columns-swapped] — Rows have been paired with rows. It is a row of the first against a column of the second.
+    ✘ $\begin{pmatrix}19 & 3 \\ -3 & 1\end{pmatrix}$ [fm.matrix.inverse-order] — That is $BA$. The order of a matrix product changes the answer.
+- d3 (The shape rule): A matrix $P$ is $2 \times 3$ and a matrix $Q$ is $3 \times 2$. Which products exist?
+    ✔ Both $PQ$ and $QP$ — For $PQ$ the inner numbers are $3$ and $3$; for $QP$ they are $2$ and $2$. Both match, although the two answers are different shapes.
+    ✘ $PQ$ only [fm.matrix.dimensions-not-conformable] — $QP$ has inner numbers $2$ and $2$, so it exists as well. It comes out $3 \times 3$.
+    ✘ Neither, because the shapes are different [fm.matrix.dimensions-not-conformable] — Multiplication does not need identical shapes. It needs the inner two numbers to match.
+- d4 (Squaring a matrix): For a matrix $M$, what does $M^{2}$ mean?
+    ✔ $M \times M$, worked row by column — A power is a repeated product, and matrix products are row by column.
+    ✘ Each entry of $M$ squared [fm.matrix.scalar-multiple-squared] — That is the slip the reports name most often here. It gives a different matrix entirely.
+    ✘ $2M$, with every entry doubled [fm.matrix.scalar-multiple-squared] — Doubling is $2M$. Squaring is multiplying the matrix by itself.
+
+## QUESTIONS
+### q.fm.u1.matrix-arithmetic.0001 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (main)work-out2 · A sum of two square matrices, the opening part of a matrix question
+  FIG: svg — Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.
+  (main) [2] The diagram shows the matrices $A$, $B$ and $C$, where $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$.
+Work out $A + B$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["8","1"],["1","4"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: adding the entries in matching positions
+      W1 W1: $\begin{pmatrix}8 & 1 \\ 1 & 4\end{pmatrix}$
+      SOLUTION: Adding position by position: $\begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix} + \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix} = \begin{pmatrix}8 & 1 \\ 1 & 4\end{pmatrix}$.
+      ERR [fm.matrix.elementwise-product] {"kind":"matrix","entries":[["15","-2"],["-2","0"]]} → The entries in matching positions have been multiplied rather than added. Adding them gives $\begin{pmatrix}8 & 1 \\ 1 & 4\end{pmatrix}$. (0)
+      ERR [fm.matrix.subtract-wrong-way] {"kind":"matrix","entries":[["-2","-3"],["3","4"]]} → That is $A - B$. The question asked for the sum, which is $\begin{pmatrix}8 & 1 \\ 1 & 4\end{pmatrix}$. (0)
+      HINTS: Add the two entries that sit in the same position.
+
+### q.fm.u1.matrix-arithmetic.0002 [verified] practice · diff 1 · untiered · FM1 calc · 2 marks · (main)work-out2 · A scalar multiple, where every entry is multiplied
+  (main) [2] The matrix $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$.
+Work out $3A$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["9","-3"],["6","12"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: every entry multiplied by $3$
+      W1 W1: $\begin{pmatrix}9 & -3 \\ 6 & 12\end{pmatrix}$
+      SOLUTION: Multiplying every entry by $3$: $3\begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix} = \begin{pmatrix}9 & -3 \\ 6 & 12\end{pmatrix}$.
+      ERR [fm.matrix.scalar-multiple-squared] {"kind":"matrix","entries":[["9","1"],["4","16"]]} → Each entry has been squared instead of multiplied by $3$. A number outside the brackets multiplies every entry, giving $\begin{pmatrix}9 & -3 \\ 6 & 12\end{pmatrix}$. (0)
+      HINTS: A number outside the brackets multiplies every entry inside.
+
+### q.fm.u1.matrix-arithmetic.0003 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)identify1 · Whether an operation is possible at all, decided from the shapes
+  FIG: svg — Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.
+  (main) [1] The diagram shows $A$, which is $2 \times 2$, and $C$, which is $2 \times 3$.
+Identify the correct statement about $A + C$.
+      ANSWER: mcq ✔It does not exist, because the two matrices are different shapes | ✘It is a $2 \times 3$ matrix, with the extra column of $C$ copied across [fm.matrix.dimensions-not-conformable] | ✘It is a $2 \times 2$ matrix, using the first two columns of $C$ [fm.matrix.dimensions-not-conformable]
+      W1 W1: it does not exist: the shapes differ
+      SOLUTION: $A$ is $2 \times 2$ and $C$ is $2 \times 3$. Addition pairs entries in matching positions, so it needs identical shapes. $A + C$ does not exist.
+      HINTS: Compare the two shapes before anything else.
+
+### q.fm.u1.matrix-arithmetic.0004 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)work-out3 · A product of two square matrices, worked row by column
+  (main) [3] The matrices $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$.
+Work out $AB$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["16","6"],["6","4"]],"tolerance":{"type":"absolute","value":0.0005}}
+      M1 M1: at least one entry from a row of $A$ against a column of $B$
+      M1 M2: all four entries attempted row by column
+      W1 W1: $\begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$ ft
+      SOLUTION: Row by column: $\begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}\begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix} = \begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$. For example row 2, column 1 is $(2)(5) + (4)(-1) = 6$.
+      ERR [fm.matrix.elementwise-product] {"kind":"matrix","entries":[["15","-2"],["-2","0"]]} → The entries in matching positions have been multiplied. Each entry of a product is a whole row against a whole column, which gives $\begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$. (0)
+      ERR [fm.matrix.rows-and-columns-swapped] {"kind":"matrix","entries":[["13","-3"],["18","-2"]]} → Rows of $A$ have been paired with rows of $B$. It is a row of the first against a column of the second, which gives $\begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$. (1)
+      ERR [fm.matrix.inverse-order] {"kind":"matrix","entries":[["19","3"],["-3","1"]]} → That is $BA$. The order of a matrix product changes the answer, and $AB$ is $\begin{pmatrix}16 & 6 \\ 6 & 4\end{pmatrix}$. (1)
+      HINTS: Row 1 of $A$ with column 1 of $B$ gives the entry in row 1, column 1. || Work along the row and down the column, then add.
+
+### q.fm.u1.matrix-arithmetic.0005 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)write-down2 · One named entry of a product, so the row-by-column rule is used on its own
+  (main) [2] The matrices $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$.
+Write down the entry in row 2, column 1 of $AB$.
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $(2)(5) + (4)(-1)$
+      W1 W1: $6$ ft
+      SOLUTION: Row 2 of $A$ is $2$, $4$ and column 1 of $B$ is $5$, $-1$. $(2)(5) + (4)(-1) = 6$.
+      ERR [fm.matrix.elementwise-product] {"kind":"numeric","value":-2} → That is the entry of $A$ multiplied by the entry of $B$ in the same position. A product pairs a whole row with a whole column, which gives $6$. (0)
+      ERR [fm.matrix.rows-and-columns-swapped] {"kind":"numeric","value":18} → That came from taking row 2 of $A$ against row 1 of $B$. It is a row of the first against a column of the second, which gives $6$. (0)
+      HINTS: Row 2 of $A$, column 1 of $B$.
+
+### q.fm.u1.matrix-arithmetic.0006 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)identify1 · The shape of a product, read from the shape rule alone
+  (main) [1] The matrix $A$ is $2 \times 2$ and the matrix $C$ is $2 \times 3$.
+Identify the shape of the product $AC$.
+      ANSWER: mcq ✔$2 \times 3$ | ✘$3 \times 2$ [fm.matrix.dimensions-not-conformable] | ✘$2 \times 2$ [fm.matrix.dimensions-not-conformable]
+      W1 W1: $2 \times 3$
+      SOLUTION: $2 \times 2$ times $2 \times 3$: the inner numbers are both $2$, so the product exists. The outer numbers give the shape, so $AC$ is $2 \times 3$.
+      HINTS: Write the two shapes side by side and look at the inner and outer numbers.
+
+### q.fm.u1.matrix-arithmetic.0007 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)identify2 · A squared matrix, the slip the reports name most often on this topic
+  (main) [2] The matrix $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$.
+Identify $A^{2}$.
+      ANSWER: mcq ✔$\begin{pmatrix}7 & -7 \\ 14 & 14\end{pmatrix}$ | ✘$\begin{pmatrix}9 & 1 \\ 4 & 16\end{pmatrix}$ [fm.matrix.scalar-multiple-squared] | ✘$\begin{pmatrix}6 & -2 \\ 4 & 8\end{pmatrix}$ [fm.matrix.scalar-multiple-squared] | ✘$\begin{pmatrix}10 & 2 \\ 2 & 20\end{pmatrix}$ [fm.matrix.rows-and-columns-swapped]
+      M1 M1: $A \times A$ attempted row by column
+      W1 W1: $\begin{pmatrix}7 & -7 \\ 14 & 14\end{pmatrix}$
+      SOLUTION: $A^{2} = A \times A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}\begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix} = \begin{pmatrix}7 & -7 \\ 14 & 14\end{pmatrix}$. Row 1, column 1 is $(3)(3) + (-1)(2) = 7$.
+      HINTS: $A^{2}$ is $A$ multiplied by $A$.
+
+### q.fm.u1.matrix-arithmetic.0008 [verified] exam-style · diff 3 · untiered · FM1 calc · 6 marks · (a)work-out2|(b)work-out3|(c)explain1 · A combined expression, then a non-square product, then a conformability explanation
+  FIG: svg — Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.
+  (a) [2] The diagram shows the matrices $A$, $B$ and $C$.
+Work out $2A - B$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["1","-4"],["5","8"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: $2A = \begin{pmatrix}6 & -2 \\ 4 & 8\end{pmatrix}$
+      W1 W1: $\begin{pmatrix}1 & -4 \\ 5 & 8\end{pmatrix}$ ft
+      SOLUTION: $2A = \begin{pmatrix}6 & -2 \\ 4 & 8\end{pmatrix}$. Subtracting position by position: $2A - B = \begin{pmatrix}1 & -4 \\ 5 & 8\end{pmatrix}$.
+      ERR [fm.matrix.subtract-wrong-way] {"kind":"matrix","entries":[["-1","4"],["-5","-8"]]} → The subtraction is the wrong way round: that is $B - 2A$. Every entry changes sign, and $2A - B$ is $\begin{pmatrix}1 & -4 \\ 5 & 8\end{pmatrix}$. (1)
+      HINTS: Double every entry of $A$ first, then subtract position by position.
+  (b) [3] Work out $AC$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":3,"entries":[["0","12","-11"],["14","8","16"]],"tolerance":{"type":"absolute","value":0.0005}}
+      M1 M1: row of $A$ against column of $C$ for at least one entry
+      M1 M2: all six entries attempted
+      W1 W1: $\begin{pmatrix}0 & 12 & -11 \\ 14 & 8 & 16\end{pmatrix}$ ft
+      SOLUTION: $AC = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}\begin{pmatrix}1 & 4 & -2 \\ 3 & 0 & 5\end{pmatrix} = \begin{pmatrix}0 & 12 & -11 \\ 14 & 8 & 16\end{pmatrix}$. For example row 2, column 3 is $(2)(-2) + (4)(5) = 16$.
+      ERR [fm.matrix.dimensions-not-conformable] {"kind":"matrix","entries":[["7","-7"],["14","14"]]} → That product is $2 \times 2$, so it cannot be $AC$: $C$ has three columns, and the shape rule says the answer has three as well. $AC$ is $\begin{pmatrix}0 & 12 & -11 \\ 14 & 8 & 16\end{pmatrix}$. (0)
+      HINTS: The shapes are $2 \times 2$ and $2 \times 3$, so the answer has six entries. || Each row of $A$ meets each of the three columns of $C$.
+  (c) [1] Explain why the product $CA$ cannot be worked out.
+      ANSWER: text accepted=["C has 3 columns and A has 2 rows, and they are not equal, so the product does not exist","the number of columns of C is 3 and the number of rows of A is 2, so they do not match"] keyWords=[{"any":["columns","column"],"marks":1}]
+      W1 W1: the columns of $C$ and the rows of $A$ do not match accept ["3 and 2 are not equal","the inner numbers differ"]
+      SOLUTION: $C$ is $2 \times 3$ and $A$ is $2 \times 2$, so the product $CA$ has inner numbers $3$ and $2$. C has 3 columns and A has 2 rows, and they are not equal, so the product does not exist.
+      HINTS: Write the two shapes side by side, $C$ first.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.matrix-arithmetic.01 [draft] fm.matrix.elementwise-product · earned MW1 · ccea-cer:further-maths:2023-summer:FM1:Q8
+STEM: Seán was asked to work out $AB$, where $A = \begin{pmatrix}3 & -1 \\ 2 & 4\end{pmatrix}$ and $B = \begin{pmatrix}5 & 2 \\ -1 & 0\end{pmatrix}$. His working:
+    1. A is 2 x 2 and B is 2 x 2, so AB is 2 x 2
+  ✘ 2. row 1, column 1: (3)(5) = 15
+    3. row 1, column 2: (-1)(2) = -2
+    4. row 2, column 1: (2)(-1) = -2
+    5. row 2, column 2: (4)(0) = 0
+    6. AB = (15 -2 ; -2 0)
+  WRONG: Line 1 is right, and the shape he predicted is the shape he produced, so nothing looks wrong on the page.
+Line 2 multiplies the two entries sitting in the same position. A matrix product pairs a whole row of the first with a whole column of the second, so that entry is $(3)(5) + (-1)(-1) = 16$.
+Every line after it repeats the same pairing, so the whole matrix is wrong even though the arithmetic in each line is right.
+  FIX: row 1, column 1: (3)(5) + (-1)(-1) = 16 / row 1, column 2: (3)(2) + (-1)(0) = 6 / AB = (16 6 ; 6 4)
+  FEEDBACK: The shape check earns its mark and the arithmetic is accurate, so this is a method problem rather than a careless one. Each entry of a product is a sum of two products, never a single one: if a line of your working has no plus sign in it, you have paired the wrong things. Say "row of the first, column of the second" as you write each line.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.matrix-arithmetic.01 [draft] (procedure) How do you find the entry in row 2, column 1 of a matrix product?  →  Take row 2 of the first matrix and column 1 of the second, multiply them term by term and add the results.
+- rp.fm.u1.matrix-arithmetic.02 [draft] (qa) When can two matrices be added, and when can they be multiplied?  →  Added only when they are the same shape. Multiplied only when the columns of the first match the rows of the second.
+- rp.fm.u1.matrix-arithmetic.03 [draft] (formula) A matrix that is $m \times n$ is multiplied by one that is $n \times p$. What shape is the answer?  →  It is $m \times p$: the inner numbers match, and the outer two give the shape of the product.
+- rp.fm.u1.matrix-arithmetic.04 [draft] (trap) What does $M^{2}$ mean for a matrix $M$, and what does it not mean?  →  It means $M \times M$, worked row by column. It does not mean squaring each entry.
+- rp.fm.u1.matrix-arithmetic.05 [draft] (trap) Is $AB$ the same as $BA$?  →  No. Matrix multiplication depends on the order, and often only one of the two products exists at all.
+- rp.fm.u1.matrix-arithmetic.06 [draft] (procedure) What is the first thing to write down before multiplying two matrices?  →  The two shapes, side by side. They say whether the product exists and how many entries the answer needs.

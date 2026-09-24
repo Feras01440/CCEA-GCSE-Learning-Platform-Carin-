@@ -1,0 +1,219 @@
+[
+  {
+    "type": "hero",
+    "lede": "A ruler that reads 6.4 cm is not promising 6.4 cm. It is promising something between 6.35 cm and 6.45 cm, because everything in that interval rounds to 6.4. Bounds are how you say exactly how far out a measurement, and anything worked out from it, could be.",
+    "can": [
+      "Write the upper and lower bounds of any rounded measurement.",
+      "Take half the rounding step, the nearest 5 included.",
+      "Find the greatest and least possible total, area or volume."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Upper and lower bounds: adding and multiplying"
+  },
+  {
+    "type": "p",
+    "md": "Every measurement is a lie of a useful kind. A ruler that reads 6.4 cm is not telling you the length is 6.4 cm; it is telling you the length is **near** 6.4 cm. This topic is about being exact about how near. Once you can say how far a single measurement might be out, you can say how far a total, an area or a volume might be out."
+  },
+  {
+    "type": "figure",
+    "alt": "A number line marked 6.35, 6.4 and 6.45. Arrows from 6.4 out to each end are labelled 0.05 below and 0.05 above. The point at 6.35 is a filled circle (included) and the point at 6.45 is an open circle (not included).",
+    "svg": "<svg viewBox=\"0 0 660 190\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"bounds-number-line\"><title id=\"bounds-number-line\">Every length that rounds to 6.4 lies between 6.35 and 6.45</title>\n<g stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\">\n  <path d=\"M40 108 L620 108\"/>\n  <path d=\"M170 98 L170 118\"/><path d=\"M330 92 L330 124\"/><path d=\"M490 98 L490 118\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-serif, Georgia, serif\" font-size=\"17\" text-anchor=\"middle\">\n  <text x=\"170\" y=\"150\">6.35</text><text x=\"330\" y=\"150\">6.4</text><text x=\"490\" y=\"150\">6.45</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"14\" text-anchor=\"middle\">\n  <text x=\"170\" y=\"174\">lower bound</text><text x=\"330\" y=\"174\">rounded value</text><text x=\"490\" y=\"174\">upper bound</text>\n  <text x=\"250\" y=\"62\">0.05 below</text><text x=\"410\" y=\"62\">0.05 above</text>\n  <text x=\"330\" y=\"32\">every length that rounds to 6.4 lives in here</text>\n</g>\n<g stroke=\"currentColor\" stroke-width=\"1.4\" fill=\"none\">\n  <path d=\"M330 74 L182 74\"/><path d=\"M182 74 L192 69\"/><path d=\"M182 74 L192 79\"/>\n  <path d=\"M330 74 L478 74\"/><path d=\"M478 74 L468 69\"/><path d=\"M478 74 L468 79\"/>\n</g>\n<circle cx=\"170\" cy=\"108\" r=\"5.5\" fill=\"currentColor\" stroke=\"currentColor\"/>\n<circle cx=\"490\" cy=\"108\" r=\"5.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/></svg>",
+    "caption": "Every length that rounds to 6.4 lies between 6.35 and 6.45"
+  },
+  {
+    "type": "gate",
+    "id": "g0a",
+    "kind": "choice",
+    "prompt": "The number line above runs from 6.35 to 6.45. Which lengths round to 6.4?",
+    "options": [
+      "From 6.35 up to 6.45",
+      "Only 6.4 itself",
+      "From 6.3 to 6.5"
+    ],
+    "answer": "From 6.35 up to 6.45",
+    "explain": "Anything in that interval is nearer to 6.4 than to 6.3 or 6.5, so the ruler cannot tell them apart."
+  },
+  {
+    "type": "h",
+    "text": "One measurement: the half unit"
+  },
+  {
+    "type": "p",
+    "md": "A value rounded to 6.4 came from somewhere in an interval centred on 6.4. The interval is one rounding step wide, so it reaches **half a step** either side. Half a step is the whole topic; get it right and the rest is arithmetic."
+  },
+  {
+    "type": "p",
+    "md": "**The half unit is half the rounding step.**\nNearest whole number → $0.5$. One decimal place → $0.05$. Two decimal places → $0.005$. Nearest 10 → $5$. **Nearest 5 → $2.5$.**\nThat last one costs marks every year. If a crate is 45 kg to the nearest 5 kg, it weighs between $42.5$ kg and $47.5$ kg — not between 40 and 50."
+  },
+  {
+    "type": "gate",
+    "id": "g0b",
+    "kind": "number",
+    "prompt": "A crate is 45 kg to the nearest 5 kg. What is the half unit, in kg?",
+    "answer": "2.5",
+    "explain": "Half of 5 is 2.5, so the crate lies between 42.5 kg and 47.5 kg."
+  },
+  {
+    "type": "p",
+    "md": "Notice the two ends behave differently: $6.35$ does round to $6.4$, so the lower bound is included; $6.45$ rounds up to $6.5$, so the upper bound is not. Written as an interval that is $6.35 \\le L < 6.45$. CCEA papers usually ask for 'the upper bound' and 'the lower bound' by name, so the values matter more than the notation."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "A sack is 30 kg to the nearest 5 kg. Its lower bound, in kg, is",
+    "answer": "27.5",
+    "explain": "Half of 5 is 2.5, so the sack weighs at least 27.5 kg."
+  },
+  {
+    "type": "h",
+    "text": "Adding: every bound goes the same way"
+  },
+  {
+    "type": "p",
+    "md": "Three parcels of $2.4$ kg, $3.7$ kg and $1.9$ kg, each to 1 decimal place. The heaviest the load can be is every parcel at its heaviest:\n$2.45 + 3.75 + 1.95 = 8.15$ kg.\nThe lightest is every parcel at its lightest: $2.35 + 3.65 + 1.85 = 7.85$ kg.\nThree parcels means three half units, so the total is uncertain by $0.15$ kg either way, not by $0.05$. That is the whole reason bounds go on the **measurements** and not on the answer."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Which is the upper bound of $2.4 + 3.7 + 1.9$ with each value to 1 d.p.?",
+    "options": [
+      "8.15",
+      "8.05",
+      "8.5"
+    ],
+    "answer": "8.15",
+    "explain": "Each of the three has its own 0.05, so the total gains 0.15."
+  },
+  {
+    "type": "h",
+    "text": "Multiplying: the biggest rectangle you could be holding"
+  },
+  {
+    "type": "p",
+    "md": "A tray measured 14 cm by 9 cm, each to the nearest centimetre. The area grows if either side grows, so the greatest area uses **both** upper bounds and the least uses both lower bounds."
+  },
+  {
+    "type": "figure",
+    "alt": "A solid rectangle 14.5 cm by 9.5 cm with the measured 14 cm by 9 cm rectangle drawn inside it as a dashed outline. The solid rectangle is labelled upper bound of the area, 14.5 times 9.5 = 137.75 square centimetres.",
+    "svg": "<svg viewBox=\"0 0 660 356\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"bounds-area-model\"><title id=\"bounds-area-model\">The largest rectangle the measurements allow: 14.5 cm by 9.5 cm</title>\n<g fill=\"currentColor\" fill-opacity=\"0.08\" stroke=\"currentColor\" stroke-width=\"1.8\">\n  <rect x=\"60\" y=\"50\" width=\"406\" height=\"266\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"6 4\">\n  <rect x=\"60\" y=\"50\" width=\"378\" height=\"247\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\" text-anchor=\"middle\">\n  <text x=\"263\" y=\"38\">14.5 cm (upper bound of the length)</text>\n  <text x=\"263\" y=\"190\">upper bound of the area</text>\n  <text x=\"263\" y=\"214\">14.5 x 9.5 = 137.75 sq cm</text>\n  <text x=\"263\" y=\"340\">dashed rectangle: the measured 14 cm by 9 cm</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\" text-anchor=\"start\">\n  <text x=\"486\" y=\"186\">9.5 cm</text><text x=\"486\" y=\"206\">(upper bound</text><text x=\"486\" y=\"226\">of the width)</text>\n</g></svg>",
+    "caption": "The largest rectangle the measurements allow: 14.5 cm by 9.5 cm"
+  },
+  {
+    "type": "p",
+    "md": "Upper bound of area $= 14.5 \\times 9.5 = 137.75 \\text{ cm}^2$.\nLower bound of area $= 13.5 \\times 8.5 = 114.75 \\text{ cm}^2$.\nThose two are 23 cm² apart, from a measurement that looked exact. Rounding to the nearest centimetre is a surprisingly blunt instrument once two lengths are multiplied."
+  },
+  {
+    "type": "gate",
+    "id": "g2b",
+    "kind": "number",
+    "prompt": "$14.5 \\times 9.5 = 137.75$ and $13.5 \\times 8.5 = 114.75$. How far apart are they, in cm²?",
+    "answer": "23",
+    "explain": "$137.75 - 114.75 = 23$, from two measurements that looked exact."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why 'all upper' is right here but not in M4",
+    "md": "Multiplying and adding are both **increasing**: make any input bigger and the answer gets bigger. So the extremes line up — all upper together, all lower together.\nSubtracting and dividing are not. $a - b$ gets bigger when $b$ gets **smaller**, so the maximum pairs the upper bound of $a$ with the lower bound of $b$. That is statement M4-NA-01, a separate topic; in M3 you never need to mix them."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "A rectangle is 8 cm by 5 cm to the nearest cm. The greatest possible area is",
+    "options": [
+      "$8.5 \\times 5.5 = 46.75$",
+      "$8.5 \\times 4.5 = 38.25$",
+      "$8 \\times 5 = 40$"
+    ],
+    "answer": "$8.5 \\times 5.5 = 46.75$",
+    "explain": "Both sides at their largest. Mixing bounds is for subtraction and division."
+  },
+  {
+    "type": "h",
+    "text": "Bounds inside a formula"
+  },
+  {
+    "type": "p",
+    "md": "The step up is a formula with three measurements in it. A trapezium-shaped bed has parallel sides $7.2$ m and $11.6$ m and height $5.0$ m, each to 1 decimal place. The formula sheet gives $\\tfrac{1}{2}(a+b)h$, and all three letters are measurements, so all three get bounded:\n$\\tfrac{1}{2}(7.25 + 11.65) \\times 5.05 = \\tfrac{1}{2} \\times 18.9 \\times 5.05 = 47.7225 \\text{ m}^2$.\nRead the formula symbol by symbol first. The reported losses here are never about bounds: they are about forgetting the $\\tfrac{1}{2}$, or bounding two letters and leaving the third alone."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "$\\tfrac{1}{2}(7.25 + 11.65) \\times 5.05$ — work out the bracket first. $7.25 + 11.65 = $",
+    "answer": "18.9",
+    "explain": "Then halve it (9.45) and multiply by 5.05 to reach 47.7225."
+  },
+  {
+    "type": "h",
+    "text": "Two habits that cost the accuracy mark"
+  },
+  {
+    "type": "p",
+    "md": "**Do not bound the answer.** Work out $5.6 \\times 3.4 = 19.04$ and then add $0.05$, and you get $19.09$, which is nothing. The bounds belong on $5.6$ and $3.4$, giving $5.65 \\times 3.45 = 19.4925$.\n**Do not round a bound.** $19.4925$ is the answer. Writing $19.5$ says the area could reach $19.5 \\text{ m}^2$, and it cannot. Unless the question asks for an accuracy, the full display goes on the answer line with its unit."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "November 2025 M4 Q17",
+    "md": "About three in ten scored full marks. Many worked with the given values and bounded the result afterwards, and most who got to the end rounded it instead of leaving the display as it stood.",
+    "source": "ccea-cer:maths:2025-november:M4:Q17"
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Your calculator shows 20.049375 for an upper bound. What goes on the answer line?",
+    "options": [
+      "20.049375",
+      "20.05",
+      "20"
+    ],
+    "answer": "20.049375",
+    "explain": "A bound is exact. Round it only when the question tells you to."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Write the half unit down as a number.\nGive the upper and lower bound of any rounded measurement.\nUse all upper bounds for a greatest total, area or volume.\nLeave a bound unrounded on the answer line."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Expect one item of two to four marks late in the paper: a rectangle or a total measured to a stated accuracy, with the range of the result wanted. The first mark is the bounds written down, so write all four before anything else. The last is the value with its unit and no rounding. Stuck: write the half unit and the four bounds anyway — that is usually a mark in hand."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "M3-NA-03 is addition and multiplication only. Bounds in a **subtraction** or a **division** — a difference in lengths, a speed, a density — belong to M4-NA-01, and only there do you pair an upper bound with a lower one. Truncation is not used in this specification."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.upper-and-lower-bounds-addition-and-multiplication.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.upper-and-lower-bounds-addition-and-multiplication.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.upper-and-lower-bounds-addition-and-multiplication.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.upper-and-lower-bounds-addition-and-multiplication.05"
+  }
+]

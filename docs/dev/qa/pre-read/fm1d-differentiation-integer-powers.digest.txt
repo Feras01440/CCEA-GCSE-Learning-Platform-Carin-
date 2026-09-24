@@ -1,0 +1,198 @@
+# fm.u1.differentiation-integer-powers — Differentiating integer powers of x  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Differentiating integer powers of x v1 [verified]
+verification statuses: {"verified":17}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] The slope that keeps changing
+- [p] 
+- [figure] The same curve, three points, three different slopes. The gradient is a function of $x$.
+- [choice] 
+- [h] 1. Two moves on every term
+- [p] 
+- [figure] Multiply, then step down. Every term, every time.
+- [why] Why the power drops
+- [blank] 
+- [h] 2. Constants, and the plain term in x
+- [p] 
+- [figure] A constant never climbs, so it contributes nothing to $\frac{dy}{dx}$.
+- [choice] 
+- [h] 3. Negative powers, and a full example
+- [p] 
+- [figure] Rewrite first, differentiate second. The index steps down: $-2$ goes to $-3$.
+- [p] 
+- [figure] Four terms, four small jobs, one answer: $\frac{dy}{dx} = 15x^{2} + 7 + \frac{8}{x^{3}}$.
+- [blank] 
+- [h] 4. Differentiating a second time
+- [p] 
+- [figure] The second derivative is the slope of the slope.
+- [video] Differentiation and Integration basics - CCEA GCSE Further Maths
+- [blank] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [notonspec] Not on this specification
+- [examiner] Summer 2025, Unit 1, Question 8(i)
+- [examiner] Summer 2024, Unit 1, Question 1(i)
+- [examiner] Summer 2019, Unit 1, Question 3(i)
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.differentiation-integer-powers.01 [verified] paper FM1 calc
+STEM: Find $\frac{dy}{dx}$ and $\frac{d^{2}y}{dx^{2}}$ for the curve $y = 5x^{3} + 7x - 9 - \frac{4}{x^{2}}$
+  FIG: svg — A table of the four terms of y = 5x cubed minus 4 over x squared plus 7x minus 9, each rewritten and then differentiated.
+  1. Rewrite the fraction as a power: $-\frac{4}{x^{2}} = -4x^{-2}$.   — The rule is written for powers of x, so anything under a line has to come up as a negative index first. Nothing has changed except the way it is written.  (MW1)
+  2. Differentiate $5x^{3}$: multiply by 3 and step the power down to give $15x^{2}$.   — Take one term at a time and finish it before looking at the next. Most lost marks in this topic come from doing four terms at once in your head.  (MW1)  WHY: ✔Because 5 times 3 is 15 and 3 steps down to 2 | ✘Because 5 plus 3 is 8 | ✘Because the power always becomes 2
+  3. Differentiate $-4x^{-2}$: $-4 \times -2 = 8$ and the index steps down from $-2$ to $-3$, giving $8x^{-3}$.   — Two negatives meet here, one in the coefficient and one in the power, and they do different jobs. The product of the signs sets the new coefficient; the index only ever moves down.  (W1)
+  4. Differentiate $7x$ to get $7$, and differentiate $-9$ to get $0$.   — A straight line contributes its own gradient, and a constant contributes nothing, because a horizontal graph never rises.  (W1)
+  5. Collect the four pieces: $\frac{dy}{dx} = 15x^{2} + 7 + \frac{8}{x^{3}}$.   — Putting the negative power back over the line is optional, and it is how CCEA prints the answer, so it is the safer habit.  (W2)
+  6. Differentiate that answer again: $\frac{d^{2}y}{dx^{2}} = 30x - \frac{24}{x^{4}}$.   — Start from the first derivative, never from y. Here 15x squared gives 30x, 8x to the minus 3 gives minus 24x to the minus 4, and the constant 7 disappears.  (MW2)
+  FINAL: $\frac{dy}{dx} = 15x^{2} + 7 + \frac{8}{x^{3}}$ and $\frac{d^{2}y}{dx^{2}} = 30x - \frac{24}{x^{4}}$
+  TWIN: Find $\frac{dy}{dx}$ for the curve $y = 3x^{5} + 6x - 2 - \frac{10}{x^{1}}$  → algebraic 15x^{4} + 6 + \frac{10}{x^{2}} (equivalent)
+
+## DIAGNOSTICS
+### dx.fm.u1.differentiation-integer-powers.pre (pre) [verified]
+- p1 (Move a power from under the line to a negative index): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+Write $\frac{3}{x^{2}}$ using a single power of $x$.
+    ✔ $3x^{-2}$ — A power under the line changes sign when it comes up. That single rewrite is what lets the power rule reach the term.
+    ✘ $3x^{2}$ [fm.calc.index-moved-to-numerator] — Moving a term to the top line also changes the sign of its index, so the 2 becomes $-2$.
+    ✘ $-3x^{2}$ [fm.calc.index-moved-to-numerator] — The sign that changes belongs to the index, not to the coefficient. The 3 stays positive.
+- p2 (Multiply two negative numbers): What is $-4 \times -2$?
+    ✔ $8$ — Two negatives multiply to a positive. This exact product appears when a negative coefficient meets a negative power.
+    ✘ $-8$ [fm.calc.negative-power-differentiation] — A negative times a negative is positive. Carrying a stray minus sign here changes the whole derivative.
+    ✘ $-6$ [fm.calc.negative-power-differentiation] — That is $-4 + -2$. The rule multiplies the coefficient by the power.
+- p3 (Step down from a negative number): Which number is one **less** than $-2$?
+    ✔ $-3$ — Down from $-2$ is $-3$. The index in a derivative always steps down, whichever side of zero it starts on.
+    ✘ $-1$ [fm.calc.negative-power-differentiation] — Moving towards zero is going up. One less than $-2$ is $-3$.
+    ✘ $2$ [fm.calc.negative-power-differentiation] — That is $-2$ with the sign removed. Stepping down keeps the sign and makes the number smaller.
+
+### dx.fm.u1.differentiation-integer-powers.post (post) [verified]
+- q1 (Apply the power rule to a single positive power): Differentiate $y = 6x^{4}$.
+    ✔ $24x^{3}$ — Multiply by 4 to get 24, then step the power down to 3. Both moves, in order.
+    ✘ $24x^{4}$ [fm.calc.power-not-reduced] — The coefficient is right. The power still has to step down by one, from 4 to 3.
+    ✘ $6x^{3}$ [fm.calc.coefficient-not-multiplied] — The power stepped down correctly. The coefficient also has to be multiplied by the power it came from, so 6 becomes 24.
+- q2 (Differentiate a quadratic, constant included): Differentiate $y = 9x^{2} - 6x + 4$.
+    ✔ $18x - 6$ — The constant goes to zero and the term in x leaves its own coefficient behind.
+    ✘ $18x - 2$ [fm.calc.constant-term-kept] — The $+ 4$ has no slope, so it differentiates to zero rather than being copied down.
+    ✘ $18x$ [fm.calc.linear-term-derivative-omitted] — The $-6x$ differentiates to $-6$, not to nothing. Only a plain number disappears.
+- q3 (Differentiate a term with a negative power): Differentiate $y = \frac{9}{x^{1}}$.
+    ✔ $-\frac{9}{x^{2}}$ — Written as $9x^{-1}$, it differentiates to $-9x^{-2}$, which is $-\frac{9}{x^{2}}$.
+    ✘ $9$ [fm.calc.index-moved-to-numerator] — Bringing the $x$ to the top line without changing the sign of its index turns the term into $9x$, which is a different expression.
+    ✘ $\frac{9}{x^{2}}$ [fm.calc.negative-power-differentiation] — The index is right. Multiplying 9 by $-1$ makes the coefficient negative.
+- q4 (Differentiate twice): $y = 6x^{4} - 3x^{2}$. Find $\frac{d^{2}y}{dx^{2}}$.
+    ✔ $72x^{2} - 6$ — Differentiate to $24x^{3} - 6x$, then differentiate that. The constant that appears on the way disappears at the next step.
+    ✘ $24x^{3} - 6x$ [fm.calc.second-derivative-stops-at-first] — That is $\frac{dy}{dx}$. The second derivative asks you to differentiate it once more.
+    ✘ $72x^{3} - 6x$ [fm.calc.power-not-reduced] — The coefficients are right for the second step. The powers still have to step down, so $x^{3}$ becomes $x^{2}$.
+
+## QUESTIONS
+### q.fm.u1.differentiation-integer-powers.0001 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · Pure differentiation of a two-term polynomial, the shape CCEA opens Unit 1 with
+  (main) [2] Find $\frac{dy}{dx}$ if $y = x^{5} + 3x^{2}$
+      ANSWER: algebraic 5x^{4} + 6x (equivalent)
+      MW1 MW1: $5x^{4}$ from the first term
+      MW1 MW2: $6x$ from the second term
+      SOLUTION: Differentiating $x^{5}$ gives $5x^{4}$, and differentiating $3x^{2}$ gives $6x$. So $\frac{dy}{dx} = 5x^{4} + 6x$.
+      ERR [fm.calc.power-not-reduced] {"kind":"algebraic","latex":"5x^{5} + 6x^{2}"} → Both coefficients are right, so the first move is secure. The second move is missing: each power steps down by one, so $x^{5}$ becomes $x^{4}$. (1)
+      ERR [fm.calc.coefficient-not-multiplied] {"kind":"algebraic","latex":"x^{4} + 3x"} → The powers stepped down correctly. Each coefficient also has to be multiplied by the power it came from, so $1$ becomes $5$ and $3$ becomes $6$. (1)
+      HINTS: Take one term at a time. || Multiply by the power, then step the power down by one.
+
+### q.fm.u1.differentiation-integer-powers.0002 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A quadratic with a constant term, so the constant has somewhere to go wrong
+  (main) [2] Find $\frac{dy}{dx}$ if $y = 4x^{3} - 7x^{2} + 2$
+      ANSWER: algebraic 12x^{2} - 14x (equivalent)
+      MW1 MW1: $12x^{2}$ from the cubic term
+      MW1 MW2: $-14x$ and the constant differentiated to zero
+      SOLUTION: $4x^{3}$ gives $12x^{2}$ and $-7x^{2}$ gives $-14x$. The constant $2$ has no slope, so it differentiates to $0$ and disappears. So $\frac{dy}{dx} = 12x^{2} - 14x$.
+      ERR [fm.calc.constant-term-kept] {"kind":"algebraic","latex":"12x^{2} - 14x + 2"} → Both variable terms are right. The $+ 2$ should differentiate to zero: a horizontal graph has no slope, so nothing of it survives. (1)
+      ERR [fm.calc.power-not-reduced] {"kind":"algebraic","latex":"12x^{3} - 14x^{2}"} → The coefficients are right and the constant went correctly. Each power still has to step down by one. (1)
+      ERR [fm.calc.coefficient-not-multiplied] {"kind":"algebraic","latex":"4x^{2} - 7x"} → The powers are right. Multiply each coefficient by the power it came from as well, so $4$ becomes $12$ and $-7$ becomes $-14$. (1)
+      HINTS: Three terms, three small jobs. || Ask what the slope of the graph $y = 2$ is.
+
+### q.fm.u1.differentiation-integer-powers.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A quadratic whose middle term is the one that is quietly dropped
+  (main) [2] Find $\frac{dy}{dx}$ if $y = 9x^{2} - 6x + 4$
+      ANSWER: algebraic 18x - 6 (equivalent)
+      MW1 MW1: $18x$ from the squared term
+      MW1 MW2: $-6$ and the constant gone
+      SOLUTION: $9x^{2}$ gives $18x$, and $-6x$ gives $-6$. The $+ 4$ differentiates to $0$. So $\frac{dy}{dx} = 18x - 6$.
+      ERR [fm.calc.linear-term-derivative-omitted] {"kind":"algebraic","latex":"18x"} → The squared term is right. The term $-6x$ is a straight line of gradient $-6$, so it leaves $-6$ behind rather than vanishing. (1)
+      ERR [fm.calc.constant-term-kept] {"kind":"algebraic","latex":"18x - 2"} → Both variable terms are right. The $+ 4$ differentiates to zero and does not travel into the answer. (1)
+      HINTS: The term $-6x$ is $-6x^{1}$. || $x^{0}$ is 1, so the $x$ disappears from that term but its coefficient stays.
+
+### q.fm.u1.differentiation-integer-powers.0004 [verified] practice · diff 3 · untiered · FM1 calc · 2 marks · (main)find2 · A single negative power, written as a fraction the way CCEA prints it
+  (main) [2] Find $\frac{dy}{dx}$ if $y = \frac{5}{x^{2}}$
+      ANSWER: algebraic -\frac{10}{x^{3}} (equivalent)
+      M1 M1: writing the term as $5x^{-2}$
+      W1 W1: $-\frac{10}{x^{3}}$ or $-10x^{-3}$
+      SOLUTION: Rewrite as $y = 5x^{-2}$. Multiply by the power: $5 \times -2 = -10$. Step the index down from $-2$ to $-3$. So $\frac{dy}{dx} = -\frac{10}{x^{3}}$.
+      ERR [fm.calc.index-moved-to-numerator] {"kind":"algebraic","latex":"10x"} → Bringing $x^{2}$ to the top line without changing the sign of the index turns the expression into $5x^{2}$ before any differentiating happens. The index changes sign as it crosses the line. (0)
+      ERR [fm.calc.negative-power-differentiation] {"kind":"algebraic","latex":"\\frac{10}{x^{3}}"} → The index stepped down correctly to $-3$. Multiplying $5$ by the power $-2$ makes the coefficient negative. (1)
+      ERR [fm.calc.power-not-reduced] {"kind":"algebraic","latex":"-\\frac{10}{x^{2}}"} → The coefficient is right. The index still has to step down, from $-2$ to $-3$. (1)
+      HINTS: Bring the power up first, changing the sign of the index. || Then apply the same two moves as always.
+
+### q.fm.u1.differentiation-integer-powers.0005 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A mixed expression with a positive power, a negative power and a constant
+  (main) [3] Find $\frac{dy}{dx}$ if $y = 2x^{3} - 4 + \frac{9}{x^{1}}$
+      ANSWER: algebraic 6x^{2} - \frac{9}{x^{2}} (equivalent)
+      MW1 MW1: $6x^{2}$ from the cubic term
+      M1 M1: writing the middle term as $9x^{-1}$
+      W1 W1: $-\frac{9}{x^{2}}$ and the constant gone
+      SOLUTION: $2x^{3}$ gives $6x^{2}$. Rewrite $\frac{9}{x}$ as $9x^{-1}$: multiplying by $-1$ gives $-9$ and the index steps down to $-2$, so that term gives $-9x^{-2}$. The $-4$ differentiates to $0$. So $\frac{dy}{dx} = 6x^{2} - \frac{9}{x^{2}}$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"algebraic","latex":"6x^{2} + \\frac{9}{x^{2}}"} → The cubic term and the index are right. The coefficient of the middle term is multiplied by the power $-1$, which makes it negative. (2)
+      ERR [fm.calc.constant-term-kept] {"kind":"algebraic","latex":"6x^{2} - 4 - \\frac{9}{x^{2}}"} → Both variable terms are right. The $-4$ differentiates to zero rather than travelling into the answer. (2)
+      ERR [fm.calc.index-moved-to-numerator] {"kind":"algebraic","latex":"6x^{2} + 9"} → The middle term was brought to the top line as $9x$ before it was differentiated. Crossing the line changes the sign of the index, so it is $9x^{-1}$. (1)
+      HINTS: $\frac{9}{x}$ is $9x^{-1}$. || Multiplying by $-1$ changes the sign of the coefficient. || The $-4$ disappears.
+
+### q.fm.u1.differentiation-integer-powers.0006 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A second derivative asked directly, as CCEA asks it in the opening question
+  (main) [2] $y = 6x^{4} - 3x^{2}$
+Find an expression for $\frac{d^{2}y}{dx^{2}}$.
+      ANSWER: algebraic 72x^{2} - 6 (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 24x^{3} - 6x$
+      MW1 MW2: $72x^{2} - 6$
+      SOLUTION: First derivative: $\frac{dy}{dx} = 24x^{3} - 6x$. Differentiate that: $24x^{3}$ gives $72x^{2}$ and $-6x$ gives $-6$. So $\frac{d^{2}y}{dx^{2}} = 72x^{2} - 6$.
+      ERR [fm.calc.second-derivative-stops-at-first] {"kind":"algebraic","latex":"24x^{3} - 6x"} → That is $\frac{dy}{dx}$, and it earns the first mark. The question asks for the derivative of that expression in turn. (1)
+      ERR [fm.calc.power-not-reduced] {"kind":"algebraic","latex":"72x^{3} - 6x"} → The coefficients of the second step are right. Each power steps down again, so $x^{3}$ becomes $x^{2}$. (1)
+      HINTS: Differentiate once, then differentiate your answer. || Do not go back to $y$ for the second step.
+
+### q.fm.u1.differentiation-integer-powers.0007 [verified] exam-style · diff 3 · untiered · FM1 calc · 5 marks · (a)find3|(b)find2 · The opening calculus question of a Unit 1 paper: differentiate, then differentiate again
+  (a) [3] $y = 2x^{4} - 5x + 1 + \frac{6}{x^{3}}$
+Find an expression for $\frac{dy}{dx}$.
+      ANSWER: algebraic 8x^{3} - 5 - \frac{18}{x^{4}} (equivalent)
+      MW1 MW1: $8x^{3}$ from the first term
+      M1 M1: writing the second term as $6x^{-3}$
+      W1 W1: $8x^{3} - 5 - \frac{18}{x^{4}}$ complete, with the constant gone ft
+      SOLUTION: $2x^{4}$ gives $8x^{3}$. Rewrite $\frac{6}{x^{3}}$ as $6x^{-3}$: $6 \times -3 = -18$ and the index steps down to $-4$, so that term gives $-18x^{-4}$. $-5x$ gives $-5$, and $+ 1$ gives $0$. So $\frac{dy}{dx} = 8x^{3} - 5 - \frac{18}{x^{4}}$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"algebraic","latex":"8x^{3} - 5 + \\frac{18}{x^{4}}"} → The index on the second term is right. Multiplying $6$ by the power $-3$ makes that coefficient negative, so the term is subtracted. (2)
+      ERR [fm.calc.constant-term-kept] {"kind":"algebraic","latex":"8x^{3} - 4 - \\frac{18}{x^{4}}"} → Everything in $x$ is right. The $+ 1$ differentiates to zero, so it should not appear in the derivative at all. (2)
+      ERR [fm.calc.index-moved-to-numerator] {"kind":"algebraic","latex":"8x^{3} + 18x^{2} - 5"} → The second term was lifted to the top line as $6x^{3}$ and differentiated there. The index changes sign as it crosses the line, so it is $6x^{-3}$. (1)
+      ERR [fm.calc.linear-term-derivative-omitted] {"kind":"algebraic","latex":"8x^{3} - \\frac{18}{x^{4}}"} → The two power terms are right. The term $-5x$ is a straight line of gradient $-5$, so it leaves $-5$ behind. (2)
+      HINTS: Four terms, four small jobs. || $\frac{6}{x^{3}}$ is $6x^{-3}$, and the index steps down to $-4$. || The $-5x$ leaves $-5$ behind and the $+ 1$ leaves nothing.
+  (b) [2] Find an expression for $\frac{d^{2}y}{dx^{2}}$.
+      ANSWER: algebraic 24x^{2} + \frac{72}{x^{5}} (equivalent)
+      M1 M1: differentiating your first derivative term by term
+      W1 W1: $24x^{2} + \frac{72}{x^{5}}$ ft
+      SOLUTION: Differentiate $8x^{3} - 5 - \frac{18}{x^{4}}$ again. $8x^{3}$ gives $24x^{2}$; $-18x^{-4}$ gives $-18 \times -4 = 72$ with the index stepping down to $-5$; the $-5$ gives $0$. So $\frac{d^{2}y}{dx^{2}} = 24x^{2} + \frac{72}{x^{5}}$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"algebraic","latex":"24x^{2} - \\frac{72}{x^{5}}"} → The index stepped down correctly to $-5$. Multiplying $-18$ by $-4$ gives a positive $72$, so that term is added. (1)
+      ERR [fm.calc.second-derivative-stops-at-first] {"kind":"algebraic","latex":"8x^{3} - 5 - \\frac{18}{x^{4}}"} → That is the answer to part (a) written again. Differentiate it once more to reach the second derivative. (0)
+      HINTS: Differentiate the answer to part (a), not the original curve. || $-18x^{-4}$ differentiates to $72x^{-5}$.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.differentiation-integer-powers.01 [verified] fm.calc.negative-power-differentiation · earned MW1,M1 · ccea-cer:further-maths:2025-summer:FM1:Q8
+STEM: Orla was asked to find $\frac{dy}{dx}$ for $y = 4x^{3} + 7 - \frac{6}{x^{2}}$. Her working:
+    1. y = 4x^3 + 7 - 6/x^2
+    2. y = 4x^3 - 6x^-2 + 7
+    3. 4x^3 differentiates to 12x^2
+  ✘ 4. -6x^-2 differentiates to -12x^-3
+    5. dy/dx = 12x^2 - 12/x^3
+  WRONG: Line 2 is exactly right: the fraction is rewritten as a negative index before anything else happens, which is the step most candidates miss.
+Line 4 has the index right as well. It is the coefficient that slipped: $-6$ is multiplied by the power $-2$, and a negative times a negative is positive, so the term is $+12x^{-3}$.
+Because the rest of the line looks orderly, nothing on the page announces the error.
+  FIX: -6x^-2 differentiates to (-6) x (-2) x^-3 = +12x^-3 / dy/dx = 12x^2 + 12/x^3
+  FEEDBACK: The rewrite and the index are both right, so the method marks stand. Write the two signs down separately before you multiply them: the coefficient carries one, the power carries the other, and only their product reaches the answer. The finished derivative is $\frac{dy}{dx} = 12x^{2} + \frac{12}{x^{3}}$.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.differentiation-integer-powers.01 [verified] (formula) State the rule for differentiating $ax^{n}$.  →  Multiply the coefficient by the power and step the power down by one: $nax^{n-1}$.
+- rp.fm.u1.differentiation-integer-powers.02 [verified] (procedure) What must you do to a term such as $\frac{4}{x^{2}}$ before differentiating it?  →  Rewrite it as $4x^{-2}$, so that the power rule can reach it.
+- rp.fm.u1.differentiation-integer-powers.03 [verified] (trap) A term has index $-2$. What is the index after differentiating?  →  $-3$: the index always steps down, whichever side of zero it starts on.
+- rp.fm.u1.differentiation-integer-powers.04 [verified] (qa) What is the derivative of a constant, and why?  →  Zero, because the graph of a constant is a horizontal line and a horizontal line has no slope.
+- rp.fm.u1.differentiation-integer-powers.05 [verified] (definition) What does $\frac{d^{2}y}{dx^{2}}$ mean, and how do you find it?  →  It is the derivative of the derivative: differentiate $y$, then differentiate that answer again.

@@ -1,0 +1,295 @@
+# fm.u3.venn-diagrams-probability — Venn diagrams with unknowns and probabilities from them  [S, difficulty 3]
+unit FM3 · tier untiered · specRefs []
+note: Venn diagrams: filling every region, then reading the probability v1 [verified]
+verification statuses: {"verified":23}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Separate boxes, one number each
+- [p] 
+- [figure] The overlap is unknown, so call it $x$. The piano circle holds 18 altogether, so what is left of it is $18 - x$.
+- [choice] 
+- [h] 1. Fill from the middle outwards
+- [p] 
+- [figure] Centre first, then the pairs, then the singles, then the outside. Each step subtracts what is already placed.
+- [choice] 
+- [h] 2. 'Only' is a word that changes the number
+- [p] 
+- [why] Why the outside region matters
+- [choice] 
+- [h] 3. An equation from the total
+- [p] 
+- [figure] The four regions add to 13 + 5 + 10 + 4 = 32, which is the check worth doing every time.
+- [number] 
+- [h] 4. Three circles, same method
+- [p] 
+- [figure] Each single region is the circle total minus the three regions already inside it: otters only is $52 - 12 - 9 - 7 = 24$.
+- [number] 
+- [h] 5. The outside region and the check
+- [p] 
+- [video] Venn Diagrams
+- [number] 
+- [h] 6. Probabilities off a filled diagram
+- [p] 
+- [examiner] What the reports keep finding
+- [number] 
+- [h] 7. 'Given that' shrinks the group
+- [p] 
+- [figure] The red-squirrel circle holds 20 + 12 + 5 + 7 = 44, and 19 of them are inside the otter circle too.
+- [number] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u3.venn-diagrams-probability.01 [verified] paper FM3 calc
+STEM: A leisure centre has 45 members. 26 use the weights room, 21 go to classes and 7 do neither. $x$ members do both.
+Find $x$, and hence the probability that one member, picked at random, goes to classes only.
+  FIG: svg — A two-circle Venn diagram for 45 members with the overlap written as x, the weights-only region as 26 minus x, the classes-only region as 21 minus x and 7 outside both circles.
+  1. Weights only $= 26 - x$; classes only $= 21 - x$; outside $= 7$.   — Write every region in terms of the unknown before anything else. The two printed totals each include the overlap, so each loses an $x$.  (M1)
+  2. $(26 - x) + x + (21 - x) + 7 = 45$   — The four regions do not overlap, so together they are the whole membership. That sentence is the equation, and forgetting the 7 outside is what makes it come out wrong.  (MW1)  WHY: ✔Include the 7 outside the circles, because they are members too | ✘Leave the 7 out, because they are outside the circles | ✘Add the 7 to both circle totals
+  3. $54 - x = 45$, so $x = 9$.   — Collect the constants and the single $x$. One $x$ is left because the overlap was added once and subtracted twice.  (W1)
+  4. Regions: 17, 9, 12, 7. Their total is 45.   — Put $x$ back and check the total against the 45 the question gave. This is the one check that catches a misplaced region before it spoils every probability.  (MW1)
+  5. $P(\text{classes only}) = \dfrac{12}{45} = \dfrac{4}{15}$   — 'Only' is the region outside the overlap, and the denominator is the whole membership. A bare count would earn nothing on the answer line.  (W1)
+  FINAL: $x = 9$ and $P(\text{classes only}) = \dfrac{4}{15}$
+  TWIN: 32 pupils were asked which instruments they play. 18 play the piano, 15 play the guitar and 4 play neither.
+Find the number who play both.  → numeric 5 pupils tol={"type":"exact"} forms=decimal
+
+### we.fm.u3.venn-diagrams-probability.02 [verified] paper FM3 calc
+STEM: 75 households were asked which of glass, paper and textiles they recycle. 6 recycle all three, 7 recycle glass and textiles but not paper, 5 recycle paper and textiles but not glass, 11 recycle paper only, 7 recycle textiles only and 9 recycle none of them. $x$ recycle glass and paper but not textiles, and $2x$ recycle glass only.
+Find $x$, and hence the probability that a household recycles exactly two of the three materials.
+  FIG: svg — A three-circle Venn diagram for 75 households with the glass-only region written 2x and the glass-and-paper-only region written x.
+  1. Regions: $2x$, $x$, 6, 7, 5, 11, 7, 9.   — List all eight regions of a three-circle diagram, the outside one included. Eight regions is the number to expect, and a missing one is the commonest reason an equation comes out wrong.  (M1)
+  2. $2x + x + 6 + 7 + 5 + 11 + 7 + 9 = 75$   — Set their total equal to the 75 households. The two unknown regions give $3x$, not $2x$, because one of them is twice the other.  (MW1)
+  3. $3x + 45 = 75$, so $3x = 30$ and $x = 10$.   — Collect and solve. Checking that $x$ is a whole number is worth a second: a fraction here means a region was misread.  (W1)
+  4. Glass only $= 20$, glass and paper only $= 10$. All eight regions total 75.   — Substitute and check the total. 20 + 10 + 7 + 6 + 11 + 5 + 7 + 9 comes to 75, which is what the survey said.  (MW1)
+  5. $P(\text{exactly two}) = \dfrac{10 + 7 + 5}{75} = \dfrac{22}{75} = \dfrac{22}{75}$   — 'Exactly two' is the three pair regions and never the centre, and the denominator is all 75 households, including the 9 who recycle nothing.  (W1)
+  FINAL: $x = 10$ and $P(\text{exactly two}) = \dfrac{22}{75}$
+  TWIN: Using the same completed diagram, calculate the probability that one household, picked at random, recycles glass.  → numeric 0.5733333333333334 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+
+## DIAGNOSTICS
+### dx.fm.u3.venn-diagrams-probability.pre (pre) [verified]
+- p1 (Solving a one-step linear equation (from GCSE Mathematics)): Before the lesson, a check on something you already know. Solve $37 - x = 32$.
+    ✔ $x = 5$ — Yes. Every unknown-region Venn question ends in an equation of exactly this shape.
+    ✘ $x = 69$ — The 32 has been added rather than subtracted. Moving $x$ across gives $37 = 32 + x$, so $x = 5$.
+    ✘ $x = -5$ — The sign has flipped. $37 - x = 32$ means $x$ is what takes 37 down to 32, which is 5.
+- p2 (The complement of a count (from GCSE Mathematics)): Another check on earlier work. In a group of 40 people, 25 own a bicycle. How many do not?
+    ✔ $15$ — Yes: $40 - 25$. The region outside a Venn circle is found the same way.
+    ✘ $65$ — The two numbers have been added. The people who do not own one are part of the same 40, so subtract.
+    ✘ $25$ — That is the number who do own one. The question asked for the rest of the group.
+- p3 (Adding the regions of a Venn diagram (from GCSE Mathematics)): One more from earlier work, before anything new. A two-circle Venn diagram has regions 12, 5 and 9, with 4 outside. How many are in the diagram altogether?
+    ✔ $30$ — Yes: $12 + 5 + 9 + 4$. Every region counts, including the one outside the circles.
+    ✘ $26$ — The 4 outside the circles has been left out. It belongs to the group just as much as the rest.
+    ✘ $21$ — Only the two circles have been added as printed. The regions are separate, so all four are added once each.
+
+### dx.fm.u3.venn-diagrams-probability.post (post) [verified]
+- d1 (Taking the centre off a printed pair total): A three-circle Venn diagram has 8 in the centre. The question says 20 chose both tennis and squash. What goes in the tennis-and-squash region that is outside the third circle?
+    ✔ $12$ — Yes: $20 - 8$. A printed pair total always includes the people who chose all three.
+    ✘ $20$ [fm.prob.only-misread-in-venn] — That would count the 8 in the centre twice, once here and once there. Take the centre off first.
+    ✘ $28$ [fm.prob.only-misread-in-venn] — The centre has been added rather than subtracted. The 20 already contains it.
+- d2 (Finding the region outside the circles): In a survey of 60 people, the regions inside the two circles come to 47. What goes outside the circles?
+    ✔ $13$ — Yes: $60 - 47$. Checking that every region totals the stated group is the habit that saves this question.
+    ✘ $0$ [fm.prob.venn-total-not-used] — Nothing says the circles hold everybody. The survey named 60, and only 47 are placed so far.
+    ✘ $47$ [fm.prob.venn-total-not-used] — That is the number already inside the circles. The outside region is what is left of the 60.
+- d3 (Reading a whole circle rather than its 'only' region): A two-circle Venn diagram for 50 people has 18 in the left circle only, 7 in the overlap and 14 in the right circle only. Pick one person at random. How likely is it that this person is in the left circle?
+    ✔ $\dfrac{25}{50}$ — Yes: the whole circle is $18 + 7 = 25$, out of all 50 people.
+    ✘ $\dfrac{18}{50}$ [fm.prob.only-misread-in-venn] — That is 'in the left circle only'. Without the word only the overlap counts as well.
+    ✘ $\dfrac{25}{39}$ [fm.prob.venn-total-not-used] — The denominator has become the number inside the circles. The 11 outside them are part of the 50 too.
+- d4 (Giving a probability rather than a count): A Venn diagram of 80 members shows 9 in the overlap of two circles. Pick one member at random. How likely is it that this member is in the overlap?
+    ✔ $\dfrac{9}{80}$ — Yes. A probability is always a count over a total; the answer line never takes a bare count.
+    ✘ $9$ [fm.prob.venn-count-given-as-probability] — That is the count in the region. Divide it by the 80 members to turn it into a probability.
+    ✘ $\dfrac{80}{9}$ [fm.prob.venn-count-given-as-probability] — The fraction is upside down, and it is larger than 1. The total goes on the bottom.
+- d5 (Reading a conditional probability off a diagram): On a Venn diagram of 100 people, 35 are in circle $B$ and 12 of those are also in circle $A$. Given that one person, picked at random, is in $B$, what is the probability that they are also in $A$?
+    ✔ $\dfrac{12}{35}$ — Yes. Being told the person is in $B$ shrinks the group to those 35, so 35 is the denominator.
+    ✘ $\dfrac{12}{100}$ [fm.condprob.denominator-not-conditioned] — The numerator is right, but the condition has been ignored. The group is no longer all 100.
+    ✘ $\dfrac{35}{100}$ [fm.condprob.denominator-not-conditioned] — That is the probability of being in $B$ at all. The question asks about $A$ within $B$.
+- d6 (Telling 'exactly two' from 'two or more'): A three-circle Venn diagram has single regions 20, 14 and 9, pair regions 10, 7 and 5, a centre of 6 and 9 outside. How many people are in exactly two of the circles?
+    ✔ $22$ — Yes: the three pair regions, $10 + 7 + 5$. The centre is three circles, not two.
+    ✘ $28$ [fm.prob.only-misread-in-venn] — The centre has been counted in. Those 6 are in all three circles, so they are not 'exactly two'.
+    ✘ $43$ [fm.prob.only-misread-in-venn] — That is one whole circle. 'Exactly two' means the regions where two circles overlap and the third does not.
+
+## QUESTIONS
+### q.fm.u3.venn-diagrams-probability.0001 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)find2 · A year group asked which instruments they play
+  FIG: svg — A two-circle Venn diagram for 32 pupils with the overlap written as x, the piano-only region as 18 minus x, the guitar-only region as 15 minus x and 4 outside both circles.
+  (main) [2] 32 pupils were asked which instruments they play. 18 play the piano, 15 play the guitar and 4 play neither. $x$ pupils play both.
+By forming an equation in $x$, find the value of $x$.
+      ANSWER: numeric 5 pupils tol={"type":"exact"} forms=decimal
+      M1 M1: $(18 - x) + x + (15 - x) + 4 = 32$, or an equivalent equation with all four regions
+      W1 W1: $x = 5$
+      SOLUTION: Piano only is $18 - x$ and guitar only is $15 - x$. $(18 - x) + x + (15 - x) + 4 = 32$ $37 - x = 32$, so $x = 5$.
+      ERR [fm.prob.venn-total-not-used] {"kind":"numeric","value":1,"tolerance":{"type":"absolute","value":0.004}} → The 4 pupils outside the circles have been left out of the equation. Every region counts towards the 32, so the equation reads $37 - x = 32$ and $x = 5$. (1)
+      HINTS: Write each of the four regions in terms of $x$. || Their total is 32.
+
+### q.fm.u3.venn-diagrams-probability.0002 [verified] practice · diff 2 · untiered · FM3 calc · 2 marks · (main)calculate2 · A year group asked which instruments they play
+  FIG: svg — A two-circle Venn diagram for 32 pupils showing 13 who play the piano only, 5 who play both, 10 who play the guitar only and 4 who play neither.
+  (main) [2] The Venn diagram shows the 32 pupils.
+One pupil is picked at random.
+Calculate the probability that this pupil plays both instruments.
+      ANSWER: numeric 0.15625 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{5}{32}$ seen
+      W1 W1: 5/32 or 0.16
+      SOLUTION: The overlap holds 5 pupils out of 32. $P(\text{both}) = \dfrac{5}{32} = \dfrac{5}{32}$, which is 0.16.
+      ERR [fm.prob.venn-count-given-as-probability] {"kind":"numeric","value":5,"tolerance":{"type":"absolute","value":0.004}} → That is the count in the overlap, not a probability. A probability is that count over the whole group: $\dfrac{5}{32} = \dfrac{5}{32}$. (1)
+      HINTS: The overlap is one region of the diagram. || Divide by all 32 pupils.
+
+### q.fm.u3.venn-diagrams-probability.0003 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · A year group asked which instruments they play
+  FIG: svg — A two-circle Venn diagram for 32 pupils showing 13 who play the piano only, 5 who play both, 10 who play the guitar only and 4 who play neither.
+  (main) [2] One pupil is picked at random from the same year group.
+Using the Venn diagram, calculate the probability that this pupil plays the piano.
+      ANSWER: numeric 0.5625 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 13 + 5 = 18, or $\dfrac{18}{32}$ seen
+      W1 W1: 9/16 or 18/32 or 0.56
+      SOLUTION: The piano circle holds 13 + 5 = 18 pupils. $P(\text{piano}) = \dfrac{18}{32} = \dfrac{9}{16}$, which is 0.56.
+      ERR [fm.prob.only-misread-in-venn] {"kind":"numeric","value":0.40625,"tolerance":{"type":"absolute","value":0.004}} → That is 'plays the piano only', the region outside the overlap. Without the word only the whole circle counts, so add the 5 in the overlap back: $\dfrac{18}{32} = \dfrac{9}{16}$. (1)
+      HINTS: 'Plays the piano' is the whole piano circle. || Add both regions inside it.
+
+### q.fm.u3.venn-diagrams-probability.0004 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)find2 · Members of a leisure centre using the weights room or classes
+  FIG: svg — A two-circle Venn diagram for 45 members with the overlap written as x, the weights-only region as 26 minus x, the classes-only region as 21 minus x and 7 outside both circles.
+  (main) [2] A leisure centre has 45 members. 26 use the weights room, 21 go to classes and 7 do neither. $x$ members do both.
+By forming an equation in $x$, find the value of $x$.
+      ANSWER: numeric 9 members tol={"type":"exact"} forms=decimal
+      M1 M1: $(26 - x) + x + (21 - x) + 7 = 45$
+      W1 W1: $x = 9$
+      SOLUTION: $(26 - x) + x + (21 - x) + 7 = 45$ $54 - x = 45$, so $x = 9$.
+      ERR [fm.prob.venn-total-not-used] {"kind":"numeric","value":2,"tolerance":{"type":"absolute","value":0.004}} → The 7 members outside the circles are missing from the equation. Putting them in gives $54 - x = 45$ and $x = 9$. (1)
+      HINTS: Four regions, each written in terms of $x$. || They total 45.
+
+### q.fm.u3.venn-diagrams-probability.0005 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · Members of a leisure centre using the weights room or classes
+  FIG: svg — A two-circle Venn diagram for 45 members showing 17 who use the weights room only, 9 who do both, 12 who go to classes only and 7 who do neither.
+  (main) [2] One member is picked at random.
+Using the completed Venn diagram, calculate the probability that this member uses the weights room only.
+      ANSWER: numeric 0.37777777777777777 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{17}{45}$ seen
+      W1 W1: 17/45 or 0.38
+      SOLUTION: The weights-only region holds 17 members. $P(\text{weights only}) = \dfrac{17}{45} = \dfrac{17}{45}$, which is 0.38.
+      ERR [fm.prob.only-misread-in-venn] {"kind":"numeric","value":0.5777777777777777,"tolerance":{"type":"absolute","value":0.004}} → That is the whole weights circle, with the 9 who also go to classes counted in. 'Only' keeps the region outside the overlap: $\dfrac{17}{45} = \dfrac{17}{45}$. (1)
+      HINTS: 'Only' excludes the overlap. || The denominator is all 45 members.
+
+### q.fm.u3.venn-diagrams-probability.0006 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · Visitors at a wildlife park recording which species they saw
+  FIG: svg — A three-circle Venn diagram for 120 visitors: 24 saw otters only, 20 squirrels only, 18 buzzards only, 12 otters and squirrels only, 9 otters and buzzards only, 5 squirrels and buzzards only, 7 saw all three and 25 saw none
+  (main) [2] The Venn diagram shows which of three species each of 120 visitors saw.
+One visitor is picked at random.
+Calculate the probability that this visitor saw exactly two of the three species.
+      ANSWER: numeric 0.21666666666666667 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 12 + 9 + 5 = 26, or the three pair regions added
+      W1 W1: 13/60 or 26/120 or 0.22
+      SOLUTION: The pair regions hold 12, 9 and 5 visitors, which is 26 altogether. $P(\text{exactly two}) = \dfrac{26}{120} = \dfrac{13}{60}$, which is 0.22.
+      ERR [fm.prob.only-misread-in-venn] {"kind":"numeric","value":0.39166666666666666,"tolerance":{"type":"absolute","value":0.004}} → The three pair totals printed in the question each include the 7 who saw all three, so adding them as printed counts those visitors three times. On the diagram the pair regions are 12, 9 and 5, giving \dfrac{13}{60}. (0)
+      ERR [fm.prob.venn-total-not-used] {"kind":"numeric","value":0.2736842105263158,"tolerance":{"type":"absolute","value":0.004}} → The denominator is the 95 visitors inside the circles rather than all 120 asked. The 25 who saw none still belong to the group: \dfrac{13}{60}. (1)
+      HINTS: 'Exactly two' is the three pair regions, not the centre. || Divide by all 120 visitors.
+
+### q.fm.u3.venn-diagrams-probability.0007 [verified] practice · diff 3 · untiered · FM3 calc · 2 marks · (main)calculate2 · Visitors at a wildlife park recording which species they saw
+  FIG: svg — A three-circle Venn diagram for 120 visitors: 24 saw otters only, 20 squirrels only, 18 buzzards only, 12 otters and squirrels only, 9 otters and buzzards only, 5 squirrels and buzzards only, 7 saw all three and 25 saw none
+  (main) [2] One visitor is picked at random from the same group of 120.
+Using the Venn diagram, calculate the probability that this visitor saw none of the three species.
+      ANSWER: numeric 0.20833333333333334 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 120 - 95 = 25, or the outside region identified
+      W1 W1: 5/24 or 25/120 or 0.21
+      SOLUTION: Inside the circles: 24 + 20 + 18 + 12 + 9 + 5 + 7 = 95. Outside: 120 - 95 = 25, so $P(\text{none}) = \dfrac{25}{120} = \dfrac{5}{24}$.
+      ERR [fm.prob.venn-total-not-used] {"kind":"numeric","value":0.26666666666666666,"tolerance":{"type":"absolute","value":0.004}} → The three circle totals have been added and the three pair totals taken off, but the 7 who saw all three were removed one time too many and never put back. Filling the diagram region by region leaves 25 outside, so $P(\text{none}) = \dfrac{5}{24}$. (1)
+      HINTS: Add the seven regions inside the circles first. || Whatever is left of the 120 sits outside them.
+
+### q.fm.u3.venn-diagrams-probability.0008 [verified] practice · diff 4 · untiered · FM3 calc · 2 marks · (main)calculate2 · Visitors at a wildlife park recording which species they saw
+  FIG: svg — A three-circle Venn diagram for 120 visitors: 24 saw otters only, 20 squirrels only, 18 buzzards only, 12 otters and squirrels only, 9 otters and buzzards only, 5 squirrels and buzzards only, 7 saw all three and 25 saw none
+  (main) [2] A visitor is chosen at random from those who saw red squirrels.
+Calculate the probability that this visitor also saw otters.
+      ANSWER: numeric 0.4318181818181818 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: denominator 44 used, with numerator 12 + 7 = 19
+      W1 W1: 19/44 or 0.43
+      SOLUTION: The red-squirrel circle holds 20 + 12 + 5 + 7 = 44 visitors. Of those, 12 + 7 = 19 also saw otters. $P = \dfrac{19}{44} = \dfrac{19}{44}$, which is 0.43.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.15833333333333333,"tolerance":{"type":"absolute","value":0.004}} → The numerator is right but the denominator is still all 120 visitors. Being told the visitor saw red squirrels shrinks the group to 44: $\dfrac{19}{44} = \dfrac{19}{44}$. (1)
+      HINTS: The group has shrunk to the red-squirrel circle. || How many of that circle are inside the otter circle too?
+
+### q.fm.u3.venn-diagrams-probability.0009 [verified] exam-style · diff 3 · untiered · FM3 calc · 7 marks · (a)illustrate3|(b)calculate2|(c)calculate2 · Visitors at a wildlife park recording which species they saw
+  FIG: svg — A blank three-circle Venn diagram labelled otters, red squirrels and buzzards, with the eight regions marked (i) to (viii).
+  (a) [3] 120 visitors at a wildlife park were asked which of three species they saw.
+7 saw all three.
+19 saw otters and red squirrels.
+16 saw otters and buzzards.
+12 saw red squirrels and buzzards.
+52 saw otters.
+44 saw red squirrels.
+39 saw buzzards.
+Illustrate this information on the Venn diagram above, choosing the number for each of the regions (i) to (viii).
+      ANSWER: label {"kind":"label","targets":[{"id":"i","accepted":["24"],"position":[140,112]},{"id":"ii","accepted":["20"],"position":[320,112]},{"id":"iii","accepted":["18"],"position":[230,262]},{"id":"iv","accepted
+      MW1 MW1: centre 7 and the three pair regions 12, 9, 5
+      MW1 MW2: the three single regions 24, 20, 18
+      W1 W1: 25 outside the circles
+      SOLUTION: Centre (vii) is 7. Pairs: (iv) 19 - 7 = 12; (v) 16 - 7 = 9; (vi) 12 - 7 = 5. Singles: (i) 52 - 12 - 9 - 7 = 24; (ii) 44 - 12 - 5 - 7 = 20; (iii) 39 - 9 - 5 - 7 = 18. Outside: (viii) 120 - 95 = 25.
+      HINTS: Region (vii) is the centre: 7. || Each pair region is the printed pair total minus the centre. || The eight regions must total 120.
+  (b) [2] One visitor is picked at random.
+Calculate the probability that this visitor saw exactly one of the three species.
+      ANSWER: numeric 0.5166666666666667 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 24 + 20 + 18 = 62 ft
+      W1 W1: 31/60 or 62/120 or 0.52
+      SOLUTION: 24 + 20 + 18 = 62. $P(\text{exactly one}) = \dfrac{62}{120} = \dfrac{31}{60}$, which is 0.52.
+      ERR [fm.prob.only-misread-in-venn] {"kind":"numeric","value":0.7916666666666666,"tolerance":{"type":"absolute","value":0.004}} → That counts everyone inside the circles, which is 'at least one'. 'Exactly one' keeps only the three single regions: $\dfrac{62}{120} = \dfrac{31}{60}$. (1)
+      HINTS: 'Exactly one' is the three single regions. || None of the overlaps count.
+  (c) [2] A visitor is chosen at random from those who saw otters.
+Calculate the probability that this visitor also saw buzzards.
+      ANSWER: numeric 0.3076923076923077 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: $\dfrac{16}{52}$, with the otter total as the denominator ft
+      W1 W1: 4/13 or 0.31
+      SOLUTION: The otter circle holds 52 visitors, of whom 9 + 7 = 16 also saw buzzards. $P = \dfrac{16}{52} = \dfrac{4}{13}$, which is 0.31.
+      ERR [fm.condprob.condition-reversed] {"kind":"numeric","value":0.41025641025641024,"tolerance":{"type":"absolute","value":0.004}} → That divides by the buzzard total and answers 'given that the visitor saw buzzards, what is the probability they saw otters'. The condition here names otters, so the denominator is 52: \dfrac{4}{13}. (1)
+      HINTS: The group is now the 52 who saw otters. || Count how many of them are inside the buzzard circle.
+
+### q.fm.u3.venn-diagrams-probability.0010 [verified] exam-style · diff 4 · untiered · FM3 calc · 6 marks · (a)find2|(b)calculate2|(c)calculate2 · Households surveyed about which materials they recycle
+  FIG: svg — A three-circle Venn diagram for 75 households with the glass-only region written 2x and the glass-and-paper-only region written x; the other regions read 11, 7, 7, 5, 6 in the centre and 9 outside.
+  (a) [2] 75 households were asked which of glass, paper and textiles they recycle. The Venn diagram shows the results, with $x$ households recycling glass and paper but not textiles, and $2x$ recycling glass only.
+By forming an equation in $x$, find the value of $x$.
+      ANSWER: numeric 10 households tol={"type":"exact"} forms=decimal
+      M1 M1: $2x + x + 6 + 7 + 5 + 11 + 7 + 9 = 75$, or $3x + 45 = 75$
+      W1 W1: $x = 10$
+      SOLUTION: $2x + x + 6 + 7 + 5 + 11 + 7 + 9 = 75$ $3x + 45 = 75$, so $3x = 30$ and $x = 10$.
+      ERR [fm.prob.venn-total-not-used] {"kind":"numeric","value":13,"tolerance":{"type":"absolute","value":0.004}} → The 9 households outside the circles have been left out, so the equation solved was $3x + 36 = 75$. Every region counts: $x = 10$. (1)
+      ERR [fm.prob.only-misread-in-venn] {"kind":"numeric","value":15,"tolerance":{"type":"absolute","value":0.004}} → The glass-only region is $2x$, not $x$, so the equation carries $3x$ and not $2x$. Reading the diagram again gives $3x = 30$ and $x = 10$. (1)
+      HINTS: Add all eight regions, the two written in $x$ included. || Set the total equal to 75.
+  (b) [2] One household is picked at random.
+Calculate the probability that this household recycles exactly two of the three materials.
+      ANSWER: numeric 0.29333333333333333 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: 10 + 7 + 5 = 22 ft
+      W1 W1: 22/75 or 0.29
+      SOLUTION: With $x = 10$ the pair regions are 10, 7 and 5, which total 22. $P(\text{exactly two}) = \dfrac{22}{75} = \dfrac{22}{75}$, which is 0.29.
+      ERR [fm.prob.venn-total-not-used] {"kind":"numeric","value":0.3333333333333333,"tolerance":{"type":"absolute","value":0.004}} → The denominator is the 66 households inside the circles. The survey asked 75, and the 9 who recycle none of the three still belong to it: \dfrac{22}{75}. (1)
+      HINTS: With $x = 10$ the glass-and-paper region is 10. || Add the three pair regions and leave the centre out.
+  (c) [2] A household is chosen at random from those that recycle glass.
+Calculate the probability that this household also recycles paper.
+      ANSWER: numeric 0.37209302325581395 tol={"type":"absolute","value":0.005} forms=fraction/decimal
+      M1 M1: denominator 43, numerator 10 + 6 = 16 ft
+      W1 W1: 16/43 or 0.37
+      SOLUTION: Glass circle: 20 + 10 + 7 + 6 = 43. Of those, 10 + 6 = 16 also recycle paper. $P = \dfrac{16}{43} = \dfrac{16}{43}$, which is 0.37.
+      ERR [fm.condprob.denominator-not-conditioned] {"kind":"numeric","value":0.21333333333333335,"tolerance":{"type":"absolute","value":0.004}} → The numerator is right, but dividing by all 75 households ignores the condition. Choosing from those that recycle glass shrinks the group to 43: \dfrac{16}{43}. (1)
+      HINTS: Add the four regions of the glass circle first. || Then count how many of them are inside the paper circle.
+
+## FIND THE MISTAKE
+### ftm.fm.u3.venn-diagrams-probability.01 [verified] fm.prob.venn-total-not-used · earned M1 · ccea-cer:further-maths:2023-summer:FM3:Q3
+STEM: Ellie was asked to find $x$, the number of the 32 pupils who play both the piano and the guitar. 18 play the piano, 15 play the guitar and 4 play neither. Her working:
+    1. piano only = 18 - x, guitar only = 15 - x
+  ✘ 2. (18 - x) + x + (15 - x) = 32
+    3. 33 - x = 32, so x = 1
+  WRONG: Line 2 adds only the three regions inside the circles. The 4 pupils who play neither instrument are part of the 32 as well, and they sit outside both circles. With them the equation reads $(18 - x) + x + (15 - x) + 4 = 32$.
+  FIX: piano only = 18 - x, guitar only = 15 - x, neither = 4 / (18 - x) + x + (15 - x) + 4 = 32 / 37 - x = 32, so x = 5
+  FEEDBACK: The three circle regions are written correctly in terms of $x$, so the first method mark stands. The working mark is lost at line 2, where the outside region never joins the total. Checking afterwards would have caught it: with $x = 1$ the regions come to 28, not 32. The answer is $x = 5$.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u3.venn-diagrams-probability.01 [verified] (procedure) In what order do you fill a three-circle Venn diagram, and why?  →  Centre first, then the three pair regions, then the three single regions, then the region outside the circles. Each step subtracts what is already placed, so nothing is counted twice.
+- rp.fm.u3.venn-diagrams-probability.02 [verified] (trap) What is the difference between 'plays the guitar' and 'plays the guitar only' on a Venn diagram?  →  Plays the guitar is the whole circle, overlaps included. Plays the guitar only is the part of that circle outside every overlap.
+- rp.fm.u3.venn-diagrams-probability.03 [verified] (trap) A question prints '20 chose both tennis and squash' and the centre of a three-circle diagram is 8. What goes in the tennis-and-squash region?  →  12, because the printed 20 already includes the 8 who chose all three, so the centre comes off first.
+- rp.fm.u3.venn-diagrams-probability.04 [verified] (procedure) How do you form the equation when one Venn region is an unknown $x$?  →  Write every region in terms of x, including the region outside the circles, then set their total equal to the number the question names.
+- rp.fm.u3.venn-diagrams-probability.05 [verified] (trap) You have filled a Venn diagram. What is the one check worth doing before you use it?  →  Add every region, the outside one included, and see that the total is the group the question named.
+- rp.fm.u3.venn-diagrams-probability.06 [verified] (trap) A Venn region holds 10 people out of 120. Why is 10 not the answer to 'find the probability'?  →  A probability is a count over a total, so it is 10 over 120. A bare count is not a probability and earns nothing on the answer line.
+- rp.fm.u3.venn-diagrams-probability.07 [verified] (definition) A question says 'a visitor is chosen from those who saw squirrels'. What does that change?  →  The denominator. The group shrinks to the squirrel circle, so you divide by the squirrel total and not by everybody.
+
+## INSIGHT
+RULE: Fill from the intersection outwards, include the region outside the circles, check the regions total the population, and give probabilities as fractions of the total (never a count).
+- ccea-cer:further-maths:2019-summer:FM3:Q7: asked Complete a Venn diagram and find a probability. | went wrong: Most placed the numbers, but the answer was given as 10/120 (forgetting to add 25), as a number greater than 1, or as the bare count 10. | rule: Add every region that satisfies the event, then divide by the total.
+- ccea-cer:further-maths:2023-summer:FM3:Q3: asked Venn diagram with x; solve for x; probabilities. | went wrong: x placed wrongly; the 2 in the equation dropped giving x = 5; 54/78 written instead of 54/80. | rule: The equation for x is the sum of all regions equal to the total.
+- ccea-cer:further-maths:2024-summer:FM3:Q6: asked A familiar Venn diagram. | went wrong: The stated total of 120 was not checked, leaving 26 unplaced. | rule: Regions must sum to the population.
+- ccea-cer:further-maths:2025-summer:FM3:Q3: asked Venn diagram with 'only'. | went wrong: 'Only' misread; x - 18 written for x; the 9 outside the circles omitted. | rule: Place the intersection first, then the 'only' regions, then the outside.

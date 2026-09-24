@@ -1,0 +1,432 @@
+[
+  {
+    "type": "hero",
+    "lede": "Tie two bodies together with a string and they move as one: the same pull at both ends, the same acceleration. You still treat them as two, with an equation for each, and then add the equations so that the tension cancels.",
+    "can": [
+      "Write an equation of motion for each connected body and add them to find the acceleration",
+      "Find the tension, and the force the string exerts on the pulley when the sections are parallel or at a right angle",
+      "Start again correctly when a string breaks or goes slack, or a tow-bar snaps"
+    ],
+    "minutes": 16
+  },
+  {
+    "type": "h",
+    "text": "Two bodies, one string",
+    "role": "idea"
+  },
+  {
+    "type": "p",
+    "md": "A light inextensible string over a smooth pulley does two things at once: it carries the same pull at both ends, and it stops either body moving without the other. Those two facts are what make a pair of bodies solvable."
+  },
+  {
+    "type": "h",
+    "text": "1. Separate them, then add",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "Top: block A on a horizontal table, joined by a string over a pulley at the table's edge to block B, which hangs below. Underneath, each block is drawn again on its own. A has the tension T forwards, friction F backwards, the normal reaction R upwards and its weight W downwards. B has the same tension T upwards and its weight W downwards. A dashed open arrow marks the same acceleration a on each: along the table for A, downwards for B.",
+    "svg": "<svg viewBox='0 0 400 384' xmlns='http://www.w3.org/2000/svg' width='400' height='384'><g fill='currentColor' font-family='inherit'><path d='M20 92H230V142' fill='none' stroke='currentColor' stroke-width='1.6'/><rect x='108' y='58' width='62' height='34' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='139' y='80.5' text-anchor='middle' font-size='15' font-weight='600'>A</text><circle cx='248' cy='87' r='12' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='248' cy='87' r='2.5' fill='currentColor'/><path d='M248 87L230 102' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M170 75L248 75' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M260 87L260 116' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='238' y='116' width='44' height='34' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='260' y='138.5' text-anchor='middle' font-size='15' font-weight='600'>B</text><rect x='16' y='170' width='222' height='204' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.45'/><rect x='254' y='170' width='130' height='204' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.45'/><text x='26' y='190' text-anchor='start' font-size='14' fill-opacity='0.85'>A on its own</text><text x='264' y='190' text-anchor='start' font-size='14' fill-opacity='0.85'>B on its own</text><rect x='97' y='265' width='60' height='34' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='127' y='287.5' text-anchor='middle' font-size='15' font-weight='600'>A</text><path d='M157 282L205 282' fill='none' stroke='currentColor' stroke-width='2'/><path d='M205 282L195 286.2L195 277.8Z' fill='currentColor'/><text x='212' y='287' text-anchor='start' font-size='15'>T</text><path d='M97 282L51 282' fill='none' stroke='currentColor' stroke-width='2'/><path d='M51 282L61 277.8L61 286.2Z' fill='currentColor'/><text x='44' y='287' text-anchor='end' font-size='15'>F</text><path d='M127 265L127 221' fill='none' stroke='currentColor' stroke-width='2'/><path d='M127 221L131.2 231L122.8 231Z' fill='currentColor'/><text x='137' y='232' text-anchor='start' font-size='15'>R</text><path d='M127 299L127 343' fill='none' stroke='currentColor' stroke-width='2'/><path d='M127 343L122.8 333L131.2 333Z' fill='currentColor'/><text x='137' y='340' text-anchor='start' font-size='15'>W</text><path d='M172 238L212 238' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M212 238l-10 5.5M212 238l-10 -5.5' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='218' y='243' text-anchor='start' font-size='15'>a</text><rect x='298' y='265' width='44' height='34' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='320' y='287.5' text-anchor='middle' font-size='15' font-weight='600'>B</text><path d='M320 265L320 221' fill='none' stroke='currentColor' stroke-width='2'/><path d='M320 221L324.2 231L315.8 231Z' fill='currentColor'/><text x='330' y='232' text-anchor='start' font-size='15'>T</text><path d='M320 299L320 343' fill='none' stroke='currentColor' stroke-width='2'/><path d='M320 343L315.8 333L324.2 333Z' fill='currentColor'/><text x='330' y='340' text-anchor='start' font-size='15'>W</text><path d='M362 262L362 302' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M362 302l-5.5 -10M362 302l5.5 -10' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='368' y='316' text-anchor='start' font-size='15'>a</text></g></svg>",
+    "caption": "Each body drawn on its own, with only its own forces: the same T and the same a."
+  },
+  {
+    "type": "p",
+    "md": "Draw each body on its own with only its own forces, using the **same $T$** and the **same $a$** for both. Write one equation for each body, in that body's own direction of travel, and **add them**. The $T$ terms cancel, and what is left is one equation in $a$."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "blank",
+    "prompt": "Adding $50 - T = 5a$ and $T - 30 = 3a$ gives $20 = $ ____ $a$.",
+    "answer": "8 | 8a",
+    "explain": "The $T$ terms cancel and the two $a$ terms add: $5a + 3a = 8a$. That is the whole point of adding."
+  },
+  {
+    "type": "h",
+    "text": "2. Why one tension and one acceleration",
+    "role": "why"
+  },
+  {
+    "type": "p",
+    "md": "A light string has no mass, so the pull at one end equals the pull at the other, and a smooth pulley passes it on unchanged: one letter, $T$, for both bodies. An inextensible string cannot stretch, so when one body moves 1 cm the other moves 1 cm too: one acceleration, $a$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why adding removes T",
+    "md": "The string pulls each body towards the pulley. In one body's equation $T$ helps the motion; in the other's it opposes it. So the two $T$ terms have opposite signs, and adding the equations cancels them."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "Two connected bodies each have an equation of motion. Why do the tension terms cancel when the two equations are added?",
+    "options": [
+      "T helps one body's motion and opposes the other's",
+      "The tension is zero while the bodies accelerate",
+      "The two bodies have equal weights"
+    ],
+    "answer": "T helps one body's motion and opposes the other's",
+    "explain": "The same pull acts along the string on both bodies, forwards for one and backwards for the other, so $+T$ and $-T$ cancel. The tension is not zero: it is still there, in each equation."
+  },
+  {
+    "type": "h",
+    "text": "3. Three arrangements, one method",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "Three small sketches side by side. Left: two blocks on a horizontal road joined by a bar, labelled horizontal. Middle: a pulley hanging from a ceiling with a block on each side of the string, labelled vertical. Right: a block on a table joined over a pulley at the table's edge to a hanging block, labelled one of each.",
+    "svg": "<svg viewBox='0 0 400 150' xmlns='http://www.w3.org/2000/svg' width='400' height='150'><g fill='currentColor' font-family='inherit'><path d='M10 100H124' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M14 108l8 -8M26 108l8 -8M38 108l8 -8M50 108l8 -8M62 108l8 -8M74 108l8 -8M86 108l8 -8M98 108l8 -8M110 108l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='16' y='72' width='40' height='26' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><rect x='76' y='66' width='44' height='32' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><path d='M56 88H76' fill='none' stroke='currentColor' stroke-width='2.4'/><text x='67' y='138' text-anchor='middle' font-size='14'>horizontal</text><path d='M172 18H228' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M176 18l8 -8M188 18l8 -8M200 18l8 -8M212 18l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M200 18V28' fill='none' stroke='currentColor' stroke-width='1.2'/><circle cx='200' cy='44' r='16' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='200' cy='44' r='2.5' fill='currentColor'/><path d='M184 44L184 78' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='171' y='78' width='26' height='24' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><path d='M216 44L216 70' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='203' y='70' width='26' height='24' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><text x='200' y='138' text-anchor='middle' font-size='14'>vertical</text><path d='M276 74H346V112' fill='none' stroke='currentColor' stroke-width='1.4'/><rect x='292' y='52' width='34' height='22' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><circle cx='356' cy='71' r='8' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='356' cy='71' r='2.5' fill='currentColor'/><path d='M326 63L356 63' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M364 71L364 90' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='352' y='90' width='24' height='22' rx='3' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.4'/><text x='333' y='138' text-anchor='middle' font-size='14'>one of each</text></g></svg>",
+    "caption": "The only three the specification allows: both horizontal, both vertical, or one of each."
+  },
+  {
+    "type": "p",
+    "md": "The Teacher Guidance allows exactly three arrangements: **both horizontal** (a car and trailer, with no pulley), **both vertical** (either side of a pulley) and **one of each** (a table and a hanging block). The method is the same in all three; only the forces in each equation change."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "Which arrangement of two connected bodies is NOT set on this specification?",
+    "options": [
+      "Both bodies on an inclined plane, joined over a pulley at the top",
+      "Both bodies hanging either side of a pulley",
+      "One body on a table, the other hanging over a pulley at the edge"
+    ],
+    "answer": "Both bodies on an inclined plane, joined over a pulley at the top",
+    "explain": "CCEA allows both horizontal, both vertical, or one of each. A slope with a pulley is an A-level arrangement."
+  },
+  {
+    "type": "h",
+    "text": "4. Both hanging",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A pulley fixed to a ceiling with a 5 kilogram block on the left-hand section of the string and a 3 kilogram block on the right. The same tension T is marked on both sections, and dashed arrows show the 5 kilogram block accelerating down and the 3 kilogram block up.",
+    "svg": "<svg viewBox='0 0 400 230' xmlns='http://www.w3.org/2000/svg' width='400' height='230'><g fill='currentColor' font-family='inherit'><path d='M130 22H270' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M134 22l8 -8M146 22l8 -8M158 22l8 -8M170 22l8 -8M182 22l8 -8M194 22l8 -8M206 22l8 -8M218 22l8 -8M230 22l8 -8M242 22l8 -8M254 22l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M200 22V30' fill='none' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='70' r='40' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='200' cy='70' r='2.5' fill='currentColor'/><path d='M160 70L160 160' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='128' y='160' width='64' height='50' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='160' y='190.5' text-anchor='middle' font-size='15' font-weight='600'>5 kg</text><text x='169' y='129' text-anchor='start' font-size='15'>T</text><path d='M110 164L110 208' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M110 208l-5.5 -10M110 208l5.5 -10' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='101' y='190' text-anchor='end' font-size='15'>a</text><path d='M240 70L240 160' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='208' y='160' width='64' height='50' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='240' y='190.5' text-anchor='middle' font-size='15' font-weight='600'>3 kg</text><text x='231' y='129' text-anchor='end' font-size='15'>T</text><path d='M290 206L290 162' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M290 162l5.5 10M290 162l-5.5 10' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='299' y='190' text-anchor='start' font-size='15'>a</text></g></svg>",
+    "caption": "The heavier block goes down and the lighter one up: each equation in its own direction."
+  },
+  {
+    "type": "p",
+    "md": "Each block has two forces: its weight and $T$. Take each block's own direction of travel as positive, so the heavier block's equation starts with its weight and the lighter block's starts with $T$."
+  },
+  {
+    "type": "p",
+    "md": "**The 5 kg, down positive:** $50 - T = 5a$\n**The 3 kg, up positive:** $T - 30 = 3a$\n**Adding:** $20 = 8a$, so $a = 2.5$ m/s².\n**Then:** $T = 30 + 3 \\times 2.5$, so $T = 37.5$ N."
+  },
+  {
+    "type": "video",
+    "videoId": "VOzYJqjx-UA",
+    "title": "FM Pulleys 1",
+    "channel": "P McAleavey",
+    "why": "Two blocks either side of one pulley, worked against this specification. Before each equation, say which way is positive for that block."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "Blocks of 7 kg and 3 kg hang either side of a smooth pulley and are released. What is their acceleration, in m/s²? Take $g = 10$ m/s².",
+    "answer": "4",
+    "explain": "Adding the two equations: $70 - 30 = 10a$, so $a = 4$ m/s². Both masses go on the right, because both blocks are being accelerated."
+  },
+  {
+    "type": "h",
+    "text": "5. On a table, one hanging",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A 7 kilogram block on a rough horizontal table, joined by a string running over a pulley at the table's edge to a 5 kilogram block hanging below. The same tension T is marked on both sections, friction of 14 newtons acts backwards on the table block, and dashed arrows show each block's acceleration: along the table, and down.",
+    "svg": "<svg viewBox='0 0 400 254' xmlns='http://www.w3.org/2000/svg' width='400' height='254'><g fill='currentColor' font-family='inherit'><rect x='16' y='124' width='232' height='116' fill='currentColor' fill-opacity='0.05'/><path d='M16 124H248V240' fill='none' stroke='currentColor' stroke-width='1.8'/><rect x='78' y='78' width='88' height='46' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='122' y='106.5' text-anchor='middle' font-size='15' font-weight='600'>7 kg</text><circle cx='268' cy='115' r='14' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='268' cy='115' r='2.5' fill='currentColor'/><path d='M268 115L248 136' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M166 101L268 101' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M282 115L282 174' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='254' y='174' width='56' height='46' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='282' y='202.5' text-anchor='middle' font-size='15' font-weight='600'>5 kg</text><text x='217' y='93' text-anchor='middle' font-size='15'>T</text><text x='291' y='152.5' text-anchor='start' font-size='15'>T</text><path d='M78 109L32 109' fill='none' stroke='currentColor' stroke-width='2'/><path d='M32 109L42 104.8L42 113.2Z' fill='currentColor'/><text x='55' y='95' text-anchor='middle' font-size='15'>14 N</text><path d='M96 54L148 54' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M148 54l-10 5.5M148 54l-10 -5.5' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='156' y='59' text-anchor='start' font-size='15'>a</text><path d='M332 178L332 220' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M332 220l-5.5 -10M332 220l5.5 -10' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='341' y='220' text-anchor='start' font-size='15'>a</text></g></svg>",
+    "caption": "7 kg on a rough table, 5 kg hanging, and 14 N of friction."
+  },
+  {
+    "type": "p",
+    "md": "The block on the table moves sideways, so its weight and the normal reaction balance and stay out of its equation. Along the table it has $T$ forwards and friction backwards."
+  },
+  {
+    "type": "p",
+    "md": "**Hanging block, down positive:** $50 - T = 5a$\n**Table block:** $T - 14 = 7a$\n**Adding:** $36 = 12a$, so $a = 3$ m/s².\n**Then:** $T = 14 + 7 \\times 3$, so $T = 35$ N."
+  },
+  {
+    "type": "video",
+    "videoId": "AVxOEUW8ccA",
+    "title": "FM Pulleys 2 - on smooth table",
+    "channel": "P McAleavey",
+    "why": "Taught against this specification by name. Watch the two free-body diagrams go down before either equation is written."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "A 2 kg block on a smooth table is joined over a pulley to a 3 kg hanging block. What is their acceleration, in m/s²? Take $g = 10$ m/s².",
+    "answer": "6",
+    "explain": "$30 = 5a$, so $a = 6$ m/s². The block on the table contributes its mass but no force, because the table is smooth."
+  },
+  {
+    "type": "h",
+    "text": "6. Car and trailer",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A trailer of 400 kilograms and a car of 1200 kilograms joined by a tow-bar on a horizontal road. The car's driving force of 4100 newtons acts forwards; resistances of 300 newtons on the trailer and 1800 newtons on the car act backwards; a dashed arrow shows the acceleration.",
+    "svg": "<svg viewBox='0 0 400 144' xmlns='http://www.w3.org/2000/svg' width='400' height='144'><g fill='currentColor' font-family='inherit'><path d='M8 126H392' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M12 134l8 -8M24 134l8 -8M36 134l8 -8M48 134l8 -8M60 134l8 -8M72 134l8 -8M84 134l8 -8M96 134l8 -8M108 134l8 -8M120 134l8 -8M132 134l8 -8M144 134l8 -8M156 134l8 -8M168 134l8 -8M180 134l8 -8M192 134l8 -8M204 134l8 -8M216 134l8 -8M228 134l8 -8M240 134l8 -8M252 134l8 -8M264 134l8 -8M276 134l8 -8M288 134l8 -8M300 134l8 -8M312 134l8 -8M324 134l8 -8M336 134l8 -8M348 134l8 -8M360 134l8 -8M372 134l8 -8M384 134l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='44' y='66' width='92' height='56' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='90' y='91' text-anchor='middle' font-size='15' font-weight='600'>trailer</text><text x='90' y='109' text-anchor='middle' font-size='15'>400 kg</text><rect x='200' y='56' width='108' height='66' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='254' y='86' text-anchor='middle' font-size='15' font-weight='600'>car</text><text x='254' y='104' text-anchor='middle' font-size='15'>1200 kg</text><path d='M136 100H200' fill='none' stroke='currentColor' stroke-width='3'/><path d='M308 89L360 89' fill='none' stroke='currentColor' stroke-width='2'/><path d='M360 89L350 93.2L350 84.8Z' fill='currentColor'/><text x='338' y='79' text-anchor='middle' font-size='15'>4100 N</text><path d='M44 78L12 78' fill='none' stroke='currentColor' stroke-width='2'/><path d='M12 78L22 73.8L22 82.2Z' fill='currentColor'/><text x='30' y='62' text-anchor='middle' font-size='15'>300 N</text><path d='M200 68L168 68' fill='none' stroke='currentColor' stroke-width='2'/><path d='M168 68L178 63.8L178 72.2Z' fill='currentColor'/><text x='184' y='52' text-anchor='middle' font-size='15'>1800 N</text><path d='M170 26L232 26' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M232 26l-10 5.5M232 26l-10 -5.5' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='240' y='31' text-anchor='start' font-size='15'>a</text></g></svg>",
+    "caption": "No pulley: the tow-bar pulls the trailer forwards and the car backwards."
+  },
+  {
+    "type": "p",
+    "md": "There is no pulley, and both vehicles move the same way. A resistance given per kilogram belongs to one vehicle, so multiply by its own mass. The whole system gives $a$, because the tow-bar's pull is internal and cancels; for the tension, use one vehicle on its own."
+  },
+  {
+    "type": "p",
+    "md": "**Resistances:** car $1.5 \\times 1200$, which is 1800 N; trailer $0.75 \\times 400$, which is 300 N.\n**Both together:** $4100 - 1800 - 300 = 1600a$, so $a = 1.25$ m/s².\n**The trailer alone:** $T - 300 = 400 \\times 1.25$, so $T = 800$ N."
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "A trailer of mass 500 kg is towed with an acceleration of 1.2 m/s² against a resistance of 250 N. What is the tension in the tow-bar, in newtons?",
+    "answer": "850",
+    "explain": "The trailer alone: $T - 250 = 500 \\times 1.2$, so $T = 850$ N. The car's forces never enter the trailer's equation."
+  },
+  {
+    "type": "h",
+    "text": "7. The force on the pulley",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A pulley hanging from a ceiling with both string sections going straight down. Each section pulls the pulley downwards with a force T, drawn as an arrow along that section, and the resultant is drawn from the axle as one bold arrow straight down, twice as long, labelled 2T.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M140 24H260' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M144 24l8 -8M156 24l8 -8M168 24l8 -8M180 24l8 -8M192 24l8 -8M204 24l8 -8M216 24l8 -8M228 24l8 -8M240 24l8 -8M252 24l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M200 24V46' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M170 76L170 282' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.6'/><path d='M230 76L230 282' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.6'/><circle cx='200' cy='76' r='30' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='200' cy='76' r='2.5' fill='currentColor'/><path d='M170 76L170 166' fill='none' stroke='currentColor' stroke-width='2'/><path d='M170 166L165.8 156L174.2 156Z' fill='currentColor'/><text x='160' y='160' text-anchor='end' font-size='15'>T</text><path d='M230 76L230 166' fill='none' stroke='currentColor' stroke-width='2'/><path d='M230 166L225.8 156L234.2 156Z' fill='currentColor'/><text x='240' y='160' text-anchor='start' font-size='15'>T</text><path d='M200 76L200 256' fill='none' stroke='currentColor' stroke-width='2.8'/><path d='M200 256L195.4 245L204.6 245Z' fill='currentColor'/><text x='210' y='252' text-anchor='start' font-size='16' font-weight='600'>2T</text></g></svg>",
+    "caption": "Both sections vertical: the two pulls point the same way and add to 2T."
+  },
+  {
+    "type": "p",
+    "md": "The string presses on the pulley from both sides. Each section pulls it with force $T$ along that section, so the force on the pulley is the **resultant** of two pulls: their vector sum, not just their sizes added. When both sections hang vertically the pulls point the same way, so the force is $2T$, straight down."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "Two blocks hang either side of a pulley and the tension is 40 N. What is the magnitude of the force on the pulley, in newtons?",
+    "answer": "80",
+    "explain": "Both sections hang vertically, so the two 40 N pulls are parallel and add to 80 N downwards."
+  },
+  {
+    "type": "h",
+    "text": "8. The pulley at a right angle",
+    "role": "derivation"
+  },
+  {
+    "type": "figure",
+    "alt": "A pulley at the corner of a table. One string section runs horizontally to the left and the other hangs straight down. Each pulls the pulley with a force T, drawn from the axle along its section; the two pulls make a square, drawn dashed, and its diagonal is the resultant, labelled T root 2, at 45 degrees to each section.",
+    "svg": "<svg viewBox='0 0 400 262' xmlns='http://www.w3.org/2000/svg' width='400' height='262'><g fill='currentColor' font-family='inherit'><path d='M24 66L250 66' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.6'/><path d='M272 88L272 250' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.6'/><path d='M250 88L302 36' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M288 22l28 28' fill='none' stroke='currentColor' stroke-width='2'/><circle cx='250' cy='88' r='22' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='250' cy='88' r='2.5' fill='currentColor'/><path d='M154 88V184H250' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='4 4' stroke-opacity='0.7'/><path d='M250 88L154 88' fill='none' stroke='currentColor' stroke-width='2'/><path d='M154 88L164 83.8L164 92.2Z' fill='currentColor'/><path d='M250 88L250 184' fill='none' stroke='currentColor' stroke-width='2'/><path d='M250 184L245.8 174L254.2 174Z' fill='currentColor'/><text x='146' y='93' text-anchor='end' font-size='15'>T</text><text x='250' y='204' text-anchor='middle' font-size='15'>T</text><path d='M250 88L154 184' fill='none' stroke='currentColor' stroke-width='2.8'/><path d='M154 184L158.5 173L165 179.5Z' fill='currentColor'/><text x='146' y='200' text-anchor='end' font-size='16' font-weight='600'>T√2</text><path d='M221.7 116.3A40 40 0 0 0 250 128' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='227' y='149.4' text-anchor='middle' font-size='15'>45°</text></g></svg>",
+    "caption": "At a right angle the two pulls make a square, and the resultant is its diagonal."
+  },
+  {
+    "type": "p",
+    "md": "When the string runs along a table and over a pulley at its edge, one section is horizontal and the other vertical. Draw both pulls from the axle: equal sides at $90°$ make a square, and the resultant is its diagonal. By Pythagoras, $R^2 = T^2 + T^2$, which is $2T^2$, so $R = T\\sqrt{2}$, at $45°$ to each section."
+  },
+  {
+    "type": "p",
+    "md": "**The table pair:** $T = 35$ N, so $R = 35\\sqrt{2}$, which is $49.50$ N."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "The least well-answered part of Summer 2025",
+    "md": "Most candidates doubled the tension. The method mark was for combining the two pulls by Pythagoras, so draw them first.",
+    "source": "ccea-cer:further-maths:2025-summer:FM2:Q4"
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "A string runs horizontally along a table, over a pulley at the edge, and vertically down. The tension is 40 N. What is the magnitude of the force on the pulley, in newtons, to 2 decimal places?",
+    "answer": "56.57",
+    "explain": "$R^2 = 40^2 + 40^2$, so $R = 40\\sqrt{2}$, which is $56.57$ N. Doubling to 80 N is what most candidates did on the least well-answered part of the Summer 2025 paper."
+  },
+  {
+    "type": "h",
+    "text": "9. The string goes slack",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A pulley fixed to a ceiling with block P, 5 kilograms, on the left-hand section of the string and block Q, 3 kilograms, on the right. Both blocks are held 0.8 metres above a horizontal floor.",
+    "svg": "<svg viewBox='0 0 400 302' xmlns='http://www.w3.org/2000/svg' width='400' height='302'><g fill='currentColor' font-family='inherit'><path d='M130 22H270' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M134 22l8 -8M146 22l8 -8M158 22l8 -8M170 22l8 -8M182 22l8 -8M194 22l8 -8M206 22l8 -8M218 22l8 -8M230 22l8 -8M242 22l8 -8M254 22l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M200 22V30' fill='none' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='70' r='40' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='200' cy='70' r='2.5' fill='currentColor'/><path d='M160 70L160 160' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='128' y='160' width='64' height='50' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='160' y='182' text-anchor='middle' font-size='15' font-weight='600'>P</text><text x='160' y='200' text-anchor='middle' font-size='15'>5 kg</text><path d='M105 210h10M105 286h10M110 210V286' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='101' y='253' text-anchor='end' font-size='15'>0.8 m</text><path d='M240 70L240 160' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='208' y='160' width='64' height='50' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='240' y='182' text-anchor='middle' font-size='15' font-weight='600'>Q</text><text x='240' y='200' text-anchor='middle' font-size='15'>3 kg</text><path d='M285 210h10M285 286h10M290 210V286' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='299' y='253' text-anchor='start' font-size='15'>0.8 m</text><path d='M40 286H360' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M44 294l8 -8M56 294l8 -8M68 294l8 -8M80 294l8 -8M92 294l8 -8M104 294l8 -8M116 294l8 -8M128 294l8 -8M140 294l8 -8M152 294l8 -8M164 294l8 -8M176 294l8 -8M188 294l8 -8M200 294l8 -8M212 294l8 -8M224 294l8 -8M236 294l8 -8M248 294l8 -8M260 294l8 -8M272 294l8 -8M284 294l8 -8M296 294l8 -8M308 294l8 -8M320 294l8 -8M332 294l8 -8M344 294l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/></g></svg>",
+    "caption": "Released from rest 0.8 m up: P lands first, and then the string goes slack."
+  },
+  {
+    "type": "p",
+    "md": "When the heavier block lands, the string goes slack: no tension, and the pair's acceleration no longer applies. The lighter block is still rising, now under its weight alone, so with up positive its acceleration is $-10$ m/s², not the old $a$ and not $+10$."
+  },
+  {
+    "type": "p",
+    "md": "**P lands:** $v^2 = 2 \\times 2.5 \\times 0.8$, so $v = 2$ m/s.\n**Q then rises freely, up positive:** $0 = 2^2 - 2 \\times 10 \\times s$, so $s = 0.2$ m.\n**Q's greatest height:** it started 0.8 m up, rose 0.8 m while P fell, then 0.2 m more: 1.8 m above the floor."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "Two blocks hang either side of a pulley. The lighter one is moving upwards at 3 m/s when the heavier one lands and the string goes slack. How much higher does the lighter one rise, in metres? Take $g = 10$ m/s².",
+    "answer": "0.45",
+    "explain": "With the string slack only its weight acts, so, with up positive, $0 = 3^2 - 20s$ and $s = 0.45$ m. The pair's acceleration no longer applies."
+  },
+  {
+    "type": "h",
+    "text": "10. The tow-bar breaks",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "The trailer on its own after the tow-bar breaks, on a horizontal road: its 300 newton resistance acts backwards, the normal reaction R up and its 4000 newton weight down, with a dashed arrow showing its acceleration backwards, against its motion.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' width='400' height='290'><g fill='currentColor' font-family='inherit'><path d='M24 167H376' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M28 175l8 -8M40 175l8 -8M52 175l8 -8M64 175l8 -8M76 175l8 -8M88 175l8 -8M100 175l8 -8M112 175l8 -8M124 175l8 -8M136 175l8 -8M148 175l8 -8M160 175l8 -8M172 175l8 -8M184 175l8 -8M196 175l8 -8M208 175l8 -8M220 175l8 -8M232 175l8 -8M244 175l8 -8M256 175l8 -8M268 175l8 -8M280 175l8 -8M292 175l8 -8M304 175l8 -8M316 175l8 -8M328 175l8 -8M340 175l8 -8M352 175l8 -8M364 175l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='154' y='113' width='92' height='54' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='200' y='146' text-anchor='middle' font-size='16' font-weight='600'>trailer</text><path d='M154 140L90 140' fill='none' stroke='currentColor' stroke-width='2'/><path d='M90 140L100 135.8L100 144.2Z' fill='currentColor'/><text x='84' y='131' text-anchor='start' font-size='15'>300 N</text><path d='M200 113L200 49' fill='none' stroke='currentColor' stroke-width='2'/><path d='M200 49L204.2 59L195.8 59Z' fill='currentColor'/><text x='210' y='61' text-anchor='start' font-size='15'>R</text><path d='M200 167L200 231' fill='none' stroke='currentColor' stroke-width='2'/><path d='M200 231L195.8 221L204.2 221Z' fill='currentColor'/><text x='210' y='229' text-anchor='start' font-size='15'>4000 N</text><path d='M164 83L120 83' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M120 83l10 -5.5M120 83l10 5.5' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='112' y='88' text-anchor='end' font-size='15'>a</text></g></svg>",
+    "caption": "The trailer alone: only its resistance acts along the road, so it slows."
+  },
+  {
+    "type": "p",
+    "md": "When a tow-bar breaks, the trailer keeps its speed for a moment but loses its pull. Only its resistance acts along the road, so it slows down, while the car, still driving, speeds up. Each needs its own equation from now on."
+  },
+  {
+    "type": "p",
+    "md": "**The trailer alone:** $300 = 400a$, so it decelerates at $0.75$ m/s².\n**To rest from 6 m/s:** $0 = 6^2 - 2 \\times 0.75 \\times s$, so $s = 24$ m."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "A trailer of mass 500 kg is moving at 8 m/s when its tow-bar breaks. The resistance to its motion is 400 N. What is its deceleration, in m/s²?",
+    "answer": "0.8",
+    "explain": "Only the resistance acts along the road: $400 = 500a$, so the deceleration is $0.8$ m/s². Its speed decides how far it goes, not how fast it slows."
+  },
+  {
+    "type": "h",
+    "text": "11. Exam twists",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**The connection goes** (2019, 2022, 2024, 2026). A block lands, a string goes slack or a tow-bar breaks. First line: a new diagram for each body, with no tension in it."
+  },
+  {
+    "type": "p",
+    "md": "**Resistance per kilogram** (2019, 2024, 2026). A resistance in newtons per kilogram belongs to one vehicle. First line: multiply by that vehicle's own mass, never the total."
+  },
+  {
+    "type": "p",
+    "md": "**An unknown to show** (2023, 2024, 2026). A mass or a resistance is the unknown, often in a show-that. First line: an equation with the letter in it; the value must come out, not go in."
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "A car of known mass tows a trailer of unknown mass M, and a later part asks you to show the value of M. How should you find the tension in the tow-bar first?",
+    "options": [
+      "From the car's own equation",
+      "From the trailer's equation, using the M from the later part",
+      "From the whole system's equation"
+    ],
+    "answer": "From the car's own equation",
+    "explain": "The car's equation has only $T$ unknown. The 2024 report found that a value printed in a later part, used earlier, scored nothing; and the whole system's equation has no $T$ in it at all."
+  },
+  {
+    "type": "p",
+    "md": "**Kinematics first** (2021, 2023). The pair is timed over a distance, or reaches a speed, before any force is given. First line: a constant-acceleration formula for $a$."
+  },
+  {
+    "type": "p",
+    "md": "**The pulley's force** (2022, 2025). After the tension, a part asks for the force on the pulley. First line: which way do the two sections run? Parallel gives $2T$; a right angle, $T\\sqrt{2}$."
+  },
+  {
+    "type": "p",
+    "md": "**A later value, used early** (2024). A value printed in a later part, used to answer an earlier one, scored nothing. First line: only what the question has given so far."
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A part says that 2 seconds after release from rest the blocks are moving at 5 m/s, then asks for the friction on the block on the table. What should the first line be?",
+    "options": [
+      "v = u + at, to find the acceleration",
+      "The hanging block's equation of motion",
+      "Friction equals the hanging block's weight"
+    ],
+    "answer": "v = u + at, to find the acceleration",
+    "explain": "No force can be found until $a$ is known, and the timing gives it: $5 = 0 + 2a$, so $a = 2.5$ m/s². Then the hanging block gives $T$, and the table block gives the friction."
+  },
+  {
+    "type": "h",
+    "text": "12. Going further: the car runs on",
+    "role": "further"
+  },
+  {
+    "type": "figure",
+    "alt": "The car on its own after the tow-bar breaks: its 3200 newton driving force forwards, its 800 newton resistance backwards, the normal reaction R up and its 10000 newton weight down, with a dashed arrow showing its acceleration forwards.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' width='400' height='290'><g fill='currentColor' font-family='inherit'><path d='M24 167H376' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M28 175l8 -8M40 175l8 -8M52 175l8 -8M64 175l8 -8M76 175l8 -8M88 175l8 -8M100 175l8 -8M112 175l8 -8M124 175l8 -8M136 175l8 -8M148 175l8 -8M160 175l8 -8M172 175l8 -8M184 175l8 -8M196 175l8 -8M208 175l8 -8M220 175l8 -8M232 175l8 -8M244 175l8 -8M256 175l8 -8M268 175l8 -8M280 175l8 -8M292 175l8 -8M304 175l8 -8M316 175l8 -8M328 175l8 -8M340 175l8 -8M352 175l8 -8M364 175l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='154' y='113' width='92' height='54' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='200' y='146' text-anchor='middle' font-size='16' font-weight='600'>car</text><path d='M246 140L310 140' fill='none' stroke='currentColor' stroke-width='2'/><path d='M310 140L300 144.2L300 135.8Z' fill='currentColor'/><text x='316' y='131' text-anchor='end' font-size='15'>3200 N</text><path d='M154 140L90 140' fill='none' stroke='currentColor' stroke-width='2'/><path d='M90 140L100 135.8L100 144.2Z' fill='currentColor'/><text x='84' y='131' text-anchor='start' font-size='15'>800 N</text><path d='M200 113L200 49' fill='none' stroke='currentColor' stroke-width='2'/><path d='M200 49L204.2 59L195.8 59Z' fill='currentColor'/><text x='210' y='61' text-anchor='start' font-size='15'>R</text><path d='M200 167L200 231' fill='none' stroke='currentColor' stroke-width='2'/><path d='M200 231L195.8 221L204.2 221Z' fill='currentColor'/><text x='210' y='229' text-anchor='start' font-size='15'>10000 N</text><path d='M236 83L280 83' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M280 83l-10 5.5M280 83l-10 -5.5' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='288' y='88' text-anchor='start' font-size='15'>a</text></g></svg>",
+    "caption": "The car alone keeps its driving force and its own resistance, so it speeds up."
+  },
+  {
+    "type": "p",
+    "md": "The hardest shape so far (2019) lets the car run on after the tow-bar breaks, still driving and still resisted, and asks for its speed later. Here a 1000 kg car tows a 600 kg trailer, each resisted by 0.8 N per kg."
+  },
+  {
+    "type": "p",
+    "md": "**Together:** $3200 - 800 - 480 = 1600a$, so $a = 1.2$ m/s².\n**The bar breaks 10 s from rest:** $v = 1.2 \\times 10$, so $v = 12$ m/s.\n**The car alone:** $3200 - 800 = 1000a$, so $a = 2.4$ m/s².\n**5 s later:** $v = 12 + 2.4 \\times 5$, so $v = 24$ m/s."
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "number",
+    "prompt": "After a tow-bar breaks, a car of mass 800 kg keeps its 2500 N driving force and its 500 N resistance. What is its acceleration now, in m/s²?",
+    "answer": "2.5",
+    "explain": "The car alone: $2500 - 500 = 800a$, so $a = 2.5$ m/s². With no trailer to pull, all of its spare force now goes into its own mass."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where the specification stops",
+    "md": "Two bodies joined over a pulley on an inclined plane, three or more connected bodies, and friction written as $F = \\mu R$ are A-level mechanics. CCEA's pairs are both horizontal, both vertical, or one of each."
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "Write one equation per body with the same $T$ and $a$, and add them to find $a$.\nFind $T$ from one body's own equation; for a tow-bar, from one vehicle's.\nFind the force on a pulley: $2T$ for parallel sections, $T\\sqrt{2}$ at a right angle.\nStart again when the connection goes: no tension, and each body on its own.\nSpot the twists: kinematics first, per-kilogram resistance, an unknown to show."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "This is one of the long questions, usually Q4, Q5 or Q6: a force diagram for 2 marks, the acceleration, the tension, then the pulley or what happens after the connection goes. Each correct equation of motion earns its own marks, and follow-through runs through every part. Stuck? Write each body's equation, add them, and draw the two pulls before the pulley part."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.connected-particles-and-pulleys.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.connected-particles-and-pulleys.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.connected-particles-and-pulleys.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.connected-particles-and-pulleys.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.connected-particles-and-pulleys.07"
+  }
+]

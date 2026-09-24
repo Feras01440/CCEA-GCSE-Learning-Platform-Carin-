@@ -1,0 +1,300 @@
+# fm.u1.area-under-curve — Area under a curve between two ordinates  [S, difficulty 3]
+unit FM1 · tier untiered · specRefs []
+note: Area under a curve between two ordinates v1 [verified]
+verification statuses: {"verified":15}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] The space a curve encloses
+- [p] 
+- [figure] The shaded patch between $y = x^{2} + 1$, the $x$-axis and the ordinates $x = 0$ and $x = 3$.
+- [choice] 
+- [h] 1. Why an integral is an area
+- [p] 
+- [figure] Each strip holds about $y \, dx$. The integral is the limit of the sum.
+- [why] Why the height comes from the curve
+- [choice] 
+- [h] 2. A worked area, start to finish
+- [p] 
+- [figure] The region the four steps measure, between $x = 0$ and $x = 3$.
+- [number] 
+- [h] 3. Below the axis, the integral turns negative
+- [p] 
+- [figure] Every strip hangs below the axis, so the integral is $-\frac{32}{3}$ and the area is $\frac{32}{3}$.
+- [video] Integration - Area under a curve CCEA GCSE Further Mathematics
+- [number] 
+- [h] 4. When the curve crosses between the ordinates
+- [p] 
+- [figure] Two regions, two integrals, two sizes added. The dashed line sits at the root, $x = 2$.
+- [notonspec] Beyond what CCEA asks
+- [number] 
+- [h] 5. When the limits are not handed to you
+- [p] 
+- [figure] No ordinates are given, so the intercepts $x = 1$ and $x = 4$ become the limits.
+- [examiner] Summer 2025, Unit 1, Question 11
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.area-under-curve.01 [verified] paper FM1 calc
+STEM: Find the area enclosed by the curve $y = x^{2} + 1$, the $x$-axis and the ordinates $x = 0$ and $x = 3$.
+  FIG: svg — The curve y equals x squared plus 1 with the region between it, the x-axis and the vertical lines x equals 0 and x equals 3 shaded.
+  1. Write the integral: $\int_{0}^{3} \left(x^{2} + 1\right) dx$.   — The left ordinate is the bottom limit and the right one is the top limit. This line is the first mark and it costs no arithmetic, so write it even if the rest defeats you.  (MW1)
+  2. Integrate, simplifying each term as you write it: $\left[\frac{1}{3}x^{3} + x\right]_{0}^{3}$.   — Simplifying now rather than after the limits go in is what keeps the arithmetic small; the examiners name unsimplified terms as a source of slips.  (M2)  WHY: ✔Because the area is the integral of the curve's own equation | ✘Because the limits have to be differentiated first | ✘Because the constant of integration is needed here
+  3. Top limit first: at $x = 3$ the bracket is $12$. Then the bottom: at $x = 0$ it is $0$.   — Putting each substitution in its own bracket is what stops a sign going astray when the bottom value is negative.  (M3)
+  4. Subtract, top minus bottom: $12 - \left(0\right) = 12$.   — The value is positive, which matches the picture: the whole region sits above the axis. A sanity check like that takes a second and catches a reversed subtraction.  (W1)
+  FINAL: $12$
+  TWIN: Find the area enclosed by the curve $y = x^{2} + 2x$, the $x$-axis and the ordinates $x = 0$ and $x = 3$.  → numeric 18 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+
+### we.fm.u1.area-under-curve.02 [verified] paper FM1 calc
+STEM: Find the area enclosed by the curve $y = x^{2} - 4x$, the $x$-axis and the ordinates $x = 0$ and $x = 4$.
+  FIG: svg — The curve y equals x squared minus 4x between x equals 0 and x equals 4, lying below the x-axis, with the region shaded.
+  1. Write the integral: $\int_{0}^{4} \left(x^{2} - 4x\right) dx$.   — The set-up is the same whichever side of the axis the region is on. Nothing about the limits changes.  (MW1)
+  2. Integrate: $\left[\frac{1}{3}x^{3} - 2x^{2}\right]_{0}^{4}$.   — Raise each index by one and divide by the new index. The examiners see both halves of that rule dropped, so say it to yourself as you write.  (M2)
+  3. At $x = 4$ the bracket is $-\frac{32}{3}$; at $x = 0$ it is $0$. Subtracting gives $-\frac{32}{3}$.   — A negative result is information, not a mistake. It says every strip in this region hangs below the axis.  (M3)  WHY: ✔Because the region lies below the x-axis, so every strip has a negative height | ✘Because the limits were written the wrong way round | ✘Because the curve was differentiated instead of integrated
+  4. The region lies below the $x$-axis, so the area is $\frac{32}{3}$.   — Write that sentence. It shows the examiner the sign was read rather than quietly dropped, and it is where the last mark lives.  (W1)
+  FINAL: $\frac{32}{3}$
+  TWIN: Find the area enclosed by the curve $y = x^{2} - 9$, the $x$-axis and the ordinates $x = 0$ and $x = 3$.  → numeric 18 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u1.area-under-curve.pre (pre) [draft]
+- p1 (Integrate a single power term): Three quick checks on what this lesson is built from. None of them is the new idea, so answer from what you already know.
+What is $\int \left(3x^{2}\right) dx$?
+    ✔ $x^{3} + c$ — Raise the index to $3$ and divide the coefficient by $3$, which leaves $x^{3}$.
+    ✘ $x^{2} + c$ — The coefficient was divided but the index stayed at $2$. Both halves of the rule apply.
+    ✘ $3x^{3} + c$ — The index went up but the coefficient was never divided by the new index.
+- p2 (Evaluate a definite integral): What is the value of $\int_{1}^{2} \left(3x^{2}\right) dx$?
+    ✔ $7$ — $8 - \left(1\right) = 7$.
+    ✘ $8$ — Only the top limit has been substituted. The bottom one still has to be taken away.
+    ✘ $-7$ — The subtraction is the wrong way round. It is the top limit take away the bottom.
+- p3 (Find the x-intercepts of a quadratic): Where does the curve $y = x^{2} - 4$ cross the $x$-axis?
+    ✔ $x = 2$ and $x = -2$ — Setting $y = 0$ gives $x^{2} = 4$, so $x = 2$ or $x = -2$.
+    ✘ $x = 4$ and $x = -4$ — That is the value of $x^{2}$, not of $x$. Take the square root of $4$.
+    ✘ $x = 2$ only — A square root has two values, so the curve meets the axis twice.
+
+### dx.fm.u1.area-under-curve.post (post) [draft]
+- d1 (Set up the integral with the right limits): Which integral gives the area between the curve $y = x^{2} + 2x$, the $x$-axis and the ordinates $x = 0$ and $x = 3$?
+    ✔ $\int_{0}^{3} \left(x^{2} + 2x\right) dx$ — The curve's own equation goes inside, with the left ordinate at the bottom and the right one at the top.
+    ✘ $\int_{3}^{0} \left(x^{2} + 2x\right) dx$ [fm.int.limits-reversed] — The limits are the wrong way round, which changes the sign of everything that follows.
+    ✘ $\int_{0}^{3} \left(\frac{1}{3}x^{3} + x^{2}\right) dx$ [fm.int.limits-into-integrand] — That is the integrated expression, already integrated once. What goes inside the integral is the curve itself.
+- d2 (Report a below-axis region): A region lies below the $x$-axis and its integral works out as $-18$. What is the area?
+    ✔ $18$ — The minus sign says the region is below the axis; the area is its size.
+    ✘ $-18$ [fm.int.negative-area-left] — An area cannot be negative. The integral tells you where the region is, and the answer line wants how big it is.
+    ✘ $0$ [fm.int.negative-area-left] — The region has a real size. A negative integral is not an empty region.
+- d3 (Split a crossing region at the root): The curve $y = x^{2} - 4$ crosses the $x$-axis at $x = 2$. What is the total area between the curve, the $x$-axis and the ordinates $x = 0$ and $x = 4$?
+    ✔ $16$ — Split at the root, take the size of each piece, then add: $\frac{16}{3} + \frac{32}{3}$.
+    ✘ $\frac{16}{3}$ [fm.int.region-not-split-at-root] — That is one integral straight across the root, so the piece below the axis cancelled part of the piece above it.
+    ✘ $\frac{32}{3}$ [fm.int.region-not-split-at-root] — That is only the piece above the axis. The piece below it still has an area to add.
+- d4 (Find the limits when none are printed): A question asks for the area enclosed by the curve $y = -x^{2} + 6x$ and the $x$-axis, and prints no ordinates. What are the limits?
+    ✔ $x = 0$ and $x = 6$, where the curve meets the $x$-axis — Setting $y = 0$ gives the two intercepts, and those are the limits.
+    ✘ $x = 0$ and $x = 1$, because no other values are given [fm.int.limits-into-integrand] — Limits are never invented. Solve $y = 0$ to find where the enclosed region starts and stops.
+    ✘ $y = 0$ and $y = 9$, the smallest and largest heights [fm.int.limits-into-integrand] — The limits of $\int y \, dx$ are values of $x$, not of $y$.
+- d5 (Apply both halves of the integration rule): Integrating $y = x^{2} + 2x$ gives which expression?
+    ✔ $\frac{1}{3}x^{3} + x^{2}$ — Each index rises by one and each coefficient is divided by its new index.
+    ✘ $x^{3} + 2x^{2}$ [fm.int.coefficient-not-divided] — The indices are right and no coefficient was divided by the new index.
+    ✘ $\frac{1}{3}x^{2} + x$ [fm.int.power-not-raised] — The coefficients were divided and the indices never moved.
+
+## QUESTIONS
+### q.fm.u1.area-under-curve.0001 [verified] practice · diff 1 · untiered · FM1 calc · 3 marks · (main)find3 · A straight line above the axis, the simplest region of all
+  FIG: svg — The line y equals 2x plus 1 with the region between it, the x-axis and the vertical lines x equals 1 and x equals 4 shaded.
+  (main) [3] The diagram shows the line $y = 2x + 1$.
+Find the area of the shaded region, which is enclosed by the line, the $x$-axis and the ordinates $x = 1$ and $x = 4$.
+      ANSWER: numeric 18 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{1}^{4} \left(2x + 1\right) dx$, with both limits
+      M1 M2: $\left[x^{2} + x\right]_{1}^{4}$, each term simplified
+      W1 W1: $18$ ft
+      SOLUTION: Area $= \int_{1}^{4} \left(2x + 1\right) dx = \left[x^{2} + x\right]_{1}^{4}$. At $x = 4$ the bracket is $20$; at $x = 1$ it is $2$. Subtracting: $20 - \left(2\right) = 18$.
+      ERR [fm.int.limits-reversed] {"kind":"numeric","value":-18} → The integrating and both substitutions are right, so the method marks stand. The subtraction is the wrong way round: it is the top limit take away the bottom, giving $18$. (2)
+      HINTS: Write the integral with $1$ at the bottom and $4$ at the top. || Integrate, then substitute the top limit and the bottom one.
+
+### q.fm.u1.area-under-curve.0002 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · A single power term between two ordinates
+  FIG: svg — The curve y equals 3x squared with the region between it, the x-axis and the vertical lines x equals 1 and x equals 2 shaded.
+  (main) [3] Find the area enclosed by the curve $y = 3x^{2}$, the $x$-axis and the ordinates $x = 1$ and $x = 2$.
+      ANSWER: numeric 7 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{1}^{2} \left(3x^{2}\right) dx$, with both limits
+      M1 M2: $\left[x^{3}\right]_{1}^{2}$, each term simplified
+      W1 W1: $7$ ft
+      SOLUTION: Area $= \int_{1}^{2} \left(3x^{2}\right) dx = \left[x^{3}\right]_{1}^{2}$. At $x = 2$ the bracket is $8$; at $x = 1$ it is $1$. Subtracting: $8 - \left(1\right) = 7$.
+      ERR [fm.int.power-not-raised] {"kind":"numeric","value":3} → The coefficient was divided by the new index but the index itself never went up, so $3x^{2}$ became $x^{2}$ instead of $x^{3}$. Both halves of the rule are needed. (0)
+      HINTS: Raise the index by one, then divide by the new index.
+
+### q.fm.u1.area-under-curve.0003 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · Two terms, with the lower ordinate at the origin
+  FIG: svg — The curve y equals x squared plus 2x with the region between it, the x-axis and the vertical line x equals 3 shaded.
+  (main) [3] Find the area enclosed by the curve $y = x^{2} + 2x$, the $x$-axis and the ordinates $x = 0$ and $x = 3$.
+      ANSWER: numeric 18 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{0}^{3} \left(x^{2} + 2x\right) dx$, with both limits
+      M1 M2: $\left[\frac{1}{3}x^{3} + x^{2}\right]_{0}^{3}$, each term simplified
+      W1 W1: $18$ ft
+      SOLUTION: Area $= \int_{0}^{3} \left(x^{2} + 2x\right) dx = \left[\frac{1}{3}x^{3} + x^{2}\right]_{0}^{3}$. At $x = 3$ the bracket is $18$; at $x = 0$ it is $0$. Subtracting: $18 - \left(0\right) = 18$.
+      ERR [fm.int.coefficient-not-divided] {"kind":"numeric","value":45} → Each index went up by one but no coefficient was divided, so the integral was read as $x^{3} + 2x^{2}$ rather than $\frac{1}{3}x^{3} + x^{2}$. Dividing by the new index is the other half of the rule. (0)
+      ERR [fm.int.differentiated-instead] {"kind":"numeric","value":6} → That value comes from differentiating $x^{2} + 2x$ and putting the limits into the derivative. An area needs the integral, so raise each index instead of lowering it. (0)
+      HINTS: Integrate both terms. || Substituting the bottom limit gives zero here, but write the line down anyway.
+
+### q.fm.u1.area-under-curve.0004 [verified] practice · diff 3 · untiered · FM1 calc · 4 marks · (main)find4 · A symmetric region straddling the y-axis, with a negative lower limit
+  FIG: svg — The curve y equals 4 minus x squared with the region between it and the x-axis, from x equals minus 2 to x equals 2, shaded.
+  (main) [4] Find the area enclosed by the curve $y = -x^{2} + 4$ and the $x$-axis.
+Give your answer as an exact fraction.
+      ANSWER: numeric 10.666666666666666 tol={"type":"absolute","value":0.0005} forms=fraction
+      MW1 MW1: $\int_{-2}^{2} \left(-x^{2} + 4\right) dx$, with both limits
+      M1 M2: $\left[-\frac{1}{3}x^{3} + 4x\right]_{-2}^{2}$, each term simplified
+      M1 M3: substituting both limits, each inside its own bracket
+      W1 W1: $\frac{32}{3}$ ft
+      SOLUTION: The curve meets the $x$-axis where $-x^{2} + 4 = 0$, so $x = -2$ and $x = 2$. Area $= \int_{-2}^{2} \left(-x^{2} + 4\right) dx = \left[-\frac{1}{3}x^{3} + 4x\right]_{-2}^{2}$. At $x = 2$ the bracket is $\frac{16}{3}$; at $x = -2$ it is $-\frac{16}{3}$. Subtracting: $\frac{16}{3} - \left(-\frac{16}{3}\right) = \frac{32}{3}$.
+      ERR [fm.int.lower-limit-ignored] {"kind":"numeric","value":5.333333333333333} → The top limit was substituted correctly. The bottom limit at $x = -2$ still has to be substituted and taken away, which gives $\frac{32}{3}$. (2)
+      HINTS: The curve meets the $x$-axis where $-x^{2} + 4 = 0$. || Take care with the signs when the bottom limit is negative.
+
+### q.fm.u1.area-under-curve.0005 [verified] practice · diff 3 · untiered · FM1 calc · 4 marks · (main)find4 · A region entirely below the axis, where the integral is negative
+  FIG: svg — The curve y equals x squared minus 9 with the region between it, the x-axis and the vertical lines x equals 0 and x equals 3 shaded below the axis.
+  (main) [4] The diagram shows the curve $y = x^{2} - 9$.
+Find the area of the shaded region, which is enclosed by the curve, the $x$-axis and the ordinates $x = 0$ and $x = 3$.
+      ANSWER: numeric 18 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{0}^{3} \left(x^{2} - 9\right) dx$, with both limits
+      M1 M2: $\left[\frac{1}{3}x^{3} - 9x\right]_{0}^{3}$, each term simplified
+      M1 M3: substituting both limits, each inside its own bracket
+      W1 W1: $18$ ft
+      SOLUTION: Area $= \int_{0}^{3} \left(x^{2} - 9\right) dx = \left[\frac{1}{3}x^{3} - 9x\right]_{0}^{3}$. At $x = 3$ the bracket is $-18$; at $x = 0$ it is $0$. Subtracting: $-18 - \left(0\right) = -18$. The region lies below the $x$-axis, so the area is $18$.
+      ERR [fm.int.negative-area-left] {"kind":"numeric","value":-18} → Every step is right and the last line is not. A negative integral says the region lies below the $x$-axis; the area is its size, $18$. (3)
+      HINTS: Integrate and substitute as usual. || The region is below the axis, so say what the sign of your integral means.
+
+### q.fm.u1.area-under-curve.0006 [verified] practice · diff 3 · untiered · FM1 calc · 4 marks · (main)find4 · A second below-axis region, with a coefficient in the squared term
+  FIG: svg — The curve y equals 3x squared minus 12 with the region between it, the x-axis and the vertical lines x equals 0 and x equals 2 shaded below the axis.
+  (main) [4] Find the area enclosed by the curve $y = 3x^{2} - 12$, the $x$-axis and the ordinates $x = 0$ and $x = 2$.
+      ANSWER: numeric 16 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{0}^{2} \left(3x^{2} - 12\right) dx$, with both limits
+      M1 M2: $\left[x^{3} - 12x\right]_{0}^{2}$, each term simplified
+      M1 M3: substituting both limits, each inside its own bracket
+      W1 W1: $16$ ft
+      SOLUTION: Area $= \int_{0}^{2} \left(3x^{2} - 12\right) dx = \left[x^{3} - 12x\right]_{0}^{2}$. At $x = 2$ the bracket is $-16$; at $x = 0$ it is $0$. Subtracting: $-16 - \left(0\right) = -16$. The region lies below the $x$-axis, so the area is $16$.
+      ERR [fm.int.negative-area-left] {"kind":"numeric","value":-16} → The integral is right. It is negative because the region hangs below the axis, so write the area as $16$. (3)
+      HINTS: Integrate both terms. || A negative integral is telling you where the region is, not how big it is.
+
+### q.fm.u1.area-under-curve.0007 [verified] practice · diff 4 · untiered · FM1 calc · 4 marks · (main)find4 · A region that crosses the axis, so the integral has to be split at the root
+  FIG: svg — The curve y equals x squared minus 4 from x equals 0 to x equals 4, shaded below the axis on the left of x equals 2 and above it on the right.
+  (main) [4] The curve $y = x^{2} - 4$ crosses the $x$-axis at $x = 2$.
+Find the total area enclosed by the curve, the $x$-axis and the ordinates $x = 0$ and $x = 4$.
+      ANSWER: numeric 16 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: splitting at $x = 2$: two integrals, $0$ to $2$ and $2$ to $4$
+      M1 M2: $\left[\frac{1}{3}x^{3} - 4x\right]_{0}^{2}$ and $\left[\frac{1}{3}x^{3} - 4x\right]_{2}^{4}$
+      W1 W2: $-\frac{16}{3}$ and $\frac{32}{3}$ ft
+      W1 W3: $16$ from the two sizes added ft
+      SOLUTION: Split at the root: $\int_{0}^{2} \left(x^{2} - 4\right) dx = -\frac{16}{3}$ and $\int_{2}^{4} \left(x^{2} - 4\right) dx = \frac{32}{3}$. The left piece lies below the axis, so its area is $\frac{16}{3}$. Total area $= \frac{16}{3} + \frac{32}{3} = 16$.
+      ERR [fm.int.region-not-split-at-root] {"kind":"numeric","value":5.333333333333333} → That is one integral taken straight across the root, so the piece below the axis cancelled part of the piece above it. Split at $x = 2$, take each size, then add: $16$. (1)
+      HINTS: The root at $x = 2$ divides the region in two. || Take the size of each piece before you add them.
+
+### q.fm.u1.area-under-curve.0008 [verified] practice · diff 3 · untiered · FM1 calc · 4 marks · (main)find4 · No ordinates printed, so the intercepts have to be found first
+  FIG: svg — The curve y equals 6x minus x squared with the region between it and the x-axis, from x equals 0 to x equals 6, shaded.
+  (main) [4] Find the area enclosed by the curve $y = -x^{2} + 6x$ and the $x$-axis.
+      ANSWER: numeric 36 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $x = 0$ and $x = 6$ from $-x^{2} + 6x = 0$
+      M1 M2: $\int_{0}^{6} \left(-x^{2} + 6x\right) dx$
+      M1 M3: $\left[-\frac{1}{3}x^{3} + 3x^{2}\right]_{0}^{6}$, each term simplified
+      W1 W1: $36$ ft
+      SOLUTION: $-x^{2} + 6x = 0$ factorises to $x\left(6 - x\right) = 0$, so $x = 0$ and $x = 6$. Area $= \int_{0}^{6} \left(-x^{2} + 6x\right) dx = \left[-\frac{1}{3}x^{3} + 3x^{2}\right]_{0}^{6}$. At $x = 6$ the bracket is $36$; at $x = 0$ it is $0$. Subtracting: $36 - \left(0\right) = 36$.
+      ERR [fm.int.limits-into-integrand] {"kind":"numeric","value":0} → The two limits were put straight into $-x^{2} + 6x$ and subtracted. They belong in the integrated expression $-\frac{1}{3}x^{3} + 3x^{2}$, which gives $36$. (1)
+      HINTS: Set $-x^{2} + 6x = 0$ and factorise to find where the curve meets the axis. || Those two values are the limits.
+
+### q.fm.u1.area-under-curve.0009 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · A small region whose area is an exact fraction
+  FIG: svg — The curve y equals x squared with the region between it, the x-axis and the vertical lines x equals 1 and x equals 2 shaded.
+  (main) [3] Find the area enclosed by the curve $y = x^{2}$, the $x$-axis and the ordinates $x = 1$ and $x = 2$.
+Give your answer as an exact fraction.
+      ANSWER: numeric 2.3333333333333335 tol={"type":"absolute","value":0.0005} forms=fraction
+      MW1 MW1: $\int_{1}^{2} \left(x^{2}\right) dx$, with both limits
+      M1 M2: $\left[\frac{1}{3}x^{3}\right]_{1}^{2}$, each term simplified
+      W1 W1: $\frac{7}{3}$ ft
+      SOLUTION: Area $= \int_{1}^{2} \left(x^{2}\right) dx = \left[\frac{1}{3}x^{3}\right]_{1}^{2}$. At $x = 2$ the bracket is $\frac{8}{3}$; at $x = 1$ it is $\frac{1}{3}$. Subtracting: $\frac{8}{3} - \left(\frac{1}{3}\right) = \frac{7}{3}$.
+      ERR [fm.int.power-not-raised] {"kind":"numeric","value":1} → The coefficient was divided by $3$ but the index stayed at $2$, so the integral was read as $\frac{1}{3}x^{2}$ rather than $\frac{1}{3}x^{3}$. (0)
+      HINTS: Keep the thirds as fractions instead of turning them into decimals.
+
+### q.fm.u1.area-under-curve.0010 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)find3 · A straight line below the axis, so the negative integral appears at the simplest possible tariff
+  FIG: svg — The line y equals 2x minus 8 with the region between it, the x-axis and the vertical lines x equals 1 and x equals 4 shaded below the axis.
+  (main) [3] Find the area enclosed by the line $y = 2x - 8$, the $x$-axis and the ordinates $x = 1$ and $x = 4$.
+      ANSWER: numeric 9 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{1}^{4} \left(2x - 8\right) dx$, with both limits
+      M1 M2: $\left[x^{2} - 8x\right]_{1}^{4}$, each term simplified
+      W1 W1: $9$ ft
+      SOLUTION: Area $= \int_{1}^{4} \left(2x - 8\right) dx = \left[x^{2} - 8x\right]_{1}^{4}$. At $x = 4$ the bracket is $-16$; at $x = 1$ it is $-7$. Subtracting: $-16 - \left(-7\right) = -9$. The region lies below the $x$-axis, so the area is $9$.
+      ERR [fm.int.negative-area-left] {"kind":"numeric","value":-9} → That is the integral, and it is negative because the region hangs below the axis. The area is its size, $9$. (2)
+      HINTS: The line sits below the axis across the whole interval.
+
+### q.fm.u1.area-under-curve.0011 [verified] exam-style · diff 4 · untiered · FM1 calc · 6 marks · (a)find2|(b)find4 · Intercepts then area, the shape a Unit 1 curve question takes in its closing parts
+  FIG: svg — The curve y equals x squared minus 5x plus 4 with the region between its two x-intercepts shaded below the x-axis.
+  (a) [2] The diagram shows the curve $y = x^{2} - 5x + 4$.
+Find the coordinates of the two points where the curve crosses the $x$-axis.
+      ANSWER: text accepted=["(1, 0) and (4, 0)","(1, 0), (4, 0)","x = 1 gives (1, 0) and x = 4 gives (4, 0)"] keyWords=[{"any":["(1, 0)","1, 0"],"marks":1},{"any":["(4, 0)","4, 0"],"marks":1}]
+      M1 M1: $\left(x - 1\right)\left(x - 4\right) = 0$
+      W1 W1: $\left(1, 0\right)$ and $\left(4, 0\right)$
+      SOLUTION: Setting $y = 0$: $x^{2} - 5x + 4 = 0$ factorises to $(x - 1)(x - 4) = 0$. So $x = 1$ and $x = 4$, and the points are $(1, 0)$ and $(4, 0)$.
+      HINTS: Set $y = 0$ and factorise. || The question asks for coordinates, so give a pair for each point.
+  (b) [4] Find the area of the shaded region, which is enclosed by the curve and the $x$-axis.
+      ANSWER: numeric 4.5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $\int_{1}^{4} \left(x^{2} - 5x + 4\right) dx$, with both limits
+      M1 M2: $\left[\frac{1}{3}x^{3} - \frac{5}{2}x^{2} + 4x\right]_{1}^{4}$, each term simplified
+      M1 M3: substituting both limits, each inside its own bracket
+      W1 W1: $\frac{9}{2}$ ft
+      SOLUTION: Area $= \int_{1}^{4} \left(x^{2} - 5x + 4\right) dx = \left[\frac{1}{3}x^{3} - \frac{5}{2}x^{2} + 4x\right]_{1}^{4}$. At $x = 4$ the bracket is $-\frac{8}{3}$; at $x = 1$ it is $\frac{11}{6}$. Subtracting: $-\frac{8}{3} - \left(\frac{11}{6}\right) = -\frac{9}{2}$. The region lies below the $x$-axis, so the area is $\frac{9}{2}$.
+      ERR [fm.int.negative-area-left] {"kind":"numeric","value":-4.5} → The integral is right and the answer line is not. A negative value records a region below the $x$-axis; its area is $\frac{9}{2}$. (3)
+      HINTS: The limits are the two intercepts you have just found. || The region lies below the axis, so expect a negative integral.
+
+### q.fm.u1.area-under-curve.0012 [verified] exam-style · diff 4 · untiered · FM1 calc · 9 marks · (a)write-down1|(b)find4|(c)find4 · One curve, one region above the axis and one below, as a late-paper three-part question
+  FIG: svg — The curve y equals 8 minus 2x squared, with the region from x equals 0 to x equals 2 shaded above the x-axis and the region from x equals 2 to x equals 3 shaded below it.
+  (a) [1] The diagram shows the curve $y = -2x^{2} + 8$.
+Write down the coordinates of the point where the curve crosses the positive $x$-axis.
+      ANSWER: text accepted=["(2, 0)","2, 0","the curve crosses at (2, 0)"] keyWords=[{"any":["(2, 0)","2, 0"],"marks":1}]
+      W1 W1: $\left(2, 0\right)$
+      SOLUTION: $-2x^{2} + 8 = 0$ gives $x^{2} = 4$, so $x = 2$ on the positive side. The point is $(2, 0)$.
+      HINTS: Solve $-2x^{2} + 8 = 0$ and take the positive root.
+  (b) [4] Find the area of the region enclosed by the curve, the $x$-axis and the $y$-axis.
+Give your answer as an exact fraction.
+      ANSWER: numeric 10.666666666666666 tol={"type":"absolute","value":0.0005} forms=fraction
+      MW1 MW1: $\int_{0}^{2} \left(-2x^{2} + 8\right) dx$, with both limits
+      M1 M2: $\left[-\frac{2}{3}x^{3} + 8x\right]_{0}^{2}$, each term simplified
+      M1 M3: substituting both limits, each inside its own bracket
+      W1 W1: $\frac{32}{3}$ ft
+      SOLUTION: Area $= \int_{0}^{2} \left(-2x^{2} + 8\right) dx = \left[-\frac{2}{3}x^{3} + 8x\right]_{0}^{2}$. At $x = 2$ the bracket is $\frac{32}{3}$; at $x = 0$ it is $0$. Subtracting: $\frac{32}{3} - \left(0\right) = \frac{32}{3}$.
+      ERR [fm.int.coefficient-not-divided] {"kind":"numeric","value":0} → Each index went up correctly but the coefficient was never divided by the new index, so the integral was read as $-2x^{3} + 8x$ instead of $-\frac{2}{3}x^{3} + 8x$. (1)
+      HINTS: The $y$-axis is the ordinate $x = 0$. || The other limit is the intercept from part (a).
+  (c) [4] Find the area of the region enclosed by the curve, the $x$-axis and the ordinate $x = 3$.
+Give your answer as an exact fraction.
+      ANSWER: numeric 4.666666666666667 tol={"type":"absolute","value":0.0005} forms=fraction
+      MW1 MW1: $\int_{2}^{3} \left(-2x^{2} + 8\right) dx$, with both limits
+      M1 M2: $\left[-\frac{2}{3}x^{3} + 8x\right]_{2}^{3}$, each term simplified
+      M1 M3: substituting both limits, each inside its own bracket
+      W1 W1: $\frac{14}{3}$ ft
+      SOLUTION: Area $= \int_{2}^{3} \left(-2x^{2} + 8\right) dx = \left[-\frac{2}{3}x^{3} + 8x\right]_{2}^{3}$. At $x = 3$ the bracket is $6$; at $x = 2$ it is $\frac{32}{3}$. Subtracting: $6 - \left(\frac{32}{3}\right) = -\frac{14}{3}$. The region lies below the $x$-axis, so the area is $\frac{14}{3}$.
+      ERR [fm.int.negative-area-left] {"kind":"numeric","value":-4.666666666666667} → That is the integral, and it is negative because this second region lies under the axis. Its area is $\frac{14}{3}$. (3)
+      HINTS: This region lies below the axis. || The limits are the intercept and the ordinate the question names.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.area-under-curve.01 [draft] fm.int.negative-area-left · earned MW1,M2,M3 · ccea-cer:further-maths:2025-summer:FM1:Q11
+STEM: Niamh was asked for the area enclosed by the curve $y = 3x^{2} - 12$, the $x$-axis and the ordinates $x = 0$ and $x = 2$. Her working:
+    1. Area = integral from 0 to 2 of (3x^{2} - 12) dx
+    2. = [x^{3} - 12x] from 0 to 2
+    3. at x = 2: -16
+    4. at x = 0: 0
+    5. -16 - (0) = -16
+  ✘ 6. Area = -16
+  WRONG: Lines 1 to 5 are all correct: the integral is set up with the right limits, the integration is right, and the subtraction is the right way round.
+Line 6 copies the integral onto the answer line. The integral came out negative because the whole region lies below the $x$-axis, and an area cannot be negative.
+The area is the size of that value, $16$.
+  FIX: The region lies below the x-axis, so the integral is negative / Area = 16
+  FEEDBACK: Everything mathematical here is right, and CCEA gives all of the method marks. Only the last line costs her, and it is the line the examiners named: a negative value left on the answer line. Add one sentence before the answer, saying the region lies below the axis, and then write the size.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.area-under-curve.01 [draft] (formula) Write the integral for the area between a curve, the $x$-axis and the ordinates $x = a$ and $x = b$.  →  Area $= \int_{a}^{b} y \, dx$, with the curve's own equation in place of $y$, $a$ at the bottom and $b$ at the top.
+- rp.fm.u1.area-under-curve.02 [draft] (procedure) Give the four steps of an area question in order.  →  Write the integral with both limits; integrate and simplify each term; substitute the top limit and then the bottom one, each in its own bracket; subtract top minus bottom and report the size.
+- rp.fm.u1.area-under-curve.03 [draft] (qa) What does a negative definite integral tell you about a region?  →  That the region lies below the $x$-axis. The area is the size of the value, so drop the minus sign and say why.
+- rp.fm.u1.area-under-curve.04 [draft] (trap) A question asks for the area enclosed by a curve and the $x$-axis and prints no ordinates. Where do the limits come from?  →  From the curve itself: set $y = 0$ and solve, and the two $x$-intercepts are the limits.
+- rp.fm.u1.area-under-curve.05 [draft] (procedure) What do you do when the curve crosses the $x$-axis between the two ordinates?  →  Split the integral at the root, work out each piece separately, take the size of each, then add them. One integral straight across would let the two pieces cancel.
+- rp.fm.u1.area-under-curve.06 [draft] (trap) Which line of an area question earns the first mark, even when the rest goes wrong?  →  The integral written out with both limits and the curve's equation inside it.
+- rp.fm.u1.area-under-curve.07 [draft] (trap) Why is the constant of integration never needed in an area question?  →  Because the integral is definite: the constant appears in both substitutions and cancels in the subtraction.
+
+## INSIGHT
+RULE: Use the intercepts (or given ordinates) as limits, integrate, and give the area as a positive magnitude - a negative result means the region is below the axis.
+- ccea-cer:further-maths:2022-summer:FM1:Q10: asked Area between a curve and the x-axis where the region is below the axis. | went wrong: Well answered even by weaker candidates: correct limits and the negative area handled. | rule: A region below the axis gives a negative integral - report the area as positive.
+- ccea-cer:further-maths:2025-summer:FM1:Q11: asked Area under a quadratic between the x-intercepts. | went wrong: The wrong limits, forgetting to integrate, or leaving a negative final value lost the last mark; arithmetic errors were common. | rule: Limits are the intercepts you found; the area is the magnitude.

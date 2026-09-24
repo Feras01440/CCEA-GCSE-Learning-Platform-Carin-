@@ -1,0 +1,231 @@
+[
+  {
+    "type": "hero",
+    "lede": "Two square numbers with a minus between them factorise on sight: $a^2 - b^2$ is always $(a + b)(a - b)$. It is the one factorisation with no searching in it, and it is also the trick that turns $83^2 - 17^2$ into $100 \\times 66$ in your head.",
+    "can": [
+      "Spot a difference of two squares: two terms, both squares, a minus between.",
+      "Factorise with the number first, keeping the order the question gives.",
+      "Take out a common factor, then look for the pattern again."
+    ],
+    "minutes": 10
+  },
+  {
+    "type": "h",
+    "text": "Difference of two squares"
+  },
+  {
+    "type": "p",
+    "md": "This is the one factorisation that does not need any searching. Two terms, both squares, a minus between them — and the answer is written down in a single line. Its real value comes later: it is the step that unlocks the hardest algebraic-fraction questions in M4, and it turns $83^2 - 17^2$ into something you can do in your head."
+  },
+  {
+    "type": "figure",
+    "alt": "On the left, a square of side a with a smaller square of side b cut out of its bottom right corner, labelled a squared minus b squared. On the right, the same two pieces slid together to form a rectangle of width a + b and height a minus b, labelled (a + b)(a - b).",
+    "svg": "<svg viewBox=\"0 0 760 316\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"dots-area-proof\"><title id=\"dots-area-proof\">A square with a corner removed rearranges into a rectangle of sides a + b and a − b</title>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\">\n  <path d=\"M40 46 L260 46 L260 156 L180 156 L180 266 L40 266 Z\"/>\n</g>\n<g fill=\"currentColor\" fill-opacity=\"0.09\" stroke=\"none\">\n  <path d=\"M40 46 L260 46 L260 156 L180 156 L180 266 L40 266 Z\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-dasharray=\"5 4\">\n  <path d=\"M180 46 L180 156\"/><path d=\"M180 156 L260 156\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\" text-anchor=\"middle\">\n  <text x=\"150\" y=\"32\">a</text><text x=\"222\" y=\"140\">b</text>\n  <text x=\"110\" y=\"300\">a² - b²: a square with a b by b corner removed</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\" text-anchor=\"end\"><text x=\"30\" y=\"160\">a</text></g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"26\" text-anchor=\"middle\"><text x=\"320\" y=\"165\">=</text></g>\n<g fill=\"currentColor\" fill-opacity=\"0.09\" stroke=\"currentColor\" stroke-width=\"1.7\">\n  <rect x=\"380\" y=\"90\" width=\"300\" height=\"130\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-dasharray=\"5 4\">\n  <path d=\"M600 90 L600 220\"/>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\" text-anchor=\"middle\">\n  <text x=\"530\" y=\"76\">a + b</text>\n  <text x=\"530\" y=\"250\">the two pieces slid together</text>\n  <text x=\"530\" y=\"300\">(a + b)(a - b)</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"15\" text-anchor=\"start\"><text x=\"692\" y=\"160\">a - b</text></g></svg>",
+    "caption": "A square with a corner removed rearranges into a rectangle of sides a + b and a − b"
+  },
+  {
+    "type": "h",
+    "text": "Why the identity is true"
+  },
+  {
+    "type": "p",
+    "md": "Take a square of side $a$ and cut a square of side $b$ out of one corner. What is left has area $a^2 - b^2$. Now cut the remaining L-shape into two rectangles and slide them together:"
+  },
+  {
+    "type": "gate",
+    "id": "g0a",
+    "kind": "choice",
+    "prompt": "A square of side $a$ has a square of side $b$ cut from one corner. What area is left?",
+    "options": [
+      "$a^2 - b^2$",
+      "$(a - b)^2$",
+      "$a^2 + b^2$"
+    ],
+    "answer": "$a^2 - b^2$",
+    "explain": "The whole square is $a^2$ and the piece removed is $b^2$, so $a^2 - b^2$ is left. The next step slides that same area into one rectangle."
+  },
+  {
+    "type": "p",
+    "md": "The rectangle is $(a + b)$ long and $(a - b)$ high, so $a^2 - b^2 = (a + b)(a - b)$.\nThe algebra says the same thing: $(a + b)(a - b) = a^2 - ab + ab - b^2$, and the two middle products are equal and opposite, so they cancel. **That is why there is no middle term** — and it is also the check. If you expand your brackets and a middle term survives, the signs are wrong."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "blank",
+    "prompt": "Factorise $x^2 - 49$.",
+    "answer": "(x + 7)(x − 7)",
+    "explain": "$49 = 7^2$, so $a = x$ and $b = 7$."
+  },
+  {
+    "type": "h",
+    "text": "Order matters"
+  },
+  {
+    "type": "p",
+    "md": "In $36 - p^2$ the number comes first, so the **number** leads both brackets: $(6 + p)(6 - p)$.\nTurning it round to $(p + 6)(p - 6)$ gives $p^2 - 36$ — the negative of what was asked. The two differ by a factor of $-1$, and a marker will not accept one for the other."
+  },
+  {
+    "type": "figure",
+    "alt": "Two lines contrasted. 36 minus p squared factorises as (6 + p)(6 - p), keeping the first term first. p squared minus 36 factorises as (p + 6)(p - 6). A note says the two differ by a factor of minus one.",
+    "svg": "<svg viewBox=\"0 0 740 240\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"dots-term-order\"><title id=\"dots-term-order\">36 − p² and p² − 36 factorise differently: whatever starts the expression starts both brackets</title>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-serif, Georgia, serif\" font-size=\"23\" text-anchor=\"start\">\n  <text x=\"30\" y=\"58\">36 - p²</text>\n  <text x=\"250\" y=\"58\">= (6 + p)(6 - p)</text>\n  <text x=\"30\" y=\"150\">p² - 36</text>\n  <text x=\"250\" y=\"150\">= (p + 6)(p - 6)</text>\n</g>\n<g fill=\"currentColor\" stroke=\"none\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"16\" text-anchor=\"start\">\n  <text x=\"500\" y=\"58\">first term stays first</text>\n  <text x=\"500\" y=\"150\">a different expression</text>\n  <text x=\"30\" y=\"222\">the two differ by a factor of -1: (p + 6)(p - 6) = -(36 - p²)</text>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\">\n  <path d=\"M20 84 L720 84\"/>\n  <path d=\"M20 180 L720 180\"/>\n</g></svg>",
+    "caption": "36 − p² and p² − 36 factorise differently: whatever starts the expression starts both brackets"
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2025 M4 Q20",
+    "md": "The identity itself was known. It went wrong whenever the letter was not the first term: candidates swapped the terms round and factorised as though the square of the letter came first. Full-mark answers kept the terms in the order given and then cancelled whole brackets.",
+    "source": "ccea-cer:maths:2025-summer:M4:Q20"
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Factorise $100 - w^2$.",
+    "options": [
+      "$(10 + w)(10 - w)$",
+      "$(w + 10)(w - 10)$",
+      "$(10 - w)^2$"
+    ],
+    "answer": "$(10 + w)(10 - w)$",
+    "explain": "The second gives $w^2 - 100$; the third has a middle term."
+  },
+  {
+    "type": "h",
+    "text": "Square-root the whole term"
+  },
+  {
+    "type": "p",
+    "md": "A term is a perfect square when its **coefficient** is a square number and its **index** is even. So:\n$4x^2 = (2x)^2$, because $2x \\times 2x = 4x^2$.\n$25a^2 = (5a)^2$ and $4b^2 = (2b)^2$, so $25a^2 - 4b^2 = (5a + 2b)(5a - 2b)$.\n$\\dfrac{x^2}{4} = \\left(\\dfrac{x}{2}\\right)^2$, so $\\dfrac{x^2}{4} - 9 = \\left(\\dfrac{x}{2} + 3\\right)\\left(\\dfrac{x}{2} - 3\\right)$.\nThe commonest loss is rooting the letter and forgetting the number, which gives brackets that expand to the wrong thing."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "blank",
+    "prompt": "Factorise $9m^2 - 64$.",
+    "answer": "(3m + 8)(3m − 8)",
+    "explain": "$9m^2 = (3m)^2$ and $64 = 8^2$."
+  },
+  {
+    "type": "h",
+    "text": "Common factor first, then look again"
+  },
+  {
+    "type": "p",
+    "md": "$5x^2 - 45$ is **not** a difference of two squares as it stands, because $5x^2$ is not a perfect square. Take the common factor out and it becomes one:\n$5x^2 - 45 = 5(x^2 - 9) = 5(x + 3)(x - 3)$.\nThat is what **'factorise fully'** is asking for. Two half-answers lose marks: stopping at $5(x^2 - 9)$, and hiding the factor inside as $(2n + 6)(2n - 6)$ — which expands correctly but leaves a 2 in each bracket.\nThe habit worth building: after every common factor, ask the question again. Is what is left still a difference of two squares?"
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Factorise fully $8x^2 - 2$.",
+    "options": [
+      "$2(2x + 1)(2x - 1)$",
+      "$2(4x^2 - 1)$",
+      "$(8x + 2)(x - 1)$"
+    ],
+    "answer": "$2(2x + 1)(2x - 1)$",
+    "explain": "Take out 2, then $4x^2 - 1 = (2x)^2 - 1^2$."
+  },
+  {
+    "type": "h",
+    "text": "When it does not apply"
+  },
+  {
+    "type": "p",
+    "md": "$x^2 + 25$ is a **sum** of two squares. There is no factorisation with real numbers, and rearranging will not produce one. Two terms and a plus sign means stop.\n$x^2 - 20$ has only one perfect square: 20 is not a square number, so this needs surds and is not part of this statement.\nAnd 'factorise' never means 'solve'. $(x + 5)(x - 5)$ is a complete answer; adding $= 0$, or offering $x = 5$ and $x = -5$, answers a different question."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "Which of these does **not** factorise?",
+    "options": [
+      "$x^2 + 36$",
+      "$x^2 - 36$",
+      "$36 - x^2$"
+    ],
+    "answer": "$x^2 + 36$",
+    "explain": "A sum of two squares has no real factorisation. The other two are $(x + 6)(x - 6)$ and $(6 + x)(6 - x)$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why a sum will not factorise",
+    "md": "Two brackets avoid a middle term only when their middle products cancel, and that needs one plus bracket and one minus bracket. A plus between the two squares leaves nothing to cancel, so there are no brackets to find."
+  },
+  {
+    "type": "h",
+    "text": "The identity as arithmetic"
+  },
+  {
+    "type": "p",
+    "md": "M3 gives you a calculator, but M7 Paper 1 does not, and there the identity is a shortcut worth knowing:\n$83^2 - 17^2 = (83 + 17)(83 - 17) = 100 \\times 66 = 6600$.\n$101^2 - 99^2 = 200 \\times 2 = 400$.\nTwo squares you would not want to work out become one easy product. Watch the trap: $(83 - 17)^2$ is a different number entirely."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "Without a calculator, $45^2 - 35^2 = $",
+    "answer": "800",
+    "explain": "$(45 + 35)(45 - 35) = 80 \\times 10 = 800$."
+  },
+  {
+    "type": "h",
+    "text": "Where it is really going"
+  },
+  {
+    "type": "p",
+    "md": "The reason this identity is worth more than its two marks is what it does to fractions:\n$\\dfrac{x^2 - 16}{x + 4} = \\dfrac{(x + 4)(x - 4)}{x + 4} = x - 4$.\nNothing cancels until the top is factorised, and only **whole brackets** cancel — crossing out the $x^2$ against the $x$ is worth nothing. That is the M4 question this topic is preparing you for."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "blank",
+    "prompt": "Simplify $\\dfrac{x^2 - 25}{x - 5}$.",
+    "answer": "x + 5",
+    "explain": "$\\dfrac{(x + 5)(x - 5)}{x - 5} = x + 5$."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Spot two squares with a minus between them.\nKeep the order given, so the first term leads both brackets.\nTake a common factor out first, then look again.\nUse the identity as arithmetic when there is no calculator."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "In this unit it is one or two marks, usually one part of a two-part factorise question. The first mark, where there is one, is for showing the pattern: writing $64 = 8^2$ and $9k^2 = (3k)^2$. The last is the pair of brackets in the order given, fully factorised. Stuck: expand your answer back — the middle terms must cancel and the two ends must match the question, signs included."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this spec",
+    "md": "Sums of two squares do not factorise. Differences where a term is not a perfect square ($x^2 - 20$) would need surds, and differences of cubes ($x^3 - 8$) are not on this specification. Solving is M3-NA-11."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.difference-of-two-squares.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.difference-of-two-squares.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.difference-of-two-squares.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.difference-of-two-squares.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.difference-of-two-squares.10"
+  }
+]

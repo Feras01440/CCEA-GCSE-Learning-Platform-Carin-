@@ -1,0 +1,244 @@
+[
+  {
+    "type": "hero",
+    "lede": "A grouped table says how many eggs weigh between 50 g and 55 g. It never says how many weigh under 55 g, which is usually what you want to know. Add the classes as you go down and each total answers that question; plot the totals and the curve answers it for every mass on the axis.",
+    "can": [
+      "Turn a frequency column into a column of running totals.",
+      "Plot each running total at the upper boundary of its class.",
+      "Read a median, the quartiles and a count off the curve."
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "Cumulative frequency: how many so far"
+  },
+  {
+    "type": "p",
+    "md": "A **cumulative frequency** is a running total. Add the classes as you go down the table and each entry answers one question: how many values are **this much or less**. Plot those totals against the top of each class, join them with one smooth curve, and the graph answers that question for every value on the axis, not only at the class boundaries."
+  },
+  {
+    "type": "figure",
+    "alt": "The seven plotted points for the 80 eggs at (40, 0), (45, 5), (50, 25), (55, 45), (60, 65), (65, 76) and (70, 80), with no curve drawn yet.",
+    "svg": "<svg viewBox='0 0 580 392' xmlns='http://www.w3.org/2000/svg' font-family='inherit' fill='currentColor'><path d='M90.1 22V318M106.3 22V318M122.4 22V318M138.5 22V318M170.8 22V318M186.9 22V318M203.1 22V318M219.2 22V318M251.5 22V318M267.6 22V318M283.7 22V318M299.9 22V318M332.1 22V318M348.3 22V318M364.4 22V318M380.5 22V318M412.8 22V318M428.9 22V318M445.1 22V318M461.2 22V318M493.5 22V318M509.6 22V318M525.7 22V318M541.9 22V318M74 310.6H558M74 303.2H558M74 295.8H558M74 288.4H558M74 273.6H558M74 266.2H558M74 258.8H558M74 251.4H558M74 236.6H558M74 229.2H558M74 221.8H558M74 214.4H558M74 199.6H558M74 192.2H558M74 184.8H558M74 177.4H558M74 162.6H558M74 155.2H558M74 147.8H558M74 140.4H558M74 125.6H558M74 118.2H558M74 110.8H558M74 103.4H558M74 88.6H558M74 81.2H558M74 73.8H558M74 66.4H558M74 51.6H558M74 44.2H558M74 36.8H558M74 29.4H558' fill='none' stroke='currentColor' stroke-opacity='0.13' stroke-width='0.6'/><path d='M74 22V318M154.7 22V318M235.3 22V318M316 22V318M396.7 22V318M477.3 22V318M558 22V318M74 318H558M74 281H558M74 244H558M74 207H558M74 170H558M74 133H558M74 96H558M74 59H558M74 22H558' fill='none' stroke='currentColor' stroke-opacity='0.34' stroke-width='1'/><g fill='currentColor'><circle cx='74' cy='318' r='3'/><circle cx='154.7' cy='299.5' r='3'/><circle cx='235.3' cy='225.5' r='3'/><circle cx='316' cy='151.5' r='3'/><circle cx='396.7' cy='77.5' r='3'/><circle cx='477.3' cy='36.8' r='3'/><circle cx='558' cy='22' r='3'/></g><path d='M74 22V318H558' fill='none' stroke='currentColor' stroke-width='1.6'/><g fill='currentColor'><text x='74' y='336' font-size='12' text-anchor='middle'>40</text><text x='154.7' y='336' font-size='12' text-anchor='middle'>45</text><text x='235.3' y='336' font-size='12' text-anchor='middle'>50</text><text x='316' y='336' font-size='12' text-anchor='middle'>55</text><text x='396.7' y='336' font-size='12' text-anchor='middle'>60</text><text x='477.3' y='336' font-size='12' text-anchor='middle'>65</text><text x='558' y='336' font-size='12' text-anchor='middle'>70</text><text x='66' y='322' font-size='12' text-anchor='end'>0</text><text x='66' y='285' font-size='12' text-anchor='end'>10</text><text x='66' y='248' font-size='12' text-anchor='end'>20</text><text x='66' y='211' font-size='12' text-anchor='end'>30</text><text x='66' y='174' font-size='12' text-anchor='end'>40</text><text x='66' y='137' font-size='12' text-anchor='end'>50</text><text x='66' y='100' font-size='12' text-anchor='end'>60</text><text x='66' y='63' font-size='12' text-anchor='end'>70</text><text x='66' y='26' font-size='12' text-anchor='end'>80</text></g><text x='316' y='362' font-size='13' text-anchor='middle'>Mass, m (grams)</text><text x='18' y='170' font-size='13' text-anchor='middle' transform='rotate(-90 18 170)'>Cumulative frequency</text></svg>",
+    "caption": "The points before the curve. Each one sits at the top of its class, and the last one is level with the total number of eggs."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "number",
+    "prompt": "The frequencies of the first three classes are 5, 20 and 20. What is the third cumulative frequency?",
+    "answer": "45",
+    "explain": "$5 + 20 + 20 = 45$. Each entry is the total so far, not the class on its own."
+  },
+  {
+    "type": "h",
+    "text": "Where each point goes"
+  },
+  {
+    "type": "p",
+    "md": "Here is the egg table with the running totals filled in. The question that decides the whole graph is: which mass does each total belong above?\n\nTake the total 45 for the class $50 < m \\le 55$. It counts every egg of mass 55 g or less. At 50 g that class has not been counted at all; at 52.5 g only part of it has. The total is only true at the **top** of the class, so 45 is plotted at $m = 55$.\n\nThat single decision is where the plotting mark lives, and in Summer 2025 upper bounds, midpoints and lower bounds turned up in roughly equal numbers."
+  },
+  {
+    "type": "gate",
+    "id": "g1b",
+    "kind": "number",
+    "prompt": "The running total after the fifth class is 76 and the last class has frequency 4. What is the final cumulative frequency?",
+    "answer": "80",
+    "explain": "$76 + 4 = 80$, and that must equal the number of eggs, which is the check that the whole column is right."
+  },
+  {
+    "type": "figure",
+    "alt": "A table of the 80 egg masses: classes from 40 to 70 grams in steps of 5, frequencies 5, 20, 20, 20, 11, 4 and cumulative frequencies 5, 25, 45, 65, 76, 80.",
+    "svg": "<svg viewBox='0 0 580 226' xmlns='http://www.w3.org/2000/svg' font-family='inherit' fill='currentColor'><rect x='12' y='8' width='556' height='30' fill='currentColor' fill-opacity='0.07'/><path d='M12 8H568M12 38H568M12 68H568M12 98H568M12 128H568M12 158H568M12 188H568M12 218H568M12 8V218M202 8V218M385 8V218M568 8V218' fill='none' stroke='currentColor' stroke-opacity='0.35' stroke-width='1'/><text x='20' y='28' font-size='12.5' fill='currentColor' font-weight='600'>Mass, m (g)</text><text x='210' y='28' font-size='12.5' fill='currentColor' font-weight='600'>Frequency</text><text x='393' y='28' font-size='12.5' fill='currentColor' font-weight='600'>Cumulative frequency</text><text x='20' y='58' font-size='12.5' fill='currentColor' font-weight='600'>40 &lt; m ≤ 45</text><text x='210' y='58' font-size='12.5' fill='currentColor'>5</text><text x='393' y='58' font-size='12.5' fill='currentColor'>5</text><text x='20' y='88' font-size='12.5' fill='currentColor' font-weight='600'>45 &lt; m ≤ 50</text><text x='210' y='88' font-size='12.5' fill='currentColor'>20</text><text x='393' y='88' font-size='12.5' fill='currentColor'>25</text><text x='20' y='118' font-size='12.5' fill='currentColor' font-weight='600'>50 &lt; m ≤ 55</text><text x='210' y='118' font-size='12.5' fill='currentColor'>20</text><text x='393' y='118' font-size='12.5' fill='currentColor'>45</text><text x='20' y='148' font-size='12.5' fill='currentColor' font-weight='600'>55 &lt; m ≤ 60</text><text x='210' y='148' font-size='12.5' fill='currentColor'>20</text><text x='393' y='148' font-size='12.5' fill='currentColor'>65</text><text x='20' y='178' font-size='12.5' fill='currentColor' font-weight='600'>60 &lt; m ≤ 65</text><text x='210' y='178' font-size='12.5' fill='currentColor'>11</text><text x='393' y='178' font-size='12.5' fill='currentColor'>76</text><text x='20' y='208' font-size='12.5' fill='currentColor' font-weight='600'>65 &lt; m ≤ 70</text><text x='210' y='208' font-size='12.5' fill='currentColor'>4</text><text x='393' y='208' font-size='12.5' fill='currentColor'>80</text></svg>",
+    "caption": "The last running total, 80, must equal the number of eggs. That is a free check on the whole column."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "At which value of $m$ is the running total for the class $60 < m \\le 65$ plotted?",
+    "answer": "65",
+    "explain": "The upper class boundary. At 60 g the class has not started; the total is only complete at 65 g."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "Not on the formula sheet",
+    "md": "Plot each running total at the **upper class boundary**.\n\nMedian: read across from $\\tfrac{n}{2}$. Lower quartile: $\\tfrac{n}{4}$. Upper quartile: $\\tfrac{3n}{4}$. $\\text{IQR} = \\text{UQ} - \\text{LQ}$.\n\nThe page-2 Higher formula sheet carries no statistics formulae, so all of this is recall."
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "blank",
+    "prompt": "Fill the gap: each cumulative frequency is plotted at the ______ class boundary.",
+    "answer": "upper",
+    "explain": "Upper. The running total is only complete at the top of the class."
+  },
+  {
+    "type": "h",
+    "text": "Reading the median and the quartiles"
+  },
+  {
+    "type": "p",
+    "md": "The curve is read **across first, then down**. Start on the cumulative frequency axis, because that axis counts values.\n\nWith $n = 80$ eggs: the median is the $40$th, so go across from $40$. The lower quartile is the $20$th, the upper quartile the $60$th.\n\nThe common wreck is to halve the horizontal axis instead. For these eggs that would give 55 g, and the real median is about $53.75$ g. Halving the axis halves the masses; the median halves the eggs."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "What joins the points on a cumulative frequency diagram?",
+    "options": [
+      "One smooth curve through the points in order",
+      "Bars from the axis up to each point",
+      "A line of best fit that need not touch the points"
+    ],
+    "answer": "One smooth curve through the points in order",
+    "explain": "A curve, and it passes through every plotted point. In November 2024 a bar chart scored nothing and also removed the follow-through marks from the part that read the graph."
+  },
+  {
+    "type": "figure",
+    "alt": "The cumulative frequency curve for the 80 eggs with dashed read-off lines: across from 20 down to about 48.75 grams, across from 40 down to about 53.75 grams, and across from 60 down to about 58.75 grams.",
+    "svg": "<svg viewBox='0 0 580 392' xmlns='http://www.w3.org/2000/svg' font-family='inherit' fill='currentColor'><path d='M90.1 22V318M106.3 22V318M122.4 22V318M138.5 22V318M170.8 22V318M186.9 22V318M203.1 22V318M219.2 22V318M251.5 22V318M267.6 22V318M283.7 22V318M299.9 22V318M332.1 22V318M348.3 22V318M364.4 22V318M380.5 22V318M412.8 22V318M428.9 22V318M445.1 22V318M461.2 22V318M493.5 22V318M509.6 22V318M525.7 22V318M541.9 22V318M74 310.6H558M74 303.2H558M74 295.8H558M74 288.4H558M74 273.6H558M74 266.2H558M74 258.8H558M74 251.4H558M74 236.6H558M74 229.2H558M74 221.8H558M74 214.4H558M74 199.6H558M74 192.2H558M74 184.8H558M74 177.4H558M74 162.6H558M74 155.2H558M74 147.8H558M74 140.4H558M74 125.6H558M74 118.2H558M74 110.8H558M74 103.4H558M74 88.6H558M74 81.2H558M74 73.8H558M74 66.4H558M74 51.6H558M74 44.2H558M74 36.8H558M74 29.4H558' fill='none' stroke='currentColor' stroke-opacity='0.13' stroke-width='0.6'/><path d='M74 22V318M154.7 22V318M235.3 22V318M316 22V318M396.7 22V318M477.3 22V318M558 22V318M74 318H558M74 281H558M74 244H558M74 207H558M74 170H558M74 133H558M74 96H558M74 59H558M74 22H558' fill='none' stroke='currentColor' stroke-opacity='0.34' stroke-width='1'/><path d='M74 318 C100.9 311.8 127.8 309.4 154.7 299.5 C181.6 289.6 208.4 250.2 235.3 225.5 C262.2 200.8 289.1 176.2 316 151.5 C342.9 126.8 369.8 95 396.7 77.5 C423.6 60 450.4 44 477.3 36.8 C504.2 29.6 531.1 26.9 558 22' fill='none' stroke='currentColor' stroke-width='2'/><g fill='currentColor'><circle cx='74' cy='318' r='3'/><circle cx='154.7' cy='299.5' r='3'/><circle cx='235.3' cy='225.5' r='3'/><circle cx='316' cy='151.5' r='3'/><circle cx='396.7' cy='77.5' r='3'/><circle cx='477.3' cy='36.8' r='3'/><circle cx='558' cy='22' r='3'/></g><path d='M74 244H215.2V318' fill='none' stroke='currentColor' stroke-width='1.4' stroke-dasharray='6 4'/><text x='220.2' y='238' font-size='12' fill='currentColor'>LQ</text><path d='M74 170H295.8V318' fill='none' stroke='currentColor' stroke-width='1.4' stroke-dasharray='6 4'/><text x='300.8' y='164' font-size='12' fill='currentColor'>median</text><path d='M74 96H376.5V318' fill='none' stroke='currentColor' stroke-width='1.4' stroke-dasharray='6 4'/><text x='381.5' y='90' font-size='12' fill='currentColor'>UQ</text><path d='M74 22V318H558' fill='none' stroke='currentColor' stroke-width='1.6'/><g fill='currentColor'><text x='74' y='336' font-size='12' text-anchor='middle'>40</text><text x='154.7' y='336' font-size='12' text-anchor='middle'>45</text><text x='235.3' y='336' font-size='12' text-anchor='middle'>50</text><text x='316' y='336' font-size='12' text-anchor='middle'>55</text><text x='396.7' y='336' font-size='12' text-anchor='middle'>60</text><text x='477.3' y='336' font-size='12' text-anchor='middle'>65</text><text x='558' y='336' font-size='12' text-anchor='middle'>70</text><text x='66' y='322' font-size='12' text-anchor='end'>0</text><text x='66' y='285' font-size='12' text-anchor='end'>10</text><text x='66' y='248' font-size='12' text-anchor='end'>20</text><text x='66' y='211' font-size='12' text-anchor='end'>30</text><text x='66' y='174' font-size='12' text-anchor='end'>40</text><text x='66' y='137' font-size='12' text-anchor='end'>50</text><text x='66' y='100' font-size='12' text-anchor='end'>60</text><text x='66' y='63' font-size='12' text-anchor='end'>70</text><text x='66' y='26' font-size='12' text-anchor='end'>80</text></g><text x='316' y='362' font-size='13' text-anchor='middle'>Mass, m (grams)</text><text x='18' y='170' font-size='13' text-anchor='middle' transform='rotate(-90 18 170)'>Cumulative frequency</text></svg>",
+    "caption": "Three readings from one curve: LQ $\\approx 48.75$ g, median $\\approx 53.75$ g, UQ $\\approx 58.75$ g, so the interquartile range is about 10 g."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "A cumulative frequency curve is drawn for 60 people. At what height do you read across for the upper quartile?",
+    "answer": "45",
+    "explain": "$\\tfrac{3 \\times 60}{4} = 45$. Three quarters of the people lie below the upper quartile."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "From the picture above, what is the interquartile range of the egg masses, in grams?",
+    "answer": "10",
+    "explain": "UQ $-$ LQ $= 58.75 - 48.75 = 10$ g."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why a reading off a grid line is still a good answer",
+    "md": "The curve is an estimate built from grouped data, so the answer is an estimate too. Summer 2024 M4 Q10 says it outright: when a reading falls between two grid lines, a value in between is exactly what is wanted. Refusing to commit is what loses the mark, not the odd tenth."
+  },
+  {
+    "type": "video",
+    "videoId": "FCnqp-Z9FC4",
+    "title": "Drawing Cumulative Frequency Graphs",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 153,
+    "why": "The table-to-graph routine at a steady pace. Watch where each point is placed: the running total goes above the top of its class every time."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "In the video, each cumulative frequency is plotted against which value?",
+    "answer": "The upper boundary of its class",
+    "explain": "Yes. That is the one decision the plotting mark tests.",
+    "options": [
+      "The upper boundary of its class",
+      "The midpoint of its class",
+      "The class width"
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Counting above, below and between"
+  },
+  {
+    "type": "p",
+    "md": "The curve always counts **downwards**: the height above a value is the number of items that are that value or less.\n\n- **Below** a value: read straight off the curve.\n- **Above** a value: read the curve, then subtract from the total.\n- **Between** two values: read the curve twice and subtract the smaller reading from the larger.\n\nFor the eggs, the reading at 60 g is 65, so the number heavier than 60 g is $80 - 65 = 15$. November 2024 M3 Q27 reports that only the strongest candidates read both values and subtracted."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "A curve for 50 journeys reads 12 at 24 minutes and 43 at 38 minutes. How many journeys took between 24 and 38 minutes?",
+    "answer": "31",
+    "explain": "$43 - 12 = 31$. Between two values is the difference of the two readings, never one of them on its own."
+  },
+  {
+    "type": "h",
+    "text": "Watch the axis label"
+  },
+  {
+    "type": "p",
+    "md": "An axis marked **Price (£1000s)** or **Value, $V$ (£1000s)** counts thousands. A reading of 9 on such an axis is £9000, not £9.\n\nBoth Summer 2025 reports name this: candidates found the quartiles correctly, subtracted correctly, and then wrote an answer a thousand times too small. Read the axis label out loud before the answer line is filled in."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "On an axis marked Price (£1000s) the quartiles read 155 and 245. What is the interquartile range, in pounds?",
+    "answer": "90000",
+    "explain": "$245 - 155 = 90$ on the axis, and each unit is £1000, so the interquartile range is £90 000."
+  },
+  {
+    "type": "h",
+    "text": "Where marks are lost"
+  },
+  {
+    "type": "gate",
+    "id": "g9a",
+    "kind": "number",
+    "prompt": "A class is $20 < t \\le 25$ and its running total is 33. At which value of $t$ is the point plotted?",
+    "answer": "25",
+    "explain": "The upper class boundary. The running total of 33 is only complete once every value up to 25 has been counted."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Bars cost the next part as well",
+    "md": "November 2024 M4 Q13(b) reports that a bar chart scored nothing in that part and left nothing to carry into part (c). One wrong diagram removed the marks from a part that only needed a reading.",
+    "source": "ccea-cer:maths:2024-november:M4:Q13"
+  },
+  {
+    "type": "gate",
+    "id": "g9b",
+    "kind": "choice",
+    "prompt": "A candidate draws a bar chart in part (b). What happens in part (c), which reads from the graph?",
+    "options": [
+      "Nothing in part (b), and nothing to carry into part (c)",
+      "Part (b) scores nothing but part (c) still follows through",
+      "Both parts are marked normally"
+    ],
+    "answer": "Nothing in part (b), and nothing to carry into part (c)",
+    "explain": "One wrong diagram takes the marks from a part that only needed a reading. That is the November 2024 M4 finding in one line."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Fill in a cumulative frequency column of running totals.\nPlot each total at the upper boundary of its class.\nRead the median and the quartiles across from the frequency axis.\nCount above, below or between by subtracting two readings."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Three parts run together: complete the running totals, draw the curve on the printed grid, then read something off it. The first mark is the totals, the last of which must equal the number of items; the reading marks follow through from your own curve. Stuck: draw the dashed lines across from the frequency axis anyway — a visible reading line shows the method, and the marker credits what is on the page."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.cumulative-frequency-tables-and-curves.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.cumulative-frequency-tables-and-curves.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.cumulative-frequency-tables-and-curves.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.maths.m3.cumulative-frequency-tables-and-curves.09"
+  }
+]

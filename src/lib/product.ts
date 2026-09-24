@@ -1,0 +1,7 @@
+/** The product identity lives here and nowhere else. */
+export const PRODUCT = {
+  name: "Cairn",
+  tagline:
+    "Original CCEA-style practice on the topics where marks are actually lost, scheduled so you do not forget it, with the truth about where you stand in UMS.",
+  accentHue: 270,
+} as const;

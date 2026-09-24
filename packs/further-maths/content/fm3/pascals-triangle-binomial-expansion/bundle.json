@@ -1,0 +1,2781 @@
+{
+  "$schema": "../../../../../pipeline/schema/topic-bundle.schema.json",
+  "topic": {
+    "id": "fm.u3.pascals-triangle-binomial-expansion",
+    "slug": "pascals-triangle-binomial-expansion",
+    "title": "Pascal's triangle and expanding (p + q)ⁿ",
+    "subject": "further-maths",
+    "unit": "FM3",
+    "tier": "untiered",
+    "strand": "Binomial distribution",
+    "statementIds": [
+      "FM3-BIN-01"
+    ],
+    "prerequisites": [
+      "maths.m3.identities-and-expanding-double-brackets",
+      "maths.m7.index-laws-in-algebra-integer-powers"
+    ],
+    "order": 9,
+    "hardness": "L",
+    "difficulty": 1,
+    "examinerFlagged": true,
+    "examinerSources": [
+      "ccea-cer:further-maths:2019-summer:FM3:Q4",
+      "ccea-cer:further-maths:2022-summer:FM3:Q4",
+      "ccea-cer:further-maths:2023-summer:FM3:Q4",
+      "ccea-cer:further-maths:2025-summer:FM3:Q4"
+    ],
+    "examWeightHint": "The binomial question in Unit 3 (Q4 from 2019 to 2025, Q2 in the 2021 paper and Q3 in 2026) opens with this topic: complete Pascal's triangle, printed with its first rows, for 1 mark, then 'Hence write down the expansion of (p + q)ⁿ' for 1 or 2 marks, with n from 3 to 8. The scheme gives MW1 for the row and MW1 for the expansion, the second sometimes split between the coefficients and the powers. The later parts use the expansion for binomial probabilities.",
+    "mustMemorise": [
+      "Rows of Pascal's triangle to n = 8, built by adding the two numbers above",
+      "(p + q)ⁿ terms: coefficient × pⁿ⁻ʳ qʳ, powers summing to n, joined with + signs"
+    ],
+    "onFormulaSheet": [],
+    "notOnThisSpec": [
+      "The ⁿCᵣ notation, factorials and the general term: the specification names Pascal's triangle",
+      "Powers above 8, and fractional or negative powers (the binomial series)",
+      "Expansions with a number or a minus sign inside the bracket are not set in Unit 3, though the method is the same"
+    ],
+    "externalRefs": [
+      {
+        "kind": "youtube",
+        "videoId": "9Y4bhtNSW8w",
+        "channel": "P McAleavey",
+        "credit": "Pascal's Triangle / Binomial / Probability, P McAleavey (embeddable id verified in data/links/media-map.json)"
+      },
+      {
+        "kind": "phet",
+        "sim": "plinko-probability",
+        "url": "https://phet.colorado.edu/sims/html/plinko-probability/latest/plinko-probability_en.html",
+        "licence": "CC BY-NC 4.0",
+        "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)"
+      },
+      {
+        "kind": "ccea-doc",
+        "docType": "cer",
+        "url": "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-further-mathematics-2017/reports",
+        "asOf": "2026-09-22"
+      }
+    ],
+    "keywords": [
+      "Pascal",
+      "binomial expansion",
+      "coefficients",
+      "powers",
+      "(p + q)^n"
+    ]
+  },
+  "note": {
+    "id": "note.fm.u3.pascals-triangle-binomial-expansion",
+    "topic": "fm.u3.pascals-triangle-binomial-expansion",
+    "title": "Pascal's triangle and the expansion of (p + q)ⁿ",
+    "subject": "further-maths",
+    "unit": "FM3",
+    "tier": "untiered",
+    "specRefs": [
+      "FM3-BIN-01"
+    ],
+    "calculator": true,
+    "formulaSheet": {
+      "given": [
+        "Nothing for this topic: Pascal's triangle is not on the Unit 3 formula sheet"
+      ],
+      "mustKnow": [
+        "Each row starts and ends with 1; every other entry is the sum of the two above",
+        "Row n (counting from row 0) gives the coefficients of (p + q)ⁿ; it has n + 1 numbers",
+        "The power of p falls from n to 0 and the power of q rises from 0 to n; they add to n in every term"
+      ]
+    },
+    "notOnThisSpec": [
+      "The ⁿCᵣ notation, factorials and the general term: the specification names Pascal's triangle",
+      "Powers above 8, and fractional or negative powers (the binomial series)",
+      "Expansions with a number or a minus sign inside the bracket are not set in Unit 3, though the method is the same"
+    ],
+    "hardness": "L",
+    "examinerFlagged": true,
+    "externalRefs": [
+      {
+        "kind": "youtube",
+        "videoId": "9Y4bhtNSW8w",
+        "channel": "P McAleavey",
+        "credit": "Pascal's Triangle / Binomial / Probability, P McAleavey (embeddable id verified in data/links/media-map.json)"
+      },
+      {
+        "kind": "phet",
+        "sim": "plinko-probability",
+        "url": "https://phet.colorado.edu/sims/html/plinko-probability/latest/plinko-probability_en.html",
+        "licence": "CC BY-NC 4.0",
+        "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)"
+      },
+      {
+        "kind": "ccea-doc",
+        "docType": "cer",
+        "url": "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-further-mathematics-2017/reports",
+        "asOf": "2026-09-22"
+      }
+    ],
+    "sheet": {
+      "mustBeAbleTo": [
+        "Build Pascal's triangle to row 8 by adding pairs, starting from row 0",
+        "Check a row: n + 1 numbers, symmetric, a total of $2^{n}$",
+        "Write down the expansion of $(p + q)^{n}$ for $n \\le 8$: coefficients from row n, the power of p falling and of q rising, each pair adding to n",
+        "Pick out a single term, such as the term in $p^{3}q^{5}$",
+        "Write the terms as one expression joined by plus signs",
+        "Keep the signs of a negative term and raise the whole of a term such as 2x (beyond what CCEA sets, same method)"
+      ],
+      "howExamined": "The binomial question in Unit 3 (Q4 from 2019 to 2025, Q2 in the 2021 paper and Q3 in 2026) opens with this topic: complete Pascal's triangle, printed with its first rows, for 1 mark, then 'Hence write down the expansion of (p + q)ⁿ' for 1 or 2 marks, with n from 3 to 8. The scheme gives MW1 for the row and MW1 for the expansion, the second sometimes split between the coefficients and the powers. The later parts use the expansion for binomial probabilities.",
+      "traps": [
+        "Summer 2019 FM3 Q4: three quarters expanded correctly, but a few lost a mark by not writing out Pascal's triangle, some expanded to the power 5 instead of 6, and some left out the plus signs or put extra ones between the p and q in a term",
+        "Summer 2022 FM3 Q4: almost everyone completed the triangle and the expansion was very well done; the few errors were in the powers",
+        "Summer 2023 FM3 Q4: a few made errors with the powers and a few left out the coefficients",
+        "Summer 2025 FM3 Q4: almost all completed the triangle and used it in the expansion; the marks lost in this question came in the probability parts that follow"
+      ]
+    },
+    "verification": "ver.note.fm.u3.pascals-triangle-binomial-expansion",
+    "version": 1,
+    "updated": "2026-09-22"
+  },
+  "workedExamples": [
+    {
+      "id": "we.fm.u3.pascals-triangle-binomial-expansion.01",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "stem": "Complete Pascal's triangle as far as row 6. Hence write down the expansion of $(p + q)^{6}$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "Rows 0 to 5 are written out, ending with row 5: 1 5 10 10 5 1",
+          "decision": "Write the triangle out on the page. It is quick, it earns its own mark, and it is where the coefficients come from.",
+          "earns": []
+        },
+        {
+          "n": 2,
+          "working": "Row 6: 1 6 15 20 15 6 1",
+          "decision": "Add each neighbouring pair of row 5 and put 1 at each end. Check: seven numbers, symmetric, total 64.",
+          "whyMenu": {
+            "options": [
+              "Each entry is the sum of the two entries above it",
+              "Each entry is the one above it multiplied by 6",
+              "Row 6 counts up by 6 each time"
+            ],
+            "correct": 0,
+            "explain": "That addition rule is the whole triangle. Multiplying or counting up gives numbers that are not symmetric and do not total 2 to the power 6."
+          },
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 20,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        },
+        {
+          "n": 3,
+          "working": "$(p + q)^{6} = p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3}$\n$+ 15p^{2}q^{4} + 6pq^{5} + q^{6}$",
+          "decision": "Take the coefficients from row 6 in order, with the power of p falling from 6 and the power of q rising to 6, and join the seven terms with plus signs.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3} + 15p^{2}q^{4} + 6pq^{5} + q^{6}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "form": "expanded"
+          }
+        }
+      ],
+      "finalAnswer": "$(p + q)^{6} = p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3} + 15p^{2}q^{4} + 6pq^{5} + q^{6}$",
+      "twin": {
+        "stem": "Use Pascal's triangle to write down the expansion of $(a + b)^{5}$.",
+        "answer": {
+          "kind": "algebraic",
+          "latex": "a^{5} + 5a^{4}b + 10a^{3}b^{2} + 10a^{2}b^{3} + 5ab^{4} + b^{5}",
+          "equivalence": "equivalent",
+          "variables": [
+            "a",
+            "b"
+          ],
+          "form": "expanded"
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u3.pascals-triangle-binomial-expansion.01",
+      "version": 1
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "dx.fm.u3.pascals-triangle-binomial-expansion.pre",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "when": "pre",
+      "items": [
+        {
+          "id": "p1",
+          "stem": "Before the lesson, a check on earlier work. Which is the expansion of $(p + q)^{2}$?",
+          "skill": "Expanding a squared bracket (from GCSE Mathematics)",
+          "options": [
+            {
+              "id": "a",
+              "text": "$p^{2} + 2pq + q^{2}$",
+              "correct": true,
+              "feedback": "Yes: $(p + q)(p + q) = p^{2} + pq + qp + q^{2}$, and the two middle terms make $2pq$. The 1, 2, 1 is row 2 of Pascal's triangle."
+            },
+            {
+              "id": "b",
+              "text": "$p^{2} + q^{2}$",
+              "correct": false,
+              "feedback": "The two middle products are missing: multiplying out gives $pq$ twice, so the expansion is $p^{2} + 2pq + q^{2}$."
+            },
+            {
+              "id": "c",
+              "text": "$p^{2} + pq + q^{2}$",
+              "correct": false,
+              "feedback": "There are two middle products, $pq$ and $qp$, and they are the same, so together they make $2pq$."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "p2",
+          "stem": "Another check on earlier work. What is $(2x)^{3}$?",
+          "skill": "A power of a product (from GCSE Mathematics)",
+          "options": [
+            {
+              "id": "a",
+              "text": "$8x^{3}$",
+              "correct": true,
+              "feedback": "Yes: the cube acts on the 2 and on the $x$, so $2^{3}x^{3} = 8x^{3}$."
+            },
+            {
+              "id": "b",
+              "text": "$2x^{3}$",
+              "correct": false,
+              "feedback": "The power acts on the whole bracket, the 2 included: $2^{3} = 8$, so $(2x)^{3} = 8x^{3}$."
+            },
+            {
+              "id": "c",
+              "text": "$6x^{3}$",
+              "correct": false,
+              "feedback": "That multiplies the 2 by 3. The 2 is cubed: $2 \\times 2 \\times 2 = 8$, so $8x^{3}$."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "p3",
+          "stem": "One more check on earlier work. What is $(-q)^{3}$?",
+          "skill": "Odd and even powers of a negative (from GCSE Mathematics)",
+          "options": [
+            {
+              "id": "a",
+              "text": "$-q^{3}$",
+              "correct": true,
+              "feedback": "Yes: three negatives multiplied give a negative. An even power would be positive."
+            },
+            {
+              "id": "b",
+              "text": "$q^{3}$",
+              "correct": false,
+              "feedback": "$(-q)(-q) = q^{2}$, and one more $-q$ makes it negative again: $-q^{3}$."
+            },
+            {
+              "id": "c",
+              "text": "$-3q$",
+              "correct": false,
+              "feedback": "That multiplies by 3 instead of raising to the power 3. $(-q)^{3} = (-q)(-q)(-q) = -q^{3}$."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u3.pascals-triangle-binomial-expansion.post",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "d1",
+          "stem": "Which row of Pascal's triangle gives the coefficients of $(p + q)^{6}$?",
+          "skill": "Choosing the row for a power",
+          "options": [
+            {
+              "id": "a",
+              "text": "The row that starts 1, 6, 15",
+              "correct": true,
+              "feedback": "Yes: that is row 6, 1 6 15 20 15 6 1, with seven numbers, one for each term."
+            },
+            {
+              "id": "b",
+              "text": "The row that starts 1, 5, 10",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "That is row 5, one row too early: it has six numbers, so it expands the fifth power. The sixth power needs the row that starts 1, 6."
+            },
+            {
+              "id": "c",
+              "text": "The row that starts 1, 7, 21",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "That is row 7, one row too far: it has eight numbers, so it expands the seventh power. Count the single 1 at the top as row 0."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d2",
+          "stem": "How many terms are there in the expansion of $(p + q)^{8}$?",
+          "skill": "Counting terms: n + 1",
+          "options": [
+            {
+              "id": "a",
+              "text": "9",
+              "correct": true,
+              "feedback": "Yes: the power of $q$ runs 0, 1, …, 8, which is nine values, and row 8 has nine numbers."
+            },
+            {
+              "id": "b",
+              "text": "8",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "Eight terms belong to $(p + q)^{7}$. Counting from $q^{0}$ to $q^{8}$ gives nine terms, one for each number in row 8."
+            },
+            {
+              "id": "c",
+              "text": "10",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "Ten terms belong to $(p + q)^{9}$. The power of $q$ runs from 0 to 8, which is nine values."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d3",
+          "stem": "In the expansion of $(p + q)^{7}$, which term is correct?",
+          "skill": "Powers adding to n, coefficient from row n",
+          "options": [
+            {
+              "id": "a",
+              "text": "$21p^{5}q^{2}$",
+              "correct": true,
+              "feedback": "Yes: the powers $5 + 2 = 7$, and the coefficient of the third term of row 7 is 21."
+            },
+            {
+              "id": "b",
+              "text": "$15p^{5}q^{2}$",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "15 comes from row 6. The seventh power takes its coefficients from row 7, where the third number is 21."
+            },
+            {
+              "id": "c",
+              "text": "$21p^{5}q^{3}$",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "The powers add up to 8, not 7. In every term of the seventh power the two powers add up to 7."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d4",
+          "stem": "Which is the expansion of $(p - q)^{3}$?",
+          "skill": "Alternating signs for a negative term",
+          "options": [
+            {
+              "id": "a",
+              "text": "$p^{3} - 3p^{2}q + 3pq^{2} - q^{3}$",
+              "correct": true,
+              "feedback": "Yes: the terms with $q$ and $q^{3}$ are negative, because odd powers of $-q$ are negative."
+            },
+            {
+              "id": "b",
+              "text": "$p^{3} + 3p^{2}q + 3pq^{2} + q^{3}$",
+              "correct": false,
+              "misconception": "fm.binomial.negative-term-signs-lost",
+              "feedback": "That is $(p + q)^{3}$. With $-q$, the odd powers of $q$ bring a minus sign."
+            },
+            {
+              "id": "c",
+              "text": "$p^{3} - 3p^{2}q - 3pq^{2} - q^{3}$",
+              "correct": false,
+              "misconception": "fm.binomial.negative-term-signs-lost",
+              "feedback": "$(-q)^{2} = q^{2}$ is positive, so the third term is $+3pq^{2}$. The signs alternate."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0001",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 328' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Pascal&apos;s triangle written out to row 6, with an empty grid underneath: Row 1 has 8 boxes for row 7 and Row 2 has 9 boxes for row 8'><title>Pascal&apos;s triangle written out to row 6, with an empty grid underneath: Row 1 has 8 boxes for row 7 and Row 2 has 9 boxes for row 8</title><rect x='84' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='118.22' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='152.44' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='186.67' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='220.89' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='255.11' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='289.33' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='323.56' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='357.78' y='218' width='34.22' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='84' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='118.22' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='152.44' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='186.67' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='220.89' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='255.11' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='289.33' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='323.56' y='242' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='84' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='118.22' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='152.44' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='186.67' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='220.89' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='255.11' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='289.33' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='323.56' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='357.78' y='282' width='34.22' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='4' y='24' text-anchor='start' font-size='14'>row 0</text><text x='238' y='24'>1</text><text x='4' y='52' text-anchor='start' font-size='14'>row 1</text><text x='217' y='52'>1</text><text x='259' y='52'>1</text><text x='4' y='80' text-anchor='start' font-size='14'>row 2</text><text x='196' y='80'>1</text><text x='238' y='80'>2</text><text x='280' y='80'>1</text><text x='4' y='108' text-anchor='start' font-size='14'>row 3</text><text x='175' y='108'>1</text><text x='217' y='108'>3</text><text x='259' y='108'>3</text><text x='301' y='108'>1</text><text x='4' y='136' text-anchor='start' font-size='14'>row 4</text><text x='154' y='136'>1</text><text x='196' y='136'>4</text><text x='238' y='136'>6</text><text x='280' y='136'>4</text><text x='322' y='136'>1</text><text x='4' y='164' text-anchor='start' font-size='14'>row 5</text><text x='133' y='164'>1</text><text x='175' y='164'>5</text><text x='217' y='164'>10</text><text x='259' y='164'>10</text><text x='301' y='164'>5</text><text x='343' y='164'>1</text><text x='4' y='192' text-anchor='start' font-size='14'>row 6</text><text x='112' y='192'>1</text><text x='154' y='192'>6</text><text x='196' y='192'>15</text><text x='238' y='192'>20</text><text x='280' y='192'>15</text><text x='322' y='192'>6</text><text x='364' y='192'>1</text><text x='4' y='234' text-anchor='start' font-size='14'>column</text><text x='101.11' y='235' font-size='14'>1</text><text x='135.33' y='235' font-size='14'>2</text><text x='169.56' y='235' font-size='14'>3</text><text x='203.78' y='235' font-size='14'>4</text><text x='238' y='235' font-size='14'>5</text><text x='272.22' y='235' font-size='14'>6</text><text x='306.44' y='235' font-size='14'>7</text><text x='340.67' y='235' font-size='14'>8</text><text x='374.89' y='235' font-size='14'>9</text><text x='4' y='259' text-anchor='start' font-weight='600' font-size='14'>Row 1</text><text x='4' y='276' text-anchor='start' font-size='14'>(row 7)</text><text x='4' y='299' text-anchor='start' font-weight='600' font-size='14'>Row 2</text><text x='4' y='316' text-anchor='start' font-size='14'>(row 8)</text></g></svg>",
+          "alt": "Pascal's triangle written out from row 0 to row 6, then an empty grid: Row 1 has eight boxes for row 7 and Row 2 has nine boxes for row 8, with the columns numbered 1 to 9."
+        }
+      ],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0001",
+      "style": "practice",
+      "difficulty": 1,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Complete"
+      ],
+      "emphasis": [
+        "building rows by addition"
+      ],
+      "context": {
+        "setting": "Extending Pascal's triangle by two rows",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Complete rows 7 and 8 of Pascal's triangle in the grid. Row 1 of the grid is row 7 of the triangle and Row 2 is row 8.",
+          "marks": 2,
+          "answer": {
+            "kind": "table",
+            "cells": [
+              {
+                "row": 0,
+                "col": 0,
+                "value": 1,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 1,
+                "value": 7,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 2,
+                "value": 21,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 3,
+                "value": 35,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 4,
+                "value": 35,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 5,
+                "value": 21,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 6,
+                "value": 7,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 7,
+                "value": 1,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 0,
+                "value": 1,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 1,
+                "value": 8,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 2,
+                "value": 28,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 3,
+                "value": 56,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 4,
+                "value": 70,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 5,
+                "value": 56,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 6,
+                "value": 28,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 7,
+                "value": 8,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 1,
+                "col": 8,
+                "value": 1,
+                "tolerance": {
+                  "type": "exact"
+                }
+              }
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "row 7: 1, 7, 21, 35, then the same four in reverse"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "row 8: 1, 8, 28, 56, 70 in the middle, then the same four in reverse"
+            }
+          ],
+          "hints": [
+            "Each number is the sum of the two above it.",
+            "Both rows start and end with 1 and are symmetrical."
+          ],
+          "workedSolution": "Row 6 is 1 6 15 20 15 6 1. Adding neighbours gives row 7: 1, 7, 21, 35, then the same four in reverse.\nAdding neighbours in row 7 gives row 8: 1, 8, 28, 56, 70 in the middle, then the same four in reverse. Row 8 adds up to 256, which is $2^{8}$.",
+          "commonErrors": [],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 2,
+      "timeAllowanceSec": 144,
+      "skeleton": "(main)complete2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2022-summer:FM3:Q4",
+        "ccea-cer:further-maths:2025-summer:FM3:Q4"
+      ],
+      "solutionProgram": "row7 = pairwise sums of [1, 6, 15, 20, 15, 6, 1]; row8 = pairwise sums of row7; sum(row8) = 256"
+    },
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0002",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0002",
+      "style": "practice",
+      "difficulty": 1,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Write down"
+      ],
+      "emphasis": [
+        "the row for n",
+        "powers falling and rising"
+      ],
+      "context": {
+        "setting": "Expanding a fifth power with Pascal's triangle",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Use Pascal's triangle to write down $(p + q)^{5}$ in expanded form.",
+          "marks": 1,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "p^{5} + 5p^{4}q + 10p^{3}q^{2} + 10p^{2}q^{3} + 5pq^{4} + q^{5}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "form": "expanded"
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$p^{5} + 5p^{4}q + 10p^{3}q^{2} + 10p^{2}q^{3} + 5pq^{4} + q^{5}$"
+            }
+          ],
+          "hints": [
+            "Row 5 is 1 5 10 10 5 1.",
+            "The power of p falls from 5 to 0 as the power of q rises."
+          ],
+          "workedSolution": "Row 5: 1 5 10 10 5 1.\n$(p + q)^{5} = p^{5} + 5p^{4}q + 10p^{3}q^{2} + 10p^{2}q^{3} + 5pq^{4}$\n$+ q^{5}$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "p^{4} + 4p^{3}q + 6p^{2}q^{2} + 4pq^{3} + q^{4}"
+              },
+              "feedback": "That is the expansion of $(p + q)^{4}$: row 4 has been used. The fifth power needs row 5, 1 5 10 10 5 1, and six terms whose powers add up to 5.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "text",
+                "regex": "^[^+]*,[^+]*$"
+              },
+              "feedback": "Those are the right terms, but an expansion is one expression, so the terms are joined by plus signs: $p^{5} + 5p^{4}q + 10p^{3}q^{2} + 10p^{2}q^{3} + 5pq^{4} + q^{5}$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 1,
+      "timeAllowanceSec": 72,
+      "skeleton": "(main)write-down1",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM3:Q4"
+      ],
+      "solutionProgram": "coefficients = row 5 = [1, 5, 10, 10, 5, 1]; terms p^(5-r) q^r"
+    },
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0003",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0003",
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Write down"
+      ],
+      "emphasis": [
+        "the row for n",
+        "coefficients",
+        "plus signs"
+      ],
+      "context": {
+        "setting": "Expanding a seventh power with Pascal's triangle",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Use Pascal's triangle to write down $(p + q)^{7}$ in expanded form.",
+          "marks": 2,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "p^{7} + 7p^{6}q + 21p^{5}q^{2} + 35p^{4}q^{3} + 35p^{3}q^{4} + 21p^{2}q^{5} + 7pq^{6} + q^{7}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "form": "expanded"
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "the coefficients 1, 7, 21, 35, then the same four in reverse"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "the powers of p falling from 7 and of q rising to 7, each pair adding to 7"
+            }
+          ],
+          "hints": [
+            "Build down to row 7, which has eight numbers.",
+            "Check the count: eight terms."
+          ],
+          "workedSolution": "Row 7: 1, 7, 21, 35, then the same four in reverse.\n$(p + q)^{7} = p^{7} + 7p^{6}q + 21p^{5}q^{2} + 35p^{4}q^{3}$\n$+ 35p^{3}q^{4} + 21p^{2}q^{5} + 7pq^{6} + q^{7}$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3} + 15p^{2}q^{4} + 6pq^{5} + q^{6}"
+              },
+              "feedback": "That is $(p + q)^{6}$, with seven terms. The seventh power has eight terms and uses row 7, 1, 7, 21, 35, then the same four in reverse.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.coefficient-omitted",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "p^{7} + p^{6}q + p^{5}q^{2} + p^{4}q^{3} + p^{3}q^{4} + p^{2}q^{5} + pq^{6} + q^{7}"
+              },
+              "feedback": "The powers are all right, which is one of the two marks, but the coefficients are missing. Each term takes its number from row 7: 1, 7, 21, 35, then the same four in reverse.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2023-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "text",
+                "regex": "^[^+]*,[^+]*$"
+              },
+              "feedback": "The terms are right, but they are joined by commas. An expansion is one expression, so write plus signs between the terms.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 2,
+      "timeAllowanceSec": 144,
+      "skeleton": "(main)write-down2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM3:Q4",
+        "ccea-cer:further-maths:2023-summer:FM3:Q4"
+      ],
+      "solutionProgram": "coefficients = row 7; terms p^(7-r) q^r, r = 0..7"
+    },
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0004",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0004",
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Write down"
+      ],
+      "emphasis": [
+        "one term",
+        "powers adding to n"
+      ],
+      "context": {
+        "setting": "Picking out one term of an eighth-power expansion",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Write down the term in $p^{3}q^{5}$ in the expansion of $(p + q)^{8}$.",
+          "marks": 1,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "56p^{3}q^{5}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$56p^{3}q^{5}$"
+            }
+          ],
+          "hints": [
+            "Row 8 of the triangle gives the coefficients.",
+            "q to the power 5 is the sixth term, counting from p to the power 8."
+          ],
+          "workedSolution": "Row 8: 1, 8, 28, 56, 70 in the middle, then the same four in reverse.\nThe term with $q^{5}$ is the sixth, so its coefficient is 56: $56p^{3}q^{5}$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "21p^{3}q^{5}"
+              },
+              "feedback": "21 is the sixth number of row 7. An eighth power takes its coefficients from row 8, where the sixth number is 56.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.p-q-swapped",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "56p^{5}q^{3}"
+              },
+              "feedback": "That is the term in $p^{5}q^{3}$. The question asks for $p^{3}q^{5}$; the coefficient happens to be the same, but the powers must match the ones asked for.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2023-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 1,
+      "timeAllowanceSec": 72,
+      "skeleton": "(main)write-down1",
+      "examinerSources": [
+        "ccea-cer:further-maths:2023-summer:FM3:Q4",
+        "ccea-cer:further-maths:2019-summer:FM3:Q4"
+      ],
+      "solutionProgram": "coefficient = row 8, position 5 = 56"
+    },
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0005",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0005",
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Expand"
+      ],
+      "emphasis": [
+        "a negative term",
+        "alternating signs"
+      ],
+      "context": {
+        "setting": "Expanding a bracket with a minus sign",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Expand $(p - q)^{4}$.",
+          "marks": 2,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "p^{4} - 4p^{3}q + 6p^{2}q^{2} - 4pq^{3} + q^{4}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "form": "expanded"
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "the coefficients 1, 4, 6, 4, 1 with the powers of p falling and q rising"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "the signs alternating +, −, +, −, +"
+            }
+          ],
+          "hints": [
+            "Treat it as (p + (−q)) to the power 4.",
+            "An odd power of −q is negative."
+          ],
+          "workedSolution": "Row 4: 1 4 6 4 1, with $-q$ in place of $q$.\n$(p - q)^{4} = p^{4} - 4p^{3}q + 6p^{2}q^{2} - 4pq^{3} + q^{4}$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.negative-term-signs-lost",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "p^{4} + 4p^{3}q + 6p^{2}q^{2} + 4pq^{3} + q^{4}"
+              },
+              "feedback": "The coefficients and powers are right, but that is $(p + q)^{4}$. With $-q$ the odd powers are negative: $p^{4} - 4p^{3}q + 6p^{2}q^{2} - 4pq^{3} + q^{4}$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 2,
+      "timeAllowanceSec": 144,
+      "skeleton": "(main)expand2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM3:Q4"
+      ],
+      "solutionProgram": "coefficients = row 4; sign of term r = (-1)^r"
+    },
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0006",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0006",
+      "style": "practice",
+      "difficulty": 3,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Expand"
+      ],
+      "emphasis": [
+        "a number in the bracket",
+        "powers of the whole term"
+      ],
+      "context": {
+        "setting": "Expanding (1 + 2x) to the fourth power",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Expand and simplify $(1 + 2x)^{4}$.",
+          "marks": 3,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "1 + 8x + 24x^{2} + 32x^{3} + 16x^{4}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "form": "expanded"
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "the coefficients 1, 4, 6, 4, 1 from row 4"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "$(2x)^{2}$, $(2x)^{3}$ and $(2x)^{4}$ in the terms",
+              "accept": [
+                "1 + 4(2x) + 6(2x)^2 + 4(2x)^3 + (2x)^4"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$1 + 8x + 24x^{2} + 32x^{3} + 16x^{4}$",
+              "dependsOn": [
+                "M1",
+                "M2"
+              ]
+            }
+          ],
+          "hints": [
+            "Use row 4 with p = 1 and q = 2x.",
+            "(2x) squared is 4x squared: square the 2 as well."
+          ],
+          "workedSolution": "$1 + 4(2x) + 6(2x)^{2} + 4(2x)^{3} + (2x)^{4}$\n$= 1 + 8x + 24x^{2} + 32x^{3} + 16x^{4}$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.bracket-number-not-raised",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "1 + 8x + 12x^{2} + 8x^{3} + 2x^{4}"
+              },
+              "feedback": "The coefficients are right, but each power was put on the $x$ and not on the 2. $(2x)^{2} = 4x^{2}$, so the terms are $1 + 8x + 24x^{2} + 32x^{3} + 16x^{4}$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2024-summer:FM1:Q6"
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(main)expand3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM1:Q6"
+      ],
+      "solutionProgram": "terms = row4[r] * 2^r x^r: 1, 8, 24, 32, 16"
+    },
+    {
+      "id": "q.fm.u3.pascals-triangle-binomial-expansion.0007",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 260' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Pascal&apos;s triangle written out from row 0 to row 5, then an empty grid of seven boxes, Row 1, for row 6'><title>Pascal&apos;s triangle written out from row 0 to row 5, then an empty grid of seven boxes, Row 1, for row 6</title><rect x='84' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='128' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='172' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='216' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='260' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='304' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='348' y='190' width='44' height='24' stroke='currentColor' stroke-width='0.8' fill='currentColor' fill-opacity='0.07'/><rect x='84' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='128' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='172' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='216' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='260' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='304' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><rect x='348' y='214' width='44' height='40' stroke='currentColor' stroke-width='1.3' fill='none'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='4' y='24' text-anchor='start' font-size='14'>row 0</text><text x='238' y='24'>1</text><text x='4' y='52' text-anchor='start' font-size='14'>row 1</text><text x='217' y='52'>1</text><text x='259' y='52'>1</text><text x='4' y='80' text-anchor='start' font-size='14'>row 2</text><text x='196' y='80'>1</text><text x='238' y='80'>2</text><text x='280' y='80'>1</text><text x='4' y='108' text-anchor='start' font-size='14'>row 3</text><text x='175' y='108'>1</text><text x='217' y='108'>3</text><text x='259' y='108'>3</text><text x='301' y='108'>1</text><text x='4' y='136' text-anchor='start' font-size='14'>row 4</text><text x='154' y='136'>1</text><text x='196' y='136'>4</text><text x='238' y='136'>6</text><text x='280' y='136'>4</text><text x='322' y='136'>1</text><text x='4' y='164' text-anchor='start' font-size='14'>row 5</text><text x='133' y='164'>1</text><text x='175' y='164'>5</text><text x='217' y='164'>10</text><text x='259' y='164'>10</text><text x='301' y='164'>5</text><text x='343' y='164'>1</text><text x='4' y='206' text-anchor='start' font-size='14'>column</text><text x='106' y='207' font-size='14'>1</text><text x='150' y='207' font-size='14'>2</text><text x='194' y='207' font-size='14'>3</text><text x='238' y='207' font-size='14'>4</text><text x='282' y='207' font-size='14'>5</text><text x='326' y='207' font-size='14'>6</text><text x='370' y='207' font-size='14'>7</text><text x='4' y='231' text-anchor='start' font-weight='600' font-size='14'>Row 1</text><text x='4' y='248' text-anchor='start' font-size='14'>(row 6)</text></g></svg>",
+          "alt": "Pascal's triangle from row 0 to row 5, then one row of seven empty boxes, labelled Row 1 (row 6), under the column numbers 1 to 7."
+        }
+      ],
+      "version": 1,
+      "verification": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0007",
+      "style": "exam-style",
+      "difficulty": 2,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Complete",
+        "Hence",
+        "Write down"
+      ],
+      "emphasis": [
+        "the triangle as a mark",
+        "expansion",
+        "one term",
+        "a negative term"
+      ],
+      "context": {
+        "setting": "Pascal's triangle and the sixth-power expansion",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "a",
+          "stem": "Complete row 6 of Pascal's triangle in the grid.",
+          "marks": 1,
+          "answer": {
+            "kind": "table",
+            "cells": [
+              {
+                "row": 0,
+                "col": 0,
+                "value": 1,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 1,
+                "value": 6,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 2,
+                "value": 15,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 3,
+                "value": 20,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 4,
+                "value": 15,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 5,
+                "value": 6,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              {
+                "row": 0,
+                "col": 6,
+                "value": 1,
+                "tolerance": {
+                  "type": "exact"
+                }
+              }
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "1 6 15 20 15 6 1"
+            }
+          ],
+          "hints": [
+            "Add each neighbouring pair in row 5."
+          ],
+          "workedSolution": "Row 5 is 1 5 10 10 5 1; adding neighbours gives row 6: 1 6 15 20 15 6 1.",
+          "commonErrors": [],
+          "requiresWorking": false
+        },
+        {
+          "id": "b",
+          "stem": "Hence write down the expansion of $(p + q)^{6}$.",
+          "marks": 1,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3} + 15p^{2}q^{4} + 6pq^{5} + q^{6}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "form": "expanded"
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3} + 15p^{2}q^{4} + 6pq^{5} + q^{6}$"
+            }
+          ],
+          "hints": [
+            "Use the row you have just written."
+          ],
+          "workedSolution": "$(p + q)^{6} = p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3}$\n$+ 15p^{2}q^{4} + 6pq^{5} + q^{6}$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "p^{5} + 5p^{4}q + 10p^{3}q^{2} + 10p^{2}q^{3} + 5pq^{4} + q^{5}"
+              },
+              "feedback": "That is $(p + q)^{5}$, the row above. The sixth power uses row 6, the row you completed in part (a), and has seven terms.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.wrong-power",
+              "pattern": {
+                "kind": "text",
+                "regex": "^[^+]*,[^+]*$"
+              },
+              "feedback": "The terms are right, but an expansion needs plus signs between them, not commas.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        },
+        {
+          "id": "c",
+          "stem": "Write down the term in $p^{4}q^{2}$ in the expansion of $(p + q)^{6}$.",
+          "marks": 1,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "15p^{4}q^{2}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$15p^{4}q^{2}$"
+            }
+          ],
+          "hints": [
+            "q squared is the third term."
+          ],
+          "workedSolution": "The term with $q^{2}$ is the third: $15p^{4}q^{2}$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.p-q-swapped",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "15p^{2}q^{4}"
+              },
+              "feedback": "That is the term in $p^{2}q^{4}$. For $p^{4}q^{2}$ the power of $p$ is 4: $15p^{4}q^{2}$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2023-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        },
+        {
+          "id": "d",
+          "stem": "Write down the expansion of $(p - q)^{6}$.",
+          "marks": 2,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "p^{6} - 6p^{5}q + 15p^{4}q^{2} - 20p^{3}q^{3} + 15p^{2}q^{4} - 6pq^{5} + q^{6}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "form": "expanded"
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "the coefficients and powers of part (b)"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "the signs alternating, starting with +"
+            }
+          ],
+          "hints": [
+            "Start from part (b).",
+            "The terms with an odd power of q become negative."
+          ],
+          "workedSolution": "$(p - q)^{6} = p^{6} - 6p^{5}q + 15p^{4}q^{2} - 20p^{3}q^{3}$\n$+ 15p^{2}q^{4} - 6pq^{5} + q^{6}$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.negative-term-signs-lost",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3} + 15p^{2}q^{4} + 6pq^{5} + q^{6}"
+              },
+              "feedback": "That is part (b) again. With $-q$ the terms with an odd power of $q$ turn negative: $p^{6} - 6p^{5}q + 15p^{4}q^{2} - 20p^{3}q^{3} + 15p^{2}q^{4} - 6pq^{5} + q^{6}$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 5,
+      "timeAllowanceSec": 360,
+      "skeleton": "(a)complete1|(b)write-down1|(c)write-down1|(d)write-down2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM3:Q4",
+        "ccea-cer:further-maths:2022-summer:FM3:Q4",
+        "ccea-cer:further-maths:2023-summer:FM3:Q4",
+        "ccea-cer:further-maths:2025-summer:FM3:Q4"
+      ],
+      "solutionProgram": "row 6 = [1, 6, 15, 20, 15, 6, 1]; term in p^4 q^2 = 15; (p - q)^6 signs (-1)^r"
+    }
+  ],
+  "findTheMistake": [
+    {
+      "id": "ftm.fm.u3.pascals-triangle-binomial-expansion.01",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "stem": "Seán was asked to complete Pascal's triangle and hence expand $(p + q)^{6}$. He skipped the triangle and wrote:",
+      "studentWorking": [
+        "The row for power 6 is 1, 5, 10, 10, 5, 1",
+        "(p + q)^6 = p^6 + 5p^5q + 10p^4q^2 + 10p^3q^3 + 5p^2q^4 + pq^5"
+      ],
+      "mistakeLine": 1,
+      "misconception": "fm.binomial.triangle-not-written",
+      "whatWentWrong": "Line 1 is row 5, recalled without writing the triangle. The sixth power needs row 6, 1 6 15 20 15 6 1, which has seven numbers; row 5 has only six, so his expansion is a term short and every coefficient after the first is from the wrong row.",
+      "correction": [
+        "The row for power 6 is 1, 6, 15, 20, 15, 6, 1",
+        "(p + q)^6 = p^6 + 6p^5q + 15p^4q^2 + 20p^3q^3 + 15p^2q^4 + 6pq^5 + q^6"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Writing the triangle out would have saved both marks: it is a mark in itself, and counting the rows from row 0 shows that 1, 5, 10, 10, 5, 1 is row 5. His expansion also fails the quick check, six terms where the sixth power has seven.",
+      "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "rp.fm.u3.pascals-triangle-binomial-expansion.01",
+      "kind": "procedure",
+      "prompt": "How is each new row of Pascal's triangle made?",
+      "answer": "Start and end the row with 1; every number in between is the sum of the two numbers just above it.",
+      "keyWords": [
+        "start and end",
+        "sum of the two"
+      ],
+      "difficultyPrior": 1,
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.pascals-triangle-binomial-expansion.02",
+      "kind": "definition",
+      "prompt": "Which row gives the coefficients of (p + q)ⁿ, and how many terms does it have?",
+      "answer": "Row n, counting the single 1 at the top as row 0. It has n + 1 numbers, so the expansion has n + 1 terms.",
+      "keyWords": [
+        "row n",
+        "row 0",
+        "n + 1"
+      ],
+      "difficultyPrior": 2,
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.pascals-triangle-binomial-expansion.03",
+      "kind": "procedure",
+      "prompt": "What happens to the powers from one term of (p + q)ⁿ to the next?",
+      "answer": "The power of p falls by 1, from n down to 0, and the power of q rises by 1, from 0 up to n; in every term they add up to n.",
+      "keyWords": [
+        "falls",
+        "rises",
+        "add up to n"
+      ],
+      "difficultyPrior": 2,
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.pascals-triangle-binomial-expansion.04",
+      "kind": "trap",
+      "prompt": "What changes when you expand (p − q)ⁿ instead of (p + q)ⁿ?",
+      "answer": "Only the signs: terms with an odd power of q become negative, so the signs alternate plus, minus, plus.",
+      "keyWords": [
+        "odd power",
+        "alternate"
+      ],
+      "difficultyPrior": 3,
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.pascals-triangle-binomial-expansion.05",
+      "kind": "trap",
+      "prompt": "Two presentation habits that protect the marks when you expand with Pascal's triangle.",
+      "answer": "Write the triangle out on the page, because it earns a mark of its own, and join the terms with plus signs, because an expansion is one expression.",
+      "keyWords": [
+        "write the triangle out",
+        "plus signs"
+      ],
+      "difficultyPrior": 2,
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "specRefs": [
+        "FM3-BIN-01"
+      ],
+      "examUnit": "FM3"
+    }
+  ],
+  "sets": [
+    {
+      "id": "set.fm.u3.pascals-triangle-binomial-expansion.practice",
+      "topic": "fm.u3.pascals-triangle-binomial-expansion",
+      "kind": "interleaved",
+      "title": "Build the rows, then expand: short ladder",
+      "subject": "further-maths",
+      "units": [
+        "FM3"
+      ],
+      "itemIds": [
+        "dx.fm.u3.pascals-triangle-binomial-expansion.pre",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0001",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0002",
+        "rp.fm.u3.pascals-triangle-binomial-expansion.02",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0003",
+        "ftm.fm.u3.pascals-triangle-binomial-expansion.01",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0004",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0005",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0006",
+        "q.fm.u3.pascals-triangle-binomial-expansion.0007",
+        "dx.fm.u3.pascals-triangle-binomial-expansion.post"
+      ],
+      "showTopicLabels": false,
+      "version": 1
+    }
+  ],
+  "verification": [
+    {
+      "id": "ver.note.fm.u3.pascals-triangle-binomial-expansion",
+      "itemId": "note.fm.u3.pascals-triangle-binomial-expansion",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts and lesson template v2 by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every row, expansion and coefficient in the note and its three figures is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sheet traps cite Summer 2019, 2022, 2023 and 2025 FM3 Q4 from pipeline/mine/cer-blocks/further-maths; no examiner callout is needed in the body.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u3.pascals-triangle-binomial-expansion.01",
+      "itemId": "we.fm.u3.pascals-triangle-binomial-expansion.01",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (WorkedExample) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "The triangle MW1 and the expansion MW1 of the 2022-2025 schemes.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Row 6 and the expansion of (p + q)^6, and the twin's (a + b)^5 is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Step 1 answers the Summer 2019 finding that not writing the triangle cost a mark (ccea-cer:further-maths:2019-summer:FM3:Q4).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u3.pascals-triangle-binomial-expansion.pre",
+      "itemId": "dx.fm.u3.pascals-triangle-binomial-expansion.pre",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (DiagnosticSet) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Prerequisite items from GCSE Mathematics: a squared bracket, a power of a product, and an odd power of a negative; honestly labelled; no topic tags.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every option is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u3.pascals-triangle-binomial-expansion.post",
+      "itemId": "dx.fm.u3.pascals-triangle-binomial-expansion.post",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (DiagnosticSet) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every option is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Distractors carry fm.binomial.wrong-power (ccea-cer:further-maths:2019-summer:FM3:Q4) and fm.binomial.negative-term-signs-lost.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u3.pascals-triangle-binomial-expansion.01",
+      "itemId": "ftm.fm.u3.pascals-triangle-binomial-expansion.01",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (FindTheMistake) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "The six-term expansion from row 5 and the corrected seven-term expansion is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Seeded from ccea-cer:further-maths:2019-summer:FM3:Q4: the triangle not written out, and the expansion to the power 5 instead of 6.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.pascals-triangle-binomial-expansion.01",
+      "itemId": "rp.fm.u3.pascals-triangle-binomial-expansion.01",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (RetrievalPrompt) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Rehearses the habits behind ccea-cer:further-maths:2019-summer:FM3:Q4.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash. Every key word appears in the prompt's own answer.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.pascals-triangle-binomial-expansion.02",
+      "itemId": "rp.fm.u3.pascals-triangle-binomial-expansion.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (RetrievalPrompt) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Rehearses the habits behind ccea-cer:further-maths:2019-summer:FM3:Q4.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash. Every key word appears in the prompt's own answer.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.pascals-triangle-binomial-expansion.03",
+      "itemId": "rp.fm.u3.pascals-triangle-binomial-expansion.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (RetrievalPrompt) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Rehearses the habits behind ccea-cer:further-maths:2019-summer:FM3:Q4.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash. Every key word appears in the prompt's own answer.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.pascals-triangle-binomial-expansion.04",
+      "itemId": "rp.fm.u3.pascals-triangle-binomial-expansion.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (RetrievalPrompt) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Rehearses the habits behind ccea-cer:further-maths:2019-summer:FM3:Q4.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash. Every key word appears in the prompt's own answer.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.pascals-triangle-binomial-expansion.05",
+      "itemId": "rp.fm.u3.pascals-triangle-binomial-expansion.05",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (RetrievalPrompt) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Rehearses the habits behind ccea-cer:further-maths:2019-summer:FM3:Q4.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash. Every key word appears in the prompt's own answer.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0001",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0001",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0001 (solutionProgram: row7 = pairwise sums of [1, 6, 15, 20, 15, 6, 1]; row8 = pairwise sums of row7; sum(row8) = 256) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2022-summer:FM3:Q4, ccea-cer:further-maths:2025-summer:FM3:Q4; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0002",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0002",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0002 (solutionProgram: coefficients = row 5 = [1, 5, 10, 10, 5, 1]; terms p^(5-r) q^r) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2019-summer:FM3:Q4; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0003",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0003",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0003 (solutionProgram: coefficients = row 7; terms p^(7-r) q^r, r = 0..7) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2019-summer:FM3:Q4, ccea-cer:further-maths:2023-summer:FM3:Q4; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0004",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0004",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0004 (solutionProgram: coefficient = row 8, position 5 = 56) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2023-summer:FM3:Q4, ccea-cer:further-maths:2019-summer:FM3:Q4; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0005",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0005",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0005 (solutionProgram: coefficients = row 4; sign of term r = (-1)^r) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2019-summer:FM3:Q4; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0006",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0006",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0006 (solutionProgram: terms = row4[r] * 2^r x^r: 1, 8, 24, 32, 16) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2024-summer:FM1:Q6; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.pascals-triangle-binomial-expansion.0007",
+      "itemId": "q.fm.u3.pascals-triangle-binomial-expansion.0007",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by pipeline/build-content.mts",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-01 (use Pascal's triangle to expand (p + q)ⁿ for n up to 8). No nCr notation. The minus-sign and number-in-the-bracket material goes beyond what CCEA sets and carries a notonspec callout in the note and a line in notOnThisSpec.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/formula-sheets.json (FM3): nothing for this statement; the triangle is must-know (mk.fm3.binomial).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Complete, Hence, Write down, Expand.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Tariffs follow the Q4 openings read in the Summer 2019, 2021, 2022, 2023, 2024, 2025 and 2026 papers and schemes (the triangle 1 mark; the expansion 1 or 2 marks) and packs/further-maths/exam-true/tariffs.json.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Every value in q.fm.u3.pascals-triangle-binomial-expansion.0007 (solutionProgram: row 6 = [1, 6, 15, 20, 15, 6, 1]; term in p^4 q^2 = 15; (p - q)^6 signs (-1)^r) is emitted by scratchpad/fm3-batch-c/pascals-triangle-binomial-expansion.mjs from ROWS in stat.mjs (each row built by addition and asserted symmetric with total 2^n); every expansion is built term by term; every algebraic commonError is its route in routes.mjs, checked by verify-published.mjs.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "check-marking.mts feeds each answer in LaTeX, caret, unspaced and reversed spellings, and every commonError, to the app's own marker (src/components/items/mark.ts).",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Sources ccea-cer:further-maths:2019-summer:FM3:Q4, ccea-cer:further-maths:2022-summer:FM3:Q4, ccea-cer:further-maths:2023-summer:FM3:Q4, ccea-cer:further-maths:2025-summer:FM3:Q4; every commonError is the result of executing its described route.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers, schemes and reports read for this batch; rows 7 and 8 are said as a rise and its mirror image so that no eight numbers of a printed triangle stand in one run; node scripts/qa/shingles.mjs reports no breach for this topic.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-C generators in scratchpad/fm3-batch-c: stat.mjs builds every Pascal coefficient by addition, every binomial probability as an exact rational over BigInt and every normal probability from an error-function series checked against the table entries printed in the Summer 2022-2025 schemes; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part, gate and error to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; every $...$ pair on one line, no prose inside maths, every TeX command keeps its backslash.",
+          "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    }
+  ]
+}

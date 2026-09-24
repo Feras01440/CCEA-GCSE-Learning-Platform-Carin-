@@ -1,0 +1,293 @@
+# fm.u2.average-speed-and-velocity — Average speed and average velocity  [S, difficulty 3]
+unit FM2 · tier untiered · specRefs []
+note: Average speed and average velocity v1 [verified]
+verification statuses: {"verified":25}
+
+## NOTE BLOCKS
+- [h] Two words that sound alike
+- [p] 
+- [h] 1. The journey, drawn once
+- [figure] 180 m out, 20 s stopped, then 240 m back past the depot.
+- [p] 
+- [number] 
+- [h] 2. The two rules
+- [figure] Same denominator, different numerator.
+- [p] 
+- [number] 
+- [h] 3. Every second counts
+- [figure] The 20 seconds at the door are part of the journey.
+- [p] 
+- [why] What an average speed is really saying
+- [number] 
+- [h] 4. A worked example
+- [figure] A ferry crossing 900 m, waiting, then coming back.
+- [p] 
+- [number] 
+- [h] 5. The trap: averaging the speeds
+- [video] Speed, Distance and Time
+- [p] 
+- [choice] 
+- [h] 6. Units first
+- [figure] Change the units before dividing, never after.
+- [p] 
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [choice] 
+- [spec] The statement
+- [mustknow] Sheet or memory?
+- [choice] 
+- [examiner] Summer 2024 Unit 2 Question 1
+- [examiner] Summer 2019 Unit 2 Question 2
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u2.average-speed-and-velocity.01 [verified] paper FM2 calc
+STEM: A ferry crosses a straight channel from a slipway to a landing stage 900 m away, taking 150 seconds. It waits at the landing stage for 30 seconds and then returns to the slipway, taking 180 seconds.
+
+(i) Calculate the average speed of the ferry for the whole journey.
+(ii) Write down the average velocity of the ferry for the whole journey.
+  FIG: svg — A displacement/time graph for the ferry: a straight line from (0, 0) to (150, 900), a horizontal line to (180, 900), then a straight line back down to (360, 0).
+  1. Total distance $= 900 + 900 = 1800$ m   — Distance counts both crossings, because the ferry really did cover 900 m twice. The direction it was pointing makes no difference to a distance.  (MW1)
+  2. Total time $= 150 + 30 + 180 = 360$ s   — The 30 seconds at the landing stage belong in the total. Average speed is about the whole journey, waiting included, and leaving the wait out is the quickest way to an answer that is too big.  (MW1)
+  3. Average speed $= \dfrac{1800}{360} = 5$ m/s   — Total distance divided by total time, in that order. Nothing is averaged twice.  (W1)  WHY: ✔Because average speed is the total distance divided by the total time | ✘Because average speed is the mean of the speed out and the speed back | ✘Because average speed is the displacement divided by the total time
+  4. Total displacement $= 900 - 900 = 0$ m, so average velocity $= \dfrac{0}{360} = 0$ m/s   — The ferry finishes where it began, so its displacement is zero and so is its average velocity. It was moving for most of six minutes, and its average velocity is still zero: that is exactly the difference between the two words.  (MW1)
+  FINAL: (i) $5$ m/s  (ii) $0$ m/s
+  TWIN: A swimmer swims six lengths of a straight 25 m pool in 250 seconds, finishing at the end she started from. Calculate her average speed.  → numeric 0.6 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+### we.fm.u2.average-speed-and-velocity.02 [verified] paper FM2 calc
+STEM: A tram runs along a straight track. It travels 1.8 km in one direction in 200 seconds, then reverses and travels 0.6 km back along the same track in 100 seconds.
+
+(i) Calculate the average speed of the tram, in m/s.
+(ii) Calculate the average velocity of the tram, in m/s.
+  1. $1.8$ km $= 1800$ m and $0.6$ km $= 600$ m   — The answer is wanted in metres per second, so put every length into metres before anything else. Mixing kilometres with seconds gives a number a thousand times too small.  (MW1)
+  2. Total distance $= 1800 + 600 = 2400$ m; total time $= 200 + 100 = 300$ s   — Distance adds both legs as lengths. The tram was moving for the whole 300 seconds, so there is no waiting time to include.  (MW1)
+  3. Average speed $= \dfrac{2400}{300} = 8$ m/s   — Total distance over total time.  (W1)
+  4. Total displacement $= 1800 - 600 = 1200$ m   — Displacement takes the direction into account, so the return leg is subtracted. The tram ends 1200 m along the track from where it set off.  (MW1)
+  5. Average velocity $= \dfrac{1200}{300} = 4$ m/s   — Same time underneath, different quantity on top. The average velocity is half the average speed here, and that gap is the reversal.  (W1)
+  FINAL: (i) $8$ m/s  (ii) $4$ m/s
+  TWIN: A van travels 4.5 km along a straight road in 250 seconds and then 1.5 km back along the same road in 150 seconds. Calculate its average speed, in m/s.  → numeric 15 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u2.average-speed-and-velocity.pre (pre) [verified]
+- 01 (Prerequisite: kilometres into metres): From an earlier topic: how many metres are there in 1.5 km?
+    ✔ 1500 — One kilometre is 1000 m, so $1.5 \times 1000 = 1500$ m.
+    ✘ 150 [fm.kin.stage-time-not-used] — That multiplies by 100. A kilometre is a thousand metres, not a hundred.
+    ✘ 15000 [fm.kin.stage-time-not-used] — That is ten times too many: $1.5 \times 1000$, not $1.5 \times 10000$.
+    ✘ 0.0015 [fm.kin.gradient-and-area-swapped] — That divides by 1000, which turns kilometres into something a thousand times smaller than a metre.
+- 02 (Prerequisite: minutes into seconds): From an earlier topic: how many seconds are there in 5 minutes?
+    ✔ 300 — One minute is 60 s, so $5 \times 60 = 300$ s.
+    ✘ 500 [fm.kin.stage-time-not-used] — That multiplies by 100. A minute is 60 seconds.
+    ✘ 0.083 [fm.kin.gradient-and-area-swapped] — That is 5 minutes written as a fraction of an hour, which is not what the question asked for.
+    ✘ 60 [fm.kin.stage-time-not-used] — That is one minute. There are five of them.
+- 03 (Prerequisite: speed from a distance and a time): From an earlier topic: a body covers 150 m in 30 s. What is its speed?
+    ✔ 5 m/s — $150 \div 30 = 5$ m/s: metres on top, seconds underneath.
+    ✘ 0.2 m/s [fm.kin.gradient-and-area-swapped] — The fraction is upside down. Speed is distance divided by time.
+    ✘ 4500 m/s [fm.kin.gradient-and-area-swapped] — Multiplying gives neither a speed nor anything else useful here. Divide instead.
+    ✘ 120 m/s [fm.kin.average-speed-formula] — Subtracting does not give a rate. Speed is a division.
+
+### dx.fm.u2.average-speed-and-velocity.post (post) [verified]
+- 01 (State the rule for average speed): How is the average speed of a journey worked out?
+    ✔ Total distance divided by total time — One distance, one time, one division, whatever happened in between.
+    ✘ The mean of the speeds of the separate stages [fm.kin.average-speed-formula] — That only agrees when the stages take equal times. The Summer 2024 examiners reported that only the stronger candidates used total distance over total time.
+    ✘ Total displacement divided by total time [fm.kin.speed-vs-velocity] — That is the average velocity. For a journey that turns back, the two answers differ.
+    ✘ Total time divided by total distance [fm.kin.gradient-and-area-swapped] — Upside down: that gives seconds per metre. Speed is metres per second.
+- 02 (Average velocity of a journey that returns to its start): A runner runs 600 m along a straight track and then runs the same 600 m back, taking 300 seconds altogether. What is her average velocity?
+    ✔ 0 m/s — She finishes where she started, so her displacement is zero and so is her average velocity. Her average speed is 4 m/s.
+    ✘ 4 m/s [fm.kin.speed-vs-velocity] — That is her average speed, from 1200 m over 300 s. Velocity uses the displacement, which is zero here.
+    ✘ 2 m/s [fm.kin.average-speed-formula] — That divides one leg of 600 m by the whole 300 s. Average velocity uses the displacement for the whole journey, which is zero.
+    ✘ 1200 m/s [fm.kin.gradient-not-taken-from-graph] — That is a distance, not a rate. A velocity always has a time underneath it.
+- 03 (Reject the mean of two speeds): A cyclist rides 400 m at 8 m/s and then a further 400 m at 4 m/s. Is her average speed for the 800 m equal to 6 m/s?
+    ✔ No, because she spends longer on the slower stretch — 50 s then 100 s, so 800 m in 150 s, which is about 5.33 m/s. The slow stretch weighs more because it lasts longer.
+    ✘ Yes, because the two distances are the same [fm.kin.average-speed-formula] — Equal distances do not make equal times. Averaging speeds is only safe when the times match.
+    ✘ Yes, because 8 and 4 have a mean of 6 [fm.kin.average-speed-formula] — The mean of the two speeds is not the average speed. Work out the total distance and the total time instead.
+    ✘ No, because average speed uses the displacement [fm.kin.speed-vs-velocity] — The verdict is right but the reason is not: average speed uses the total distance. Displacement belongs to average velocity.
+- 04 (Decide which quantity can be negative): Which of these can be negative?
+    ✔ Average velocity, because it carries a direction — Velocity and displacement are vectors, so they carry a sign. Speed and distance are sizes and never do.
+    ✘ Average speed, because a body can go backwards [fm.kin.speed-vs-velocity] — Going backwards makes the velocity negative. The speed is the size of it, so it stays positive.
+    ✘ Total distance, when the body returns [fm.kin.speed-vs-velocity] — Distance keeps counting upwards whichever way the body moves. The displacement is the one that can fall.
+    ✘ None of them, because time cannot be negative [fm.kin.negative-gradient-as-slowing] — Time being positive says nothing about the top of the fraction. A displacement of -60 m over 120 s gives -0.5 m/s.
+- 05 (Include the stationary time): A van drives for 240 s, waits for 60 s and drives on for 300 s. What time goes underneath in its average speed?
+    ✔ 600 s, the whole journey including the wait — Average speed covers the journey as it happened, and the van really did take 600 s.
+    ✘ 540 s, the time it was moving [fm.kin.average-speed-formula] — Leaving the wait out gives the average speed while moving, which is a different quantity and always larger.
+    ✘ 300 s, the longest stage [fm.kin.stage-time-not-used] — One stage cannot stand for the whole journey. Add all three times.
+    ✘ 60 s, the time at rest [fm.kin.stage-time-not-used] — That is the wait on its own. The total time is 240 + 60 + 300.
+
+## QUESTIONS
+### q.fm.u2.average-speed-and-velocity.0001 [verified] practice · diff 1 · untiered · FM2 calc · 1 marks · (main)identify1 · The two rules, side by side
+  (main) [1] Which of these gives the average velocity of a journey?
+      ANSWER: mcq ✔Total displacement divided by total time | ✘Total distance divided by total time [fm.kin.speed-vs-velocity] | ✘The mean of the velocities of the stages [fm.kin.average-speed-formula] | ✘Total displacement divided by the moving time [fm.kin.stage-time-not-used]
+      W1 W1: total displacement divided by total time
+      SOLUTION: Average velocity = total displacement ÷ total time. Average speed = total distance ÷ total time. Only the top of the fraction changes.
+      HINTS: Velocity is the vector twin of speed.
+
+### q.fm.u2.average-speed-and-velocity.0002 [verified] practice · diff 1 · untiered · FM2 calc · 1 marks · (main)calculate1 · A single stage, no context
+  (main) [1] A body travels 240 m along a straight line in 60 seconds. Calculate its average speed.
+      ANSWER: numeric 4 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: 240 divided by 60, giving 4
+      SOLUTION: Average speed $= \dfrac{240}{60} = 4$ m/s.
+      HINTS: Total distance over total time.
+
+### q.fm.u2.average-speed-and-velocity.0003 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A journey given in kilometres and minutes
+  (main) [2] A train travels 1.5 km along a straight track in 5 minutes. Calculate its average speed, in m/s.
+      ANSWER: numeric 5 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: 1500 m and 300 s both seen
+      W1 W1: 5
+      SOLUTION: $1.5$ km $= 1500$ m and $5$ minutes $= 300$ s, so the average speed is $\dfrac{1500}{300} = 5$ m/s.
+      HINTS: Change the kilometres into metres and the minutes into seconds first. || 1.5 km is 1500 m; 5 minutes is 300 s.
+
+### q.fm.u2.average-speed-and-velocity.0004 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · Out and back in equal distances
+  (main) [2] A robot moves 120 m along a straight rail and then 120 m back to where it started. The whole journey takes 80 seconds. Calculate its average speed.
+      ANSWER: numeric 3 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: a total distance of 240 m
+      W1 W1: 3
+      SOLUTION: Total distance $= 120 + 120 = 240$ m over $80$ s, so the average speed is $\dfrac{240}{80} = 3$ m/s.
+      ERR [fm.kin.speed-vs-velocity] {"kind":"numeric","value":0,"tolerance":{"type":"absolute","value":0.005}} → That is the average velocity: the robot finishes where it began, so its displacement is zero. Average speed counts both 120 m legs. (0)
+      HINTS: The robot really covers 120 m twice.
+
+### q.fm.u2.average-speed-and-velocity.0005 [verified] practice · diff 2 · untiered · FM2 calc · 1 marks · (main)write-down1 · The same journey, the other quantity
+  (main) [1] A robot moves 120 m along a straight rail and then 120 m back to where it started, taking 80 seconds altogether. Write down its average velocity.
+      ANSWER: numeric 0 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      W1 W1: 0 (m/s)
+      SOLUTION: The robot ends where it began, so its displacement is 0 m and its average velocity is $0$ m/s, whatever its speed was along the way.
+      HINTS: Where does the robot finish compared with where it started?
+
+### q.fm.u2.average-speed-and-velocity.0006 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A change of units
+  (main) [2] A car travels along a straight road at a steady 36 km/h. Calculate its speed in m/s.
+      ANSWER: numeric 10 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: 36 000 m and 3600 s seen, or division by 3.6
+      W1 W1: 10
+      SOLUTION: $36$ km/h $= \dfrac{36\,000}{3600} = 10$ m/s. Dividing by $3.6$ is the same step written more quickly.
+      HINTS: 36 km is 36 000 m and 1 hour is 3600 s. || Dividing by 3.6 does the same job.
+
+### q.fm.u2.average-speed-and-velocity.0007 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A change of units the other way
+  (main) [2] A cyclist rides along a straight road at a steady 12 m/s. Calculate her speed in km/h.
+      ANSWER: numeric 43.2 km/h tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: multiplication by 3.6, or 12 x 3600 divided by 1000
+      W1 W1: 43.2
+      SOLUTION: In one hour she covers $12 \times 3600 = 43\,200$ m, which is $43.2$ km, so her speed is $43.2$ km/h.
+      HINTS: In one hour she covers 12 x 3600 metres. || Then change the metres into kilometres.
+
+### q.fm.u2.average-speed-and-velocity.0008 [verified] practice · diff 3 · untiered · FM2 calc · 3 marks · (main)calculate3 · Two stages at different speeds
+  (main) [3] A drone flies 300 m along a straight line in 30 seconds and then a further 300 m in the same direction in 50 seconds. Calculate its average speed for the whole flight.
+      ANSWER: numeric 7.5 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: a total distance of 600 m
+      MW1 MW2: a total time of 80 s
+      W1 W1: 7.5
+      SOLUTION: Total distance $= 300 + 300 = 600$ m and total time $= 30 + 50 = 80$ s, so the average speed is $\dfrac{600}{80} = 7.5$ m/s.
+      ERR [fm.kin.average-speed-formula] {"kind":"numeric","value":8,"tolerance":{"type":"absolute","value":0.005}} → The two stage speeds are 10 m/s and 6 m/s, and their mean is 8 m/s. Averaging speeds treats the two stages as equal, but the slower one lasts 50 s against 30 s, so it counts for more. Total distance over total time gives 7.5 m/s. (0)
+      ERR [fm.kin.stage-time-not-used] {"kind":"numeric","value":12,"tolerance":{"type":"absolute","value":0.005}} → The total distance of 600 m earns the method mark (M). The time underneath must be the whole 80 s, not one stage's 50 s. (1)
+      HINTS: Add the two distances, then add the two times. || Do not average the two speeds: the stages take different times.
+
+### q.fm.u2.average-speed-and-velocity.0009 [verified] practice · diff 1 · untiered · FM2 calc · 1 marks · (main)identify1 · Naming the vector
+  (main) [1] A body has travelled 300 m in total and has ended up 40 m from where it started, on the far side. Which pair of statements is right?
+      ANSWER: mcq ✔Distance 300 m, displacement $-40$ m | ✘Distance $-40$ m, displacement 300 m [fm.kin.speed-vs-velocity] | ✘Distance 300 m, displacement 40 m [fm.kin.negative-gradient-as-slowing] | ✘Distance 260 m, displacement $-40$ m [fm.kin.speed-vs-velocity]
+      W1 W1: distance 300 m and displacement -40 m
+      SOLUTION: Distance is the total ground covered, 300 m. Displacement is the single reading at the end, and the far side of the start makes it $-40$ m.
+      HINTS: Which of the two carries a direction?
+
+### q.fm.u2.average-speed-and-velocity.0010 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A negative average velocity
+  (main) [2] Over 45 seconds a body's displacement from a marker changes from $30$ m to $-60$ m. Calculate its average velocity.
+      ANSWER: numeric -2 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: a change in displacement of -90 m
+      W1 W1: -2
+      SOLUTION: Change in displacement $= -60 - 30 = -90$ m over $45$ s, so the average velocity is $\dfrac{-90}{45} = -2$ m/s.
+      ERR [fm.kin.speed-vs-velocity] {"kind":"numeric","value":2,"tolerance":{"type":"absolute","value":0.005}} → The size is right, so the method mark (M) stands. The body is moving the other way, so the working mark (W) needs the velocity written as -2 m/s. (1)
+      HINTS: Average velocity is the change in displacement divided by the time it took. || Subtract in the order finish minus start.
+
+### q.fm.u2.average-speed-and-velocity.0011 [verified] exam-style · diff 3 · untiered · FM2 calc · 5 marks · (a)calculate1|(b)calculate2|(c)calculate2 · A gritter lorry on a straight road
+  (a) [1] A gritter lorry leaves its depot and travels 2400 m along a straight road, taking 240 seconds.
+It stops for 60 seconds.
+It then turns and travels 1500 m back along the same road, taking 300 seconds.
+
+Calculate the total distance travelled by the lorry.
+
+Answer ________ m
+      ANSWER: numeric 3900 m tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: 2400 + 1500 = 3900
+      SOLUTION: Total distance $= 2400 + 1500 = 3900$ m.
+      ERR [fm.kin.speed-vs-velocity] {"kind":"numeric","value":900,"tolerance":{"type":"absolute","value":0.005}} → That is how far the lorry ends up from the depot, which is its displacement. Distance counts the 1500 m of the return leg as well. (0)
+      HINTS: Both legs count, whichever way the lorry is pointing.
+  (b) [2] Calculate the average speed of the lorry for the whole journey.
+
+Answer ________ m/s
+      ANSWER: numeric 6.5 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: a total time of 600 s
+      W1 W1: 6.5 ft
+      SOLUTION: Total time $= 240 + 60 + 300 = 600$ s, so the average speed is $\dfrac{3900}{600} = 6.5$ m/s.
+      ERR [fm.kin.average-speed-formula] {"kind":"numeric","value":7.5,"tolerance":{"type":"absolute","value":0.005}} → The stage speeds are 10 m/s and 5 m/s, and their mean is 7.5 m/s. The mean of two speeds is not an average speed unless the stages take the same time, and here they take 240 s and 300 s. Total distance over total time gives 6.5 m/s. (0)
+      ERR [fm.kin.stage-time-not-used] {"kind":"numeric","value":7.22,"tolerance":{"type":"absolute","value":0.005}} → The total distance is right, so the method mark (M) is safe. The 60 seconds at rest are part of the journey, so the total time is 600 s and not 540 s. (1)
+      HINTS: The 60 seconds at rest belong in the total time. || Total distance divided by total time.
+  (c) [2] Calculate the average velocity of the lorry for the whole journey.
+
+Answer ________ m/s
+      ANSWER: numeric 1.5 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: a displacement of 900 m
+      W1 W1: 1.5 ft
+      SOLUTION: Displacement $= 2400 - 1500 = 900$ m, so the average velocity is $\dfrac{900}{600} = 1.5$ m/s.
+      ERR [fm.kin.speed-vs-velocity] {"kind":"numeric","value":6.5,"tolerance":{"type":"absolute","value":0.005}} → That is the average speed again. Average velocity puts the displacement of 900 m on top, not the 3900 m of road covered. (0)
+      HINTS: Where does the lorry finish, compared with the depot? || 2400 m out and 1500 m back leaves it 900 m from the depot.
+
+### q.fm.u2.average-speed-and-velocity.0012 [verified] exam-style · diff 3 · untiered · FM2 calc · 8 marks · (a)calculate2|(b)calculate3|(c)write-down1|(d)calculate2 · A cable car running out and back along a straight cable
+  (a) [2] A cable car runs along a straight cable between two stations, P and Q, which are 1.2 km apart.
+It travels from P to Q in 150 seconds, waits at Q for 60 seconds, and returns to P in 190 seconds.
+
+Calculate the speed of the cable car on the journey from P to Q, in m/s.
+
+Answer ________ m/s
+      ANSWER: numeric 8 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: 1200 m seen, divided by 150
+      W1 W1: 8
+      SOLUTION: $1.2$ km $= 1200$ m, so the speed from P to Q is $\dfrac{1200}{150} = 8$ m/s.
+      ERR [fm.kin.stage-time-not-used] {"kind":"numeric","value":3,"tolerance":{"type":"absolute","value":0.005}} → The 1200 m is right, which is the method mark (M). This part asks about one leg, so divide by the 150 s that leg took rather than by the 400 s of the whole journey. (1)
+      HINTS: 1.2 km is 1200 m. || That leg took 150 s on its own.
+  (b) [3] Calculate the average speed of the cable car for the whole journey, in m/s.
+
+Answer ________ m/s
+      ANSWER: numeric 6 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: a total distance of 2400 m
+      MW1 MW2: a total time of 400 s
+      W1 W1: 6
+      SOLUTION: Total distance $= 1200 + 1200 = 2400$ m and total time $= 150 + 60 + 190 = 400$ s, so the average speed is $\dfrac{2400}{400} = 6$ m/s.
+      ERR [fm.kin.average-speed-formula] {"kind":"numeric","value":7.16,"tolerance":{"type":"absolute","value":0.005}} → That is the mean of the two leg speeds, 8 m/s and about 6.32 m/s. The legs take different times, so their speeds cannot simply be averaged. Use 2400 m over 400 s. (0)
+      ERR [fm.kin.stage-time-not-used] {"kind":"numeric","value":7.06,"tolerance":{"type":"absolute","value":0.005}} → The 2400 m earns the method mark (M). The wait at Q counts, so the time underneath is 400 s rather than 340 s. (1)
+      HINTS: The cable car covers 1200 m twice. || The 60 seconds at Q are part of the journey.
+  (c) [1] Write down the average velocity of the cable car for the whole journey.
+
+Answer ________ m/s
+      ANSWER: numeric 0 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      W1 W1: 0 (m/s)
+      SOLUTION: The cable car ends back at P, so its displacement for the whole journey is 0 m and its average velocity is $0$ m/s.
+      ERR [fm.kin.speed-vs-velocity] {"kind":"numeric","value":6,"tolerance":{"type":"absolute","value":0.005}} → That is the average speed from the part above. The cable car finishes where it started, so its displacement is zero and so is its average velocity. (0)
+      HINTS: Where does the cable car finish?
+  (d) [2] Calculate the speed of the cable car on the journey from P to Q in km/h.
+
+Answer ________ km/h
+      ANSWER: numeric 28.8 km/h tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: multiplication by 3.6, or 1.2 km divided by 150/3600 hours
+      W1 W1: 28.8 ft
+      SOLUTION: $8$ m/s means $8 \times 3600 = 28\,800$ m in an hour, which is $28.8$ km, so the speed is $28.8$ km/h.
+      HINTS: In one hour the cable car would cover 8 x 3600 metres. || Multiplying a speed in m/s by 3.6 gives km/h.
+
+## FIND THE MISTAKE
+### ftm.fm.u2.average-speed-and-velocity.01 [verified] fm.kin.average-speed-formula · earned none · ccea-cer:further-maths:2024-summer:FM2:Q1
+STEM: Cormac is finding the average speed of the gritter lorry. It travels 2400 m in 240 s, stops for 60 s, then travels 1500 m back in 300 s. His working:
+    1. Speed out = 2400 ÷ 240 = 10 m/s
+    2. Speed back = 1500 ÷ 300 = 5 m/s
+  ✘ 3. Average speed = (10 + 5) ÷ 2 = 7.5 m/s
+  WRONG: Line 3 takes the mean of the two stage speeds. That would only be right if the lorry spent the same time on each stage, and it does not: 240 seconds out against 300 seconds back, with a 60-second stop in between that is not counted at all. Average speed has one definition, and it is total distance divided by total time.
+  FIX: Total distance = 2400 + 1500 = 3900 m / Total time = 240 + 60 + 300 = 600 s / Average speed = 3900 ÷ 600 = 6.5 m/s
+  FEEDBACK: Both stage speeds are correct, and they would earn their marks in a part that asked for them. This part asks for an average speed, and the mean of two speeds is a different quantity: it earns no method mark because the method itself is not the one the scheme rewards. The Summer 2024 examiners called this part surprisingly poorly answered and said only the stronger candidates used total distance over total time.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u2.average-speed-and-velocity.01 [verified] (formula) Write the rule for average speed.  →  Average speed = total distance divided by total time, with every stage of the journey counted, waiting included.
+- rp.fm.u2.average-speed-and-velocity.02 [verified] (formula) Write the rule for average velocity.  →  Average velocity = total displacement divided by total time. The displacement carries a sign.
+- rp.fm.u2.average-speed-and-velocity.03 [verified] (trap) Why is the average speed of a journey not the mean of the stage speeds?  →  Because the stages usually last different times, and the longer stage counts for more. The mean is only right when the times are equal.
+- rp.fm.u2.average-speed-and-velocity.04 [verified] (qa) A body returns to where it began. What is its average velocity?  →  Zero, because its displacement is zero, however fast it was moving.
+- rp.fm.u2.average-speed-and-velocity.05 [verified] (definition) How are speed and velocity related?  →  Speed is the magnitude of velocity: the same size, without the direction. Speed is never negative.
+- rp.fm.u2.average-speed-and-velocity.06 [verified] (procedure) How do you change a speed in km/h into m/s?  →  Divide by 3.6, or change the kilometres into metres and the hour into 3600 seconds.
+- rp.fm.u2.average-speed-and-velocity.07 [verified] (trap) A journey includes a stop. Does the stopped time go into the average speed?  →  Yes. The total time is the whole journey from start to finish, including every wait.

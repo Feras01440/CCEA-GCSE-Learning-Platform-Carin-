@@ -1,0 +1,205 @@
+# fm.u1.indicial-equations — Solving indicial (exponential) equations with logarithms  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: Solving indicial (exponential) equations with logarithms v1 [verified]
+verification statuses: {"verified":9}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] When the unknown has climbed into the power
+- [p] 
+- [figure] Once the index is down at the front it is just a number multiplying $x$.
+- [choice] 
+- [h] 1. The route, line by line
+- [p] 
+- [figure] Four moves, in the same order every time.
+- [number] 
+- [h] 2. The brackets are the marks
+- [p] 
+- [figure] The bracket is what keeps the equation the same equation.
+- [examiner] Summer 2018, Unit 1, Question 6
+- [choice] 
+- [h] 3. Collecting the x terms
+- [p] 
+- [figure] Expand, collect, factorise, divide — then evaluate.
+- [number] 
+- [h] 4. Evaluate once, at the end
+- [p] 
+- [figure] Same equation, same method, one rounded too soon.
+- [video] Solving Index Equations using Logs - Part 1 - Corbettmaths
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.indicial-equations.01 [verified] paper FM1 calc
+STEM: Solve the equation $5^{3x - 2} = 40$, giving your answer correct to two decimal places.
+  FIG: svg — Five lines of working solving 5 to the power 3x minus 2 equals 40, each with a short note beside it.
+  1. Take logarithms of both sides: $\log 5^{3x - 2} = \log 40$.   — Both sides, always. Taking logs of one side alone changes the equation, and this line is the first mark whatever happens next.  (M1)
+  2. The power law brings the whole index down, in a bracket: $(3x - 2) \log 5 = \log 40$.   — The bracket is not decoration. Without it the logarithm multiplies only the constant, and the equation stops being the one that was set.  (MW1)  WHY: ✔Because $\log a^{n} = n \log a$ applies to the whole index | ✘Because $\log 5$ can be cancelled from both sides | ✘Because the index can be divided out
+  3. Divide both sides by $\log 5$: $3x - 2 = \frac{\log 40}{\log 5}$.   — Leave it as a quotient of logarithms. Writing $\log 40 - \log 5$ here is the slip the reports name, and it changes the answer.  (M2)
+  4. Now evaluate, once: $\frac{\log 40}{\log 5} = 2.29203$, so $3x = 4.29203$ and $x = 1.430677$.   — One calculator step for the whole expression. Rounding the logarithms on the way in moves the second decimal place, which is where the last mark sits.  (M3)
+  5. To two decimal places, $x = 1.43$.   — Check it: $5^{3(1.43) - 2} = 39.87$, which is the right-hand side to the accuracy carried.  (W1)
+  FINAL: $x = 1.43$
+  TWIN: Solve the equation $7^{3x - 1} = 200$, giving your answer correct to two decimal places.  → numeric 1.24 tol={"type":"dp","places":2} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u1.indicial-equations.pre (pre) [draft]
+- p1 (The power law): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+What is $\log a^{n}$ written another way?
+    ✔ $n \log a$ — The power law brings the index down in front. It is the move this whole lesson rests on.
+    ✘ $(\log a)^{n}$ — The index belongs to $a$ inside the logarithm, not to the logarithm itself.
+    ✘ $\log n + \log a$ — That would be $\log(na)$. An index is not a factor inside the logarithm.
+- p2 (A linear equation with the unknown on both sides): Solve $5x - 2 = 3x + 8$.
+    ✔ $x = 5$ — $2x = 10$, so $x = 5$. The last half of every indicial equation is exactly this.
+    ✘ $x = 3$ — The constant moved without changing sign. From $5x - 3x = 8 + 2$, $2x = 10$.
+    ✘ $x = 1.25$ — The $x$ terms were added rather than subtracted: $5x - 3x = 2x$, not $8x$.
+- p3 (Recognising a shared base): Write $4$ as a power of $2$.
+    ✔ $2^{2}$ — $2^{2} = 4$. Spotting a shared base can finish a question without logarithms at all.
+    ✘ $2^{4}$ — $2^{4} = 16$, which is too big. The index is the number of twos multiplied.
+    ✘ $2^{1}$ — $2^{1} = 2$. One more factor of $2$ is needed.
+
+### dx.fm.u1.indicial-equations.post (post) [draft]
+- d1 (Bringing the index down with a bracket): Taking logarithms of $5^{x + 2} = 90$ gives which line?
+    ✔ $(x + 2) \log 5 = \log 90$ — The whole index comes down together, inside a bracket.
+    ✘ $x + 2 \log 5 = \log 90$ [fm.logs.brackets-omitted] — Without the bracket only the $2$ is multiplied by the logarithm, so the equation has changed.
+    ✘ $\log(x + 2) + \log 5 = \log 90$ [fm.logs.sum-inside-the-log] — An index does not become a separate logarithm. The power law multiplies, it does not add.
+- d2 (Isolating x from a product of logarithms): From $x \log 2 = \log 40$, what is $x$?
+    ✔ $\frac{\log 40}{\log 2}$ — Divide both sides by $\log 2$, exactly as you would by any other number.
+    ✘ $\log 40 - \log 2$ [fm.logs.quotient-as-divided-logs] — Subtracting logarithms is what $\log \frac{40}{2}$ means, which is a different number. Here you divide the two logarithms.
+    ✘ $\log \frac{40}{2}$ [fm.logs.quotient-as-divided-logs] — That is the logarithm of a quotient. What the equation needs is a quotient of logarithms.
+- d3 (Collecting the x terms): In $4x \log 2 + \log 2 = x \log 7 + 3 \log 7$, what happens when the $x$ term on the right is moved to the left?
+    ✔ It becomes $-x \log 7$ on the left — A term crossing the equals sign changes sign, which is what lets $x$ be factorised out.
+    ✘ It stays as $+x \log 7$ on the left [fm.logs.terms-not-collected] — The sign has to change. Leaving it positive adds the two $x$ terms instead of subtracting them.
+    ✘ It cancels with $\log 2$ [fm.logs.terms-not-collected] — They are different numbers and one carries an $x$, so nothing cancels.
+- d4 (Keeping accuracy to the last step): Solving $3^{x} = 11$, a student rounds $\log 11$ and $\log 3$ to two decimal places before dividing. What happens?
+    ✔ The answer comes out as $2.17$ instead of $2.18$ — Rounding on the way in moves the second decimal place, and that is the place the mark is given for.
+    ✘ Nothing changes, because rounding twice cancels out [fm.logs.rounded-too-early] — Two roundings do not cancel; here they move the answer by a hundredth.
+    ✘ The answer is more accurate, because the numbers are simpler [fm.logs.rounded-too-early] — Simpler numbers are not more accurate ones. Keep the logarithms in the calculator until the last step.
+
+## QUESTIONS
+### q.fm.u1.indicial-equations.0001 [verified] practice · diff 1 · untiered · FM1 calc · 3 marks · (main)solve3 · The simplest indicial equation, with the unknown alone in the index
+  (main) [3] Solve the equation
+$2^{x} = 40$
+Give your answer correct to two decimal places.
+      ANSWER: numeric 5.32 tol={"type":"dp","places":2} forms=decimal/fraction
+      M1 M1: taking logarithms of both sides
+      MW1 MW1: $(x) \log 2 = \log 40$, with brackets
+      W1 W1: $5.32$ ft
+      SOLUTION: Taking logs: $\log 2^{x} = \log 40$, so $x \log 2 = \log 40$. $x = \frac{\log 40}{\log 2} = 5.321928$. To two decimal places, $x = 5.32$.
+      ERR [fm.logs.unknown-base-divided] {"kind":"numeric","value":20} → That is $40 \div 2$. An index is not a multiplier, so it cannot be divided away; taking logarithms is what frees the $x$. (0)
+      ERR [fm.logs.quotient-as-divided-logs] {"kind":"numeric","value":1.3} → The two logarithms have been subtracted where the method divides them. From $x \log 2 = \log 40$ you divide, which gives $5.32$. (1)
+      HINTS: Take logarithms of both sides. || The power law brings the $x$ down in front of $\log 2$.
+
+### q.fm.u1.indicial-equations.0002 [verified] practice · diff 2 · untiered · FM1 calc · 4 marks · (main)solve4 · A linear index on one side, where the bracket first matters
+  (main) [4] Solve the equation
+$5^{x + 2} = 90$
+Give your answer correct to two decimal places.
+      ANSWER: numeric 0.8 tol={"type":"dp","places":2} forms=decimal/fraction
+      M1 M1: taking logarithms of both sides
+      MW1 MW1: $(x + 2) \log 5 = \log 90$, with brackets
+      M1 M2: expanding and collecting the terms in $x$ on one side
+      W1 W1: $0.80$ ft
+      SOLUTION: Taking logs: $(x + 2) \log 5 = \log 90$. Dividing: $x + 2 = \frac{\log 90}{\log 5} = 2.795889$. So $x = 0.795889$, which is $0.80$ to two decimal places.
+      ERR [fm.logs.brackets-omitted] {"kind":"numeric","value":0.56} → The brackets were left off, so only the $2$ was multiplied by $\log 5$. With the bracket, $(x + 2) \log 5 = \log 90$ gives $0.80$. (1)
+      HINTS: Take logarithms of both sides. || Put the whole index in a bracket before you multiply.
+
+### q.fm.u1.indicial-equations.0003 [verified] practice · diff 2 · untiered · FM1 calc · 4 marks · (main)solve4 · A coefficient and a constant in the index, still with a plain number on the right
+  (main) [4] Solve the equation
+$7^{3x - 1} = 200$
+Give your answer correct to two decimal places.
+      ANSWER: numeric 1.24 tol={"type":"dp","places":2} forms=decimal/fraction
+      M1 M1: taking logarithms of both sides
+      MW1 MW1: $(3x - 1) \log 7 = \log 200$, with brackets
+      M1 M2: expanding and collecting the terms in $x$ on one side
+      W1 W1: $1.24$ ft
+      SOLUTION: Taking logs: $(3x - 1) \log 7 = \log 200$. Dividing: $3x - 1 = \frac{\log 200}{\log 7} = 2.722797$. So $3x = 3.722797$ and $x = 1.24$ to two decimal places.
+      ERR [fm.logs.brackets-omitted] {"kind":"numeric","value":1.05} → Without the bracket the logarithm multiplied only the $1$. Written as $(3x - 1) \log 7$, the answer is $1.24$. (1)
+      HINTS: Brackets around the whole index. || Divide first, then unpick the linear equation.
+
+### q.fm.u1.indicial-equations.0004 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)solve3 · Both sides written as powers of the same base, where indices beat logarithms
+  (main) [3] By writing both sides as powers of $2$, solve the equation
+$4^{x} = 2^{x + 3}$
+      ANSWER: numeric 3 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $4 = 2^{2}$, so the left side is $2^{2x}$
+      M1 M2: $2x = x + 3$
+      W1 W1: $3$ ft
+      SOLUTION: $4 = 2^{2}$, so $4^{x} = 2^{2x}$. The equation becomes $2^{2x} = 2^{x + 3}$, so $2x = x + 3$. That gives $x = 3$.
+      ERR [fm.logs.brackets-omitted] {"kind":"numeric","value":-2.27} → Taking logs is a valid route here, but the brackets were left off, so $\log 2$ multiplied only the $3$. Matching powers of $2$ avoids the slip and gives $x = 3$. (0)
+      HINTS: $4$ is a power of $2$. || Equal powers of the same base have equal indices.
+
+### q.fm.u1.indicial-equations.0005 [verified] practice · diff 3 · untiered · FM1 calc · 5 marks · (main)solve5 · Different bases on both sides, so the x terms have to be gathered
+  (main) [5] Solve the equation
+$5^{2x} = 3^{x + 4}$
+Give your answer correct to two decimal places.
+      ANSWER: numeric 2.07 tol={"type":"dp","places":2} forms=decimal/fraction
+      M1 M1: taking logarithms of both sides
+      MW1 MW1: $(2x) \log 5 = (x + 4) \log 3$, with brackets
+      M1 M2: expanding and collecting the terms in $x$ on one side
+      M1 M3: factorising $x$ out and dividing
+      W1 W1: $2.07$ ft
+      SOLUTION: Taking logs: $2x \log 5 = (x + 4) \log 3$. Expanding: $2x \log 5 = x \log 3 + 4 \log 3$. Collecting: $x(2 \log 5 - \log 3) = 4 \log 3$. So $x = 2.072596$, which is $2.07$ to two decimal places.
+      ERR [fm.logs.terms-not-collected] {"kind":"numeric","value":1.02} → The $x$ term crossed the equals sign without changing sign, so the two $x$ terms were added instead of subtracted. With the sign changed, $x(2 \log 5 - \log 3) = 4 \log 3$ gives $2.07$. (2)
+      HINTS: Logs of both sides, with brackets. || Every $\log$ is a number, so collect the $x$ terms as usual.
+
+### q.fm.u1.indicial-equations.0006 [verified] practice · diff 2 · untiered · FM1 calc · 3 marks · (main)solve3 · The accuracy step on its own, where rounding early moves the answer
+  (main) [3] Solve the equation
+$3^{x} = 11$
+Give your answer correct to two decimal places.
+      ANSWER: numeric 2.18 tol={"type":"dp","places":2} forms=decimal/fraction
+      M1 M1: taking logarithms of both sides
+      MW1 MW1: $(x) \log 3 = \log 11$, with brackets
+      W1 W1: $2.18$ ft
+      SOLUTION: Taking logs: $x \log 3 = \log 11$. $x = \frac{\log 11}{\log 3} = 2.182658$. To two decimal places, $x = 2.18$.
+      ERR [fm.logs.rounded-too-early] {"kind":"numeric","value":2.17} → The method is right and the logarithms were rounded before they were divided. Keeping them in the calculator to the last step gives $2.18$. (2)
+      HINTS: Take logs of both sides. || Do the division in one calculator step.
+
+### q.fm.u1.indicial-equations.0007 [verified] exam-style · diff 3 · untiered · FM1 calc · 8 marks · (a)solve5|(b)solve3 · The full two-sided equation, then a same-base pair, as a Unit 1 logarithm question closes
+  (a) [5] Solve the equation
+$2^{4x + 1} = 7^{x + 3}$
+Give your answer correct to two decimal places.
+      ANSWER: numeric 6.22 tol={"type":"dp","places":2} forms=decimal/fraction
+      M1 M1: taking logarithms of both sides
+      MW1 MW1: $(4x + 1) \log 2 = (x + 3) \log 7$, with brackets
+      M1 M2: expanding and collecting the terms in $x$ on one side
+      M1 M3: factorising $x$ out and dividing
+      W1 W1: $6.22$ ft
+      SOLUTION: Taking logs: $(4x + 1) \log 2 = (x + 3) \log 7$. Expanding: $4x \log 2 + \log 2 = x \log 7 + 3 \log 7$. Collecting: $x(4 \log 2 - \log 7) = 3 \log 7 - \log 2$. So $x = 6.223197$, which is $6.22$ to two decimal places.
+      ERR [fm.logs.brackets-omitted] {"kind":"numeric","value":0.74} → The brackets were left off when the indices came down, so each logarithm multiplied only its constant. With brackets the answer is $6.22$. (1)
+      ERR [fm.logs.terms-not-collected] {"kind":"numeric","value":1.09} → The $x$ term crossed the equals sign with its sign unchanged, so the two $x$ terms were added. Subtracting gives $x(4 \log 2 - \log 7)$ and the answer $6.22$. (3)
+      ERR [fm.logs.quotient-as-divided-logs] {"kind":"numeric","value":23.46} → The two logarithms on the top line were divided where the working subtracts them. The numerator is $3 \log 7 - \log 2$, which gives $6.22$. (2)
+      HINTS: Take logarithms of both sides, keeping each index in a bracket. || Expand, then gather the $x$ terms on one side. || Factorise $x$ out before you divide.
+  (b) [3] By writing both sides as powers of $2$, solve the equation
+$8^{x} = 2^{x + 4}$
+      ANSWER: numeric 2 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      M1 M1: $8 = 2^{3}$, so the left side is $2^{3x}$
+      M1 M2: $3x = x + 4$
+      W1 W1: $2$ ft
+      SOLUTION: $8 = 2^{3}$, so $8^{x} = 2^{3x}$. The equation becomes $2^{3x} = 2^{x + 4}$, so $3x = x + 4$. That gives $2x = 4$ and $x = 2$.
+      HINTS: $8$ is a power of $2$. || Once both sides share a base, the indices are equal.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.indicial-equations.01 [draft] fm.logs.brackets-omitted · earned M1 · ccea-cer:further-maths:2018-summer:FM1:Q6
+STEM: Cara was asked to solve 7^3x - 1 = 200 correct to two decimal places. Her working:
+    1. log(7^3x - 1) = log 200
+  ✘ 2. 3x - 1 log 7 = log 200
+    3. 3x = log 200 + log 7
+    4. 3x = 3.146128
+    5. x = 1.05
+  WRONG: Line 1 is right: logarithms of both sides is always the first move.
+Line 2 brings the index down without a bracket, so $\log 7$ multiplies only the $1$ and no longer multiplies the $3x$. Everything after that solves a different equation, which is why the answer is out by more than a rounding.
+The line should read $(3x - 1) \log 7 = \log 200$, and then $x = 1.24$.
+  FIX: (3x - 1) log 7 = log 200 / 3x - 1 = log 200 / log 7 = 2.722797 / x = 1.24
+  FEEDBACK: Taking logarithms of both sides is the right first move and it earns its mark. The bracket is what the rest depends on: the index is one expression, so all of it multiplies the logarithm. Write the bracket as you bring the index down, every time, and the rest is a linear equation you can already do.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.indicial-equations.01 [draft] (procedure) Give the first two lines of solving an equation with the unknown in the index.  →  Take logarithms of both sides, then use the power law to bring each whole index down in front of its logarithm, inside a bracket.
+- rp.fm.u1.indicial-equations.02 [draft] (trap) Why must the index be written in a bracket when it comes down?  →  Because the whole index multiplies the logarithm. Without the bracket only the constant is multiplied, and the equation being solved is no longer the one that was set.
+- rp.fm.u1.indicial-equations.03 [draft] (procedure) With logarithms on both sides, how is $x$ found?  →  Expand both brackets, move the $x$ terms to one side and the numbers to the other, factorise $x$ out, then divide.
+- rp.fm.u1.indicial-equations.04 [draft] (trap) From $x \log 2 = \log 40$, what is the next line, and what is it not?  →  It is $x = \frac{\log 40}{\log 2}$, a quotient of the two logarithms. It is not $\log 40 - \log 2$, which is a different number.
+- rp.fm.u1.indicial-equations.05 [draft] (trap) When should the calculator be used in an indicial equation, and to what accuracy is the answer given?  →  Only at the last step, on the whole expression at once. Give two decimal places unless the question says otherwise.
+- rp.fm.u1.indicial-equations.06 [draft] (qa) When can an indicial equation be solved without logarithms at all?  →  When both sides can be written as powers of the same base. Then the indices are equal and the equation is linear at once.

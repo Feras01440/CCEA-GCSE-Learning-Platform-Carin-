@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qwc-item.schema.json",
+  "title": "QwcItem",
+  "$ref": "#/$defs/QwcItem",
+  "$defs": {
+    "QwcItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/QwcItemId"
+        },
+        "specRefs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SpecRef"
+          }
+        },
+        "unit": {
+          "type": "string",
+          "pattern": "^[A-Z]{0,3}[0-9]{1,2}$"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier"
+        },
+        "stem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "indicativeContent": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "point": {
+                "type": "string",
+                "minLength": 1
+              },
+              "keyWords": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "commonLoss": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "point",
+              "keyWords"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "bands": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "band": {
+                "type": "string",
+                "enum": [
+                  "0",
+                  "A",
+                  "B",
+                  "C"
+                ]
+              },
+              "marks": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 6
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 6
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "descriptor": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "band",
+              "marks",
+              "descriptor"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "modelAnswerBandA": {
+          "type": "string",
+          "minLength": 1
+        },
+        "upgradeMeBandB": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selfMarkRubric": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "examinerSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExaminerSource"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "specRefs",
+        "unit",
+        "tier",
+        "stem",
+        "indicativeContent",
+        "bands",
+        "modelAnswerBandA",
+        "upgradeMeBandB",
+        "selfMarkRubric",
+        "examinerSources"
+      ],
+      "additionalProperties": false,
+      "description": "Six-mark quality-of-written-communication builder: indicative content, three bands, model → upgrade-me → blank"
+    },
+    "QwcItemId": {
+      "type": "string",
+      "pattern": "^qwc\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "SpecRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{0,4}(-[A-Za-z0-9.]+){1,3}$",
+      "description": "Learning-outcome statement id from data/spec/*.json"
+    },
+    "Tier": {
+      "type": "string",
+      "enum": [
+        "F",
+        "H",
+        "both",
+        "untiered"
+      ]
+    },
+    "ExaminerSource": {
+      "type": "string",
+      "pattern": "^ccea-cer:[a-z][a-z0-9-]*:\\d{4}-(?:summer|november|march|january):[A-Za-z0-9]+:Q\\d{1,2}(?:[a-z]|\\([a-z]\\))?(?:\\([ivx]{1,4}\\))?$",
+      "description": "Chief Examiner report citation: ccea-cer:<subject>:<yyyy>-<series>:<unit>:Q<n>"
+    }
+  }
+}

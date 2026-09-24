@@ -1,0 +1,252 @@
+# fm.u2.vector-magnitude-and-direction — Magnitude and direction of a vector  [L, difficulty 2]
+unit FM2 · tier untiered · specRefs []
+note: Magnitude and direction of a vector v1 [verified]
+verification statuses: {"verified":18}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] How long, and which way
+- [p] 
+- [h] 1. The arrow is a hypotenuse
+- [figure] Two legs at right angles, so the arrow is $\sqrt{625}$ long.
+- [p] 
+- [number] 
+- [h] 2. Which ratio gives which angle
+- [figure] Two formulae on the sheet, and one check that is not.
+- [p] 
+- [why] Why the check works every time
+- [number] 
+- [h] 3. Both angles on one picture
+- [figure] The same arrow: $16.26^{\circ}$ from $\mathbf{i}$, $73.74^{\circ}$ from $\mathbf{j}$.
+- [p] 
+- [video] Magnitude and Direction
+- [number] 
+- [h] 4. When the axes are east and north
+- [figure] A bearing is the angle from north, so it is the angle with $\mathbf{j}$.
+- [p] 
+- [choice] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u2.vector-magnitude-and-direction.01 [verified] paper FM2 calc
+STEM: A force $\mathbf{F} = (24\mathbf{i} + 7\mathbf{j})$ N acts on a body, where $\mathbf{i}$ and $\mathbf{j}$ are perpendicular unit vectors, with $mathbf{i}$ along the x-axis.
+
+(i) Calculate the magnitude of $\mathbf{F}$.
+(ii) Calculate the angle $\mathbf{F}$ makes with the positive x-axis. Round to 2 decimal places.
+(iii) Calculate the angle $\mathbf{F}$ makes with $\mathbf{j}$. Round to 2 decimal places.
+  FIG: svg — A single arrow from the origin to the point 24 across and 7 up, with dashed lines showing the two components, the arrow labelled 25 and the angle it makes with the i direction marked as theta.
+  1. $|\mathbf{F}| = \sqrt{24^2 + 7^2} = \sqrt{625} = 25$ N   — The two components are at right angles, so the arrow is the hypotenuse of a right-angled triangle and Pythagoras gives its length. The formula is on the Unit 2 sheet.  (MW1,W1)  WHY: ✔Because the i and j directions are perpendicular, so the components form a right-angled triangle | ✘Because the magnitude of a vector is always the sum of its components | ✘Because the larger component is the length of the arrow
+  2. $\theta = \tan^{-1}\dfrac{7}{24} = 16.26^{\circ}$   — The angle with i sits between the arrow and the x-axis, and the side opposite it is the j component while the side beside it is the i component. Opposite over adjacent is the tangent.  (MW1,W1)
+  3. $\tan^{-1}\dfrac{24}{7} = 73.74^{\circ}$   — Measuring from j swaps which side is opposite and which is adjacent, so the fraction turns over. Nothing else changes.  (MW1)
+  4. Check: $16.26 + 73.74 = 90$   — The two axes are at right angles, so the two angles must add to $90^{\circ}$. It is a five-second check that catches an upside-down fraction.  (W1)
+  FINAL: (i) $25$ N  (ii) $16.26^{\circ}$  (iii) $73.74^{\circ}$
+  TWIN: A force is $(9\mathbf{i} + 40\mathbf{j})$ N. Calculate its magnitude, in newtons.  → numeric 41 N tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u2.vector-magnitude-and-direction.pre (pre) [verified]
+- 01 (Prerequisite: Pythagoras): From an earlier topic: a right-angled triangle has shorter sides 5 and 12. How long is the hypotenuse?
+    ✔ $13$ — $25 + 144 = 169$, and $\sqrt{169} = 13$.
+    ✘ $17$ — That adds the two sides. Pythagoras squares them first, then roots the total.
+    ✘ $169$ — That is the square of the hypotenuse. One more step is needed.
+    ✘ $60$ — That multiplies the sides, which gives twice the area rather than a length.
+- 02 (Prerequisite: naming the sides of a right-angled triangle): From an earlier topic: in a right-angled triangle, which pair of sides does the tangent of an angle use?
+    ✔ Opposite and adjacent — $\tan \theta = \dfrac{\text{opposite}}{\text{adjacent}}$.
+    ✘ Opposite and hypotenuse — That pair gives the sine.
+    ✘ Adjacent and hypotenuse — That pair gives the cosine.
+    ✘ The two shorter sides and the hypotenuse — All three together is Pythagoras, which gives a length rather than an angle.
+- 03 (Prerequisite: inverse tangent on a calculator): From an earlier topic: $\tan \theta = 1$. What is $\theta$, in degrees?
+    ✔ $45$ — $\tan 45^{\circ} = 1$, so $\tan^{-1} 1 = 45^{\circ}$.
+    ✘ $90$ — The tangent is not defined at $90^{\circ}$; it grows without limit as the angle approaches it.
+    ✘ $1$ — That is the value of the tangent, not the angle. Use the inverse key.
+    ✘ $0$ — $\tan 0^{\circ} = 0$, not 1.
+
+### dx.fm.u2.vector-magnitude-and-direction.post (post) [verified]
+- 04 (The magnitude formula): What is the magnitude of $(6\mathbf{i} + 8\mathbf{j})$?
+    ✔ $10$ — $\sqrt{36 + 64} = \sqrt{100} = 10$.
+    ✘ $100$ [fm.vectors.magnitude-root-omitted] — That is the sum of the squares. The square root is the last step.
+    ✘ $14$ [fm.vectors.magnitude-components-added] — That adds the components. They are at right angles, so they cannot simply be added.
+    ✘ $8$ [fm.vectors.magnitude-components-added] — That is the larger component. The arrow is longer than either of its components.
+- 05 (Which ratio the angle with i uses): Which expression gives the angle between $x\mathbf{i} + y\mathbf{j}$ and $\mathbf{i}$?
+    ✔ $\tan^{-1}\dfrac{y}{x}$ — This is the form printed on the Unit 2 formula sheet.
+    ✘ $\tan^{-1}\dfrac{x}{y}$ [fm.vectors.direction-ratio-inverted] — That is the angle with $\mathbf{j}$. The two answers add to $90^{\circ}$, so it is a quick one to spot.
+    ✘ $\sin^{-1}\dfrac{y}{x}$ [fm.vectors.direction-ratio-inverted] — Sine compares a side with the hypotenuse, and $x$ is not the hypotenuse here.
+    ✘ $\tan^{-1}(xy)$ [fm.vectors.direction-ratio-inverted] — The tangent is a ratio of the two sides, so they are divided rather than multiplied.
+- 06 (The two angles add to a right angle): A vector makes an angle of $28^{\circ}$ with $\mathbf{i}$. What angle does it make with $\mathbf{j}$?
+    ✔ $62^{\circ}$ — The axes are at right angles, so the two angles add to $90^{\circ}$.
+    ✘ $28^{\circ}$ [fm.vectors.direction-ratio-inverted] — That would need the vector to lie at $45^{\circ}$, halfway between the axes.
+    ✘ $152^{\circ}$ [fm.vectors.direction-ratio-inverted] — That subtracts from $180^{\circ}$, which is the angle on a straight line rather than between the axes.
+    ✘ $332^{\circ}$ [fm.vectors.direction-ratio-inverted] — That subtracts from a full turn, which is not what the second axis is.
+- 07 (Speed as the magnitude of a velocity): A body has velocity $(3\mathbf{i} + 4\mathbf{j})$ m/s. What is its speed?
+    ✔ $5$ m/s — Speed is the magnitude of the velocity: $\sqrt{9 + 16} = 5$.
+    ✘ $(3\mathbf{i} + 4\mathbf{j})$ m/s [fm.kin.speed-vs-velocity] — That is the velocity itself. A speed is a single number, because it carries no direction.
+    ✘ $7$ m/s [fm.vectors.magnitude-components-added] — That adds the components rather than using Pythagoras on them.
+    ✘ $25$ m/s [fm.vectors.magnitude-root-omitted] — That is the sum of the squares, with the root not yet taken.
+
+## QUESTIONS
+### q.fm.u2.vector-magnitude-and-direction.0001 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A force acting on a block
+  (main) [2] A force is $(5\mathbf{i} + 12\mathbf{j})$ N.
+
+Calculate its magnitude.
+
+Answer ________ N
+      ANSWER: numeric 13 N tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\sqrt{5^2 + 12^2}$
+      W1 W1: $13$
+      SOLUTION: $\sqrt{5^2 + 12^2} = \sqrt{169} = 13$ N.
+      ERR [fm.vectors.magnitude-root-omitted] {"kind":"numeric","value":169,"tolerance":{"type":"absolute","value":0.005}} → That is $5^2 + 12^2$, so the squaring and adding earn the method mark (M). The working mark (W) needs the square root taken at the end. (1)
+      ERR [fm.vectors.magnitude-components-added] {"kind":"numeric","value":17,"tolerance":{"type":"absolute","value":0.005}} → That adds the sizes of the two components. They point at right angles to each other, so the arrow joining them is shorter than that: square, add, then root. (0)
+      HINTS: The two components are at right angles. || The formula is printed on the Unit 2 sheet.
+
+### q.fm.u2.vector-magnitude-and-direction.0002 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A displacement on a smooth plane
+  (main) [2] A displacement is $(12\mathbf{i} + 35\mathbf{j})$ m.
+
+Calculate its magnitude.
+
+Answer ________ m
+      ANSWER: numeric 37 m tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\sqrt{12^2 + 35^2}$
+      W1 W1: $37$
+      SOLUTION: $\sqrt{12^2 + 35^2} = \sqrt{1369} = 37$ m.
+      ERR [fm.vectors.magnitude-root-omitted] {"kind":"numeric","value":1369,"tolerance":{"type":"absolute","value":0.005}} → That is $12^2 + 35^2$, so the squaring and adding earn the method mark (M). The working mark (W) needs the square root taken at the end. (1)
+      ERR [fm.vectors.magnitude-components-added] {"kind":"numeric","value":47,"tolerance":{"type":"absolute","value":0.005}} → That adds the sizes of the two components. They point at right angles to each other, so the arrow joining them is shorter than that: square, add, then root. (0)
+      HINTS: The two components are at right angles. || The formula is printed on the Unit 2 sheet.
+
+### q.fm.u2.vector-magnitude-and-direction.0003 [verified] practice · diff 3 · untiered · FM2 calc · 2 marks · (main)calculate2 · A force acting on a particle
+  (main) [2] A force is $(-9\mathbf{i} + 12\mathbf{j})$ N.
+
+Calculate its magnitude.
+
+Answer ________ N
+      ANSWER: numeric 15 N tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\sqrt{9^2 + 12^2}$
+      W1 W1: $15$
+      SOLUTION: $\sqrt{9^2 + 12^2} = \sqrt{225} = 15$ N.
+      ERR [fm.vectors.magnitude-root-omitted] {"kind":"numeric","value":225,"tolerance":{"type":"absolute","value":0.005}} → That is $9^2 + 12^2$, so the squaring and adding earn the method mark (M). The working mark (W) needs the square root taken at the end. (1)
+      ERR [fm.vectors.magnitude-components-added] {"kind":"numeric","value":21,"tolerance":{"type":"absolute","value":0.005}} → That adds the sizes of the two components. They point at right angles to each other, so the arrow joining them is shorter than that: square, add, then root. (0)
+      HINTS: The two components are at right angles. || The formula is printed on the Unit 2 sheet.
+
+### q.fm.u2.vector-magnitude-and-direction.0004 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A particle moving on a smooth horizontal plane
+  (main) [2] A particle has velocity $(7\mathbf{i} + 24\mathbf{j})$ m/s.
+
+Calculate its speed.
+
+Answer ________ m/s
+      ANSWER: numeric 25 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\sqrt{7^2 + 24^2}$
+      W1 W1: $25$
+      SOLUTION: Speed $= \sqrt{7^2 + 24^2} = \sqrt{625} = 25$ m/s.
+      ERR [fm.vectors.magnitude-root-omitted] {"kind":"numeric","value":625,"tolerance":{"type":"absolute","value":0.005}} → That is the sum of the squares. The method mark (M) is safe; the square root is what turns it into a speed. (1)
+      ERR [fm.vectors.magnitude-components-added] {"kind":"numeric","value":31,"tolerance":{"type":"absolute","value":0.005}} → That adds the components. The particle does not travel along one axis and then the other: it goes straight, along the arrow the two components build. (0)
+      HINTS: Speed is the magnitude of the velocity. || A speed is a single number with no direction.
+
+### q.fm.u2.vector-magnitude-and-direction.0005 [verified] practice · diff 2 · untiered · FM2 calc · 2 marks · (main)calculate2 · A force drawn on a set of standard axes
+  (main) [2] A force is $(3\mathbf{i} + 4\mathbf{j})$ N.
+
+Calculate the angle between the force and the positive x-axis.
+
+Round to 2 decimal places.
+
+Answer ________ °
+      ANSWER: numeric 53.13 ° tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: $\tan^{-1}\dfrac{4}{3}$
+      W1 W1: $53.13$
+      SOLUTION: $\tan^{-1}\dfrac{4}{3} = 53.13^{\circ}$.
+      ERR [fm.vectors.direction-ratio-inverted] {"kind":"numeric","value":36.87,"tolerance":{"type":"dp","places":2}} → That is $\tan^{-1}\dfrac{3}{4}$, the angle measured from $\mathbf{j}$. Using an inverse tangent earns the method mark (M); the two answers add to $90^{\circ}$, which is the quickest way to notice the fraction is upside down. (1)
+      HINTS: The formula sheet gives the angle with $\mathbf{i}$. || Which component is opposite the angle?
+
+### q.fm.u2.vector-magnitude-and-direction.0006 [verified] practice · diff 3 · untiered · FM2 calc · 2 marks · (main)calculate2 · A velocity drawn on a set of standard axes
+  (main) [2] A velocity is $(8\mathbf{i} + 15\mathbf{j})$ m/s.
+
+Calculate the angle it makes with $\mathbf{j}$.
+
+Round to 2 decimal places.
+
+Answer ________ °
+      ANSWER: numeric 28.07 ° tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: $\tan^{-1}\dfrac{8}{15}$, or $90$ minus the angle with $\mathbf{i}$
+      W1 W1: $28.07$
+      SOLUTION: $\tan^{-1}\dfrac{8}{15} = 28.07^{\circ}$, which is $90 - 61.93$ as expected.
+      ERR [fm.vectors.direction-ratio-inverted] {"kind":"numeric","value":61.93,"tolerance":{"type":"dp","places":2}} → That is the angle with $\mathbf{i}$, the formula printed on the sheet. Reaching it earns the method mark (M); this part measures from $\mathbf{j}$, so the fraction turns over and the two answers add to $90^{\circ}$. (1)
+      ERR [fm.vectors.direction-ratio-inverted] {"kind":"numeric","value":118.07,"tolerance":{"type":"dp","places":2}} → That takes the angle with $\mathbf{i}$ away from $180^{\circ}$. The axes are a quarter turn apart, not a half turn, so the subtraction is from $90^{\circ}$. (0)
+      HINTS: Draw the triangle and mark the angle at the top, against the j direction. || Which component is opposite that angle now?
+
+### q.fm.u2.vector-magnitude-and-direction.0007 [verified] practice · diff 3 · untiered · FM2 calc · 3 marks · (main)calculate3 · A boat leaving a harbour
+  FIG: svg — A displacement arrow from the origin to 40 metres east and 30 metres north, of length 50 metres, with the angle from the north direction round to the arrow marked as the bearing.
+  (main) [3] A boat's displacement from the harbour is $(40\mathbf{i} + 30\mathbf{j})$ m, where $\mathbf{i}$ is due east and $\mathbf{j}$ is due north.
+
+Calculate the bearing of the boat from the harbour.
+
+Round to 2 decimal places.
+
+Answer ________ °
+      ANSWER: numeric 53.13 ° tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: the angle is measured clockwise from north, so it is the angle with $\mathbf{j}$
+      MW1 MW2: $\tan^{-1}\dfrac{40}{30}$
+      W1 W1: $53.13$
+      SOLUTION: North is $\mathbf{j}$, so the bearing is the angle between the displacement and $\mathbf{j}$: $\tan^{-1}\dfrac{40}{30} = 53.13^{\circ}$.
+      ERR [fm.vectors.bearing-not-from-north] {"kind":"numeric","value":36.87,"tolerance":{"type":"dp","places":2}} → That is the angle above the east direction, which is where an angle measured from $\mathbf{i}$ starts. Reaching it earns the method mark (M); a bearing is measured clockwise from north, so it is the angle with $\mathbf{j}$. (1)
+      ERR [fm.vectors.magnitude-when-vector-asked] {"kind":"numeric","value":50,"tolerance":{"type":"dp","places":2}} → That is how far the boat is from the harbour, in metres. This part asks only for the direction, which is an angle in degrees. (0)
+      HINTS: A bearing starts at north and turns clockwise. || North is the $\mathbf{j}$ direction here.
+
+### q.fm.u2.vector-magnitude-and-direction.0008 [verified] exam-style · diff 3 · untiered · FM2 calc · 6 marks · (a)calculate2|(b)calculate2|(c)calculate2 · A particle moving on a smooth horizontal plane
+  FIG: svg — A velocity arrow drawn from the origin to 20 across and 21 up, with dashed lines marking the two components and the arrow labelled v.
+  (a) [2] A particle moves with velocity $\mathbf{v} = (20\mathbf{i} + 21\mathbf{j})$ m/s, where $\mathbf{i}$ and $\mathbf{j}$ are perpendicular unit vectors, with $mathbf{i}$ along the x-axis.
+
+Calculate the speed of the particle.
+
+Answer ________ m/s
+      ANSWER: numeric 29 m/s tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\sqrt{20^2 + 21^2}$
+      W1 W1: $29$
+      SOLUTION: Speed $= \sqrt{20^2 + 21^2} = \sqrt{841} = 29$ m/s.
+      ERR [fm.vectors.magnitude-root-omitted] {"kind":"numeric","value":841,"tolerance":{"type":"absolute","value":0.005}} → That is $20^2 + 21^2$, so the method mark (M) for squaring and adding is safe. The working mark (W) needs the square root. (1)
+      ERR [fm.vectors.magnitude-components-added] {"kind":"numeric","value":41,"tolerance":{"type":"absolute","value":0.005}} → That adds the two components. They act at right angles, so the speed along the arrow is smaller than their total. (0)
+      ERR [fm.vectors.magnitude-components-added] {"kind":"numeric","value":6.4,"tolerance":{"type":"dp","places":2}} → That roots the difference of the squares. Pythagoras adds them, because both components make the arrow longer rather than one cancelling the other. (0)
+      HINTS: Speed is the magnitude of the velocity vector.
+  (b) [2] Calculate the angle between the velocity and the positive x-axis.
+
+Round to 2 decimal places.
+
+Answer ________ °
+      ANSWER: numeric 46.4 ° tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: $\tan^{-1}\dfrac{21}{20}$
+      W1 W1: $46.4$
+      SOLUTION: $\tan^{-1}\dfrac{21}{20} = 46.4^{\circ}$.
+      ERR [fm.vectors.direction-ratio-inverted] {"kind":"numeric","value":43.6,"tolerance":{"type":"dp","places":2}} → That is $\tan^{-1}\dfrac{20}{21}$, which measures from $\mathbf{j}$. Using an inverse tangent earns the method mark (M); the sheet prints the ratio the other way up for the angle with $\mathbf{i}$. (1)
+      ERR [fm.vectors.direction-ratio-inverted] {"kind":"numeric","value":133.6,"tolerance":{"type":"dp","places":2}} → That takes the angle away from $180^{\circ}$. The two axes are a quarter turn apart, so anything measured against the other one is subtracted from $90^{\circ}$. (0)
+      HINTS: The positive x-axis is the $\mathbf{i}$ direction. || The formula is on the Unit 2 sheet.
+  (c) [2] Calculate the angle the velocity makes with $\mathbf{j}$.
+
+Round to 2 decimal places.
+
+Answer ________ °
+      ANSWER: numeric 43.6 ° tol={"type":"dp","places":2} forms=decimal/fraction
+      MW1 MW1: $\tan^{-1}\dfrac{20}{21}$, or $90$ minus the answer to part (b) ft
+      W1 W1: $43.6$
+      SOLUTION: $\tan^{-1}\dfrac{20}{21} = 43.6^{\circ}$, and $46.4 + 43.6 = 90$.
+      ERR [fm.vectors.direction-ratio-inverted] {"kind":"numeric","value":46.4,"tolerance":{"type":"dp","places":2}} → That is part (b)'s answer again, the angle with $\mathbf{i}$. The inverse tangent earns the method mark (M); measuring from $\mathbf{j}$ turns the fraction over, and the two angles must add to $90^{\circ}$. (1)
+      HINTS: Turn the fraction over, or subtract part (b) from 90.
+
+## FIND THE MISTAKE
+### ftm.fm.u2.vector-magnitude-and-direction.01 [verified] fm.vectors.direction-ratio-inverted · earned MW1 · ccea-cer:further-maths:2025-summer:FM2:Q2
+STEM: Séamus is finding the angle that $(5\mathbf{i} + 12\mathbf{j})$ N makes with the positive x-axis. His working:
+    1. x = 5, y = 12
+  ✘ 2. angle = tan⁻¹(x ÷ y)
+    3. angle = tan⁻¹(5 ÷ 12)
+    4. angle = 22.62°
+  WRONG: Line 2 has the fraction upside down. The Unit 2 sheet prints the angle with $\mathbf{i}$ as $\tan^{-1}\dfrac{y}{x}$, because the $\mathbf{j}$ component is opposite that angle and the $\mathbf{i}$ component is beside it. What line 4 gives, $22.62^{\circ}$, is the angle measured from $\mathbf{j}$ instead.
+  FIX: x = 5, y = 12 / angle = tan⁻¹(y ÷ x) / angle = tan⁻¹(12 ÷ 5) / angle = 67.38°
+  FEEDBACK: Choosing an inverse tangent is right, and that earns the method mark (M). The check that saves this one takes five seconds: the two angles must add to $90^{\circ}$, and $22.62 + 67.38 = 90$, so the answer written down is the other one of the pair. Sketching the triangle and marking which angle you want first makes it hard to go wrong.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u2.vector-magnitude-and-direction.01 [verified] (formula) What is the magnitude of $x\mathbf{i} + y\mathbf{j}$?  →  The square root of $x^2 + y^2$, which is on the Unit 2 formula sheet.
+- rp.fm.u2.vector-magnitude-and-direction.02 [verified] (formula) What is the angle between $x\mathbf{i} + y\mathbf{j}$ and $\mathbf{i}$?  →  The inverse tangent of $y$ over $x$, which is on the Unit 2 formula sheet.
+- rp.fm.u2.vector-magnitude-and-direction.03 [verified] (trap) How do you turn the angle with $\mathbf{i}$ into the angle with $\mathbf{j}$?  →  Subtract it from 90 degrees, because the two axes are at right angles.
+- rp.fm.u2.vector-magnitude-and-direction.04 [verified] (definition) What is the speed of a body whose velocity is given in $\mathbf{i}$ and $\mathbf{j}$ form?  →  The magnitude of that velocity vector, so a single number with no direction.
+- rp.fm.u2.vector-magnitude-and-direction.05 [verified] (trap) A bearing is wanted and $\mathbf{j}$ is due north. Which angle do you calculate?  →  The angle with $\mathbf{j}$, because a bearing is measured clockwise from north.

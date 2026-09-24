@@ -1,0 +1,240 @@
+[
+  {
+    "type": "hero",
+    "lede": "Somewhere near the top of a hill the ground is level for an instant, and the same is true of a curve. Those level places are the stationary points, and calculus finds them exactly: set the gradient to zero, solve, then decide whether you are standing on a peak or in a valley.",
+    "can": [
+      "Set dy/dx = 0, solve it, and find the coordinates of every stationary point",
+      "Use the second derivative to say whether each one is a maximum or a minimum",
+      "Check an answer by asking whether the shape of the curve agrees with it"
+    ],
+    "minutes": 17
+  },
+  {
+    "type": "h",
+    "text": "Where the curve goes level"
+  },
+  {
+    "type": "p",
+    "md": "Follow a curve from left to right and the gradient changes as you go: positive while it climbs, negative while it falls. In between it must pass through zero.\nThose are the **stationary points**, and on a cubic there are usually two: one at the top of a rise, one at the bottom of a dip."
+  },
+  {
+    "type": "figure",
+    "alt": "A cubic curve drawn on axes with a peak on the left and a dip on the right, each marked with a short flat dashed line to show that the tangent there is horizontal.",
+    "svg": "<svg viewBox='0 0 560 350' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A cubic curve with a maximum and a minimum, each marked with a flat dashed tangent'><title>A cubic curve with a maximum and a minimum, each marked with a flat dashed tangent</title><path d='M 79.9 24 L 79.9 304 M 219.3 24 L 219.3 304 M 358.7 24 L 358.7 304 M 498.2 24 L 498.2 304 M 52 284 L 540 284 M 52 244 L 540 244 M 52 204 L 540 204 M 52 164 L 540 164 M 52 124 L 540 124 M 52 84 L 540 84 M 52 44 L 540 44' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 204 L 540 204' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 79.9 24 L 79.9 304' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 219.3 200 L 219.3 208' stroke='currentColor' stroke-width='1' fill='none'/><text x='219.3' y='221' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><path d='M 358.7 200 L 358.7 208' stroke='currentColor' stroke-width='1' fill='none'/><text x='358.7' y='221' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 498.2 200 L 498.2 208' stroke='currentColor' stroke-width='1' fill='none'/><text x='498.2' y='221' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><path d='M 75.9 284 L 83.9 284' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='288' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><path d='M 75.9 244 L 83.9 244' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='248' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><path d='M 75.9 164 L 83.9 164' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='168' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><path d='M 75.9 124 L 83.9 124' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='128' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><path d='M 75.9 84 L 83.9 84' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='88' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><path d='M 75.9 44 L 83.9 44' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='48' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='72.9' y='218' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 60.1 301.7 L 95.9 238.7 L 128.5 200.5 L 159.4 178.3 L 195.1 166 L 365.9 183.8 L 401.7 177.1 L 432.6 161.2 L 461.9 134.9 L 492.8 92.9 L 527 26.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 128.7 164 L 309.9 164' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.85'/><path d='M 275.1 184 L 442.4 184' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.85'/><circle cx='219.3' cy='164' r='3.6' fill='currentColor'/><text x='211.3' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>maximum (1, 2)</text><circle cx='358.7' cy='184' r='3.6' fill='currentColor'/><text x='366.7' y='204' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>minimum (2, 1)</text><text x='540' y='196' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='86.9' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='340' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>at both marked points the tangent is flat</text></svg>",
+    "caption": "Two level places on one curve: a maximum and a minimum."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "One tap to start. What is the gradient of the curve at either of the two marked points?",
+    "options": [
+      "Zero",
+      "One",
+      "It cannot be worked out"
+    ],
+    "answer": "Zero",
+    "explain": "The tangent there is flat, and a flat line has gradient zero. That single fact is the equation you are about to solve."
+  },
+  {
+    "type": "h",
+    "text": "1. Set the gradient to zero and solve"
+  },
+  {
+    "type": "p",
+    "md": "Flat means $\\frac{dy}{dx} = 0$, so the search turns into an equation. Differentiate, write the derivative equal to zero, and solve it the way you would solve any equation.\nFrom a quadratic curve the derivative is linear and there is one answer. From a cubic it is a quadratic, so factorise and expect **two**."
+  },
+  {
+    "type": "figure",
+    "alt": "A three-row card: differentiate the cubic, set the derivative equal to zero, factorise and read off the two values of x.",
+    "svg": "<svg viewBox='0 0 560 174' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The three lines that find a stationary point: differentiate, set the derivative to zero, solve'><title>The three lines that find a stationary point: differentiate, set the derivative to zero, solve</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>y = 2x^3 - 9x^2 + 12x - 3</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>dy/dx = 6x^2 - 18x + 12</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the gradient rule</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>6x^2 - 18x + 12 = 0</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>flat means zero gradient</text><rect x='14' y='114' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='132' font-family='inherit' font-size='13' fill='currentColor'>6(x - 1)(x - 2) = 0, so x = 1 or x = 2</text><text x='532' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>two places, on a cubic</text><text x='280' y='166' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the equation is the whole idea: flat means the gradient is zero</text></svg>",
+    "caption": "The derivative is set to zero, not evaluated. Everything else follows from that line."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why zero and not something else",
+    "md": "$\\frac{dy}{dx}$ is the steepness. A number bigger than zero means climbing, a number smaller than zero means falling, and the only way to be doing neither is to be exactly at zero. So the word *stationary* and the equation $\\frac{dy}{dx} = 0$ say the same thing."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "$y = x^{2} - 6x + 5$, so $\\frac{dy}{dx} = 2x - 6$. Solve $2x - 6 = 0$: $x = $ ___",
+    "answer": "3",
+    "explain": "$2x = 6$, so $x = 3$. A quadratic curve has exactly one stationary point, because its derivative is a straight line."
+  },
+  {
+    "type": "h",
+    "text": "2. The height comes from the curve"
+  },
+  {
+    "type": "p",
+    "md": "Solving gives you $x$ and nothing else. To finish the point you substitute that $x$ back into the **original equation**, because that is what gives heights.\nSubstituting into $\\frac{dy}{dx}$ instead always gives zero, which is how a turning point ends up written as $(2, 0)$ when it is nowhere near the $x$-axis. Then write the pair in brackets: the coordinates are the answer, not the $x$."
+  },
+  {
+    "type": "figure",
+    "alt": "The cubic with a dashed line from each turning point down to the x-axis and across to the y-axis, showing the pair of coordinates at each one.",
+    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The cubic with dashed lines from each turning point across to the y-axis, showing where the heights come from'><title>The cubic with dashed lines from each turning point across to the y-axis, showing where the heights come from</title><path d='M 79.9 24 L 79.9 284 M 219.3 24 L 219.3 284 M 358.7 24 L 358.7 284 M 498.2 24 L 498.2 284 M 52 265.4 L 540 265.4 M 52 228.3 L 540 228.3 M 52 191.1 L 540 191.1 M 52 154 L 540 154 M 52 116.9 L 540 116.9 M 52 79.7 L 540 79.7 M 52 42.6 L 540 42.6' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 191.1 L 540 191.1' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 79.9 24 L 79.9 284' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 219.3 187.1 L 219.3 195.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='219.3' y='208.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><path d='M 358.7 187.1 L 358.7 195.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='358.7' y='208.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 498.2 187.1 L 498.2 195.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='498.2' y='208.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><path d='M 75.9 265.4 L 83.9 265.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='269.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><path d='M 75.9 228.3 L 83.9 228.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='232.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><path d='M 75.9 154 L 83.9 154' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><path d='M 75.9 116.9 L 83.9 116.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='120.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><path d='M 75.9 79.7 L 83.9 79.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='83.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><path d='M 75.9 42.6 L 83.9 42.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='46.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='72.9' y='205.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 52 154 L 540 154' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><path d='M 52 172.6 L 540 172.6' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><path d='M 60.1 281.9 L 95.9 223.4 L 128.5 187.9 L 161 166.5 L 200 155.2 L 367.6 172.3 L 405 165.1 L 435.9 149.2 L 466.8 121.8 L 499.3 77.8 L 527 26.2' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 219.3 154 L 219.3 191.1' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3' stroke-opacity='0.8' fill='none'/><path d='M 358.7 172.6 L 358.7 191.1' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3' stroke-opacity='0.8' fill='none'/><circle cx='219.3' cy='154' r='3.6' fill='currentColor'/><text x='211.3' y='144' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>(1, 2)</text><circle cx='358.7' cy='172.6' r='3.6' fill='currentColor'/><text x='368.7' y='192.6' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(2, 1)</text><text x='540' y='183.1' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='86.9' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='320' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>each x goes back into the curve to give its own height</text></svg>",
+    "caption": "Each $x$ goes back into the curve, and the curve hands back the height."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "number",
+    "prompt": "The curve $y = 2x^{3} - 9x^{2} + 12x - 3$ is stationary at $x = 2$. What is $y$ there?",
+    "answer": "1",
+    "explain": "$2(8) - 9(4) + 12(2) - 3 = 1$. Substituting into the derivative would have given $0$, because that is what being stationary means."
+  },
+  {
+    "type": "h",
+    "text": "3. A worked example, start to finish"
+  },
+  {
+    "type": "p",
+    "md": "Find the coordinates of the stationary points of $y = 2x^{3} - 9x^{2} + 12x - 3$ and say what each one is.\n**Step 1.** $\\frac{dy}{dx} = 6x^{2} - 18x + 12$.\n**Step 2.** Setting it to zero and taking out the 6: $6(x - 1)(x - 2) = 0$, so $x = 1$ and $x = 2$.\n**Step 3.** From the curve, $y = 2$ and $y = 1$.\n**Step 4.** $\\frac{d^{2}y}{dx^{2}} = 12x - 18$ settles the nature."
+  },
+  {
+    "type": "figure",
+    "alt": "A two-row table giving, for each stationary point, the value of x, the height from the curve, the value of the second derivative and the resulting nature.",
+    "svg": "<svg viewBox='0 0 560 148' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The worked example set out as a table: the two stationary points with their second-derivative values and natures'><title>The worked example set out as a table: the two stationary points with their second-derivative values and natures</title><rect x='2' y='2' width='556' height='144' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.5'/><text x='12' y='30' font-family='inherit' font-size='13.5' font-weight='600' fill='currentColor'>y = 2x^3 - 9x^2 + 12x - 3,  d2y/dx2 = 12x - 18</text><path d='M 10 72 L 550 72 M 10 100 L 550 100 M 10 128 L 550 128' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.45' fill='none'/><text x='14' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>x</text><text x='84' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>y from the curve</text><text x='244' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>second derivative</text><text x='404' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>nature</text><text x='14' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>1</text><text x='84' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>2</text><text x='244' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>-6</text><text x='404' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>maximum</text><text x='14' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>2</text><text x='84' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>1</text><text x='244' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>6</text><text x='404' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>minimum</text><text x='280' y='140' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>so maximum at (1, 2), minimum at (2, 1)</text></svg>",
+    "caption": "The finished answer: $\\text{maximum at } (1, 2),\\ \\text{minimum at } (2, 1)$."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Which pair of coordinates is the maximum of $y = 2x^{3} - 9x^{2} + 12x - 3$?",
+    "options": [
+      "$(1, 2)$",
+      "$(2, 1)$",
+      "$(1, 0)$"
+    ],
+    "answer": "$(1, 2)$",
+    "explain": "The second derivative at $x = 1$ is $-6$, which is negative, so that point is the maximum. The third option has the height taken from $\\frac{dy}{dx}$ rather than from the curve."
+  },
+  {
+    "type": "h",
+    "text": "4. Which one is it: the second derivative"
+  },
+  {
+    "type": "p",
+    "md": "$\\frac{d^{2}y}{dx^{2}}$ measures how the gradient itself is changing, which is the same as asking which way the curve bends.\n**Positive** means the curve bends upwards, so the point is a **minimum**. **Negative** means it bends downwards, so the point is a **maximum**. Substitute each $x$ in turn and write the sign down beside it."
+  },
+  {
+    "type": "figure",
+    "alt": "A three-row card: second derivative greater than zero means minimum, less than zero means maximum, equal to zero means the test gives no answer.",
+    "svg": "<svg viewBox='0 0 560 174' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The second-derivative test written out: positive means minimum, negative means maximum'><title>The second-derivative test written out: positive means minimum, negative means maximum</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>the second derivative decides which way the curve bends</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 &gt; 0    the curve bends upwards    MINIMUM</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>like a valley</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 &lt; 0    the curve bends downwards    MAXIMUM</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>like a hill</text><rect x='14' y='114' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='132' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 = 0    the test says nothing</text><text x='532' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>use the gradient either side</text><text x='280' y='166' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>one substitution and one sign, and the sentence writes itself</text></svg>",
+    "caption": "Positive bends upwards into a valley; negative bends downwards into a hill."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "At one stationary point $\\frac{d^{2}y}{dx^{2}} = 6$. What is that point?",
+    "options": [
+      "A minimum",
+      "A maximum",
+      "It could be either"
+    ],
+    "answer": "A minimum",
+    "explain": "$6$ is positive, so the curve bends upwards there and the point sits at the bottom of a dip."
+  },
+  {
+    "type": "h",
+    "text": "5. The other test: the gradient either side"
+  },
+  {
+    "type": "p",
+    "md": "When the second derivative comes out as zero it tells you nothing, and there is a second test that always works: look at the sign of $\\frac{dy}{dx}$ just before and just after the point.\nRising then falling is a maximum. Falling then rising is a minimum. It takes two substitutions instead of one, and CCEA accepts it wherever the second derivative would be accepted."
+  },
+  {
+    "type": "figure",
+    "alt": "A two-row card showing the pattern of gradient signs around a turning point: plus, zero, minus gives a maximum, and minus, zero, plus gives a minimum.",
+    "svg": "<svg viewBox='0 0 560 140' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the gradient just before and just after a stationary point, for a maximum and for a minimum'><title>A table of the gradient just before and just after a stationary point, for a maximum and for a minimum</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>the other test: look at the gradient on each side</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>gradient  +   0   -     the curve rises, levels, falls</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>MAXIMUM</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>gradient  -   0   +     the curve falls, levels, rises</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>MINIMUM</text><text x='280' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>useful when the second derivative comes out as zero</text></svg>",
+    "caption": "Plus, zero, minus is a hilltop; minus, zero, plus is the bottom of a dip."
+  },
+  {
+    "type": "video",
+    "videoId": "Y9SCt2xZzJE",
+    "title": "Differentiation Turning Points - CCEA GCSE Further Mathematics",
+    "channel": "P McAleavey",
+    "why": "A Northern Ireland teacher taking a cubic all the way through against this specification, nature included."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "Just before a stationary point the gradient is negative, and just after it the gradient is positive. What is the point?",
+    "options": [
+      "A minimum",
+      "A maximum",
+      "Neither"
+    ],
+    "answer": "A minimum",
+    "explain": "The curve falls into the point and climbs out of it, so the point is the bottom of a dip."
+  },
+  {
+    "type": "h",
+    "text": "6. One free check on every answer"
+  },
+  {
+    "type": "p",
+    "md": "On a cubic the two stationary points are always one of each, so two maxima or two minima means an arithmetic slip somewhere earlier. Examiners say so year after year.\nOn a curve in two separate branches, though, a maximum really can sit **below** a minimum, and the picture below is one. Check the shape against the answer rather than against your expectations."
+  },
+  {
+    "type": "figure",
+    "alt": "A curve in two separate branches: the left branch has a high point below the axis and the right branch has a low point above it, so the maximum lies below the minimum.",
+    "svg": "<svg viewBox='0 0 560 350' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A curve in two branches whose maximum lies below its minimum, showing that such an answer can be correct'><title>A curve in two branches whose maximum lies below its minimum, showing that such an answer can be correct</title><path d='M 52 24 L 52 304 M 133.3 24 L 133.3 304 M 214.7 24 L 214.7 304 M 296 24 L 296 304 M 377.3 24 L 377.3 304 M 458.7 24 L 458.7 304 M 540 24 L 540 304 M 52 291.3 L 540 291.3 M 52 259.5 L 540 259.5 M 52 227.6 L 540 227.6 M 52 195.8 L 540 195.8 M 52 164 L 540 164 M 52 132.2 L 540 132.2 M 52 100.4 L 540 100.4 M 52 68.5 L 540 68.5 M 52 36.7 L 540 36.7' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 164 L 540 164' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 296 24 L 296 304' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 160 L 52 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='52' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-6</text><path d='M 133.3 160 L 133.3 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='133.3' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-4</text><path d='M 214.7 160 L 214.7 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='214.7' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-2</text><path d='M 377.3 160 L 377.3 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='377.3' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 458.7 160 L 458.7 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='458.7' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><path d='M 540 160 L 540 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='540' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>6</text><path d='M 292 291.3 L 300 291.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='295.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-20</text><path d='M 292 259.5 L 300 259.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='263.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-15</text><path d='M 292 227.6 L 300 227.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='231.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-10</text><path d='M 292 195.8 L 300 195.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='199.8' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-5</text><path d='M 292 132.2 L 300 132.2' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='136.2' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>5</text><path d='M 292 100.4 L 300 100.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='104.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>10</text><path d='M 292 68.5 L 300 68.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='72.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>15</text><path d='M 292 36.7 L 300 36.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='40.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>20</text><text x='289' y='178' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 52 248.8 L 228.9 215.9 L 251.6 224.6 L 263 237.1 L 271.4 255.8 L 277.5 281.4 L 279.7 296.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 312.3 31.6 L 319.9 69.8 L 331.2 94.2 L 355.5 110.6 L 540 79.2' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='214.7' cy='214.9' r='3.6' fill='currentColor'/><text x='204.7' y='204.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>maximum (-2, -8)</text><circle cx='377.3' cy='113.1' r='3.6' fill='currentColor'/><text x='387.3' y='131.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>minimum (2, 8)</text><text x='540' y='156' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='303' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='340' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>two separate branches, so the maximum can sit below the minimum</text></svg>",
+    "caption": "Here the maximum at $(-2, -8)$ really does sit below the minimum at $(2, 8)$."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "You find two stationary points on a cubic and your second derivative is negative at both. What does that tell you?",
+    "options": [
+      "There is an error to find in the earlier working",
+      "The curve has two maxima",
+      "The curve is a straight line"
+    ],
+    "answer": "There is an error to find in the earlier working",
+    "explain": "A cubic's second derivative is linear, so it changes sign exactly once. Two negatives is impossible, and noticing that is free marks."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Differentiate, set $\\frac{dy}{dx} = 0$ and solve for every value of $x$.\nSubstitute each $x$ into the curve to get its height, and write the pair as coordinates.\nDifferentiate a second time and read the sign to name each point.\nUse the gradient either side when the second derivative is zero.\nCheck that a cubic's two points are one maximum and one minimum."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "Inside a longer curve question: **3 marks** for a quadratic's single point, **5 or 6** for a cubic's two, **1 or 2** more for the nature. The first mark is $\\frac{dy}{dx}$ set to zero; the last is both points written as coordinate pairs. Stuck? Write the derivative, set it to zero, and take the values of $x$ as far as you can."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.stationary-points-and-nature.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.stationary-points-and-nature.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.stationary-points-and-nature.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.stationary-points-and-nature.06"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.stationary-points-and-nature.07"
+  }
+]

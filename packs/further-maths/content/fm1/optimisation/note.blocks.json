@@ -1,0 +1,274 @@
+[
+  {
+    "type": "hero",
+    "lede": "A fence of fixed length can enclose many different rectangles, and one of them is the biggest. Optimisation is how you find it: turn the situation into one equation in one letter, differentiate, and read off where the gradient is zero.",
+    "can": [
+      "Turn a constraint from a diagram or a sentence into an expression in a single letter",
+      "Differentiate that expression, solve dy/dx = 0 and confirm a maximum or a minimum",
+      "Finish with the quantity the question actually asked for, in its own units"
+    ],
+    "minutes": 22
+  },
+  {
+    "type": "h",
+    "text": "The biggest rectangle a fence can hold"
+  },
+  {
+    "type": "p",
+    "md": "Give someone forty-eight metres of edging and ask them to enclose the largest bed they can against a wall. Long and thin wastes the depth; short and deep wastes the width. Somewhere between the two is the best answer, and calculus finds it exactly."
+  },
+  {
+    "type": "figure",
+    "alt": "A rectangular garden bed against a wall, with two sides of 12 metres and one side of 24 metres",
+    "svg": "<svg viewBox='0 0 520 250' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A rectangular garden bed against a wall: two sides of 12 metres and one of 24 metres, enclosing 288 square metres'><title>A rectangular garden bed against a wall: two sides of 12 metres and one of 24 metres, enclosing 288 square metres</title><path d='M 124 70 L 406 70' stroke='currentColor' stroke-width='4' fill='none' stroke-linecap='round'/><path d='M 140 70 L 140 190 L 390 190 L 390 70' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><text x='265' y='58' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>the wall costs nothing to fence</text><text x='265' y='212' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>24 m, the side facing the wall</text><text x='130' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='end'>12 m</text><text x='400' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>12 m</text><text x='265' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>area 288 m²</text><text x='260' y='240' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>48 m of edging covers three sides only</text></svg>",
+    "caption": "Three sides fenced, one side free. The wall is the whole reason $x$ and $y$ are not equal."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "One tap to begin. In the picture, how many sides are made of edging?",
+    "options": [
+      "Three",
+      "Four",
+      "Two"
+    ],
+    "answer": "Three",
+    "explain": "The wall takes the fourth side, so the edging has to cover the two ends and the front only. That single fact is the constraint."
+  },
+  {
+    "type": "h",
+    "text": "1. The same five steps every time"
+  },
+  {
+    "type": "p",
+    "md": "These questions look different from each other and are not. Every one of them gives you two letters and a sentence that ties them together, and asks for the largest or smallest value of something.\nThe sentence is the **constraint**. Use it to replace one letter, differentiate what is left, and the rest follows."
+  },
+  {
+    "type": "figure",
+    "alt": "A five-row card listing the steps of an optimisation question",
+    "svg": "<svg viewBox='0 0 560 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='every optimisation question runs on the same five steps'><title>every optimisation question runs on the same five steps</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>every optimisation question runs on the same five steps</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>1  read the constraint</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the sentence that ties the two letters together</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>2  one letter only</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>substitute the constraint into the quantity</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>3  differentiate and solve</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>set the derivative to zero</text><rect x='14' y='136' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='154' font-family='inherit' font-size='13' fill='currentColor'>4  confirm which it is</text><text x='532' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the sign of the second derivative</text><rect x='14' y='166' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='184' font-family='inherit' font-size='13' fill='currentColor'>5  answer the question</text><text x='532' y='184' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>substitute back, with units</text><text x='280' y='218' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>step 5 is the one candidates leave out most often</text></svg>",
+    "caption": "Write these five down the margin before you start, and tick them off."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Which step do the examiners report as the one most often missing?",
+    "options": [
+      "Substituting back to find the quantity the question asked for",
+      "Differentiating the expression",
+      "Reading the constraint"
+    ],
+    "answer": "Substituting back to find the quantity the question asked for",
+    "explain": "Candidates solve for $x$ and stop there. In Summer 2022 a question wanted a length of $60$ mm and a great many answers gave the value of $x$ instead."
+  },
+  {
+    "type": "h",
+    "text": "2. Reading the constraint"
+  },
+  {
+    "type": "p",
+    "md": "The edging runs along two ends and the front, so $2x + y = 48$, which rearranges to $y = 48 - 2x$.\nThe quantity to make large is the area, $A = xy$. Replacing $y$ gives $A = x(48 - 2x) = -2x^{2} + 48x$, which is now a function of one letter and can be differentiated."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why one letter and not two",
+    "md": "Differentiation asks how one quantity changes as another changes. With $x$ and $y$ both free there is no single thing to change. The constraint removes that freedom: choose $x$ and $y$ is decided, so the area depends on $x$ alone and the gradient means something."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "blank",
+    "prompt": "A rectangle of area $54$ m² has width $x$ and height $y$. Write $y$ in terms of $x$: $y = $ ___",
+    "answer": "54/x | 54x^-1 | 54x^{-1}",
+    "explain": "From $xy = 54$, dividing both sides by $x$ gives $y = \\frac{54}{x}$. That fraction is what turns the problem into one letter."
+  },
+  {
+    "type": "h",
+    "text": "3. The garden bed, worked in full"
+  },
+  {
+    "type": "p",
+    "md": "**Constraint.** $2x + y = 48$, so $y = 48 - 2x$.\n**One letter.** $A = x(48 - 2x) = -2x^{2} + 48x$.\n**Differentiate.** $\\frac{dA}{dx} = -4x + 48$.\n**Solve.** $-4x + 48 = 0$ gives $x = 12$.\n**Confirm.** $\\frac{d^{2}A}{dx^{2}} = -4$, which is negative, so this is a maximum.\n**Answer.** $y = 24$ m and the greatest area is $288$ m²."
+  },
+  {
+    "type": "figure",
+    "alt": "A graph of the bed's area against x, peaking at 288 square metres when x is 12",
+    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The area of the garden bed plotted against x: it rises to 288 square metres at x = 12 and falls away on both sides'><title>The area of the garden bed plotted against x: it rises to 288 square metres at x = 12 and falls away on both sides</title><path d='M 44 22 L 44 290 M 81.7 22 L 81.7 290 M 119.4 22 L 119.4 290 M 157.1 22 L 157.1 290 M 194.8 22 L 194.8 290 M 232.5 22 L 232.5 290 M 270.2 22 L 270.2 290 M 307.8 22 L 307.8 290 M 345.5 22 L 345.5 290 M 383.2 22 L 383.2 290 M 420.9 22 L 420.9 290 M 458.6 22 L 458.6 290 M 496.3 22 L 496.3 290 M 534 22 L 534 290 M 44 290 L 534 290 M 44 256.5 L 534 256.5 M 44 223 L 534 223 M 44 189.5 L 534 189.5 M 44 156 L 534 156 M 44 122.5 L 534 122.5 M 44 89 L 534 89 M 44 55.5 L 534 55.5 M 44 22 L 534 22' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 44 290 L 534 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 44 22 L 44 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 81.7 286 L 81.7 294 M 119.4 286 L 119.4 294 M 157.1 286 L 157.1 294 M 194.8 286 L 194.8 294 M 232.5 286 L 232.5 294 M 270.2 286 L 270.2 294 M 307.8 286 L 307.8 294 M 345.5 286 L 345.5 294 M 383.2 286 L 383.2 294 M 420.9 286 L 420.9 294 M 458.6 286 L 458.6 294 M 496.3 286 L 496.3 294 M 534 286 L 534 294 M 40 256.5 L 48 256.5 M 40 223 L 48 223 M 40 189.5 L 48 189.5 M 40 156 L 48 156 M 40 122.5 L 48 122.5 M 40 89 L 48 89 M 40 55.5 L 48 55.5 M 40 22 L 48 22' stroke='currentColor' stroke-width='1' fill='none'/><text x='81.7' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><text x='119.4' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><text x='157.1' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>6</text><text x='194.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>8</text><text x='232.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>10</text><text x='270.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>12</text><text x='307.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>14</text><text x='345.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>16</text><text x='383.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>18</text><text x='420.9' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>20</text><text x='458.6' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>22</text><text x='496.3' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>24</text><text x='534' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>26</text><text x='37' y='260.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>40</text><text x='37' y='227' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>80</text><text x='37' y='193.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>120</text><text x='37' y='160' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>160</text><text x='37' y='126.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>200</text><text x='37' y='93' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>240</text><text x='37' y='59.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>280</text><text x='37' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>320</text><text x='37' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 44.2 289.6 L 46.8 284 L 49.5 278.4 L 52.2 272.9 L 54.8 267.5 L 57.5 262.1 L 60.1 256.8 L 62.8 251.6 L 65.5 246.4 L 68.1 241.3 L 70.8 236.3 L 73.4 231.3 L 76.1 226.4 L 78.8 221.5 L 81.4 216.8 L 84.1 212.1 L 86.7 207.4 L 89.4 202.9 L 92.1 198.4 L 94.7 193.9 L 97.4 189.6 L 100 185.3 L 102.7 181 L 105.4 176.9 L 108 172.8 L 110.7 168.7 L 113.3 164.8 L 116 160.9 L 118.7 157 L 121.3 153.3 L 124 149.6 L 126.6 145.9 L 129.3 142.4 L 132 138.9 L 134.6 135.4 L 137.3 132.1 L 139.9 128.8 L 142.6 125.5 L 145.3 122.4 L 147.9 119.3 L 150.6 116.2 L 153.2 113.3 L 155.9 110.4 L 158.5 107.5 L 161.2 104.8 L 163.9 102.1 L 166.5 99.4 L 169.2 96.9 L 171.8 94.4 L 174.5 91.9 L 177.2 89.6 L 179.8 87.3 L 182.5 85 L 185.1 82.9 L 187.8 80.8 L 190.5 78.7 L 193.1 76.8 L 195.8 74.9 L 198.4 73.1 L 201.1 71.3 L 203.8 69.6 L 206.4 68 L 209.1 66.4 L 211.7 64.9 L 214.4 63.5 L 217.1 62.1 L 219.7 60.8 L 222.4 59.6 L 225 58.4 L 227.7 57.3 L 230.4 56.3 L 233 55.3 L 235.7 54.4 L 238.3 53.6 L 241 52.8 L 243.7 52.1 L 246.3 51.5 L 249 50.9 L 251.6 50.4 L 254.3 50 L 257 49.6 L 259.6 49.3 L 262.3 49.1 L 264.9 48.9 L 267.6 48.8 L 270.2 48.8 L 272.9 48.8 L 275.6 48.9 L 278.2 49.1 L 280.9 49.3 L 283.5 49.6 L 286.2 50 L 288.9 50.5 L 291.5 51 L 294.2 51.5 L 296.8 52.2 L 299.5 52.9 L 302.2 53.6 L 304.8 54.5 L 307.5 55.4 L 310.1 56.3 L 312.8 57.4 L 315.5 58.5 L 318.1 59.7 L 320.8 60.9 L 323.4 62.2 L 326.1 63.6 L 328.8 65 L 331.4 66.5 L 334.1 68.1 L 336.7 69.7 L 339.4 71.4 L 342.1 73.2 L 344.7 75 L 347.4 76.9 L 350 78.9 L 352.7 80.9 L 355.4 83 L 358 85.2 L 360.7 87.4 L 363.3 89.7 L 366 92.1 L 368.7 94.6 L 371.3 97.1 L 374 99.6 L 376.6 102.3 L 379.3 105 L 381.9 107.7 L 384.6 110.6 L 387.3 113.5 L 389.9 116.5 L 392.6 119.5 L 395.2 122.6 L 397.9 125.8 L 400.6 129 L 403.2 132.3 L 405.9 135.7 L 408.5 139.1 L 411.2 142.6 L 413.9 146.2 L 416.5 149.8 L 419.2 153.5 L 421.8 157.3 L 424.5 161.1 L 427.2 165.1 L 429.8 169 L 432.5 173.1 L 435.1 177.2 L 437.8 181.3 L 440.5 185.6 L 443.1 189.9 L 445.8 194.3 L 448.4 198.7 L 451.1 203.2 L 453.8 207.8 L 456.4 212.4 L 459.1 217.1 L 461.7 221.9 L 464.4 226.7 L 467.1 231.6 L 469.7 236.6 L 472.4 241.6 L 475 246.8 L 477.7 251.9 L 480.4 257.2 L 483 262.5 L 485.7 267.8 L 488.3 273.3 L 491 278.8 L 493.6 284.4 L 496.3 290' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 270.2 290 L 270.2 48.8' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><circle cx='270.2' cy='48.8' r='3.4' fill='currentColor'/><text x='278.2' y='38.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(12, 288)</text><text x='534' y='282' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x (m)</text><text x='52' y='32' font-family='inherit' font-size='12' fill='currentColor'>A (m²)</text><text x='289' y='322' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the peak is where the gradient is zero</text></svg>",
+    "caption": "Every width is possible. The area peaks at $x = 12$ and falls away on both sides."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "For that bed, $\\frac{dA}{dx} = -4x + 48$. At what value of $x$ is the area greatest?",
+    "answer": "12",
+    "explain": "Set the derivative to zero: $48 = 4x$, so $x = 12$. The gradient of the area is zero exactly at the peak."
+  },
+  {
+    "type": "h",
+    "text": "4. Confirming which kind of turning point it is"
+  },
+  {
+    "type": "p",
+    "md": "The question is never satisfied by finding a stationary value. It has to be shown to be the maximum or the minimum, and the second derivative is the evidence the scheme wants.\nSubstitute your value of $x$, write the number down, and say what its sign means. A sentence with no number attached earns nothing."
+  },
+  {
+    "type": "figure",
+    "alt": "A three-row card: a positive second derivative is a minimum, a negative one is a maximum, and the number itself must be shown",
+    "svg": "<svg viewBox='0 0 560 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='which way does the second derivative point'><title>which way does the second derivative point</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>which way does the second derivative point</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>d²y/dx² is positive</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the gradient is climbing through zero: a minimum</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>d²y/dx² is negative</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the gradient is falling through zero: a maximum</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>you must show the number</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>a bare word earns nothing</text><text x='280' y='158' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>substitute your value of x and write the sign down</text></svg>",
+    "caption": "The sign is the argument, and the number is the evidence."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "The bed has $\\frac{d^{2}A}{dx^{2}} = -4$. What does that show?",
+    "options": [
+      "That $x = 12$ gives the greatest area",
+      "That $x = 12$ gives the smallest area",
+      "Nothing, because the second derivative has no $x$ in it"
+    ],
+    "answer": "That $x = 12$ gives the greatest area",
+    "explain": "A negative second derivative means the gradient is falling through zero, which is a peak. A constant second derivative is perfectly usable evidence; its sign is all that is being asked for."
+  },
+  {
+    "type": "h",
+    "text": "5. Finish with what was asked"
+  },
+  {
+    "type": "p",
+    "md": "Read the last line of the question again before you write anything down. It may want the area, the perimeter, the cost, or the length of one side, and the value of $x$ you solved for is often none of those.\nHere the question asked for the greatest area, so $x = 12$ goes back into $A$ to give $288$ m². Carry the unit with it."
+  },
+  {
+    "type": "video",
+    "videoId": "0LNa9xqi-Mo",
+    "title": "Maximising Using Differentiation - GCSE Further Maths/AS-Level Maths Solution",
+    "channel": "N.I. Maths Tutor",
+    "why": "A Northern Ireland teacher taking a maximising problem through the same five steps."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "The bed's greatest area comes from $A = -2x^{2} + 48x$ at $x = 12$. What is that area, in m²?",
+    "answer": "288",
+    "explain": "$48 \\times 12 - 2 \\times 12^{2} = 288$. Writing $12$ as the answer would be the value of $x$, which is a width, not an area."
+  },
+  {
+    "type": "h",
+    "text": "6. When the expression has a negative power"
+  },
+  {
+    "type": "p",
+    "md": "A fixed **area** with a length to minimise produces a fraction. For a plot of $54$ m² fenced round the outside and once across the middle, the fencing is $L = 2x + 3y$ with $y = \\frac{54}{x}$, so $L = 2x + \\frac{162}{x}$.\nWrite the fraction as $162x^{-1}$ before differentiating: $\\frac{dL}{dx} = 2 - \\frac{162}{x^{2}}$."
+  },
+  {
+    "type": "figure",
+    "alt": "A rectangular plot 9 metres by 6 metres with one fence across the middle",
+    "svg": "<svg viewBox='0 0 520 260' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A rectangular vegetable plot 9 metres by 6 metres with one extra fence across the middle, using 36 metres of fencing'><title>A rectangular vegetable plot 9 metres by 6 metres with one extra fence across the middle, using 36 metres of fencing</title><rect x='110' y='60' width='300' height='150' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='2'/><path d='M 260 60 L 260 210' stroke='currentColor' stroke-width='2' fill='none' stroke-dasharray='6 4' stroke-linecap='round'/><text x='260' y='46' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>9 m across</text><text x='100' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='end'>6 m</text><text x='268' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>the extra fence</text><text x='260' y='234' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>area 54 m², fencing 36 m</text></svg>",
+    "caption": "Two sides of $x$, two sides of $y$, and one more fence of $y$ across the middle."
+  },
+  {
+    "type": "p",
+    "md": "Setting $2 - \\frac{162}{x^{2}} = 0$ gives $x^{2} = 81$, so $x = 9$ and $y = 6$.\nThe second derivative is $\\frac{d^{2}L}{dx^{2}} = \\frac{324}{x^{3}}$, which at $x = 9$ is $\\frac{4}{9}$: positive, so this is the least fencing, $36$ m."
+  },
+  {
+    "type": "figure",
+    "alt": "A graph of the fencing against x, dipping to 36 metres at x = 9",
+    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The total fencing plotted against x: it falls to a least value of 36 metres at x = 9 and rises again'><title>The total fencing plotted against x: it falls to a least value of 36 metres at x = 9 and rises again</title><path d='M 44 22 L 44 290 M 81.7 22 L 81.7 290 M 119.4 22 L 119.4 290 M 157.1 22 L 157.1 290 M 194.8 22 L 194.8 290 M 232.5 22 L 232.5 290 M 270.2 22 L 270.2 290 M 307.8 22 L 307.8 290 M 345.5 22 L 345.5 290 M 383.2 22 L 383.2 290 M 420.9 22 L 420.9 290 M 458.6 22 L 458.6 290 M 496.3 22 L 496.3 290 M 534 22 L 534 290 M 44 290 L 534 290 M 44 256.5 L 534 256.5 M 44 223 L 534 223 M 44 189.5 L 534 189.5 M 44 156 L 534 156 M 44 122.5 L 534 122.5 M 44 89 L 534 89 M 44 55.5 L 534 55.5 M 44 22 L 534 22' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 44 290 L 534 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 44 22 L 44 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 81.7 286 L 81.7 294 M 119.4 286 L 119.4 294 M 157.1 286 L 157.1 294 M 194.8 286 L 194.8 294 M 232.5 286 L 232.5 294 M 270.2 286 L 270.2 294 M 307.8 286 L 307.8 294 M 345.5 286 L 345.5 294 M 383.2 286 L 383.2 294 M 420.9 286 L 420.9 294 M 458.6 286 L 458.6 294 M 496.3 286 L 496.3 294 M 534 286 L 534 294 M 40 256.5 L 48 256.5 M 40 223 L 48 223 M 40 189.5 L 48 189.5 M 40 156 L 48 156 M 40 122.5 L 48 122.5 M 40 89 L 48 89 M 40 55.5 L 48 55.5 M 40 22 L 48 22' stroke='currentColor' stroke-width='1' fill='none'/><text x='81.7' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><text x='119.4' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><text x='157.1' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>6</text><text x='194.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>8</text><text x='232.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>10</text><text x='270.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>12</text><text x='307.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>14</text><text x='345.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>16</text><text x='383.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>18</text><text x='420.9' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>20</text><text x='458.6' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>22</text><text x='496.3' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>24</text><text x='534' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>26</text><text x='37' y='260.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>10</text><text x='37' y='227' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>20</text><text x='37' y='193.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>30</text><text x='37' y='160' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>40</text><text x='37' y='126.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>50</text><text x='37' y='93' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>60</text><text x='37' y='59.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>70</text><text x='37' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>80</text><text x='37' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 91.1 56.2 L 93.7 66.6 L 96.3 75.9 L 98.9 84.3 L 101.5 91.8 L 104.1 98.6 L 106.7 104.7 L 109.4 110.3 L 112 115.3 L 114.6 120 L 117.2 124.2 L 119.8 128.1 L 122.4 131.6 L 125 134.9 L 127.6 137.9 L 130.2 140.7 L 132.8 143.3 L 135.4 145.6 L 138 147.8 L 140.6 149.8 L 143.2 151.6 L 145.8 153.4 L 148.4 154.9 L 151 156.4 L 153.6 157.7 L 156.2 159 L 158.9 160.1 L 161.5 161.2 L 164.1 162.1 L 166.7 163 L 169.3 163.8 L 171.9 164.6 L 174.5 165.2 L 177.1 165.8 L 179.7 166.4 L 182.3 166.9 L 184.9 167.3 L 187.5 167.7 L 190.1 168.1 L 192.7 168.4 L 195.3 168.6 L 197.9 168.8 L 200.5 169 L 203.1 169.2 L 205.7 169.3 L 208.3 169.3 L 211 169.4 L 213.6 169.4 L 216.2 169.4 L 218.8 169.3 L 221.4 169.3 L 224 169.2 L 226.6 169.1 L 229.2 168.9 L 231.8 168.8 L 234.4 168.6 L 237 168.4 L 239.6 168.2 L 242.2 167.9 L 244.8 167.7 L 247.4 167.4 L 250 167.1 L 252.6 166.8 L 255.2 166.5 L 257.8 166.1 L 260.5 165.8 L 263.1 165.4 L 265.7 165.1 L 268.3 164.7 L 270.9 164.3 L 273.5 163.8 L 276.1 163.4 L 278.7 163 L 281.3 162.5 L 283.9 162.1 L 286.5 161.6 L 289.1 161.1 L 291.7 160.6 L 294.3 160.1 L 296.9 159.6 L 299.5 159.1 L 302.1 158.6 L 304.7 158.1 L 307.3 157.5 L 310 157 L 312.6 156.4 L 315.2 155.9 L 317.8 155.3 L 320.4 154.7 L 323 154.2 L 325.6 153.6 L 328.2 153 L 330.8 152.4 L 333.4 151.8 L 336 151.2 L 338.6 150.5 L 341.2 149.9 L 343.8 149.3 L 346.4 148.7 L 349 148 L 351.6 147.4 L 354.2 146.7 L 356.8 146.1 L 359.5 145.4 L 362.1 144.8 L 364.7 144.1 L 367.3 143.4 L 369.9 142.8 L 372.5 142.1 L 375.1 141.4 L 377.7 140.7 L 380.3 140 L 382.9 139.3 L 385.5 138.6 L 388.1 137.9 L 390.7 137.2 L 393.3 136.5 L 395.9 135.8 L 398.5 135.1 L 401.1 134.4 L 403.7 133.7 L 406.3 133 L 409 132.2 L 411.6 131.5 L 414.2 130.8 L 416.8 130 L 419.4 129.3 L 422 128.6 L 424.6 127.8 L 427.2 127.1 L 429.8 126.3 L 432.4 125.6 L 435 124.8 L 437.6 124.1 L 440.2 123.3 L 442.8 122.6 L 445.4 121.8 L 448 121 L 450.6 120.3 L 453.2 119.5 L 455.8 118.8 L 458.4 118 L 461.1 117.2 L 463.7 116.4 L 466.3 115.7 L 468.9 114.9 L 471.5 114.1 L 474.1 113.3 L 476.7 112.5 L 479.3 111.8 L 481.9 111 L 484.5 110.2 L 487.1 109.4 L 489.7 108.6 L 492.3 107.8 L 494.9 107 L 497.5 106.2 L 500.1 105.4 L 502.7 104.6 L 505.3 103.8 L 507.9 103 L 510.6 102.2 L 513.2 101.4 L 515.8 100.6 L 518.4 99.8 L 521 99 L 523.6 98.2 L 526.2 97.4 L 528.8 96.6 L 531.4 95.7 L 534 94.9' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 213.6 290 L 213.6 169.4' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><circle cx='213.6' cy='169.4' r='3.4' fill='currentColor'/><text x='221.6' y='159.4' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(9, 36)</text><text x='534' y='282' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x (m)</text><text x='52' y='32' font-family='inherit' font-size='12' fill='currentColor'>L (m)</text><text x='289' y='322' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>a dip, so the second derivative is positive here</text></svg>",
+    "caption": "A fixed area gives a dip rather than a peak: the fencing is least at $x = 9$."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "Solve $2 - \\frac{162}{x^{2}} = 0$ for the positive value of $x$.",
+    "answer": "9",
+    "explain": "Rearranged, $\\frac{162}{x^{2}} = 2$, so $x^{2} = 81$ and $x = 9$. Stopping at $x^{2} = 81$ leaves the square root untaken."
+  },
+  {
+    "type": "h",
+    "text": "7. A show-that, then the answer"
+  },
+  {
+    "type": "p",
+    "md": "Many of these questions build the expression for you across two or three short parts, each worth one or two marks and each beginning with *show that*. Those parts pay for the lines of working, not for the printed result, so write every one.\nA notice has a printed area of $300$ cm², a margin of $3$ cm at each side and $4$ cm at the top and bottom. With $w$ the printed width, $h = \\frac{300}{w}$ and the whole notice measures $(w + 6)$ by $\\left(h + 8\\right)$."
+  },
+  {
+    "type": "figure",
+    "alt": "A notice with a printed rectangle of area 300 square centimetres and margins of 3 and 4 centimetres round it",
+    "svg": "<svg viewBox='0 0 520 300' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A notice: a printed rectangle of area 300 square centimetres with margins of 3 centimetres at each side and 4 centimetres at the top and bottom'><title>A notice: a printed rectangle of area 300 square centimetres with margins of 3 centimetres at each side and 4 centimetres at the top and bottom</title><rect x='116' y='18' width='278' height='224' fill='none' fill-opacity='0' stroke='currentColor' stroke-width='2'/><rect x='150' y='60' width='210' height='140' fill='currentColor' fill-opacity='0.09' stroke='currentColor' stroke-width='1.6'/><text x='255' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>printed area 300 cm²</text><text x='255' y='54' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>4 cm margin</text><text x='255' y='230' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>4 cm margin</text><text x='108' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='end'>3 cm</text><text x='402' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>3 cm</text><text x='255' y='262' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>w is the width of the printed part only</text></svg>",
+    "caption": "The outer rectangle is wider by $6$ and taller by $8$."
+  },
+  {
+    "type": "gate",
+    "id": "g7a",
+    "kind": "choice",
+    "prompt": "The printed part is $w$ cm wide. How wide is the whole notice?",
+    "options": [
+      "$w + 6$",
+      "$w + 3$",
+      "$w$"
+    ],
+    "answer": "$w + 6$",
+    "explain": "There is a margin of $3$ cm at each side, so two of them are added to the printed width. Adding only one is the slip that makes the whole answer plausible."
+  },
+  {
+    "type": "p",
+    "md": "Multiplying out gives $A = 8w + 348 + \\frac{1800}{w}$, and $\\frac{dA}{dw} = 8 - \\frac{1800}{w^{2}}$.\nThat is zero when $w^{2} = 225$, so $w = 15$ cm, $h = 20$ cm, and the least total area is $588$ cm²."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Only flat contexts",
+    "md": "The Teacher Guidance is explicit that three-dimensional optimisation problems and problems involving $\\pi$ will not be asked, so every context you meet is a flat one: no boxes, no tanks, no circles.",
+    "source": "CCEA GCSE Further Mathematics specification, statement FM1-DIF-02 and its Teacher Guidance"
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "The notice is smallest when $w = 15$ cm. What is its least total area, in cm²?",
+    "answer": "588",
+    "explain": "$A = 348 + 8 \\times 15 + \\frac{1800}{15} = 588$ cm², which is the $21$ cm by $28$ cm rectangle. The width alone is not an area."
+  },
+  {
+    "type": "h",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Read a constraint off a diagram or a sentence and write one letter in terms of the other.\nBuild the quantity to optimise as a function of a single letter and simplify it.\nDifferentiate, including a term with a negative power, and solve the derivative equal to zero.\nShow with the second derivative, and its number, which kind of turning point you have.\nSubstitute back and answer with the quantity asked for and its unit."
+  },
+  {
+    "type": "h",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "The wording is *using calculus, find the value of $x$ which gives the maximum, showing that it is a maximum*, usually after one or two show-that parts. The first mark is for a correct derivative, so write it down even when the setting-up has defeated you. The last mark is for the quantity the question named, with its unit."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.optimisation.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.optimisation.03"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.optimisation.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.optimisation.07"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u1.optimisation.08"
+  }
+]

@@ -1,0 +1,280 @@
+# fm.u1.matrix-simultaneous-equations — Solving 2 × 2 simultaneous equations with matrices  [S, difficulty 3]
+unit FM1 · tier untiered · specRefs []
+note: Solving 2 × 2 simultaneous equations with matrices v1 [verified]
+verification statuses: {"verified":12}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] When the question names the method
+- [p] 
+- [figure] Same equations. Only one of them leaves you free to eliminate.
+- [choice] 
+- [h] 1. Copy the numbers into three boxes
+- [p] 
+- [figure] $AX = B$, read straight off the page.
+- [number] 
+- [h] 2. Line them up before you copy
+- [p] 
+- [figure] Rearrange first, then copy.
+- [why] Why a missing term has to be a zero
+- [number] 
+- [h] 3. Now it is a matrix equation
+- [p] 
+- [figure] The same three steps as any matrix equation.
+- [number] 
+- [h] 4. The column is not the answer yet
+- [p] 
+- [figure] Read the column off, top for $x$ and bottom for $y$.
+- [examiner] Summer 2025, Unit 1, Question 5
+- [video] Using Matrices to Solve Simultaneous Equations - Corbettmaths
+- [number] 
+- [h] 5. When there is no unique solution
+- [p] 
+- [figure] One row is a multiple of the other, so the determinant is zero.
+- [choice] 
+- [h] You can now
+- [p] 
+- [h] In the exam
+- [p] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.matrix-simultaneous-equations.01 [verified] paper FM1 calc
+STEM: Solve the simultaneous equations
+$4x + 3y = 18$
+$2x + 5y = 16$
+You must use a matrix method.
+Give the values of $x$ and $y$.
+  FIG: svg — Two simultaneous equations beside the three matrices they become: the coefficients in a box, the unknowns in a column and the constants in a column.
+  1. Copy the numbers into three matrices: $\begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}$ for the coefficients, a column for $x$ and $y$, and $\begin{pmatrix}18 \\ 16\end{pmatrix}$ for the constants.   — This line is transcription, not mathematics, and it earns a mark before any arithmetic. Both equations are already in the right form here, so nothing has to be rearranged.  (MW1)
+  2. $\det A = (4)(5) - (3)(2) = 14$.   — The determinant on its own line. A zero here would mean the pair has no unique solution, so it is worth knowing before any more work is done.  (M2)
+  3. Swap, negate and divide: $A^{-1} = \frac{1}{14}\begin{pmatrix}5 & -3 \\ -2 & 4\end{pmatrix}$.   — The same three actions as any inverse. From this point the question is an ordinary matrix equation.  (M3)  WHY: ✔Because the pair is now AX = B, and an inverse is what undoes a multiplying matrix | ✘Because the determinant has to be cancelled from both sides | ✘Because the two equations can be added together
+  4. $X = A^{-1}B = \begin{pmatrix}\frac{5}{14} & -\frac{3}{14} \\ -\frac{1}{7} & \frac{2}{7}\end{pmatrix}\begin{pmatrix}18 \\ 16\end{pmatrix} = \begin{pmatrix}3 \\ 2\end{pmatrix}$.   — The inverse goes in front of the constants. The product of a two by two and a column is a column, which is what the two unknowns need.  (M4)
+  5. Reading the column off: $x = 3$ and $y = 2$. Checking in both equations: $4(3) + 3(2) = 18$ and $2(3) + 5(2) = 16$.   — The column is not the answer line. Name both values, and substitute them into both original equations: that check costs twenty seconds and catches every slip above it.  (W1)
+  FINAL: $x = 3$, $y = 2$
+  TWIN: Solve the simultaneous equations $2x + 3y = 14$ and $3x + 5y = 22$, using a matrix method. Give the values of $x$ and $y$.  → algebraic (4, 2) (equivalent)
+
+## DIAGNOSTICS
+### dx.fm.u1.matrix-simultaneous-equations.pre (pre) [draft]
+- p1 (Rearranging a linear equation): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+Rearrange $5x = 11 - 2y$ so that both letters are on the left.
+    ✔ $5x + 2y = 11$ — The term in $y$ crosses the equals sign and changes sign.
+    ✘ $5x - 2y = 11$ — Moving $-2y$ across makes it $+2y$, not $-2y$.
+    ✘ $5x + 2y = -11$ — The $11$ was already on the right and does not move, so its sign is unchanged.
+- p2 (The inverse of a 2 by 2): What is the inverse of $\begin{pmatrix}2 & 3 \\ 3 & 5\end{pmatrix}$?
+    ✔ $\begin{pmatrix}5 & -3 \\ -3 & 2\end{pmatrix}$ — The determinant is $1$, so swapping and negating is the whole of it.
+    ✘ $\begin{pmatrix}5 & 3 \\ 3 & 2\end{pmatrix}$ — The leading diagonal swapped and the other one kept its signs.
+    ✘ $\begin{pmatrix}2 & -3 \\ -3 & 5\end{pmatrix}$ — The signs changed and the leading diagonal never swapped.
+- p3 (The shape of a product): A $2 \times 2$ matrix is multiplied by a $2 \times 1$ column. What shape is the answer?
+    ✔ $2 \times 1$ — The inner numbers match and the outer two give the shape, so the answer is a column.
+    ✘ $2 \times 2$ — The columns of the answer come from the second matrix, which has one.
+    ✘ $1 \times 2$ — Rows come first: the answer has as many rows as the first matrix.
+
+### dx.fm.u1.matrix-simultaneous-equations.post (post) [draft]
+- d1 (Transcribing the coefficients): For the pair $4x + 3y = 18$ and $2x + 5y = 16$, which is the coefficient matrix?
+    ✔ $\begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}$ — One equation to a row, in the order the terms are written.
+    ✘ $\begin{pmatrix}4 & 2 \\ 3 & 5\end{pmatrix}$ [fm.matrix.rows-and-columns-swapped] — The coefficients have been read down the columns instead of across the rows.
+    ✘ $\begin{pmatrix}4 & 18 \\ 2 & 16\end{pmatrix}$ [fm.matrix.dimensions-not-conformable] — The constants have gone into the coefficient matrix. They belong in a column of their own.
+- d2 (A missing term): An equation in a pair reads $3y = 12$, with no term in $x$. What goes in its $x$ slot?
+    ✔ $0$ — A missing term is a zero. The row has to be complete for the product to reproduce the equation.
+    ✘ The slot is left empty [fm.matrix.dimensions-not-conformable] — A matrix has no empty slots: leaving one out would change its shape.
+    ✘ $1$ [fm.matrix.dimensions-not-conformable] — A coefficient of $1$ would put an $x$ into the equation that is not there.
+- d3 (The method once the pair is transcribed): A pair has been written as $AX = B$. What comes next?
+    ✔ Find $A^{-1}$ and work out $A^{-1}B$ — From here it is an ordinary matrix equation, with the inverse in front.
+    ✘ Work out $BA^{-1}$ [fm.matrix.inverse-order] — The inverse goes in front of both sides. $BA^{-1}$ is a different product, and here it does not even exist.
+    ✘ Add the two equations to remove one unknown [fm.matrix.method-instruction-ignored] — That is elimination. When the question names the matrix method, elimination earns nothing.
+- d4 (Naming the two values): Solving a pair gives the column $\begin{pmatrix}3 \\ 2\end{pmatrix}$. What should be written on the answer line?
+    ✔ $x = 3$, $y = 2$ — The top entry is $x$ and the bottom is $y$.
+    ✘ $x = 2$, $y = 3$ [fm.matrix.values-in-wrong-slots] — The two values have swapped. The column is read top to bottom in the order the unknowns were written.
+    ✘ The column $\begin{pmatrix}3 \\ 2\end{pmatrix}$ on its own [fm.matrix.values-in-wrong-slots] — The question asked for two values, so both have to be named. A column is not an answer line.
+- d5 (The singular case): The coefficient matrix of a pair has determinant $0$. What does that tell you?
+    ✔ There is no unique solution, because the matrix has no inverse — The two equations describe parallel lines, so they never meet at a single point.
+    ✘ Both unknowns are zero [fm.matrix.singular-not-recognised] — The determinant says nothing about the values; it says the method cannot run.
+    ✘ The pair must be solved by elimination instead [fm.matrix.singular-not-recognised] — Elimination would not find a unique solution either: there is not one to find.
+
+## QUESTIONS
+### q.fm.u1.matrix-simultaneous-equations.0001 [verified] practice · diff 1 · untiered · FM1 calc · 1 marks · (main)write-down1 · The transcription on its own, before any solving
+  (main) [1] A pair of simultaneous equations is
+$4x + 3y = 18$
+$2x + 5y = 16$
+This pair is to be written as $AX = B$.
+Write down the coefficient matrix $A$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["4","3"],["2","5"]],"tolerance":{"type":"absolute","value":0.0005}}
+      W1 W1: $\begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}$
+      SOLUTION: Row 1 holds the coefficients of the first equation and row 2 those of the second, so $A = \begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}$.
+      ERR [fm.matrix.rows-and-columns-swapped] {"kind":"matrix","entries":[["4","2"],["3","5"]]} → The coefficients have been read down the columns instead of across the rows. One equation fills one row, so $A = \begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}$. (0)
+      ERR [fm.matrix.dimensions-not-conformable] {"kind":"matrix","entries":[["4","18"],["2","16"]]} → The constants have gone into the coefficient matrix. They belong in a column of their own on the other side of the equals sign. (0)
+      HINTS: Copy the coefficients in the order they are written, one equation to a row.
+
+### q.fm.u1.matrix-simultaneous-equations.0002 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)write-down2 · A pair that has to be rearranged before the coefficients can be copied
+  (main) [2] A pair of simultaneous equations is
+$5x = 11 - 2y$
+$3x + 4y = 15$
+This pair is to be written as $AX = B$.
+Write down the coefficient matrix $A$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["5","2"],["3","4"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: the first equation rearranged to $5x + 2y = 11$
+      W1 W1: $\begin{pmatrix}5 & 2 \\ 3 & 4\end{pmatrix}$ ft
+      SOLUTION: The first equation rearranges to $5x + 2y = 11$. Copying both rows of coefficients, $A = \begin{pmatrix}5 & 2 \\ 3 & 4\end{pmatrix}$.
+      ERR [fm.matrix.subtract-wrong-way] {"kind":"matrix","entries":[["5","-2"],["3","4"]]} → The term in $y$ crossed the equals sign without changing sign. Moving $-2y$ across makes it $+2y$, so the first row is $5$ and $2$. The copying itself follows through and keeps a mark. (1)
+      HINTS: Both equations need the letters on the left and the number alone on the right.
+
+### q.fm.u1.matrix-simultaneous-equations.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)write-down2 · A pair with a missing term, which has to be written as a zero
+  (main) [2] A pair of simultaneous equations is
+$4x + y = 9$
+$2y = 6$
+This pair is to be written as $AX = B$.
+Write down the coefficient matrix $A$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["4","1"],["0","2"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: the missing term written as $0x$
+      W1 W1: $\begin{pmatrix}4 & 1 \\ 0 & 2\end{pmatrix}$ ft
+      SOLUTION: The second equation is $0x + 2y = 6$. So the coefficient matrix has all four slots filled: $A = \begin{pmatrix}4 & 1 \\ 0 & 2\end{pmatrix}$.
+      HINTS: The second equation has no term in $x$, so its coefficient is zero.
+
+### q.fm.u1.matrix-simultaneous-equations.0004 [verified] practice · diff 2 · untiered · FM1 calc · 1 marks · (main)calculate1 · The determinant of a coefficient matrix, which decides whether the method can run
+  (main) [1] The coefficient matrix of a pair of simultaneous equations is $A = \begin{pmatrix}3 & 2 \\ 1 & -1\end{pmatrix}$.
+Calculate $\det A$.
+      ANSWER: numeric -5 tol={"type":"absolute","value":0.0005} forms=decimal/fraction
+      MW1 MW1: $-5$
+      SOLUTION: $\det A = (3)(-1) - (2)(1) = -5$.
+      ERR [fm.matrix.determinant-sign-reversed] {"kind":"numeric","value":5,"tolerance":{"type":"absolute","value":0.0005}} → That is $bc - ad$, the subtraction the other way round. The determinant is $-5$, and its sign has to survive into the inverse. (0)
+      HINTS: Leading diagonal multiplied, take away the other diagonal multiplied.
+
+### q.fm.u1.matrix-simultaneous-equations.0005 [verified] practice · diff 3 · untiered · FM1 calc · 5 marks · (main)solve5 · The whole route on a pair with a positive determinant
+  METHOD LOCK: You must use a matrix method.
+  (main) [5] Solve the simultaneous equations
+$4x + 3y = 18$
+$2x + 5y = 16$
+You must use a matrix method.
+Give the values of $x$ and $y$.
+      ANSWER: algebraic (3, 2) (equivalent)
+      MW1 MW1: $\begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}\begin{pmatrix}0 \\ 0\end{pmatrix} = \begin{pmatrix}18 \\ 16\end{pmatrix}$ with the unknowns in the middle column
+      M1 M2: $\det A = 14$
+      M1 M3: $A^{-1} = \frac{1}{14}\begin{pmatrix}5 & -3 \\ -2 & 4\end{pmatrix}$
+      M1 M4: $X = A^{-1}B$, with the inverse in front
+      W1 W1: $x = 3$, $y = 2$ ft
+      SOLUTION: Writing the pair as $AX = B$ gives $A = \begin{pmatrix}4 & 3 \\ 2 & 5\end{pmatrix}$ and $B = \begin{pmatrix}18 \\ 16\end{pmatrix}$. $\det A = 14$, so $A^{-1} = \frac{1}{14}\begin{pmatrix}5 & -3 \\ -2 & 4\end{pmatrix}$. $X = A^{-1}B = \begin{pmatrix}3 \\ 2\end{pmatrix}$, so $x = 3$ and $y = 2$. Checking in both equations: $4(3) + 3(2) = 18$ and $2(3) + 5(2) = 16$.
+      ERR [fm.matrix.values-in-wrong-slots] {"kind":"algebraic","latex":"(2, 3)"} → The two values are right and they have swapped places. The top entry of the column is $x$ and the bottom is $y$, so $x = 3$. (4)
+      HINTS: Copy the coefficients and the constants into matrices first. || Then it is a matrix equation: find the inverse and pre-multiply. || Read the two values off the column and name them.
+
+### q.fm.u1.matrix-simultaneous-equations.0006 [verified] practice · diff 3 · untiered · FM1 calc · 5 marks · (main)solve5 · A pair whose coefficient matrix has a negative determinant
+  METHOD LOCK: You must use a matrix method.
+  (main) [5] Solve the simultaneous equations
+$3x + 2y = 12$
+$x - y = -1$
+You must use a matrix method.
+Give the values of $x$ and $y$.
+      ANSWER: algebraic (2, 3) (equivalent)
+      MW1 MW1: the pair written as $AX = B$
+      M1 M2: $\det A = -5$
+      M1 M3: $A^{-1} = \frac{1}{-5}\begin{pmatrix}-1 & -2 \\ -1 & 3\end{pmatrix}$
+      M1 M4: $X = A^{-1}B$
+      W1 W1: $x = 2$, $y = 3$ ft
+      SOLUTION: $A = \begin{pmatrix}3 & 2 \\ 1 & -1\end{pmatrix}$ and $B = \begin{pmatrix}12 \\ -1\end{pmatrix}$. $\det A = -5$, so $A^{-1} = \frac{1}{-5}\begin{pmatrix}-1 & -2 \\ -1 & 3\end{pmatrix}$. $X = A^{-1}B = \begin{pmatrix}2 \\ 3\end{pmatrix}$, so $x = 2$ and $y = 3$. Both original equations check out with those values.
+      ERR [fm.matrix.values-in-wrong-slots] {"kind":"algebraic","latex":"(3, 2)"} → Both values are right and they are the wrong way round. The top of the column is $x$. (4)
+      HINTS: The determinant comes out negative here, and the minus sign stays with it. || Check both values in both equations at the end.
+
+### q.fm.u1.matrix-simultaneous-equations.0007 [verified] practice · diff 3 · untiered · FM1 calc · 1 marks · (main)identify1 · What the instruction to use matrices rules out
+  (main) [1] A question reads "using a matrix method, solve these simultaneous equations".
+A candidate solves them correctly by elimination and gets both values right.
+Identify what that answer earns.
+      ANSWER: mcq ✔No marks at all | ✘Full marks, because both values are right [fm.matrix.method-instruction-ignored] | ✘The final accuracy mark only [fm.matrix.method-instruction-ignored]
+      W1 W1: no marks
+      SOLUTION: The instruction names the method, so only the matrix route earns marks. A correct answer reached by elimination earns no marks at all.
+      HINTS: Read what the question told her to do.
+
+### q.fm.u1.matrix-simultaneous-equations.0008 [verified] practice · diff 4 · untiered · FM1 calc · 2 marks · (main)explain2 · A pair that the matrix method cannot solve, and why
+  (main) [2] A pair of simultaneous equations is
+$2x + 3y = 7$
+$4x + 6y = 11$
+Explain why these equations cannot be solved by a matrix method.
+      ANSWER: text accepted=["the determinant of the coefficient matrix is 0, so it has no inverse and there is no unique solution","det A = 0, so the coefficient matrix is singular and cannot be inverted"] keyWords=[{"any":["determinant","det"],"marks":1},{"any":["0","zero"],"marks":1}]
+      MW1 MW1: $\det A = 12 - 12 = 0$
+      W1 W1: no inverse exists, so there is no unique solution accept ["the coefficient matrix is singular","the lines are parallel"]
+      SOLUTION: The coefficient matrix is $\begin{pmatrix}2 & 3 \\ 4 & 6\end{pmatrix}$, and its determinant is $12 - 12 = 0$. The determinant of the coefficient matrix is 0, so it has no inverse and there is no unique solution. The two equations describe parallel lines, which never meet at a single point.
+      HINTS: Work out the determinant of the coefficient matrix. || Say what a determinant of zero rules out.
+
+### q.fm.u1.matrix-simultaneous-equations.0009 [verified] exam-style · diff 3 · untiered · FM1 calc · 6 marks · (a)find2|(b)find4 · The inverse, then the pair it solves, which is how the papers set this
+  METHOD LOCK: You must use a matrix method.
+  (a) [2] The matrix $A = \begin{pmatrix}2 & 3 \\ 3 & 5\end{pmatrix}$.
+Find $A^{-1}$.
+Write the answer as a matrix.
+      ANSWER: matrix {"kind":"matrix","rows":2,"cols":2,"entries":[["5","-3"],["-3","2"]],"tolerance":{"type":"absolute","value":0.0005}}
+      MW1 MW1: $\det A = 1$
+      W1 W1: $\begin{pmatrix}5 & -3 \\ -3 & 2\end{pmatrix}$ ft
+      SOLUTION: $\det A = (2)(5) - (3)(3) = 1$. Swapping and negating gives $A^{-1} = \begin{pmatrix}5 & -3 \\ -3 & 2\end{pmatrix}$.
+      ERR [fm.matrix.adjugate-not-negated] {"kind":"matrix","entries":[["5","3"],["3","2"]]} → The leading diagonal swapped and $b$ and $c$ kept their signs. The other diagonal changes sign, giving $\begin{pmatrix}5 & -3 \\ -3 & 2\end{pmatrix}$. (1)
+      HINTS: Determinant first, then swap and negate.
+  (b) [4] Hence solve the simultaneous equations
+$2x + 3y = 14$
+$3x + 5y = 22$
+You must use a matrix method.
+Give the values of $x$ and $y$.
+      ANSWER: algebraic (4, 2) (equivalent)
+      MW1 MW1: the pair written as $AX = B$ with $B = \begin{pmatrix}14 \\ 22\end{pmatrix}$
+      M1 M2: $X = A^{-1}B$, using the inverse from part (a)
+      M1 M3: the product worked row by column
+      W1 W1: $x = 4$, $y = 2$ ft
+      SOLUTION: The pair is $AX = B$ with $B = \begin{pmatrix}14 \\ 22\end{pmatrix}$. Using the inverse from part (a), $X = A^{-1}B = \begin{pmatrix}5 & -3 \\ -3 & 2\end{pmatrix}\begin{pmatrix}14 \\ 22\end{pmatrix} = \begin{pmatrix}4 \\ 2\end{pmatrix}$. So $x = 4$ and $y = 2$, and both values satisfy both equations.
+      ERR [fm.matrix.values-in-wrong-slots] {"kind":"algebraic","latex":"(2, 4)"} → Both values are right and they are the wrong way round. The top of the column is $x$. (3)
+      HINTS: The coefficients are already the matrix $A$ from part (a). || Put the constants in a column and pre-multiply.
+
+### q.fm.u1.matrix-simultaneous-equations.0010 [verified] exam-style · diff 4 · untiered · FM1 calc · 7 marks · (a)write-down2|(b)solve5 · A context in two unknown prices, formed and then solved by the named method
+  METHOD LOCK: You must use a matrix method.
+  (a) [2] A stationer sells notebooks at $n$ pounds each and pens at $p$ pounds each.
+3 notebooks and 2 pens cost 19 pounds.
+5 notebooks and 4 pens cost 33 pounds.
+Write down two equations in $n$ and $p$.
+      ANSWER: text accepted=["3n + 2p = 19 and 5n + 4p = 33","3n + 2p = 19, 5n + 4p = 33"] keyWords=[{"any":["3n + 2p = 19"],"marks":1},{"any":["5n + 4p = 33"],"marks":1}]
+      MW1 MW1: $3n + 2p = 19$
+      W1 W1: $5n + 4p = 33$
+      SOLUTION: 3 notebooks at $n$ pounds and 2 pens at $p$ pounds give 3n + 2p = 19 and 5n + 4p = 33.
+      HINTS: Each sentence about a total cost becomes one equation.
+  (b) [5] Solve your two equations to find the price of a notebook and the price of a pen.
+You must use a matrix method.
+Give the values of $n$ and $p$.
+      ANSWER: algebraic (5, 2) (equivalent)
+      MW1 MW1: the pair written as $AX = B$ with $A = \begin{pmatrix}3 & 2 \\ 5 & 4\end{pmatrix}$
+      M1 M2: $\det A = 2$
+      M1 M3: $A^{-1} = \frac{1}{2}\begin{pmatrix}4 & -2 \\ -5 & 3\end{pmatrix}$
+      M1 M4: $X = A^{-1}B$
+      W1 W1: $n = 5$, $p = 2$ ft
+      SOLUTION: $A = \begin{pmatrix}3 & 2 \\ 5 & 4\end{pmatrix}$ and $B = \begin{pmatrix}19 \\ 33\end{pmatrix}$. $\det A = 2$, so $A^{-1} = \frac{1}{2}\begin{pmatrix}4 & -2 \\ -5 & 3\end{pmatrix}$. $X = A^{-1}B = \begin{pmatrix}5 \\ 2\end{pmatrix}$, so a notebook costs 5 pounds and a pen costs 2 pounds. Checking: 3(5) + 2(2) = 19 and 5(5) + 4(2) = 33.
+      ERR [fm.matrix.values-in-wrong-slots] {"kind":"algebraic","latex":"(2, 5)"} → The two prices are right and they belong the other way round: the top of the column is the notebook, at 5 pounds. (4)
+      HINTS: Copy the coefficients from your two equations into a matrix. || Then it is a matrix equation.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.matrix-simultaneous-equations.01 [draft] fm.matrix.method-instruction-ignored · earned none · ccea-cer:further-maths:2025-summer:FM1:Q5
+STEM: Órla was asked to solve $4x + 3y = 18$ and $2x + 5y = 16$, using a matrix method. Her working:
+    1. 4x + 3y = 18
+    2. 2x + 5y = 16
+  ✘ 3. multiply the second equation by 2: 4x + 10y = 32
+    4. subtract: 7y = 14, so y = 2
+    5. x = 3
+  WRONG: Every line of this is correct arithmetic, and both values at the end are right.
+Line 3 is where the marks go: it starts an elimination. The question named the matrix method, so no part of this route earns anything, however accurate it is.
+The line that belongs there writes the pair as $AX = B$, with the coefficients in a matrix and the constants in a column.
+  FIX: write the pair as AX = B with A = (4 3 ; 2 5) and B = (18 ; 16) / X = A inverse x B = (3 ; 2), so x = 3 and y = 2
+  FEEDBACK: This is the hardest kind of mistake to accept, because nothing in it is wrong: the arithmetic is clean and the answer is right. What the examiners mark here is the method the question named, and the report for that series records correct elimination solutions earning nothing at all. Read the instruction before the equations, every time.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.matrix-simultaneous-equations.01 [draft] (procedure) How is a pair of simultaneous equations written as a matrix equation?  →  The coefficients go into a $2 \times 2$ matrix, one equation to a row; the unknowns go into a column; the constants go into a column on the other side, giving $AX = B$.
+- rp.fm.u1.matrix-simultaneous-equations.02 [draft] (trap) What has to be done to the equations before the coefficients are copied?  →  Line them up as $ax + by = c$, with both letters on the left in the same order and the number alone on the right.
+- rp.fm.u1.matrix-simultaneous-equations.03 [draft] (trap) One equation of a pair has no term in $x$. What goes in its slot?  →  A zero. Every slot of the coefficient matrix has to be filled for the product to reproduce the equations.
+- rp.fm.u1.matrix-simultaneous-equations.04 [draft] (formula) Once the pair is $AX = B$, how is it solved?  →  $X = A^{-1}B$: find the determinant, build the inverse, and pre-multiply the column of constants.
+- rp.fm.u1.matrix-simultaneous-equations.05 [draft] (trap) The product gives a column. Why is that not the answer?  →  The question asked for two values, so both have to be named: the top entry is the first unknown and the bottom entry the second.
+- rp.fm.u1.matrix-simultaneous-equations.06 [draft] (procedure) How do you check a solution found this way?  →  Put both values into both original equations. It takes twenty seconds and catches any slip in the inverse or the product.
+- rp.fm.u1.matrix-simultaneous-equations.07 [draft] (trap) A question says to use a matrix method and you solve it correctly by elimination. What does that earn?  →  Nothing. A named method is part of the question, and the examiners record correct elimination answers scoring zero.
+- rp.fm.u1.matrix-simultaneous-equations.08 [draft] (qa) What does a determinant of zero mean for a pair of simultaneous equations?  →  The coefficient matrix has no inverse, so there is no unique solution: the two equations describe parallel lines.
+
+## INSIGHT
+RULE: For AX = B, X = A inverse B with the inverse on the left; follow a stated method exactly - the algebra route scores nothing when the matrix method is required.
+- ccea-cer:further-maths:2025-summer:FM1:Q5: asked Find an inverse; then solve simultaneous equations using the matrix method. | went wrong: The inverse was fine (a few wrote 26 instead of 1/-26). Many solved by elimination or substitution despite the instruction and received no marks; others struggled with the layout of the matrix method. | rule: When told to use matrices, write X = A inverse B and multiply.
+- ccea-cer:further-maths:2018-summer:FM1:Q5: asked A matrix equation solved with an inverse. | went wrong: Well done; occasional multiplication in the wrong order; arithmetic slips. | rule: Pre-multiply by the inverse: A inverse on the left of both sides.
+- ccea-cer:further-maths:2025-summer:FM1:Q1: asked Scalar multiple of a matrix; product of a 2x2 and a 2x3. | went wrong: A few squared the matrix instead of multiplying by the scalar; sign slips even with calculators. | rule: A scalar multiplies every element; only matrix times matrix uses row-by-column.

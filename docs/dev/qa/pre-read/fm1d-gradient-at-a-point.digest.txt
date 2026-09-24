@@ -1,0 +1,210 @@
+# fm.u1.gradient-at-a-point — Gradient of a curve at a point  [L, difficulty 2]
+unit FM1 · tier untiered · specRefs []
+note: The gradient of a curve at a point v1 [verified]
+verification statuses: {"verified":17}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Where exactly?
+- [p] 
+- [figure] Three points on one curve, with gradients $-3$, $-2$ and $5$.
+- [choice] 
+- [h] 1. The derivative is a rule; the gradient is a number
+- [p] 
+- [figure] One rule, three substitutions, three numbers.
+- [why] Why a substitution is enough
+- [number] 
+- [h] 2. The point has two coordinates
+- [p] 
+- [figure] The tangent at $(3, 2)$ rises 5 for every 1 across, so the gradient there is 5.
+- [number] 
+- [h] 3. A worked example, start to finish
+- [p] 
+- [figure] Two substitutions into two different expressions: $5$ and $2$.
+- [number] 
+- [h] 4. Running the question backwards
+- [p] 
+- [figure] Setting $\frac{dy}{dx} = 0$ finds the flat point. The question asked for the other one.
+- [video] Gradient of a Curve - Corbettmaths
+- [number] 
+- [mustknow] You can now
+- [h] In the exam
+- [p] 
+- [examiner] Summer 2025, Unit 1, Question 13(i)
+- [examiner] Summer 2022, Unit 1, Question 8(ii)
+- [examiner] Summer 2019, Unit 1, Question 11
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.fm.u1.gradient-at-a-point.01 [verified] paper FM1 calc
+STEM: A curve is defined by the equation $y = x^{3} - 4x^{2} + 2x + 5$
+Find the gradient of this curve at the point where $x = 3$, and write down the coordinates of that point.
+  FIG: svg — The curve with its tangent at the point (3, 2), and a gradient triangle showing a rise of 5 for a run of 1.
+  1. Differentiate: $\frac{dy}{dx} = 3x^{2} - 8x + 2$.   — Write the derivative before anything else. It is the first mark on the scheme, and it is available whether or not the rest of the question goes well.  (MW1)
+  2. Substitute $x = 3$ into the derivative: $3(3)^{2} - 8(3) + 2$.   — Brackets round the 3 keep the square attached to the 3 and not to the coefficient. The examiners ask for this habit because it is where the arithmetic slips start.  (M1)  WHY: ✔Because the gradient comes from the derivative | ✘Because 3 is the y-coordinate | ✘Because the curve passes through 3
+  3. Work it out: $27 - 24 + 2 = 5$. The gradient is $5$.   — One number, and it is positive, which agrees with the picture: the curve is climbing at this point.  (W1)
+  4. Now substitute $x = 3$ into the **curve**: $27 - 36 + 6 + 5 = 2$.   — The height of the point has nothing to do with the derivative. Two substitutions, two expressions, two lines of working.  (M2)
+  5. So the point is $(3, 2)$ and the gradient there is $5$.   — Answer both halves of the question explicitly. A bare number leaves the examiner guessing which of the two you meant.  (W2)
+  FINAL: The gradient is $5$, at the point $(3, 2)$
+  TWIN: Find the gradient of the curve $y = x^{3} - 2x^{2} - 5x + 1$ at the point where $x = -1$.  → numeric 2 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+
+## DIAGNOSTICS
+### dx.fm.u1.gradient-at-a-point.pre (pre) [verified]
+- p1 (Read the gradient of a straight line from its equation): Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.
+What is the gradient of the straight line $y = 4x - 9$?
+    ✔ $4$ — For a straight line the gradient is the coefficient of $x$, and it is the same everywhere along the line. A curve is exactly the case where that stops being true.
+    ✘ $-9$ [fm.calc.gradient-read-as-coefficient] — That is the intercept, where the line crosses the $y$-axis. The gradient is the number multiplying $x$.
+    ✘ $-\frac{9}{4}$ [fm.calc.gradient-read-as-coefficient] — That is where the line crosses the $x$-axis. The gradient is the coefficient of $x$.
+- p2 (Substitute a negative value with brackets): Work out $3(-2)^{2} + 5(-2)$.
+    ✔ $2$ — $3 \times 4 = 12$ and $5 \times -2 = -10$, so $12 - 10 = 2$. Squaring a negative makes it positive; multiplying does not.
+    ✘ $-22$ [fm.calc.gradient-from-y-not-derivative] — The square came out negative. $(-2)^{2}$ is $4$, because the bracket squares the whole of $-2$.
+    ✘ $22$ [fm.calc.gradient-from-y-not-derivative] — The second term is $5 \times -2 = -10$, so it is taken away rather than added.
+- p3 (Differentiate a quadratic (the previous topic)): Differentiate $y = 5x^{2} - 4x + 1$.
+    ✔ $10x - 4$ — Multiply by the power, step the power down, and send the constant to zero.
+    ✘ $10x - 3$ [fm.calc.constant-term-kept] — The $+ 1$ differentiates to zero, so it does not appear in the gradient rule.
+    ✘ $5x - 4$ [fm.calc.coefficient-not-multiplied] — The powers stepped down correctly. Each coefficient is multiplied by the power it came from as well.
+
+### dx.fm.u1.gradient-at-a-point.post (post) [verified]
+- q1 (Substitute into the derivative): A curve has $y = x^{2} + 3x$. What is the gradient at the point where $x = 2$?
+    ✔ $7$ — $\frac{dy}{dx} = 2x + 3$, and at $x = 2$ that is $7$.
+    ✘ $10$ [fm.calc.gradient-from-y-not-derivative] — That is the height of the curve at $x = 2$, not its steepness. The gradient comes from $\frac{dy}{dx}$.
+    ✘ $3$ [fm.calc.gradient-read-as-coefficient] — That is the coefficient of $x$ in the curve's equation. Reading a gradient off a coefficient only works for a straight line.
+- q2 (Substitute a negative value into the derivative): A curve has $\frac{dy}{dx} = 10x - 4$. What is the gradient at the point where $x = -1$?
+    ✔ $-14$ — $10(-1) - 4 = -14$. The sign travels through the substitution.
+    ✘ $6$ [fm.calc.negative-power-differentiation] — The minus sign was dropped on the way in. Substituting $-1$ gives $-10$, not $10$.
+    ✘ $-4$ [fm.calc.gradient-read-as-coefficient] — That is the coefficient of $x$ in the curve. The gradient of a curve is never read off a coefficient.
+- q3 (Set the derivative equal to a stated gradient): A curve has $\frac{dy}{dx} = 4x - 7$. Where is the gradient equal to $9$?
+    ✔ At $x = 4$ — Solve $4x - 7 = 9$: $4x = 16$, so $x = 4$.
+    ✘ At $x = 1.75$ [fm.calc.default-to-derivative-zero] — That is the solution of $\frac{dy}{dx} = 0$, which finds the flat point. The question gave a gradient of 9.
+    ✘ At $x = 9$ [fm.calc.default-to-derivative-zero] — The 9 is the value of the gradient, not the value of $x$. It goes on the right-hand side of the equation you solve.
+- q4 (Find a point from a stated gradient): A curve has $y = 2x^{2} - 7x + 3$ and its gradient is $1$ at one point. What are the coordinates of that point?
+    ✔ $(2, -3)$ — $4x - 7 = 1$ gives $x = 2$, and substituting that into the curve gives $y = -3$.
+    ✘ $(2, 1)$ [fm.calc.stationary-y-from-derivative] — The $x$ is right. The second coordinate is the height of the curve there, not the gradient you were given.
+    ✘ $(\frac{7}{4}, -\frac{25}{8})$ [fm.calc.default-to-derivative-zero] — That is the point where the gradient is zero. The question named a gradient of 1, so that is what $\frac{dy}{dx}$ is set equal to.
+
+## QUESTIONS
+### q.fm.u1.gradient-at-a-point.0001 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A quadratic with no constant term, the gentlest shape of this question
+  (main) [2] A curve is defined by the equation $y = x^{2} + 3x$
+Find the gradient of this curve at the point where $x = 2$.
+      ANSWER: numeric 7 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dy}{dx} = 2x + 3$
+      W1 W1: $7$ ft
+      SOLUTION: $\frac{dy}{dx} = 2x + 3$. At $x = 2$: $2(2) + 3 = 7$.
+      ERR [fm.calc.gradient-from-y-not-derivative] {"kind":"numeric","value":10} → That is the height of the curve at $x = 2$. The gradient comes from substituting into $\frac{dy}{dx}$, so differentiate first and then substitute. (0)
+      ERR [fm.calc.gradient-read-as-coefficient] {"kind":"numeric","value":3} → That is the coefficient of $x$ in the curve's equation. A curve has no single gradient, so there is no coefficient to read it from. (0)
+      ERR [fm.calc.power-not-reduced] {"kind":"numeric","value":14} → The substitution is right, so the second half of the method is sound. In the differentiation the power did not step down: $x^{2}$ becomes $x$, not $x^{2}$. (0)
+      HINTS: Differentiate first. || Then put 2 in place of $x$ in the derivative, not in the curve.
+
+### q.fm.u1.gradient-at-a-point.0002 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A quadratic evaluated at a negative value, where the sign has to survive the substitution
+  (main) [2] A curve is defined by the equation $y = 5x^{2} - 4x + 1$
+Find the gradient of this curve at the point where $x = -1$.
+      ANSWER: numeric -14 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dy}{dx} = 10x - 4$
+      W1 W1: $-14$ ft
+      SOLUTION: $\frac{dy}{dx} = 10x - 4$. At $x = -1$: $10(-1) - 4 = -14$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"numeric","value":6} → The derivative is right, so the method mark stands. The minus sign was lost on the way in: substituting $-1$ gives $-10$ before the 4 comes off. (1)
+      ERR [fm.calc.gradient-from-y-not-derivative] {"kind":"numeric","value":10} → That is the height of the curve at $x = -1$. Substitute into the derivative instead. (0)
+      ERR [fm.calc.gradient-read-as-coefficient] {"kind":"numeric","value":-4} → That is the coefficient of $x$ in the curve. It would be the gradient only if the graph were a straight line. (0)
+      HINTS: Differentiate, then substitute. || Write $10(-1) - 4$ rather than $10 - 1 - 4$.
+
+### q.fm.u1.gradient-at-a-point.0003 [verified] practice · diff 2 · untiered · FM1 calc · 2 marks · (main)find2 · A cubic, so the derivative is itself a quadratic
+  (main) [2] A curve is defined by the equation $y = x^{3} - 6x$
+Find the gradient of this curve at the point where $x = 2$.
+      ANSWER: numeric 6 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      MW1 MW1: $\frac{dy}{dx} = 3x^{2} - 6$
+      W1 W1: $6$ ft
+      SOLUTION: $\frac{dy}{dx} = 3x^{2} - 6$. At $x = 2$: $3(2)^{2} - 6 = 12 - 6 = 6$.
+      ERR [fm.calc.gradient-read-as-coefficient] {"kind":"numeric","value":-6} → That is the coefficient of $x$ in the curve's equation, read as though the graph were a straight line. Differentiate and substitute instead. (0)
+      ERR [fm.calc.gradient-from-y-not-derivative] {"kind":"numeric","value":-4} → That is the height of the curve at $x = 2$. The gradient is a different substitution, into $\frac{dy}{dx}$. (0)
+      ERR [fm.calc.power-not-reduced] {"kind":"numeric","value":12} → The substitution is careful. In the differentiation the power did not step down, so $3x^{3}$ was evaluated where $3x^{2}$ belonged. (0)
+      HINTS: The derivative of $x^{3}$ is $3x^{2}$. || Square before you multiply.
+
+### q.fm.u1.gradient-at-a-point.0004 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A curve with a negative power, the shape that separates candidates in this unit
+  (main) [3] A curve is defined by the equation $y = 5 + \frac{8}{x^{1}}$
+Find the gradient of this curve at the point where $x = 2$.
+      ANSWER: numeric -2 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: writing the term as $8x^{-1}$
+      W1 W1: $\frac{dy}{dx} = -\frac{8}{x^{2}}$
+      W1 W2: $-2$ ft
+      SOLUTION: Rewrite: $y = 5 + 8x^{-1}$. Differentiate: $\frac{dy}{dx} = -\frac{8}{x^{2}}$. At $x = 2$: $-\frac{8}{4} = -2$.
+      ERR [fm.calc.negative-power-differentiation] {"kind":"numeric","value":2} → The index stepped down correctly. Multiplying 8 by the power $-1$ makes the coefficient negative, so the gradient here is negative. (1)
+      ERR [fm.calc.index-moved-to-numerator] {"kind":"numeric","value":8} → The term was lifted to the top line as $8x$ before it was differentiated. Crossing the line changes the sign of the index, so it is $8x^{-1}$. (0)
+      ERR [fm.calc.gradient-from-y-not-derivative] {"kind":"numeric","value":9} → That is the height of the curve at $x = 2$. The gradient is the derivative evaluated there. (0)
+      HINTS: Rewrite $\frac{8}{x}$ as $8x^{-1}$ before differentiating. || The constant differentiates to zero. || Then substitute 2.
+
+### q.fm.u1.gradient-at-a-point.0005 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A stated gradient, so the derivative is set equal to it rather than evaluated
+  (main) [3] A curve is defined by the equation $y = 2x^{2} - 7x + 3$
+At the point $A$ on this curve the gradient is equal to $1$.
+Find the coordinates of $A$.
+      ANSWER: algebraic (2, -3) (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 4x - 7$
+      M1 M1: setting $4x - 7 = 1$
+      W1 W1: $(2, -3)$ ft
+      SOLUTION: $\frac{dy}{dx} = 4x - 7$. Set it equal to the given gradient: $4x - 7 = 1$, so $x = 2$. Substitute into the curve: $y = 8 - 14 + 3 = -3$. So $A$ is $(2, -3)$.
+      ERR [fm.calc.default-to-derivative-zero] {"kind":"algebraic","latex":"(\\frac{7}{4}, -\\frac{25}{8})"} → That is the point where the gradient is zero. The question gave a gradient of 1, so the equation to solve is $\frac{dy}{dx} = 1$. (1)
+      ERR [fm.calc.stationary-y-from-derivative] {"kind":"algebraic","latex":"(2, 1)"} → The $x$-coordinate is right, so the harder half is done. The second coordinate is the height of the curve there, found by substituting into $y$, not the gradient you were given. (2)
+      HINTS: The gradient is given, so $\frac{dy}{dx}$ goes on the left of an equation and 1 on the right. || Solve for $x$. || Then find $y$ from the curve.
+
+### q.fm.u1.gradient-at-a-point.0006 [verified] practice · diff 3 · untiered · FM1 calc · 3 marks · (main)find3 · A cubic, so a stated gradient gives a quadratic with two answers
+  (main) [3] A curve is defined by the equation $y = x^{3} - 3x^{2} + 4$
+Find every value of $x$ at which this curve has gradient $9$.
+      ANSWER: algebraic x=3, x=-1 (equivalent)
+      MW1 MW1: $\frac{dy}{dx} = 3x^{2} - 6x$
+      M1 M1: setting $3x^{2} - 6x = 9$ and reaching a quadratic equal to zero
+      W1 W1: $x = 3$ and $x = -1$ ft
+      SOLUTION: $\frac{dy}{dx} = 3x^{2} - 6x$. Set it equal to 9: $3x^{2} - 6x = 9$, so $3x^{2} - 6x - 9 = 0$ and $x^{2} - 2x - 3 = 0$. Factorising gives $(x - 3)(x + 1) = 0$, so $x = 3$ and $x = -1$. A cubic has two places with any given gradient, so two answers are expected.
+      ERR [fm.calc.default-to-derivative-zero] {"kind":"algebraic","latex":"x=0, x=2"} → Those solve $\frac{dy}{dx} = 0$, which finds the two flat points. The question named a gradient of 9, so 9 belongs on the right-hand side. (1)
+      HINTS: Set the derivative equal to 9. || Bring everything to one side so the quadratic equals zero. || Factorise, and expect two answers.
+
+### q.fm.u1.gradient-at-a-point.0007 [verified] exam-style · diff 3 · untiered · FM1 calc · 6 marks · (a)find1|(b)find2|(c)find3 · A single curve carrying the three gradient questions CCEA asks in sequence
+  FIG: svg — A parabola drawn on axes with a flat dashed tangent at its lowest point and a steeper dashed tangent further to the right, the two points labelled gradient 0 and gradient 9.
+  (a) [1] A curve is defined by the equation $y = 2x^{2} - 7x + 4$
+Find $\frac{dy}{dx}$.
+      ANSWER: algebraic 4x - 7 (equivalent)
+      MW1 MW1: $4x - 7$
+      SOLUTION: $2x^{2}$ gives $4x$, $-7x$ gives $-7$, and $+ 4$ gives $0$. So $\frac{dy}{dx} = 4x - 7$.
+      ERR [fm.calc.constant-term-kept] {"kind":"algebraic","latex":"4x - 3"} → Both terms in $x$ are right. The $+ 4$ differentiates to zero, so it should not travel into the derivative. (0)
+      HINTS: Two moves on each term, and the constant goes to zero.
+  (b) [2] Find the gradient of this curve at the point where $x = -2$.
+      ANSWER: numeric -15 tol={"type":"absolute","value":0.005} forms=decimal/fraction
+      M1 M1: substituting $-2$ into your $\frac{dy}{dx}$
+      W1 W1: $-15$ ft
+      SOLUTION: Substitute into the derivative: $4(-2) - 7 = -8 - 7 = -15$. The gradient is negative, so the curve is falling at that point.
+      ERR [fm.calc.gradient-from-y-not-derivative] {"kind":"numeric","value":26} → That is the height of the curve at $x = -2$. The gradient is the derivative evaluated there, so use your answer to part (a). (0)
+      ERR [fm.calc.negative-power-differentiation] {"kind":"numeric","value":1} → The method is right, so the method mark stands. The minus sign was dropped on the way in: $4 \times -2$ is $-8$. (1)
+      ERR [fm.calc.gradient-read-as-coefficient] {"kind":"numeric","value":-7} → That is the coefficient of $x$ in the curve, read as though the graph were a straight line. A curve's gradient always comes from $\frac{dy}{dx}$. (0)
+      HINTS: Use the derivative from part (a), not the curve. || Write $4(-2) - 7$ and keep the bracket.
+  (c) [3] At the point $P$ on this curve the gradient is equal to $9$.
+Find the coordinates of $P$.
+      ANSWER: algebraic (4, 8) (equivalent)
+      M1 M1: setting your $\frac{dy}{dx}$ equal to $9$
+      W1 W1: $x = 4$ ft
+      W1 W2: $(4, 8)$ as a coordinate pair ft
+      SOLUTION: Set the derivative equal to the stated gradient: $4x - 7 = 9$, so $4x = 16$ and $x = 4$. Substitute into the curve: $y = 2(4)^{2} - 7(4) + 4 = 32 - 28 + 4 = 8$. So $P$ is $(4, 8)$.
+      ERR [fm.calc.default-to-derivative-zero] {"kind":"algebraic","latex":"(\\frac{7}{4}, -\\frac{17}{8})"} → That is the point where the gradient is zero, which is a different question. Here the gradient is given as 9, so solve $\frac{dy}{dx} = 9$. (1)
+      ERR [fm.calc.stationary-y-from-derivative] {"kind":"algebraic","latex":"(4, 9)"} → The $x$-coordinate is right, so two of the three marks are secure. The second coordinate comes from substituting into the curve, not from the gradient you were given. (2)
+      HINTS: The gradient is given, so it goes on the right of an equation. || Solve $4x - 7 = 9$. || Then substitute your $x$ into the curve to find $y$.
+
+## FIND THE MISTAKE
+### ftm.fm.u1.gradient-at-a-point.01 [verified] fm.calc.default-to-derivative-zero · earned MW1 · ccea-cer:further-maths:2025-summer:FM1:Q13
+STEM: Cara was asked: the curve $y = 2x^{2} - 7x + 4$ has gradient $9$ at the point $P$; find the coordinates of $P$. Her working:
+    1. y = 2x^2 - 7x + 4
+    2. dy/dx = 4x - 7
+  ✘ 3. 4x - 7 = 0
+    4. x = 1.75
+    5. y = -2.125, so P = (1.75, -2.125)
+  WRONG: Line 2 is right, and lines 4 and 5 are careful, accurate work.
+Line 3 is where it goes: the derivative was set equal to zero out of habit, and the question had already said the gradient is $9$. So the equation should read $4x - 7 = 9$.
+Everything after line 3 then answers a question nobody asked, which is why nothing in the arithmetic looks wrong.
+  FIX: 4x - 7 = 9 / 4x = 16 / x = 4 / y = 2(4)^2 - 7(4) + 4 = 8 / P = (4, 8)
+  FEEDBACK: The differentiation mark is yours. Before writing the equation, read the sentence once more and say what $\frac{dy}{dx}$ has been told to equal: zero only when the question says flat, stationary or turning point. The examiners report this exact substitution of habit for reading, and it costs two marks every time.
+
+## RETRIEVAL PROMPTS
+- rp.fm.u1.gradient-at-a-point.01 [verified] (procedure) How do you find the gradient of a curve at the point where $x = a$?  →  Differentiate to get $\frac{dy}{dx}$, then substitute $a$ into that derivative.
+- rp.fm.u1.gradient-at-a-point.02 [verified] (trap) Where does the $y$-coordinate of the point come from?  →  From the equation of the curve, never from $\frac{dy}{dx}$.
+- rp.fm.u1.gradient-at-a-point.03 [verified] (trap) A question says the gradient of the curve at $P$ is 5. What equation do you solve?  →  $\frac{dy}{dx} = 5$. Zero belongs there only when the question asks for a flat or stationary point.
+- rp.fm.u1.gradient-at-a-point.04 [verified] (qa) Why can a curve not have one gradient the way a straight line does?  →  Its steepness changes from point to point, so the gradient is a function of $x$ rather than a single number.
+- rp.fm.u1.gradient-at-a-point.05 [verified] (trap) What should you write when substituting a negative value into $\frac{dy}{dx}$?  →  Put the value in brackets, for example $4(-2) - 7$, so the sign and any power stay attached to it.

@@ -1,0 +1,396 @@
+[
+  {
+    "type": "hero",
+    "lede": "Tip a floor and a box that was sitting still starts to slide. The forces have not changed, but the directions they point in relative to the surface have — and that one shift is the whole of this topic, because it means the weight has to be split in two.",
+    "can": [
+      "Resolve a weight into its components along and perpendicular to a slope",
+      "Decide which component takes the sine, from the shape of the problem rather than a mnemonic",
+      "Write the equation of motion for a body going up a slope and for the same body coming down"
+    ],
+    "minutes": 15
+  },
+  {
+    "type": "h",
+    "text": "Why a slope is harder than a floor",
+    "role": "idea"
+  },
+  {
+    "type": "p",
+    "md": "On level ground the weight points straight down and the surface pushes straight up, so they simply cancel. Tilt the surface and the weight no longer lines up with anything, and part of it starts pulling the body along the slope."
+  },
+  {
+    "type": "h",
+    "text": "1. Turn the axes onto the slope",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "A block on a slope at angle alpha. Friction F acts up the slope, along the plane; the normal reaction R acts at right angles to the plane; the weight mg acts straight down, along neither.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 73.7L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 65.8 247' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>α</text><path d='M172.6 185.4L219.4 158.4L202.4 128.9L155.6 155.9Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><path d='M210.9 143.6L261.1 114.6' fill='none' stroke='currentColor' stroke-width='2'/><path d='M261.1 114.6L254.6 123.3L250.4 116Z' fill='currentColor'/><text x='253.6' y='100.6' text-anchor='middle' font-size='15'>F</text><path d='M179 142.4L150 92.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M150 92.2L158.6 98.7L151.4 102.9Z' fill='currentColor'/><text x='142' y='94.2' text-anchor='end' font-size='15'>R</text><path d='M187.5 157.1L187.5 235.1' fill='none' stroke='currentColor' stroke-width='2'/><path d='M187.5 235.1L183.3 225.1L191.7 225.1Z' fill='currentColor'/><text x='195.5' y='233.1' text-anchor='start' font-size='15'>mg</text></g></svg>",
+    "caption": "Three forces already lie along an axis; only the weight does not."
+  },
+  {
+    "type": "p",
+    "md": "Instead of horizontal and vertical, use **along the plane** and **perpendicular to it**. The motion, the friction and any applied force already lie along the plane, and the normal reaction already lies perpendicular to it. That leaves the weight as the single force that has to be broken up."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "On an inclined plane, which force is the one that has to be resolved into components?",
+    "options": [
+      "The weight",
+      "The normal reaction",
+      "The friction"
+    ],
+    "answer": "The weight",
+    "explain": "The other two already lie along one of the two rotated axes. The weight points straight down, which is along neither."
+  },
+  {
+    "type": "h",
+    "text": "2. Where the sine and cosine come from",
+    "role": "derivation"
+  },
+  {
+    "type": "figure",
+    "alt": "The weight mg drawn straight down from a point on a slope at angle alpha, with its two components dashed: mg sin alpha down the slope and mg cos alpha into it, completing a rectangle. The angle alpha is marked at the foot of the slope and again between the weight and the component into the slope.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M24 274L376 70.8L376 274Z' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.5'/><path d='M68 274A44 44 0 0 0 62.1 252' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='76' y='266' text-anchor='start' font-size='15'>α</text><path d='M141 139.5L192.1 228L243.2 198.5' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='3 3' stroke-opacity='0.6'/><circle cx='192.1' cy='110' r='3.5' fill='currentColor'/><path d='M192.1 110L192.1 228' fill='none' stroke='currentColor' stroke-width='2.2'/><path d='M192.1 228L187.9 218L196.3 218Z' fill='currentColor'/><path d='M192.1 110L141 139.5' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M141 139.5L147.6 130.8L151.8 138.1Z' fill='currentColor'/><path d='M192.1 110L243.2 198.5' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M243.2 198.5L234.6 191.9L241.9 187.7Z' fill='currentColor'/><path d='M192.1 140A30 30 0 0 0 207.1 135.9' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='205.5' y='158.5' text-anchor='start' font-size='15'>α</text><text x='184.1' y='232' text-anchor='end' font-size='15'>mg</text><text x='133' y='137.5' text-anchor='end' font-size='15'>mg sin α</text><text x='251.2' y='202.5' text-anchor='start' font-size='15'>mg cos α</text></g></svg>",
+    "caption": "The weight and its two parts: the angle α appears again between the weight and the part into the slope."
+  },
+  {
+    "type": "p",
+    "md": "The plane is at $\\alpha$ to the horizontal, so the line perpendicular to it is at $\\alpha$ to the vertical: turning both lines through $90°$ keeps the angle between them. The weight is vertical, so it makes the angle $\\alpha$ with the perpendicular. In the right-angled triangle it builds, the side next to $\\alpha$ is $mg\\cos\\alpha$, into the slope, and the side opposite is $mg\\sin\\alpha$, along it."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "A body of mass 8 kg rests on a slope at 30°. What is the component of its weight along the slope, in newtons? Take $g = 10$ m/s².",
+    "answer": "40",
+    "explain": "$80\\sin 30°$ is $80 \\times 0.5$, which is 40 N. The cosine would give 69.28 N, which is the part pressing into the slope."
+  },
+  {
+    "type": "h",
+    "text": "3. Why the flat-slope check never fails",
+    "role": "why"
+  },
+  {
+    "type": "p",
+    "md": "Rebuild the rule rather than memorise it. Imagine the slope almost flat. The body would barely slide, so the part along the slope is nearly zero, and $\\sin 0° = 0$. The ground would take nearly the whole weight, so the part into the slope is nearly $mg$, and $\\cos 0° = 1$."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the check is worth more than the rule",
+    "md": "A remembered rule is the first thing to go under pressure, and this is the most repeated slip on the topic. The flat-slope test rebuilds both components from something you cannot forget: a flat floor holds a body up and lets it slide nowhere."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "A slope is made steeper and steeper, until it is almost vertical. Which part of the weight becomes nearly the whole weight?",
+    "options": [
+      "The part along the slope",
+      "The part into the slope",
+      "Neither: both parts shrink"
+    ],
+    "answer": "The part along the slope",
+    "explain": "Near $90°$, $\\sin 90° = 1$, so the part along the slope is nearly $mg$: the body is nearly falling freely, and the surface barely touches it."
+  },
+  {
+    "type": "p",
+    "md": "A body accelerating on a slope is not in equilibrium, but it is not far off. Perpendicular to the plane the forces always balance, because nothing sinks into the surface or lifts off it, so $R = mg\\cos\\alpha$. Along the plane there is a resultant, and that is where the acceleration comes from."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "A body is accelerating down a rough slope. Which statement is true?",
+    "options": [
+      "The perpendicular forces balance but the along-slope forces do not",
+      "All the forces balance",
+      "The along-slope forces balance but the perpendicular ones do not"
+    ],
+    "answer": "The perpendicular forces balance but the along-slope forces do not",
+    "explain": "If everything balanced there would be no acceleration. The body does not sink into the slope, so that pair does balance."
+  },
+  {
+    "type": "h",
+    "text": "4. The two things CCEA fixes for you",
+    "role": "idea"
+  },
+  {
+    "type": "figure",
+    "alt": "A block on a slope at angle alpha, pulled up the slope by a force P parallel to the plane, with friction F down the slope, the normal reaction R out of the plane and the weight mg straight down.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 111.5L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 67.7 250.6' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>α</text><path d='M171.5 202.1L220.5 179.3L206.1 148.5L157.2 171.3Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><path d='M213.3 163.9L265.9 139.4' fill='none' stroke='currentColor' stroke-width='2'/><path d='M265.9 139.4L258.6 147.4L255 139.8Z' fill='currentColor'/><text x='260.2' y='124.5' text-anchor='middle' font-size='15'>P</text><path d='M164.3 186.7L111.8 211.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M111.8 211.2L119.1 203.2L122.6 210.8Z' fill='currentColor'/><text x='98.9' y='196.3' text-anchor='middle' font-size='15'>F</text><path d='M181.6 159.9L157.1 107.3' fill='none' stroke='currentColor' stroke-width='2'/><path d='M157.1 107.3L165.2 114.6L157.5 118.2Z' fill='currentColor'/><text x='149.1' y='109.3' text-anchor='end' font-size='15'>R</text><path d='M188.8 175.3L188.8 253.3' fill='none' stroke='currentColor' stroke-width='2'/><path d='M188.8 253.3L184.6 243.3L193 243.3Z' fill='currentColor'/><text x='196.8' y='251.3' text-anchor='start' font-size='15'>mg</text></g></svg>",
+    "caption": "The pull P is parallel to the plane, and the friction F is a number you are given."
+  },
+  {
+    "type": "p",
+    "md": "Two restrictions make this topic smaller than it looks on other boards. An applied force **always acts parallel to the plane**, so it never needs resolving, and friction is always **given as a value**: $F = \\mu R$ is not on this specification. The normal reaction still belongs on every diagram."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "On a CCEA inclined-plane question, in which direction does an externally applied force act?",
+    "options": [
+      "Parallel to the plane",
+      "Horizontally",
+      "At whatever angle the question chooses"
+    ],
+    "answer": "Parallel to the plane",
+    "explain": "The Teacher Guidance says so in terms. It is the reason the weight is the only force you ever resolve here."
+  },
+  {
+    "type": "h",
+    "text": "5. Sliding down",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A box of mass 8 kilograms on a slope at 30 degrees to the horizontal. Friction of 16 newtons acts up the slope, the normal reaction R acts out of the slope, the weight of 80 newtons acts straight down, and a dashed arrow shows the acceleration down the slope.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 73.7L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 65.8 247' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>30°</text><path d='M172.6 185.4L219.4 158.4L202.4 128.9L155.6 155.9Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><text x='187.5' y='154.1' text-anchor='middle' font-size='14' font-weight='600'>8 kg</text><path d='M210.9 143.6L261.1 114.6' fill='none' stroke='currentColor' stroke-width='2'/><path d='M261.1 114.6L254.6 123.3L250.4 116Z' fill='currentColor'/><text x='253.6' y='100.6' text-anchor='middle' font-size='15'>16 N</text><path d='M179 142.4L150 92.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M150 92.2L158.6 98.7L151.4 102.9Z' fill='currentColor'/><text x='142' y='94.2' text-anchor='end' font-size='15'>R</text><path d='M187.5 157.1L187.5 235.1' fill='none' stroke='currentColor' stroke-width='2'/><path d='M187.5 235.1L183.3 225.1L191.7 225.1Z' fill='currentColor'/><text x='195.5' y='233.1' text-anchor='start' font-size='15'>80 N</text><path d='M121.4 130.6L86.8 150.6' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M86.8 150.6l5.9 -9.8M86.8 150.6l11.4 -0.2' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='96.1' y='130.8' text-anchor='middle' font-size='15'>a</text></g></svg>",
+    "caption": "Weight 80 N, friction 16 N, and the box on its way down."
+  },
+  {
+    "type": "p",
+    "md": "**An 8 kg box sliding down a 30° slope against 16 N of friction.**\n**Perpendicular:** $R = 80\\cos 30°$, so $R = 69.28$ N.\n**Along, down positive:** $80\\sin 30° = 40$ N pulls it down; friction opposes with 16 N.\n**So:** $40 - 16 = 8a$, giving $a = 3$ m/s²."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "A 6 kg crate slides down a 30° slope against 12 N of friction. What is its acceleration, in m/s²? Take $g = 10$ m/s².",
+    "answer": "3",
+    "explain": "$60\\sin 30° = 30$ N, so $30 - 12 = 6a$ and $a = 3$ m/s²."
+  },
+  {
+    "type": "h",
+    "text": "6. Pushed up the slope",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A block of mass 5 kilograms pushed up a slope at 30 degrees by a force of 60 newtons parallel to the plane, with friction of 12 newtons down the slope, the normal reaction out of the slope, the weight of 50 newtons straight down, and a dashed arrow showing the acceleration up the slope.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 73.7L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 65.8 247' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>30°</text><path d='M172.6 185.4L219.4 158.4L202.4 128.9L155.6 155.9Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><text x='187.5' y='154.1' text-anchor='middle' font-size='14' font-weight='600'>5 kg</text><path d='M210.9 143.6L261.1 114.6' fill='none' stroke='currentColor' stroke-width='2'/><path d='M261.1 114.6L254.6 123.3L250.4 116Z' fill='currentColor'/><text x='253.6' y='100.6' text-anchor='middle' font-size='15'>60 N</text><path d='M164.1 170.6L113.9 199.6' fill='none' stroke='currentColor' stroke-width='2'/><path d='M113.9 199.6L120.4 191L124.6 198.3Z' fill='currentColor'/><text x='99.4' y='185.6' text-anchor='middle' font-size='15'>12 N</text><path d='M179 142.4L150 92.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M150 92.2L158.6 98.7L151.4 102.9Z' fill='currentColor'/><text x='142' y='94.2' text-anchor='end' font-size='15'>R</text><path d='M187.5 157.1L187.5 235.1' fill='none' stroke='currentColor' stroke-width='2'/><path d='M187.5 235.1L183.3 225.1L191.7 225.1Z' fill='currentColor'/><text x='195.5' y='233.1' text-anchor='start' font-size='15'>50 N</text><path d='M197.6 86.6L232.2 66.6' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M232.2 66.6l-5.9 9.8M232.2 66.6l-11.4 0.2' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='206.9' y='66.8' text-anchor='middle' font-size='15'>a</text></g></svg>",
+    "caption": "A 60 N push up the slope, with the weight's part and 12 N of friction against it."
+  },
+  {
+    "type": "p",
+    "md": "The push is parallel to the plane, so only the weight needs resolving. The block moves up, so friction and the weight's part along the slope both act down it, against the push."
+  },
+  {
+    "type": "p",
+    "md": "**Along, up positive:** $60 - 50\\sin 30° - 12 = 5a$\n**So:** $60 - 25 - 12 = 5a$, giving $a = 4.6$ m/s²."
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "A 4 kg block is pulled up a slope at 20° to the horizontal by a 40 N force parallel to the plane, against 6 N of friction. What is its acceleration, in m/s², to 2 decimal places? Take $g = 10$ m/s².",
+    "answer": "5.08",
+    "explain": "$40\\sin 20° = 13.68$ N, so $40 - 13.68 - 6 = 4a$ and $a = 5.08$ m/s²."
+  },
+  {
+    "type": "h",
+    "text": "7. Friction turns round",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "The same block on the same slope twice. On the left it slides down, with a dashed arrow showing the motion down the slope and friction F pointing up it. On the right it moves up, and friction F points down the slope.",
+    "svg": "<svg viewBox='0 0 400 200' xmlns='http://www.w3.org/2000/svg' width='400' height='200'><g fill='currentColor' font-family='inherit'><path d='M14 160L190 77.9L190 160Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.5'/><path d='M92.7 123.3L128.9 106.4L118.8 84.7L82.5 101.6Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.5'/><path d='M123.9 95.5L161.9 77.8' fill='none' stroke='currentColor' stroke-width='2'/><path d='M161.9 77.8L154.6 85.8L151.1 78.2Z' fill='currentColor'/><text x='168.7' y='97.3' text-anchor='middle' font-size='15'>F</text><path d='M111.3 63.9L71.4 82.5' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M71.4 82.5l6.7 -9.2M71.4 82.5l11.4 0.8' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='102' y='188' text-anchor='middle' font-size='14'>sliding down</text><path d='M210 160L386 77.9L386 160Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.5'/><path d='M288.7 123.3L324.9 106.4L314.8 84.7L278.5 101.6Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.5'/><path d='M283.6 112.4L245.5 130.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M245.5 130.2L252.8 122.2L256.4 129.8Z' fill='currentColor'/><text x='252.3' y='149.7' text-anchor='middle' font-size='15'>F</text><path d='M267.4 82.5L307.3 63.9' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M307.3 63.9l-6.7 9.2M307.3 63.9l-11.4 -0.8' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='298' y='188' text-anchor='middle' font-size='14'>moving up</text></g></svg>",
+    "caption": "Change the direction of travel and exactly one arrow moves: the friction."
+  },
+  {
+    "type": "p",
+    "md": "Friction opposes the motion, so it points up the slope when the body slides down and down the slope when the body moves up. Nothing else on the diagram changes. That is why a body always slows harder going up than it speeds up coming down: going up, the weight's part and friction add."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "The same block on the same rough slope is released to slide down, and then projected up. Which is larger in size?",
+    "options": [
+      "The deceleration going up",
+      "The acceleration coming down",
+      "They are equal"
+    ],
+    "answer": "The deceleration going up",
+    "explain": "Going up, the weight component and friction add; coming down, they work against each other."
+  },
+  {
+    "type": "h",
+    "text": "8. See it done: both ways",
+    "role": "see"
+  },
+  {
+    "type": "p",
+    "md": "**A 10 kg block on a 30° slope, with 25 N of friction either way.**\n**Down the slope:** $50 - 25 = 10a$, so $a = 2.5$ m/s².\n**Up the slope:** $50 + 25 = 10a$, so the deceleration is $7.5$ m/s².\nTake the resultant in the direction of travel each time, and both come out as positive sizes."
+  },
+  {
+    "type": "video",
+    "videoId": "tp_Lou1lwVg",
+    "title": "FM Mechanics Incline Plane",
+    "channel": "P McAleavey",
+    "why": "Taught against this specification by name, so its restrictions are built in. Watch the axes go onto the slope before any force is resolved."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "A 10 kg body is projected up a 30° slope against 20 N of friction. What is its deceleration, in m/s²? Take $g = 10$ m/s².",
+    "answer": "7",
+    "explain": "$100\\sin 30° = 50$ N, and going up the friction adds: $50 + 20 = 10a$, so the deceleration is 7 m/s²."
+  },
+  {
+    "type": "h",
+    "text": "9. Projected up, then stopping",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A block of mass 6 kilograms moving up a slope at 22 degrees with no push. Friction of 15 newtons acts down the slope, the normal reaction R out of the slope and the weight of 60 newtons straight down; a dashed arrow shows the acceleration pointing down the slope, against the motion.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 132.6L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 68.7 252.8' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>22°</text><path d='M171 211.4L221 191.2L208.3 159.7L158.2 179.9Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><text x='189.6' y='182.6' text-anchor='middle' font-size='14' font-weight='600'>6 kg</text><path d='M164.6 195.7L110.8 217.4' fill='none' stroke='currentColor' stroke-width='2'/><path d='M110.8 217.4L118.5 209.8L121.7 217.5Z' fill='currentColor'/><text x='98.9' y='202' text-anchor='middle' font-size='15'>15 N</text><path d='M183.3 169.8L161.5 116' fill='none' stroke='currentColor' stroke-width='2'/><path d='M161.5 116L169.2 123.7L161.4 126.9Z' fill='currentColor'/><text x='153.5' y='118' text-anchor='end' font-size='15'>R</text><path d='M189.6 185.6L189.6 263.6' fill='none' stroke='currentColor' stroke-width='2'/><path d='M189.6 263.6L185.4 253.6L193.8 253.6Z' fill='currentColor'/><text x='197.6' y='261.6' text-anchor='start' font-size='15'>60 N</text><path d='M127.9 150.1L90.8 165.1' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M90.8 165.1l7.2 -8.8M90.8 165.1l11.3 1.4' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='103.3' y='146.8' text-anchor='middle' font-size='15'>a</text></g></svg>",
+    "caption": "Moving up with no push: the weight's part and friction both slow it."
+  },
+  {
+    "type": "p",
+    "md": "A block sent up a slope has no push. The weight's part along the slope and the friction both act down it, so the block decelerates, and a constant-acceleration formula then says how far it goes before it stops."
+  },
+  {
+    "type": "p",
+    "md": "**Against the motion:** $60\\sin 22° + 15$, which is 37.48 N.\n**Deceleration:** $37.48 = 6a$, so $a = 6.25$ m/s².\n**Distance to stop from 9 m/s:** $0 = 9^2 - 2 \\times 6.25 \\times s$, so $s = 6.48$ m."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "A block moving up a slope at 6 m/s decelerates at 4 m/s². How far up the slope does it travel before it stops, in metres?",
+    "answer": "4.5",
+    "explain": "$0 = 6^2 - 2 \\times 4 \\times s$, so $8s = 36$ and $s = 4.5$ m."
+  },
+  {
+    "type": "h",
+    "text": "10. Exam twists",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Which option wins** (2019). Two ways to move the same block are compared, such as sliding down or being pulled up. First line: each acceleration in its own direction of travel; then compare their sizes."
+  },
+  {
+    "type": "p",
+    "md": "**Kinematics first** (2021). The block is projected up and stops after a given distance. First line: $v^2 = u^2 + 2as$ for the deceleration; the forces then give the friction."
+  },
+  {
+    "type": "p",
+    "md": "**A value to show** (2021, 2024). A deceleration or a friction force is printed for you to show. First line: the equation of motion with the letter in it; the value must come out, not go in."
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "A part says: show that the deceleration of the box up the slope is 4 m/s², to the nearest whole number. What should your working do?",
+    "options": [
+      "Form the equation of motion and solve it for a",
+      "Put a = 4 into the equation and check that it balances",
+      "Quote v = u + at with a = 4"
+    ],
+    "answer": "Form the equation of motion and solve it for a",
+    "explain": "The 2024 report saw many put the given value into an equation instead of forming it; only the full method earned full marks."
+  },
+  {
+    "type": "p",
+    "md": "**Friction per kilogram** (2025). The friction is given in newtons per kilogram of mass. First line: multiply by the body's own mass before it goes into the equation."
+  },
+  {
+    "type": "p",
+    "md": "**The return journey** (2021, 2024). After stopping, the block slides back down. Friction turns round and the acceleration changes. First line: a new equation, with down the slope positive."
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A 7 kg box slides down a rough slope, and the friction is given as 3 N per kg of mass. What goes into the equation of motion for the friction?",
+    "options": [
+      "21 N",
+      "3 N",
+      "70 N"
+    ],
+    "answer": "21 N",
+    "explain": "Per kilogram means multiply by the box's own mass: $3 \\times 7$, which is 21 N."
+  },
+  {
+    "type": "h",
+    "text": "11. Going further: up, stop and back",
+    "role": "further"
+  },
+  {
+    "type": "figure",
+    "alt": "A block of mass 5 kilograms sliding back down a slope at 20 degrees after it stopped. Friction F now acts up the slope, the normal reaction R out of the slope, the weight of 50 newtons straight down, and a dashed arrow shows the acceleration down the slope.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 146.3L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 69.2 254.3' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>20°</text><path d='M170.6 217.4L221.4 198.9L209.7 166.9L159 185.4Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><text x='190.2' y='189.2' text-anchor='middle' font-size='14' font-weight='600'>5 kg</text><path d='M215.6 182.9L270.1 163.1' fill='none' stroke='currentColor' stroke-width='2'/><path d='M270.1 163.1L262.1 170.4L259.2 162.6Z' fill='currentColor'/><text x='266.3' y='147.4' text-anchor='middle' font-size='15'>F</text><path d='M184.4 176.2L164.5 121.7' fill='none' stroke='currentColor' stroke-width='2'/><path d='M164.5 121.7L171.9 129.6L164 132.5Z' fill='currentColor'/><text x='156.5' y='123.7' text-anchor='end' font-size='15'>R</text><path d='M190.2 192.2L190.2 270.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M190.2 270.2L186 260.2L194.4 260.2Z' fill='currentColor'/><text x='198.2' y='268.2' text-anchor='start' font-size='15'>50 N</text><path d='M129.7 154.6L92.1 168.3' fill='none' stroke='currentColor' stroke-width='1.5' stroke-dasharray='5 4'/><path d='M92.1 168.3l7.5 -8.6M92.1 168.3l11.3 1.7' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='105.4' y='150.4' text-anchor='middle' font-size='15'>a</text></g></svg>",
+    "caption": "On the way back down, friction has turned round to act up the slope."
+  },
+  {
+    "type": "p",
+    "md": "The hardest shape so far (2021) runs the whole trip: up, stop, and back to the start. Here a 5 kg block leaves $A$ at 6 m/s up a 20° slope and stops at $B$, 3.6 m further up."
+  },
+  {
+    "type": "p",
+    "md": "**Deceleration from the trip up:** $0 = 6^2 - 2a \\times 3.6$, so $a = 5$ m/s².\n**Friction:** $50\\sin 20° + F = 5 \\times 5$, so $F = 7.90$ N.\n**Back down, friction up:** $17.10 - 7.90 = 5a$, so $a = 1.84$ m/s².\n**Speed back at A:** $v^2 = 2 \\times 1.84 \\times 3.6$, so $v = 3.64$ m/s."
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "number",
+    "prompt": "After stopping, a 4 kg block slides back down a 30° slope against 6 N of friction. What is its acceleration, in m/s²? Take $g = 10$ m/s².",
+    "answer": "3.5",
+    "explain": "$40\\sin 30° = 20$ N down the slope, with friction now up it: $20 - 6 = 4a$, so $a = 3.5$ m/s²."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where the specification stops",
+    "md": "Friction as $F = \\mu R$, a force at an angle to the plane, and two connected bodies on a slope are A-level mechanics. CCEA's slopes carry one body, with any push parallel to the plane and the friction given."
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "Rotate the axes onto the slope and resolve the weight: $mg\\sin\\alpha$ along, $mg\\cos\\alpha$ across.\nRebuild which part takes the sine from the flat-slope test.\nFind $R$ from perpendicular balance, and the acceleration along the plane.\nWrite the equation for each direction of travel, with friction turned round.\nSpot the twists: kinematics first, a value to show, friction per kilogram, the return trip."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "This is a whole question most years, usually Q4, Q5 or Q6: a force diagram, the normal reaction or a resolved part, then the equation of motion for 3 or 4 marks, then the same slope travelled the other way. The first mark is the weight resolved with the right ratio. Stuck? Draw the axes on the slope, resolve the weight, and say which way the body is going before the friction goes on."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.02"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.04"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.05"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.08"
+  }
+]

@@ -1,0 +1,2411 @@
+/**
+ * FM1 batch F — topic 3: laws-of-logarithms (difficulty 5 -> H).
+ * Every law used is checked numerically at three sample points; every distractor is produced by
+ * executing the misuse its feedback describes. Answer forms come from probe-log-forms.mts:
+ *   form "single-log"    only where the answer IS one logarithm
+ *   form "expanded-logs" only where the answer is a sum of separate logarithms
+ *   no form where the answer holds no logarithm at all (the engine rejects a correct answer otherwise)
+ *
+ * 23 Sep 2026, depth pass (pipeline/prompts/author-topic.md "Depth standard (22 Sep 2026)", band H5), the pilot:
+ * the note is rebuilt as fourteen roled sections (idea x4, why, variant x5, see, twists, further, derivation) with
+ * gates g9 to g15 added, the text-card figures replaced by phone-native drawings (400-unit viewBox, labels of 14 to
+ * 16 units), and new items appended with new ids: we 04-05, q 0017-0020, ftm 04, rp 11-12 and a mixed set. Nothing
+ * published changes: every answer spec, scheme, common error, id, gate answer and diagnostic option is frozen and
+ * checked with frozen-surface.mjs (scratchpad/fm1-batch-g/depth-pilot/laws-of-logarithms.before.json).
+ */
+import fs from "node:fs";
+import {
+  OUT, PAPER, check, log as verLog, writeJson, lintTree, figure, svgWrap, svgText, svgPath, svgRect, svgLine, svgCircle, num,
+  fx, frac, fTex, shingleClash, corpusFiles,
+} from "./lib.mjs";
+
+const SLUG = "laws-of-logarithms";
+const TOPIC = "fm.u1.laws-of-logarithms";
+const REFS = ["FM1-LOG-02"];
+const CER18 = "ccea-cer:further-maths:2018-summer:FM1:Q6";
+const CER19 = "ccea-cer:further-maths:2019-summer:FM1:Q9";
+const CER22 = "ccea-cer:further-maths:2022-summer:FM1:Q5";
+const CER23 = "ccea-cer:further-maths:2023-summer:FM1:Q7";
+const CER24 = "ccea-cer:further-maths:2024-summer:FM1:Q6";
+const CER25 = "ccea-cer:further-maths:2025-summer:FM1:Q9";
+
+/* ---- the laws, checked numerically ------------------------------------------------------------ */
+
+const L = (v) => Math.log10(v);
+const d6 = (v) => Math.round(v * 1e6) / 1e6;
+const near = (a, b) => Math.abs(a - b) < 1e-9;
+
+/** Each law checked at three sample points before a word of the lesson is written. */
+const LAW_CHECKS = [];
+function checkLaw(name, f, samples) {
+  const rows = samples.map((s) => ({ ...s, lhs: d6(f(s).lhs), rhs: d6(f(s).rhs) }));
+  for (const r of rows) if (!near(r.lhs, r.rhs)) throw new Error(`${name} failed at ${JSON.stringify(r)}`);
+  LAW_CHECKS.push({ name, rows });
+}
+checkLaw("product", ({ a, b }) => ({ lhs: L(a) + L(b), rhs: L(a * b) }), [
+  { a: 4, b: 25 },
+  { a: 3, b: 7 },
+  { a: 0.5, b: 8 },
+]);
+checkLaw("quotient", ({ a, b }) => ({ lhs: L(a) - L(b), rhs: L(a / b) }), [
+  { a: 100, b: 4 },
+  { a: 21, b: 3 },
+  { a: 2, b: 5 },
+]);
+checkLaw("power", ({ a, n }) => ({ lhs: n * L(a), rhs: L(a ** n) }), [
+  { a: 6, n: 3 },
+  { a: 2, n: 0.5 },
+  { a: 9, n: -2 },
+]);
+checkLaw("constant-as-log", ({ k }) => ({ lhs: k, rhs: L(10 ** k) }), [{ k: 1 }, { k: 2 }, { k: -1 }]);
+
+/* ---- the worked numbers, all computed ------------------------------------------------------------ */
+
+/** log 2 = m, log 3 = n and so on: the given-logs questions are built from these. */
+const GIVEN = { two: L(2), three: L(3), five: L(5), seven: L(7) };
+
+/** 7.5 = 3 x 5 / 2 and 2 = 10 / 5, so log 7.5 = p + 2q - 1 with p = log 3 and q = log 5. */
+const SEVEN_FIVE = { value: 7.5, exact: L(7.5), fromPQ: GIVEN.three + 2 * GIVEN.five - 1 };
+if (!near(d6(SEVEN_FIVE.exact), d6(SEVEN_FIVE.fromPQ))) throw new Error("the 7.5 decomposition is wrong");
+
+/** 40 = 2^3 x 5, so log 40 = 3a + b with a = log 2 and b = log 5. */
+const FORTY = { value: 40, exact: L(40), fromAB: 3 * GIVEN.two + GIVEN.five };
+if (!near(d6(FORTY.exact), d6(FORTY.fromAB))) throw new Error("the 40 decomposition is wrong");
+
+/** 23 Sep fix pass, worked example 03's twin: 4.5 = 3^2 / 2 and 2 = 10 / 5, so log 4.5 = 2p + q - 1. */
+const FOUR_FIVE = { value: 4.5, exact: L(4.5), fromPQ: 2 * GIVEN.three + GIVEN.five - 1, slipBracket: 2 * GIVEN.three - 1 - GIVEN.five };
+if (!near(d6(FOUR_FIVE.exact), d6(FOUR_FIVE.fromPQ))) throw new Error("the 4.5 decomposition is wrong");
+if (near(d6(FOUR_FIVE.exact), d6(FOUR_FIVE.slipBracket))) throw new Error("the 4.5 bracket slip does not separate");
+
+/** 18 = 2 x 3^2, so log 18 = m + 2n. */
+const EIGHTEEN = { value: 18, exact: L(18), fromMN: GIVEN.two + 2 * GIVEN.three };
+if (!near(d6(EIGHTEEN.exact), d6(EIGHTEEN.fromMN))) throw new Error("the 18 decomposition is wrong");
+
+/** 0.75 = 3 / 2^2, so log 0.75 = n - 2m. */
+const THREE_QUARTERS = { value: 0.75, exact: L(0.75), fromMN: GIVEN.three - 2 * GIVEN.two };
+if (!near(d6(THREE_QUARTERS.exact), d6(THREE_QUARTERS.fromMN))) throw new Error("the 0.75 decomposition is wrong");
+
+/** 3 log 2x = log (2x)^3 = log 8x^3, and the slip leaves log 2x^3. Checked at three values of x. */
+const CUBE_CHECK = [1.5, 4, 0.2].map((x) => ({
+  x,
+  correct: d6(L(8 * x ** 3)),
+  threeLog: d6(3 * L(2 * x)),
+  slip: d6(L(2 * x ** 3)),
+}));
+for (const c of CUBE_CHECK) if (!near(c.correct, c.threeLog)) throw new Error(`the cube identity failed at x = ${c.x}`);
+if (CUBE_CHECK.every((c) => near(c.correct, c.slip))) throw new Error("the coefficient slip is indistinguishable from the answer");
+
+/** Equations whose solutions are found and then checked by substitution. */
+function solveAndCheck(name, solve, verify) {
+  const x = solve();
+  if (!verify(x)) throw new Error(`${name}: the solution ${x} does not satisfy the equation`);
+  return x;
+}
+// log x + log 4 = log 20  ->  4x = 20
+const EQ1 = solveAndCheck("log x + log 4 = log 20", () => 20 / 4, (x) => near(d6(L(x) + L(4)), d6(L(20))));
+// log(x + 5) - log(x - 1) = log 3  ->  x + 5 = 3(x - 1)
+const EQ2 = solveAndCheck("log(x + 5) - log(x - 1) = log 3", () => 8 / 2, (x) => near(d6(L(x + 5) - L(x - 1)), d6(L(3))));
+// log(2x - 1) = log 3 + log 4  ->  2x - 1 = 12
+const EQ3 = solveAndCheck("log(2x - 1) = log 3 + log 4", () => 13 / 2, (x) => near(d6(L(2 * x - 1)), d6(L(3) + L(4))));
+// log(x + 2) + log(x - 2) = log 12  ->  x^2 - 4 = 12, and the negative root is rejected
+const EQ4 = solveAndCheck("log(x + 2) + log(x - 2) = log 12", () => 4, (x) => near(d6(L(x + 2) + L(x - 2)), d6(L(12))));
+const EQ4_REJECTED = -4;
+/**
+ * 22 Sep (fm1-g-logs-reverify.md, open item C): "4 or -4" now scores 0 but was told only that it could not be read.
+ * This pattern answers it with the reason. It matches the whole answer only (so "14 or -4" and "4 or -40" do not
+ * fire), with or without "x =", either order, "or", "and", a comma, a semicolon or plus-or-minus, and either minus.
+ */
+const BOTH_ROOTS_KEPT = new RegExp(
+  String.raw`^\s*(?:x\s*=\s*)?(?:${EQ4}\s*(?:or|and|,|;|&)\s*(?:x\s*=\s*)?[-−]\s*${-EQ4_REJECTED}|[-−]\s*${-EQ4_REJECTED}\s*(?:or|and|,|;|&)\s*(?:x\s*=\s*)?${EQ4}|±\s*${EQ4})\s*$`,
+).source;
+if (EQ4 + EQ4_REJECTED !== 0 || EQ4_REJECTED + 2 >= 0 || EQ4_REJECTED - 2 >= 0) throw new Error("the rejected root was expected to make both arguments negative");
+
+/* ---- depth pass (23 Sep 2026): every number the new sections and items print, computed and checked ---------- */
+
+/** Logarithm to base b. The change of base rule is used only here, inside the generator, never in the lesson. */
+const Lb = (b, v) => Math.log(v) / Math.log(b);
+/** Two expressions agree at every sample point, or the generator stops. */
+function sameAt(what, samples, lhs, rhs) {
+  for (const s of samples) if (!near(d6(lhs(s)), d6(rhs(s)))) throw new Error(`${what} fails at ${JSON.stringify(s)}: ${lhs(s)} against ${rhs(s)}`);
+}
+/** Two expressions differ at some sample point (a distractor must never be the answer in disguise). */
+function differsAt(what, samples, lhs, rhs) {
+  if (samples.every((s) => near(d6(lhs(s)), d6(rhs(s))))) throw new Error(`${what} is indistinguishable from the answer`);
+}
+const XS = [0.7, 2.5, 11];
+const r2 = (v) => Math.round(v * 100) / 100;
+
+// The note's own examples, chosen apart from every practice item and every twin.
+const EQ_NOTE = solveAndCheck("log x + log 3 = log 21", () => 21 / 3, (x) => near(d6(L(x) + L(3)), d6(L(21))));
+sameAt("2 log y = 5 log x gives y = x^(5/2)", XS, (x) => 2 * L(x ** 2.5), (x) => 5 * L(x));
+sameAt("log(9x^2 / 3x) = log 3x", XS, (x) => L((9 * x * x) / (3 * x)), (x) => L(3 * x));
+sameAt("log(x^3 / y^2) = 3 log x - 2 log y", XS.map((x) => ({ x, y: x + 1.3 })), ({ x, y }) => L(x ** 3 / y ** 2), ({ x, y }) => 3 * L(x) - 2 * L(y));
+const LOG4 = fx(L(4), 3);
+const LOG25 = fx(L(25), 3);
+if (!near(Number(LOG4) + Number(LOG25), 2)) throw new Error("the two hops of the product figure do not reach 2");
+
+// Roots and coefficients on brackets (section "Numbers and roots inside", the twists, gate g10).
+const ROOT_NOTE = { k: 6, power: 3 };
+const ROOT_GATE = { k: 8, power: 4 };
+const ROOT_TWIST = { k: 10, power: 5 };
+for (const r of [ROOT_NOTE, ROOT_GATE, ROOT_TWIST]) {
+  if (r.k / 2 !== r.power) throw new Error(`${r.k} log root c is not log c^${r.power}`);
+  sameAt(`${r.k} log sqrt c = log c^${r.power}`, XS, (c) => r.k * L(Math.sqrt(c)), (c) => L(c ** r.power));
+}
+differsAt("g10 squared instead of halved", XS, (y) => L(y ** (ROOT_GATE.k * 2)), (y) => L(y ** ROOT_GATE.power));
+const BRACKET_TWIST = { k: 2, a: 7 };
+sameAt("2 log 7x = log 49x^2", XS, (x) => BRACKET_TWIST.k * L(BRACKET_TWIST.a * x), (x) => L(BRACKET_TWIST.a ** BRACKET_TWIST.k * x ** BRACKET_TWIST.k));
+
+// Gate g9: log 2 to 3 decimal places, and 200 = 2 x 100 is two more steps.
+const LOG2_3DP = fx(L(2), 3);
+const G9 = fx(Number(LOG2_3DP) + 2, 3);
+if (fx(L(200), 3) !== G9) throw new Error(`g9: log 200 to 3 dp is ${fx(L(200), 3)}, not ${G9}`);
+
+// "In terms of" (section and gate g11): 50 = 2 x 5^2 and 12 = 2^2 x 3.
+sameAt("log 50 = log 2 + 2 log 5", [0], () => L(50), () => L(2) + 2 * L(5));
+sameAt("log 12 = 2 log 2 + log 3", [0], () => L(12), () => 2 * L(2) + L(3));
+differsAt("g11 index left on the letter", [0], () => L(2) ** 2 + L(3), () => L(12));
+differsAt("g11 logarithms multiplied", [0], () => 2 * L(2) * L(3), () => L(12));
+
+// See it done, base 3: log_3 13.5 = 3 - t and gate g12: log_3 18 = t + 2, with t = log_3 2.
+const T3 = Lb(3, 2);
+sameAt("log_3 13.5 = 3 - t", [0], () => Lb(3, 13.5), () => 3 - T3);
+sameAt("log_3 18 = t + 2", [0], () => Lb(3, 18), () => T3 + 2);
+differsAt("g12 log_3 9 left as 9", [0], () => T3 + 9, () => Lb(3, 18));
+differsAt("g12 log_3 9 read as 9 / 3", [0], () => T3 + 9 / 3, () => Lb(3, 18));
+
+// Going further (gate g14) and the derivation (gate g15).
+sameAt("log 5x^3 = log 5 + 3 log x", XS, (x) => L(5 * x ** 3), (x) => L(5) + 3 * L(x));
+differsAt("g14 power on the 5 as well", XS, (x) => 3 * L(5 * x), (x) => L(5 * x ** 3));
+sameAt("a = 10^p gives log a^3 = 3p", [0.4, 1.7, -0.3], (p) => L((10 ** p) ** 3), (p) => 3 * p);
+
+// Worked example 04: 2 log y = log x + log 9 gives y = 3 root x; twin 3 log y = 2 log x + log 8 gives y = 2x^(2/3).
+const WE04 = { k: 2, c: 9, root: 3 };
+const WE04_TWIN = { k: 3, m: 2, c: 8, root: 2 };
+sameAt("WE04 y = 3 root x", XS, (x) => WE04.k * L(WE04.root * Math.sqrt(x)), (x) => L(x) + L(WE04.c));
+sameAt("WE04 twin y = 2x^(2/3)", XS, (x) => WE04_TWIN.k * L(WE04_TWIN.root * x ** (2 / 3)), (x) => WE04_TWIN.m * L(x) + L(WE04_TWIN.c));
+
+// Worked example 05 (base 3) and its twin (base 5): expand, with the base's own power and a root.
+const PQ = [{ x: 7, y: 11 }, { x: 0.4, y: 2.2 }, { x: 13, y: 0.6 }];
+sameAt("WE05 log_3(9x^3 / root y) = 2 + 3p - q/2", PQ, ({ x, y }) => Lb(3, (9 * x ** 3) / Math.sqrt(y)), ({ x, y }) => 2 + 3 * Lb(3, x) - 0.5 * Lb(3, y));
+sameAt("WE05 twin log_5(25 root x / y^2) = 2 + p/2 - 2q", PQ, ({ x, y }) => Lb(5, (25 * Math.sqrt(x)) / y ** 2), ({ x, y }) => 2 + 0.5 * Lb(5, x) - 2 * Lb(5, y));
+
+// Question 0017, the synoptic chain. (a) 2 log 6x - log 4x = log 9x; (b) log_2 48 = 4 + t; (c) 8 = 2^3;
+// (d) 5^(2x - 1) = 8 x 2^x = 2^(x + 3), solved by logarithms.
+const Q17A = { k: 2, a: 6, b: 4 };
+const Q17A_ARG = frac(Q17A.a ** Q17A.k, Q17A.b); // 36 / 4 = 9, the coefficient of x left inside
+sameAt("q0017(a) 2 log 6x - log 4x = log 9x", XS, (x) => Q17A.k * L(Q17A.a * x) - L(Q17A.b * x), (x) => L((Q17A_ARG.n / Q17A_ARG.d) * x));
+// the misuses, executed: the coefficient not raised (6x^2 / 4x), the coefficient as a multiplier (12x / 4x),
+// and the subtraction the wrong way up (4x / 36x^2)
+const Q17A_NOT_RAISED = frac(Q17A.a, Q17A.b); // 6x^2 / 4x = 3x / 2
+const Q17A_MULTIPLIER = frac(Q17A.k * Q17A.a, Q17A.b); // 12x / 4x = 3
+const Q17A_SWAPPED = frac(Q17A.b, Q17A.a ** Q17A.k); // 4x / 36x^2 = 1 / 9x
+sameAt("q0017(a) not raised", XS, (x) => L((Q17A.a * x * x) / (Q17A.b * x)), (x) => L((Q17A_NOT_RAISED.n * x) / Q17A_NOT_RAISED.d));
+sameAt("q0017(a) multiplier", XS, (x) => L((Q17A.k * Q17A.a * x) / (Q17A.b * x)), () => L(Q17A_MULTIPLIER.n / Q17A_MULTIPLIER.d));
+sameAt("q0017(a) swapped", XS, (x) => L((Q17A.b * x) / ((Q17A.a * x) ** Q17A.k)), (x) => L(Q17A_SWAPPED.n / (Q17A_SWAPPED.d * x)));
+const Q17B = { base: 2, n: 48, power: 4, given: 3 };
+sameAt("q0017(b) log_2 48 = 4 + t", [0], () => Lb(Q17B.base, Q17B.n), () => Q17B.power + Lb(Q17B.base, Q17B.given));
+if (Q17B.base ** Q17B.power * Q17B.given !== Q17B.n) throw new Error("48 is not 2^4 x 3");
+const Q17B_DIVIDED = Q17B.base ** Q17B.power / Q17B.base; // log_2 16 read as 16 / 2
+const Q17C = 3;
+if (2 ** Q17C !== 8) throw new Error("8 is not 2^3");
+const Q17D_EXACT = (3 * L(2) + L(5)) / (2 * L(5) - L(2));
+if (!near(d6(5 ** (2 * Q17D_EXACT - 1)), d6(8 * 2 ** Q17D_EXACT))) throw new Error("q0017(d) does not satisfy its equation");
+const Q17D = r2(Q17D_EXACT);
+const Q17D_NO_BRACKETS = r2(3 * L(2) + L(5)); // (2x - 1) log 5 read as 2x - log 5, and (x + 3) log 2 as x + 3 log 2
+const Q17D_SIGN = r2((3 * L(2) + L(5)) / (2 * L(5) + L(2))); // x log 2 carried across without its sign changing
+for (const v of [Q17D_NO_BRACKETS, Q17D_SIGN]) if (near(v, Q17D)) throw new Error("a q0017(d) route reaches the answer");
+
+// Question 0018: log_2 3 = k, so log_2 72 = 3 + 2k (72 = 2^3 x 3^2).
+const Q18 = { base: 2, n: 72, p: 3, q: 2 };
+if (2 ** Q18.p * 3 ** Q18.q !== Q18.n) throw new Error("72 is not 2^3 x 3^2");
+sameAt("q0018 log_2 72 = 3 + 2k", [0], () => Lb(2, Q18.n), () => Q18.p + Q18.q * Lb(2, 3));
+const Q18_DIVIDED = 2 ** Q18.p / 2; // log_2 8 read as 8 / 2
+differsAt("q0018 index left on k", [0], () => Q18.p + Lb(2, 3) ** Q18.q, () => Lb(2, Q18.n));
+differsAt("q0018 logarithms multiplied", [0], () => Q18.p * Q18.q * Lb(2, 3), () => Lb(2, Q18.n));
+
+// Question 0019: y = log 8 and z = log (1/4), so y = 3 log 2 and z = -2 log 2, and y = -3z/2.
+const Q19 = frac(3, -2);
+sameAt("q0019 y = -3z/2", [0], () => L(8), () => (Q19.n / Q19.d) * L(1 / 4));
+differsAt("q0019 sign dropped", [0], () => (-Q19.n / Q19.d) * L(1 / 4), () => L(8));
+
+// Question 0020, the context: P = k v^n through (5, 250) and (10, 2000).
+const Q20 = { v1: 5, p1: 250, v2: 10, p2: 2000 };
+const Q20_N = (L(Q20.p2) - L(Q20.p1)) / (L(Q20.v2) - L(Q20.v1));
+if (!near(d6(Q20_N), 3)) throw new Error(`q0020: n is ${Q20_N}, not 3`);
+const Q20_K = Q20.p1 / Q20.v1 ** 3;
+if (Q20_K !== 2 || Q20.p2 !== Q20_K * Q20.v2 ** 3) throw new Error("q0020: k is not 2 at both points");
+const Q20_N_INVERTED = 1 / Q20_N; // the gradient turned upside down
+const Q20_LOG_K = d6(L(Q20.p1) - 3 * L(Q20.v1)); // log k handed in as k
+
+/**
+ * 23 Sep evening, question 0021: the tail-only item (depth standard, section 9 refinement 4). It is not a ladder
+ * rung and it sits last in questions[]. Its method comes from FM1-LOG-01, the neighbouring statement: after the laws
+ * make one logarithm, log_2(x(x + 2)) = 3 has no logarithm on the right to drop, so the index form, x(x + 2) = 2^3,
+ * is the step. Every value is computed, the answer is substituted back, and each misuse is executed.
+ */
+const Q21 = { base: 2, shift: 2, rhs: 3 }; // log_base x + log_base(x + shift) = rhs
+const Q21_POWER = Q21.base ** Q21.rhs; // 8
+const q21Roots = (k) => {
+  // x^2 + shift x - k = 0
+  const disc = Q21.shift ** 2 + 4 * k;
+  return [(-Q21.shift + Math.sqrt(disc)) / 2, (-Q21.shift - Math.sqrt(disc)) / 2];
+};
+const [Q21_X, Q21_REJECTED] = q21Roots(Q21_POWER);
+if (Q21_X !== 2 || Q21_REJECTED !== -4) throw new Error(`q0021: the roots are ${Q21_X} and ${Q21_REJECTED}`);
+if (!near(d6(Lb(Q21.base, Q21_X) + Lb(Q21.base, Q21_X + Q21.shift)), Q21.rhs)) throw new Error("q0021: x = 2 does not satisfy the equation");
+if (Q21_REJECTED > 0) throw new Error("q0021: the second root was expected to be negative, so log_2 x has no value there");
+// the sum put inside, log_2(2x + 2) = 3: 2x + 2 = 8
+const Q21_SUM_INSIDE = (Q21_POWER - Q21.shift) / 2;
+// the base multiplied by the index instead of raised to it (the registry's "4 times 3"): x(x + 2) = 6
+const Q21_TIMES = q21Roots(Q21.base * Q21.rhs)[0];
+for (const [name, v] of [["sum inside", Q21_SUM_INSIDE], ["base times index", Q21_TIMES]]) {
+  if (near(d6(v), Q21_X) || near(d6(v), Q21_REJECTED)) throw new Error(`q0021: the ${name} route reaches a root`);
+}
+if (near(d6(Q21_SUM_INSIDE), d6(Q21_TIMES))) throw new Error("q0021: two routes collide");
+/** Both roots kept, in any order, with or without "x =": the whole answer only, as BOTH_ROOTS_KEPT does for q0016(c). */
+const Q21_BOTH_ROOTS = new RegExp(
+  String.raw`^\s*(?:x\s*=\s*)?(?:${Q21_X}\s*(?:or|and|,|;|&)\s*(?:x\s*=\s*)?[-−]\s*${-Q21_REJECTED}|[-−]\s*${-Q21_REJECTED}\s*(?:or|and|,|;|&)\s*(?:x\s*=\s*)?${Q21_X})\s*$`,
+).source;
+
+// Find-the-mistake 04: 3^(x + 1) = 40, the bracket dropped when the index comes down (Summer 2018 Q6).
+const FTM4_EXACT = L(40) / L(3) - 1;
+if (!near(d6(3 ** (FTM4_EXACT + 1)), 40)) throw new Error("ftm04 does not satisfy its equation");
+const FTM4 = r2(FTM4_EXACT);
+const FTM4_NO_BRACKET = r2(L(40) - L(3));
+if (near(FTM4, FTM4_NO_BRACKET)) throw new Error("ftm04's slip reaches the answer");
+
+/* ---- error routes, executed ----------------------------------------------------------------------- */
+
+const routes = {
+  /** log a + log b read as log of the sum. */
+  sumInsideTheLog: (a, b) => d6(L(a + b)),
+  /** log a - log b carried out as one logarithm divided by the other. */
+  quotientAsDividedLogs: (a, b) => d6(L(a) / L(b)),
+  /** n log a written as log of n times a. */
+  powerAsMultiplier: (n, a) => d6(L(n * a)),
+  /** The power applied to the variable only, leaving the coefficient alone. */
+  coefficientNotRaised: (n, k, x) => d6(L(k * x ** n)),
+  /** A subtracted term put in the numerator (or an added one in the denominator). */
+  subtractionRuleMisapplied: (a, b, c) => d6(L((a * b) / c) * 0 + L((a * c) / b)),
+  /** log x + log 4 = log 20 solved as x + 4 = 20. */
+  equationAddedNotMultiplied: () => 20 - 4,
+  /** log(x + 5) - log(x - 1) = log 3 solved as (x + 3) - (x - 1) = 5, which has no solution, so
+   *  the learner divides the logs instead and reaches this value. */
+  equationLogsDivided: () => d6((L(5) * 1 + 3) / 1),
+};
+
+const E = {
+  sumInside: routes.sumInsideTheLog(4, 25),
+  quotientDivided: routes.quotientAsDividedLogs(100, 4),
+  powerMultiplier: routes.powerAsMultiplier(3, 6),
+  eq1Added: routes.equationAddedNotMultiplied(),
+};
+
+/* ---- figures ---------------------------------------------------------------------------------------- */
+// Depth pass, 23 Sep: every figure is drawn in a 400-unit viewBox with labels of 14 to 16 units, so its smallest
+// label renders at 12.5 px or more in the 358 px phone column, and each draws one idea. Text that is prose (the three
+// laws, the steps of a combination) lives in the note's paragraphs; the eight text-card figures of 20 Sep are gone.
+
+const W = 400;
+const FS = 14; // the smallest label on every figure
+const r1 = (v) => Math.round(v * 10) / 10;
+
+/** An arrowhead at (x, y) pointing along (dx, dy). */
+function arrowHead(x, y, dx, dy, size = 8) {
+  const len = Math.hypot(dx, dy);
+  const ux = dx / len;
+  const uy = dy / len;
+  const bx = x - ux * size;
+  const by = y - uy * size;
+  const px = -uy * size * 0.55;
+  const py = ux * size * 0.55;
+  return svgPath(`M ${r1(bx + px)} ${r1(by + py)} L ${r1(x)} ${r1(y)} L ${r1(bx - px)} ${r1(by - py)}`, { width: 1.4 });
+}
+
+/** A hop along the ruler: an arc from x1 to x2 whose ends sit at y0, bowed towards yc, with its label beyond the apex. */
+function hop(x1, x2, y0, yc, label) {
+  const xm = (x1 + x2) / 2;
+  const apex = (y0 + yc) / 2;
+  const below = yc > y0;
+  return [
+    svgPath(`M ${r1(x1)} ${y0} Q ${r1(xm)} ${yc} ${r1(x2)} ${y0}`, { width: 1.4 }),
+    arrowHead(x2, y0, x2 - xm, y0 - yc),
+    svgText(r1(xm), r1(below ? apex + 20 : apex - 7), label, { size: FS }),
+  ].join("");
+}
+
+/**
+ * The ruler of powers of ten: an axis from x = 70 to x = 370 on which each value sits at its logarithm, a tick and
+ * its number under every value, and optionally the logarithm under the number. `vmax` is the logarithm at the right end.
+ */
+function ruler(vmax, ticks, { axisY = 110, logs = true } = {}) {
+  const X = (v) => 70 + (300 * v) / vmax;
+  const out = [svgLine(70, axisY, 370, axisY, { width: 1.5 })];
+  for (const t of ticks) {
+    const x = r1(X(t.at));
+    out.push(svgLine(x, axisY - 6, x, axisY + 6, { width: 1.5 }));
+    out.push(svgText(x, axisY + 28, t.number, { size: 15 }));
+    if (logs) out.push(svgText(x, axisY + 54, t.log, { size: FS }));
+  }
+  out.push(svgText(8, axisY + 28, "number", { size: FS, anchor: "start" }));
+  if (logs) out.push(svgText(8, axisY + 54, "log", { size: FS, anchor: "start" }));
+  return { X, body: out.join("") };
+}
+const tickAt = (value, log = fx(L(value), 3).replace(/\.?0+$/, "")) => ({ at: L(value), number: num(value), log });
+
+/** The idea: equal steps of times ten, and a logarithm counts them. */
+const RULER_SVG = (() => {
+  const { X, body } = ruler(3, [1, 10, 100, 1000].map((v) => tickAt(v)));
+  const hops = [0, 1, 2].map((k) => hop(X(k), X(k + 1), 102, 52, "× 10")).join("");
+  return svgWrap(`0 36 ${W} 146`, "A ruler marked 1, 10, 100 and 1000 at equal steps, each step times 10, with the logarithms 0, 1, 2 and 3 under the numbers", body + hops);
+})();
+
+/** The product law: a hop of log 4 then a hop of log 25 lands on 100. */
+const PRODUCT_SVG = (() => {
+  const { X, body } = ruler(2, [tickAt(1), tickAt(4, LOG4), tickAt(10), tickAt(100)]);
+  const hops = hop(X(0), X(L(4)), 102, 60, "log 4") + hop(X(L(4)), X(2), 102, 32, "log 25");
+  return svgWrap(`0 36 ${W} 146`, "The ruler from 1 to 100: a hop of log 4 from 1 reaches 4, and a hop of log 25 from 4 reaches 100", body + hops);
+})();
+
+/** The quotient law: from 100, a hop back of log 4 lands on 25. */
+const QUOTIENT_SVG = (() => {
+  const { X, body } = ruler(2, [tickAt(1), tickAt(10), tickAt(25, LOG25), tickAt(100)]);
+  const back = hop(X(2), X(L(25)), 102, 54, "− log 4");
+  return svgWrap(`0 36 ${W} 146`, "The ruler from 1 to 100: starting at 100, a hop back of log 4 lands on 25", body + back);
+})();
+
+/** The power law: a cube of edge 2x is eight cubes of edge x. */
+const CUBE_SVG = (() => {
+  const P = (d) => svgPath(d, { width: 1.5 });
+  const g = (d) => svgPath(d, { width: 1 });
+  const body = [
+    P("M 110 90 L 230 90 L 230 210 L 110 210 Z"),
+    P("M 110 90 L 190 34 L 310 34 L 230 90"),
+    P("M 230 210 L 310 154 L 310 34"),
+    g("M 170 90 L 170 210 M 110 150 L 230 150"),
+    g("M 150 62 L 270 62 M 170 90 L 250 34"),
+    g("M 270 62 L 270 182 M 230 150 L 310 94"),
+    svgText(170, 236, "2x", { size: 16 }),
+    svgText(98, 156, "2x", { size: 16, anchor: "end" }),
+    svgText(286, 200, "2x", { size: 16, anchor: "start" }),
+  ].join("");
+  return svgWrap(`0 20 ${W} 230`, "A cube whose edges are all 2x, cut into eight smaller cubes whose edges are x", body);
+})();
+
+/** Combining: terms with a plus go above the line, the term with a minus goes below it. */
+const COMBINE_SVG = (() => {
+  const body = [
+    svgRect(16, 18, 112, 38),
+    svgRect(144, 18, 112, 38),
+    svgRect(272, 18, 112, 38),
+    svgText(72, 43, "log a", { size: 15 }),
+    svgText(200, 43, "+ log b³", { size: 15 }),
+    svgText(328, 43, "− log c²", { size: 15 }),
+    svgLine(72, 58, 178, 128, { width: 1.4 }),
+    arrowHead(178, 128, 106, 70),
+    svgLine(200, 58, 200, 126, { width: 1.4 }),
+    arrowHead(200, 126, 0, 1),
+    svgPath("M 328 58 L 328 181 L 226 181", { width: 1.4 }),
+    arrowHead(226, 181, -1, 0),
+    svgText(210, 96, "on top", { size: FS, anchor: "start" }),
+    svgText(318, 130, "underneath", { size: FS, anchor: "end" }),
+    svgLine(130, 160, 270, 160, { width: 1.6 }),
+    svgText(200, 148, "a b³", { size: 16 }),
+    svgText(200, 186, "c²", { size: 16 }),
+  ].join("");
+  return svgWrap(`0 0 ${W} 210`, "The terms log a and plus log b cubed are sent above a fraction line, and minus log c squared is sent below it, giving a b cubed over c squared", body);
+})();
+
+/** In terms of given logarithms: 50 = 2 x 5 x 5, so one hop of log 2 and two of log 5. */
+const FIFTY_SVG = (() => {
+  const { X, body } = ruler(2, [tickAt(1), tickAt(2), tickAt(10), tickAt(50), tickAt(100)]);
+  const hops = hop(X(0), X(L(2)), 102, 66, "log 2") + hop(X(L(2)), X(1), 102, 46, "log 5") + hop(X(1), X(L(50)), 102, 46, "log 5");
+  return svgWrap(`0 36 ${W} 146`, "The ruler from 1 to 100: a hop of log 2 reaches 2, a hop of log 5 reaches 10, and a second hop of log 5 reaches 50", body + hops);
+})();
+
+/** Going further: y = k x^n as a straight line on log axes. */
+const LINE_SVG = (() => {
+  const x0 = 60;
+  const y0 = 210;
+  const yAt = (x) => 160 - (114 / 290) * (x - x0);
+  const body = [
+    svgLine(x0, y0, 372, y0, { width: 1.5 }),
+    arrowHead(372, y0, 1, 0),
+    svgLine(x0, y0, x0, 18, { width: 1.5 }),
+    arrowHead(x0, 18, 0, -1),
+    svgText(372, 234, "log x", { size: 15, anchor: "end" }),
+    svgText(72, 26, "log y", { size: 15, anchor: "start" }),
+    svgLine(x0, yAt(x0), 350, yAt(350), { width: 2 }),
+    svgCircle(x0, yAt(x0), 3.5),
+    svgText(50, 165, "log k", { size: 15, anchor: "end" }),
+    svgPath(`M 170 ${r1(yAt(170))} L 270 ${r1(yAt(170))} L 270 ${r1(yAt(270))}`, { width: 1.2, dash: "5 4" }),
+    svgText(220, r1(yAt(170) + 22), "1", { size: 15 }),
+    svgText(280, r1((yAt(170) + yAt(270)) / 2 + 5), "n", { size: 15, anchor: "start" }),
+  ].join("");
+  return svgWrap(`0 0 ${W} 244`, "A straight line on axes of log y against log x, crossing the vertical axis at log k, with a gradient triangle whose run is 1 and whose rise is n", body);
+})();
+
+/** Worked example 03: 7.5 = 3 x 5 / 2, as two hops forward and one back. */
+const SEVEN_FIVE_SVG = (() => {
+  const { X, body } = ruler(1.2, [tickAt(1), tickAt(3), tickAt(7.5), tickAt(15)], { logs: false });
+  const forward = hop(X(0), X(L(3)), 102, 58, "log 3") + hop(X(L(3)), X(L(15)), 102, 36, "log 5");
+  const back = hop(X(L(15)), X(L(7.5)), 150, 190, "− log 2");
+  return svgWrap(`0 36 ${W} 178`, "The ruler: a hop of log 3 from 1 reaches 3, a hop of log 5 reaches 15, and a hop back of log 2 lands on 7.5", body + forward + back);
+})();
+
+/* ---- note ---------------------------------------------------------------------------------------------- */
+
+// Depth pass, 23 Sep: fourteen teaching sections, each heading carrying its role, in the standard's order: idea (four),
+// why, variant (five, from the routine combination to the given-logarithms shape the recent papers set most), see,
+// twists, further, derivation; then the recap and the pointer. Gates g1 to g8 keep their ids and answers; their
+// prompts now restate what they ask, so each reads alone in the review inbox. g9 to g15 are new.
+const blocks = [
+  {
+    type: "hero",
+    lede: "A logarithm counts powers of ten, so it turns multiplying into adding. Three laws follow, and they run both ways: squeeze several logarithms into one, or open one into several. Every laws question on the paper is one of those two jobs, sometimes in a base other than ten.",
+    can: [
+      "Combine several logarithms into one, coefficients, numbers and roots included",
+      "Expand one logarithm, or write it in terms of the logarithms you are given",
+      "Solve log P = log Q, and write one letter in terms of another",
+    ],
+    minutes: 0, // set from the minute model once the blocks are complete (below)
+  },
+
+  // 1. idea: what a logarithm is, and the three laws
+  { type: "h", text: "A logarithm counts powers of ten", role: "idea" },
+  {
+    type: "p",
+    md: `Every positive number has a place on a ruler of powers of ten, and its logarithm says how far along it sits. $\\log 1000 = 3$ because $1000 = 10^{3}$: three steps of ten from $1$.`,
+  },
+  {
+    type: "figure",
+    alt: `A ruler marked 1, 10, 100 and 1000 at equal steps, each step labelled times 10, with the logarithms 0, 1, 2 and 3 under the numbers.`,
+    svg: RULER_SVG,
+    caption: `Each step to the right multiplies by ten. A logarithm counts the steps from 1, so log 1000 = 3.`,
+  },
+  {
+    type: "p",
+    md: `Multiplying adds steps, and that one fact gives three laws:\n$\\log a + \\log b = \\log(ab)$\n$\\log a - \\log b = \\log\\frac{a}{b}$\n$n\\log a = \\log a^{n}$\nEach works forwards, squeezing logarithms into one, or backwards, opening one out.`,
+  },
+  {
+    type: "gate",
+    id: "g1",
+    kind: "choice",
+    prompt: `One tap to begin. When two logarithms are added, as in $\\log a + \\log b$, what happens to $a$ and $b$ inside the single logarithm?`,
+    options: ["The two numbers are multiplied", "The two numbers are added", "The two numbers are divided"],
+    answer: "The two numbers are multiplied",
+    explain: `$\\log a + \\log b = \\log(ab)$. Adding outside means multiplying inside, which is the index rule read backwards.`,
+  },
+
+  // 2. idea: the product law
+  { type: "h", text: "Adding logarithms multiplies inside", role: "idea" },
+  {
+    type: "figure",
+    alt: `The ruler from 1 to 100: a hop of log 4 from 1 reaches 4, and a hop of log 25 from 4 reaches 100.`,
+    svg: PRODUCT_SVG,
+    caption: `A hop of log 4 and then a hop of log 25 land on 100, so log 4 + log 25 = log 100.`,
+  },
+  {
+    type: "p",
+    md: `$\\log a + \\log b = \\log(ab)$. The plus sign outside becomes a times sign inside; it never goes in as a plus.\nThe ruler shows why. The hop for $4$ is $${LOG4}$ and the hop for $25$ is $${LOG25}$, and together they reach $2$, which is where $100$ sits.`,
+  },
+  {
+    type: "gate",
+    id: "g2",
+    kind: "choice",
+    prompt: `What is $\\log 5 + \\log 6$ as a single logarithm?`,
+    options: ["$\\log 30$", "$\\log 11$", "$\\log 5 \\times \\log 6$"],
+    answer: "$\\log 30$",
+    explain: `Adding the logarithms multiplies the numbers inside, so it is $\\log 30$. Writing $\\log 11$ adds them inside, which is the most reported misuse of this law.`,
+  },
+
+  // 3. idea: the quotient law
+  { type: "h", text: "Subtracting logarithms divides inside", role: "idea" },
+  {
+    type: "figure",
+    alt: `The ruler from 1 to 100: starting at 100, a hop back of log 4 lands on 25.`,
+    svg: QUOTIENT_SVG,
+    caption: `Start at 100 and hop back by log 4: you land on 25, so log 100 − log 4 = log 25.`,
+  },
+  {
+    type: "p",
+    md: `$\\log a - \\log b = \\log\\frac{a}{b}$. The minus goes inside as a division.\nIt is not $\\frac{\\log a}{\\log b}$, which divides the logarithms themselves: $\\log 100 \\div \\log 4$ is about $${fx(E.quotientDivided, 2)}$, and that is not the logarithm of anything here.`,
+  },
+  {
+    type: "gate",
+    id: "g3",
+    kind: "choice",
+    prompt: `What is $\\log 12 - \\log 3$ as a single logarithm?`,
+    options: ["$\\log 4$", "$\\log 9$", "$\\frac{\\log 12}{\\log 3}$"],
+    answer: "$\\log 4$",
+    explain: `Subtracting outside divides inside, so it is $\\log\\frac{12}{3} = \\log 4$. Dividing the two logarithms is a different calculation altogether.`,
+  },
+
+  // 4. idea: the power law, with the coefficient on a bracket
+  { type: "h", text: "A number in front becomes a power", role: "idea" },
+  {
+    type: "figure",
+    alt: `A cube whose edges are all 2x, cut into eight smaller cubes whose edges are x.`,
+    svg: CUBE_SVG,
+    caption: `A cube of edge 2x holds eight cubes of edge x, so (2x)³ = 8x³, not 2x³.`,
+  },
+  {
+    type: "p",
+    md: `$n\\log a = \\log a^{n}$. The coefficient climbs inside as an index, and the index lands on **everything** inside.\n$3\\log 2x = \\log\\left((2x)^{3}\\right)$, and $(2x)^{3} = 8x^{3}$, as the eight small cubes show. Leaving the $2$ alone gives $\\log 2x^{3}$, a different expression.`,
+  },
+  {
+    type: "callout",
+    kind: "examiner",
+    title: "Summer 2024, Unit 1, Question 6",
+    md: "Marks went here: writing $3\\log 2x$ as a single logarithm, the majority forgot to cube the $2$. Write the bracket $(2x)^{3}$ before you expand it, every time.",
+    source: CER24,
+  },
+  {
+    type: "gate",
+    id: "g4",
+    kind: "choice",
+    prompt: `What is $2\\log 3x$ as a single logarithm?`,
+    options: ["$\\log 9x^{2}$", "$\\log 3x^{2}$", "$\\log 6x$"],
+    answer: "$\\log 9x^{2}$",
+    explain: `$(3x)^{2} = 9x^{2}$. The square lands on the $3$ as well as on the $x$, which is the step the Summer 2024 report says most candidates missed.`,
+  },
+
+  // 5. why
+  { type: "h", text: "Why the three laws hold", role: "why" },
+  {
+    type: "p",
+    md: `Every law is one fact about the ruler: multiplying by $b$ is always the same hop, $\\log b$, wherever you start.\nSo a product is a sum of hops, and a division is a hop back. A power repeats one hop: $a^{3} = a \\times a \\times a$ is three hops of $\\log a$, so $\\log a^{3} = 3\\log a$.`,
+  },
+  {
+    type: "callout",
+    kind: "why",
+    title: "Why the laws never change",
+    md: `A logarithm is an index, and the laws are the index laws read the other way: multiply two powers of ten and the indices add. The index laws hold in every base, so these laws do too.`,
+  },
+  {
+    type: "gate",
+    id: "g9",
+    kind: "number",
+    prompt: `Given that $\\log 2 = ${LOG2_3DP}$ to 3 decimal places, what is $\\log 200$ to 3 decimal places?`,
+    answer: G9,
+    explain: `$200 = 2 \\times 100$, and multiplying by $100$ is two more steps of ten, so $\\log 200 = ${LOG2_3DP} + 2 = ${G9}$.`,
+  },
+
+  // 6. variant: combining into one logarithm
+  { type: "h", text: "Combining into one logarithm", role: "variant" },
+  {
+    type: "figure",
+    alt: `The terms log a and plus log b cubed are sent above a fraction line, and minus log c squared is sent below it, giving a b cubed over c squared.`,
+    svg: COMBINE_SVG,
+    caption: `Added terms go on top and the subtracted term goes underneath: log a + log b³ − log c² is log(ab³/c²).`,
+  },
+  {
+    type: "p",
+    md: `To write $\\log a + 3\\log b - 2\\log c$ as one logarithm, work in this order.\n**Step 1.** Coefficients become powers: $\\log a + \\log b^{3} - \\log c^{2}$.\n**Step 2.** Added terms multiply on top: $\\log(ab^{3}) - \\log c^{2}$.\n**Step 3.** The subtracted term goes underneath: $\\log\\frac{ab^{3}}{c^{2}}$.`,
+  },
+  {
+    type: "p",
+    md: `If the argument then simplifies, simplify it: $\\log\\frac{9x^{2}}{3x}$ is $\\log 3x$. Putting a term on the wrong side of the line is a slip the Summer 2025 report names.`,
+  },
+  {
+    type: "gate",
+    id: "g5",
+    kind: "choice",
+    prompt: `$\\log a + 3\\log b - 2\\log c$ is being written as one logarithm, and $-2\\log c$ has become $-\\log c^{2}$. Where does $c^{2}$ end up?`,
+    options: ["In the denominator", "In the numerator", "Outside the logarithm"],
+    answer: "In the denominator",
+    explain: `A subtracted logarithm divides, so $c^{2}$ goes underneath: $\\log\\frac{ab^{3}}{c^{2}}$.`,
+  },
+
+  // 7. variant: numbers and roots inside
+  { type: "h", text: "Numbers and roots inside", role: "variant" },
+  {
+    type: "p",
+    md: `The laws only combine logarithms, so a bare number must become one first. To base ten, $1 = \\log 10$ and $2 = \\log 100$.\nSo $2 + \\log x$ becomes $\\log 100 + \\log x$, which is $\\log 100x$.`,
+  },
+  {
+    type: "gate",
+    id: "g6",
+    kind: "choice",
+    prompt: `To base $10$, $1 = \\log 10$. What is $1 + \\log x$ as a single logarithm?`,
+    // The third option drops the constant, which is the slip the post-diagnostic d5 names. The
+    // earlier "log x + 1" was the prompt's own expression reordered, so rejecting it taught nothing.
+    options: ["$\\log 10x$", "$\\log(1 + x)$", "$\\log x$"],
+    answer: "$\\log 10x$",
+    explain: `$1 = \\log 10$, so $1 + \\log x = \\log 10 + \\log x = \\log 10x$. Dropping the $1$ altogether would leave $\\log x$, which is a different number.`,
+  },
+  {
+    type: "p",
+    md: `A root is a power too: $\\sqrt{x} = x^{\\frac{1}{2}}$, so $\\frac{1}{2}\\log x = \\log\\sqrt{x}$.\nWith a coefficient in front, multiply the powers: $${ROOT_NOTE.k}\\log\\sqrt{c} = \\log c^{${ROOT_NOTE.power}}$, because $${ROOT_NOTE.k} \\times \\frac{1}{2} = ${ROOT_NOTE.power}$. The Summer 2025 report found numbers and roots combined wrongly.`,
+  },
+  {
+    type: "gate",
+    id: "g10",
+    kind: "choice",
+    prompt: `What is $${ROOT_GATE.k}\\log\\sqrt{y}$ as a single logarithm?`,
+    options: [`$\\log y^{${ROOT_GATE.power}}$`, `$\\log ${ROOT_GATE.k}\\sqrt{y}$`, `$\\log y^{${ROOT_GATE.k * 2}}$`],
+    answer: `$\\log y^{${ROOT_GATE.power}}$`,
+    explain: `$\\sqrt{y} = y^{\\frac{1}{2}}$, and $${ROOT_GATE.k} \\times \\frac{1}{2} = ${ROOT_GATE.power}$, so it is $\\log y^{${ROOT_GATE.power}}$. Squaring instead of halving gives $y^{${ROOT_GATE.k * 2}}$.`,
+  },
+
+  // 8. variant: expanding, the laws read backwards
+  { type: "h", text: "The same laws, read backwards", role: "variant" },
+  {
+    type: "p",
+    md: `Some questions want one logarithm opened into several. Run the laws from right to left: a product splits into a sum, a quotient into a difference, and each power drops in front.\n$\\log\\frac{x^{3}}{y^{2}}$ splits into $\\log x^{3} - \\log y^{2}$, which is $3\\log x - 2\\log y$. A square root drops in as $\\frac{1}{2}$.`,
+  },
+  {
+    type: "video",
+    videoId: "LKJJ2YtK-ic",
+    title: "LOGS - Laws of Logs CCEA GCSE Further Mathematics",
+    channel: "P McAleavey",
+    why: "A Northern Ireland teacher running the three laws against this specification, in both directions.",
+  },
+  {
+    type: "gate",
+    id: "g7",
+    kind: "choice",
+    prompt: `What is $\\log(m^{4}n)$ written as separate logarithms?`,
+    options: ["$4\\log m + \\log n$", "$4\\log m \\times \\log n$", "$\\log 4m + \\log n$"],
+    answer: "$4\\log m + \\log n$",
+    explain: `The product splits into a sum, then the power on $m$ drops out in front as a $4$.`,
+  },
+
+  // 9. variant: equal logarithms, and one letter in terms of another
+  { type: "h", text: "Equal logarithms, equal arguments", role: "variant" },
+  {
+    type: "p",
+    md: `Once an equation reads $\\log P = \\log Q$, the logarithms can go: $P = Q$. Make each side a single logarithm first.\nSo $\\log x + \\log 3 = \\log 21$ becomes $\\log 3x = \\log 21$, then $3x = 21$ and $x = ${EQ_NOTE}$.`,
+  },
+  {
+    type: "p",
+    md: `The same step writes one letter in terms of another. From $2\\log y = 5\\log x$, the power law gives $\\log y^{2} = \\log x^{5}$.\nSo $y^{2} = x^{5}$, and $y = x^{\\frac{5}{2}}$.`,
+  },
+  {
+    type: "gate",
+    id: "g8",
+    kind: "number",
+    prompt: `Combining the left-hand side of $\\log x + \\log 4 = \\log 20$ gives $\\log 4x = \\log 20$. What is $x$?`,
+    answer: String(EQ1),
+    explain: `Equal logarithms have equal arguments, so $4x = 20$ and $x = ${EQ1}$. Writing $x + 4 = 20$ instead would give $${E.eq1Added}$.`,
+  },
+
+  // 10. variant: in terms of given logarithms
+  { type: "h", text: "In terms of given logarithms", role: "variant" },
+  {
+    type: "figure",
+    alt: `The ruler from 1 to 100: a hop of log 2 reaches 2, a hop of log 5 reaches 10, and a second hop of log 5 reaches 50.`,
+    svg: FIFTY_SVG,
+    caption: `One hop of log 2 and two hops of log 5 reach 50, because 50 = 2 × 5 × 5.`,
+  },
+  {
+    type: "p",
+    md: `Told that $\\log 2 = a$ and $\\log 5 = b$, you can reach any number built from twos and fives. Factorise it first: $50 = 2 \\times 5^{2}$, so $\\log 50 = \\log 2 + 2\\log 5$, which is $a + 2b$.`,
+  },
+  {
+    type: "p",
+    md: `A logarithm with no letter of its own is built from the ones you have. With only $\\log 3 = p$ and $\\log 5 = q$, write $2 = \\frac{10}{5}$: then $\\log 2 = 1 - q$, because $\\log 10 = 1$.`,
+  },
+  {
+    type: "gate",
+    id: "g11",
+    kind: "choice",
+    prompt: `Given that $\\log 2 = a$ and $\\log 3 = b$, what is $\\log 12$ in terms of $a$ and $b$?`,
+    options: ["$2a + b$", "$a^{2} + b$", "$2ab$"],
+    answer: "$2a + b$",
+    explain: `$12 = 2^{2} \\times 3$, so $\\log 12 = 2\\log 2 + \\log 3$, which is $2a + b$. The index comes down in front of the logarithm; it does not stay on the letter.`,
+  },
+
+  // 11. see it done: the most recent shape, a base other than ten
+  { type: "h", text: "See it done: a base other than ten", role: "see" },
+  {
+    type: "p",
+    md: `Given $\\log_{3} 2 = t$, express $\\log_{3} 13.5$ in terms of $t$.\n**Line 1.** $13.5 = \\frac{27}{2}$, and $27 = 3^{3}$.\n**Line 2.** $\\log_{3} 13.5 = \\log_{3} 3^{3} - \\log_{3} 2$.\n**Line 3.** $\\log_{3} 3^{3} = 3$, since $\\log_{3} 3 = 1$.\n**Line 4.** So $\\log_{3} 13.5 = 3 - t$.`,
+  },
+  {
+    type: "p",
+    md: `The base is the one number whose logarithm needs no letter, so look for it as a factor before anything else.`,
+  },
+  {
+    type: "gate",
+    id: "g12",
+    kind: "choice",
+    prompt: `Given that $\\log_{3} 2 = t$, what is $\\log_{3} 18$ in terms of $t$?`,
+    options: ["$t + 2$", "$t + 9$", "$t + 3$"],
+    answer: "$t + 2$",
+    explain: `$18 = 2 \\times 3^{2}$, so $\\log_{3} 18 = t + 2$. The base's own logarithm is $1$, so $\\log_{3} 9 = 2$: not $9$, and not $9 \\div 3$.`,
+  },
+
+  // 12. exam twists, from the 2018 to 2026 papers, most frequent first
+  { type: "h", text: "Exam twists", role: "twists" },
+  {
+    type: "p",
+    md: `**$x$ in the indices** (every paper, 2018 to 2026). The partner part is an equation with $x$ in two indices. Take logarithms of both sides; each index comes down whole, in a bracket.`,
+  },
+  {
+    type: "p",
+    md: `**A base other than ten** (2022, 2023, 2026). The laws are unchanged, and the base's own logarithm is $1$. Factorise the number with the base as one factor.`,
+  },
+  {
+    type: "p",
+    md: `**A coefficient on a bracket or a root** (2024, 2025). The power reaches everything inside: $${BRACKET_TWIST.k}\\log ${BRACKET_TWIST.a}x = \\log ${BRACKET_TWIST.a ** BRACKET_TWIST.k}x^{${BRACKET_TWIST.k}}$ and $${ROOT_TWIST.k}\\log\\sqrt{c} = \\log c^{${ROOT_TWIST.power}}$.`,
+  },
+  {
+    type: "p",
+    md: `**One letter in terms of another** (2019, 2021). Make each side a single logarithm, or write both letters as multiples of one shared logarithm, then compare.`,
+  },
+  {
+    type: "gate",
+    id: "g13",
+    kind: "choice",
+    prompt: `The part after a laws question often has $x$ in two indices, with a different base on each side. What do you do first?`,
+    options: ["Take logarithms of both sides", "Divide both sides by one of the bases", "Set the two indices equal"],
+    answer: "Take logarithms of both sides",
+    explain: `Different bases cannot be compared directly, so take logarithms of both sides; the power law then brings each index down, in a bracket. Setting the indices equal works only when the bases match.`,
+  },
+
+  // 13. going further: the reduction to a straight line, which the papers set every year from 2018 to 2025 (not 2026)
+  { type: "h", text: "Going further: a power law in disguise", role: "further" },
+  {
+    type: "figure",
+    alt: `A straight line on axes of log y against log x, crossing the vertical axis at log k, with a gradient triangle whose run is 1 and whose rise is n.`,
+    svg: LINE_SVG,
+    caption: `Plotted as log y against log x, y = kxⁿ is a straight line with gradient n and intercept log k.`,
+  },
+  {
+    type: "p",
+    md: `The laws turn a curve into a straight line. Take logarithms of $y = kx^{n}$: the product law splits the right side and the power law brings $n$ down.\n$\\log y = n\\log x + \\log k$\nThat is a line with gradient $n$ and intercept $\\log k$. The papers set it every year from 2018 to 2025, and the log/log graphs lesson takes it from here.`,
+  },
+  {
+    type: "callout",
+    kind: "notonspec",
+    title: "Where the specification stops",
+    md: `The change of base rule, natural logarithms and the number $e$ are not on this specification. Every logarithm here is to base ten or to a base the question states.`,
+  },
+  {
+    type: "gate",
+    id: "g14",
+    kind: "choice",
+    prompt: `If $y = 5x^{3}$, what is $\\log y$?`,
+    options: ["$\\log 5 + 3\\log x$", "$3\\log 5x$", "$5 + 3\\log x$"],
+    answer: "$\\log 5 + 3\\log x$",
+    explain: `The product law splits $5x^{3}$ into $\\log 5 + \\log x^{3}$, and the power law brings the $3$ down. The $3$ belongs to $x$ alone, so $\\log 5$ keeps no coefficient.`,
+  },
+
+  // 14. derivation: the three laws from the index laws
+  { type: "h", text: "Where the laws come from", role: "derivation" },
+  {
+    type: "p",
+    md: `Let $a = 10^{p}$ and $b = 10^{q}$, so that $p = \\log a$ and $q = \\log b$.\nThen $ab = 10^{p + q}$, because indices add.\nSo $\\log(ab) = p + q$, which is $\\log a + \\log b$.\nIn the same way $\\frac{a}{b} = 10^{p - q}$, so $\\log\\frac{a}{b} = \\log a - \\log b$.\nAnd $a^{n} = 10^{np}$, so $\\log a^{n} = np$, which is $n\\log a$.`,
+  },
+  {
+    type: "p",
+    md: `Nothing here needs base ten: put any base in place of $10$ and every line still holds.`,
+  },
+  {
+    type: "gate",
+    id: "g15",
+    kind: "choice",
+    prompt: `Let $a = 10^{p}$. What is $\\log a^{3}$ in terms of $p$?`,
+    options: ["$3p$", "$p^{3}$", "$p + 3$"],
+    answer: "$3p$",
+    explain: `$a^{3} = (10^{p})^{3} = 10^{3p}$, so $\\log a^{3} = 3p$, which is $3\\log a$: the power law, derived.`,
+  },
+
+  { type: "h", text: "You can now", role: "recap" },
+  {
+    type: "p",
+    md: `Combine logarithms: coefficients to powers, then add, then subtract.\nPut numbers and roots inside, as logarithms and as powers.\nExpand one logarithm, or write it in terms of the ones you are given.\nDrop the logarithms from $\\log P = \\log Q$, and write one letter in terms of another.\nSpot the twists: a bracket or a root under a coefficient, a new base, $x$ in the indices.`,
+  },
+  { type: "h", text: "In the exam", role: "pointer" },
+  {
+    type: "p",
+    md: `Expect a laws part worth $2$ or $3$ marks, then an indicial equation. The first mark is usually the coefficients written as powers; the last is one logarithm, or the expression in the given letters. A "show that" line is there to be used in the part after it. Stuck? Coefficients first, then add, then subtract.`,
+  },
+  { type: "prompt", promptId: `rp.${TOPIC}.01` },
+  { type: "prompt", promptId: `rp.${TOPIC}.03` },
+  { type: "prompt", promptId: `rp.${TOPIC}.05` },
+  { type: "prompt", promptId: `rp.${TOPIC}.08` },
+  { type: "prompt", promptId: `rp.${TOPIC}.12` },
+];
+
+// The hero's minutes are the note's own figure by the app's model (lesson-plan.ts: 180 words a minute and 40 seconds a
+// gate), counted exactly as scripts/qa/lesson-v2.mjs counts them, never a rounder number.
+{
+  const wordsIn = (s) => String(s ?? "").split(/\s+/).filter(Boolean).length;
+  const proseOf = (b) => (b.type === "p" || b.type === "callout" ? b.md : b.type === "h" ? b.text : "");
+  const noteWords = blocks.reduce((a, b) => a + wordsIn(proseOf(b)), 0);
+  const recapAt = blocks.findIndex((b) => b.type === "h" && b.text === "You can now");
+  const gates = blocks.slice(0, recapAt).filter((b) => b.type === "gate").length;
+  blocks[0].minutes = Math.max(1, Math.round(noteWords / 180 + (gates * 40) / 60));
+}
+
+/* ---- items ----------------------------------------------------------------------------------------------- */
+
+/** A single-logarithm answer: form "single-log" is safe only because the answer IS one logarithm. */
+const singleLog = (latex, variables) => ({ kind: "algebraic", latex, equivalence: "equivalent", variables, form: "single-log" });
+/**
+ * One logarithm whose argument has been multiplied out. "single-log" alone pays full marks for
+ * log((2x)^3), which is exactly the mark the Summer 2024 report says the majority lost, so the
+ * parts where a bracket can survive carry this form instead (probe-single-log-expanded.mts).
+ */
+const singleLogExpanded = (latex, variables) => ({ kind: "algebraic", latex, equivalence: "equivalent", variables, form: "single-log-expanded" });
+/** An expanded answer: form "expanded-logs" is safe only because the answer is a sum of logarithms. */
+const expandedLogs = (latex, variables) => ({ kind: "algebraic", latex, equivalence: "equivalent", variables, form: "expanded-logs" });
+/** No form: the answer holds no logarithm, so either form would reject a correct learner (probe-log-forms.mts). */
+const plainAlg = (latex, variables) => ({ kind: "algebraic", latex, equivalence: "equivalent", variables });
+
+const numAns = (value) => ({
+  kind: "numeric",
+  value,
+  tolerance: { type: "absolute", value: 0.0005 },
+  unitRequired: false,
+  acceptForms: ["decimal", "fraction"],
+});
+
+const ceA = (misconception, latex, feedback, marks, source) => ({
+  misconception,
+  pattern: { kind: "algebraic", latex },
+  feedback,
+  marksTypicallyEarned: marks,
+  source,
+});
+const ceN = (misconception, value, feedback, marks, source) => ({
+  misconception,
+  pattern: { kind: "numeric", value, tolerance: { type: "absolute", value: 0.0005 } },
+  feedback,
+  marksTypicallyEarned: marks,
+  source,
+});
+
+const SINGLE = "Give your answer as a single logarithm.";
+const SINGLE_EXPANDED = "Give your answer as a single logarithm, with the bracket multiplied out.";
+const SEPARATE = "Give your answer as separate logarithms.";
+
+const questions = [
+  {
+    id: `q.${TOPIC}.0001`, difficulty: 1, style: "practice", commandWords: ["Express"],
+    setting: "The product law on its own, as the first line of a logarithm question",
+    parts: [{
+      id: "main",
+      stem: `Express $\\log a + \\log b$ as a single logarithm.`,
+      marks: 2,
+      answer: singleLog("\\log(ab)", ["a", "b"]),
+      scheme: [
+        { id: "MW1", code: "MW", marks: 1, for: "the product law used" },
+        { id: "W1", code: "W", marks: 1, for: `$\\log(ab)$` },
+      ],
+      hints: ["Adding outside multiplies inside."],
+      workedSolution: `Adding two logarithms multiplies their arguments, so $\\log a + \\log b = \\log(ab)$.`,
+      commonErrors: [
+        ceA("fm.logs.sum-inside-the-log", "\\log(a + b)", `The plus sign has gone inside unchanged. Adding logarithms multiplies the arguments, so it is $\\log(ab)$.`, 0, CER22),
+      ],
+      requiresWorking: false,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0002`, difficulty: 1, style: "practice", commandWords: ["Express"],
+    setting: "The quotient law on its own",
+    parts: [{
+      id: "main",
+      stem: `Express $\\log x - \\log y$ as a single logarithm.`,
+      marks: 2,
+      answer: singleLog("\\log\\frac{x}{y}", ["x", "y"]),
+      scheme: [
+        { id: "MW1", code: "MW", marks: 1, for: "the quotient law used" },
+        { id: "W1", code: "W", marks: 1, for: `$\\log\\frac{x}{y}$` },
+      ],
+      hints: ["Subtracting outside divides inside."],
+      workedSolution: `Subtracting two logarithms divides their arguments, so $\\log x - \\log y = \\log\\frac{x}{y}$.`,
+      commonErrors: [
+        ceA("fm.logs.sum-inside-the-log", "\\log(x - y)", `The minus sign has gone inside unchanged. Subtracting logarithms divides the arguments, so it is $\\log\\frac{x}{y}$.`, 0, CER22),
+      ],
+      requiresWorking: false,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0003`, difficulty: 2, style: "practice", commandWords: ["Express"],
+    setting: "The power law with a single letter inside",
+    parts: [{
+      id: "main",
+      stem: `Express $3\\log m$ as a single logarithm.`,
+      marks: 2,
+      answer: singleLog("\\log m^{3}", ["m"]),
+      scheme: [
+        { id: "MW1", code: "MW", marks: 1, for: "the coefficient written as a power" },
+        { id: "W1", code: "W", marks: 1, for: `$\\log m^{3}$` },
+      ],
+      hints: ["A number in front becomes an index."],
+      workedSolution: `The power law takes the coefficient inside as an index: $3\\log m = \\log m^{3}$.`,
+      commonErrors: [
+        ceA("fm.logs.power-as-multiplier-inside", "\\log 3m", `The $3$ has gone inside as a multiplier. A coefficient becomes a power, so it is $\\log m^{3}$.`, 0, CER24),
+      ],
+      requiresWorking: false,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0004`, difficulty: 4, style: "practice", commandWords: ["Express"],
+    setting: "The power law with a coefficient inside, the step the 2024 report names",
+    parts: [{
+      id: "main",
+      stem: `Express $3\\log 2x$ as a single logarithm.\n${SINGLE_EXPANDED}`,
+      marks: 3,
+      answer: singleLogExpanded("\\log 8x^{3}", ["x"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log\\left((2x)^{3}\\right)$` },
+        { id: "M2", code: "M", marks: 1, for: `$(2x)^{3} = 8x^{3}$ expanded`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$\\log 8x^{3}$`, ft: true },
+      ],
+      hints: ["Write the bracket before you expand it.", "The cube lands on the $2$ as well as on the $x$."],
+      workedSolution: `$3\\log 2x = \\log\\left((2x)^{3}\\right)$.\nExpanding the bracket, $(2x)^{3} = 8x^{3}$.\nSo the single logarithm is $\\log 8x^{3}$.`,
+      commonErrors: [
+        // The scheme makes the expansion its own mark, so a failed expansion keeps the first one only.
+        ceA("fm.logs.coefficient-not-raised", "\\log 2x^{3}", `The cube reached the $x$ but not the $2$. The whole bracket is cubed, and $(2x)^{3} = 8x^{3}$, so the answer is $\\log 8x^{3}$.`, 1, CER24),
+        ceA("fm.logs.power-as-multiplier-inside", "\\log 6x", `The $3$ has gone inside as a multiplier rather than as a power. It becomes an index on everything inside.`, 0, CER24),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0005`, difficulty: 4, style: "practice", commandWords: ["Express"],
+    setting: "Three terms with coefficients, combined into one logarithm",
+    parts: [{
+      id: "main",
+      stem: `Express $2\\log p + \\log q - 3\\log r$ as a single logarithm.\n${SINGLE}`,
+      marks: 3,
+      answer: singleLog("\\log\\frac{p^{2}q}{r^{3}}", ["p", "q", "r"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log p^{2}$ and $\\log r^{3}$` },
+        { id: "M2", code: "M", marks: 1, for: `$\\log(p^{2}q)$`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$\\log\\frac{p^{2}q}{r^{3}}$`, ft: true },
+      ],
+      hints: ["Deal with every coefficient first.", "Then add, then subtract."],
+      workedSolution: `Coefficients first: $2\\log p = \\log p^{2}$ and $3\\log r = \\log r^{3}$.\nAdding: $\\log p^{2} + \\log q = \\log(p^{2}q)$.\nSubtracting: $\\log(p^{2}q) - \\log r^{3} = \\log\\frac{p^{2}q}{r^{3}}$.`,
+      commonErrors: [
+        ceA("fm.logs.subtraction-rule-misapplied", "\\log\\frac{p^{2}r^{3}}{q}", `The subtracted term has gone on top and the added one underneath. A subtracted logarithm divides, so $r^{3}$ belongs in the denominator.`, 1, CER25),
+        ceA("fm.logs.coefficient-not-raised", "\\log\\frac{2pq}{3r}", `The coefficients have gone inside as multipliers. Each one becomes a power, giving $\\log\\frac{p^{2}q}{r^{3}}$.`, 0, CER25),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0006`, difficulty: 3, style: "practice", commandWords: ["Express"],
+    setting: "A constant combined with a logarithm",
+    parts: [{
+      id: "main",
+      stem: `Logarithms in this question are to base $10$.\nExpress $2 + \\log x$ as a single logarithm.\n${SINGLE}`,
+      marks: 3,
+      answer: singleLog("\\log 100x", ["x"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$2 = \\log 100$` },
+        { id: "M2", code: "M", marks: 1, for: `$\\log 100 + \\log x$`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$\\log 100x$`, ft: true },
+      ],
+      hints: [`A number has to become a logarithm before it can be combined.`, `$10^{2} = 100$.`],
+      workedSolution: `To base $10$, $2 = \\log 100$.\nSo $2 + \\log x = \\log 100 + \\log x$.\nThe product law gives $\\log 100x$.`,
+      commonErrors: [
+        ceA("fm.logs.sum-inside-the-log", "\\log(x + 2)", `The $2$ has gone inside as an addition. It first has to be written as $\\log 100$, and then the product law gives $\\log 100x$.`, 0, CER25),
+        ceA("fm.logs.power-as-multiplier-inside", "\\log 2x", `The $2$ has gone inside as a multiplier. A constant becomes a logarithm of a power of ten, so here it is $\\log 100$.`, 0, CER25),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0007`, difficulty: 3, style: "practice", commandWords: ["Express"],
+    setting: "Expanding one logarithm into separate logarithms",
+    parts: [{
+      id: "main",
+      stem: `Express $\\log(x^{3}y^{2})$ as separate logarithms.\n${SEPARATE}`,
+      marks: 3,
+      answer: expandedLogs("3\\log x + 2\\log y", ["x", "y"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log x^{3} + \\log y^{2}$` },
+        { id: "W1", code: "W", marks: 1, for: `$3\\log x$`, ft: true },
+        { id: "W2", code: "W", marks: 1, for: `$2\\log y$`, ft: true },
+      ],
+      hints: ["Split at the product first.", "Then bring each power down in front."],
+      workedSolution: `The product splits into a sum: $\\log(x^{3}y^{2}) = \\log x^{3} + \\log y^{2}$.\nEach power drops out in front: $3\\log x + 2\\log y$.`,
+      commonErrors: [
+        ceA("fm.logs.product-to-sum", "\\log x^{3} \\times \\log y^{2}", `The product inside has become a product of logarithms. It becomes a sum: $\\log x^{3} + \\log y^{2}$.`, 0, CER22),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0008`, difficulty: 4, style: "practice", commandWords: ["Express"],
+    setting: "Expanding a quotient with a power and a root",
+    parts: [{
+      id: "main",
+      stem: `Express $\\log\\frac{m^{4}\\sqrt{n}}{t}$ as separate logarithms.\n${SEPARATE}`,
+      marks: 4,
+      answer: expandedLogs("4\\log m + \\frac{1}{2}\\log n - \\log t", ["m", "n", "t"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log(m^{4}\\sqrt{n}) - \\log t$` },
+        { id: "M2", code: "M", marks: 1, for: `$\\log m^{4} + \\log n^{\\frac{1}{2}} - \\log t$`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$4\\log m$`, ft: true },
+        { id: "W2", code: "W", marks: 1, for: `$\\frac{1}{2}\\log n$`, ft: true },
+      ],
+      hints: ["The division becomes a minus.", `A square root is a power of $\\frac{1}{2}$.`],
+      workedSolution: `The division splits off first: $\\log(m^{4}\\sqrt{n}) - \\log t$.\nThe product splits next: $\\log m^{4} + \\log n^{\\frac{1}{2}} - \\log t$.\nBringing each power down: $4\\log m + \\frac{1}{2}\\log n - \\log t$.`,
+      commonErrors: [
+        ceA("fm.logs.quotient-as-divided-logs", "\\frac{4\\log m + \\frac{1}{2}\\log n}{\\log t}", `The division has been carried out on the logarithms. A quotient inside becomes a subtraction outside, so the last term is $-\\log t$.`, 2, CER25),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0009`, difficulty: 3, style: "practice", commandWords: ["Express"],
+    setting: "A number built from two given logarithms",
+    parts: [{
+      id: "main",
+      stem: `It is given that $\\log 2 = a$ and $\\log 5 = b$.\nExpress $\\log ${FORTY.value}$ in terms of $a$ and $b$.`,
+      marks: 2,
+      answer: plainAlg("3a + b", ["a", "b"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$${FORTY.value} = 2^{3} \\times 5$` },
+        { id: "W1", code: "W", marks: 1, for: `$3a + b$`, ft: true },
+      ],
+      hints: [`Factorise $${FORTY.value}$ into twos and fives.`],
+      workedSolution: `$${FORTY.value} = 2^{3} \\times 5$.\nSo $\\log ${FORTY.value} = \\log 2^{3} + \\log 5 = 3\\log 2 + \\log 5 = 3a + b$.`,
+      commonErrors: [
+        ceA("fm.logs.power-as-multiplier-inside", "a^{3} + b", `The index has stayed where it was. The power law brings it down in front, so $\\log 2^{3} = 3\\log 2 = 3a$.`, 1, CER23),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0010`, difficulty: 5, style: "practice", commandWords: ["Express"],
+    setting: "A number that needs a division as well as a product, the discriminating version",
+    parts: [{
+      id: "main",
+      stem: `It is given that $\\log 3 = p$ and $\\log 5 = q$, with logarithms to base $10$.\nExpress $\\log ${SEVEN_FIVE.value}$ in terms of $p$ and $q$.`,
+      marks: 3,
+      answer: plainAlg("p + 2q - 1", ["p", "q"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$${SEVEN_FIVE.value} = \\frac{3 \\times 5}{2}$` },
+        { id: "M2", code: "M", marks: 1, for: `$\\log 2 = 1 - q$`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$p + 2q - 1$`, ft: true },
+      ],
+      hints: [`Write $${SEVEN_FIVE.value}$ using only threes, fives and twos.`, `There is no letter for $\\log 2$, but $2 = \\frac{10}{5}$.`],
+      workedSolution: `$${SEVEN_FIVE.value} = \\frac{15}{2} = \\frac{3 \\times 5}{2}$.\nSo $\\log ${SEVEN_FIVE.value} = \\log 3 + \\log 5 - \\log 2 = p + q - \\log 2$.\nSince $2 = \\frac{10}{5}$, $\\log 2 = \\log 10 - \\log 5 = 1 - q$.\nSo $\\log ${SEVEN_FIVE.value} = p + q - (1 - q) = p + 2q - 1$.`,
+      commonErrors: [
+        ceA("fm.logs.subtraction-rule-misapplied", "p + q - 1", `The bracket round $1 - q$ was dropped, so only the $1$ changed sign. Taking away $1 - q$ adds a second $q$, giving $p + 2q - 1$.`, 2, CER25),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0011`, difficulty: 3, style: "practice", commandWords: ["Solve"],
+    setting: "An equation finished by dropping equal logarithms",
+    parts: [{
+      id: "main",
+      stem: `Solve the equation\n$\\log x + \\log 4 = \\log 20$`,
+      marks: 3,
+      answer: numAns(EQ1),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log 4x = \\log 20$` },
+        { id: "M2", code: "M", marks: 1, for: `$4x = 20$`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$${EQ1}$`, ft: true },
+      ],
+      hints: ["Combine the left-hand side into one logarithm first.", "Equal logarithms have equal arguments."],
+      workedSolution: `Combining the left side: $\\log 4x = \\log 20$.\nEqual logarithms have equal arguments, so $4x = 20$.\nTherefore $x = ${EQ1}$.`,
+      commonErrors: [
+        ceN("fm.logs.sum-inside-the-log", E.eq1Added, `The left side was read as $\\log(x + 4)$. Adding logarithms multiplies inside, so it is $\\log 4x$ and $x = ${EQ1}$.`, 0, CER22),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0012`, difficulty: 4, style: "practice", commandWords: ["Solve"],
+    setting: "An equation whose combination is a quotient",
+    parts: [{
+      id: "main",
+      stem: `Solve the equation\n$\\log(x + 5) - \\log(x - 1) = \\log 3$`,
+      marks: 4,
+      answer: numAns(EQ2),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log\\frac{x + 5}{x - 1} = \\log 3$` },
+        { id: "M2", code: "M", marks: 1, for: `$x + 5 = 3(x - 1)$`, dependsOn: ["M1"] },
+        { id: "M3", code: "M", marks: 1, for: `$8 = 2x$`, dependsOn: ["M2"] },
+        { id: "W1", code: "W", marks: 1, for: `$${EQ2}$`, ft: true },
+      ],
+      hints: ["Subtracting logarithms divides inside.", "Multiply both sides by the denominator."],
+      workedSolution: `The left side combines to $\\log\\frac{x + 5}{x - 1} = \\log 3$.\nEqual logarithms have equal arguments, so $\\frac{x + 5}{x - 1} = 3$ and $x + 5 = 3(x - 1)$.\nExpanding: $x + 5 = 3x - 3$, so $8 = 2x$ and $x = ${EQ2}$.`,
+      // Dividing the two logarithms instead of subtracting them reaches the same value here, so it
+      // cannot be seen on the answer line at all: it is caught in the working by ftm...02 instead.
+      commonErrors: [],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0013`, difficulty: 5, style: "practice", commandWords: ["Express"],
+    setting: "Two logarithmic expressions set equal, then one letter written in terms of the other",
+    parts: [{
+      id: "main",
+      stem: `It is given that $2\\log y = 3\\log x$.\nExpress $y$ in terms of $x$.`,
+      marks: 3,
+      answer: plainAlg("y = x^{\\frac{3}{2}}", ["x", "y"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log y^{2} = \\log x^{3}$` },
+        { id: "M2", code: "M", marks: 1, for: `$y^{2} = x^{3}$`, dependsOn: ["M1"] },
+        { id: "W1", code: "W", marks: 1, for: `$y = x^{\\frac{3}{2}}$`, ft: true },
+      ],
+      hints: ["Take each coefficient inside as a power.", "Equal logarithms have equal arguments, then take the square root."],
+      workedSolution: `The power law gives $\\log y^{2} = \\log x^{3}$.\nEqual logarithms have equal arguments, so $y^{2} = x^{3}$.\nTaking the square root, $y = x^{\\frac{3}{2}}$.`,
+      commonErrors: [
+        ceA("fm.logs.cannot-remove-logs", "y = \\frac{3\\log x}{2\\log y}", `The working stopped at a ratio of logarithms. Once both sides are single logarithms they can be dropped, leaving $y^{2} = x^{3}$.`, 1, CER19),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0014`, difficulty: 4, style: "exam-style", commandWords: ["Express", "Solve"],
+    setting: "A single-logarithm part and an equation, the shape a Unit 1 logarithm question takes",
+    parts: [
+      {
+        id: "a",
+        stem: `Express $\\log a + 2\\log b - \\log c$ as a single logarithm.\n${SINGLE}`,
+        marks: 3,
+        answer: singleLog("\\log\\frac{ab^{2}}{c}", ["a", "b", "c"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$2\\log b = \\log b^{2}$` },
+          { id: "M2", code: "M", marks: 1, for: `$\\log(ab^{2})$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$\\log\\frac{ab^{2}}{c}$`, ft: true },
+        ],
+        hints: ["Coefficient first, then add, then subtract."],
+        workedSolution: `The coefficient becomes a power: $2\\log b = \\log b^{2}$.\nAdding: $\\log a + \\log b^{2} = \\log(ab^{2})$.\nSubtracting: $\\log(ab^{2}) - \\log c = \\log\\frac{ab^{2}}{c}$.`,
+        commonErrors: [
+          ceA("fm.logs.subtraction-rule-misapplied", "\\log\\frac{ac}{b^{2}}", `The subtracted term has gone on top and the squared one underneath. It is $c$ that is subtracted, so $c$ is the denominator.`, 1, CER25),
+          ceA("fm.logs.coefficient-not-raised", "\\log\\frac{2ab}{c}", `The $2$ went inside as a multiplier. A coefficient becomes a power, so $2\\log b = \\log b^{2}$.`, 1, CER24),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `Solve the equation\n$\\log(2x - 1) = \\log 3 + \\log 4$`,
+        marks: 3,
+        answer: numAns(EQ3),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$\\log 12$ on the right` },
+          { id: "M2", code: "M", marks: 1, for: `$2x - 1 = 12$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$${EQ3}$`, ft: true },
+        ],
+        hints: ["Combine the right-hand side first.", "Then drop the logarithms."],
+        workedSolution: `The right side combines to $\\log 12$, so $\\log(2x - 1) = \\log 12$.\nEqual logarithms have equal arguments, so $2x - 1 = 12$.\nTherefore $2x = 13$ and $x = ${EQ3}$.`,
+        commonErrors: [
+          ceN("fm.logs.sum-inside-the-log", 4, `The right side was read as $\\log 7$, adding inside instead of multiplying. It combines to $\\log 12$, and the answer is $${EQ3}$.`, 1, CER22),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0015`, difficulty: 5, style: "exam-style", commandWords: ["Express"],
+    setting: "Two numbers built from the same pair of given logarithms, the second needing a division",
+    parts: [
+      {
+        id: "a",
+        stem: `It is given that $\\log 2 = m$ and $\\log 3 = n$.\nExpress $\\log ${EIGHTEEN.value}$ in terms of $m$ and $n$.`,
+        marks: 2,
+        answer: plainAlg("m + 2n", ["m", "n"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${EIGHTEEN.value} = 2 \\times 3^{2}$` },
+          { id: "W1", code: "W", marks: 1, for: `$m + 2n$`, ft: true },
+        ],
+        hints: [`Factorise $${EIGHTEEN.value}$ into twos and threes.`],
+        workedSolution: `$${EIGHTEEN.value} = 2 \\times 3^{2}$.\nSo $\\log ${EIGHTEEN.value} = \\log 2 + \\log 3^{2} = m + 2n$.`,
+        commonErrors: [
+          ceA("fm.logs.power-as-multiplier-inside", "m + n^{2}", `The index stayed inside. The power law brings it down, so $\\log 3^{2} = 2\\log 3 = 2n$.`, 1, CER23),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `Express $\\log ${THREE_QUARTERS.value}$ in terms of $m$ and $n$.`,
+        marks: 3,
+        answer: plainAlg("n - 2m", ["m", "n"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${THREE_QUARTERS.value} = \\frac{3}{4}$` },
+          { id: "M2", code: "M", marks: 1, for: `$\\log 3 - \\log 2^{2}$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$n - 2m$`, ft: true },
+        ],
+        hints: [`Write $${THREE_QUARTERS.value}$ as a fraction first.`, `$4 = 2^{2}$.`],
+        workedSolution: `$${THREE_QUARTERS.value} = \\frac{3}{4} = \\frac{3}{2^{2}}$.\nSo $\\log ${THREE_QUARTERS.value} = \\log 3 - \\log 2^{2} = n - 2m$.`,
+        commonErrors: [
+          ceA("fm.logs.subtraction-rule-misapplied", "2m - n", `The subtraction is the wrong way round. The $3$ is on top, so it is $\\log 3 - \\log 4$, which is $n - 2m$.`, 1, CER25),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0016`, difficulty: 5, style: "exam-style", commandWords: ["Express", "Solve"],
+    setting: "An expansion, a rearrangement and an equation with a root to reject",
+    parts: [
+      {
+        id: "a",
+        stem: `Express $\\log\\frac{x^{2}\\sqrt{y}}{z^{3}}$ as separate logarithms.\n${SEPARATE}`,
+        marks: 3,
+        answer: expandedLogs("2\\log x + \\frac{1}{2}\\log y - 3\\log z", ["x", "y", "z"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$\\log(x^{2}\\sqrt{y}) - \\log z^{3}$` },
+          { id: "W1", code: "W", marks: 1, for: `$2\\log x + \\frac{1}{2}\\log y$`, ft: true },
+          { id: "W2", code: "W", marks: 1, for: `$-3\\log z$`, ft: true },
+        ],
+        hints: ["Split the division first.", `A square root is a power of $\\frac{1}{2}$.`],
+        workedSolution: `The division splits first: $\\log(x^{2}\\sqrt{y}) - \\log z^{3}$.\nThe product splits next, and each power drops down: $2\\log x + \\frac{1}{2}\\log y - 3\\log z$.`,
+        commonErrors: [
+          ceA("fm.logs.root-not-brought-down", "2\\log x + \\log y - 3\\log z", `The square root has been dropped rather than brought down as a half. A root is a power of $\\frac{1}{2}$, so that term is $\\frac{1}{2}\\log y$.`, 2, CER25),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `It is given that $3\\log x = 2\\log z$.\nExpress $x$ in terms of $z$.`,
+        marks: 2,
+        answer: plainAlg("x = z^{\\frac{2}{3}}", ["x", "z"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$x^{3} = z^{2}$` },
+          { id: "W1", code: "W", marks: 1, for: `$x = z^{\\frac{2}{3}}$`, ft: true },
+        ],
+        hints: ["Take both coefficients inside as powers, then drop the logarithms."],
+        workedSolution: `The power law gives $\\log x^{3} = \\log z^{2}$, so $x^{3} = z^{2}$.\nTaking the cube root, $x = z^{\\frac{2}{3}}$.`,
+        commonErrors: [
+          ceA("fm.logs.cannot-remove-logs", "x = \\frac{2\\log z}{3}", `The logarithm was left on one side. Once both sides are single logarithms they can be dropped, giving $x^{3} = z^{2}$.`, 1, CER19),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "c",
+        stem: `Solve the equation\n$\\log(x + 2) + \\log(x - 2) = \\log 12$`,
+        marks: 4,
+        answer: numAns(EQ4),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$\\log\\left((x + 2)(x - 2)\\right) = \\log 12$` },
+          { id: "M2", code: "M", marks: 1, for: `$x^{2} - 4 = 12$`, dependsOn: ["M1"] },
+          { id: "M3", code: "M", marks: 1, for: `$x^{2} = 16$`, dependsOn: ["M2"] },
+          { id: "W1", code: "W", marks: 1, for: `$${EQ4}$ only, with $${EQ4_REJECTED}$ rejected`, ft: true },
+        ],
+        hints: ["Combine the left side into one logarithm.", `Both roots of $x^{2} = 16$ must be tested in the original equation.`],
+        workedSolution: `Combining the left side: $\\log\\left((x + 2)(x - 2)\\right) = \\log 12$.\nEqual logarithms have equal arguments, so $(x + 2)(x - 2) = 12$ and $x^{2} - 4 = 12$.\nSo $x^{2} = 16$ and $x = ${EQ4}$ or $x = ${EQ4_REJECTED}$.\nAt $x = ${EQ4_REJECTED}$ the expression $\\log(x - 2)$ has a negative argument, so that root is rejected and $x = ${EQ4}$.`,
+        commonErrors: [
+          ceN("fm.logs.sum-inside-the-log", 6, `The left side was read as $\\log(2x)$, adding inside instead of multiplying. Multiplying the brackets gives $x^{2} - 4 = 12$ and $x = ${EQ4}$.`, 0, CER22),
+          // Both roots kept: the method marks stand and only the final W1 ("4 only, with -4 rejected") goes. The
+          // registry's evidence for keeping an impossible value is the Summer 2023 Q5 and Summer 2018 reports on
+          // other question types, so no source is claimed on this item.
+          {
+            misconception: "fm.qin.context-not-applied",
+            pattern: { kind: "text", regex: BOTH_ROOTS_KEPT },
+            feedback: `Both roots of $x^{2} = 16$ are there, but $x = ${EQ4_REJECTED}$ has to be rejected: it makes both brackets negative, $${EQ4_REJECTED + 2}$ and $${EQ4_REJECTED - 2}$, and there is no logarithm of a negative number. The answer is $x = ${EQ4}$ only.`,
+            marksTypicallyEarned: 3,
+          },
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+
+  /* ---- depth pass, 23 Sep: new items with new ids ---------------------------------------------------------- */
+  {
+    // The synoptic chain the standard asks of an H5 bundle: the two laws shapes the papers set most, then the
+    // Summer 2019 pairing of a one-line "write as a power" with a "hence" indicial equation, at full length.
+    id: `q.${TOPIC}.0017`, difficulty: 5, style: "exam-style", commandWords: ["Express", "Write down", "Hence", "Solve"],
+    setting: "A laws question chained through a 'hence' to an indicial equation, the whole logarithm question at full length",
+    verbs: { a: "express", b: "express", c: "write-down", d: "solve" },
+    examinerSources: [CER18, CER19, CER24],
+    methodLock: {
+      instruction: "Hence solve the equation",
+      requiredMethod: "Use part (c) to replace 8 × 2^x by a single power of 2, then take logarithms of both sides with each index in a bracket and gather the terms in x. Solving without part (c) is valid mathematics, but the part is written to be answered from it.",
+      evidence: CER19,
+    },
+    parts: [
+      {
+        id: "a",
+        stem: `Express $${Q17A.k}\\log ${Q17A.a}x - \\log ${Q17A.b}x$ as a single logarithm.`,
+        marks: 3,
+        answer: singleLog(`\\log ${Q17A_ARG.n}x`, ["x"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$\\log\\left((${Q17A.a}x)^{${Q17A.k}}\\right) = \\log ${Q17A.a ** Q17A.k}x^{${Q17A.k}}$` },
+          { id: "M2", code: "M", marks: 1, for: `$\\log\\frac{${Q17A.a ** Q17A.k}x^{${Q17A.k}}}{${Q17A.b}x}$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$\\log ${Q17A_ARG.n}x$, or the unsimplified single logarithm`, ft: true },
+        ],
+        hints: ["Write the bracket before you square it.", "The subtracted term goes underneath, then cancel inside."],
+        workedSolution: `The coefficient becomes a power on the whole bracket: $${Q17A.k}\\log ${Q17A.a}x = \\log ${Q17A.a ** Q17A.k}x^{${Q17A.k}}$.\nSubtracting divides inside: $\\log\\frac{${Q17A.a ** Q17A.k}x^{${Q17A.k}}}{${Q17A.b}x}$.\nCancelling inside, the single logarithm is $\\log ${Q17A_ARG.n}x$.`,
+        commonErrors: [
+          ceA("fm.logs.coefficient-not-raised", `\\log\\frac{${Q17A_NOT_RAISED.n}x}{${Q17A_NOT_RAISED.d}}`, `The square reached the $x$ but not the $${Q17A.a}$. The whole bracket is squared, $(${Q17A.a}x)^{2} = ${Q17A.a ** Q17A.k}x^{2}$, which leaves $\\log ${Q17A_ARG.n}x$.`, 1, CER24),
+          ceA("fm.logs.power-as-multiplier-inside", `\\log ${Q17A_MULTIPLIER.n}`, `The $${Q17A.k}$ went inside as a multiplier, so the $x$ cancelled away. A coefficient becomes a power: $\\log ${Q17A.a ** Q17A.k}x^{2}$ first, then divide by $${Q17A.b}x$.`, 0, CER24),
+          ceA("fm.logs.subtraction-rule-misapplied", `\\log\\frac{${Q17A_SWAPPED.n}}{${Q17A_SWAPPED.d}x}`, `The fraction is upside down. The term with the minus, $\\log ${Q17A.b}x$, is the one that goes underneath.`, 2, CER25),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `It is given that $\\log_{${Q17B.base}} ${Q17B.given} = t$.\nExpress $\\log_{${Q17B.base}} ${Q17B.n}$ in terms of $t$.`,
+        marks: 2,
+        answer: plainAlg(`${Q17B.power} + t`, ["t"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${Q17B.n} = ${Q17B.base}^{${Q17B.power}} \\times ${Q17B.given}$` },
+          { id: "W1", code: "W", marks: 1, for: `$${Q17B.power} + t$`, ft: true },
+        ],
+        hints: [`Factorise $${Q17B.n}$ with the base, $${Q17B.base}$, as a factor.`, `$\\log_{${Q17B.base}} ${Q17B.base} = 1$.`],
+        workedSolution: `$${Q17B.n} = ${Q17B.base}^{${Q17B.power}} \\times ${Q17B.given}$.\nSo $\\log_{${Q17B.base}} ${Q17B.n} = \\log_{${Q17B.base}} ${Q17B.base}^{${Q17B.power}} + \\log_{${Q17B.base}} ${Q17B.given}$.\nThat is $${Q17B.power} + t$.`,
+        commonErrors: [
+          ceA("fm.logs.unknown-base-divided", `${Q17B_DIVIDED} + t`, `$\\log_{${Q17B.base}} ${Q17B.base ** Q17B.power}$ is the power of $${Q17B.base}$ that makes $${Q17B.base ** Q17B.power}$, which is $${Q17B.power}$, not $${Q17B.base ** Q17B.power} \\div ${Q17B.base}$.`, 1),
+          ceA("fm.logs.product-to-sum", `${Q17B.power}t`, `The two logarithms have been multiplied. A product inside splits into a sum outside: $${Q17B.power} + t$.`, 0),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "c",
+        stem: `Write $8 \\times 2^{x}$ in the form $2^{x + a}$.\nWrite down the value of $a$.`,
+        marks: 1,
+        answer: numAns(Q17C),
+        scheme: [{ id: "W1", code: "W", marks: 1, for: `$a = ${Q17C}$, since $8 = 2^{${Q17C}}$` }],
+        hints: ["Write $8$ as a power of $2$.", "Multiplying powers of the same base adds the indices."],
+        workedSolution: `$8 = 2^{${Q17C}}$, so $8 \\times 2^{x} = 2^{${Q17C}} \\times 2^{x}$.\nThe indices add: $2^{x + ${Q17C}}$, so $a = ${Q17C}$.`,
+        commonErrors: [],
+        requiresWorking: false,
+      },
+      {
+        id: "d",
+        stem: `Hence solve the equation\n$5^{2x - 1} = 8 \\times 2^{x}$\nGive your answer correct to 2 decimal places.`,
+        marks: 4,
+        answer: numAns(Q17D),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$(2x - 1)\\log 5 = (x + ${Q17C})\\log 2$, brackets included` },
+          { id: "M2", code: "M", marks: 1, for: `$2x\\log 5 - \\log 5 = x\\log 2 + ${Q17C}\\log 2$`, dependsOn: ["M1"] },
+          { id: "M3", code: "M", marks: 1, for: `$x(2\\log 5 - \\log 2) = ${Q17C}\\log 2 + \\log 5$`, dependsOn: ["M2"] },
+          { id: "W1", code: "W", marks: 1, for: `$${Q17D}$`, ft: true },
+        ],
+        hints: ["Use part (c) to write the right-hand side as one power of $2$.", "Take logarithms of both sides, keeping each index in a bracket."],
+        workedSolution: `By part (c), the equation is $5^{2x - 1} = 2^{x + ${Q17C}}$.\nTaking logarithms: $(2x - 1)\\log 5 = (x + ${Q17C})\\log 2$.\nExpanding: $2x\\log 5 - \\log 5 = x\\log 2 + ${Q17C}\\log 2$.\nGathering the $x$ terms: $x(2\\log 5 - \\log 2) = ${Q17C}\\log 2 + \\log 5$.\nSo $x = ${fx(Q17D_EXACT, 4)}$, which is $${Q17D}$ to 2 decimal places.`,
+        commonErrors: [
+          ceN("fm.logs.brackets-omitted", Q17D_NO_BRACKETS, `The brackets went missing when the indices came down, so only the $1$ and the $${Q17C}$ met the logarithms. Write $(2x - 1)\\log 5 = (x + ${Q17C})\\log 2$ first; the answer is $${Q17D}$.`, 1, CER18),
+          ceN("fm.logs.terms-not-collected", Q17D_SIGN, `The $x\\log 2$ term crossed to the left without its sign changing. Gathering the $x$ terms gives $x(2\\log 5 - \\log 2)$, and the answer is $${Q17D}$.`, 2),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    id: `q.${TOPIC}.0018`, difficulty: 4, style: "practice", commandWords: ["Express"],
+    setting: "In terms of a given logarithm, in a base other than ten",
+    examinerSources: [CER22, CER23],
+    parts: [{
+      id: "main",
+      stem: `It is given that $\\log_{2} 3 = k$.\nExpress $\\log_{2} ${Q18.n}$ in terms of $k$.`,
+      marks: 2,
+      answer: plainAlg(`${Q18.p} + ${Q18.q}k`, ["k"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$${Q18.n} = 2^{${Q18.p}} \\times 3^{${Q18.q}}$` },
+        { id: "W1", code: "W", marks: 1, for: `$${Q18.p} + ${Q18.q}k$`, ft: true },
+      ],
+      hints: [`Factorise $${Q18.n}$ into twos and threes.`, `The base's own logarithm is $1$, so $\\log_{2} 2^{${Q18.p}} = ${Q18.p}$.`],
+      workedSolution: `$${Q18.n} = 2^{${Q18.p}} \\times 3^{${Q18.q}}$.\nSo $\\log_{2} ${Q18.n} = \\log_{2} 2^{${Q18.p}} + \\log_{2} 3^{${Q18.q}}$.\nThat is $${Q18.p} + ${Q18.q}\\log_{2} 3$, which is $${Q18.p} + ${Q18.q}k$.`,
+      commonErrors: [
+        ceA("fm.logs.power-as-multiplier-inside", `${Q18.p} + k^{${Q18.q}}`, `The index on the $3$ stayed where it was. The power law brings it down in front: $\\log_{2} 3^{${Q18.q}} = ${Q18.q}k$.`, 1),
+        ceA("fm.logs.unknown-base-divided", `${Q18_DIVIDED} + ${Q18.q}k`, `$\\log_{2} ${2 ** Q18.p}$ is the power of $2$ that makes $${2 ** Q18.p}$, which is $${Q18.p}$, not $${2 ** Q18.p} \\div 2$.`, 1),
+        ceA("fm.logs.product-to-sum", `${Q18.p * Q18.q}k`, `The two logarithms have been multiplied. A product inside splits into a sum outside, so it is $${Q18.p} + ${Q18.q}k$.`, 0),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    id: `q.${TOPIC}.0019`, difficulty: 5, style: "practice", commandWords: ["Express"],
+    setting: "Two letters defined as logarithms of numbers, one written in terms of the other",
+    examinerSources: [CER19, CER23],
+    parts: [{
+      id: "main",
+      stem: `It is given that $y = \\log 8$ and $z = \\log\\frac{1}{4}$.\nExpress $y$ in terms of $z$.`,
+      marks: 3,
+      answer: plainAlg(`y = ${fTex(Q19)}z`, ["y", "z"]),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$y = 3\\log 2$` },
+        { id: "M2", code: "M", marks: 1, for: `$z = -2\\log 2$` },
+        { id: "W1", code: "W", marks: 1, for: `$y = ${fTex(Q19)}z$`, ft: true },
+      ],
+      hints: [`Write $8$ and $\\frac{1}{4}$ as powers of $2$.`, `$\\frac{1}{4} = 2^{-2}$.`],
+      workedSolution: `$8 = 2^{3}$, so $y = 3\\log 2$.\n$\\frac{1}{4} = 2^{-2}$, so $z = -2\\log 2$ and $\\log 2 = -\\frac{z}{2}$.\nSo $y = 3 \\times \\left(-\\frac{z}{2}\\right)$, which is $${fTex(Q19)}z$.`,
+      commonErrors: [
+        ceA("fm.logs.negative-index-sign-dropped", `y = ${fTex(frac(-Q19.n, Q19.d))}z`, `The minus sign has gone. $\\frac{1}{4} = 2^{-2}$, so $z = -2\\log 2$, and that sign carries through to $y = ${fTex(Q19)}z$.`, 1),
+      ],
+      requiresWorking: true,
+    }],
+  },
+  {
+    // The context question: the laws reduce a power law, the first mark of the log/log graph question in every paper from 2018 to 2025.
+    id: `q.${TOPIC}.0020`, difficulty: 4, style: "exam-style", commandWords: ["Express", "Find"],
+    setting: "A power law for a wind turbine, reduced by the laws of logarithms and fitted to two readings",
+    verbs: { a: "express", b: "find", c: "find" },
+    examinerSources: [CER19],
+    parts: [
+      {
+        id: "a",
+        stem: `The power $P$ watts of a small wind turbine is modelled by $P = kv^{n}$, where $v$ m/s is the wind speed and $k$ and $n$ are constants.\nExpress $\\log P$ in terms of $\\log k$, $n$ and $\\log v$.\n${SEPARATE}`,
+        marks: 2,
+        answer: expandedLogs("\\log k + n\\log v", ["k", "n", "v"]),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$\\log P = \\log k + \\log v^{n}$` },
+          { id: "W1", code: "W", marks: 1, for: `$\\log k + n\\log v$`, ft: true },
+        ],
+        hints: ["Take logarithms of both sides: the product law splits the right side.", "Then the power law brings $n$ down."],
+        workedSolution: `Taking logarithms, $\\log P = \\log(kv^{n})$.\nThe product law splits it: $\\log k + \\log v^{n}$.\nThe power law brings $n$ down: $\\log P = \\log k + n\\log v$.`,
+        commonErrors: [
+          ceA("fm.logs.product-to-sum", "\\log k \\times n\\log v", `The product inside has become a product of logarithms. It splits into a sum: $\\log k + n\\log v$.`, 0),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "b",
+        stem: `When $v = ${Q20.v1}$, $P = ${Q20.p1}$, and when $v = ${Q20.v2}$, $P = ${Q20.p2}$.\nUse your answer to part (a) to find the value of $n$.`,
+        marks: 3,
+        answer: numAns(3),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$\\log ${Q20.p1} = \\log k + n\\log ${Q20.v1}$ and $\\log ${Q20.p2} = \\log k + n\\log ${Q20.v2}$` },
+          { id: "M2", code: "M", marks: 1, for: `$\\log ${Q20.p2 / Q20.p1} = n\\log ${Q20.v2 / Q20.v1}$`, dependsOn: ["M1"] },
+          { id: "W1", code: "W", marks: 1, for: `$n = 3$` },
+        ],
+        hints: ["Write the equation from part (a) for each reading.", "Subtract one from the other: $\\log k$ disappears."],
+        workedSolution: `From part (a): $\\log ${Q20.p1} = \\log k + n\\log ${Q20.v1}$ and $\\log ${Q20.p2} = \\log k + n\\log ${Q20.v2}$.\nSubtracting: $\\log ${Q20.p2} - \\log ${Q20.p1} = n(\\log ${Q20.v2} - \\log ${Q20.v1})$.\nThe quotient law gives $\\log ${Q20.p2 / Q20.p1} = n\\log ${Q20.v2 / Q20.v1}$.\nSince $${Q20.p2 / Q20.p1} = ${Q20.v2 / Q20.v1}^{3}$, $n = 3$.`,
+        commonErrors: [
+          ceN("fm.logs.gradient-inverted", d6(Q20_N_INVERTED),`That is the change in $\\log v$ divided by the change in $\\log P$, which is upside down. $n$ multiplies $\\log v$, so $n = \\frac{\\log ${Q20.p2 / Q20.p1}}{\\log ${Q20.v2 / Q20.v1}} = 3$.`, 0),
+        ],
+        requiresWorking: true,
+      },
+      {
+        id: "c",
+        stem: `Find the value of $k$.`,
+        marks: 2,
+        answer: numAns(Q20_K),
+        scheme: [
+          { id: "M1", code: "M", marks: 1, for: `$${Q20.p1} = k \\times ${Q20.v1}^{3}$` },
+          { id: "W1", code: "W", marks: 1, for: `$k = ${Q20_K}$` },
+        ],
+        hints: ["Go back to $P = kv^{n}$ with $n = 3$ and one reading."],
+        workedSolution: `With $n = 3$ and the first reading, $${Q20.p1} = k \\times ${Q20.v1}^{3} = ${Q20.v1 ** 3}k$.\nSo $k = ${Q20_K}$.`,
+        commonErrors: [
+          ceN("fm.logs.log-a-given-as-a", Q20_LOG_K, `That value is $\\log k$, not $k$. Since $\\log k = ${fx(Q20_LOG_K, 3)}$, $k = 10^{${fx(Q20_LOG_K, 3)}} = ${Q20_K}$; or go straight back to $P = kv^{3}$.`, 1),
+        ],
+        requiresWorking: true,
+      },
+    ],
+  },
+  {
+    // 23 Sep evening: the tail-only item (not a ladder rung, last in questions[], "mixed-tail" in its emphasis). Its
+    // method is FM1-LOG-01's: the laws make one logarithm, then the index form, not a dropped logarithm, finishes it.
+    id: `q.${TOPIC}.0021`, difficulty: 5, style: "practice", commandWords: ["Solve"],
+    setting: "Two logarithms to base 2 equal to a number: the laws make one logarithm and the index form finishes it",
+    specRefs: [...REFS, "FM1-LOG-01"],
+    emphasis: ["mixed-tail"],
+    examinerSources: [CER19, CER22],
+    parts: [{
+      id: "main",
+      stem: `Solve the equation\n$\\log_{${Q21.base}} x + \\log_{${Q21.base}}(x + ${Q21.shift}) = ${Q21.rhs}$`,
+      marks: 4,
+      answer: numAns(Q21_X),
+      scheme: [
+        { id: "M1", code: "M", marks: 1, for: `$\\log_{${Q21.base}}\\left(x(x + ${Q21.shift})\\right) = ${Q21.rhs}$` },
+        { id: "M2", code: "M", marks: 1, for: `$x(x + ${Q21.shift}) = ${Q21.base}^{${Q21.rhs}}$`, dependsOn: ["M1"] },
+        { id: "M3", code: "M", marks: 1, for: `$(x + ${-Q21_REJECTED})(x - ${Q21_X}) = 0$`, dependsOn: ["M2"] },
+        { id: "W1", code: "W", marks: 1, for: `$x = ${Q21_X}$ only, with $x = ${Q21_REJECTED}$ rejected`, ft: true },
+      ],
+      hints: [
+        "Combine the left side into one logarithm first.",
+        `Nothing on the right is a logarithm, so write the equation in index form: a logarithm to base $${Q21.base}$ equal to $${Q21.rhs}$ means the number inside is $${Q21.base}^{${Q21.rhs}}$.`,
+        "Test both roots in the original equation: a logarithm needs a positive number.",
+      ],
+      workedSolution: `Combining the left side: $\\log_{${Q21.base}}\\left(x(x + ${Q21.shift})\\right) = ${Q21.rhs}$.\nIn index form, $x(x + ${Q21.shift}) = ${Q21.base}^{${Q21.rhs}} = ${Q21_POWER}$, so $x^{2} + ${Q21.shift}x - ${Q21_POWER} = 0$.\nThat factorises as $(x + ${-Q21_REJECTED})(x - ${Q21_X}) = 0$, so $x = ${Q21_X}$ or $x = ${Q21_REJECTED}$.\nAt $x = ${Q21_REJECTED}$ the term $\\log_{${Q21.base}} x$ has a negative argument, so that root is rejected and $x = ${Q21_X}$.`,
+      commonErrors: [
+        ceN("fm.logs.sum-inside-the-log", Q21_SUM_INSIDE, `The two logarithms were added inside, as $\\log_{${Q21.base}}(2x + ${Q21.shift})$. Added logarithms multiply inside: $\\log_{${Q21.base}}\\left(x(x + ${Q21.shift})\\right) = ${Q21.rhs}$, so $x(x + ${Q21.shift}) = ${Q21_POWER}$ and $x = ${Q21_X}$.`, 0, CER22),
+        {
+          misconception: "fm.logs.unknown-base-divided",
+          // an irrational root, so the pattern takes the two- and three-decimal spellings a learner writes
+          pattern: { kind: "numeric", value: d6(Q21_TIMES), tolerance: { type: "absolute", value: 0.005 } },
+          feedback: `The logarithm was undone by multiplying the base by the $${Q21.rhs}$, giving $x(x + ${Q21.shift}) = ${Q21.base * Q21.rhs}$. The index form raises the base to that power instead: $x(x + ${Q21.shift}) = ${Q21.base}^{${Q21.rhs}} = ${Q21_POWER}$, and then $x = ${Q21_X}$.`,
+          marksTypicallyEarned: 1,
+          source: CER19,
+        },
+        {
+          misconception: "fm.qin.context-not-applied",
+          pattern: { kind: "text", regex: Q21_BOTH_ROOTS },
+          feedback: `Both roots of $x^{2} + ${Q21.shift}x - ${Q21_POWER} = 0$ are there, but $x = ${Q21_REJECTED}$ has to be rejected: $\\log_{${Q21.base}} x$ has no value at a negative number. The answer is $x = ${Q21_X}$ only.`,
+          marksTypicallyEarned: 3,
+        },
+      ],
+      requiresWorking: true,
+    }],
+  },
+];
+
+/**
+ * The practice ladder (depth standard): the practice questions rung by rung, difficulty 1 to 5, then the exam-style
+ * set with the synoptic chain last. Ids are unchanged; only the order in which the practice flow meets them moves.
+ */
+const LADDER = [
+  "0001", "0002", "0003", "0006", "0007", "0009", "0011", "0004", "0005", "0008", "0012", "0018", "0010", "0013", "0019",
+  "0014", "0020", "0015", "0016", "0017",
+  // 23 Sep evening: the tail-only item, not a rung; the standard lists it last in questions[].
+  "0021",
+];
+
+function buildQuestion(q) {
+  const totalMarks = q.parts.reduce((s, p) => s + p.marks, 0);
+  // A new item may name its verbs (write-down, find) and its own sources; the published ones keep the 20 Sep rule.
+  const verbFor = (p) => q.verbs?.[p.id] ?? (p.stem.includes("Solve") ? "solve" : "express");
+  return {
+    id: q.id,
+    topic: TOPIC,
+    // a tail-only item names its neighbouring statement beside the topic's own; every other item keeps REFS
+    specRefs: q.specRefs ?? REFS,
+    paper: PAPER,
+    tier: "untiered",
+    style: q.style,
+    difficulty: q.difficulty,
+    ao: q.style === "exam-style" ? ["AO1", "AO2", "AO3"] : ["AO1", "AO2"],
+    commandWords: q.commandWords,
+    emphasis: q.emphasis ?? [],
+    context: { setting: q.setting, original: true },
+    figures: [],
+    parts: q.parts,
+    totalMarks,
+    timeAllowanceSec: Math.round(totalMarks * 1.2 * 60),
+    skeleton: q.parts.map((p) => `(${p.id})${verbFor(p)}${p.marks}`).join("|"),
+    ...(q.methodLock ? { methodLock: q.methodLock } : {}),
+    examinerSources: q.examinerSources ?? [CER22, CER24, CER25],
+    solutionProgram: q.parts.map((p) => `${p.id}: ${p.workedSolution.replace(/\n/g, " ")}`).join(" || "),
+    verification: `ver.${q.id}`,
+    version: 1,
+  };
+}
+
+const builtById = new Map(questions.map((q) => [q.id, buildQuestion(q)]));
+if (LADDER.length !== questions.length || new Set(LADDER).size !== LADDER.length) throw new Error("the ladder must hold every question exactly once");
+const builtQuestions = LADDER.map((n) => {
+  const q = builtById.get(`q.${TOPIC}.${n}`);
+  if (!q) throw new Error(`the ladder names q ${n}, which does not exist`);
+  return q;
+});
+{
+  // rung by rung: the practice questions in non-decreasing difficulty, then the exam-style set, then the tail-only
+  // items (practice questions that are not rungs, "mixed-tail" in their emphasis), which the standard puts last
+  const tailOnly = (q) => q.emphasis.includes("mixed-tail");
+  const practice = builtQuestions.filter((q) => q.style === "practice" && !tailOnly(q));
+  const firstExam = builtQuestions.findIndex((q) => q.style === "exam-style");
+  if (builtQuestions.slice(firstExam).some((q) => q.style === "practice" && !tailOnly(q))) throw new Error("a practice question sits among the exam-style set");
+  practice.forEach((q, i) => {
+    if (i > 0 && q.difficulty < practice[i - 1].difficulty) throw new Error(`the ladder steps down at ${q.id}`);
+  });
+  const firstTail = builtQuestions.findIndex(tailOnly);
+  if (firstTail < 0 || builtQuestions.slice(firstTail).some((q) => !tailOnly(q) || q.style !== "practice")) throw new Error("the tail-only item must be a practice question listed last");
+  if (!builtQuestions[firstTail].specRefs.some((r) => !REFS.includes(r))) throw new Error("the tail-only item must name a neighbouring statement");
+}
+
+const workedExamples = [
+  {
+    id: `we.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `Express $\\log a + 3\\log b - 2\\log c$ as a single logarithm.`,
+    figure: figure(COMBINE_SVG, `The terms log a and plus log b cubed go above a fraction line and minus log c squared goes below it, giving a b cubed over c squared.`),
+    steps: [
+      {
+        n: 1,
+        working: `Deal with the coefficients first: $3\\log b = \\log b^{3}$ and $2\\log c = \\log c^{2}$.`,
+        decision: "Coefficients always go first. A term with a number in front cannot join a product or a quotient until that number is inside as a power.",
+        whyMenu: {
+          options: [
+            `Because $n \\log a = \\log a^{n}$, so the coefficient becomes an index`,
+            `Because the coefficient can be cancelled from every term`,
+            `Because a coefficient multiplies the argument`,
+          ],
+          correct: 0,
+          explain: `The power law takes the coefficient inside as an index. It does not multiply the argument, which is the misuse the reports name.`,
+        },
+        earns: ["M1"],
+      },
+      {
+        n: 2,
+        working: `The expression is now $\\log a + \\log b^{3} - \\log c^{2}$.`,
+        decision: "Rewriting the whole line before combining anything keeps the three terms visible, so nothing is lost when the laws start to act.",
+        // 23 Sep fix pass: this line restates step 1, so it earns nothing of its own. The example carried M1 M2 M3 W1,
+        // four marks, against a 3-mark task; it now follows q0005's scheme for the same shape (M1 the powers inside,
+        // M2 the product, W1 the single logarithm), which is also Summer 2025 Q9(a)'s 3. The twin is marked out of the
+        // codes the steps earn, so it is now marked out of 3, like q0005.
+      },
+      {
+        n: 3,
+        working: `Add the first two: $\\log a + \\log b^{3} = \\log(ab^{3})$.`,
+        decision: "Added logarithms multiply inside. Doing the addition before the subtraction keeps the subtracted term where it belongs.",
+        earns: ["M2"],
+      },
+      {
+        n: 4,
+        working: `Subtract the last: $\\log(ab^{3}) - \\log c^{2} = \\log\\frac{ab^{3}}{c^{2}}$.`,
+        decision: `The subtracted term goes underneath. Swapping top and bottom is the slip the Summer 2025 report names, and it is invisible unless you check which term had the minus.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$\\log\\frac{ab^{3}}{c^{2}}$`,
+    twin: {
+      stem: `Express $2\\log p + \\log q - 3\\log r$ as a single logarithm.`,
+      answer: singleLog("\\log\\frac{p^{2}q}{r^{3}}", ["p", "q", "r"]),
+    },
+    faded: [
+      { showSteps: 2, studentSupplies: [3, 4] },
+      { showSteps: 1, studentSupplies: [2, 3, 4] },
+    ],
+    verification: `ver.we.${TOPIC}.01`,
+    version: 1,
+  },
+  {
+    id: `we.${TOPIC}.02`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `Express $3\\log 2x$ as a single logarithm.`,
+    figure: figure(CUBE_SVG, `A cube whose edges are all 2x, cut into eight smaller cubes whose edges are x: the cube of 2x is 8x cubed.`),
+    steps: [
+      {
+        n: 1,
+        working: `Write the bracket first: $3\\log 2x = \\log\\left((2x)^{3}\\right)$.`,
+        decision: "The bracket is the whole point. Written without it, the cube looks as though it belongs to the x alone, and that is exactly what the examiners report happening.",
+        earns: ["M1"],
+      },
+      {
+        n: 2,
+        working: `Expand the bracket: $(2x)^{3} = 2^{3} \\times x^{3} = 8x^{3}$.`,
+        decision: `Every factor inside the bracket is cubed, so the $2$ becomes $8$. Check it on a number if you are unsure: at $x = ${CUBE_CHECK[0].x}$ both $3\\log 2x$ and $\\log 8x^{3}$ come to $${CUBE_CHECK[0].correct}$.`,
+        whyMenu: {
+          options: [
+            "Because the index applies to everything inside the bracket",
+            "Because only the letter can carry an index",
+            "Because the coefficient stays outside the bracket",
+          ],
+          correct: 0,
+          explain: `$(2x)^{3}$ means $2x \\times 2x \\times 2x$, which is $8x^{3}$. Leaving the $2$ alone would answer a different question.`,
+        },
+        earns: ["M2"],
+      },
+      {
+        n: 3,
+        working: `So $3\\log 2x = \\log 8x^{3}$.`,
+        decision: `Compare it with $\\log 2x^{3}$, which is what the slip produces: at $x = ${CUBE_CHECK[0].x}$ that comes to $${CUBE_CHECK[0].slip}$, not $${CUBE_CHECK[0].correct}$.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$\\log 8x^{3}$`,
+    twin: {
+      stem: `Express $2\\log 5x$ as a single logarithm, with the bracket multiplied out.`,
+      answer: singleLogExpanded("\\log 25x^{2}", ["x"]),
+    },
+    faded: [
+      { showSteps: 1, studentSupplies: [2, 3] },
+      { showSteps: 0, studentSupplies: [1, 2, 3] },
+    ],
+    verification: `ver.we.${TOPIC}.02`,
+    version: 1,
+  },
+  {
+    id: `we.${TOPIC}.03`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `It is given that $\\log 3 = p$ and $\\log 5 = q$, with logarithms to base $10$.\nExpress $\\log ${SEVEN_FIVE.value}$ in terms of $p$ and $q$.`,
+    figure: figure(SEVEN_FIVE_SVG, `The ruler: a hop of log 3 from 1 reaches 3, a hop of log 5 reaches 15, and a hop back of log 2 lands on 7.5.`),
+    steps: [
+      {
+        n: 1,
+        working: `Write $${SEVEN_FIVE.value}$ using only the numbers you have logarithms for: $${SEVEN_FIVE.value} = \\frac{15}{2} = \\frac{3 \\times 5}{2}$.`,
+        decision: "Factorising the number is the whole question. Until it is written in threes, fives and twos, none of the three laws has anything to act on.",
+        earns: ["M1"],
+      },
+      {
+        n: 2,
+        working: `Apply the laws: $\\log ${SEVEN_FIVE.value} = \\log 3 + \\log 5 - \\log 2 = p + q - \\log 2$.`,
+        decision: "The product becomes a sum and the division becomes a subtraction. What is left is one logarithm with no letter of its own.",
+        // 23 Sep fix pass: the example carried M1 M2 M3 W1, four marks, for the task q0010 sets at 3 (M1 the number
+        // written in threes, fives and twos, M2 log 2 = 1 - q, W1 the answer). This step follows from step 1's
+        // factorising and earns nothing of its own; the twin is now the same shape at 3 marks (see FOUR_FIVE).
+      },
+      {
+        n: 3,
+        working: `Build the missing one: $2 = \\frac{10}{5}$, so $\\log 2 = \\log 10 - \\log 5 = 1 - q$.`,
+        decision: `To base $10$, $\\log 10 = 1$. That is what lets a logarithm you were not given be built from the ones you were.`,
+        whyMenu: {
+          options: [
+            `Because $10^{1} = 10$, so $\\log 10 = 1$`,
+            `Because every logarithm of a whole number is 1`,
+            `Because $\\log 2$ cannot be written down at all`,
+          ],
+          correct: 0,
+          explain: `A logarithm is an index, and the index that turns $10$ into $10$ is $1$.`,
+        },
+        earns: ["M2"],
+      },
+      {
+        n: 4,
+        working: `Substitute, keeping the bracket: $p + q - (1 - q) = p + q - 1 + q = p + 2q - 1$.`,
+        decision: `The bracket changes the sign of both terms inside it. Dropping it leaves $p + q - 1$, which is short of a whole $q$.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$p + 2q - 1$`,
+    // 23 Sep fix pass: the twin was log 18 = m + 2n, q0015(a) word for word and a 2-mark task with no logarithm to
+    // build, marked out of the example's codes. It is now the example's own shape on a new number: 4.5 = 3^2 / 2, so
+    // log 4.5 = 2p - log 2 = 2p - (1 - q) = 2p + q - 1, with the same bracket to keep.
+    twin: {
+      stem: `It is given that $\\log 3 = p$ and $\\log 5 = q$, with logarithms to base $10$.\nExpress $\\log ${FOUR_FIVE.value}$ in terms of $p$ and $q$.`,
+      answer: plainAlg("2p + q - 1", ["p", "q"]),
+    },
+    faded: [
+      { showSteps: 2, studentSupplies: [3, 4] },
+      { showSteps: 1, studentSupplies: [2, 3, 4] },
+    ],
+    verification: `ver.we.${TOPIC}.03`,
+    version: 1,
+  },
+
+  /* ---- depth pass, 23 Sep: one worked example for each variant that had none ---------------------------------- */
+  {
+    // Equal logarithms: one letter in terms of another, the Summer 2019 shape with a constant to combine first.
+    id: `we.${TOPIC}.04`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `It is given that $${WE04.k}\\log y = \\log x + \\log ${WE04.c}$.\nExpress $y$ in terms of $x$.`,
+    steps: [
+      {
+        n: 1,
+        working: `Take the coefficient inside as a power: $\\log y^{${WE04.k}} = \\log x + \\log ${WE04.c}$.`,
+        decision: `The left side has to become a single logarithm, and the $${WE04.k}$ in front stops that until it is an index.`,
+        whyMenu: {
+          options: [
+            `Because $n\\log a = \\log a^{n}$, so the $${WE04.k}$ becomes an index on $y$`,
+            `Because the $${WE04.k}$ can be divided out of every term`,
+            `Because $${WE04.k}\\log y$ means $\\log ${WE04.k}y$`,
+          ],
+          correct: 0,
+          explain: `The power law takes a coefficient inside as an index. It never multiplies what is inside, and it is not a factor to divide out.`,
+        },
+      },
+      {
+        n: 2,
+        working: `Combine the right side: $\\log y^{${WE04.k}} = \\log ${WE04.c}x$.`,
+        decision: "Now each side is one logarithm, which is what dropping them needs.",
+        earns: ["M1"],
+      },
+      {
+        n: 3,
+        working: `Equal logarithms have equal arguments: $y^{${WE04.k}} = ${WE04.c}x$.`,
+        decision: "Dropping the logarithms is allowed only now, with a single logarithm on each side.",
+        earns: ["M2"],
+      },
+      {
+        n: 4,
+        working: `Take the square root: $y = ${WE04.root}\\sqrt{x}$.`,
+        decision: `$\\sqrt{${WE04.c}x} = ${WE04.root}\\sqrt{x}$, and $y$ is positive because it sits inside a logarithm. The Summer 2019 report found that very few candidates took this last step.`,
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$y = ${WE04.root}\\sqrt{x}$`,
+    twin: {
+      stem: `It is given that $${WE04_TWIN.k}\\log y = ${WE04_TWIN.m}\\log x + \\log ${WE04_TWIN.c}$. Express $y$ in terms of $x$.`,
+      answer: plainAlg(`y = ${WE04_TWIN.root}x^{\\frac{${WE04_TWIN.m}}{${WE04_TWIN.k}}}`, ["x", "y"]),
+    },
+    // Backward fading: the last step is hidden first, then the last two.
+    faded: [
+      { showSteps: 3, studentSupplies: [4] },
+      { showSteps: 2, studentSupplies: [3, 4] },
+    ],
+    verification: `ver.we.${TOPIC}.04`,
+    version: 1,
+  },
+  {
+    // Expanding in a base other than ten, the Summer 2022 shape: the base's own power, a product and a root.
+    id: `we.${TOPIC}.05`,
+    topic: TOPIC,
+    specRefs: REFS,
+    paper: PAPER,
+    stem: `It is given that $p = \\log_{3} x$ and $q = \\log_{3} y$.\nExpress $\\log_{3}\\frac{9x^{3}}{\\sqrt{y}}$ in terms of $p$ and $q$.`,
+    steps: [
+      {
+        n: 1,
+        working: `Split the quotient: $\\log_{3}(9x^{3}) - \\log_{3}\\sqrt{y}$.`,
+        decision: "A quotient inside becomes a difference outside. Deal with the division first, so the minus lands on the root term alone.",
+        earns: ["M1"],
+      },
+      {
+        n: 2,
+        working: `Split the product: $\\log_{3} 9 + \\log_{3} x^{3} - \\log_{3}\\sqrt{y}$.`,
+        decision: "The product becomes a sum. This is the separation the Summer 2022 report found hardest.",
+      },
+      {
+        n: 3,
+        working: `Bring the powers down: $\\log_{3} 9 + 3\\log_{3} x - \\frac{1}{2}\\log_{3} y$.`,
+        decision: "Each index comes down in front, and a square root is the power one half.",
+        whyMenu: {
+          options: [`Because $\\sqrt{y} = y^{\\frac{1}{2}}$`, "Because a root cancels the logarithm", `Because $\\sqrt{y}$ is half of $y$`],
+          correct: 0,
+          explain: `A square root is the power one half, so the power law brings down $\\frac{1}{2}$. It is not half of $y$: $\\sqrt{16} = 4$, not $8$.`,
+        },
+        earns: ["M2"],
+      },
+      {
+        n: 4,
+        working: `Use the base: $\\log_{3} 9 = 2$, since $3^{2} = 9$.`,
+        decision: "The base is the one number whose logarithm needs no letter.",
+      },
+      {
+        n: 5,
+        working: `So the expression is $2 + 3p - \\frac{1}{2}q$.`,
+        decision: "Replace each logarithm by its letter, keeping every sign.",
+        earns: ["W1"],
+      },
+    ],
+    finalAnswer: `$2 + 3p - \\frac{1}{2}q$`,
+    twin: {
+      stem: `It is given that $p = \\log_{5} x$ and $q = \\log_{5} y$. Express $\\log_{5}\\frac{25\\sqrt{x}}{y^{2}}$ in terms of $p$ and $q$.`,
+      answer: plainAlg("2 + \\frac{1}{2}p - 2q", ["p", "q"]),
+    },
+    faded: [
+      { showSteps: 4, studentSupplies: [5] },
+      { showSteps: 3, studentSupplies: [4, 5] },
+    ],
+    verification: `ver.we.${TOPIC}.05`,
+    version: 1,
+  },
+];
+
+const diagnostics = [
+  {
+    id: `dx.${TOPIC}.pre`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "pre",
+    items: [
+      {
+        id: "p1",
+        stem: `Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is $(2x)^{3}$?`,
+        skill: "A power applied to a bracket",
+        options: [
+          { id: "a", text: "$8x^{3}$", correct: true, feedback: `Everything inside the bracket is cubed, so the $2$ becomes $8$.` },
+          { id: "b", text: "$2x^{3}$", correct: false, feedback: `Only the $x$ has been cubed. The bracket means the $2$ is cubed as well.` },
+          { id: "c", text: "$6x^{3}$", correct: false, feedback: `The $2$ has been multiplied by $3$ rather than cubed.` },
+        ],
+        secondsExpected: 25, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "p2",
+        stem: `What is $\\log_{10} 100$?`,
+        skill: "Evaluating a logarithm from a power",
+        options: [
+          { id: "a", text: "$2$", correct: true, feedback: `$10^{2} = 100$, so the logarithm is $2$. That fact is what lets a constant be written as a logarithm.` },
+          { id: "b", text: "$10$", correct: false, feedback: `That is the base. The logarithm is the index on the base.` },
+          { id: "c", text: "$100$", correct: false, feedback: `That is the number inside. The answer is the index that reaches it.` },
+        ],
+        secondsExpected: 20, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "p3",
+        stem: `Write $${SEVEN_FIVE.value}$ as a fraction, fully simplified.`,
+        skill: "Turning a decimal into a fraction",
+        options: [
+          { id: "a", text: `$\\frac{15}{2}$`, correct: true, feedback: `$${SEVEN_FIVE.value} = \\frac{15}{2}$, and $15 = 3 \\times 5$, which is where the given logarithms come in.` },
+          { id: "b", text: `$\\frac{7}{5}$`, correct: false, feedback: `The digits have been read as a fraction. $${SEVEN_FIVE.value}$ is seven and a half.` },
+          { id: "c", text: `$\\frac{75}{100}$`, correct: false, feedback: `That is $0.75$. The number here is larger than $7$.` },
+        ],
+        secondsExpected: 25, confidence: true, hypercorrectionQueue: true,
+      },
+    ],
+  },
+  {
+    id: `dx.${TOPIC}.post`,
+    topic: TOPIC,
+    specRefs: REFS,
+    when: "post",
+    items: [
+      {
+        id: "d1",
+        stem: `What is $\\log 5 + \\log 6$ as a single logarithm?`,
+        skill: "The product law",
+        options: [
+          { id: "a", text: "$\\log 30$", correct: true, feedback: `Adding logarithms multiplies the arguments.` },
+          { id: "b", text: "$\\log 11$", correct: false, misconception: "fm.logs.sum-inside-the-log", feedback: `The plus has gone inside unchanged. Added outside means multiplied inside.` },
+          { id: "c", text: "$\\log 5 \\times \\log 6$", correct: false, misconception: "fm.logs.product-to-sum", feedback: `The logarithms themselves are not multiplied. One logarithm of the product is what the law gives.` },
+        ],
+        secondsExpected: 25, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d2",
+        stem: `What is $\\log 20 - \\log 4$ as a single logarithm?`,
+        skill: "The quotient law",
+        options: [
+          { id: "a", text: "$\\log 5$", correct: true, feedback: `Subtracting outside divides inside: $\\log\\frac{20}{4} = \\log 5$.` },
+          { id: "b", text: "$\\log 16$", correct: false, misconception: "fm.logs.sum-inside-the-log", feedback: `The minus has gone inside unchanged. Subtracted outside means divided inside.` },
+          { id: "c", text: "$\\frac{\\log 20}{\\log 4}$", correct: false, misconception: "fm.logs.quotient-as-divided-logs", feedback: `Dividing the two logarithms is a different calculation, and it is not the logarithm of anything here.` },
+        ],
+        secondsExpected: 25, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d3",
+        stem: `What is $4\\log 3x$ as a single logarithm?`,
+        skill: "The power law with a coefficient inside",
+        options: [
+          { id: "a", text: "$\\log 81x^{4}$", correct: true, feedback: `$(3x)^{4} = 81x^{4}$: the fourth power reaches the $3$ as well.` },
+          { id: "b", text: "$\\log 3x^{4}$", correct: false, misconception: "fm.logs.coefficient-not-raised", feedback: `The power reached the $x$ but not the $3$. Write the bracket $(3x)^{4}$ first.` },
+          { id: "c", text: "$\\log 12x$", correct: false, misconception: "fm.logs.power-as-multiplier-inside", feedback: `The $4$ has gone inside as a multiplier rather than as a power.` },
+        ],
+        secondsExpected: 35, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d4",
+        stem: `Where does the $c$ go when $\\log a + \\log b - \\log c$ is written as a single logarithm?`,
+        skill: "Which term goes underneath",
+        options: [
+          { id: "a", text: "In the denominator, giving $\\log\\frac{ab}{c}$", correct: true, feedback: `A subtracted logarithm divides, so its argument goes underneath.` },
+          { id: "b", text: "In the numerator, giving $\\log\\frac{ac}{b}$", correct: false, misconception: "fm.logs.subtraction-rule-misapplied", feedback: `The subtracted term is $c$, so $c$ is the one that divides. Check which term carries the minus.` },
+          { id: "c", text: "Outside, giving $\\frac{\\log ab}{c}$", correct: false, misconception: "fm.logs.quotient-as-divided-logs", feedback: `The division happens inside one logarithm, not outside it.` },
+        ],
+        secondsExpected: 30, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d5",
+        stem: `To base $10$, what is $1 + \\log x$ as a single logarithm?`,
+        skill: "A constant written as a logarithm",
+        options: [
+          { id: "a", text: "$\\log 10x$", correct: true, feedback: `$1 = \\log 10$, and then the product law gives $\\log 10x$.` },
+          { id: "b", text: "$\\log(x + 1)$", correct: false, misconception: "fm.logs.sum-inside-the-log", feedback: `The $1$ has gone inside as an addition. It first has to become $\\log 10$.` },
+          { id: "c", text: "$\\log x$", correct: false, misconception: "fm.logs.power-as-multiplier-inside", feedback: `The $1$ cannot simply be dropped. It is $\\log 10$, and it multiplies inside.` },
+        ],
+        secondsExpected: 30, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d6",
+        stem: `An equation has reached $\\log 4x = \\log 20$. What comes next?`,
+        skill: "Equal logarithms, equal arguments",
+        options: [
+          { id: "a", text: "$4x = 20$", correct: true, feedback: `Equal logarithms have equal arguments, so the logarithms are dropped together.` },
+          { id: "b", text: `$4x = \\frac{\\log 20}{\\log 4}$`, correct: false, misconception: "fm.logs.quotient-as-divided-logs", feedback: `Nothing needs dividing here. Both sides are already single logarithms.` },
+          { id: "c", text: "It cannot be taken any further without a calculator", correct: false, misconception: "fm.logs.cannot-remove-logs", feedback: `Once both sides are one logarithm, they can be dropped and the equation is linear.` },
+        ],
+        secondsExpected: 30, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d7",
+        stem: `What is $\\log(m^{4}n)$ written as separate logarithms?`,
+        skill: "Expanding, the laws backwards",
+        options: [
+          { id: "a", text: "$4\\log m + \\log n$", correct: true, feedback: `The product splits into a sum and the power drops down in front.` },
+          { id: "b", text: "$\\log 4m + \\log n$", correct: false, misconception: "fm.logs.power-as-multiplier-inside", feedback: `The index has become a multiplier inside instead of a coefficient outside.` },
+          { id: "c", text: "$4\\log m \\times \\log n$", correct: false, misconception: "fm.logs.product-to-sum", feedback: `A product inside becomes a sum of logarithms, never a product of them.` },
+        ],
+        secondsExpected: 30, confidence: true, hypercorrectionQueue: true,
+      },
+      {
+        id: "d8",
+        stem: `It is given that $2\\log y = 3\\log x$. What is the next line?`,
+        skill: "Dropping logarithms from both sides",
+        options: [
+          { id: "a", text: "$\\log y^{2} = \\log x^{3}$", correct: true, feedback: `Both coefficients go inside as powers, and then the logarithms can be dropped.` },
+          { id: "b", text: `$y = \\frac{3\\log x}{2}$`, correct: false, misconception: "fm.logs.cannot-remove-logs", feedback: `A logarithm has been left on one side. Take both coefficients inside first.` },
+          { id: "c", text: "$2y = 3x$", correct: false, misconception: "fm.logs.cannot-remove-logs", feedback: `The logarithms cannot be dropped while coefficients are still outside them.` },
+        ],
+        secondsExpected: 35, confidence: true, hypercorrectionQueue: true,
+      },
+    ],
+  },
+];
+
+const findTheMistake = [
+  {
+    id: `ftm.${TOPIC}.01`,
+    topic: TOPIC,
+    specRefs: REFS,
+    stem: `Aoife was asked to express $3\\log 2x$ as a single logarithm. Her working:`,
+    studentWorking: [
+      `3 log 2x`,
+      `= log((2x)^3)`,
+      `= log 2x^3`,
+    ],
+    mistakeLine: 3,
+    misconception: "fm.logs.coefficient-not-raised",
+    whatWentWrong: `Lines 1 and 2 are exactly right: the coefficient is inside and the bracket is there, which is the first mark.\nLine 3 expands the bracket as though the cube belonged to the $x$ alone. $(2x)^{3}$ means $2x \\times 2x \\times 2x$, so the $2$ is cubed as well: $(2x)^{3} = 8x^{3}$.\nCheck it on a number. At $x = ${CUBE_CHECK[0].x}$, $3\\log 2x = ${CUBE_CHECK[0].correct}$ and $\\log 8x^{3} = ${CUBE_CHECK[0].correct}$, while $\\log 2x^{3} = ${CUBE_CHECK[0].slip}$.`,
+    // The correction names only the line that was wrong, and it states the finished value.
+    correction: [`= log 8x^3`],
+    // The scheme makes the expansion its own mark (M2), so a failed expansion keeps M1 alone.
+    marksEarnedAsWritten: ["M1"],
+    feedback: `The bracket was written, so the first mark stands. What went are the last two marks, and the step that lost them is the one the Summer 2024 report says the majority got wrong. When you expand a bracket with a power, say the coefficient out loud first: two cubed is eight.`,
+    source: CER24,
+  },
+  {
+    id: `ftm.${TOPIC}.02`,
+    topic: TOPIC,
+    specRefs: REFS,
+    stem: `Ruairí was asked to solve $\\log(x + 5) - \\log(x - 1) = \\log 3$. His working:`,
+    studentWorking: [
+      `log(x + 5) - log(x - 1) = log 3`,
+      `log(x + 5) / log(x - 1) = log 3`,
+      `(x + 5) / (x - 1) = 3`,
+      `x + 5 = 3x - 3`,
+      `8 = 2x, so x = ${EQ2}`,
+    ],
+    mistakeLine: 2,
+    misconception: "fm.logs.quotient-as-divided-logs",
+    whatWentWrong: `Lines 3, 4 and 5 are all correct work, and the final answer happens to be right.\nLine 2 is not. It divides one logarithm by the other, which is a different quantity from $\\log\\frac{x + 5}{x - 1}$. The line that belongs there is $\\log\\frac{x + 5}{x - 1} = \\log 3$: subtracting logarithms divides inside one logarithm, not outside.\nA right answer reached through a wrong line still loses the method mark, because the examiner marks the working.`,
+    correction: [`log((x + 5) / (x - 1)) = log 3`, `(x + 5) / (x - 1) = 3`],
+    marksEarnedAsWritten: ["M2", "M3", "W1"],
+    feedback: `Everything after line 2 is sound, so most of the marks stand. The quotient law puts the division inside the logarithm, and the difference matters: $\\log 100 - \\log 4$ is $\\log 25$, while $\\log 100 \\div \\log 4$ is about $${E.quotientDivided}$. Write the single logarithm before you drop it.`,
+    source: CER25,
+  },
+  {
+    id: `ftm.${TOPIC}.03`,
+    topic: TOPIC,
+    specRefs: REFS,
+    stem: `Méabh was asked to express $\\log a + 2\\log b - \\log c$ as a single logarithm. Her working:`,
+    studentWorking: [
+      `log a + 2 log b - log c`,
+      `= log a + log b^2 - log c`,
+      `= log(a c) - log b^2`,
+      `= log(ac / b^2)`,
+    ],
+    mistakeLine: 3,
+    misconception: "fm.logs.subtraction-rule-misapplied",
+    whatWentWrong: `Lines 1 and 2 are right: the coefficient has gone inside as a power, which is the first mark.\nLine 3 gathers the wrong pair. The minus sign belongs to $\\log c$, so it is $c$ that divides, and $b^{2}$ that multiplies. The line should read $\\log(ab^{2}) - \\log c$.\nThe finished single logarithm is $\\log\\frac{ab^{2}}{c}$, with the subtracted term underneath.`,
+    correction: [`= log(a b^2) - log c`, `= log(a b^2 / c)`],
+    marksEarnedAsWritten: ["M1"],
+    feedback: `The power law was applied correctly and that mark stands. Before you combine, underline the term that carries the minus: that one, and only that one, goes underneath. The Summer 2025 report names this swap directly.`,
+    source: CER25,
+  },
+  {
+    // Depth pass, 23 Sep: the power law read backwards, where the partner indicial part meets it. Seeded from the
+    // Summer 2018 report's sentence on brackets left off when an index comes down; a finding none of 01 to 03 uses.
+    id: `ftm.${TOPIC}.04`,
+    topic: TOPIC,
+    specRefs: [...REFS, "FM1-LOG-03"],
+    stem: `Ciara was asked to solve $3^{x + 1} = 40$, giving $x$ correct to 2 decimal places. Her working:`,
+    studentWorking: [
+      `log 3^(x + 1) = log 40`,
+      `x + 1 log 3 = log 40`,
+      `x = log 40 - log 3`,
+      `x = ${fx(FTM4_NO_BRACKET, 2)}`,
+    ],
+    mistakeLine: 2,
+    misconception: "fm.logs.brackets-omitted",
+    whatWentWrong: `Line 1 is right: taking logarithms of both sides is the first mark.\nLine 2 brings the index down without its bracket. The power law brings down the whole index, $x + 1$, so the line must read $(x + 1)\\log 3 = \\log 40$. Without the bracket only the $1$ meets $\\log 3$, and line 3 follows that misreading.\nWith the bracket, $x + 1 = \\frac{\\log 40}{\\log 3}$, so $x = ${fx(FTM4, 2)}$.`,
+    correction: [`(x + 1) log 3 = log 40`, `x + 1 = log 40 / log 3`, `x = ${fx(FTM4, 2)}`],
+    marksEarnedAsWritten: ["M1"],
+    feedback: `Taking logarithms was right, and that mark stands. The Summer 2018 report singled out this slip: brackets left off when an index comes down. Write the bracket the moment the index moves, before anything else.`,
+    source: CER18,
+  },
+];
+
+const prompts = [
+  { id: `rp.${TOPIC}.01`, kind: "formula", prompt: "Write the three laws of logarithms.", answer: "$\\log a + \\log b = \\log(ab)$, $\\log a - \\log b = \\log\\frac{a}{b}$, and $n\\log a = \\log a^{n}$.", keyWords: ["log ab", "log a - log b", "n log a"], difficultyPrior: 4 },
+  { id: `rp.${TOPIC}.02`, kind: "trap", prompt: "What is $\\log a + \\log b$, and what is it not?", answer: "It is $\\log(ab)$. It is not $\\log(a + b)$: the plus outside becomes a times inside.", keyWords: ["log ab", "not"], difficultyPrior: 4 },
+  { id: `rp.${TOPIC}.03`, kind: "trap", prompt: "What is $\\log a - \\log b$, and what is it not?", answer: "It is $\\log\\frac{a}{b}$. It is not $\\frac{\\log a}{\\log b}$: the division happens inside one logarithm.", keyWords: ["inside", "not"], difficultyPrior: 5 },
+  { id: `rp.${TOPIC}.04`, kind: "procedure", prompt: "In what order do you combine several logarithms into one?", answer: "Coefficients first, turning each into a power; then add the terms to multiply inside; then subtract, putting that argument underneath.", keyWords: ["coefficients", "add", "subtract"], difficultyPrior: 5 },
+  { id: `rp.${TOPIC}.05`, kind: "trap", prompt: "Write $3\\log 2x$ as a single logarithm.", answer: "$\\log\\left((2x)^{3}\\right) = \\log 8x^{3}$. The cube reaches the $2$ as well as the $x$, and the bracket is multiplied out.", keyWords: ["8x", "cube"], difficultyPrior: 7 },
+  { id: `rp.${TOPIC}.06`, kind: "qa", prompt: "To base $10$, how do you write the number $2$ as a logarithm?", answer: "$2 = \\log 100$, because $10^{2} = 100$. A constant has to become a logarithm before the laws can combine it.", keyWords: ["log 100", "100"], difficultyPrior: 5 },
+  { id: `rp.${TOPIC}.07`, kind: "procedure", prompt: "How do you expand $\\log\\frac{x^{3}}{y}$ into separate logarithms?", answer: "The division becomes a subtraction and the power drops down: $3\\log x - \\log y$.", keyWords: ["3 log x", "log y"], difficultyPrior: 5 },
+  { id: `rp.${TOPIC}.08`, kind: "qa", prompt: "An equation has reached $\\log P = \\log Q$. What can you do?", answer: "Drop both logarithms: $P = Q$. Each side must be a single logarithm first.", keyWords: ["P = Q", "single"], difficultyPrior: 4 },
+  { id: `rp.${TOPIC}.09`, kind: "trap", prompt: "You are told $\\log 3 = p$ and $\\log 5 = q$ but you need $\\log 2$. What do you do?", answer: "Build it: $2 = \\frac{10}{5}$, so $\\log 2 = \\log 10 - \\log 5 = 1 - q$, because $\\log 10 = 1$ to base ten.", keyWords: ["1 - q", "log 10"], difficultyPrior: 8 },
+  { id: `rp.${TOPIC}.10`, kind: "trap", prompt: "From $2\\log y = 3\\log x$, how do you reach $y$ in terms of $x$?", answer: "Take both coefficients inside: $\\log y^{2} = \\log x^{3}$, so $y^{2} = x^{3}$ and $y = x^{\\frac{3}{2}}$.", keyWords: ["y^2 = x^3", "3/2"], difficultyPrior: 8 },
+  // Depth pass, 23 Sep: the derivation, and the twist the recent papers set most (a base other than ten).
+  { id: `rp.${TOPIC}.11`, kind: "qa", prompt: "Why is $\\log(ab) = \\log a + \\log b$?", answer: "Write $a = 10^{p}$ and $b = 10^{q}$. Then $ab = 10^{p + q}$, because indices add when powers multiply, so $\\log(ab) = p + q$, which is $\\log a + \\log b$.", keyWords: ["10^p", "p + q"], difficultyPrior: 6 },
+  { id: `rp.${TOPIC}.12`, kind: "trap", prompt: "To base $b$, what is $\\log_{b} b$, and how does it help in a base other than ten?", answer: "$\\log_{b} b = 1$, because $b^{1} = b$. Factorise the number with the base as a factor: each factor of the base becomes a plain $1$, so $\\log_{3} 18 = \\log_{3} 2 + 2$.", keyWords: ["1", "factor"], difficultyPrior: 6 },
+];
+
+const insight = JSON.parse(fs.readFileSync(`${process.cwd()}/packs/further-maths/insights/u1.laws-of-logarithms.json`, "utf8"));
+
+/* ---- bundle ------------------------------------------------------------------------------------------------- */
+
+/** The depth pass's checks carry the day they were run; the 20 Sep checks keep theirs. */
+const DEPTH_AT = "2026-09-23T15:00:00Z";
+const checkDepth = (type, detail) => ({ ...check(type, detail), at: DEPTH_AT });
+/** The fix pass (23 Sep evening): worked examples 01 and 03 re-checked after their marks were rebalanced. */
+const FIX_AT = "2026-09-23T18:45:00Z";
+const checkFix = (type, detail) => ({ ...check(type, detail), at: FIX_AT });
+/** The tail-only item (23 Sep evening), checked once it was written. */
+const TAIL_AT = "2026-09-23T18:50:00Z";
+const checkTail = (type, detail) => ({ ...check(type, detail), at: TAIL_AT });
+const noteGates = blocks.filter((b) => b.type === "gate");
+const noteFigures = blocks.filter((b) => b.type === "figure");
+
+const noteChecks = [
+  checkDepth("schema", `Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, the ${noteGates.length} gate ids (${noteGates.map((g) => g.id).join(", ")}) are unique, every heading carries a role from the depth standard, every prompt block names a prompt in this bundle, and every gate restates the expression it works on so it reads alone in the review inbox.`),
+  checkDepth("scope-tier", "FM1 is untiered and calculator-allowed. The change-of-base rule, which the FM1-LOG-02 teacher guidance excludes, appears nowhere, and the Going further section says so in a not-on-this-specification callout: every logarithm is to base 10, to an unstated common base, or to a stated base (3 or 5, and 2 in the items) that is answered by factorising with the base as a factor, since the base's own logarithm is 1. Natural logarithms and e do not appear."),
+  checkDepth("formula-sheet", "The Unit 1 sheet gives only a^x = n so x = log_a n. The three laws are must-know (mk.fm1.log-laws in packs/further-maths/exam-true/formula-sheets.json); the Where the laws come from section derives all three from the index laws in five lines."),
+  checkDepth("command-words", "Express, Solve, Write down, Hence and Find are the command words, with the tariffs from packs/further-maths/exam-true/command-words.json. The stems keep the shape of the logarithm parts read in the 2018, 2019, 2021, 2022, 2023, 2024, 2025 and 2026 FM1 papers while every letter, number and sentence is our own."),
+  checkDepth("tariff", "2 to 3 marks for a single-logarithm part and 2 for an in-terms-of part, matching Summer 2023 Q7(a) (2), Summer 2024 Q6(a) (3) and Summer 2025 Q9(a) (3); the exam-style questions run 3 + 3, 2 + 3, 3 + 2 + 4, the synoptic chain 3 + 2 + 1 + 4 (the Summer 2019 show-then-hence pairing at full length) and the context 2 + 3 + 2. The Summer 2024 scheme gives the last mark to the single logarithm before its argument is cancelled, so the unsimplified form earns full marks here too."),
+  checkDepth("maths-numeric", `Each law was checked at three sample points before the lesson was written: ${LAW_CHECKS.map((c) => `${c.name} (${c.rows.map((r) => `${r.lhs} = ${r.rhs}`).join(", ")})`).join("; ")}. Every decomposition was verified against the real logarithm (log 40 = ${d6(FORTY.exact)} against 3a + b = ${d6(FORTY.fromAB)}; log 7.5 = ${d6(SEVEN_FIVE.exact)} against p + 2q - 1 = ${d6(SEVEN_FIVE.fromPQ)}; log 18 = ${d6(EIGHTEEN.exact)} against m + 2n = ${d6(EIGHTEEN.fromMN)}; log 0.75 = ${d6(THREE_QUARTERS.exact)} against n - 2m = ${d6(THREE_QUARTERS.fromMN)}; log 50 = ${d6(L(50))} against a + 2b; log_3 13.5 = ${d6(Lb(3, 13.5))} against 3 - t = ${d6(3 - T3)}; log_3 18 = ${d6(Lb(3, 18))} against t + 2), the figure hops were computed (log 4 = ${LOG4} and log 25 = ${LOG25} reach 2), and every equation's solution was substituted back into the equation it came from.`),
+  checkDepth("maths-symbolic", `The three laws are used symbolically throughout; the (2x)^3 identity was checked at three values of x (${CUBE_CHECK.map((c) => `x = ${c.x}: ${c.correct}`).join(", ")}) and separated from the coefficient-not-raised slip at each of them. Every new identity (the roots ${[ROOT_NOTE, ROOT_GATE, ROOT_TWIST].map((r) => `${r.k} log root c = log c^${r.power}`).join(", ")}; 2 log 7x = log 49x^2; log 5x^3 = log 5 + 3 log x; log a^3 = 3p for a = 10^p) was checked at sample points and every gate distractor shown to differ from its answer.`),
+  checkDepth("examiner-alignment", "One examiner callout stands in the body beside the power-law step (Summer 2024 Q6); every other finding is a Sheet trap. The Exam twists section cites the series for each twist from the 2018 to 2026 papers, most frequent first, and each twist has been set at least twice. The four find-the-mistake items are seeded from Summer 2024 Q6, Summer 2025 Q9 (twice) and Summer 2018 Q6."),
+  checkDepth("copy-shingle", "An 8-word shingle scan of the note and the bundle against every text file of the private FM corpus (scratchpad/fm1-batch-f/lib.mjs shingleClash) returns nothing. The corpus expressions were read for tariff and part structure only: none is reused."),
+  checkDepth("style-lint", `British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. ${noteFigures.length} phone-native inline SVG figures (a 400-unit viewBox, labels of 14 to 16 units), each drawing one idea from the checked numbers, and one embeddable video from data/links/media-map.json followed immediately by a gate. The closing panel is a pointer of under 80 words followed by the prompts.`),
+];
+
+const ALIGN_2025 = "Every distractor and common error carries a registry misconception evidenced by the Summer 2019 Q9, Summer 2022 Q5, Summer 2023 Q7, Summer 2024 Q6 or Summer 2025 Q9 report block.";
+const itemChecks = (detail, alignment = ALIGN_2025, stamp = check) => [
+  stamp("schema", "Validated by pipeline/build-content.mts against the Zod Question / WorkedExample / DiagnosticSet / FindTheMistake schema; every scheme sums to its part's marks and the skeleton matches the parts."),
+  stamp("maths-symbolic", detail),
+  stamp("command-words", "Command words and tariffs taken from packs/further-maths/exam-true/command-words.json; the wording is ours."),
+  stamp("examiner-alignment", alignment),
+  stamp("copy-shingle", "8-word shingle scan against the private FM corpus returns nothing."),
+  stamp("style-lint", "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none."),
+];
+/** Alignment text for the depth pass's new questions: each names the report blocks its common errors stand on. */
+const NEW_ALIGNMENT = {
+  [`q.${TOPIC}.0017`]: "Tagged to registry misconceptions: coefficient-not-raised and power-as-multiplier-inside (Summer 2024 Q6), subtraction-rule-misapplied (Summer 2025 Q9), unknown-base-divided (Summer 2019 Q9, Summer 2023 Q7), product-to-sum (Summer 2022 Q5, Summer 2023 Q7), brackets-omitted (Summer 2018 Q6) and terms-not-collected (Summer 2022 Q5, Summer 2023 Q7). The method lock stands on Summer 2019 Q9, where few used the part before.",
+  [`q.${TOPIC}.0018`]: "Tagged to registry misconceptions power-as-multiplier-inside (Summer 2024 Q6, Summer 2025 Q9), unknown-base-divided (Summer 2019 Q9, Summer 2023 Q7) and product-to-sum (Summer 2022 Q5, Summer 2023 Q7); the base other than ten is the Summer 2022, 2023 and 2026 shape.",
+  [`q.${TOPIC}.0019`]: "Tagged to the registry misconception negative-index-sign-dropped (Summer 2019 Q9, Summer 2025 Q9); the shape, two letters defined as logarithms of numbers, is the Summer 2021 one.",
+  [`q.${TOPIC}.0020`]: "Tagged to registry misconceptions product-to-sum (Summer 2022 Q5), gradient-inverted (Summer 2022 Q12, Summer 2024 Q12, Summer 2025 Q10) and log-a-given-as-a (Summer 2018 Q11 onwards): the first mark of the log/log graph question in every paper from 2018 to 2025 is this reduction.",
+  [`q.${TOPIC}.0021`]: "The tail-only item (depth standard, section 9 refinement 4): a practice question outside the ladder, last in questions[], its specRefs naming FM1-LOG-01 beside the topic's own because its finishing step is the index form. Tagged to registry misconceptions sum-inside-the-log (Summer 2022 Q5, Summer 2025 Q9) and unknown-base-divided (Summer 2019 Q9, whose report found the index form not used to undo a logarithm; the base multiplied by the index is that entry's own example); keeping x = -4 answers to context-not-applied as q0016(c) does, with no source claimed on this item.",
+};
+
+const verification = [
+  { ...verLog(`ver.note.${TOPIC}`, `note.${TOPIC}`, noteChecks), version: 2 },
+  verLog(`ver.we.${TOPIC}.01`, `we.${TOPIC}.01`, [
+    ...itemChecks("The worked example combines log a + 3 log b - 2 log c into log(ab^3 / c^2) one law at a time; the twin combines 2 log p + log q - 3 log r into log(p^2 q / r^3). Both were marked by the app's own marker with form single-log before they were filed.", ALIGN_2025, checkFix),
+    checkFix("tariff", "The steps earn M1 (the powers inside), M2 (the product) and W1 (the single logarithm): q0005's 3-mark scheme for the same shape, and the 3 marks of Summer 2025 Q9(a). The twin is marked out of those 3 (scratchpad/fm1-batch-g/depth-pilot/probe-depth-laws.mts). Until the 23 Sep fix pass the steps carried M1 M2 M3 W1, four marks for a 3-mark task."),
+  ]),
+  verLog(`ver.we.${TOPIC}.02`, `we.${TOPIC}.02`, itemChecks(`The second worked example turns 3 log 2x into log 8x^3, with the identity checked at x = ${CUBE_CHECK.map((c) => c.x).join(", ")} and separated from log 2x^3 at each. The twin turns 2 log 5x into log 25x^2.`)),
+  verLog(`ver.we.${TOPIC}.03`, `we.${TOPIC}.03`, [
+    ...itemChecks(`The third worked example builds log ${SEVEN_FIVE.value} from log 3 = p and log 5 = q as p + 2q - 1, checked numerically (${d6(SEVEN_FIVE.exact)} against ${d6(SEVEN_FIVE.fromPQ)}). The twin builds log ${FOUR_FIVE.value} = log(3^2 / 2) as 2p + q - 1 the same way, checked numerically (${d6(FOUR_FIVE.exact)} against ${d6(FOUR_FIVE.fromPQ)}); the dropped bracket, 2p - 1 - q, comes to ${d6(FOUR_FIVE.slipBracket)} and is refused by the marker.`, ALIGN_2025, checkFix),
+    checkFix("tariff", "The steps earn M1 (7.5 written as 3 x 5 / 2), M2 (log 2 = 1 - q) and W1 (p + 2q - 1): q0010's 3-mark scheme for this same task. The Summer 2023 Q7(a) in-terms-of part is worth 2 because the base's own logarithm is given there; here log 2 has to be built from log 10 and log 5, which is the third mark. The twin, the same shape on 4.5, is marked out of 3 (scratchpad/fm1-batch-g/depth-pilot/probe-depth-laws.mts). Until the 23 Sep fix pass the steps carried four marks and the twin was log 18 = m + 2n, a 2-mark task and q0015(a) word for word."),
+  ]),
+  verLog(
+    `ver.we.${TOPIC}.04`,
+    `we.${TOPIC}.04`,
+    itemChecks(
+      `The fourth worked example takes ${WE04.k} log y = log x + log ${WE04.c} to y = ${WE04.root} root x, checked at x = ${XS.join(", ")}; the twin takes ${WE04_TWIN.k} log y = ${WE04_TWIN.m} log x + log ${WE04_TWIN.c} to y = ${WE04_TWIN.root}x^(${WE04_TWIN.m}/${WE04_TWIN.k}), checked at the same points and marked by the app's own marker (y^3 = 8x^2, the line before, is not taken as the answer). Three steps earn a mark, so the twin is out of 3, as q0013 is.`,
+      "The last step is the one the Summer 2019 Q9 report found very few candidates reached; the whyMenu distractors are the power-as-multiplier and divide-it-out readings the registry records.",
+      checkDepth,
+    ),
+  ),
+  verLog(
+    `ver.we.${TOPIC}.05`,
+    `we.${TOPIC}.05`,
+    itemChecks(
+      `The fifth worked example expands log_3(9x^3 / root y) into 2 + 3p - q/2 and the twin log_5(25 root x / y^2) into 2 + p/2 - 2q, each checked at three pairs (x, y). Three steps earn a mark, so the twin is out of 3.`,
+      "The shape is the Summer 2022 Q5(a) one, a product to be separated into a sum of logarithms, which that report found the hardest; the root as a power of one half is the Summer 2025 Q9 finding.",
+      checkDepth,
+    ),
+  ),
+  ...builtQuestions.map((q) =>
+    verLog(
+      `ver.${q.id}`,
+      q.id,
+      itemChecks(
+        `Every answer was produced by applying the laws in the generator and, where it is a number, checked by substituting it back: ${q.parts
+          .map((p) => `${p.id} -> ${p.answer.kind === "numeric" ? p.answer.value : p.answer.kind === "algebraic" ? p.answer.latex : "the option the scheme names"}`)
+          .join("; ")}. Each common error was produced by executing the misuse its feedback describes and re-checked against the published JSON by verify-published.mjs.`,
+        NEW_ALIGNMENT[q.id],
+        q.id === `q.${TOPIC}.0021` ? checkTail : NEW_ALIGNMENT[q.id] ? checkDepth : check,
+      ),
+    ),
+  ),
+  // Depth pass, 23 Sep: the diagnostics, find-the-mistake items and prompts had no logs, so the build kept them as
+  // drafts and none of them reached the learner (nor did the note's embedded prompts). Each is logged here after the
+  // checks it names were run on the published JSON. ftm 02 is logged too: engine item A (its own wrong line taken as
+  // a fix by the value fallback) was fixed in src/components/items/mistake-marking.ts (markFix) at 14:31 on 23 Sep,
+  // and the probe below shows every line of each student's working refused as a fix.
+  ...diagnostics.map((d) =>
+    verLog(`ver.${d.id}`, d.id, [
+      checkDepth("schema", "Validated by pipeline/build-content.mts against the Zod DiagnosticSet schema: option ids unique, exactly one correct option per item, distinct option texts."),
+      checkDepth("maths-symbolic", `Every correct option re-derived (${d.items.map((it) => `${it.id} ${it.options.find((o) => o.correct).text}`).join("; ")}); every distractor is the value or expression its tagged misuse produces, and the numeric ones are re-checked against executed routes by verify-published.mjs.`),
+      checkDepth("examiner-alignment", d.when === "pre" ? "The pre-check tests the prerequisites the lesson is built from (a power of a bracket, a logarithm from a power, a decimal as a fraction), untagged by design." : "Every post-check distractor carries a registry misconception evidenced by the Summer 2019 Q9, Summer 2022 Q5, Summer 2024 Q6 or Summer 2025 Q9 report block."),
+      checkDepth("style-lint", "British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree)."),
+    ]),
+  ),
+  ...findTheMistake.map((f) =>
+    verLog(`ver.${f.id}`, f.id, [
+      checkDepth("schema", "Validated by pipeline/build-content.mts against the Zod FindTheMistake schema; mistakeLine points inside studentWorking."),
+      checkDepth("maths-symbolic", `Line ${f.mistakeLine} is the first wrong line, every line before it is right, and the correction is right; each value printed was computed in the generator.`),
+      checkDepth("independent-solve", "The app's own fix box was run on it (markFix, in scratchpad/fm1-batch-g/depth-pilot/probe-depth-laws.mts): every line of the student's working typed back as it stands fixes nothing, and the correction's lines, typed the ways a learner writes them, are accepted."),
+      checkDepth("examiner-alignment", `Seeded from the ${f.source.replace(/^ccea-cer:further-maths:(\d{4})-summer:FM1:Q(\d+)$/, "Summer $1 Q$2")} report and tagged to ${f.misconception}.`),
+      checkDepth("style-lint", "British English; calm feedback that names the mark that stands before the one that went; no exclamation marks."),
+    ]),
+  ),
+  ...prompts.map((p) =>
+    verLog(`ver.${p.id}`, p.id, [
+      checkDepth("schema", "Validated by pipeline/build-content.mts against the Zod RetrievalPrompt schema."),
+      checkDepth("maths-symbolic", "The answer re-derived from the laws; each key word is something the answer says, in words or in its maths."),
+      checkDepth("style-lint", "British English; maths segments paired and prose-free (lintTree)."),
+    ]),
+  ),
+];
+
+const bundle = {
+  $schema: "../../../../../pipeline/schema/topic-bundle.schema.json",
+  topic: {
+    id: TOPIC,
+    slug: SLUG,
+    title: "Laws of logarithms: simplifying and combining expressions",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    strand: "Logarithms",
+    statementIds: REFS,
+    prerequisites: ["fm.u1.logarithms-from-indices"],
+    order: 41,
+    hardness: "H",
+    difficulty: 5,
+    examinerFlagged: true,
+    examinerSources: [CER18, CER19, CER22, CER23, CER24, CER25],
+    examWeightHint:
+      "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. This is the first half of the logarithm question almost every year and it is the discriminator: Summer 2019 Q9(a) (very few finished), Summer 2022 Q5(a) (which the report placed among the hardest questions that year), Summer 2023 Q7(a) (only the best scored), Summer 2024 Q6(a) (most lost the last mark), Summer 2025 Q9(a) (only a few reached the final answer). It is worth 2 or 3 marks; the Summer 2024 scheme gave M1 for the powers taken inside, M1 for the combining step and W1 for the finished single logarithm.",
+    mustMemorise: [
+      "log a + log b = log ab",
+      "log a − log b = log(a/b), never log a ÷ log b",
+      "n log a = log aⁿ, with the power applied to the whole argument, e.g. (2x)³ = 8x³",
+      "A constant becomes a logarithm first: 1 = log 10, 2 = log 100",
+      "log P = log Q means P = Q, once each side is a single logarithm",
+      "The base's own logarithm is 1 in any base, so a factor of the base inside becomes a plain number",
+    ],
+    onFormulaSheet: [],
+    notOnThisSpec: [
+      "The change of base rule, which the Teacher Guidance excludes",
+      "Natural logarithms and the number e",
+      "Graphs of logarithmic functions and their transformations",
+      "Logarithms of negative numbers, and the domain conditions beyond rejecting an impossible root",
+    ],
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "LKJJ2YtK-ic",
+        channel: "P McAleavey",
+        credit: "LOGS - Laws of Logs CCEA GCSE Further Mathematics, P McAleavey (embeddable id verified in data/links/media-map.json)",
+      },
+      {
+        kind: "ccea-doc",
+        docType: "cer",
+        url: "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-further-mathematics-2017/reports",
+        asOf: "2026-09-20",
+      },
+    ],
+    keywords: ["log laws", "product rule", "quotient rule", "power rule", "single logarithm", "simplify"],
+  },
+  note: {
+    id: `note.${TOPIC}`,
+    topic: TOPIC,
+    title: "Laws of logarithms: simplifying and combining expressions",
+    subject: "further-maths",
+    unit: "FM1",
+    tier: "untiered",
+    specRefs: REFS,
+    calculator: true,
+    formulaSheet: {
+      given: [
+        "Quadratic formula x = (−b ± √(b² − 4ac)) / 2a",
+        "Differentiation y = axⁿ ⇒ dy/dx = naxⁿ⁻¹",
+        "Integration ∫axⁿ dx = axⁿ⁺¹/(n + 1) + c",
+        "Logarithm aˣ = n ⇒ x = log_a n",
+      ],
+      mustKnow: [
+        "log a + log b = log ab",
+        "log a − log b = log(a/b)",
+        "n log a = log aⁿ, applied to the whole argument",
+        "1 = log 10 to base ten, and log P = log Q gives P = Q",
+      ],
+    },
+    notOnThisSpec: [
+      "The change of base rule",
+      "Natural logarithms and e",
+      "Graphs of logarithmic functions",
+      "Logarithms of negative numbers",
+    ],
+    hardness: "H",
+    examinerFlagged: true,
+    externalRefs: [
+      {
+        kind: "youtube",
+        videoId: "LKJJ2YtK-ic",
+        channel: "P McAleavey",
+        credit: "LOGS - Laws of Logs CCEA GCSE Further Mathematics, P McAleavey (embeddable id verified in data/links/media-map.json)",
+      },
+    ],
+    sheet: {
+      mustBeAbleTo: [
+        "Combine added logarithms into one logarithm of a product",
+        "Combine subtracted logarithms into one logarithm of a quotient, with the subtracted argument underneath",
+        "Take a coefficient inside as a power, applying it to the whole argument including any number",
+        "Combine several terms in the order coefficients, then add, then subtract",
+        "Write a constant as a logarithm before combining it",
+        "Expand one logarithm into separate logarithms, including a root as a power of a half",
+        "Build a logarithm you were not given from the ones you were, using log 10 = 1",
+        "Read log P = log Q as P = Q and finish the resulting equation",
+        "Reject a root that would need the logarithm of a negative number",
+        "Write a logarithm to a base other than ten in terms of a given one, using the base's own logarithm, 1",
+        "Write one letter in terms of another when both are logarithms of numbers",
+        "Take logarithms of y = kxⁿ to reach log y = n log x + log k, the first line of a log/log graph question",
+      ],
+      howExamined:
+        "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. This is the first half of the logarithm question almost every year, worth 2 or 3 marks, and it is the part that separates the grades: Summer 2019 Q9(a) (most gave a ratio of logarithms and very few finished), Summer 2022 Q5(a) (which the report placed among the hardest questions that year), Summer 2023 Q7(a) (a good discriminator, only the best scored any marks), Summer 2024 Q6(a) (most lost the final mark), Summer 2025 Q9(a) (only a few reached the final answer). The Summer 2024 scheme gave M1 for the powers taken inside, M1 for the combining step and W1 for the finished single logarithm, with follow-through into the equation part that follows. Three of the last five papers set the laws part in a base other than ten (2022, 2023, 2026); the part after it is an indicial equation every year, and Summer 2019 joined the two with a one-line \"show that\" and a \"hence\".",
+      traps: [
+        "Writing log a + log b as log(a + b), so the plus goes inside unchanged (Summer 2022 FM1 Q5)",
+        "Writing log a − log b as log a ÷ log b, dividing the logarithms instead of the arguments (Summer 2025 FM1 Q9, Summer 2019 FM1 Q9)",
+        "Applying a coefficient to the variable but not to its number, so 3 log 2x becomes log 2x³ (Summer 2024 FM1 Q6)",
+        "Taking a coefficient inside as a multiplier rather than as a power (Summer 2024 FM1 Q6)",
+        "Putting a subtracted term in the numerator, or an added one in the denominator (Summer 2025 FM1 Q9)",
+        "Being unable to split a product or a quotient into separate logarithms at all (Summer 2022 FM1 Q5)",
+        "Not seeing how to build a number from the logarithms given, such as 10.5 from logs of 2, 3 and 7 (Summer 2023 FM1 Q7)",
+        "Reaching log y² = log x³ and stopping, instead of dropping the logarithms (Summer 2019 FM1 Q9)",
+        "Dropping the bracket when a built logarithm such as 1 − q is substituted (Summer 2025 FM1 Q9)",
+        "Combining constants and roots wrongly inside a single logarithm (Summer 2025 FM1 Q9)",
+        "Leaving the bracket off when a whole expression comes down as a coefficient, writing 2x − 1 log 3 where (2x − 1) log 3 is meant (Summer 2018 FM1 Q6)",
+        "Treating log as a number to divide by, which leaves a ratio of logarithms instead of an equation in y and x; it was the most common answer that year (Summer 2019 FM1 Q9)",
+        "Reaching for logarithms when both sides are already powers of the same number, where comparing the indices finishes the job at once (Summer 2019 FM1 Q9)",
+        "Not using the result of a \"show that\" part in the \"hence\" part straight after it (Summer 2019 FM1 Q9)",
+      ],
+    },
+    verification: `ver.note.${TOPIC}`,
+    version: 2,
+    updated: "2026-09-23",
+  },
+  workedExamples,
+  diagnostics,
+  questions: builtQuestions,
+  findTheMistake,
+  prompts: prompts.map((p) => ({ ...p, topic: TOPIC, specRefs: REFS, examUnit: "FM1" })),
+  insight,
+  // The mixed tail (depth standard): the variants shuffled and unannounced, with q0020, whose second part needs the
+  // log/log graph lesson's method (a gradient from two readings), as the neighbouring topic's item. 23 Sep evening:
+  // q0021 joins it, the tail-only item she meets nowhere in the ladder, whose last step is FM1-LOG-01's index form.
+  sets: [
+    {
+      id: `set.${TOPIC}.mixed`,
+      topic: TOPIC,
+      kind: "mixed",
+      title: "Mixed practice: choose the law",
+      subject: "further-maths",
+      units: ["FM1"],
+      itemIds: ["0006", "0018", "0013", "0008", "0021", "0020", "0005", "0019"].map((n) => `q.${TOPIC}.${n}`),
+      showTopicLabels: false,
+      version: 1,
+    },
+  ],
+  verification,
+};
+for (const id of bundle.sets[0].itemIds) if (!builtById.has(id)) throw new Error(`the mixed set names ${id}, which does not exist`);
+
+/* ---- checks and write ---------------------------------------------------------------------------------------- */
+
+lintTree(bundle, `${SLUG}/bundle.json`);
+lintTree(blocks, `${SLUG}/note.blocks.json`);
+
+const allText = [JSON.stringify(bundle), JSON.stringify(blocks)].join(" ");
+const clashes = shingleClash(allText, corpusFiles());
+if (clashes.length) throw new Error(`shingle clash:\n  ${clashes.slice(0, 10).join("\n  ")}`);
+
+const a = writeJson(OUT(SLUG, "bundle.json"), bundle);
+const b = writeJson(OUT(SLUG, "note.blocks.json"), blocks);
+console.log(
+  `${SLUG}: we=${workedExamples.length} dx=${diagnostics.reduce((s, d) => s + d.items.length, 0)} q=${builtQuestions.length} ftm=${findTheMistake.length} rp=${prompts.length} gates=${blocks.filter((x) => x.type === "gate").length} sets=${bundle.sets.length} (tail ${bundle.sets[0].itemIds.length}) hero minutes=${blocks[0].minutes}`,
+);
+console.log(`  bundle.json  sha256:${a.sha}  ${a.bytes} bytes`);
+console.log(`  note.blocks.json  sha256:${b.sha}  ${b.bytes} bytes`);
+console.log(`  shingle clashes: ${clashes.length}`);
+console.log(`  law checks: ${LAW_CHECKS.map((c) => `${c.name} ok at ${c.rows.length} points`).join(", ")}`);
+console.log(`  solutions: ${[EQ1, EQ2, EQ3, EQ4].join(", ")} (each substituted back)`);

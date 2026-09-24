@@ -1,0 +1,302 @@
+# science.p2.p2-echoes-ultrasound-sonar-radar — Echoes, ultrasound, sonar and radar  [S, difficulty 3]
+unit P2 · tier F · specRefs []
+note: Echoes, ultrasound, sonar and radar v1 [verified]
+verification statuses: {"verified":25}
+
+## NOTE BLOCKS
+- [hero] 
+- [h] Echoes
+- [p] 
+- [h] 1. There and back
+- [figure] One pulse, two journeys. The timer runs for both of them.
+- [p] 
+- [choice] 
+- [h] 2. A time into a depth
+- [figure] The same measurement drawn as a timeline, with the halfway point marked.
+- [mustknow] The echo rule, and its two directions
+- [p] 
+- [number] 
+- [h] 3. Ultrasound
+- [photo] A real scan. Every bright line in it is an echo, placed on the screen by the time it took to come back.
+- [p] 
+- [blank] 
+- [h] 4. Finding a crack inside metal
+- [figure] Two echoes from one pulse. The earlier one came from something nearer.
+- [p] 
+- [choice] 
+- [h] 5. Sonar, radar, and the other direction
+- [p] 
+- [video] GCSE Physics Revision "Ultrasound"
+- [number] 
+- [mustknow] Recap — you can now
+- [h] In the exam
+- [p] 
+- [examiner] What examiners have written about this topic
+- [spec] What P2 §2.1 asks for here
+- [prompt] 
+- [prompt] 
+- [prompt] 
+- [prompt] 
+
+## WORKED EXAMPLES
+### we.science.p2.p2-echoes-ultrasound-sonar-radar.01 [verified] paper P2 calc
+STEM: A ship sends a sonar pulse straight down. The echo returns 0.12 s later. Sound travels through sea water at 1500 m/s.
+Calculate the depth of the water. [4]
+  FIG: svg — A ship sending a sonar pulse straight down to the seabed and receiving the echo back, with the depth marked and the two journeys labelled.
+  1. distance to the reflector = (speed × time) ÷ 2   — Write the rule before any number. The ÷ 2 belongs in the equation line, not as an afterthought at the end.  (P1)
+  2. total distance = 1500 × 0.12 = 180 m   — Speed times time always gives the distance the wave actually covered — and the timer ran for the whole journey.  (P2)
+  3. depth = 180 ÷ 2 = 90 m   — Halve it, because that total is the trip down plus the trip back up.  (P3)  WHY: ✔Because the pulse travelled down to the seabed and back up to the ship | ✘Because the echo is half as loud as the pulse | ✘Because sound travels half as fast on the way back
+  4. depth = 90 m   — Finish with the unit. A sanity check: the answer must be smaller than the total distance, never larger.  (P4)
+  FINAL: depth = 90 m
+  TWIN: A walker shouts at a cliff and hears the echo 1.5 s later. Sound travels at 340 m/s in air.
+Calculate the distance to the cliff. [4]  → numeric 255 m tol={"type":"exact"} forms=decimal
+
+### we.science.p2.p2-echoes-ultrasound-sonar-radar.02 [verified] paper P2 calc
+STEM: A diver knows the water below her boat is 62 m deep. A sonar pulse sent from the boat returns 0.08 s later.
+Calculate the speed of sound in the water. [3]
+  1. total distance = 2 × 62 = 124 m   — Going the other way round, the factor of two is a doubling, not a halving: the pulse covered the depth twice.  (P1)  WHY: ✔Because the 0.08 s covers the journey down and the journey back up | ✘Because the speed of sound doubles in water | ✘Because two echoes were received
+  2. speed = distance ÷ time = 124 ÷ 0.08   — Now an ordinary speed calculation, with the corrected distance in it.  (P2)
+  3. speed = 1550 m/s   — Finish with the unit. Sound in sea water is around 1500 m/s, so this is believable.  (P3)
+  FINAL: speed = 1550 m/s
+  TWIN: A clap is echoed from a wall 85 m away, 0.5 s after it was made.
+Calculate the speed of sound in the air. [3]  → numeric 340 m/s tol={"type":"exact"} forms=decimal
+
+## DIAGNOSTICS
+### dx.science.p2.p2-echoes-ultrasound-sonar-radar.pre (pre) [verified]
+- p1 (Prerequisite: distance, speed and time): Before we start, from P1: rearranged to give a distance, what does speed = distance ÷ time become?
+    ✔ distance = speed × time — That rearrangement is the engine of every echo calculation.
+    ✘ distance = speed ÷ time — Dividing by the time would make a long journey come out short. Multiply.
+    ✘ distance = time ÷ speed — That is upside down. Distance = speed × time.
+- p2 (Prerequisite: the two wave families): From the last topic: sound is which kind of wave?
+    ✔ longitudinal — Longitudinal, and so is ultrasound, which is only sound too high to hear.
+    ✘ transverse [sci.waves.sound-called-transverse] — Water waves and electromagnetic waves are transverse. Sound is longitudinal — the waves topic covers this first.
+- p3 (Prerequisite: the milli prefix): How many milliseconds are there in one second?
+    ✔ 1000 — 1000. Echo times often arrive in milliseconds and have to be converted before substituting.
+    ✘ 100 [sci.waves.prefix-not-converted] — Milli means a thousandth, so there are 1000 milliseconds in a second.
+    ✘ 60 [sci.waves.prefix-not-converted] — 60 is seconds in a minute. Milli means a thousandth.
+
+### dx.science.p2.p2-echoes-ultrasound-sonar-radar.post (post) [verified]
+- 01 (The definition of ultrasound): What is ultrasound?
+    ✔ sound with a frequency above 20 000 Hz — That is the specification's wording, and the number is what carries the mark.
+    ✘ ultraviolet light [sci.em.ultrasound-for-ultraviolet] — Those are two different things. Ultraviolet is electromagnetic; ultrasound is sound. Examiners have reported the two words being swapped.
+    ✘ a transverse wave that can travel through a vacuum [sci.waves.sound-called-transverse] — Ultrasound is sound, so it is longitudinal and it needs particles to travel through. Only electromagnetic waves cross a vacuum.
+- 02 (The echo calculation): A sonar pulse returns from the seabed 0.2 s after it was sent. Sound travels at 1500 m/s in the water. How deep is the water?
+    ✔ 150 m — (1500 × 0.2) ÷ 2. The pulse covers the depth twice, so halve the total.
+    ✘ 300 m [sci.waves.echo-distance-not-halved] — That is the total path of the pulse, down and back. The seabed is half as deep.
+    ✘ 75 m [sci.waves.echo-distance-not-halved] — That halves twice. Halve the total distance once, and only once.
+    ✘ 7500 m [sci.waves.equation-rearranged-wrongly] — Speed divided by time is not a distance. Multiply the speed by the time, then halve.
+- 03 (The reason behind the halving): Why is the time halved in an echo calculation?
+    ✔ because the pulse travels to the reflector and back, covering twice the distance — That is the whole reason, and it is what the scheme wants written down.
+    ✘ because the echo is only half as loud as the pulse that was sent out [sci.waves.echo-distance-not-halved] — Loudness does not come into it. The halving is about the distance the pulse covered.
+    ✘ because sound travels more slowly on the way back [sci.waves.echo-distance-not-halved] — The speed is the same in both directions. What is doubled is the distance, not the time each metre takes.
+- 04 (Ultrasound against ultraviolet): A student writes that ultrasound is part of the electromagnetic spectrum. What has gone wrong?
+    ✔ ultrasound is sound, so it is longitudinal and needs a medium; the electromagnetic one is ultraviolet — The two words look alike and mean quite different things. Examiners have seen ultrasound written where ultraviolet was wanted.
+    ✘ nothing: ultrasound and ultraviolet are two names for the same wave [sci.em.ultrasound-for-ultraviolet] — They are different families. Ultrasound is a sound wave; ultraviolet is an electromagnetic wave.
+    ✘ ultrasound is electromagnetic, but it sits outside the seven named regions [sci.em.ultrasound-for-ultraviolet] — Ultrasound is not electromagnetic at all. It is sound above the range of human hearing.
+- 05 (Speed from an echo): A clap is echoed back from a wall 85 m away after 0.5 s. What is the speed of sound?
+    ✔ 340 m/s — The sound covered 2 × 85 m in 0.5 s, so the speed is that distance divided by the time.
+    ✘ 170 m/s [sci.waves.echo-distance-not-doubled] — Only one leg of the journey was counted. Double the distance before dividing by the time.
+    ✘ 42.5 m/s [sci.waves.equation-rearranged-wrongly] — Distance multiplied by time is not a speed. Speed = distance ÷ time.
+    ✘ 680 m/s [sci.waves.echo-distance-not-halved] — That doubles the distance twice over. One doubling is enough: out and back.
+- 06 (The kilo prefix): An ultrasound probe works at 40 kHz. What is this frequency in Hz?
+    ✔ 40 000 Hz — Kilo means a thousand, so multiply by 1000 before substituting into any equation.
+    ✘ 40 Hz [sci.waves.prefix-not-converted] — The prefix was dropped altogether. Summer 2025 examiners reported the kilo prefix causing trouble on an ultrasound question.
+    ✘ 4 000 Hz [sci.waves.prefix-not-converted] — Kilo is a thousand, not a hundred.
+    ✘ 40 000 000 Hz [sci.waves.prefix-not-converted] — That is a million, which is the mega prefix. Kilo is a thousand.
+
+## QUESTIONS
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0001 [verified] practice · diff 2 · both · P2 calc · 3 marks · (a)state1|(b)give1|(c)give1 · A hospital and a foundry, the specification's two uses of ultrasound
+  (a) [1] State what is meant by ultrasound.
+      ANSWER: text accepted=["sound with a frequency above 20 000 Hz","sound of frequency greater than 20 000 Hz"] keyWords=[{"any":["20 000","20000","20 khz"],"marks":1}]
+      P1 P1: sound with a frequency greater than 20 000 Hz accept ["above 20 kHz"]
+      SOLUTION: Ultrasound is sound with a frequency greater than 20 000 Hz, which is above the range a human ear can hear.
+      HINTS: The specification gives one exact number for this.
+  (b) [1] Give one use of ultrasound in medicine.
+      ANSWER: text accepted=["measuring the head diameter of a foetus","scanning a foetus in the womb"] keyWords=[{"any":["foetus","foetal","fetus","fetal","unborn baby"],"marks":1}]
+      P1 P1: measuring foetal head diameter / scanning an unborn baby
+      SOLUTION: Ultrasound is used to measure the head diameter of a foetus during a pregnancy scan.
+      HINTS: The specification names one medical use, and it involves a measurement.
+  (c) [1] Give one use of ultrasound in industry.
+      ANSWER: text accepted=["detecting defects inside metals","finding cracks in a metal casting"] keyWords=[{"any":["defect","crack","flaw"],"marks":1}]
+      P1 P1: detecting defects (cracks / flaws) in metals
+      SOLUTION: Ultrasound is used to detect defects inside metals: an echo comes back early from a crack, before the echo from the far face arrives.
+      HINTS: Something inside a metal object that you cannot see from outside.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0002 [verified] practice · diff 3 · both · P2 calc · 4 marks · (main)calculate4 · A walker shouting across a quarry and timing the echo
+  (main) [4] A walker shouts towards a cliff face and hears the echo 0.8 s later. Sound travels through the air at 340 m/s.
+Calculate the distance from the walker to the cliff.
+Show your working out.
+      ANSWER: numeric 136 m tol={"type":"exact"} forms=decimal
+      P1 P1: distance to the reflector = (speed × time) ÷ 2
+      P1 P2: substitution: (340 × 0.8)
+      P1 P3: divided by 2 because the sound travels there and back
+      P1 P4: 136 m
+      SOLUTION: Write the rule before the numbers: distance to the reflector = (speed × time) ÷ 2. The sound covers 340 × 0.8 = 272 m in total, but that is the journey there and back. The cliff is half of it: 136 m.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":272} → That is the total distance the sound travelled, there and back. The cliff is half as far away. Summer 2024 examiners recorded candidates who did not halve the time or double the distance on this kind of question. (2)
+      HINTS: The shout goes to the cliff and comes back, so the timed journey is twice the distance you want. || Work out the total distance first, then halve it.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0003 [verified] practice · diff 4 · H · P2 calc · 4 marks · (main)calculate4 · An air traffic radar tracking an aircraft over the Irish Sea
+  (main) [4] A radar station sends a short pulse of radio waves towards an aircraft. The reflected pulse arrives back at the station 0.0004 s after it was sent. Radio waves travel at $3 \times 10^{8}$ m/s.
+Calculate the distance from the station to the aircraft.
+Give your answer in km.
+      ANSWER: numeric 60 km tol={"type":"exact"} forms=decimal
+      P1 P1: distance to the reflector = (speed × time) ÷ 2
+      P1 P2: substitution: (3 × 10⁸ × 0.0004) ÷ 2
+      P1 P3: 60000 m
+      P1 P4: 60 km
+      SOLUTION: The rule is the same as for any echo: distance to the reflector = (speed × time) ÷ 2. The total there-and-back distance is 3 × 10⁸ × 0.0004 = 120000 m, so the aircraft is 60000 m away. Dividing by 1000 gives 60 km.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":120} → That is the whole journey of the pulse, out to the aircraft and back again. The aircraft is half as far away. (2)
+      ERR [sci.waves.prefix-not-converted] {"kind":"numeric","value":60000} → The halving is right but the answer is still in metres. The question asks for kilometres, so divide by 1000. (3)
+      HINTS: Radar uses electromagnetic waves, so the speed is the speed of light. || Work in metres first, then convert to kilometres at the end.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0004 [verified] practice · diff 3 · both · P2 calc · 3 marks · (main)calculate3 · An engineer testing a thick steel casting for hidden cracks
+  FIG: svg — An ultrasound probe on top of a steel block, with one echo returning from a crack part way down and a later echo from the far face of the block.
+  (main) [3] An engineer places an ultrasound probe on a steel casting. An echo returns from a crack 0.0002 s after the pulse was sent. Ultrasound travels through this steel at 6000 m/s.
+Calculate how far below the surface the crack lies.
+      ANSWER: numeric 0.6 m tol={"type":"exact"} forms=decimal
+      P1 P1: distance to the reflector = (speed × time) ÷ 2
+      P1 P2: substitution: (6000 × 0.0002) ÷ 2
+      P1 P3: 0.6 m
+      SOLUTION: Using distance to the reflector = (speed × time) ÷ 2: the pulse covers 6000 × 0.0002 = 1.2 m altogether, so the crack is half that depth, 0.6 m, below the surface.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":1.2} → That is the whole path the pulse took, down to the crack and back to the probe. Halve it to get the depth. (1)
+      HINTS: The pulse reaches the crack and comes back to the same probe.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0005 [verified] practice · diff 3 · both · P2 calc · 3 marks · (main)calculate3 · A class measuring the speed of sound by timing an echo from a sports hall wall
+  (main) [3] A class stands 45 m from a flat sports hall wall. They clap once and hear the echo 0.06 s later.
+Calculate the speed of sound in the air of the hall.
+      ANSWER: numeric 1500 m/s tol={"type":"exact"} forms=decimal
+      P1 P1: speed = total distance ÷ time, with the total distance twice the distance to the wall
+      P1 P2: substitution: (2 × 45) ÷ 0.06
+      P1 P3: 1500 m/s
+      SOLUTION: The sound travels to the wall and back, so the distance covered is 2 × 45 = 90 m. Speed = distance ÷ time = 90 ÷ 0.06 = 1500 m/s.
+      ERR [sci.waves.echo-distance-not-doubled] {"kind":"numeric","value":750} → Only one leg of the journey was used. The timed 0.06 s covers 45 m out and 45 m back, so double the distance before dividing. Summer 2024 examiners named this and its twin, forgetting to halve, in the same sentence. (1)
+      HINTS: The clap has to reach the wall and come back before anyone hears it. || The distance the sound covers is not 45 m.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0006 [verified] practice · diff 2 · both · P2 calc · 2 marks · (a)name1|(b)state1 · A harbour survey vessel and an airport control tower
+  (a) [1] A survey vessel uses sonar to map the seabed.
+Name the type of wave a sonar system sends out.
+      ANSWER: text accepted=["sound pulses","sound waves"] keyWords=[{"any":["sound","ultrasound"],"marks":1,"reject":["radio","electromagnetic","microwave"]}]
+      P1 P1: sound (pulses) / ultrasound reject ["radio waves","electromagnetic waves"]
+      SOLUTION: Sonar sends out pulses of sound (usually ultrasound) and listens for the echo from the seabed or from objects under the water.
+      HINTS: The clue is in the word: sonar is built on sound.
+  (b) [1] State the type of wave that radar uses to detect aircraft and ships.
+      ANSWER: text accepted=["electromagnetic waves","radio waves"] keyWords=[{"any":["electromagnetic","radio","microwave"],"marks":1,"reject":["sound"]}]
+      P1 P1: electromagnetic waves (radio or microwaves) reject ["sound"]
+      SOLUTION: Radar uses electromagnetic waves — radio waves or microwaves — which travel at the speed of light and reflect from aircraft and ships.
+      HINTS: Radar has to work through air over many kilometres, and very fast.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0007 [verified] practice · diff 3 · both · P2 calc · 4 marks · (main)calculate4 · An ultrasound cleaning bath in a jeweller's workshop
+  (main) [4] An ultrasonic cleaning bath sends ultrasound of frequency 50 kHz through water. Sound travels through the water at 1500 m/s.
+Calculate the wavelength of the ultrasound in the water.
+      ANSWER: numeric 0.03 m tol={"type":"exact"} forms=decimal
+      P1 P1: v = f λ, rearranged to λ = v ÷ f
+      P1 P2: 50 kHz converted to 50 000 Hz
+      P1 P3: substitution: λ = 1500 ÷ 50 000
+      P1 P4: 0.03 m
+      SOLUTION: Write λ = v ÷ f. The frequency must be in hertz, so 50 kHz = 50 000 Hz. Then λ = 1500 ÷ 50 000 = 0.03 m.
+      ERR [sci.waves.prefix-not-converted] {"kind":"numeric","value":30} → The kilo was dropped: 50 kHz is 50 000 Hz, a thousand times more. Summer 2025 examiners reported the kilo prefix causing trouble on exactly this ultrasound question. (1)
+      HINTS: Kilo means a thousand, so the frequency has to be turned into hertz first. || Check the answer against the threshold: ultrasound in water has a wavelength of a few centimetres.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0008 [verified] practice · diff 2 · both · P2 calc · 2 marks · (a)identify1|(b)explain1 · Checking that the rule itself is understood before any numbers appear
+  FIG: svg — A ship sending a sonar pulse straight down to the seabed and receiving the echo back, with the depth marked and the two journeys labelled.
+  (a) [1] A pulse is sent out and its echo returns after a time t. The wave travels at speed v.
+Which expression gives the distance from the source to the reflector?
+      ANSWER: mcq ✔(v × t) ÷ 2 | ✘v × t [sci.waves.echo-distance-not-halved] | ✘(v ÷ t) × 2 [sci.waves.equation-rearranged-wrongly] | ✘v × t × 2 [sci.waves.echo-distance-not-halved]
+      P1 P1: (v × t) ÷ 2
+      SOLUTION: The pulse travels out to the reflector and back again, so in time t it covers v × t, which is twice the distance to the reflector. The distance is therefore (v × t) ÷ 2.
+      HINTS: Ask what distance the timed journey actually covers.
+  (b) [1] Explain why the calculation includes a division by two.
+      ANSWER: text accepted=["the pulse travels to the reflector and back, so it covers twice the distance"] keyWords=[{"any":["there and back","twice","double","and back","two journeys"],"marks":1}]
+      P1 P1: the pulse travels there and back / covers twice the distance in the measured time reject ["the echo is quieter"]
+      SOLUTION: The stopwatch times the whole journey: out to the reflector and back again. That is twice the distance being asked for, so the total has to be halved.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"text","regex":"(quieter|louder|weaker|loses[^;\\n]{0,12}energy)"} → The halving has nothing to do with how loud the echo is. It is there because the measured time covers two journeys, out and back. (0)
+      HINTS: Think about what the stopwatch is actually timing.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0009 [verified] exam-style · diff 3 · both · P2 calc · 8 marks · (a)calculate4|(b)calculate3|(c)use1 · A fishing boat whose sonar screen shows two returns from a single pulse
+  FIG: svg — A ship sending a sonar pulse straight down to the seabed and receiving the echo back, with the depth marked and the two journeys labelled.
+  (a) [4] A fishing boat sends one sonar pulse straight down. The echo from the seabed arrives 0.1 s later. Sound travels at 1500 m/s in sea water.
+Calculate the depth of the water.
+      ANSWER: numeric 75 m tol={"type":"exact"} forms=decimal
+      P1 P1: distance to the reflector = (speed × time) ÷ 2
+      P1 P2: substitution: (1500 × 0.1)
+      P1 P3: divided by 2
+      P1 P4: 75 m
+      SOLUTION: Using distance to the reflector = (speed × time) ÷ 2: the pulse covers 1500 × 0.1 = 150 m in total, so the water is 75 m deep.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":150} → That is the whole journey of the pulse. Halve it: the seabed is half as deep as the pulse's total path. (2)
+      HINTS: The pulse goes down to the seabed and back up to the boat.
+  (b) [3] The same pulse also produced an earlier echo, arriving 0.04 s after the pulse was sent. This echo came from a shoal of fish.
+Calculate the depth of the shoal.
+      ANSWER: numeric 30 m tol={"type":"exact"} forms=decimal
+      P1 P1: distance to the reflector = (speed × time) ÷ 2
+      P1 P2: substitution: (1500 × 0.04) ÷ 2
+      P1 P3: 30 m
+      SOLUTION: The rule is unchanged: (1500 × 0.04) ÷ 2 = 30 m. The echo arrived earlier because the shoal is nearer the boat than the seabed is.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":60} → The halving is missing again. Every echo distance is halved, because every echo is a there-and-back journey. (1)
+      HINTS: Same rule, different time. || An earlier echo must come from something closer.
+  (c) [1] Use your answers to parts (a) and (b) to work out how far the shoal is above the seabed.
+      ANSWER: numeric 45 m tol={"type":"exact"} forms=decimal
+      P1 P1: 75 − 30 = 45 m ft
+      SOLUTION: Both depths are measured down from the surface, so the gap is 75 − 30 = 45 m.
+      ERR [sci.waves.echo-distance-not-doubled] {"kind":"numeric","value":105} → The two depths were added. Both are measured down from the same surface, so subtract to find the gap between them. (0)
+      HINTS: Both depths are measured from the surface.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0010 [verified] exam-style · diff 4 · H · P2 calc · 7 marks · (a)calculate3|(b)calculate2|(c)use2 · A sonographer measuring a foetal head from two echo times
+  FIG: photo — A grey and black ultrasound scan of a foetus in the womb, with two electronic caliper crosses placed on the screen, one at each end of the body, and the measured length printed beside them.
+  (a) [3] During a scan, an ultrasound pulse is sent into the mother. An echo from the near side of the baby's head returns 0.00008 s after the pulse was sent. Ultrasound travels through the tissue at 1500 m/s.
+Calculate the depth of the near side of the head below the probe.
+      ANSWER: numeric 0.06 m tol={"type":"exact"} forms=decimal
+      P1 P1: distance to the reflector = (speed × time) ÷ 2
+      P1 P2: substitution: (1500 × 0.00008) ÷ 2
+      P1 P3: 0.06 m
+      SOLUTION: Using distance to the reflector = (speed × time) ÷ 2: (1500 × 0.00008) ÷ 2 = 0.06 m.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":0.12} → The pulse went in and came back out, so the timed distance is twice the depth. Halve it. (1)
+      HINTS: The same halving rule applies inside the body.
+  (b) [2] A second echo, from the far side of the head, returns 0.0002 s after the pulse was sent.
+Calculate the depth of the far side of the head below the probe.
+      ANSWER: numeric 0.15 m tol={"type":"exact"} forms=decimal
+      P1 P1: substitution: (1500 × 0.0002) ÷ 2
+      P1 P2: 0.15 m
+      SOLUTION: (1500 × 0.0002) ÷ 2 = 0.15 m.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"numeric","value":0.3} → The halving is missing. Every echo depth is half the total path of the pulse. (1)
+      HINTS: Same rule, longer time, greater depth.
+  (c) [2] Use your answers to parts (a) and (b) to calculate the diameter of the baby's head.
+Give your answer in cm.
+      ANSWER: numeric 9 cm tol={"type":"exact"} forms=decimal
+      P1 P1: 0.15 − 0.06 = 0.09 m ft
+      P1 P2: 9 cm
+      SOLUTION: The head stretches from 0.06 m to 0.15 m below the probe, so its diameter is 0.15 − 0.06 = 0.09 m. In centimetres that is 0.09 × 100 = 9 cm.
+      ERR [sci.waves.echo-distance-not-doubled] {"kind":"numeric","value":21} → The two depths were added. Both are measured from the same probe, so the head's diameter is the difference between them. (0)
+      ERR [sci.waves.prefix-not-converted] {"kind":"numeric","value":0.09} → The subtraction is right but the answer is still in metres. Multiply by 100 for centimetres. (1)
+      HINTS: The head sits between the two depths you have found. || Convert the metres into centimetres at the end.
+
+### q.science.p2.p2-echoes-ultrasound-sonar-radar.0011 [verified] exam-style · diff 3 · both · P2 calc · 6 marks · (main)describe6 · A note for the crew of a survey vessel explaining how their depth sounder works
+  (main) [6] A survey vessel finds the depth of the water using a sonar depth sounder.
+Describe how the depth sounder measures the depth, and explain why the measured time has to be halved.
+In this question you will be assessed on the quality of your written communication, including your use of specialist scientific terms.
+      ANSWER: text-long {"kind":"text-long","rubricId":"sci.qwc.p2.sonar-depth","bands":[{"band":"A","marks":[5,6],"descriptor":"Five or six of the indicative points, described in detail, with specialist terms used widely an
+      QWC6 QWC1: banded: count the indicative points present, then place within the band on the quality of written communication — Band A [5]-[6] five or six points, Band B [3]-[4] three or four, Band C [1]-[2] one or two, [0] response not worthy of credit
+      SOLUTION: The depth sounder sends a short pulse of sound downwards from the hull of the vessel. The pulse travels through the water, reflects from the seabed and returns as an echo, which a detector on the vessel picks up. An electronic timer measures the time between the pulse leaving and the echo arriving. The speed of sound in sea water is already known, so the total distance travelled by the pulse can be found from distance = speed × time. That total is the journey down to the seabed and back up again, which is twice the depth, so the depth of the water is half of it.
+      ERR [sci.waves.echo-distance-not-halved] {"kind":"text","regex":"depth[^;\\n]{0,24}(speed × time|speed x time|v × t|v x t)"} → The halving has been left out of the account. Speed × time gives the whole journey of the pulse, down and back; the depth is half of it. (4)
+      HINTS: Tell the story in order: send, reflect, receive, time, calculate, halve. || The halving needs a reason, not just an instruction.
+
+## FIND THE MISTAKE
+### ftm.science.p2.p2-echoes-ultrasound-sonar-radar.01 [verified] sci.waves.echo-distance-not-halved · earned P2 · ccea-cer:science:2024-summer:P2H:Q5
+STEM: Dara is asked: 'A sonar pulse sent from a boat returns 0.16 s after it was sent. Sound travels at 1500 m/s in sea water. Calculate the depth of the water. [4]'
+His answer:
+  ✘ 1. distance = speed × time
+    2. distance = 1500 × 0.16
+    3. distance = 240
+    4. depth = 240 m
+  WRONG: The equation line is incomplete. Speed × time gives the distance the pulse travelled altogether, and the pulse went down to the seabed and back up to the boat. The rule for an echo is distance to the reflector = (speed × time) ÷ 2, so the depth is 240 ÷ 2 = 120 m.
+  FIX: distance to the reflector = (speed × time) ÷ 2 / distance = (1500 × 0.16) ÷ 2 / depth = 240 ÷ 2 / depth = 120 m
+  FEEDBACK: One mark of four: the substitution stands, because those two numbers do belong together. What goes is the equation mark, the halving mark and the answer mark. Summer 2024 examiners wrote that candidates 'did not halve the time or double the distance' on this kind of question, so put the ÷ 2 into the equation line where you cannot forget it.
+
+## RETRIEVAL PROMPTS
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.01 [verified] (formula) Write the rule for finding the distance to a reflector from an echo, and say why it has a two in it.  →  distance to the reflector = (speed × time) ÷ 2. The two is there because the pulse travels to the reflector and back, so the timed journey is twice the distance wanted.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.02 [verified] (definition) Define ultrasound.  →  Sound with a frequency greater than 20 000 Hz, which is above the range of human hearing.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.03 [verified] (qa) Give the specification's medical use and industrial use of ultrasound.  →  In medicine, measuring the head diameter of a foetus. In industry, detecting defects inside metals.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.04 [verified] (qa) What does sonar use, what does radar use, and what is each one for?  →  Sonar uses pulses of sound to detect objects under water. Radar uses electromagnetic waves to detect aircraft and ships.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.05 [verified] (trap) You are given the there-and-back time and asked for a speed. What must you do to the distance first?  →  Double the one-way distance, because the wave covered it twice in the time you were given, then divide by the time.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.06 [verified] (procedure) A frequency is given in kHz and an equation needs hertz. What do you do, and what is 40 kHz in Hz?  →  Multiply by 1000: 40 kHz is 40 000 Hz.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.07 [verified] (novel-example) An engineer sees two echoes on the screen from a single ultrasound pulse sent into a steel block. What does the earlier echo tell her?  →  The earlier echo came back from something nearer the probe than the far face of the block: a crack or other defect inside the metal.
+- rp.science.p2.p2-echoes-ultrasound-sonar-radar.08 [verified] (trap) Two echo answers come out, one exactly twice the other. Which one is the distance to the reflector, and how do you know?  →  The smaller one. Speed × time gives the whole there-and-back path, so the distance to the reflector is always half of it and can never be the larger value.

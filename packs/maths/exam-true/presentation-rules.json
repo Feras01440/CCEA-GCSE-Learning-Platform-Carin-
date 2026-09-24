@@ -1,0 +1,185 @@
+{
+  "$schema": "cairn-presentation-rules/1",
+  "subject": "maths",
+  "status": "confirmed",
+  "generatedAt": "2026-09-05",
+  "note": "Applied to every worked solution and to feedback. 'marker' names the deterministic check the marking engine can run; 'coach' is the sentence shown to the learner. All wording is ours; sources are the CCEA General Marking Advice (Summer 2025 M4 MS), the paper front-page instructions, and the Chief Examiner reports as summarised in docs/research/01 (§9, parallel version §11.5).",
+  "rules": [
+    {
+      "id": "pr.maths.answer-line",
+      "rule": "Write the final answer on the answer line, and make sure it is the answer from the method you trust.",
+      "why": "Several answers with nothing on the answer line means the poorest one is marked; several methods means only the one leading to the answer-line answer is marked.",
+      "marker": "final-answer-required",
+      "coach": "Put one answer on the line — the marker follows that answer back to its method.",
+      "source": "CCEA General Marking Advice (v), Summer 2025 M4 MS; CER November 2025 (docs/sources/maths/report-november2025-plain.txt line 366: multiple solutions with no answer on the line — the worst is marked)"
+    },
+    {
+      "id": "pr.maths.one-attempt",
+      "rule": "If you start again, cross out the attempt you are abandoning; never leave two competing solutions.",
+      "why": "Crossed-out work that has not been replaced is still marked, and two answers left standing are marked at the poorer one.",
+      "marker": "multiple-attempts-flag",
+      "coach": "One clear attempt scores better than two half-finished ones.",
+      "source": "CCEA General Marking Advice (iv), (v), Summer 2025 M4 MS; research 01 (parallel) §11.5"
+    },
+    {
+      "id": "pr.maths.keep-accuracy",
+      "rule": "Keep full calculator accuracy in the working and round only at the end; if the question states an accuracy, give exactly that.",
+      "why": "The scheme credits the most accurate figure seen unless a particular accuracy is demanded; rounding part-way (e.g. a trig value) loses the accuracy mark.",
+      "marker": "premature-rounding",
+      "coach": "Write the long version, then round on the answer line.",
+      "source": "CCEA General Marking Advice (viii), Summer 2025 M4 MS; CER Summer 2025 M3 general comment on rounding and accuracy (docs/sources/maths/report-summer2025-plain.txt line 348); research 01 (parallel) §11.5"
+    },
+    {
+      "id": "pr.maths.stated-accuracy",
+      "rule": "Obey a stated accuracy ('to 1 decimal place', 'to 3 significant figures', 'to the nearest degree') exactly — no more places, no fewer.",
+      "why": "The final accuracy mark is tied to the demanded form; 'appropriate degree of accuracy' means no more places than the data given.",
+      "marker": "accuracy-format",
+      "coach": "Underline the accuracy words before you start.",
+      "source": "Paper instruction phrases counted in the corpus (\"give your answer to 1 decimal place\" 13, \"to 3 significant figures\", \"to the nearest degree\"); CCEA Teacher Guidance 2019 on 'appropriate degree of accuracy' (research 01 §4); CER November 2025 Q25 (rounding 1.347… to 1.35)"
+    },
+    {
+      "id": "pr.maths.units-and-money",
+      "rule": "Give units where none are printed on the answer line, and give money to two decimal places (or in pence if the question says pence).",
+      "why": "'pence' in bold was ignored by most candidates and cost the mark; money answers such as £96.2 lose the accuracy mark.",
+      "marker": "unit-required|money-format",
+      "coach": "£ answers end in two digits; pence answers have no £.",
+      "source": "CER Summer 2025 M2 Q18 (docs/sources/maths/report-summer2025-plain.txt line 254: 'pence' in bold ignored); research 01 (parallel) §11.5; concept C §6.9"
+    },
+    {
+      "id": "pr.maths.probability-format",
+      "rule": "Write probabilities as fractions, decimals or percentages — never as ratios or words.",
+      "why": "Ratio notation and word answers score nothing for a probability.",
+      "marker": "probability-format",
+      "coach": "3/8, 0.375 or 37.5% — not 3:8 and not 'unlikely'.",
+      "source": "research 01 (parallel) §11.5 (examiner comments on ratio notation and word answers for probabilities); concept C §6.9"
+    },
+    {
+      "id": "pr.maths.show-calculator-working",
+      "rule": "On a calculator paper, still write the calculation you keyed in before the result.",
+      "why": "A wrong answer with no working scores zero; the written calculation earns the method mark even when the number is wrong.",
+      "marker": "working-required",
+      "coach": "One line of working is your insurance policy.",
+      "source": "Paper front page: 'All working must be clearly shown ... Marks may be awarded for partially correct solutions' (M4 Summer 2025); research 01 (parallel) §11.5 (calculator inputs not shown); CER Summer 2025 M5 P2 general comment (working shown on a calculator paper)"
+    },
+    {
+      "id": "pr.maths.bold-instructions",
+      "rule": "Bold words in the stem are instructions the marker enforces: estimate, form an equation, use a scale drawing, single transformation, in pence, do not measure, without a calculator.",
+      "why": "Ignoring a bold instruction usually zeroes the part even when the maths is right.",
+      "marker": "emphasis-enforced",
+      "coach": "Read the bold twice.",
+      "source": "research 01 (parallel) §11.5; corpus phrase counts (estimate 250, single transformation 40, form an equation 4, use a scale drawing 2, without using a calculator 2); CER Summer 2025 M2 Q18"
+    },
+    {
+      "id": "pr.maths.estimate-means-round-first",
+      "rule": "When told to estimate, round each number to one significant figure first, then calculate; an exact calculation scores nothing.",
+      "why": "The marks are for the rounding and the approximate calculation, not for the exact answer.",
+      "marker": "estimate-method",
+      "coach": "Estimate = round, then work.",
+      "source": "CER Summer 2025 M5 P1 Q3 (docs/sources/maths/report-summer2025-plain.txt line 445: candidates who ignore the instruction to estimate); concept C §6.1"
+    },
+    {
+      "id": "pr.maths.algebra-not-trial",
+      "rule": "Where a question says form an equation, or the topic is solving/simultaneous equations, use an algebraic method; trial and improvement earns no method marks.",
+      "why": "Method marks are attached to the algebraic steps.",
+      "marker": "method-lock:algebraic",
+      "coach": "Trial and improvement can find the number but not the marks.",
+      "source": "research 01 (parallel) §11.5; CER Summer 2025 M2 Q26 (trial and improvement used for equations, docs/sources/maths/report-summer2025-plain.txt line 189)"
+    },
+    {
+      "id": "pr.maths.describe-fully",
+      "rule": "'Describe fully' a transformation means every detail: reflection — the line; rotation — centre, angle and direction; translation — the vector; enlargement — centre and scale factor. One transformation only when the stem says single.",
+      "why": "Each missing detail loses a mark; two transformations for a 'single transformation' scores zero.",
+      "marker": "transformation-complete",
+      "coach": "Name it, then give every number it needs.",
+      "source": "corpus phrase counts (describe fully 40, single transformation 40); research 01 §9.4 (only one candidate gained both marks); concept C §6.1"
+    },
+    {
+      "id": "pr.maths.constructions",
+      "rule": "Constructions are done with ruler and compasses in dark pencil, and the construction arcs are left visible.",
+      "why": "The arcs are the evidence of method; papers are scanned, so faint pencil disappears.",
+      "marker": "drawing-self-check",
+      "coach": "Arcs are marks — do not rub them out.",
+      "source": "M8 Paper 1 Summer 2025 Q2 instruction not to rub out construction arcs (docs/sources/maths/past-papers/summer2025-M8-paper1-noncalc-front.txt); paper front page: drawing in HB pencil; research 01 (parallel) §11.5 (freehand lines, scanned scripts)"
+    },
+    {
+      "id": "pr.maths.legibility",
+      "rule": "Digits must be unambiguous (1 vs 7, 0 vs 6); use black ink for writing and HB pencil for drawing; stay inside the boxed area.",
+      "why": "Scripts are scanned; illegible digits are marked as read. Gel pen and work outside the box may not be captured.",
+      "marker": "none",
+      "coach": "If a 7 could be a 1, it is a 1.",
+      "source": "Paper front-page instructions (black ink, no gel pen, HB pencil, boxed area — M4 Summer 2025); CER November 2025 (docs/sources/maths/report-november2025-plain.txt line 215: increasing number of responses very difficult to read)"
+    },
+    {
+      "id": "pr.maths.brackets",
+      "rule": "Use brackets when substituting negative numbers and when multiplying out; write (−3)² not −3².",
+      "why": "Missing brackets is a recurring cause of lost accuracy marks in algebra.",
+      "marker": "algebra-bracket-check",
+      "coach": "Brackets around every negative you substitute.",
+      "source": "CER Summer 2025 M3 general comment (docs/sources/maths/report-summer2025-plain.txt line 348: use of brackets in algebra was an issue); scheme phrase 'brackets' 155 occurrences"
+    },
+    {
+      "id": "pr.maths.inequality-sign",
+      "rule": "Keep the inequality sign through the solution and in the final answer; reverse it when multiplying or dividing by a negative.",
+      "why": "An inequality solved as an equation loses the final mark.",
+      "marker": "inequality-sign-kept",
+      "coach": "x > 4, not x = 4.",
+      "source": "concept C §6.9; research 01 §9 (inequality answers given as equations)"
+    },
+    {
+      "id": "pr.maths.product-of-primes",
+      "rule": "Write a product of prime factors with × signs and index notation, e.g. 2³ × 3 × 5.",
+      "why": "A list of factors is not a product; recognising squares from the index form is examined.",
+      "marker": "prime-product-format",
+      "coach": "Multiply signs and powers.",
+      "source": "concept C §6.9; CER November 2025 M6 Q26 (docs/sources/maths/report-november2025-plain.txt line 248: square numbers written as products of primes)"
+    },
+    {
+      "id": "pr.maths.sanity-check",
+      "rule": "Check the answer against the context: a probability is at most 1, an estimated mean lies inside the data range, an estimate sits below the population size, a length is positive.",
+      "why": "Impossible answers signal a method error the marker cannot follow through.",
+      "marker": "context-bounds",
+      "coach": "Does the number make sense? If not, look for the slip.",
+      "source": "concept C §6.9; research 01 §9.3–9.4 general advice"
+    },
+    {
+      "id": "pr.maths.calculator-mode",
+      "rule": "Set the calculator to give decimal answers (not fractions or surds) and know the order-of-operations keys; bring a calculator to calculator papers.",
+      "why": "Examiners report candidates sitting calculator papers without one, or copying fraction displays instead of decimals.",
+      "marker": "none",
+      "coach": "Check the display mode the night before.",
+      "source": "CER Summer 2024 M2 Q17 (docs/sources/maths/report-summer2024-plain.txt lines 153-159: no calculator; wrong mode); research 01 (parallel) §5"
+    },
+    {
+      "id": "pr.maths.non-calculator-methods",
+      "rule": "On Paper 1 of a completion test, show a written method (column methods, fraction work, surd manipulation) — numbers are chosen to be done by hand.",
+      "why": "Paper 1 is marked on the written method; an unsupported answer earns the accuracy mark only if the method is visible.",
+      "marker": "working-required",
+      "coach": "Show the arithmetic you would have typed.",
+      "source": "Specification §4.6 (calculators must not be used in Paper 1 of each completion test; docs/sources/maths/spec-2017-current_0.txt lines 1328-1330); M8 Paper 1 front page"
+    },
+    {
+      "id": "pr.maths.bounds-full-display",
+      "rule": "In bounds questions write the full calculator display before rounding, and use the correct half-unit (e.g. 47.5 for 50 kg to the nearest 5 kg).",
+      "why": "The upper/lower bound marks depend on the exact bound and the unrounded result.",
+      "marker": "bounds-format",
+      "coach": "Half the rounding unit, both ways.",
+      "source": "CER Summer 2025 M4 Q13 (docs/sources/maths/report-summer2025-plain.txt line 386); concept C §6.9"
+    },
+    {
+      "id": "pr.maths.reasons-use-key-words",
+      "rule": "When asked for a reason, use the mathematical words tied to the data ('the range is affected by the extreme value 98'); a label such as 'Z angles' or 'alternate' alone is not a reason.",
+      "why": "Reason marks need the property named in full and applied to the figures.",
+      "marker": "text-keywords",
+      "coach": "Name the rule and point at the numbers.",
+      "source": "research 01 §9.3–9.4 (reasons given as labels); concept C §6.1"
+    },
+    {
+      "id": "pr.maths.mixed-units",
+      "rule": "Convert to consistent units before calculating and state the unit of the answer (metric conversions must be known: 1 kg = 1000 g, 1 litre = 1000 cm³, 1 cm = 10 mm; 5 miles ≈ 8 km).",
+      "why": "Unit errors lose the accuracy mark and are reported every series at Foundation.",
+      "marker": "unit-consistency",
+      "coach": "Same units in, one unit out.",
+      "source": "CER November 2025 M1 Q6 and Q14 (docs/sources/maths/report-november2025-plain.txt lines 121, 135, 222); research 01 §4 (conversions to be known)"
+    }
+  ]
+}
