@@ -39,7 +39,7 @@ function Pill({ x, y, w, text, state = "", split, h = 34, fs = 18 }: { x: number
             {split.factor}
           </text>
           <path d={`M${x + 8} ${y + h - 8} L${x + 22} ${y + 8}`} stroke="var(--accent)" strokeWidth={2.5} strokeLinecap="round" />
-          <text x={x + 29} y={base} textAnchor="middle" fontSize={fs - 2} fill="var(--ink-3)" fontFamily={MATHS}>
+          <text x={x + 29} y={base} textAnchor="middle" fontSize={fs} fill="var(--ink-3)" fontFamily={MATHS}>
             ×
           </text>
           <text x={x + 43} y={base} textAnchor="middle" fontSize={fs} fill="var(--ink)" fontFamily={MATHS}>
@@ -270,8 +270,7 @@ export function TapToCancel({
         </div>
         {checked !== null && (
           <div className="motion-place mt-4 flex items-center gap-3 font-serif-lesson text-[20px] text-ink" data-result={checked.correct || allGone ? "done" : "shown"}>
-            {!checked.correct && !allGone && <span className="font-sans text-[14px] text-ink-2">It simplifies to</span>}
-            <span aria-hidden>=</span>
+            {!checked.correct && !allGone ? <span className="font-sans text-[14px] text-ink-2">It simplifies to</span> : <span aria-hidden>=</span>}
             <span className="inline-flex flex-col items-center leading-[1.15]" role="img" aria-label={`${RESULT.top} over ${RESULT.bottom}`}>
               <span className="px-1.5">{RESULT.top}</span>
               <span className="h-[2px] w-full bg-ink" aria-hidden />
@@ -379,7 +378,7 @@ export function RecapGlyph({ kind, size = 44 }: { kind: string; size?: number })
       <text x={11} y={36} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
         4
       </text>
-      <text x={22} y={26} textAnchor="middle" fontSize={12} fill="var(--ink-2)" fontFamily={MATHS}>
+      <text x={22} y={27} textAnchor="middle" fontSize={13} fill="var(--ink-2)" fontFamily={MATHS}>
         =
       </text>
       <text x={33} y={19} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--accent)" fontFamily={MATHS}>

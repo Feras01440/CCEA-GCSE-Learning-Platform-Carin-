@@ -157,6 +157,25 @@ function useLesson(subject: Subject, slug: string, topicId: string) {
   return { bundle, error, gateIds, answered, markAnswered };
 }
 
+/** Read v2: she pressed the lesson's last Continue on this device. Storage can be missing: then it lasts the visit. */
+const FINISHED_KEY = (topicId: string) => `cairn.read.finished.${topicId}`;
+
+function readFinished(topicId: string): boolean {
+  try {
+    return window.localStorage.getItem(FINISHED_KEY(topicId)) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function rememberFinished(topicId: string): void {
+  try {
+    window.localStorage.setItem(FINISHED_KEY(topicId), "1");
+  } catch {
+    // The press holds for this visit.
+  }
+}
+
 /** How long a landing keeps its stage at the top while the page above it settles, and how still it must be to stop. */
 const LANDING_MAX_MS = 4000;
 const LANDING_STILL_FRAMES = 20;
@@ -560,12 +579,18 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
   const sections = plan?.noteSections ?? serverSections ?? [];
   useStageLanding(Boolean(bundle && plan));
 
-  // How far she has come: the sections open, and whether she has pressed the lesson's last Continue.
+  // How far she has come: the sections open, and whether she has pressed the lesson's last Continue. The last press is
+  // kept on this device, so a reload still shows the last section placed (audit CQ-15); it counts only while every
+  // check is still answered, so a check added to the note later reopens the lesson honestly.
   const [open, setOpen] = useState<number | null>(null);
-  const [finished, setFinished] = useState(false);
+  const [pressedFinish, setPressedFinish] = useState(false);
+  useEffect(() => {
+    if (readFinished(topicId)) setPressedFinish(true);
+  }, [topicId]);
   useEffect(() => {
     if (gateIds && plan && open === null) setOpen(Math.max(1, initialOpen(plan.noteSections, gateIds)));
   }, [gateIds, plan, open]);
+  const finished = pressedFinish && sections.length > 0 && sections.every((s) => s.gateIds.every((id) => answered.has(id)));
 
   const onPrompt = onPromptFor(item, subject);
   // The lesson's last Continue goes on to the first stage after it; the bar has left with the lesson by then.
@@ -574,7 +599,8 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
     ? {
         label: `Continue to ${ONWARD[firstStage.id] ?? firstStage.label.toLowerCase()}`,
         onFinish: () => {
-          setFinished(true);
+          setPressedFinish(true);
+          rememberFinished(topicId);
           const el = document.getElementById(firstStage.id);
           if (!el) return;
           const reduce = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

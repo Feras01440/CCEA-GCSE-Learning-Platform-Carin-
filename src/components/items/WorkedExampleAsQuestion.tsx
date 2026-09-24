@@ -253,6 +253,15 @@ export function WorkedExampleAsQuestion({ we, fade, onStep, onComplete, onNext, 
   return <StepsMode we={we} fade={fade} showSteps={plan.showSteps} sequence={plan.sequence} calculator={calc} onStep={onStep} onComplete={onComplete} onNext={onNext} />;
 }
 
+/**
+ * The figure a mode shows. The authored figure is annotated for the full example, so it can print what a hidden step
+ * asks for; the faded and problem modes show `figurePlain`, the copy with nothing a hidden step asks for, when the
+ * worked example has one (25 Sep 2026). The twin keeps its own figure.
+ */
+export function figureForMode(we: WorkedExample, fade: FadeLevel): WorkedExample["figure"] {
+  return fade === "full" ? we.figure : (we.figurePlain ?? we.figure);
+}
+
 function Header({ we, fade }: { we: WorkedExample; fade: FadeLevel }) {
   const label: Record<FadeLevel, string> = {
     full: "Worked example · read each step, then say why",
@@ -339,7 +348,7 @@ function StepsMode({
       <div className="mt-3">
         <Md md={we.stem} />
       </div>
-      {we.figure && <Figure spec={we.figure} />}
+      {figureForMode(we, fade) && <Figure spec={figureForMode(we, fade)!} />}
 
       <ol className="mt-4 space-y-3" aria-label="Steps">
         {sequence.slice(0, opened).map(({ n, role }, i) => {
@@ -536,7 +545,7 @@ function ProblemMode({ we, calculator, onComplete, onNext }: { we: WorkedExample
       <div className="mt-3">
         <Md md={we.stem} />
       </div>
-      {we.figure && <Figure spec={we.figure} />}
+      {figureForMode(we, "problem") && <Figure spec={figureForMode(we, "problem")!} />}
       <div className="mt-4">
         {!submitted ? (
           <form

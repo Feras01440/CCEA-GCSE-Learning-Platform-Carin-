@@ -209,8 +209,10 @@ describe("markWorking: fractions, lone brackets and dependent points (MK-04)", (
   test("a point earns only with the points it depends on", () => {
     // The fraction she reaches cannot pay "fully simplified" when nothing before it was shown.
     expect(markWorking(["2(x-2)/(x+3)"], q9).earned.map((e) => e.id)).not.toContain("W1");
+    // With both factorisations shown, the simplified fraction earns its point: "(x + 3) cancelled" is wording no line
+    // reproduces, so it stands for what it depends on in turn.
     const all = markWorking(["2(x+3)(x-2)/(x+3)^2", "(x+3)^2", "2(x-2)/(x+3)"], q9);
-    expect(all.earned.map((e) => e.id)).toEqual(["MW1", "MW2"]);
+    expect(all.earned.map((e) => e.id)).toEqual(["MW1", "MW2", "W1"]);
   });
   test("ladderTotal: a wrong answer never collects every mark; a right one keeps its own", () => {
     expect(ladderTotal({ correct: false, marksAwarded: 0 }, 4, 4)).toBe(3);

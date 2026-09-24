@@ -898,6 +898,8 @@ export const WorkedExample = named(
       paper: PaperContext,
       stem: z.string().min(1),
       figure: FigureSpec.optional(),
+      /** A copy of the figure with nothing that a hidden step asks for, for the faded and problem modes (25 Sep 2026). */
+      figurePlain: FigureSpec.optional(),
       steps: z.array(WorkedExampleStep).min(1),
       finalAnswer: z.string().min(1),
       twin: z.object({ stem: z.string().min(1), answer: AnswerSpec, figure: FigureSpec.optional() }),

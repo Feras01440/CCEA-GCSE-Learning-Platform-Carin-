@@ -933,6 +933,79 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
   });
 });
 
+/** Answer every Read v2 gate right and press every Continue, until the lesson's last Continue is on the page. */
+async function walkToLessonEnd(page: Page): Promise<void> {
+  const gates = await trialGates(page);
+  for (let step = 0; step < 40; step += 1) {
+    const pending = await page.evaluate(() => Array.from(document.querySelectorAll("#note [data-gate]")).find((el) => !el.querySelector("[data-verdict]"))?.getAttribute("data-gate") ?? null);
+    if (pending) {
+      await answerGate(page, gates.find((g) => g.id === pending)!);
+      continue;
+    }
+    const next = page.locator("#note [data-continue]:not([data-finish])");
+    if ((await next.count()) === 0) break;
+    await next.first().click();
+  }
+  await expect(page.locator("#note [data-finish]")).toBeVisible();
+}
+
+/** The buttons and links on screen filled with the accent of the place they sit in (01 §4.3: at most one). */
+async function accentFilledInView(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+    const rgb = (color: string) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = "#000";
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, 1, 1);
+      const d = ctx.getImageData(0, 0, 1, 1).data;
+      return d[3] === 0 ? null : [d[0], d[1], d[2]];
+    };
+    return Array.from(document.querySelectorAll<HTMLElement>("button, a"))
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        const cs = getComputedStyle(el);
+        if (r.width === 0 || r.height === 0 || r.bottom <= 0 || r.top >= window.innerHeight || cs.visibility === "hidden") return false;
+        const probe = document.createElement("span");
+        probe.style.color = "var(--accent)";
+        el.parentElement!.appendChild(probe);
+        const accent = rgb(getComputedStyle(probe).color);
+        probe.remove();
+        const bg = rgb(cs.backgroundColor);
+        return bg !== null && accent !== null && bg.every((v, i) => Math.abs(v - accent[i]) <= 1);
+      })
+      .map((el) => (el.textContent ?? "").trim());
+  });
+}
+
+/**
+ * One accent-filled control per screen (01-art-direction.md §4.3; v2 §11.1): at the lesson's end two "Show answer"
+ * buttons shared the screen with "Continue to the worked examples", three accent fills at once (audit CD-04, build 7).
+ * Continue is the one thing to press there; the retrieval prompts' reveal is secondary inside a note.
+ */
+test.describe("The lesson's end: one accent-filled control on the screen", () => {
+  for (const size of [
+    { width: 390, height: 844 },
+    { width: 1280, height: 800 },
+    { width: 1440, height: 900 },
+  ]) {
+    test(`at ${size.width} x ${size.height}, with the last Continue low on the screen and in its middle`, async ({ page }) => {
+      await page.setViewportSize(size);
+      await openTrial(page);
+      await walkToLessonEnd(page);
+      for (const at of ["low", "middle"] as const) {
+        await page.locator("#note [data-finish]").evaluate((el, at) => {
+          const r = el.getBoundingClientRect();
+          window.scrollTo(0, at === "low" ? r.bottom + window.scrollY - window.innerHeight + 40 : r.top + window.scrollY - window.innerHeight / 2);
+        }, at);
+        await expect.poll(() => accentFilledInView(page), { message: `accent fills on screen, Continue ${at}` }).toEqual(["Continue to the worked examples"]);
+      }
+    });
+  }
+});
+
 /**
  * "Practise this topic" on the Slides close links to the topic's #practice, and the page used to stay on its hero with
  * the Practice stage 11,000 px below and nothing focused (audit LD-02, CQ-06, 24 Sep): the stage is drawn only after the
