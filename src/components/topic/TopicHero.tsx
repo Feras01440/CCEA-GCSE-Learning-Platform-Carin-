@@ -16,6 +16,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { clsx } from "clsx";
 import { MasteryChip, MdInlines, parseInline } from "@/components/items";
 import { PhotoFigure } from "@/components/media/PhotoFigure";
+import { focusLanding } from "@/components/shell/input-modality";
 import { locatorCls } from "@/components/shell/PageHeader";
 import { getDB } from "@/lib/db/db";
 import { nextStepHint } from "@/lib/mastery/engine";
@@ -26,7 +27,7 @@ import type { Subject } from "@/lib/content/taxonomy";
 import { StagedFigure } from "@/components/items/StepRevealNote";
 import { ILLUSTRATIONS } from "@/components/slides/enrich";
 import { enrichmentFor } from "@/lib/slides/enrichment";
-import { isReadV2, minutesHeading, type TopicHeroData } from "./lesson-plan";
+import { heroPromise, inlineLede, isReadV2, type TopicHeroData } from "./lesson-plan";
 import { StartButtons } from "@/components/slides/StartButtons";
 import { useCompanionContext } from "@/lib/companion";
 import { CompanionLine } from "@/components/companion/CompanionLine";
@@ -56,15 +57,19 @@ export interface TopicHeroProps {
   topicId: string;
   /** Each gate with the 1-based lesson section it closes, in note order: where she stopped is read from it. */
   gateSections?: Array<[string, number]>;
-  /** The Slides deck's card count, when the page knows it: "Start the slides · 25 cards" (the slides agent's buttons). */
-  slidesCards?: number;
+  /**
+   * The Slides deck's own numbers on a topic that has Slides (src/lib/slides deck stats, the numbers its title card
+   * prints): the promise line names them beside Read's, and the Start button says the cards ("Start the slides · 23 cards").
+   */
+  slides?: { cards: number; minutes: number };
 }
 
 const reducedMotion = (): boolean => typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
- * Take her to the first of these places that exists, and put the keyboard there too. The lesson loads just after the
- * hero, so a tap in the first moment waits (up to three seconds) for the place to exist rather than doing nothing.
+ * Take her to the first of these places that exists, and put the keyboard there too, as a landing place: it wears the
+ * focus ring only when the keyboard brought her (shell/input-modality.ts). The lesson loads just after the hero, so a
+ * tap in the first moment waits (up to three seconds) for the place to exist rather than doing nothing.
  */
 function jumpTo(selectors: string[]): void {
   const started = performance.now();
@@ -75,8 +80,7 @@ function jumpTo(selectors: string[]): void {
       return;
     }
     el.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
-    if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
-    el.focus({ preventScroll: true });
+    focusLanding(el);
   };
   attempt();
 }
@@ -141,7 +145,7 @@ function HeroFigure({ hero, staged = false, topicId }: { hero: TopicHeroData; st
   );
 }
 
-export function TopicHero({ subject, unit, slug, locator, title, displayTitle, hero, sections, checks, workedExamples, findings = 0, practicals = [], topicId, gateSections = [], slidesCards }: TopicHeroProps) {
+export function TopicHero({ subject, unit, slug, locator, title, displayTitle, hero, sections, checks, workedExamples, findings = 0, practicals = [], topicId, gateSections = [], slides }: TopicHeroProps) {
   const canId = useId();
   const paper = usePaperPhrase(subject, unit);
   // `null` once read and absent: `undefined` is still loading, and the companion waits for the difference.
@@ -173,13 +177,16 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
     questionVisible: false,
   });
   const start = () => (sectionNumber ? jumpTo([`#note h3[data-section="${sectionNumber - 1}"]`, "#note"]) : jumpTo(["#note"]));
-  const facts = [
-    `${sections} ${sections === 1 ? "section" : "sections"}`,
-    checks > 0 ? `${checks} ${checks === 1 ? "check" : "checks"}` : null,
-    workedExamples > 0 ? `${workedExamples} worked ${workedExamples === 1 ? "example" : "examples"}` : null,
-    findings > 0 ? `${findings} examiner ${findings === 1 ? "finding" : "findings"}` : null,
-    ...practicals.map((p) => `Prescribed Practical ${p}`),
-  ].filter((f): f is string => f !== null);
+  // Each way in with its own numbers, named, from its own source (lesson-plan.ts heroPromise; audit LD-04).
+  const promise = heroPromise({
+    read: { minutes: hero.minutes, sections },
+    slides: slides ?? null,
+    untimedVideos: hero.untimedVideos,
+    checks,
+    workedExamples,
+    findings,
+    practicals,
+  });
   const hasMastery = mastery != null && mastery.level !== "not-started";
 
   return (
@@ -194,18 +201,48 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
       </h1>
 
       {hero.lede && (
-        <p className="font-serif-lesson mt-3 max-w-[var(--measure-tight)] text-prose leading-[1.52] text-ink">
-          <MdInlines inlines={parseInline(hero.lede)} />
+        // Running prose: a stacked fraction in it takes the inline size (lesson-plan.ts inlineLede; audit CD-06).
+        <p data-hero-lede className="font-serif-lesson mt-3 max-w-[var(--measure-tight)] text-prose leading-[1.52] text-ink">
+          <MdInlines inlines={parseInline(inlineLede(hero.lede))} />
         </p>
       )}
 
-      {/* The promise: the one line that answers "why is this worth my time", in the first five seconds. */}
-      <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-ui text-ink-2">
-        <span className="font-semibold text-ink">{minutesHeading(hero.minutes)}</span>
-        {facts.map((f) => (
-          <span key={f}>{f}</span>
-        ))}
-      </p>
+      {/* The promise: the one line that answers "why is this worth my time", in the first five seconds. With two ways in,
+          each is named with its own minutes and size (Slides first, the primary way), then what both share. */}
+      {promise.ways.length > 1 ? (
+        <div data-hero-promise className="mt-4 flex flex-col gap-1 text-ui text-ink-2">
+          <p className="flex flex-wrap gap-x-5 gap-y-1">
+            {promise.ways.map((w) => (
+              <span key={w.way} data-way-length={w.way}>
+                <span className="font-medium">{w.label}:</span> <span className="font-semibold text-ink">{w.minutes}</span>
+                {w.plus && ` ${w.plus}`}
+                <span aria-hidden> · </span>
+                <span className="sr-only">, </span>
+                {w.size}
+              </span>
+            ))}
+          </p>
+          {promise.facts.length > 0 && (
+            <p className="flex flex-wrap gap-x-4 gap-y-1">
+              {promise.facts.map((f) => (
+                <span key={f}>{f}</span>
+              ))}
+            </p>
+          )}
+        </div>
+      ) : (
+        <p data-hero-promise className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-ui text-ink-2">
+          {promise.ways.map((w) => (
+            <span key={w.way}>
+              <span className="font-semibold text-ink">{w.minutes}</span>
+              {w.plus && ` ${w.plus}`}
+            </span>
+          ))}
+          {[...promise.ways.map((w) => w.size), ...promise.facts].map((f) => (
+            <span key={f}>{f}</span>
+          ))}
+        </p>
+      )}
 
       {/* The two ways in (the slides agent's block, TRIAL-BRIEF.md): Slides on the accent on a first visit, Read as the
           outlined second way, the last-chosen way remembered on this device; one Read button on a topic without Slides. */}
@@ -216,7 +253,7 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
         topicId={topicId}
         firstVisit={firstVisit}
         sectionNumber={sectionNumber}
-        cards={slidesCards}
+        cards={slides?.cards}
         onRead={start}
         onReadFromTop={() => jumpTo(["#note"])}
         onDoneBefore={() => jumpTo(["#practice", "#exam", "#check", "#sheet"])}

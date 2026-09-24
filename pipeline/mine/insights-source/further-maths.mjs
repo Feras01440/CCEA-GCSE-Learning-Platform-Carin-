@@ -254,6 +254,8 @@ const misconceptions = [
   MX("fm.new.friction-per-kg-not-converted", "Uses a resistance given per kilogram as the whole force, without multiplying it by the mass", ["FM2-NEW-01"], "method", [S("2022-summer", "FM2", 3)]),
   MX("fm.connected.weight-on-table-in-equation", "Puts the weight of a block sliding on a horizontal table into its equation of motion, although the weight acts at right angles to the motion and the normal reaction balances it", ["FM2-NEW-01"], "concept", [S("2025-summer", "FM2", 4)], "Summer 2025 Q4(ii) names an equation of exactly this shape, the table block's weight subtracted alongside the friction, as a frequently seen error."),
   MX("fm.show-that.given-value-used-early", "Uses a value printed in a later part (a 'show that' result) to answer an earlier part, which scores nothing", ["FM2-NEW-01"], "method", [S("2024-summer", "FM2", 6)], "Summer 2024 Q6 records candidates substituting the trailer's mass printed in part (ii) into part (i) to find the tension, and states that this was awarded zero."),
+  // Added 24 Sep 2026 by the FM2 batch-D depth pass on newtons-second-law-linear (find-the-mistake 03).
+  MX("fm.new.mass-not-updated", "Keeps the old mass in F = ma after the load or the body changes, so the new acceleration or force is worked with the mass of an earlier part", ["FM2-NEW-01"], "misread", [S("2022-summer", "FM2", 3)], "Summer 2022 Q3(b)(ii) reports candidates who kept the first box's 6 kg in the equation for the second, 8 kg box."),
 
   // kinematics and vectors
   M("fm.kin.t-not-squared", "Forgets to square t in s = ut + half a t squared, or expands the bracket wrongly", ["FM2-KIN-02"], "accuracy"),

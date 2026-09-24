@@ -9,6 +9,10 @@
  * The minute model, from the learner review (13 Sep 2026): prose at 180 words a minute, 40
  * seconds for a check, 2 minutes for a worked example, 1 minute for a check item, 1.2 minutes
  * a mark for a question, 2 minutes for a find-the-mistake. No number here is flattering.
+ * Added 25 Sep (audit LD-04, CT-12): a retrieval prompt inside the note costs 30 seconds, what
+ * the Slides deck charges the same prompt as a recall card, so the two ways price the same work
+ * alike; a video counts its own length only when its block states one, and otherwise is named
+ * beside the minutes ("plus a video"), never guessed into them, as Slides does.
  */
 import type { PhotoRef } from "@/components/media/PhotoFigure";
 import { splitTex, type TexSegment } from "@/components/items/tex-split";
@@ -90,8 +94,21 @@ export function gateStem(prompt: string): GateStem {
   };
 }
 
+/**
+ * A hero lede as the page sets it. The lede is running prose, where a stacked fraction takes the inline size (art
+ * direction v2 §8.4 and 01 §3.4: "\tfrac is the most an inline fraction may be"; audit CD-06, CT-13): an authored
+ * `\dfrac` inside `$…$` is read as `\frac` here, and only here, so "12/18 cancels to 2/3" sits in its line instead of
+ * standing two full-size fractions in it. Display maths (`$$…$$`) and every other command are left as written. The
+ * content brief is to author ledes with `\frac` (or a solidus); this is the renderer's guard until they all do.
+ */
+export function inlineLede(md: string): string {
+  return joinTex(splitTex(md).map((s) => (s.type === "math" && !s.display ? { ...s, tex: s.tex.replace(/\\dfrac(?![a-zA-Z])/g, "\\frac") } : s)));
+}
+
 export const WORDS_PER_MINUTE = 180;
 export const SECONDS_PER_GATE = 40;
+/** A retrieval prompt inside the note: the Slides deck's recall card costs the same (src/lib/slides/cards.ts). */
+export const SECONDS_PER_PROMPT = 30;
 
 type Block = Record<string, unknown>;
 
@@ -109,9 +126,26 @@ export function countWords(text: string): number {
     .filter(Boolean).length;
 }
 
-/** Reading plus checks, rounded to whole minutes and never less than one. */
-export function estimateMinutes(words: number, gates = 0): number {
-  return Math.max(1, Math.round(words / WORDS_PER_MINUTE + (gates * SECONDS_PER_GATE) / 60));
+/** Reading plus checks (plus any other timed work, in seconds), rounded to whole minutes and never less than one. */
+export function estimateMinutes(words: number, gates = 0, seconds = 0): number {
+  return Math.max(1, Math.round(words / WORDS_PER_MINUTE + (gates * SECONDS_PER_GATE) / 60 + seconds / 60));
+}
+
+/**
+ * How long a video block runs, when the note says so (its `end`, less its `start`), or null: a length is never guessed.
+ * The same rule as the Slides deck's (src/lib/slides/cards.ts videoSeconds).
+ */
+export function videoSeconds(block: unknown): number | null {
+  if (!isBlock(block) || block.type !== "video" || typeof block.end !== "number") return null;
+  return Math.max(0, block.end - (typeof block.start === "number" ? block.start : 0));
+}
+
+const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+/** "plus a video", "plus two videos": videos with no stated length, named beside the minutes; null when there are none. */
+export function plusVideos(untimed: number): string | null {
+  if (untimed <= 0) return null;
+  return `plus ${untimed === 1 ? "a video" : `${COUNT_WORDS[untimed] ?? untimed} videos`}`;
 }
 
 export const minutesForReading = (words: number): number => estimateMinutes(words, 0);
@@ -126,8 +160,67 @@ export const minutesForMistakes = (count: number): number => Math.max(1, count *
 
 /** "about 5 min" — the phrase every section eyebrow ends with. */
 export const minutesPhrase = (minutes: number): string => `about ${Math.max(1, Math.round(minutes))} min`;
-/** "About 25 minutes" — the spine's own heading. */
-export const minutesHeading = (minutes: number): string => `About ${Math.max(1, Math.round(minutes))} minutes`;
+/** "About 25 minutes" — the spine's own heading ("About 1 minute" for one). */
+export const minutesHeading = (minutes: number): string => {
+  const n = Math.max(1, Math.round(minutes));
+  return `About ${n} ${n === 1 ? "minute" : "minutes"}`;
+};
+
+/** One way into a topic as the hero states it: its name, its own minutes, and what it is made of. */
+export interface WayPromise {
+  way: "slides" | "read";
+  /** "Slides" or "Read"; null on a topic with one way in, whose line needs no name. */
+  label: string | null;
+  /** "about 11 minutes" after a name; "About 9 minutes" leading the one way's line. */
+  minutes: string;
+  /** "plus a video": videos with no stated length, which neither way can time. */
+  plus: string | null;
+  /** "25 cards", "7 sections". */
+  size: string;
+}
+
+/**
+ * The hero's promise line, one truth per way in (audit LD-04, CT-12, CD-12, 24 Sep 2026). Each way states its own
+ * length and its own size, named, from its own single source: Read from the note (its sections and the minute model the
+ * track and the spine print), Slides from the deck (the deck stats the title card and the Start button print). What
+ * both share (the checks, the worked examples, the examiners' findings, a practical) is said once, and a video with no
+ * stated length is named beside each way's minutes rather than guessed into them. Slides comes first: it is the primary
+ * way in (decision 17). A topic without Slides keeps the one line it always had.
+ */
+export function heroPromise({
+  read,
+  slides,
+  untimedVideos,
+  checks,
+  workedExamples,
+  findings,
+  practicals,
+}: {
+  read: { minutes: number; sections: number };
+  slides: { minutes: number; cards: number } | null;
+  untimedVideos: number;
+  checks: number;
+  workedExamples: number;
+  findings: number;
+  practicals: readonly string[];
+}): { ways: WayPromise[]; facts: string[] } {
+  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  const plus = plusVideos(untimedVideos);
+  const sections = plural(read.sections, "section", "sections");
+  const ways: WayPromise[] = slides
+    ? [
+        { way: "slides", label: "Slides", minutes: minutesHeading(slides.minutes).replace(/^A/, "a"), plus, size: plural(slides.cards, "card", "cards") },
+        { way: "read", label: "Read", minutes: minutesHeading(read.minutes).replace(/^A/, "a"), plus, size: sections },
+      ]
+    : [{ way: "read", label: null, minutes: minutesHeading(read.minutes), plus, size: sections }];
+  const facts = [
+    checks > 0 ? plural(checks, "check", "checks") : null,
+    workedExamples > 0 ? `${workedExamples} worked ${workedExamples === 1 ? "example" : "examples"}` : null,
+    findings > 0 ? `${findings} examiner ${findings === 1 ? "finding" : "findings"}` : null,
+    ...practicals.map((p) => `Prescribed Practical ${p}`),
+  ].filter((f): f is string => f !== null);
+  return { ways, facts };
+}
 
 /** A learner verb and the cost of doing it: "Read and check · about 25 min". */
 export const stageEyebrow = (verb: string, minutes: number): string => `${verb} · ${minutesPhrase(minutes)}`;
@@ -144,6 +237,8 @@ export interface TopicHeroData {
   /** "By the end you will be able to…", three lines, empty when the bundle has no hero block. */
   can: string[];
   minutes: number;
+  /** Videos in the lesson with no stated length: not in the minutes, named beside them ("plus a video"). */
+  untimedVideos: number;
   /** The hero block was written by the pipeline rather than by hand. */
   generated: boolean;
   /** No hero block in the bundle: the lede is the note's first paragraph and the minutes are computed. */
@@ -161,6 +256,8 @@ export interface LessonSection {
   words: number;
   gateIds: string[];
   minutes: number;
+  /** Videos in the section with no stated length: not in its minutes, named beside them. */
+  untimedVideos: number;
 }
 
 /** The first figure or photo in the note, which the hero promotes and the lesson therefore skips. */
@@ -213,7 +310,7 @@ export function heroDataFor(blocks: readonly unknown[] | null | undefined): Topi
     const authored = typeof hero.minutes === "number" && hero.minutes > 0 ? Math.round(hero.minutes) : 0;
     const minutes = measurable || authored === 0 ? lessonMinutes(list, lede) : authored;
     const short = str(hero.short).trim() || null;
-    return { short, lede, can, minutes, generated: hero.generated === true, fallback: false, figure };
+    return { short, lede, can, minutes, untimedVideos: untimedVideosIn(list, lede), generated: hero.generated === true, fallback: false, figure };
   }
   const firstParagraph = list.find((b) => blockType(b) === "p");
   const lede = isBlock(firstParagraph) ? str(firstParagraph.md) : "";
@@ -222,10 +319,16 @@ export function heroDataFor(blocks: readonly unknown[] | null | undefined): Topi
     lede,
     can: [],
     minutes: lessonMinutes(list, lede),
+    untimedVideos: untimedVideosIn(list, lede),
     generated: false,
     fallback: true,
     figure,
   };
+}
+
+/** Videos in the lesson with no stated length, over every section. */
+function untimedVideosIn(blocks: readonly unknown[], lede: string): number {
+  return lessonSections(blocks, lede).reduce((n, s) => n + s.untimedVideos, 0);
 }
 
 /** The lesson's minutes as the spine counts them: every section, each rounded to a whole minute, added up. */
@@ -350,12 +453,15 @@ export function sameTitle(a: string, b: string): boolean {
  */
 export function lessonSections(blocks: readonly unknown[] | null | undefined, lede?: string): LessonSection[] {
   const list = lessonBlocks(blocks ?? [], lede);
-  const sections: Array<Omit<LessonSection, "n" | "minutes">> = [];
+  // What a section is made of while it is read: its words and checks, and the timed work beside them (a prompt, a video
+  // with a stated length) in seconds.
+  type Open = Omit<LessonSection, "n" | "minutes"> & { seconds: number };
+  const sections: Open[] = [];
   const open = (heading: string) => {
-    sections.push({ title: heading ? spineTitle(heading) : "The lesson", heading, words: countWords(heading), gateIds: [] });
+    sections.push({ title: heading ? spineTitle(heading) : "The lesson", heading, words: countWords(heading), gateIds: [], untimedVideos: 0, seconds: 0 });
     return sections[sections.length - 1];
   };
-  let current: Omit<LessonSection, "n" | "minutes"> | null = null;
+  let current: Open | null = null;
   for (const b of list) {
     const t = blockType(b);
     if (t === "hero") continue;
@@ -366,14 +472,22 @@ export function lessonSections(blocks: readonly unknown[] | null | undefined, le
     if (!current) current = open("");
     if (t === "p" || t === "callout") current.words += countWords(str((b as Block).md));
     else if (t === "gate") current.gateIds.push(str((b as Block).id));
+    else if (t === "prompt") current.seconds += SECONDS_PER_PROMPT;
+    else if (t === "video") {
+      const s = videoSeconds(b);
+      if (s === null) current.untimedVideos += 1;
+      else current.seconds += s;
+    }
   }
   // An unheaded opening belongs to the section it introduces, not to a row of its own.
   if (sections.length > 1 && sections[0].heading === "") {
     sections[1].words += sections[0].words;
     sections[1].gateIds = [...sections[0].gateIds, ...sections[1].gateIds];
+    sections[1].untimedVideos += sections[0].untimedVideos;
+    sections[1].seconds += sections[0].seconds;
     sections.shift();
   }
-  return sections.map((s, i) => ({ ...s, n: i + 1, minutes: estimateMinutes(s.words, s.gateIds.length) }));
+  return sections.map(({ seconds, ...s }, i) => ({ ...s, n: i + 1, minutes: estimateMinutes(s.words, s.gateIds.length, seconds) }));
 }
 
 /**

@@ -143,6 +143,47 @@ describe("what she sees of it: Full, Words only or Quiet (rule 2: reduced to its
   });
 });
 
+describe("two writes at once never lose one another (25 September 2026)", () => {
+  // Every change is one read-write transaction: read the row, change it, write it back, with nothing able to land in
+  // between. Before this, each helper read in one transaction and wrote in another, so a write that landed in the gap
+  // was overwritten with the stale copy. Seen in e2e: the first Today's own seed and Letter record landed after a
+  // state row the spec had just written and replaced it, so the Letter was owed again and the topic hero stayed silent.
+
+  it("the first read seeds the row only when there is none, even if another write lands while it is reading", async () => {
+    const theirs: CompanionState = { ...freshState(NOW), letterSeen: true, letterOfferedOn: "2026-09-18", plainModeUntil: null };
+    const seeding = getCompanionState(NOW);
+    await getDB().companionState.put(theirs);
+    await seeding;
+    const stored = await getDB().companionState.get("state");
+    expect(stored?.letterSeen).toBe(true);
+    expect(stored?.letterOfferedOn).toBe("2026-09-18");
+    expect(stored?.plainModeUntil).toBeNull();
+  });
+
+  it("two choices in quick succession both count: Quiet, keeping Words only for when she leaves it", async () => {
+    await getCompanionState(NOW);
+    await Promise.all([setPresence("words", NOW), setPresence("quiet", NOW)]);
+    const state = await getCompanionState(NOW);
+    expect([state.silenced, state.figure]).toEqual([true, false]);
+    await setPresence("words", NOW);
+    await setSilenced(false, NOW);
+    expect(presenceOf(await getCompanionState(NOW))).toBe("words");
+  });
+
+  it("her choice and the record of a line said at the same moment are both kept", async () => {
+    await getCompanionState(NOW);
+    await Promise.all([setPresence("words", NOW), noteLineShown("today.nothing-back", NOW)]);
+    const state = await getCompanionState(NOW);
+    expect(presenceOf(state)).toBe("words");
+    expect(state.recent.map((r) => r.id)).toEqual(["today.nothing-back"]);
+  });
+
+  it("the Letter's first day is written once, even when two opens record it at the same moment", async () => {
+    await Promise.all([markLetterOffered(NOW), markLetterOffered(new Date(NOW.getTime() + DAY))]);
+    expect((await getCompanionState(NOW)).letterOfferedOn).toBe("2026-09-19");
+  });
+});
+
 describe("the first Letter's first day", () => {
   it("is not set until the Letter is first put in front of her", async () => {
     expect((await getCompanionState(NOW)).letterOfferedOn).toBeNull();

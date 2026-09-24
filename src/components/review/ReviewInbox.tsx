@@ -21,6 +21,7 @@ import { useExamPlan } from "@/lib/plan/store";
 import { formatPaperDate, nextPaper, todayISO } from "@/lib/plan/exam-plan";
 import { ProgressLine } from "@/components/ux/ProgressLine";
 import { CloseCard, exitPrimary, exitSecondary } from "@/components/ux/CloseCard";
+import { reviewHeadline } from "@/components/review/review-copy";
 import { CardSkeleton } from "@/components/ux/Skeleton";
 import { tap } from "@/lib/ux/haptics";
 
@@ -222,7 +223,7 @@ function ReviewComplete({ count, minutes, startedAt }: { count: number; minutes:
   return (
     <CloseCard
       eyebrow="Review complete"
-      headline={`${count} item${count === 1 ? "" : "s"} · ${minutes} min`}
+      headline={reviewHeadline(count, minutes)}
       line={line}
       startedAt={startedAt}
       exits={

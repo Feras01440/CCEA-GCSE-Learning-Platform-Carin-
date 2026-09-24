@@ -116,6 +116,7 @@ interface CompanionState {                // exactly one row, id "state"
   letterOfferedOn: string | null;         // ISO date the first Letter first reached her; it goes first only that day
   name: string | null;                    // what she renamed it to
   silenced: boolean;                      // the voice off, at no cost
+  figure: boolean;                        // the hare drawn (Full) or not (Words only); read with silenced, see "Full, Words only, Quiet"
   recent: Array<{ id: string; at: string }>;  // lines used, for the fourteen-day cooldown
   updatedAt: Date;
 }
@@ -425,3 +426,15 @@ and Quiet: one switch, obeyed by every surface", `voice.test.ts` "what she sees 
 "draws nothing during a question or against her choice", and `e2e/companion.spec.ts` "Words only keeps every line and
 draws nothing; Quiet says nothing and draws nothing; Full brings the hare back" (Today, the trial topic's hero and the
 Map, through the Settings control itself).
+
+
+**25 September 2026.** The Settings control holds her choice from the tap until the device has saved it and the
+stored row agrees (`src/components/companion/presence-pick.ts`); before this the radio showed the stored row, which
+lands about 60 ms after a write, so React put it back on her old choice for a frame and a tap looked ignored. A save
+that fails goes back to the stored choice and says so in one line (`voice.ts`: "That did not save on this device, so
+nothing has changed."). Every change to Rowan's state row is one read-write transaction (`changeCompanionState` in
+`memory.ts`), so two writes landing together can no longer undo each other (the first-open writes used to read in one
+step and write in another). Proved by `presence-pick.test.ts` (every order the save and the row can arrive in, and the
+rendered radio state), `memory.test.ts` "two writes at once never lose one another", and the widened
+`e2e/companion.spec.ts` test, whose scope is Today's line and the Letter waiting under Start, the trial topic's hero and
+the Map, through the Settings control itself.

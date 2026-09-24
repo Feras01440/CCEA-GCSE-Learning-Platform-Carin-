@@ -5,6 +5,7 @@ import "katex/dist/katex.min.css";
 import "./globals.css";
 import { SubjectScope, ThemeProvider, themeInitScript } from "@/lib/theme/ThemeProvider";
 import { AppShell } from "@/components/shell/AppShell";
+import { inputModalityScript } from "@/components/shell/input-modality";
 import { ServiceWorker } from "@/components/shell/ServiceWorker";
 import { PRODUCT } from "@/lib/product";
 
@@ -27,6 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen antialiased">
         <Script id="cairn-theme-init" strategy="beforeInteractive">
           {themeInitScript}
+        </Script>
+        {/* html[data-input]: the focus ring follows the keyboard only (src/components/shell/input-modality.ts). */}
+        <Script id="cairn-input-modality" strategy="beforeInteractive">
+          {inputModalityScript}
         </Script>
         <ThemeProvider>
           <SubjectScope />

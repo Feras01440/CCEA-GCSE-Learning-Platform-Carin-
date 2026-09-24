@@ -648,6 +648,364 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
 });
 
 /**
+ * The focused element's ring as painted: its outline and box-shadow, and the outline's colour against the accent of the
+ * place it sits in and against the page, all resolved to sRGB by the browser (a probe beside it reads the accent there).
+ */
+async function ringOf(locator: ReturnType<Page["locator"]>) {
+  return locator.evaluate((el) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+    const rgb = (color: string) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = "#000";
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, 1, 1);
+      return Array.from(ctx.getImageData(0, 0, 1, 1).data.slice(0, 3));
+    };
+    const lum = (c: number[]) => c.map((v) => (v / 255 <= 0.04045 ? v / 255 / 12.92 : Math.pow((v / 255 + 0.055) / 1.055, 2.4))).reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
+    const probe = document.createElement("span");
+    probe.style.color = "var(--accent)";
+    el.parentElement!.appendChild(probe);
+    const accent = rgb(getComputedStyle(probe).color);
+    probe.remove();
+    const cs = getComputedStyle(el);
+    const ring = rgb(cs.outlineColor);
+    const ground = rgb(getComputedStyle(document.body).backgroundColor);
+    const [a, b] = [lum(ring), lum(ground)];
+    return {
+      style: cs.outlineStyle,
+      width: cs.outlineWidth,
+      shadow: cs.boxShadow,
+      accent: ring.every((v, i) => Math.abs(v - accent[i]) <= 1),
+      contrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05),
+    };
+  });
+}
+
+/**
+ * The owner's trial (24 Sep 2026): "a purple rectangular line around the texts that appears but disappears when I click
+ * on something". The page moves the keyboard by script to a landing place (the next heading after Continue), and
+ * Chrome ringed it as soon as any key was pressed, Space or an arrow to scroll included. The ring now follows keyboard
+ * navigation only (shell/input-modality.ts, html[data-input]; app/globals.css): a pointer lands without it, reading keys
+ * keep it off, Tab and a key pressed on a control bring it, on buttons and options alike, in every theme.
+ */
+test.describe("Focus: the ring follows the keyboard, not the page", () => {
+  test("a pointer on Continue lands on the next heading with no ring; Space and the arrows keep it off; Tab rings the next control", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await openTrial(page);
+    const html = page.locator("html");
+    await expect(html).toHaveAttribute("data-input", "pointer");
+    const gates = await trialGates(page);
+    await answerGate(page, gates[0]);
+    await page.locator('#note [data-section-end="1"] [data-continue]').click();
+
+    const heading = page.locator('#note h3[data-section="1"]');
+    await expect(heading).toBeFocused();
+    expect(await ringOf(heading)).toMatchObject({ style: "none", shadow: "none" });
+
+    // Reading on with the keyboard scrolls the page: the heading keeps the focus and stays unringed.
+    for (const key of ["ArrowDown", " ", "ArrowUp"]) {
+      await page.keyboard.press(key);
+      await expect(heading).toBeFocused();
+      await expect(html).toHaveAttribute("data-input", "pointer");
+      expect(await ringOf(heading), `after ${JSON.stringify(key)}`).toMatchObject({ style: "none", shadow: "none" });
+    }
+
+    // Tab moves the keyboard on: the next control, g2's first option, wears the accent ring.
+    await page.keyboard.press("Tab");
+    await expect(html).toHaveAttribute("data-input", "keyboard");
+    const option = page.locator('#note [data-gate="g2"] [role=radio][tabindex="0"]');
+    await expect(option).toBeFocused();
+    expect(await ringOf(option)).toMatchObject({ style: "solid", width: "2px", accent: true });
+  });
+
+  test("keyboard Enter on Continue lands on the next heading with the accent ring, and Continue wears it too", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    const gates = await trialGates(page);
+    await answerGate(page, gates[0]);
+    // The verdict has the keyboard after Check; Tab goes on to Continue, a button, which is ringed.
+    await page.keyboard.press("Tab");
+    const cont = page.locator('#note [data-section-end="1"] [data-continue]');
+    await expect(cont).toBeFocused();
+    expect(await ringOf(cont)).toMatchObject({ style: "solid", width: "2px", accent: true });
+
+    await page.keyboard.press("Enter");
+    const heading = page.locator('#note h3[data-section="1"]');
+    await expect(heading).toBeFocused();
+    await expect(page.locator("html")).toHaveAttribute("data-input", "keyboard");
+    expect(await ringOf(heading)).toMatchObject({ style: "solid", width: "2px", accent: true });
+    // A keyboard reader who scrolls on keeps her ring.
+    await page.keyboard.press("ArrowDown");
+    expect(await ringOf(heading)).toMatchObject({ style: "solid", width: "2px" });
+  });
+
+  test("high contrast keeps a visible keyboard ring in its own accent", async ({ page }) => {
+    await openTrial(page);
+    await page.evaluate(() => localStorage.setItem("cairn.theme", "hc"));
+    await openTrial(page);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "hc");
+    await page.keyboard.press("Tab");
+    const focused = page.locator(":focus");
+    await expect(focused).toHaveCount(1);
+    const ring = await ringOf(focused);
+    expect(ring).toMatchObject({ style: "solid", width: "2px", accent: true });
+    expect(ring.contrast, "the ring against the paper").toBeGreaterThanOrEqual(3);
+  });
+});
+
+/** The hero's ways in as painted: which one is filled with the accent of the place it sits in, and what it says. */
+async function heroWays(page: Page) {
+  return page.locator(`${MAIN} header [data-way]`).evaluateAll((els) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+    const rgb = (color: string) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = "#000";
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, 1, 1);
+      const d = ctx.getImageData(0, 0, 1, 1).data;
+      return d[3] === 0 ? null : [d[0], d[1], d[2]];
+    };
+    return els.map((el) => {
+      const probe = document.createElement("span");
+      probe.style.color = "var(--accent)";
+      el.parentElement!.appendChild(probe);
+      const accent = rgb(getComputedStyle(probe).color)!;
+      probe.remove();
+      const bg = rgb(getComputedStyle(el).backgroundColor);
+      return { way: el.getAttribute("data-way"), text: (el.textContent ?? "").trim(), accent: bg !== null && bg.every((v, i) => Math.abs(v - accent[i]) <= 1) };
+    });
+  });
+}
+
+/**
+ * Decision 17 and art direction v2 §8.2: Slides is the primary way in on both sizes, and "Start the slides" carries the
+ * accent unless she chose Read herself. The audit (CQ-01, 24 Sep) found the accent moved to Read on any device holding
+ * one answer on the topic, and (CQ-10) that the first paint showed Read on the accent for half a second before swapping.
+ */
+test.describe("The way in: Slides carries the accent until she chooses Read herself", () => {
+  test("her answers on the topic never move the accent, nothing swaps after the first paint, and her own choice of Read does", async ({ page }) => {
+    // Every state the two ways in pass through, from the first paint.
+    await page.addInitScript(() => {
+      const w = window as unknown as { __ways: string[] };
+      w.__ways = [];
+      const snap = () => {
+        const els = Array.from(document.querySelectorAll("header [data-way]"));
+        if (els.length === 0) return;
+        const s = els.map((el) => `${el.getAttribute("data-way")}:${/(^|\s)bg-accent(\s|$)/.test(el.getAttribute("class") ?? "") ? "accent" : "outline"}`).join(" ");
+        if (w.__ways[w.__ways.length - 1] !== s) w.__ways.push(s);
+      };
+      new MutationObserver(snap).observe(document, { subtree: true, childList: true, attributes: true });
+      document.addEventListener("DOMContentLoaded", snap);
+    });
+    const painted = () => page.evaluate(() => (window as unknown as { __ways: string[] }).__ways);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    let ways = await heroWays(page);
+    expect(ways.map((w) => [w.way, w.accent])).toEqual([["slides", true], ["read", false]]);
+    expect(await painted(), "a first visit never shows Read on the accent").toEqual(["slides:accent read:outline"]);
+
+    // Evidence, and no choice: g1 answered in Read under the hero, and a mastery row from an earlier week.
+    const gates = await trialGates(page);
+    await answerGate(page, gates[0]);
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            new Promise<number>((resolve) => {
+              const open = indexedDB.open("ccea-study");
+              open.onerror = () => resolve(-1);
+              open.onsuccess = () => {
+                const db = open.result;
+                const all = db.transaction("attempts").objectStore("attempts").getAll();
+                all.onsuccess = () => {
+                  db.close();
+                  resolve((all.result as Array<{ itemId: string }>).filter((r) => r.itemId.endsWith("#gate:g1")).length);
+                };
+                all.onerror = () => resolve(-1);
+              };
+            }),
+        ),
+      )
+      .toBe(1);
+    const seeded = await page.evaluate(
+      () =>
+        new Promise<string | null>((resolve) => {
+          const open = indexedDB.open("ccea-study");
+          open.onerror = () => resolve("open failed");
+          open.onsuccess = () => {
+            const db = open.result;
+            const tx = db.transaction("mastery", "readwrite");
+            const at = new Date("2026-09-13T19:00:00");
+            tx.objectStore("mastery").put({ key: "further-maths:algebraic-fractions-simplify", subject: "further-maths", topicSlug: "algebraic-fractions-simplify", level: "attempted", score: 0.2, lastEvidenceAt: at, updatedAt: at });
+            tx.oncomplete = () => {
+              db.close();
+              resolve(null);
+            };
+            tx.onerror = () => resolve(`write failed: ${tx.error?.message}`);
+          };
+        }),
+    );
+    expect(seeded).toBeNull();
+    await openTrial(page);
+    await expect(page.locator(`${MAIN} header button[data-way="read"]`)).toHaveText("Read on from section 2");
+    ways = await heroWays(page);
+    expect(ways.map((w) => [w.way, w.accent]), JSON.stringify(ways)).toEqual([["slides", true], ["read", false]]);
+    expect(ways[0].text).toMatch(/^Start the slides/);
+    expect(new Set(await painted()), "Slides held the accent from the first paint").toEqual(new Set(["slides:accent read:outline"]));
+    expect(await page.evaluate(() => localStorage.getItem("cairn.lessonWay"))).toBeNull();
+
+    // She chooses Read herself: from then on Read carries the accent, and it says where she was.
+    await page.locator(`${MAIN} header button[data-way="read"]`).click();
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("cairn.lessonWay"))).toBe("read");
+    await openTrial(page);
+    await expect(page.locator(`${MAIN} header button[data-way="read"]`)).toHaveText("Continue at section 2");
+    ways = await heroWays(page);
+    expect(ways.map((w) => [w.way, w.accent]), JSON.stringify(ways)).toEqual([["read", true], ["slides", false]]);
+  });
+});
+
+/**
+ * One truth per way in (audit LD-04, CT-12, CD-12, 24 Sep): the hero said "About 9 minutes · 7 sections" beside a
+ * "Start the slides · 25 cards" whose title card said "About 11 minutes", and neither named the video. Now each way is
+ * named on the hero with its own minutes and size, and each number is the one that way prints itself: Read's in its
+ * track and Contents, Slides' on its Start button and its title card.
+ */
+test.describe("The way in: each way states its own numbers, the ones it prints itself", () => {
+  test("the hero's Slides and Read lines agree with the Slides title card, the Start button and the Read track", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await openTrial(page);
+    const num = (text: string, re: RegExp) => Number(re.exec(text)?.[1] ?? Number.NaN);
+    const slidesLine = (await page.locator(`${MAIN} header [data-way-length="slides"]`).textContent()) ?? "";
+    const readLine = (await page.locator(`${MAIN} header [data-way-length="read"]`).textContent()) ?? "";
+    expect(slidesLine).toMatch(/^Slides: about \d+ minutes? plus a video\s*·\s*,?\s*\d+ cards$/);
+    expect(readLine).toMatch(/^Read: about \d+ minutes? plus a video\s*·\s*,?\s*\d+ sections$/);
+    const slides = { minutes: num(slidesLine, /about (\d+) minute/), cards: num(slidesLine, /(\d+) cards/) };
+    const read = { minutes: num(readLine, /about (\d+) minute/), sections: num(readLine, /(\d+) sections/) };
+
+    // Read's numbers are the track's: "1 of 7", and the Contents heading's minutes with the same video named.
+    const track = page.locator("[data-read-track]");
+    await expect(track.locator("p").first()).toContainText(`1 of ${read.sections}`);
+    await track.getByRole("button", { name: /^Contents$/ }).click();
+    await expect(track).toContainText(`The lesson · about ${read.minutes} minutes plus a video`);
+    await page.keyboard.press("Escape");
+
+    // Slides' numbers are its Start button's and its title card's.
+    await expect(page.locator(`${MAIN} header a[data-way="slides"]`)).toHaveText(`Start the slides · ${slides.cards} cards`);
+    await page.locator(`${MAIN} header a[data-way="slides"]`).click();
+    const promise = page.locator("[data-card='title'] [data-promise]");
+    await expect(promise).toBeVisible();
+    const card = (await promise.textContent()) ?? "";
+    expect(num(card, /About (\d+) minute/), card).toBe(slides.minutes);
+    expect(num(card, /(\d+) cards/), card).toBe(slides.cards);
+    expect(card).toContain("plus a video");
+  });
+
+  test("the lede's fractions sit in their line at the inline size, at 390 and 1280", async ({ page }) => {
+    // Build 7: "12/18 cancels to 2/3" set as two full-size stacked fractions, numerals 18.7 px in a 17 px line (19.8 in
+    // 18 at 1280), so the first line stood about 12 px taller than the rest (audit CD-06, CT-13).
+    for (const size of [
+      { width: 390, height: 844 },
+      { width: 1280, height: 800 },
+    ]) {
+      await page.setViewportSize(size);
+      await openTrial(page);
+      const lede = await page.locator(`${MAIN} header [data-hero-lede]`).evaluate((el) => {
+        const cs = getComputedStyle(el);
+        const numerals = Array.from(el.querySelectorAll(".katex-html .mfrac .mord"))
+          .filter((m) => m.children.length === 0 && /\d/.test(m.textContent ?? ""))
+          .map((m) => parseFloat(getComputedStyle(m).fontSize));
+        return { font: parseFloat(cs.fontSize), line: parseFloat(cs.lineHeight), height: el.getBoundingClientRect().height, numerals };
+      });
+      expect(lede.numerals.length, "the lede's fractions").toBeGreaterThan(0);
+      for (const px of lede.numerals) {
+        expect(px, `a numeral at ${size.width}`).toBeLessThan(lede.font);
+        expect(px, `a numeral at ${size.width}: the 13 px floor`).toBeGreaterThanOrEqual(13 - 0.01);
+      }
+      // Every line the same height: the lede is a whole number of lines.
+      const lines = lede.height / lede.line;
+      expect(Math.abs(lines - Math.round(lines)), `${lede.height} px over ${lede.line} px lines at ${size.width}`).toBeLessThan(0.1);
+    }
+  });
+});
+
+/**
+ * "Practise this topic" on the Slides close links to the topic's #practice, and the page used to stay on its hero with
+ * the Practice stage 11,000 px below and nothing focused (audit LD-02, CQ-06, 24 Sep): the stage is drawn only after the
+ * lesson loads, when the browser and the router have already looked for it. A link naming a stage now lands on it, with
+ * the keyboard there, on a fresh load and on an in-app navigation, and the stage stays put while the lesson above it
+ * settles.
+ */
+test.describe("Landing on a stage: a link to Practice arrives at Practice", () => {
+  /** Where the stage sits against its own scroll margin, and whether it has the keyboard. */
+  async function landed(page: Page) {
+    return page.locator("#practice").evaluate((el) => ({
+      offset: Math.round(el.getBoundingClientRect().top - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0)),
+      focused: document.activeElement === el,
+      scrollY: Math.round(window.scrollY),
+    }));
+  }
+
+  for (const size of [
+    { width: 390, height: 844 },
+    { width: 1280, height: 800 },
+  ]) {
+    test(`at ${size.width}, on a fresh load and from the Slides close`, async ({ page }) => {
+      await page.setViewportSize(size);
+      // A fresh load of the link.
+      await page.goto(`${TRIAL.path}#practice`);
+      await expect(page.locator("#practice")).toBeFocused();
+      await expect.poll(async () => Math.abs((await landed(page)).offset)).toBeLessThanOrEqual(2);
+      // Still there once the lesson above has settled.
+      await page.waitForTimeout(1500);
+      let at = await landed(page);
+      expect(Math.abs(at.offset), JSON.stringify(at)).toBeLessThanOrEqual(2);
+      expect(at.scrollY).toBeGreaterThan(size.height);
+      // Arrived by a link, not by the keyboard: no ring.
+      expect(await page.locator("#practice").evaluate((el) => getComputedStyle(el).outlineStyle)).toBe("none");
+
+      // In the app: the close's own link, with the run restored at its last card.
+      await page.evaluate(() =>
+        localStorage.setItem("cairn.slides.fm.u1.algebraic-fractions-simplify", JSON.stringify({ at: 999, done: false, missed: [], answers: {}, checked: {}, graded: {} })),
+      );
+      await page.goto(`${TRIAL.path}slides/`);
+      await page.getByRole("link", { name: /^Practise this topic$/ }).click();
+      await expect(page).toHaveURL(/#practice$/);
+      await expect(page.locator("#practice")).toBeFocused();
+      await expect.poll(async () => Math.abs((await landed(page)).offset)).toBeLessThanOrEqual(2);
+      await page.waitForTimeout(1500);
+      at = await landed(page);
+      expect(Math.abs(at.offset), JSON.stringify(at)).toBeLessThanOrEqual(2);
+      expect(at.focused).toBe(true);
+    });
+  }
+});
+
+/**
+ * GCSE Further Mathematics sets no tier (its specification gives none; the bundle says "untiered"), yet every Further
+ * Maths topic page said "Higher tier only" (audit CT-06, 24 Sep): the catalogue wrote "H" for all of them. The page says
+ * nothing about tiers for an untiered qualification, on a published topic and on one still being written.
+ */
+test.describe("Tiers: an untiered qualification is never called Higher", () => {
+  test("the trial topic's 'On the paper' and an unpublished Further Maths topic say nothing about a tier", async ({ page }) => {
+    await openTrial(page);
+    const onThePaper = page.locator("section[aria-labelledby='ref-spec']");
+    await expect(onThePaper).toContainText("Examined in FM1 · calculator allowed");
+    await expect(onThePaper).not.toContainText(/higher|tier/i);
+
+    // A topic with no lesson yet shows the specification instead, with the same line.
+    await page.goto("/learn/further-maths/FM4/counting-principles/");
+    const spec = page.getByRole("heading", { level: 2, name: /^What the specification says$/i }).locator("xpath=..");
+    await expect(spec).toContainText("Examined in FM4");
+    await expect(spec).not.toContainText(/higher|tier/i);
+  });
+});
+
+/**
  * The owner ruled the old pill-stack cairn out of the product on the craft floor (art direction v2 §3.1, 23 Sep): the
  * one cairn is CairnArt's. The old drawings (the rail's monogram, CairnStack, the mastery chip's stones) were stacks of
  * lying pills: `rect`s in currentColor, wider than tall, with rx half their height, two or more in one svg. None may

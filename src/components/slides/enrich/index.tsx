@@ -4,15 +4,18 @@
  * The component registry behind src/lib/slides/enrichment.ts: the ids the descriptors name, drawn. A topic without an
  * entry here shows its note's own figures and has no figure to act on; nothing is invented for it.
  */
-import type { ComponentType, ReactNode } from "react";
+import type { ComponentType } from "react";
 import { FigCancel, RecapGlyph, Substitute, TapToCancel, type TapResult } from "./afs";
+import type { TapState } from "./afs-model";
 
 export interface InteractionProps {
   onChecked: (r: TapResult) => void;
   checked: TapResult | null;
   /** Counts up each time the frame's Check is pressed; the interaction marks itself then. */
   checkSignal: number;
-  verb?: ReactNode;
+  /** What she has done to the figure, kept by the run so it survives a card change and a reload. */
+  state?: TapState;
+  onState?: (s: TapState) => void;
 }
 
 export interface ReactionProps {

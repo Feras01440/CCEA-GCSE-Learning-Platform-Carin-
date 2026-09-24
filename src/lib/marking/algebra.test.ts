@@ -821,3 +821,48 @@ describe("a squared unit after a vector", () => {
     }
   });
 });
+
+// FM3 D (24 Sep 2026): "y = 1/2 x + 3" was marked not equivalent to y = 0.5x + 3, because "1/2 x" read as 1/(2x). The
+// reading rule: a numeric fraction followed by a SPACE and then a letter or a bracket is that term's coefficient, as
+// a fraction before a function already was ("1/2 log n"). Written joined, "1/2x" keeps the reading 1/(2x), the way a
+// calculator and most typed maths read it, so an algebraic-fractions answer typed "1/2x" is unchanged.
+describe("a numeric fraction then a space then a letter is the letter's coefficient", () => {
+  const line = { answer: "y = 0.5x + 3", mode: "equivalent" } as never;
+  test.each(["y = 1/2 x + 3", "y = 1/2 x+3", "y = x/2 + 3", "y = (1/2)x + 3", "y = ½x + 3", "y = 3 + 1/2 x"])("%s is y = 0.5x + 3", (typed) => {
+    expect(checkAlgebraic(typed, line).correct).toBe(true);
+  });
+  test("a bracket after the space is multiplied too", () => {
+    expect(checkAlgebraic("3/4 (x + 2)", { answer: "\\frac{3}{4}(x+2)", mode: "equivalent" } as never).correct).toBe(true);
+  });
+  test("written joined, 1/2x is still one over 2x", () => {
+    const recip = { answer: "\\frac{1}{2x}", mode: "equivalent" } as never;
+    expect(checkAlgebraic("1/2x", recip).correct).toBe(true);
+    expect(checkAlgebraic("1/(2x)", recip).correct).toBe(true);
+    expect(checkAlgebraic("1/2 x", recip).correct).toBe(false);
+    expect(checkAlgebraic("y = 1/2x + 3", line).correct).toBe(false);
+  });
+});
+
+// Trial audit MK-03 (24 Sep 2026, reproduced 25 Sep): the expected answer typed with the answer field's own × key,
+// "2×(x−2)/(x+2)", was refused as "not simplified": × became \cdot and the parse read 2 · ((x − 2)/(x + 2)), a product
+// with a fraction inside. A number or a factor times one fraction is that fraction with the factor on its numerator,
+// as it is on paper, so the form check reads it as the single fraction (2(x − 2))/(x + 2).
+describe("a factor times a fraction is one fraction for the simplest-form check", () => {
+  const spec = (answer: string) => ({ answer, mode: "form", form: "simplest-fraction" }) as never;
+  test.each([
+    [String.raw`\frac{2(x-2)}{x+2}`, "2×(x−2)/(x+2)"],
+    [String.raw`\frac{2(x-2)}{x+2}`, "2*(x-2)/(x+2)"],
+    [String.raw`\frac{2(x-2)}{x+2}`, "2 × (x-2)/(x+2)"],
+    [String.raw`\frac{3x}{x+2}`, "3×x/(x+2)"],
+    [String.raw`\frac{x(x-3)}{x+2}`, "x×(x−3)/(x+2)"],
+    [String.raw`\frac{x-6}{3}`, "(1/3)(x−6)"],
+    [String.raw`\frac{x-6}{3}`, "1/3 × (x-6)"],
+  ])("key %s: %s is in its simplest form", (answer, typed) => {
+    expect(checkAlgebraic(typed, spec(answer)).correct).toBe(true);
+  });
+  test("a factor that still cancels is still not simplest, and a sum of fractions is not one fraction", () => {
+    expect(checkAlgebraic("2×(x−2)(x+2)/(x+2)^2", spec(String.raw`\frac{2(x-2)}{x+2}`)).correct).toBe(false);
+    expect(checkAlgebraic("(x+2)×(x−2)/(x+2)", spec(String.raw`x-2`)).reason).not.toBe("identical");
+    expect(checkAlgebraic("1/x + 1/x", spec(String.raw`\frac{2}{x}`)).correct).toBe(false);
+  });
+});

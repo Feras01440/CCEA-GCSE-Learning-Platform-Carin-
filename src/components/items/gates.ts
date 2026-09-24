@@ -3,7 +3,7 @@
  * visible; answering a gate (right or not) opens the next stretch.
  */
 import { checkNumeric } from "@/lib/marking/numeric";
-import { normaliseText } from "./text-marking";
+import { isFormula, nameWithFormula, normaliseText } from "./text-marking";
 
 export type NoteBlock =
   /** The first block of a v2 note: what the topic page's hero shows (lede, three "you can" lines, a minute estimate). The lesson itself skips it. */
@@ -82,8 +82,12 @@ export function markGate(gate: GateBlock, raw: string): boolean {
       return gateAlternatives(gate.answer).some((alt) => checkNumeric(typed, { value: alt }).correct);
     case "blank": {
       const t = normaliseText(typed);
+      // A name given with its formula (C2 D F04, 24 Sep 2026): where the gate asks for the name the formula beside it
+      // is ignored, and where it asks for a formula the name is, as CCEA's general marking instructions read.
+      const pair = nameWithFormula(typed);
       return gateAlternatives(gate.answer).some((alt) => {
         if (normaliseText(alt) === t) return true;
+        if (pair && normaliseText(isFormula(alt) ? pair.formula : pair.name) === normaliseText(alt)) return true;
         // A numeric blank ("n ÷ 2 = __") accepts equivalent numeric spellings.
         return /^[-+\d.,/√π^ ]+$/.test(alt) && checkNumeric(typed, { value: alt }).correct;
       });

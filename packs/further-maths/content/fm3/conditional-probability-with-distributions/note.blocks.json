@@ -1,0 +1,431 @@
+[
+  {
+    "type": "hero",
+    "lede": "Ask only about the pupils who take under 26 minutes to walk to school, and the whole picture shrinks to them. \"Given that\" does exactly this: it makes a smaller world and asks a probability inside it. On a normal curve, or in a binomial count, that smaller world is usually one region sitting inside another.",
+    "can": [
+      "Find a conditional probability from two tails of a normal curve",
+      "Find one from two binomial probabilities, given at least one success",
+      "Spot a nested pair of events and divide, never multiply"
+    ],
+    "minutes": 19
+  },
+  {
+    "type": "h",
+    "role": "idea",
+    "text": "Given that shrinks the whole"
+  },
+  {
+    "type": "figure",
+    "alt": "A normal curve of walking times with mean 20 minutes. The region under 26 minutes is shaded lightly; the region under 15 minutes is shaded darker and sits inside it.",
+    "svg": "<svg viewBox='0 0 400 198' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Walking times to school: the region under 26 minutes shaded lightly, the region under 15 minutes shaded darker inside it'><title>Walking times to school: the region under 26 minutes shaded lightly, the region under 15 minutes shaded darker inside it</title><path d='M 14 152 L 14 151.78 L 21.38 151.65 L 28.76 151.44 L 36.14 151.14 L 43.52 150.69 L 50.9 150.05 L 58.29 149.14 L 65.67 147.9 L 73.05 146.24 L 80.43 144.04 L 87.81 141.23 L 95.19 137.7 L 102.57 133.37 L 109.95 128.2 L 117.33 122.18 L 124.71 115.34 L 132.1 107.8 L 139.48 99.72 L 146.86 91.35 L 154.24 82.98 L 161.62 74.96 L 169 67.65 L 176.38 61.4 L 183.76 56.56 L 191.14 53.38 L 198.52 52.04 L 205.9 52.62 L 213.29 55.08 L 220.67 59.28 L 228.05 65 L 235.43 71.93 L 242.81 79.71 L 250.19 87.98 L 257.57 96.39 L 264.95 104.62 L 272.33 112.4 L 279.71 119.53 L 279.71 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.14' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 152 L 14 151.78 L 17.32 151.73 L 20.64 151.66 L 23.96 151.59 L 27.29 151.49 L 30.61 151.38 L 33.93 151.24 L 37.25 151.08 L 40.57 150.89 L 43.89 150.66 L 47.21 150.4 L 50.54 150.08 L 53.86 149.72 L 57.18 149.3 L 60.5 148.81 L 63.82 148.25 L 67.14 147.61 L 70.46 146.87 L 73.79 146.04 L 77.11 145.1 L 80.43 144.04 L 83.75 142.86 L 87.07 141.54 L 90.39 140.08 L 93.71 138.47 L 97.04 136.69 L 100.36 134.76 L 103.68 132.65 L 107 130.37 L 110.32 127.92 L 113.64 125.29 L 116.96 122.5 L 120.29 119.53 L 123.61 116.41 L 126.93 113.14 L 130.25 109.74 L 133.57 106.22 L 133.57 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.3' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 151.78 L 18.65 151.7 L 23.3 151.6 L 27.95 151.47 L 32.6 151.3 L 37.25 151.08 L 41.9 150.8 L 46.55 150.45 L 51.2 150.02 L 55.85 149.47 L 60.5 148.81 L 65.15 148 L 69.8 147.03 L 74.45 145.86 L 79.1 144.48 L 83.75 142.86 L 88.4 140.97 L 93.05 138.8 L 97.7 136.32 L 102.35 133.51 L 107 130.37 L 111.65 126.89 L 116.3 123.07 L 120.95 118.92 L 125.6 114.47 L 130.25 109.74 L 134.9 104.78 L 139.55 99.64 L 144.2 94.38 L 148.85 89.07 L 153.5 83.81 L 158.15 78.66 L 162.8 73.73 L 167.45 69.1 L 172.1 64.87 L 176.75 61.13 L 181.4 57.94 L 186.05 55.39 L 190.7 53.52 L 195.35 52.38 L 200 52 L 204.65 52.38 L 209.3 53.52 L 213.95 55.39 L 218.6 57.94 L 223.25 61.13 L 227.9 64.87 L 232.55 69.1 L 237.2 73.73 L 241.85 78.66 L 246.5 83.81 L 251.15 89.07 L 255.8 94.38 L 260.45 99.64 L 265.1 104.78 L 269.75 109.74 L 274.4 114.47 L 279.05 118.92 L 283.7 123.07 L 288.35 126.89 L 293 130.37 L 297.65 133.51 L 302.3 136.32 L 306.95 138.8 L 311.6 140.97 L 316.25 142.86 L 320.9 144.48 L 325.55 145.86 L 330.2 147.03 L 334.85 148 L 339.5 148.81 L 344.15 149.47 L 348.8 150.02 L 353.45 150.45 L 358.1 150.8 L 362.75 151.08 L 367.4 151.3 L 372.05 151.47 L 376.7 151.6 L 381.35 151.7 L 386 151.78' stroke='currentColor' stroke-width='1.8' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 152 L 394 152' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 152 L 200 52' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='5 4' stroke-linejoin='round' stroke-linecap='round'/><path d='M 279.71 158 L 279.71 119.53' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 133.57 158 L 133.57 106.22' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 68 28 L 96.37 146' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 214 28 L 235.87 118' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='133.57' y='172' font-weight='600'>15</text><text x='133.57' y='190' font-size='14'>z = −1.25</text><text x='200' y='172'>20</text><text x='200' y='190' font-size='14'>z = 0</text><text x='279.71' y='172' font-weight='600'>26</text><text x='279.71' y='190' font-size='14'>z = 1.5</text><text x='68' y='22' font-weight='600'>T &lt; 15</text><text x='214' y='22'>T &lt; 26</text></g></svg>",
+    "caption": "Walking times to school. The light region is everyone under 26 minutes; the dark region inside it is everyone under 15."
+  },
+  {
+    "type": "p",
+    "md": "Walking times to school are normally distributed with mean 20 minutes and standard deviation 4. For a pupil picked at random, the chance she takes under 15 minutes is the dark tail, 0.1056.\nNow add a condition: **given that** she takes under 26 minutes. Every pupil beyond 26 minutes is set aside, and the light region left is the new whole."
+  },
+  {
+    "type": "p",
+    "md": "The question is now asked inside the light region. The dark region is the part of it that is also under 15 minutes, so the answer is dark as a share of light: the dark area divided by the light area."
+  },
+  {
+    "type": "gate",
+    "id": "g1",
+    "kind": "choice",
+    "prompt": "On the walking-time curve, a pupil is known to take under 26 minutes. Which region is now the whole, the one everything is measured against?",
+    "options": [
+      "The light region: everyone under 26 minutes",
+      "The dark region: everyone under 15 minutes",
+      "The whole curve: every pupil"
+    ],
+    "answer": "The light region: everyone under 26 minutes",
+    "explain": "\"Given that she takes under 26 minutes\" sets aside every pupil beyond 26, so on the curve only the light region is left, and it becomes the whole. The dark region is the part of it you are asked about. So the whole is the light region, and the answer to such a question is dark over light."
+  },
+  {
+    "type": "h",
+    "role": "idea",
+    "text": "One region inside the other"
+  },
+  {
+    "type": "p",
+    "md": "Look again at where the dark region sits: entirely inside the light one. Every pupil under 15 minutes is automatically under 26. Two events like these are **nested**: the smaller event lies inside the larger.\nThat keeps the calculation short. \"Under 15 and under 26\" is not a new event to build; it is simply \"under 15\"."
+  },
+  {
+    "type": "video",
+    "videoId": "xhFDlmQUAZo",
+    "title": "Conditional Probability",
+    "channel": "corbettmaths",
+    "why": "The same 'given that' idea on a two-way table: the group named after 'given' becomes the whole, and the answer is a share of it. Watch the bottom of each fraction change; the curve does exactly the same."
+  },
+  {
+    "type": "p",
+    "md": "The same idea with counts. Suppose 80 of 100 pupils take under 26 minutes, and 12 of those take under 15.\nGiven under 26 minutes, the whole is those 80. The 12 sit inside them, so the probability is their share: $\\frac{12}{80} = 0.15$."
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "In another school, 75 pupils take under 26 minutes to walk in, and 18 of those take under 15. Given that a pupil takes under 26 minutes, what is the probability that she takes under 15?",
+    "answer": "0.24 | 18/75",
+    "explain": "The condition names the whole: the 75 pupils under 26 minutes, just as the 80 were the whole a moment ago. The 18 under 15 minutes sit inside them, so the answer is their share of the whole: 18 ÷ 75, which is 0.24."
+  },
+  {
+    "type": "h",
+    "role": "idea",
+    "text": "A quick size check"
+  },
+  {
+    "type": "figure",
+    "alt": "A probability line from 0 to 1. P(A) is marked at 0.35 and P(A given B) further to the right at 0.5, with an arrow showing the move.",
+    "svg": "<svg viewBox='0 0 400 134' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A probability line from 0 to 1 with P(A) at 0.35 and P(A given B) further right at 0.5'><title>A probability line from 0 to 1 with P(A) at 0.35 and P(A given B) further right at 0.5</title><path d='M 30 74 L 370 74' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 30 66 L 30 82' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 370 66 L 370 82' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='149' cy='74' r='6' fill='currentColor' fill-opacity='0.35'/><circle cx='200' cy='74' r='6' fill='currentColor' fill-opacity='0.9'/><path d='M 157 56 L 192 56 M 185 51 L 192 56 L 185 61' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='30' y='102' font-weight='600'>0</text><text x='370' y='102' font-weight='600'>1</text><text x='149' y='34'>P(A) = 0.35</text><text x='200' y='126' font-weight='600'>P(A | B) = 0.5</text><text x='370' y='126' text-anchor='end' font-size='14'>never past 1</text></g></svg>",
+    "caption": "Dividing by a probability below 1 pushes the value to the right. It grows, and it can never pass 1."
+  },
+  {
+    "type": "p",
+    "md": "For a nested pair, the conditional probability is always at least as big as the plain one, because you divide by a probability less than 1. On the line, $P(A) = 0.35$ inside a group of probability $0.7$ becomes $\\frac{0.35}{0.7} = 0.5$.\nIt can never be more than 1: the smaller region cannot be bigger than the region it sits inside."
+  },
+  {
+    "type": "p",
+    "md": "So hold every answer against both limits. For the walking times, $0.1056 \\div 0.9332 = 0.1132$: a little bigger than 0.1056, and well under 1. Divide the other way round and you get 8.84, which cannot be a probability. An answer above 1 means the fraction is upside down."
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "A pupil works out a conditional probability for a nested pair of events and gets 2.5. What has happened?",
+    "options": [
+      "The fraction is upside down: the larger probability was divided by the smaller",
+      "Nothing: a conditional probability can be more than 1",
+      "The two probabilities should have been multiplied instead"
+    ],
+    "answer": "The fraction is upside down: the larger probability was divided by the smaller",
+    "explain": "On the probability line, a nested conditional sits between the plain probability and 1, never beyond 1. Dividing the larger probability by the smaller always gives more than 1, which is how 2.5 appears. So the fraction is upside down: turn it over, small over large, and divide again."
+  },
+  {
+    "type": "h",
+    "role": "why",
+    "text": "Why the top is the small region alone"
+  },
+  {
+    "type": "callout",
+    "kind": "spec",
+    "title": "On the formula sheet",
+    "md": "$P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$: $A$ given $B$ is $A$ and $B$ together, over $B$ (FM3-PRB-02; the Unit 3 formula sheet)."
+  },
+  {
+    "type": "p",
+    "md": "The sheet puts $P(A \\cap B)$, both events at once, on top. When $A$ sits inside $B$, every outcome in $A$ is already in $B$, so \"both\" is exactly $A$.\nFor the walking times ($A$ under 15, $B$ under 26): $P(A \\cap B) = P(A)$, which is 0.1056, over $P(B) = 0.9332$. Nothing is multiplied."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why multiplying fails here",
+    "md": "Multiplying gives \"both\" only for independent events, which leave each other alone. Being under 15 minutes settles being under 26 completely, so these two are as far from independent as events can be."
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "choice",
+    "prompt": "Bus journeys: $A$ is \"under 29 minutes\" and $B$ is \"under 41.6 minutes\". What is $P(A \\cap B)$?",
+    "options": [
+      "$P(A)$, because every journey under 29 minutes is also under 41.6",
+      "$P(A) \\times P(B)$, because \"and\" means multiply",
+      "$P(B)$, because it is the larger event"
+    ],
+    "answer": "$P(A)$, because every journey under 29 minutes is also under 41.6",
+    "explain": "Picture the two regions on a curve: under 29 minutes sits inside under 41.6, exactly as under 15 sat inside under 26. So \"both\" adds nothing and is the small region itself. A product would be right only for independent events, and these two decide each other. So $P(A \\cap B) = P(A)$."
+  },
+  {
+    "type": "h",
+    "role": "variant",
+    "text": "1. Less than, given less than"
+  },
+  {
+    "type": "figure",
+    "alt": "A normal curve of bus journey times with mean 35 minutes. The region under 41.6 minutes is shaded lightly and the region under 29 minutes is shaded darker inside it.",
+    "svg": "<svg viewBox='0 0 400 198' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Bus journey times: the region under 41.6 minutes shaded lightly and the region under 29 minutes shaded darker inside it'><title>Bus journey times: the region under 41.6 minutes shaded lightly and the region under 29 minutes shaded darker inside it</title><path d='M 14 152 L 14 151.78 L 20.79 151.66 L 27.58 151.48 L 34.37 151.22 L 41.16 150.85 L 47.95 150.33 L 54.74 149.61 L 61.53 148.64 L 68.32 147.36 L 75.11 145.68 L 81.9 143.53 L 88.7 140.85 L 95.49 137.54 L 102.28 133.56 L 109.07 128.87 L 115.86 123.45 L 122.65 117.33 L 129.44 110.58 L 136.23 103.32 L 143.02 95.72 L 149.81 87.98 L 156.6 80.36 L 163.39 73.12 L 170.18 66.57 L 176.97 60.96 L 183.76 56.56 L 190.55 53.57 L 197.34 52.12 L 204.13 52.3 L 210.92 54.09 L 217.71 57.4 L 224.5 62.09 L 231.3 67.92 L 238.09 74.65 L 244.88 81.99 L 251.67 89.66 L 258.46 97.39 L 258.46 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.14' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 152 L 14 151.78 L 17.69 151.72 L 21.38 151.65 L 25.07 151.56 L 28.76 151.44 L 32.45 151.31 L 36.14 151.14 L 39.83 150.93 L 43.52 150.69 L 47.21 150.4 L 50.9 150.05 L 54.6 149.63 L 58.29 149.14 L 61.98 148.57 L 65.67 147.9 L 69.36 147.13 L 73.05 146.24 L 76.74 145.21 L 80.43 144.04 L 84.12 142.72 L 87.81 141.23 L 91.5 139.56 L 95.19 137.7 L 98.88 135.64 L 102.57 133.37 L 106.26 130.89 L 109.95 128.2 L 113.64 125.29 L 117.33 122.18 L 121.02 118.85 L 124.71 115.34 L 128.4 111.65 L 132.1 107.8 L 135.79 103.81 L 139.48 99.72 L 143.17 95.55 L 146.86 91.35 L 146.86 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.3' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 151.78 L 18.65 151.7 L 23.3 151.6 L 27.95 151.47 L 32.6 151.3 L 37.25 151.08 L 41.9 150.8 L 46.55 150.45 L 51.2 150.02 L 55.85 149.47 L 60.5 148.81 L 65.15 148 L 69.8 147.03 L 74.45 145.86 L 79.1 144.48 L 83.75 142.86 L 88.4 140.97 L 93.05 138.8 L 97.7 136.32 L 102.35 133.51 L 107 130.37 L 111.65 126.89 L 116.3 123.07 L 120.95 118.92 L 125.6 114.47 L 130.25 109.74 L 134.9 104.78 L 139.55 99.64 L 144.2 94.38 L 148.85 89.07 L 153.5 83.81 L 158.15 78.66 L 162.8 73.73 L 167.45 69.1 L 172.1 64.87 L 176.75 61.13 L 181.4 57.94 L 186.05 55.39 L 190.7 53.52 L 195.35 52.38 L 200 52 L 204.65 52.38 L 209.3 53.52 L 213.95 55.39 L 218.6 57.94 L 223.25 61.13 L 227.9 64.87 L 232.55 69.1 L 237.2 73.73 L 241.85 78.66 L 246.5 83.81 L 251.15 89.07 L 255.8 94.38 L 260.45 99.64 L 265.1 104.78 L 269.75 109.74 L 274.4 114.47 L 279.05 118.92 L 283.7 123.07 L 288.35 126.89 L 293 130.37 L 297.65 133.51 L 302.3 136.32 L 306.95 138.8 L 311.6 140.97 L 316.25 142.86 L 320.9 144.48 L 325.55 145.86 L 330.2 147.03 L 334.85 148 L 339.5 148.81 L 344.15 149.47 L 348.8 150.02 L 353.45 150.45 L 358.1 150.8 L 362.75 151.08 L 367.4 151.3 L 372.05 151.47 L 376.7 151.6 L 381.35 151.7 L 386 151.78' stroke='currentColor' stroke-width='1.8' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 152 L 394 152' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 152 L 200 52' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='5 4' stroke-linejoin='round' stroke-linecap='round'/><path d='M 258.46 158 L 258.46 97.39' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 146.86 158 L 146.86 91.35' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 68 28 L 109.66 146' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 214 28 L 231.89 118' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='146.86' y='172' font-weight='600'>29</text><text x='146.86' y='190' font-size='14'>z = −1</text><text x='200' y='172'>35</text><text x='200' y='190' font-size='14'>z = 0</text><text x='258.46' y='172' font-weight='600'>41.6</text><text x='258.46' y='190' font-size='14'>z = 1.1</text><text x='68' y='22' font-weight='600'>T &lt; 29</text><text x='214' y='22'>T &lt; 41.6</text></g></svg>",
+    "caption": "Bus journeys with mean 35 minutes and standard deviation 6. Under 29 sits inside under 41.6: dark over light."
+  },
+  {
+    "type": "p",
+    "md": "Bus journeys have mean 35 minutes and standard deviation 6. Given that a journey takes under 41.6 minutes, find the probability that it takes under 29.\n**Step 1.** The condition: $z = \\frac{41.6 - 35}{6}$, so $z = 1.1$, and the table gives $P(T < 41.6) = 0.8643$."
+  },
+  {
+    "type": "p",
+    "md": "**Step 2.** The inner event: $z = \\frac{29 - 35}{6}$, so $z = -1$. A left tail below a negative $z$ is folded: $1 - 0.8413 = 0.1587$.\n**Step 3.** Small over large: $\\frac{0.1587}{0.8643} = 0.1836$, to 4 decimal places. It is bigger than 0.1587 and below 1, as it must be."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "Queueing times at a canteen have mean 12 minutes and standard deviation 2.5. From the table, $P(T < 15) = 0.8849$ and $P(T < 8.5) = 0.0808$. Work out $P(T < 8.5 \\mid T < 15)$ to 4 decimal places.",
+    "answer": "0.0913",
+    "explain": "As with the bus journeys, under 8.5 minutes sits inside under 15, so the top is the small tail alone and the bottom is the condition's tail: $\\frac{0.0808}{0.8849}$, which is 0.0913. Multiplying on top would hand back 0.0808; dividing the other way would give more than 1."
+  },
+  {
+    "type": "h",
+    "role": "variant",
+    "text": "2. More than, given more than"
+  },
+  {
+    "type": "figure",
+    "alt": "A normal curve of plank lengths with mean 240 cm. The region over 236 cm is shaded lightly and the region over 246 cm is shaded darker inside it.",
+    "svg": "<svg viewBox='0 0 400 198' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Plank lengths: the region over 236 cm shaded lightly and the region over 246 cm shaded darker inside it'><title>Plank lengths: the region over 236 cm shaded lightly and the region over 246 cm shaded darker inside it</title><path d='M 146.86 152 L 146.86 91.35 L 153.5 83.81 L 160.14 76.52 L 166.79 69.74 L 173.43 63.75 L 180.07 58.79 L 186.71 55.08 L 193.36 52.78 L 200 52 L 206.64 52.78 L 213.29 55.08 L 219.93 58.79 L 226.57 63.75 L 233.21 69.74 L 239.86 76.52 L 246.5 83.81 L 253.14 91.35 L 259.79 98.89 L 266.43 106.22 L 273.07 113.14 L 279.71 119.53 L 286.36 125.29 L 293 130.37 L 299.64 134.76 L 306.29 138.47 L 312.93 141.54 L 319.57 144.04 L 326.21 146.04 L 332.86 147.61 L 339.5 148.81 L 346.14 149.72 L 352.79 150.4 L 359.43 150.89 L 366.07 151.24 L 372.71 151.49 L 379.36 151.66 L 386 151.78 L 386 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.14' stroke-linejoin='round' stroke-linecap='round'/><path d='M 279.71 152 L 279.71 119.53 L 282.67 122.18 L 285.62 124.69 L 288.57 127.06 L 291.52 129.3 L 294.48 131.41 L 297.43 133.37 L 300.38 135.2 L 303.33 136.9 L 306.29 138.47 L 309.24 139.91 L 312.19 141.23 L 315.14 142.44 L 318.1 143.53 L 321.05 144.53 L 324 145.43 L 326.95 146.24 L 329.9 146.96 L 332.86 147.61 L 335.81 148.18 L 338.76 148.69 L 341.71 149.14 L 344.67 149.54 L 347.62 149.89 L 350.57 150.19 L 353.52 150.46 L 356.48 150.69 L 359.43 150.89 L 362.38 151.06 L 365.33 151.21 L 368.29 151.34 L 371.24 151.44 L 374.19 151.54 L 377.14 151.61 L 380.1 151.68 L 383.05 151.73 L 386 151.78 L 386 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.3' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 151.78 L 18.65 151.7 L 23.3 151.6 L 27.95 151.47 L 32.6 151.3 L 37.25 151.08 L 41.9 150.8 L 46.55 150.45 L 51.2 150.02 L 55.85 149.47 L 60.5 148.81 L 65.15 148 L 69.8 147.03 L 74.45 145.86 L 79.1 144.48 L 83.75 142.86 L 88.4 140.97 L 93.05 138.8 L 97.7 136.32 L 102.35 133.51 L 107 130.37 L 111.65 126.89 L 116.3 123.07 L 120.95 118.92 L 125.6 114.47 L 130.25 109.74 L 134.9 104.78 L 139.55 99.64 L 144.2 94.38 L 148.85 89.07 L 153.5 83.81 L 158.15 78.66 L 162.8 73.73 L 167.45 69.1 L 172.1 64.87 L 176.75 61.13 L 181.4 57.94 L 186.05 55.39 L 190.7 53.52 L 195.35 52.38 L 200 52 L 204.65 52.38 L 209.3 53.52 L 213.95 55.39 L 218.6 57.94 L 223.25 61.13 L 227.9 64.87 L 232.55 69.1 L 237.2 73.73 L 241.85 78.66 L 246.5 83.81 L 251.15 89.07 L 255.8 94.38 L 260.45 99.64 L 265.1 104.78 L 269.75 109.74 L 274.4 114.47 L 279.05 118.92 L 283.7 123.07 L 288.35 126.89 L 293 130.37 L 297.65 133.51 L 302.3 136.32 L 306.95 138.8 L 311.6 140.97 L 316.25 142.86 L 320.9 144.48 L 325.55 145.86 L 330.2 147.03 L 334.85 148 L 339.5 148.81 L 344.15 149.47 L 348.8 150.02 L 353.45 150.45 L 358.1 150.8 L 362.75 151.08 L 367.4 151.3 L 372.05 151.47 L 376.7 151.6 L 381.35 151.7 L 386 151.78' stroke='currentColor' stroke-width='1.8' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 152 L 394 152' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 152 L 200 52' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='5 4' stroke-linejoin='round' stroke-linecap='round'/><path d='M 146.86 158 L 146.86 91.35' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 279.71 158 L 279.71 119.53' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 332 28 L 316.91 146' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 186 28 L 184.06 118' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='146.86' y='172' font-weight='600'>236</text><text x='146.86' y='190' font-size='14'>z = −1</text><text x='200' y='172'>240</text><text x='200' y='190' font-size='14'>z = 0</text><text x='279.71' y='172' font-weight='600'>246</text><text x='279.71' y='190' font-size='14'>z = 1.5</text><text x='332' y='22' font-weight='600'>L &gt; 246</text><text x='186' y='22'>L &gt; 236</text></g></svg>",
+    "caption": "Plank lengths with mean 240 cm and standard deviation 4 cm. Over 246 sits inside over 236: the far tail inside the near one."
+  },
+  {
+    "type": "p",
+    "md": "When both events say \"more than\", the picture flips to the right. Planks have mean 240 cm and standard deviation 4 cm. Given that a plank is over 236 cm, find the probability that it is over 246 cm.\nOver 246 is the far right tail, and it lies inside over 236. Dark over light again."
+  },
+  {
+    "type": "p",
+    "md": "**Step 1.** The condition: $z = \\frac{236 - 240}{4}$, so $z = -1$. Everything to the right of a negative $z$ is the table value itself: $P(L > 236) = 0.8413$.\n**Step 2.** $z = \\frac{246 - 240}{4}$, so $z = 1.5$, and a right tail is $1 - 0.9332 = 0.0668$.\n**Step 3.** $\\frac{0.0668}{0.8413} = 0.0794$."
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "number",
+    "prompt": "Parcels at a depot have mean mass 12 kg and standard deviation 1.5 kg. From the table, $P(M > 11.1) = 0.7257$ and $P(M > 14.7) = 0.0359$. Work out $P(M > 14.7 \\mid M > 11.1)$ to 4 decimal places.",
+    "answer": "0.0495",
+    "explain": "Over 14.7 kg is the far right tail, and like the planks over 246 cm it sits inside the condition, over 11.1 kg. So the far tail goes on top and the near one on the bottom: $\\frac{0.0359}{0.7257}$, which is 0.0495."
+  },
+  {
+    "type": "h",
+    "role": "variant",
+    "text": "3. Binomial: given at least one"
+  },
+  {
+    "type": "figure",
+    "alt": "Two rows of dots for the counts 0 to 4. In the row for at least 1, the dots 1 to 4 are filled; in the row for at least 2, the dots 2 to 4 are filled.",
+    "svg": "<svg viewBox='0 0 400 102' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four scratch cards: the counts included in at least 1 and in at least 2, as filled dots'><title>Four scratch cards: the counts included in at least 1 and in at least 2, as filled dots</title><path d='M 140 48 L 382 48' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='48' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='200.5' cy='48' r='8' fill='currentColor'/><circle cx='261' cy='48' r='8' fill='currentColor'/><circle cx='321.5' cy='48' r='8' fill='currentColor'/><circle cx='382' cy='48' r='8' fill='currentColor'/><path d='M 140 82 L 382 82' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='200.5' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='261' cy='82' r='8' fill='currentColor'/><circle cx='321.5' cy='82' r='8' fill='currentColor'/><circle cx='382' cy='82' r='8' fill='currentColor'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='140' y='22' font-weight='600' font-size='14'>0</text><text x='200.5' y='22' font-weight='600' font-size='14'>1</text><text x='261' y='22' font-weight='600' font-size='14'>2</text><text x='321.5' y='22' font-weight='600' font-size='14'>3</text><text x='382' y='22' font-weight='600' font-size='14'>4</text><text x='8' y='53' text-anchor='start'>at least 1</text><text x='8' y='87' text-anchor='start'>at least 2</text></g></svg>",
+    "caption": "Four scratch cards. Every count in 'at least 2' also sits in 'at least 1', so the two events are nested."
+  },
+  {
+    "type": "p",
+    "md": "Four scratch cards each win with probability 0.4, independently. Given that at least one wins, find the probability that at least two win.\nThe dots show why this is the same idea: every count in \"at least 2\" is also in \"at least 1\". Both probabilities come from the complement, 1 minus the counts left out."
+  },
+  {
+    "type": "p",
+    "md": "**Step 1.** $P(0) = 0.6^{4}$, which is $0.1296$, and $P(1) = 4 \\times 0.4 \\times 0.6^{3}$, which is $0.3456$.\n**Step 2.** $P(X \\geq 1) = 1 - 0.1296$, so $0.8704$; then $P(X \\geq 2) = 0.8704 - 0.3456$, so $0.5248$.\n**Step 3.** $\\frac{0.5248}{0.8704} = 0.6029$, to 4 decimal places."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "Five seeds each germinate with probability 0.3, independently, so $P(X \\geq 1) = 0.83193$ and $P(X \\geq 2) = 0.47178$. Given that at least one germinates, what is the probability that at least two do? Give 4 decimal places.",
+    "answer": "0.5671",
+    "explain": "As with the scratch cards, at least 2 sits inside at least 1, so the smaller probability goes on top: $\\frac{0.47178}{0.83193}$, which is 0.5671. The bottom is \"at least one\", $1 - P(0)$, never $P(1)$ on its own."
+  },
+  {
+    "type": "h",
+    "role": "variant",
+    "text": "4. Exactly r, given at least one"
+  },
+  {
+    "type": "figure",
+    "alt": "Two rows of dots for the counts 0 to 6. In the row for at least 1, the dots 1 to 6 are filled; in the row for exactly 3, only the dot 3 is filled.",
+    "svg": "<svg viewBox='0 0 400 102' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Six coin tosses: the counts included in at least 1 head and in exactly 3 heads, as filled dots'><title>Six coin tosses: the counts included in at least 1 head and in exactly 3 heads, as filled dots</title><path d='M 140 48 L 382 48' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='48' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='180.33' cy='48' r='8' fill='currentColor'/><circle cx='220.67' cy='48' r='8' fill='currentColor'/><circle cx='261' cy='48' r='8' fill='currentColor'/><circle cx='301.33' cy='48' r='8' fill='currentColor'/><circle cx='341.67' cy='48' r='8' fill='currentColor'/><circle cx='382' cy='48' r='8' fill='currentColor'/><path d='M 140 82 L 382 82' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='180.33' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='220.67' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='261' cy='82' r='8' fill='currentColor'/><circle cx='301.33' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='341.67' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='382' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='140' y='22' font-weight='600' font-size='14'>0</text><text x='180.33' y='22' font-weight='600' font-size='14'>1</text><text x='220.67' y='22' font-weight='600' font-size='14'>2</text><text x='261' y='22' font-weight='600' font-size='14'>3</text><text x='301.33' y='22' font-weight='600' font-size='14'>4</text><text x='341.67' y='22' font-weight='600' font-size='14'>5</text><text x='382' y='22' font-weight='600' font-size='14'>6</text><text x='8' y='53' text-anchor='start'>at least 1</text><text x='8' y='87' text-anchor='start'>exactly 3</text></g></svg>",
+    "caption": "Six coin tosses. 'Exactly 3 heads' is a single count, and it sits inside 'at least 1 head'."
+  },
+  {
+    "type": "p",
+    "md": "A fair coin is tossed six times. Given at least one head, find the probability of exactly three.\nExactly three is one count, and it lies inside at least one. So the top is a single term of the expansion, and the bottom is 1 minus the no-heads term."
+  },
+  {
+    "type": "p",
+    "md": "**Step 1.** $P(3) = 20 \\times 0.5^{3} \\times 0.5^{3}$, which is $0.3125$, with 20 from row 6 of Pascal's triangle.\n**Step 2.** $P(X \\geq 1) = 1 - 0.5^{6}$, which is $0.984375$.\n**Step 3.** $\\frac{0.3125}{0.984375} = 0.3175$. A little bigger than 0.3125, as a nested conditional must be."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "Five seeds each germinate with probability 0.3, independently, so $P(X = 2) = 0.3087$ and $P(X \\geq 1) = 0.83193$. Given that at least one germinates, what is the probability that exactly two do? Give 4 decimal places.",
+    "answer": "0.3711",
+    "explain": "Exactly two is one count inside at least one, just as exactly three heads sat inside at least one head. So the single term goes on top and \"at least one\" on the bottom: $\\frac{0.3087}{0.83193}$, which is 0.3711."
+  },
+  {
+    "type": "h",
+    "role": "see",
+    "text": "See it done: the paper's shape"
+  },
+  {
+    "type": "figure",
+    "alt": "A normal curve of 400 m times with mean 85 seconds. The region under 95 seconds is shaded lightly and the region under 71 seconds is shaded darker inside it.",
+    "svg": "<svg viewBox='0 0 400 198' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Times for 400 m: the region under 95 seconds shaded lightly and the region under 71 seconds shaded darker inside it'><title>Times for 400 m: the region under 95 seconds shaded lightly and the region under 71 seconds shaded darker inside it</title><path d='M 14 152 L 14 151.78 L 21.01 151.66 L 28.02 151.47 L 35.04 151.19 L 42.05 150.79 L 49.06 150.23 L 56.07 149.45 L 63.08 148.38 L 70.1 146.96 L 77.11 145.1 L 84.12 142.72 L 91.13 139.73 L 98.14 136.07 L 105.15 131.66 L 112.17 126.48 L 119.18 120.54 L 126.19 113.88 L 133.2 106.61 L 140.21 98.89 L 147.23 90.93 L 154.24 82.98 L 161.25 75.34 L 168.26 68.33 L 175.27 62.26 L 182.29 57.4 L 189.3 54.01 L 196.31 52.24 L 203.32 52.2 L 210.33 53.87 L 217.35 57.19 L 224.36 61.97 L 231.37 67.99 L 238.38 74.96 L 245.39 82.57 L 252.4 90.5 L 259.42 98.48 L 266.43 106.22 L 266.43 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.14' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 152 L 14 151.78 L 16.58 151.74 L 19.17 151.69 L 21.75 151.64 L 24.33 151.58 L 26.92 151.5 L 29.5 151.42 L 32.08 151.32 L 34.67 151.21 L 37.25 151.08 L 39.83 150.93 L 42.42 150.77 L 45 150.58 L 47.58 150.36 L 50.17 150.12 L 52.75 149.85 L 55.33 149.54 L 57.92 149.2 L 60.5 148.81 L 63.08 148.38 L 65.67 147.9 L 68.25 147.37 L 70.83 146.79 L 73.42 146.14 L 76 145.43 L 78.58 144.65 L 81.17 143.79 L 83.75 142.86 L 86.33 141.85 L 88.92 140.75 L 91.5 139.56 L 94.08 138.28 L 96.67 136.9 L 99.25 135.42 L 101.83 133.84 L 104.42 132.16 L 107 130.37 L 107 152 Z' stroke='currentColor' stroke-width='0.5' fill='currentColor' fill-opacity='0.3' stroke-linejoin='round' stroke-linecap='round'/><path d='M 14 151.78 L 18.65 151.7 L 23.3 151.6 L 27.95 151.47 L 32.6 151.3 L 37.25 151.08 L 41.9 150.8 L 46.55 150.45 L 51.2 150.02 L 55.85 149.47 L 60.5 148.81 L 65.15 148 L 69.8 147.03 L 74.45 145.86 L 79.1 144.48 L 83.75 142.86 L 88.4 140.97 L 93.05 138.8 L 97.7 136.32 L 102.35 133.51 L 107 130.37 L 111.65 126.89 L 116.3 123.07 L 120.95 118.92 L 125.6 114.47 L 130.25 109.74 L 134.9 104.78 L 139.55 99.64 L 144.2 94.38 L 148.85 89.07 L 153.5 83.81 L 158.15 78.66 L 162.8 73.73 L 167.45 69.1 L 172.1 64.87 L 176.75 61.13 L 181.4 57.94 L 186.05 55.39 L 190.7 53.52 L 195.35 52.38 L 200 52 L 204.65 52.38 L 209.3 53.52 L 213.95 55.39 L 218.6 57.94 L 223.25 61.13 L 227.9 64.87 L 232.55 69.1 L 237.2 73.73 L 241.85 78.66 L 246.5 83.81 L 251.15 89.07 L 255.8 94.38 L 260.45 99.64 L 265.1 104.78 L 269.75 109.74 L 274.4 114.47 L 279.05 118.92 L 283.7 123.07 L 288.35 126.89 L 293 130.37 L 297.65 133.51 L 302.3 136.32 L 306.95 138.8 L 311.6 140.97 L 316.25 142.86 L 320.9 144.48 L 325.55 145.86 L 330.2 147.03 L 334.85 148 L 339.5 148.81 L 344.15 149.47 L 348.8 150.02 L 353.45 150.45 L 358.1 150.8 L 362.75 151.08 L 367.4 151.3 L 372.05 151.47 L 376.7 151.6 L 381.35 151.7 L 386 151.78' stroke='currentColor' stroke-width='1.8' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 152 L 394 152' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 152 L 200 52' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='5 4' stroke-linejoin='round' stroke-linecap='round'/><path d='M 266.43 158 L 266.43 106.22' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 107 158 L 107 130.37' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 68 28 L 69.8 146' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 214 28 L 215.94 118' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='107' y='172' font-weight='600'>71</text><text x='107' y='190' font-size='14'>z = −1.75</text><text x='200' y='172'>85</text><text x='200' y='190' font-size='14'>z = 0</text><text x='266.43' y='172' font-weight='600'>95</text><text x='266.43' y='190' font-size='14'>z = 1.25</text><text x='68' y='22' font-weight='600'>T &lt; 71</text><text x='214' y='22'>T &lt; 95</text></g></svg>",
+    "caption": "Times for 400 m with mean 85 seconds and standard deviation 8. Under 71 sits inside under 95."
+  },
+  {
+    "type": "p",
+    "md": "On the paper this comes as three parts, the last worth 2 marks. Times for 400 m have mean 85 seconds and standard deviation 8.\n**(i)** $z = \\frac{95 - 85}{8}$, so $z = 1.25$ and $P(T < 95) = 0.8944$.\n**(ii)** $z = \\frac{71 - 85}{8}$, so $z = -1.75$; fold: $1 - 0.9599 = 0.0401$.\n**(iii)** The fraction is $\\frac{0.0401}{0.8944}$, which is $0.0448$."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Where part (iii) loses its marks",
+    "md": "Part (iii) has 2 marks: the fraction with (ii) over (i), then its value. In both years it has been set, most candidates multiplied the two tails on top, which hands back the smaller tail unchanged. The strongest wrote (ii) over (i) and divided.",
+    "source": "ccea-cer:further-maths:2022-summer:FM3:Q7"
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "For the same 400 m times, $P(T < 95) = 0.8944$ and $P(T < 79) = 0.2266$. Work out $P(T < 79 \\mid T < 95)$ to 4 decimal places.",
+    "answer": "0.2534",
+    "explain": "Under 79 seconds sits inside under 95, exactly as part (ii) sat inside part (i) above. So the small tail goes over the large one: $\\frac{0.2266}{0.8944}$, which is 0.2534. The first mark is for that fraction, the second for its value."
+  },
+  {
+    "type": "h",
+    "role": "twists",
+    "text": "Exam twists"
+  },
+  {
+    "type": "p",
+    "md": "**The last part reuses the first two.** In 2022 and 2023 the normal question closed with a 2-mark 'given that' on parts (i) and (ii): no new table work, just (ii) over (i)."
+  },
+  {
+    "type": "p",
+    "md": "**\"Does not\" names the region.** Turn the words into an inequality first, as a 2021 normal question and many Venn questions needed. \"Does not last more than 30 hours\" is the left tail, $T < 30$, never $T > 30$."
+  },
+  {
+    "type": "p",
+    "md": "**Units that do not match.** In 2026 the mean was in minutes and the time in hours: convert first. With mean 250 minutes and standard deviation 20, 4.5 hours is $4.5 \\times 60 = 270$ minutes, so $z = \\frac{270 - 250}{20}$, which is $1$."
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Battery life is normally distributed. A question asks for a probability given that a battery does not last more than 30 hours. Which region is the condition?",
+    "options": [
+      "$T < 30$: the left tail below 30 hours",
+      "$T > 30$: the right tail above 30 hours",
+      "$T < 30$ and $T > 30$ together: the whole curve"
+    ],
+    "answer": "$T < 30$: the left tail below 30 hours",
+    "explain": "\"Does not last more than 30 hours\" rules out every battery above 30 hours, so what is left is the left tail below 30. Turn the words into that inequality first, $T < 30$, and shade it; that tail is the whole the answer is measured against."
+  },
+  {
+    "type": "p",
+    "md": "**A nested pair on a tree.** 2019 asked for three the same given the first two the same, and 2024 for both green given both the same colour. The smaller event sits inside the condition, so its branch total alone goes on top."
+  },
+  {
+    "type": "p",
+    "md": "**The condition is not the first stage.** In 2025 it was the second set, in 2026 rain on either day. Add every branch that meets it for the bottom. First stage 0.6; second 0.5 after it, 0.2 after a miss. Given the second, the bottom is $0.6 \\times 0.5 + 0.4 \\times 0.2 = 0.38$, and 'first missed' is $\\frac{0.08}{0.38} = 0.2105$."
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "A tree question: given that it rained at some point over the weekend, find the probability that Sunday was dry. What goes on the bottom of the fraction?",
+    "options": [
+      "The total of every branch on which it rained at least once",
+      "The probability of rain on Sunday alone",
+      "1, because the whole weekend is the sample"
+    ],
+    "answer": "The total of every branch on which it rained at least once",
+    "explain": "The condition, rain at some point, is met on every branch with rain on at least one day, just as both 'second' branches made the 0.38 above. Add those branches for the bottom. The top is the one branch among them where Sunday was dry."
+  },
+  {
+    "type": "p",
+    "md": "**Working back from a given conditional.** In 2026 the conditional probability was given and a count was asked for. Put the unknown count over the condition's count and set it equal to the value: if 40 pupils play hockey and a hockey player is in the county squad with probability $\\frac{3}{8}$, then $\\frac{x}{40} = \\frac{3}{8}$, so $x = 15$."
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "number",
+    "prompt": "A choir has 60 members. Given that a pupil is in the choir, the probability that she also plays an instrument is 0.35. How many choir members play an instrument?",
+    "answer": "21",
+    "explain": "The condition, being in the choir, is the whole: 60 pupils, just as the 40 hockey players were. The unknown count over that whole equals the given probability, $\\frac{x}{60} = 0.35$, so $x = 0.35 \\times 60$, which is 21."
+  },
+  {
+    "type": "h",
+    "role": "further",
+    "text": "Going further: normal into binomial"
+  },
+  {
+    "type": "figure",
+    "alt": "Two rows of dots for the counts 0 to 3. In the row for at least 1, the dots 1 to 3 are filled; in the row for exactly 1, only the dot 1 is filled.",
+    "svg": "<svg viewBox='0 0 400 102' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Three mornings: the counts of quick rounds included in at least 1 and in exactly 1, as filled dots'><title>Three mornings: the counts of quick rounds included in at least 1 and in exactly 1, as filled dots</title><path d='M 140 48 L 382 48' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='48' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='220.67' cy='48' r='8' fill='currentColor'/><circle cx='301.33' cy='48' r='8' fill='currentColor'/><circle cx='382' cy='48' r='8' fill='currentColor'/><path d='M 140 82 L 382 82' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='220.67' cy='82' r='8' fill='currentColor'/><circle cx='301.33' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='382' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='140' y='22' font-weight='600' font-size='14'>0</text><text x='220.67' y='22' font-weight='600' font-size='14'>1</text><text x='301.33' y='22' font-weight='600' font-size='14'>2</text><text x='382' y='22' font-weight='600' font-size='14'>3</text><text x='8' y='53' text-anchor='start'>at least 1</text><text x='8' y='87' text-anchor='start'>exactly 1</text></g></svg>",
+    "caption": "Three mornings. 'Exactly one quick round' is a single count inside 'at least one', the same nesting as before."
+  },
+  {
+    "type": "p",
+    "md": "The Teacher Guidance tests conditionals through the binomial and/or the normal, so the two can meet in one question. A delivery round's time has mean 95 minutes and standard deviation 8. For 85 minutes, $z = -1.25$, so the fold gives $P(T < 85) = 0.1056$. Call it $p$: the chance that one morning's round is quick."
+  },
+  {
+    "type": "p",
+    "md": "Over three mornings, $P(1) = 3 \\times 0.1056 \\times 0.8944^{2}$, which is $0.2534$, and $P(X \\geq 1) = 1 - 0.8944^{3}$, which is $0.2845$.\nGiven at least one quick morning, the probability of exactly one is $\\frac{0.2534}{0.2845}$, which is $0.8907$."
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A delivery round's time is normal with mean 95 minutes. Over three mornings, which number becomes the $p$ of the binomial for \"a round under 85 minutes\"?",
+    "options": [
+      "$P(T < 85) = 0.1056$, the probability of one quick morning",
+      "$P(T < 105) = 0.8944$, the larger tail",
+      "The conditional probability from the earlier part"
+    ],
+    "answer": "$P(T < 85) = 0.1056$, the probability of one quick morning",
+    "explain": "Each morning is one trial, and a success is a round under 85 minutes, so the trial's probability is that tail from the table, 0.1056. The three mornings then follow the binomial with $p = 0.1056$, and only the last step conditions on the count."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where this specification stops",
+    "md": "Every conditional CCEA sets through a distribution is nested. A pair such as 'over 80 given under 95' would need the area between two values, which the Teacher Guidance keeps out, as it keeps out finding a value from a given probability."
+  },
+  {
+    "type": "h",
+    "role": "derivation",
+    "text": "Where the nested rule comes from"
+  },
+  {
+    "type": "figure",
+    "alt": "A 10 by 10 grid of 100 dots. The first 12 are dark; the first 80, dark ones included, sit inside a dashed box; the remaining 20 are open circles.",
+    "svg": "<svg viewBox='0 0 400 374' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='One hundred pupils as dots: 80 inside a dashed box for under 26 minutes, 12 of them dark for under 15 minutes, the rest open'><title>One hundred pupils as dots: 80 inside a dashed box for under 26 minutes, 12 of them dark for under 15 minutes, the rest open</title><circle cx='34' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='70.8' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='107.6' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='144.4' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='181.2' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='218' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='254.8' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='291.6' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='328.4' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='365.2' cy='24' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='34' cy='52' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='70.8' cy='52' r='9' fill='currentColor' fill-opacity='0.9'/><circle cx='107.6' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='52' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='70.8' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='107.6' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='80' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='70.8' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='107.6' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='108' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='70.8' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='107.6' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='136' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='70.8' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='107.6' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='164' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='70.8' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='107.6' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='192' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='70.8' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='107.6' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='144.4' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='181.2' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='218' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='254.8' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='291.6' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='328.4' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='365.2' cy='220' r='9' fill='currentColor' fill-opacity='0.28'/><circle cx='34' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='70.8' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='107.6' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='144.4' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='181.2' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='218' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='254.8' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='291.6' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='328.4' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='365.2' cy='248' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='34' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='70.8' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='107.6' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='144.4' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='181.2' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='218' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='254.8' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='291.6' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='328.4' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><circle cx='365.2' cy='276' r='9' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='18' y='9' width='363.2' height='226' stroke='currentColor' stroke-width='2' fill='none' stroke-dasharray='7 4'/><circle cx='24' cy='313' r='7' fill='currentColor' fill-opacity='0.9'/><rect x='14' y='328' width='20' height='18' stroke='currentColor' stroke-width='2' fill='none' stroke-dasharray='5 3'/><circle cx='24' cy='361' r='7' fill='none' stroke='currentColor' stroke-width='1.3'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='42' y='318' text-anchor='start' font-size='14'>dark: under 15 minutes (12)</text><text x='42' y='342' text-anchor='start' font-size='14'>inside the dashed box: under 26 minutes (80)</text><text x='42' y='366' text-anchor='start' font-size='14'>open: 26 minutes or more (20)</text></g></svg>",
+    "caption": "One hundred pupils: 80 under 26 minutes in the dashed box, 12 of those under 15. The dark dots sit inside the box."
+  },
+  {
+    "type": "p",
+    "md": "Start from the sheet, $P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$, and read it with the counts. Out of 100 pupils, $P(B) = \\frac{80}{100}$, and $P(A \\cap B) = \\frac{12}{100}$ because the 12 are inside the 80.\nDivide, and the 100s cancel: $\\frac{12}{80} = 0.15$, the share of the box. With $A$ inside $B$, $A \\cap B$ is $A$, so $P(A \\mid B) = \\frac{P(A)}{P(B)}$."
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "choice",
+    "prompt": "When $A$ lies inside $B$, which single change turns the sheet's formula into the nested rule?",
+    "options": [
+      "Replace $P(A \\cap B)$ by $P(A)$, because 'both' is just $A$",
+      "Replace $P(B)$ by 1, because $B$ is certain",
+      "Replace $P(A \\cap B)$ by $P(A) \\times P(B)$"
+    ],
+    "answer": "Replace $P(A \\cap B)$ by $P(A)$, because 'both' is just $A$",
+    "explain": "On the grid, every dark dot is inside the dashed box, so 'in both' is the same set of pupils as 'dark'. That is why the top of the sheet's formula becomes $P(A)$. The bottom stays the condition's probability, $P(B)$, never 1."
+  },
+  {
+    "type": "h",
+    "role": "recap",
+    "text": "You can now"
+  },
+  {
+    "type": "p",
+    "md": "Shrink the whole to the condition's region: the answer is a share of it.\nSpot a nested pair: the small probability alone goes on top; divide, never multiply.\nNormal: both tails from the table, then small over large, to 4 decimal places.\nBinomial: 'at least one' is 1 minus P(0); the top is one term or a complement.\nRead the twist first; check the answer sits above the plain probability and below 1."
+  },
+  {
+    "type": "h",
+    "role": "pointer",
+    "text": "In the exam"
+  },
+  {
+    "type": "p",
+    "md": "This is usually the closing 2-mark part of the normal question, as in 2022 and 2023, with both tails already found in parts (i) and (ii); a binomial version can arrive the same way. The first mark is the fraction, the smaller event's probability over the condition's; the last is its value to 4 decimal places. Stuck: sketch both regions, and if one sits inside the other, write small over large and divide."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.conditional-probability-with-distributions.01"
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u3.conditional-probability-with-distributions.03"
+  }
+]

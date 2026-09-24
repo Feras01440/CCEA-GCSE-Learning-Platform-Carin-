@@ -20,7 +20,7 @@ Bitesize-grade teaching, rewritten better and made interactive. The note must, i
 4. **Do it** — the first gate is trivially easy (it teaches the interface); the next gates climb: read a value, compute one step, choose the reason, spot the trap.
 5. **Where marks are lost** — an `examiner` callout per finding on the insight card, in our words, with the series.
 6. **In the exam** — how the question is usually worded, what the first mark is for, what the last mark is for, what to write when stuck.
-7. **Prompts** — 3-6 `prompt` blocks referencing your retrieval prompts so the facts live inside the lesson.
+7. **Prompts** — one or two `prompt` blocks referencing your retrieval prompts, never more (the owner's verdict of 24 Sep 2026; see "Retrieval prompts: few, optional, short" in the Depth standard).
 
 Block contract: `[{ "type":"h", "text" } | { "type":"p", "md" } | { "type":"callout", "kind":"spec"|"mustknow"|"notonspec"|"examiner"|"why", "title"?, "md", "source"? } | { "type":"gate", "id", "kind":"blank"|"choice"|"number", "prompt", "options"?, "answer", "explain" } | { "type":"figure", "alt", "svg"?, "caption"? } | { "type":"photo", "src", "alt", "credit", "licence", "licenceUrl"?, "sourceUrl"?, "caption"?, "prompt"? } | { "type":"video", "videoId", "title", "channel", "start"?, "end"?, "why"?, "corbettmathsNumber"? } | { "type":"sim", "provider":"phet"|"geogebra", "url", "title", "attribution", "licence", "task" } | { "type":"prompt", "promptId" }]`
 Rules: `md` supports **bold**, line breaks and `$…$` KaTeX only; figures are inline SVG you write yourself (viewBox, labelled axes and points, `currentColor` strokes, no colour as the only signal, under 12 KB); photographs are fetched with `node scripts/fetch-commons-image.mjs "File:…" <subject>/<unit>/<slug>-<n>` (only CC0 / CC BY / CC BY-SA files are accepted; the script prints the credit fields you must copy into the block) and every photo carries a `prompt` ("what would the examiner ask about this?") so it is never decoration; sims are PhET (attribution "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)") wrapped in a `task`.
@@ -242,6 +242,18 @@ The owner's judgement on 22 Sep 2026, after reading fm1/algebraic-fractions-simp
 
 **Fun** here means interaction and consequence — something to do on every card and a visible result of doing it — never decoration.
 
+### Teach before you check (the owner's ruling, 24 Sep 2026)
+
+The owner, after watching the lessons run: a good teacher teaches the topic and makes sure it is understood, and only then do the questions follow. A string of questions she has not been taught to answer is not a lesson. So, in every note, every Slides deck and every Read page:
+
+- **A gate comes only after the idea has been explained and shown worked in front of her, step by step, in that section**, so that she can answer it from what she has just read and seen. Never ask about something the section has not yet taught.
+- **A section is explain, then show, then check.** Explain: the idea in words, with its one honest "because" (a paragraph, or a titled `why`, `mustknow` or `examiner` callout). Show: the idea carried out in front of her (worked lines, a figure the prose reads, a video or a sim). Check: the gate. A section may run several cards of explanation and demonstration before its one check; a "See it done" section is the show step of the section above it, and a heading with no gate of its own does not close a section (its teaching runs on to the next gate), while a gate does: teaching that came before an earlier check is not counted again for the next one.
+- **"A gate at most every four cards" is a ceiling, never a quota.** No gate is ever added to meet a count. Use fewer, better-placed checks: one gate that tests what the section has just taught is worth more than three that arrive before it has taught anything.
+- **A miss re-teaches before it shows the answer.** A gate's `explain`, and every feedback string on a miss, gives the explanation again in other words, pointing at the figure or the worked line, and only then states the expected answer; it never only marks.
+- **The questions proper follow the teaching**: the worked examples, practice, exam-style questions and find-the-mistake items come after the note has taught the idea, as they do in a classroom, never before it.
+
+`node scripts/qa/lesson-v2.mjs --teach` lists every gate that comes before its section explains and shows the idea (the definitions it applies are in `scripts/qa/teach-show-check.mjs`); it is a warning today and part of every depth pass. A studied design case for the card grammar is being prepared for the owner; until it is approved, these bullets bind as written and are applied by judgement where the lint cannot see.
+
 ### Bands
 
 Bands follow the taxonomy `difficulty`: **L** = 1–2, **S** = 3, **H4** = 4, **H5** = 5. (`hardness` L/S/H stays the bundle-size label; H splits by difficulty because a 4 and a 5 are examined differently.)
@@ -290,7 +302,7 @@ Per band (teaching sections are the headings before the recap; gates are counted
 | The synoptic question | – | – | ≥ 3 parts and ≥ 8 marks | ≥ 4 parts and ≥ 10 marks |
 | Find-the-mistake (different findings) | 1 | 2 | 3 | 3 |
 | Retrieval prompts (a minimum; no maximum) | ≥ 4 | ≥ 6 | ≥ 8 | ≥ 10 |
-| Prompts embedded in the note | 3 | 4 | 5 | 5 |
+| Prompts embedded in the note (the owner, 24 Sep 2026) | 1–2 | 1–2 | 1–2 | 1–2 |
 | Diagnostics, pre / post | 3 / ≥ 1 | 3 / ≥ 3 | 3–4 / ≥ 5 | 3–4 / ≥ 6 |
 
 The rules behind the table:
@@ -298,7 +310,16 @@ The rules behind the table:
 - The practice ladder runs rung by rung to the A* boundary: every difficulty from 1 to the band's top has at least one item; within a rung the items are minimally varied (one thing changes: a sign, a coefficient, where the unknown sits); the top rung matches the hardest shape the corpus has set for the statement. Then the mixed tail: the variants shuffled and unannounced, plus at least one **tail-only** item, so she has to choose (research 06 §5). A set can only hold this bundle's items, so a tail-only item is a practice question of this bundle that is not a ladder rung: listed last in `questions[]`, with `"mixed-tail"` in its `emphasis`, and for H bands at least one whose method comes from a neighbouring statement, which its `specRefs` name beside the topic's own. Encode the tail as a `sets` entry of kind `interleaved` or `mixed` with `showTopicLabels: false`; a tail that only repeats the ladder is not a tail. Sets drawn from other bundles wait for the practice agent (the loader reads one bundle, so cross-bundle sets need an item index in the manifest and a resolver in the loader).
 - The exam-style set holds the paper's real shapes at the paper's real length: for H bands one **synoptic** question of the chain kind the corpus sets (the topic as one part, with a "hence", at least 3 parts and 8 marks for H4, 4 parts and 10 marks for H5), one question in a context, and the standalone shape. Schemes in the subject's mark language; a `methodLock` wherever the stem names the method.
 - Find-the-mistake items come from different examiner findings, one wrong line each, seeded from the Chief Examiner's sentence and the series.
-- Retrieval prompts cover every variant, every twist, the derivation and the must-know formula; the note embeds the number stated, so the facts live inside the lesson. There is no maximum and no padding: every prompt is a fact she needs on the paper, because the review queue is her time.
+- Retrieval prompts cover every variant, every twist, the derivation and the must-know formula. There is no padding: every prompt is a fact she needs on the paper, because the review queue is her time.
+
+#### Retrieval prompts: few, optional, short (the owner's verdict, 24 Sep 2026)
+
+After trying the Slides way the owner ruled that the prompts she meets in a lesson must be optional, fewer and short-answer, never essay-like: one or two short recall prompts per topic, never four by habit.
+- **The note wires one or two prompts, never more.** Choose the one or two facts she most needs to carry out of the lesson (the must-know formula, the step most often lost); the rest stay in the bundle for the review queue and are not wired into the note.
+- **Every prompt is a short recall.** Its expected `answer` is at most 25 words: a term, a value, a formula, one line of method or one reason. A prompt whose honest answer is a paragraph is two prompts, or it is a question, not a prompt. Key words stay inside the answer's own words (the FM2 review rule above).
+- **Optional means optional.** Never write a prompt the lesson depends on: nothing later in the note, no gate and no worked example, assumes she answered it.
+
+`node scripts/qa/lesson-v2.mjs --prompts` lists every note that wires more than two prompts and every shipped prompt whose answer runs past 25 words (the definitions are in `scripts/qa/prompt-few.mjs`); it is a warning today and part of every depth pass.
 
 ### Minutes
 
@@ -317,6 +338,7 @@ The guide is what the floor implies; a topic above its floor takes longer, and t
 - **One idea per figure.** A figure draws one thing; a second annotation is a second figure. Text drawn as a picture (a method card, a table of phrases, a five-row list, with or without a box or a rule round it) is not a figure: it is prose, so it goes in `p` blocks, where it scales, wraps and reads aloud. The lint judges it by the ratio of text to drawn shapes, with two guards so that an annotated graph is not caught: four or more text nodes, at least twice as many as the shapes drawn, no curve drawn (a card has a box and rules; a graph has its curve), and the text sentence-length.
 - **Labels must survive the phone.** The renderer strips `width` and scales every SVG to the column, so a label renders at font-size × column width ÷ viewBox width. Make the smallest label at least 3.5% of the viewBox width (≥ 12.5 px in the 358 px column of a 390 px phone): a 400-unit viewBox with 14-unit labels, or a 560-unit viewBox with 20-unit labels. Prefer a phone-native viewBox of 360–420 units with 13–15-unit labels and strokes of 1.2–1.5 units; a figure that needs to be wider is two figures. Axis titles and point labels count; a long name goes in the caption. The `svg-gen` generators render labels at 6–7 px on a phone today: until they are fixed, author such figures yourself at these sizes.
 - **Two copies.** The annotated figure (the arrows, the values, the answer) is for the note; the question, the twin and the diagnostic get the plain lettered copy (`annotated: false`, or a second generator call). figure-leaks.mjs prints 0 leaks before you file.
+- **A worked example's own figure is seen with its steps hidden.** The app shows `we.figure` in the full example and again in the two faded versions and the problem version, where the later steps and the final answer are hers to write (the twin shows only `twin.figure`). So the worked example's figure draws the situation, not the working: never print a value a faded version leaves to her (the weight 60 N she is about to calculate, the area under the graph, the optimum read off the curve) or the final answer. The working belongs in the steps. figure-leaks.mjs lists every such value as a WE-LEAK line (a warning until the lead makes it fatal with `--we-fatal`); `npm run content:check` prints the same as a FIGURE warning.
 - Every figure has an `alt` that says what is drawn and a `caption` of ≤ 25 words that can stand alone as a card's text.
 - The figure comes before the paragraph that reads it, never after; two visuals never sit back to back.
 
@@ -334,14 +356,14 @@ Every topic has two ways in, Slides and Read, generated from the same note.block
 - **One idea per block.** A `p` or `callout` is at most 75 words; a 120-word stretch is two paragraphs, each a card.
 - **Headings read as card titles**: at most 8 words, sentence case, no trailing colon. A number prefix ("2. …") is allowed; the spine strips it.
 - **A figure or an interaction on every stretch that carries one.** A section whose idea is visual has its figure, placed before the prose that reads it; every section ends in a gate. A card is one paragraph, one callout, one figure with its caption, or one gate, never two of these.
-- **A gate at most every 4 cards**, and every gate reads alone (the gates-stand-alone rule above).
+- **A gate at most every 4 cards is a ceiling, never a quota** (the owner's ruling of 24 Sep 2026, "Teach before you check" above): a gate stands where its section has explained and shown the idea, never where a count says one is due; and every gate reads alone (the gates-stand-alone rule above).
 - **The recap lines and the pointer are the closing cards**, so the recap is 3–5 short lines and the pointer is one paragraph.
 - **Callouts carry a `title` of ≤ 8 words**: it is the card's title.
 - A note over about 30 cards (the H bands) splits into two Slides parts at a heading. Put the natural break after the first "See it done", so part 1 is the idea, the why, the first variant and its example, and part 2 the remaining variants, the twists and going further.
 
 ### Measuring it: `node scripts/qa/lesson-v2.mjs --depth`
 
-lesson-v2.mjs computes every count above from note.blocks.json and bundle.json. Without a flag it prints one summary line ("depth: N of M notes meet their band's floor"); `--depth` prints the report note by note (band, each measure against its floor, the section roles found, the Slides, figure and maths checks, and the minutes as learn + sit); `--json` carries the same under `depth`. Only shipped items count: an item whose verification log is missing, or whose status is not `verified` or `published`, is a draft the pipeline never ships, and the report says how many it left out. A shortfall is a warning, not a breach, until the lead promotes it with `--depth-fatal`. A topic filed from today must meet its band's floor, and its author pastes the topic's `--depth` report in the final message. Sections are recognised by `role`; a note without roles is reported as unlabelled and cannot meet the section floor.
+lesson-v2.mjs computes every count above from note.blocks.json and bundle.json, applies teach → show → check to every gate (`--teach` for the list, `--teach-fatal` to make a gate that comes first a breach), and checks that the prompts are few and short (`--prompts` for the list, `--prompts-fatal` to make a finding a breach). Without a flag it prints one summary line for each ("depth: N of M notes meet their band's floor"; "teach → show → check: N of M gates …"; "retrieval prompts: N of M notes wire more than 2 …"); `--depth` prints the report note by note (band, each measure against its floor, the section roles found, the Slides, figure and maths checks, and the minutes as learn + sit); `--json` carries the same under `depth`. Only shipped items count: an item whose verification log is missing, or whose status is not `verified` or `published`, is a draft the pipeline never ships, and the report says how many it left out. A shortfall is a warning, not a breach, until the lead promotes it with `--depth-fatal`. A topic filed from today must meet its band's floor, and its author pastes the topic's `--depth` report in the final message. Sections are recognised by `role`; a note without roles is reported as unlabelled and cannot meet the section floor.
 
 ### Depth passes over published topics
 

@@ -257,3 +257,80 @@ describe("the listing rule keeps a coordinate pair together", () => {
     expect(countListedItems("nucleus, cytoplasm (with ribosomes), vacuole")).toBe(3);
   });
 });
+
+// C2 D F04 (24 Sep 2026): a name given with its formula, "ethanol, C2H5OH", tripped the listing rule as two answers.
+// CCEA's general marking instructions (C2 Higher MS Summer 2021, "Both name and formula provided by candidate"): when
+// a name is asked for, a formula beside it is ignored, and when a formula is asked for, a name beside it is ignored.
+describe("a name and a formula side by side are one answer", () => {
+  test("a name with its formula, either way round, counts once", () => {
+    expect(countListedItems("ethanol, C2H5OH")).toBe(1);
+    expect(countListedItems("C2H5OH, ethanol")).toBe(1);
+    expect(countListedItems("Propene, C3H6")).toBe(1);
+    expect(countListedItems("C2H3Cl, the same as chloroethene")).toBe(1);
+    expect(countListedItems("propene / C3H6")).toBe(1);
+  });
+  test("two names, two formulae, or a longer list still count every item", () => {
+    expect(countListedItems("water, carbon dioxide")).toBe(2);
+    expect(countListedItems("CO2, H2O")).toBe(2);
+    expect(countListedItems("nitrogen, oxygen, CO2")).toBe(3);
+    expect(countListedItems("ethanol, methanol")).toBe(2);
+  });
+  test("the listing rule leaves the mark with the name", () => {
+    const name: TextSpec = { kind: "text", accepted: ["ethanol"], keyWords: [{ any: ["ethanol"], marks: 1 }], listingRule: true };
+    expect(markText("ethanol, C2H5OH", name).correct).toBe(true);
+    expect(markText("ethanol, methanol", name).correct).toBe(false);
+  });
+});
+
+// C2 D F11 (24 Sep 2026): "CH3CH=CH2" was refused where the key word is "CH2=CHCH3": the same condensed formula of
+// propene written from the other end. A hydrocarbon's condensed formula is right whichever end it starts from.
+describe("a condensed hydrocarbon formula read from either end", () => {
+  const monomer: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["C3H6", "CH2CHCH3", "CH2=CHCH3"], marks: 1 }], listingRule: false };
+  test.each(["CH3CH=CH2", "CH3CHCH2", "CH2=CHCH3", "C3H6", "H2C=CHCH3", "CH3-CH=CH2", "CH₃CH=CH₂"])("%s earns the key word", (typed) => {
+    expect(markText(typed, monomer).correct).toBe(true);
+  });
+  test.each(["CH3CH2CH3", "CH3CH=CH3", "CH2=CH2", "C3H8"])("%s is another substance", (typed) => {
+    expect(markText(typed, monomer).correct).toBe(false);
+  });
+  test("a formula with other atoms is left as written", () => {
+    const ethanol: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["CH3CH2OH"], marks: 1 }], listingRule: false };
+    expect(markText("CH3CH2OH", ethanol).correct).toBe(true);
+    expect(markText("OHCH2CH3", ethanol).correct).toBe(false);
+  });
+});
+
+// C2 D F12 (24 Sep 2026): "poly(ethene) or poly(ethane)" was paid 1/1. CCEA's general marking instructions (C2 Higher
+// MS Summer 2021): "Additional incorrect responses cancel out a correct response." A hedge that offers a named wrong
+// answer (one of the part's common errors) beside the right one loses the mark the right one would earn.
+describe("a hedge with a named wrong answer", () => {
+  const polymer: TextSpec = { kind: "text", accepted: ["poly(ethene)", "polythene"], keyWords: [{ any: ["poly(ethene)", "polyethene", "polythene"], marks: 1 }], listingRule: false };
+  const wrong = [/\bpolyethane\b|\bpoly ?\(ethane\)|\bpoly ethane\b/i];
+  test.each(["poly(ethene) or poly(ethane)", "poly(ethane) or poly(ethene)", "polythene / polyethane", "poly(ethene) or polyethane"])("%s earns nothing", (typed) => {
+    const r = markText(typed, polymer, { wrongAnswers: wrong });
+    expect(r).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(r.feedback).toMatch(/cancels/);
+  });
+  test("two right spellings, or the right answer that names the wrong one as wrong, keep the mark", () => {
+    expect(markText("poly(ethene) or polythene", polymer, { wrongAnswers: wrong }).correct).toBe(true);
+    expect(markText("poly(ethene), not poly(ethane)", polymer, { wrongAnswers: wrong }).correct).toBe(true);
+    expect(markText("poly(ethene)", polymer, { wrongAnswers: wrong }).correct).toBe(true);
+  });
+  test("a sentence with or in it is not a hedge", () => {
+    const denature: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["denatured"], marks: 1 }], listingRule: false };
+    const r = markText("The enzyme is denatured because the active site changes shape or is destroyed by the heat", denature, { wrongAnswers: [/destroyed/i] });
+    expect(r.correct).toBe(true);
+  });
+  test("in a two-group part only the mark the hedge touches is lost", () => {
+    const two: TextSpec = {
+      kind: "text",
+      accepted: [],
+      keyWords: [
+        { any: ["ethene"], marks: 1 },
+        { any: ["addition"], marks: 1 },
+      ],
+      listingRule: false,
+    };
+    const r = markText("monomer: ethene or ethane; type: addition", two, { wrongAnswers: [/\bethane\b/i] });
+    expect(r).toMatchObject({ marksAwarded: 1, matchedGroups: [1] });
+  });
+});

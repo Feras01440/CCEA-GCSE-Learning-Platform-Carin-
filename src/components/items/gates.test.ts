@@ -110,3 +110,30 @@ describe("gateOptions: the options in a seeded order (engine item 11)", () => {
     expect(gateOptions({ type: "gate", id: "g", kind: "number", prompt: "p", answer: "1", explain: "e" })).toEqual([]);
   });
 });
+
+// C2 D F04 and F06 on the notes' own gates (24 Sep 2026): "Propene (C3H6)" was refused where the gate asks for the
+// name, and "four" / "3O2" where it asks for a number. CCEA's rule for a name given with its formula (C2 Higher MS
+// Summer 2021): the formula beside the name is ignored where the name is asked for, and the other way round.
+describe("markGate: a name with its formula, and a number as the stem invites it", () => {
+  const propene: GateBlock = { type: "gate", id: "g7", kind: "blank", prompt: "The monomer of poly(propene) is ____.", answer: "propene", explain: "" };
+  const formula: GateBlock = { type: "gate", id: "g9", kind: "blank", prompt: "The formula of ethene is ____.", answer: "C2H4", explain: "" };
+  const count: GateBlock = { type: "gate", id: "g3", kind: "number", prompt: "C₂H₅OH + ___ O₂ → 2CO₂ + 3H₂O", answer: "3", explain: "" };
+  test.each(["Propene (C3H6)", "propene, C3H6", "C3H6 (propene)", "propene / C3H6"])("%s answers a name gate", (typed) => {
+    expect(markGate(propene, typed)).toBe(true);
+  });
+  test.each(["C2H4 (ethene)", "ethene, C2H4"])("%s answers a formula gate", (typed) => {
+    expect(markGate(formula, typed)).toBe(true);
+  });
+  test("another name beside the formula is not the answer", () => {
+    expect(markGate(propene, "propane (C3H8)")).toBe(false);
+    expect(markGate(propene, "propene, propane")).toBe(false);
+    expect(markGate(formula, "C2H6 (ethene)")).toBe(false);
+  });
+  test.each(["3", "three", "3O2", "3 O2"])("%s answers the number gate", (typed) => {
+    expect(markGate(count, typed)).toBe(true);
+  });
+  test("a different number is not the answer", () => {
+    expect(markGate(count, "2O2")).toBe(false);
+    expect(markGate(count, "two")).toBe(false);
+  });
+});

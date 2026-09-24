@@ -17,6 +17,9 @@ import { completeFirstRun, tile } from "./helpers";
  *   top of the close card (160 px or more); the day's state late at night; and it holds still under reduced
  *   motion (no animation on any of those screens);
  * - nothing signed, and no figure, is ever inside a container that holds an answer field;
+ * - one Settings control reduces it to its voice or silences it (rule 2, 24 Sep): Words only keeps every line and
+ *   draws nothing (Today's line, the Letter waiting under Start, the hero, the Map's mark), Quiet says and draws
+ *   nothing and leaves the Letter owed, Full brings both back, and the radio holds her choice from the tap;
  * - everything she typed can be deleted, and Settings explains plain words in her words.
  *
  * The helpers read and write the app's own IndexedDB directly, because some states cannot be reached through
@@ -175,17 +178,38 @@ async function moveToNextDay(page: Page): Promise<void> {
   expect(failure, "moving to the next day").toBeNull();
 }
 
-/** A state row for an install whose Letter was read yesterday, with nothing said yet. */
-async function seedLetterRead(page: Page, plainModeUntil: string | null = null): Promise<void> {
-  const yesterday = await page.evaluate(() => {
+/** Yesterday on the device's own calendar, as the companion stores a day. */
+async function yesterdayOn(page: Page): Promise<string> {
+  return page.evaluate(() => {
     const d = new Date(Date.now() - 86_400_000);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   });
+}
+
+/** A state row for an install whose Letter was read yesterday, with nothing said yet. */
+async function seedLetterRead(page: Page, plainModeUntil: string | null = null): Promise<void> {
   await seedRow(page, "companionState", {
     id: "state",
     plainModeUntil,
     letterSeen: true,
-    letterOfferedOn: yesterday,
+    letterOfferedOn: await yesterdayOn(page),
+    name: null,
+    silenced: false,
+    recent: [],
+    updatedAt: new Date(),
+  });
+}
+
+/**
+ * A state row for an install whose Letter was first offered yesterday and is still unread, with nothing said yet: from
+ * today it waits under Start, sealed to one line, and Rowan speaks everywhere else.
+ */
+async function seedLetterWaiting(page: Page): Promise<void> {
+  await seedRow(page, "companionState", {
+    id: "state",
+    plainModeUntil: null,
+    letterSeen: false,
+    letterOfferedOn: await yesterdayOn(page),
     name: null,
     silenced: false,
     recent: [],
@@ -239,6 +263,17 @@ async function box(locator: Locator): Promise<{ x: number; y: number; width: num
   const b = await locator.boundingBox();
   expect(b, "the figure has a box on screen").not.toBeNull();
   return b!;
+}
+
+/**
+ * Silence, checked once the page has settled. Rowan's context comes from live queries that answer after the page's own
+ * rows appear (measured on build 7 in Full: 0 to 32 ms after Today's plan rows, 95 to 192 ms after the topic's h1,
+ * which is in the static HTML), so an absence asserted at once would pass before anything had had the chance to speak,
+ * and a Quiet that stopped silencing could go unnoticed. The wait is four times the slowest of those.
+ */
+async function expectSilent(page: Page): Promise<void> {
+  await page.waitForTimeout(750);
+  await expect(page.locator("[data-companion], [data-companion-figure]")).toHaveCount(0);
 }
 
 /** The suite runs with reduced motion, so the hare's one arrival must never have been created: nothing moves. */
@@ -483,16 +518,18 @@ test.describe("Rowan", () => {
 
   test("Words only keeps every line and draws nothing; Quiet says nothing and draws nothing; Full brings the hare back", async ({ page }) => {
     // Rule 2 (art direction v2, appendix): Rowan "can be reduced to its voice or silenced at no cost". One control in
-    // Settings, obeyed by Today, the topic hero and the Map alike, and nothing of hers changes with it.
+    // Settings, obeyed by Today (the arrival line and the Letter waiting under Start), the topic hero and the Map alike,
+    // and nothing of hers changes with it.
     await installPastFirstRun(page);
-    await seedLetterRead(page);
+    await seedLetterWaiting(page);
 
     await page.goto("/settings/");
     const presence = tile(page, "How Rowan speaks").getByRole("radiogroup", { name: /What you see of Rowan/ });
     await expect(presence).toBeVisible();
     await expect(presence.getByRole("radio", { name: /^Full/ })).toBeChecked();
 
-    // Words only: the lines stay, in their places, and every drawing goes, the Map's mark included.
+    // Words only: the lines stay, in their places, and every drawing goes, the Map's mark included. `check()` also
+    // proves the radio holds her choice from the tap, before the device has answered (24 Sep: it snapped back).
     await presence.getByRole("radio", { name: /^Words only/ }).check();
     await expect.poll(async () => (await readState(page))?.figure).toBe(false);
     await page.goto("/");
@@ -500,7 +537,15 @@ test.describe("Rowan", () => {
     await expect(tonight.locator(ARRIVAL)).toHaveCount(1);
     await expect(tonight.locator(ARRIVAL)).not.toBeEmpty();
     await expect(page.locator("[data-companion-figure]")).toHaveCount(0);
-    await expect(tonight.locator("svg")).toHaveCount(0);
+    // Nothing drawn inside Rowan's line (the tile's own button keeps its arrow). Chained, not `${ARRIVAL} svg`: ARRIVAL
+    // is a selector list, so the string form matched the today-open line itself and failed at every hour before 21:30.
+    await expect(tonight.locator(ARRIVAL).locator("svg")).toHaveCount(0);
+    // The Letter waits in its one line with no mark, and the line starts where the eyebrow starts: no room kept for it.
+    const letter = page.locator('[data-companion="first-letter"]');
+    await expect(letter.locator('button[aria-expanded="false"]')).toContainText(/A short letter from Rowan/);
+    await expect(letter.locator("svg")).toHaveCount(0);
+    const indent = await letter.evaluate((el) => el.querySelector("button")!.getBoundingClientRect().left - el.querySelector("p")!.getBoundingClientRect().left);
+    expect(indent, "the sealed line keeps no room for the mark").toBeLessThanOrEqual(1);
     await page.goto(NEW_TOPIC);
     await expect(page.locator('header [data-companion="topic-open"]')).toBeVisible();
     await expect(page.locator("[data-companion-figure]")).toHaveCount(0);
@@ -508,19 +553,25 @@ test.describe("Rowan", () => {
     await expect(page.getByRole("heading", { level: 2, name: /Your journey/ })).toBeVisible();
     await expect(page.locator("#journey-heading svg")).toHaveCount(0);
 
-    // Quiet: nothing said and nothing drawn; the plan is still on the page in the product's own words.
+    // Quiet: nothing said and nothing drawn; the plan is still on the page in the product's own words. Back in
+    // Settings, the control reads her last choice from the device.
     await page.goto("/settings/");
+    await expect(presence.getByRole("radio", { name: /^Words only/ })).toBeChecked();
     await presence.getByRole("radio", { name: /^Quiet/ }).check();
     await expect.poll(async () => (await readState(page))?.silenced).toBe(true);
     await page.goto("/");
     await expect(tile(page, "Tonight")).toBeVisible();
-    await expect(page.locator("[data-companion], [data-companion-figure]")).toHaveCount(0);
     await expect(page.locator('[data-row="Next paper"]')).toBeVisible();
+    // Neither the line nor the Letter: the Letter is not offered while Quiet, and stays owed for the day she turns
+    // Rowan back on.
+    await expectSilent(page);
+    expect(await letterSeen(page)).toBe(false);
     await page.goto(NEW_TOPIC);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator("[data-companion], [data-companion-figure]")).toHaveCount(0);
+    await expectSilent(page);
 
-    // Full again: the hare is back beside the arrival line, at no cost to anything else.
+    // Full again: the hare is back beside the arrival line, and the waiting Letter is offered again with its mark, at
+    // no cost to anything else.
     await page.goto("/settings/");
     await presence.getByRole("radio", { name: /^Full/ }).check();
     await expect.poll(async () => {
@@ -528,7 +579,9 @@ test.describe("Rowan", () => {
       return s ? `${s.silenced}/${s.figure}` : "no state row";
     }).toBe("false/true");
     await page.goto("/");
-    await expect(tile(page, "Tonight").locator(`${ARRIVAL} [data-companion-figure="arrival"]`)).toHaveCount(1);
+    // Chained for the same reason: in the string form the today-open line itself satisfied this count before 21:30.
+    await expect(tile(page, "Tonight").locator(ARRIVAL).locator('[data-companion-figure="arrival"]')).toHaveCount(1);
+    await expect(page.locator('[data-companion="first-letter"] [data-companion-figure="letter"]')).toHaveCount(1);
   });
 
   test("shows what it remembers in Settings, forgets it on request, and explains plain words", async ({ page }) => {

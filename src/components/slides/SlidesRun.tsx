@@ -23,7 +23,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { clsx } from "clsx";
-import { InlineSvg, MdInlines, gateOptions, markGate, parseInline } from "@/components/items";
+import { InlineSvg, MdInlines, markGate, parseInline } from "@/components/items";
+import { deckGateOrders, retryOrder, shownOptions } from "@/lib/gate-order";
 import { rememberLessonWay } from "@/components/topic/lesson-way";
 import { locatorCls } from "@/components/shell/PageHeader";
 import type { Subject } from "@/lib/content/taxonomy";
@@ -31,14 +32,15 @@ import { DEFAULT_PLAN, paperPhrase, todayISO } from "@/lib/plan/exam-plan";
 import { useExamPlan } from "@/lib/plan/store";
 import { answeredGateIds } from "@/lib/session/flow";
 import { recordAttempt, touchSession } from "@/lib/session/record";
-import { deckStats, promiseLine, splitSentences, withRetries, type Card, type Deck } from "@/lib/slides/cards";
+import { deckMinutes, deckStats, promiseLine, splitSentences, withRetries, type Card, type Deck } from "@/lib/slides/cards";
 import { enrichmentFor } from "@/lib/slides/enrichment";
 import { clearPosition, readPosition, writePosition } from "@/lib/slides/position";
-import { gradeReturnDates, returnWord } from "@/lib/slides/returns";
+import { gradeReturnDates, recordRecallGrade, returnWord } from "@/lib/slides/returns";
 import { tap as haptic } from "@/lib/ux/haptics";
-import { calloutParts, gateParts, ideaParts, interactionParts, mediaParts, pointerParts, recallParts, recapParts, type CardParts, type GateAnswer } from "./cards";
-import { ILLUSTRATIONS } from "./enrich";
+import { GATE_NOTE, RETRY_NOTE, calloutParts, gateParts, ideaParts, interactionParts, mediaParts, pointerParts, recallParts, recapParts, type CardParts, type GateAnswer } from "./cards";
+import { ILLUSTRATIONS, INTERACTIONS } from "./enrich";
 import type { TapResult } from "./enrich/afs";
+import type { TapState } from "./enrich/afs-model";
 import { SlidesClose } from "./SlidesClose";
 import { Caption, CardTitle, Eyebrow, Kbd, Prose, Stage, Track, controlPrimary, quietLink } from "./ui";
 
@@ -57,10 +59,10 @@ export interface SlidesRunProps {
 }
 
 type Grade = "again" | "good" | "easy";
-const GRADES: Array<{ grade: Grade; label: string; when: string; hint: string }> = [
-  { grade: "again", label: "Again", when: "soon", hint: "Did not get it" },
-  { grade: "good", label: "Good", when: "in a few days", hint: "Got it with effort" },
-  { grade: "easy", label: "Easy", when: "later", hint: "Instant" },
+const GRADES: Array<{ grade: Grade; label: string; hint: string }> = [
+  { grade: "again", label: "Again", hint: "Did not get it" },
+  { grade: "good", label: "Good", hint: "Got it with effort" },
+  { grade: "easy", label: "Easy", hint: "Instant" },
 ];
 
 const SWIPE_PX = 60;
@@ -100,9 +102,15 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const [answers, setAnswers] = useState<Record<string, GateAnswer>>({});
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [checked, setChecked] = useState<Record<string, TapResult>>({});
+  // What she struck on a figure, by card key: kept by the run so a placed strike stays placed across a card change and a
+  // reload (art direction v2 §6, "no loss"; audit CQ-04).
+  const [figures, setFigures] = useState<Record<string, TapState>>({});
   const [checkSignal, setCheckSignal] = useState(0);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const [graded, setGraded] = useState<Record<string, Grade>>({});
+  // A recall card's typed answer (kept so "Show the answer" puts it beside the model answer) and the ones she skipped.
+  const [typed, setTyped] = useState<Record<string, string>>({});
+  const [skipped, setSkipped] = useState<Record<string, true>>({});
   const [answeredBefore, setAnsweredBefore] = useState<Set<string> | null>(null);
   const [startedAt] = useState(() => Date.now());
   const [restored, setRestored] = useState(false);
@@ -111,6 +119,17 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const N = cards.length;
   const card = cards[Math.min(index, N - 1)];
   const isLast = index >= N - 1;
+
+  // The order each gate's options are shown in: balanced over the lesson's gates, the same order Read shows (the gates
+  // are the note's, in the note's order). A retry moves the answer off the place it was lit in the first time.
+  const orders = useMemo(() => deckGateOrders(deck.cards.filter((c): c is Extract<Card, { kind: "gate" }> => c.kind === "gate" && !c.retry).map((c) => c.gate)), [deck.cards]);
+  const shownFor = useCallback(
+    (c: Extract<Card, { kind: "gate" }>): string[] => {
+      const first = shownOptions(c.gate, orders);
+      return c.retry ? retryOrder(c.gate, first) : first;
+    },
+    [orders],
+  );
 
   // Her place on this device with what the run has done, and the gates answered on any visit (so nothing is
   // recorded twice). A finished run starts afresh.
@@ -121,6 +140,9 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
       setAnswers(pos.answers);
       setChecked(pos.checked);
       setGraded(pos.graded);
+      setTyped(pos.typed);
+      setSkipped(pos.skipped);
+      setFigures(pos.figures as Record<string, TapState>);
       const expanded = withRetries(deck.cards, pos.missed);
       setIndex(Math.min(pos.at, expanded.length - 1));
     } else if (pos?.done) {
@@ -134,27 +156,30 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
 
   useEffect(() => {
     if (!restored) return;
-    writePosition(topicId, { at: index, done: isLast, missed, answers, checked, graded });
-  }, [answers, checked, graded, index, isLast, missed, restored, topicId]);
+    writePosition(topicId, { at: index, done: isLast, missed, answers, checked, graded, typed, skipped, figures });
+  }, [answers, checked, figures, graded, index, isLast, missed, restored, skipped, topicId, typed]);
 
-  // The day each grade would bring the current recall card back, from the scheduler; no date when it cannot be read.
-  const [gradeWhen, setGradeWhen] = useState<Record<Grade, string> | null>(null);
-  useEffect(() => {
+  // When the current recall card would come back under each grade, computed once at the moment she shows the answer,
+  // and the moment itself: the tap records the grade at that same moment, so the day stored is the day printed
+  // (src/lib/slides/returns.ts). No date is shown until it is known, and none when the scheduler cannot be read.
+  const [when, setWhen] = useState<{ key: string; now: Date; words: Record<Grade, string> | null } | null>(null);
+  const revealRecall = useCallback(() => {
     if (card.kind !== "recall") return;
-    let live = true;
-    setGradeWhen(null);
+    const key = card.key;
     const now = new Date();
+    setRevealed((r) => ({ ...r, [key]: true }));
+    setWhen({ key, now, words: null });
     gradeReturnDates(subject, unit, card.prompt.id, now)
-      .then((d) => {
-        if (live) setGradeWhen({ again: returnWord(d.again, now), good: returnWord(d.good, now), easy: returnWord(d.easy, now) });
-      })
+      .then((d) => setWhen((w) => (w && w.key === key && w.now === now ? { ...w, words: { again: returnWord(d.again, now), good: returnWord(d.good, now), easy: returnWord(d.easy, now) } } : w)))
       .catch(() => {
-        if (live) setGradeWhen(null);
+        // The scheduler could not be read: the buttons stay, with no date under them.
       });
-    return () => {
-      live = false;
-    };
   }, [card, subject, unit]);
+  // A card revealed earlier in the run (she went back, or reloaded) gets its dates again when it is shown.
+  useEffect(() => {
+    if (card.kind !== "recall" || !revealed[card.key] || graded[card.key] || when?.key === card.key) return;
+    revealRecall();
+  }, [card, graded, revealRecall, revealed, when]);
 
   // Focus follows the card: its title, else the card itself; the body starts at its top.
   const cardRef = useRef<HTMLDivElement>(null);
@@ -183,9 +208,18 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const tapChecked = card.kind === "interaction" ? checked[card.key] ?? null : null;
   const isRevealed = card.kind === "recall" ? revealed[card.key] === true : false;
   const isGraded = card.kind === "recall" ? graded[card.key] !== undefined : false;
+  const isSkipped = card.kind === "recall" ? skipped[card.key] === true : false;
 
+  // A recall card is optional: graded or skipped, the way on is open. Skipping records nothing and is never a miss.
+  // An interaction the registry cannot draw never locks the way on (audit CQ-20; the registry test keeps it from happening).
   const unlocked =
-    card.kind === "gate" ? gateAnswer !== null : card.kind === "interaction" ? tapChecked !== null : card.kind === "recall" ? isGraded : true;
+    card.kind === "gate"
+      ? gateAnswer !== null
+      : card.kind === "interaction"
+        ? tapChecked !== null || !INTERACTIONS[card.id]
+        : card.kind === "recall"
+          ? isGraded || isSkipped
+          : true;
 
   const go = useCallback(
     (to: number, dir: "forward" | "back") => {
@@ -232,17 +266,30 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const grade = useCallback(
     (g: Grade) => {
       if (card.kind !== "recall" || !revealed[card.key] || graded[card.key]) return;
+      // Recorded at the moment the dates were printed, so the day stored is the day she read under the button.
+      const at = when?.key === card.key ? when.now : new Date();
       haptic();
       setGraded((s) => ({ ...s, [card.key]: g }));
-      void recordAttempt({ item: { subject, unit, topicSlug: slug, id: card.prompt.id }, itemKind: "prompt", correct: g !== "again" })
+      setSkipped((s) => {
+        if (!s[card.key]) return s;
+        const rest = { ...s };
+        delete rest[card.key];
+        return rest;
+      });
+      void recordRecallGrade({ subject, unit, topicSlug: slug, id: card.prompt.id }, g, at)
         .then(() => touchSession(subject))
         .catch(() => {
           // As above.
         });
       go(index + 1, "forward");
     },
-    [card, go, graded, index, revealed, slug, subject, unit],
+    [card, go, graded, index, revealed, slug, subject, unit, when],
   );
+  const skip = useCallback(() => {
+    if (card.kind !== "recall" || graded[card.key]) return;
+    setSkipped((s) => ({ ...s, [card.key]: true }));
+    go(index + 1, "forward");
+  }, [card, go, graded, index]);
 
   /* ---- the primary action, shared by the control, Enter and the swipe ------------------------------- */
   const primary = (() => {
@@ -252,9 +299,10 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
       case "gate":
         return gateAnswer ? { label: "Continue", action: next, disabled: false } : { label: "Check", action: checkGate, disabled: !(gateSelected ?? "").trim() };
       case "interaction":
-        return tapChecked ? { label: "Continue", action: next, disabled: false } : { label: "Check", action: () => setCheckSignal((s) => s + 1), disabled: false };
+        return tapChecked || !INTERACTIONS[card.id] ? { label: "Continue", action: next, disabled: false } : { label: "Check", action: () => setCheckSignal((s) => s + 1), disabled: false };
       case "recall":
-        return isRevealed ? null : { label: "Show the answer", action: () => setRevealed((r) => ({ ...r, [card.key]: true })), disabled: false };
+        // Graded or skipped on an earlier pass: the way on is Continue. Otherwise, the answer first, then the grades.
+        return isGraded || (isSkipped && !isRevealed) ? { label: "Continue", action: next, disabled: false } : isRevealed ? null : { label: "Show the answer", action: revealRecall, disabled: false };
       case "close":
         return null;
       default:
@@ -291,8 +339,8 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
       if (/^[1-9]$/.test(e.key) && !typing) {
         const n = Number(e.key);
         if (card.kind === "gate" && card.gate.kind === "choice" && !gateAnswer) {
-          // The digit is the shown position (the seeded order), the same one the letter badge prints.
-          const opt = gateOptions(card.gate)[n - 1];
+          // The digit is the shown position, the same one the letter badge prints.
+          const opt = shownFor(card)[n - 1];
           if (opt) {
             e.preventDefault();
             setSelected((s) => ({ ...s, [card.key]: opt }));
@@ -305,7 +353,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [back, card, gateAnswer, grade, isGraded, isLast, isRevealed, next, primary, unlocked]);
+  }, [back, card, gateAnswer, grade, isGraded, isLast, isRevealed, next, primary, shownFor, unlocked]);
 
   /* ---- swipe ------------------------------------------------------------------------------------------ */
   const swipe = useRef<{ x: number; y: number; id: number } | null>(null);
@@ -346,17 +394,30 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
           answer: gateAnswer,
           onSelect: (opt) => setSelected((s) => ({ ...s, [card.key]: opt })),
           reactionId: enrichment?.reactions?.[card.gate.id] ?? null,
+          options: shownFor(card),
         });
       case "callout":
         return calloutParts(card);
       case "interaction":
-        return interactionParts(card, { checked: tapChecked, checkSignal, onChecked: (r) => setChecked((c) => ({ ...c, [card.key]: r })) });
+        return interactionParts(card, {
+          checked: tapChecked,
+          checkSignal,
+          onChecked: (r) => setChecked((c) => ({ ...c, [card.key]: r })),
+          figure: figures[card.key],
+          onFigure: (s) => setFigures((f) => ({ ...f, [card.key]: s })),
+        });
       case "recap":
         return recapParts(card, enrichment?.recapGlyphs ?? null, retriesNote);
       case "pointer":
         return pointerParts(card);
       case "recall":
-        return recallParts(card, isRevealed);
+        return recallParts(card, {
+          revealed: isRevealed,
+          typed: typed[card.key] ?? "",
+          onType: (text) => setTyped((t) => ({ ...t, [card.key]: text })),
+          graded: graded[card.key] ?? null,
+          skipped: isSkipped,
+        });
       default:
         return null;
     }
@@ -385,22 +446,27 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   );
 
   /* ---- the one control, and the foot it sits in ------------------------------------------------------- */
+  const grading = card.kind === "recall" && isRevealed && !isGraded;
+  const words = card.kind === "recall" && when?.key === card.key ? when.words : null;
   const control: ReactNode = (() => {
     if (card.kind === "close") return null;
-    if (card.kind === "recall" && isRevealed) {
+    if (grading) {
       return (
-        <div role="group" aria-label="How did it go?" className="grid grid-cols-3 gap-2.5" data-grades>
+        <div role="group" aria-label="How did it go? Each says when the card comes back." className="grid grid-cols-3 gap-2.5" data-grades>
           {GRADES.map((g) => (
             <button
               key={g.grade}
               type="button"
               title={g.hint}
-              disabled={isGraded}
               onClick={() => grade(g.grade)}
+              data-grade={g.grade}
               className="tap tap-lg flex flex-col items-center justify-center rounded-[12px] border border-line-3 bg-surface px-2 font-sans text-[16px] font-semibold leading-tight text-ink transition-transform duration-150 hover:bg-surface-2 active:scale-[0.98] disabled:pointer-events-none"
             >
               {g.label}
-              <span className="text-[13px] font-normal text-ink-2">{gradeWhen?.[g.grade] ?? g.when}</span>
+              {/* The day this grade stores, once the scheduler has said it; the line keeps its height meanwhile. */}
+              <span className="text-[13px] font-normal text-ink-2" data-when>
+                {words?.[g.grade] ?? " "}
+              </span>
             </button>
           ))}
         </div>
@@ -414,31 +480,49 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     );
   })();
 
+  /** Skip, on every recall card until it is graded: nothing is recorded and nothing counts against her. */
+  const skipButton =
+    card.kind === "recall" && !isGraded && !isSkipped ? (
+      <button type="button" className={quietLink} onClick={skip} data-skip>
+        Skip
+        <span className="sr-only">: nothing is recorded</span>
+      </button>
+    ) : null;
+
   const footNote: ReactNode =
     card.kind === "title" ? (
       <Link href={topicHref} className={quietLink} onClick={() => rememberLessonWay("read")} data-way="read">
         Read it as a page instead
       </Link>
     ) : card.kind === "gate" && !gateAnswer ? (
-      <Caption className="text-center lg:text-left">Nothing here is scored; a miss comes back before the recap.</Caption>
-    ) : card.kind === "recall" && isRevealed && !isGraded ? (
-      <Caption className="text-center lg:text-left">Again is honest, not a penalty: the card comes back sooner.</Caption>
-    ) : null;
+      // Said once: on the desktop the same line stands beside the gate (audit CD-10).
+      <Caption className="text-center lg:hidden">{card.retry ? RETRY_NOTE : GATE_NOTE}</Caption>
+    ) : grading ? (
+      <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-4">
+        <Caption className="text-center lg:text-left">Again is honest, not a penalty: the card comes back sooner.</Caption>
+        {skipButton}
+      </div>
+    ) : (
+      skipButton
+    );
 
   const hints: ReactNode = (
     <div className="hidden items-center gap-4 font-sans text-[13px] text-ink-3 lg:flex" data-hints>
       <span>
         <Kbd>←</Kbd> <Kbd>→</Kbd> move
       </span>
-      <span>
-        <Kbd>Enter</Kbd> {card.kind === "gate" || card.kind === "interaction" ? "check" : card.kind === "recall" && !isRevealed ? "show" : "continue"}
-      </span>
-      {card.kind === "gate" && card.gate.kind === "choice" && (
+      {primary && (
+        <span>
+          {/* What Enter does now: the control's own word (audit CQ-14: it said "check" under a Continue). */}
+          <Kbd>Enter</Kbd> {primary.label === "Start the slides" ? "start" : primary.label === "Show the answer" ? "show" : primary.label.toLowerCase()}
+        </span>
+      )}
+      {card.kind === "gate" && card.gate.kind === "choice" && !gateAnswer && (
         <span>
           <Kbd>1</Kbd> <Kbd>2</Kbd> <Kbd>3</Kbd> choose
         </span>
       )}
-      {card.kind === "recall" && isRevealed && (
+      {grading && (
         <span>
           <Kbd>1</Kbd> <Kbd>2</Kbd> <Kbd>3</Kbd> grade
         </span>
@@ -451,7 +535,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     <div className="flex flex-col gap-2 px-6 pb-6 pt-3 lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:border-t lg:border-line lg:bg-surface lg:px-10 lg:py-4" data-foot>
       {hints}
       <div className="flex flex-col gap-2 lg:flex-row-reverse lg:items-center lg:gap-4">
-        <div className={clsx("w-full", card.kind === "recall" && isRevealed ? "lg:w-[420px]" : "lg:w-[300px]")}>{control}</div>
+        <div className={clsx("w-full", grading ? "lg:w-[420px]" : "lg:w-[300px]")}>{control}</div>
         {footNote && <div className="flex justify-center lg:justify-start">{footNote}</div>}
       </div>
     </div>
@@ -573,11 +657,13 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
 
 /** The title card's words: the lede (two sentences), the honest promise, the three "you can" lines. */
 function TitleText({ card, stats }: { card: Extract<Card, { kind: "title" }>; stats: ReturnType<typeof deckStats> }) {
+  const { minutes, plus } = deckMinutes(stats);
   return (
     <div className="flex flex-col">
       {card.lede && <Prose md={ledeForTitle(card.lede)} size="lede" className="max-w-[42ch] lg:mt-5 lg:max-w-[44ch]" />}
-      <p className="mt-3 font-sans text-[15px] text-ink-2 lg:mt-3.5">
-        About <span className="font-semibold text-ink">{stats.minutes} minutes</span> · {promiseLine(stats)}
+      <p className="mt-3 font-sans text-[15px] text-ink-2 lg:mt-3.5" data-promise>
+        <span className="font-semibold text-ink">{minutes}</span>
+        {plus && ` ${plus}`} · {promiseLine(stats)}
       </p>
       {card.can.length > 0 && (
         <ul className="mt-3 flex max-w-[48ch] flex-col gap-1 font-sans text-[14px] leading-[1.4] text-ink-2 lg:mt-4 lg:text-[15px]">

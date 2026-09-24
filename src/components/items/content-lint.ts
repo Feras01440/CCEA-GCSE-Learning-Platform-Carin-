@@ -17,6 +17,7 @@ import { normaliseText } from "./text-marking";
 import { plotLattice, type HistogramExpect, type PointsExpect } from "@/lib/marking/plot";
 import { formatMatrixResponse, sameMatrixEntries } from "@/lib/marking/matrix";
 import { instructsAccuracy } from "./mark";
+import { planFade } from "./fade";
 
 const onlyObjects = (v: unknown): Record<string, unknown>[] =>
   Array.isArray(v) ? v.filter((x): x is Record<string, unknown> => !!x && typeof x === "object") : [];
@@ -396,8 +397,11 @@ function onlyStrings(v: unknown): string[] {
 /** Words too generic to count as a leak on their own (axis labels, diagram furniture). */
 const LEAK_STOP = new Set(["cell", "cells", "water", "time", "left", "right", "top", "bottom", "line", "point", "points", "graph", "table", "part", "parts", "side", "sides", "value", "values", "total", "start", "end", "high", "low", "large", "small", "more", "less", "increase", "decrease", "rate", "mass", "volume", "length", "area", "height", "width", "energy", "force", "light", "heat", "temperature", "distance", "speed", "number", "amount"]);
 
-/** The visible and accessible text of a figure: text nodes, <title> and <desc>, plus its alt. */
-function figureText(fig: Record<string, unknown>): string {
+/**
+ * The visible and accessible text of a figure, one entry per text node, <title>, <desc>, aria-label, alt and
+ * caption, as a reader meets them. Never joined into one string: two labels drawn side by side are two labels.
+ */
+function figureTextParts(fig: Record<string, unknown>): string[] {
   const parts: string[] = [];
   if (typeof fig.alt === "string") parts.push(fig.alt);
   if (typeof fig.caption === "string") parts.push(fig.caption);
@@ -406,7 +410,15 @@ function figureText(fig: Record<string, unknown>): string {
     for (const m of src.matchAll(/<(?:text|tspan|title|desc)\b[^>]*>([^<]*)</g)) parts.push(m[1]);
     for (const m of src.matchAll(/aria-label=(["'])(.*?)\1/g)) parts.push(m[2]);
   }
-  return normaliseText(parts.join(" \n "));
+  return parts;
+}
+
+/**
+ * Does one piece of the figure's text carry the phrase? Pieces are read one at a time, so two axis ticks side by
+ * side ("-2" and "2") never read as the point (-2, 2).
+ */
+function printedIn(fig: Record<string, unknown>, phrase: string): boolean {
+  return figureTextParts(fig).some((t) => ` ${normaliseText(t)} `.includes(` ${phrase} `));
 }
 
 /** The fraction spellings of a non-integer value with a small denominator ("5/9", "10/18"), at most six. */
@@ -440,9 +452,58 @@ function answerPhrases(part: Record<string, unknown>): string[] {
     out.push(...fractionSpellings(a.value));
   }
   // A letter label ("tube c", "point a") is how a figure is meant to be read, not a leak.
-  return out
-    .map(normaliseText)
-    .filter((p) => (/^\d/.test(p) ? /^\d+\/\d+$/.test(p) || /\d+(?:\.\d+)? [a-z°%µ]/.test(p) : p.replace(/[^a-z]/g, "").length >= 4 && !LEAK_STOP.has(p) && !/(^|\s)[a-z]$/.test(p)));
+  return out.map(normaliseText).filter(leakWorthy);
+}
+
+/** A phrase is worth looking for on a figure: a number only with its unit (or as a fraction), a word only of four letters or more that is not diagram furniture. */
+function leakWorthy(p: string): boolean {
+  return /^\d/.test(p) ? /^\d+\/\d+$/.test(p) || /\d+(?:\.\d+)? [a-z°%µ]/.test(p) : p.replace(/[^a-z]/g, "").length >= 4 && !LEAK_STOP.has(p) && !/(^|\s)[a-z]$/.test(p);
+}
+
+/** Working as plain words: maths unwrapped, bold dropped, the common TeX spelled out. */
+function plainWorking(s: string): string {
+  return s
+    .replace(/\$\$?([^$]*)\$\$?/g, "$1")
+    .replace(/\\(?:text|mathrm|textrm|mathbf)\s*\{([^}]*)\}/g, "$1")
+    .replace(/\\d?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, "$1/$2")
+    .replace(/\^\s*\{?\\circ\}?/g, "°")
+    .replace(/\\times|\\cdot/g, "×")
+    .replace(/\\div/g, "÷")
+    .replace(/\\[,;:! ]/g, " ")
+    .replace(/\\left|\\right/g, "")
+    .replace(/[{}]/g, "")
+    .replace(/\*\*/g, "");
+}
+
+/** A number and the unit of measure printed after it ("150 s", "40 °C", "5 m/s²"); a coefficient ("3x") is not one. */
+const VALUE_AND_UNIT = /(?<![\w.^])(-?\d+(?:\.\d+)?)(?![\w.^])\s?(°\s?C|°|%|m\/s²|m\/s\^2|m\/s|km\/h|cm³|cm²|dm³|m³|m²|mm|cm|km|kg|mg|kJ|kW|kPa|Pa|Hz|mol|ms|min|hours?|minutes?|seconds?|metres?|degrees?|Ω|[smgJWNVAKp](?![a-z]))/g;
+
+/**
+ * What she writes for one step of a worked example in a faded version: the spellings its input spec accepts, or,
+ * with no spec (her line is compared with the authored working), the working's values with their units and any
+ * statement of four words or fewer ("Purple.").
+ */
+type Phrase = { raw: string; norm: string };
+const phrase = (raw: string): Phrase => ({ raw: raw.trim(), norm: normaliseText(raw) });
+
+function stepAnswerPhrases(step: Record<string, unknown>): Phrase[] {
+  if (step.input && typeof step.input === "object") return answerPhrases({ answer: step.input }).map((p) => ({ raw: p, norm: p }));
+  const out: Phrase[] = [];
+  for (const raw of String(step.working ?? "").split("\n")) {
+    const line = plainWorking(raw).trim();
+    if (!line || line.startsWith("|")) continue;
+    for (const m of line.matchAll(VALUE_AND_UNIT)) out.push(phrase(`${m[1]} ${m[2]}`));
+    if (!/[=≈]/.test(line) && line.split(/\s+/).length <= 4) out.push(phrase(line.replace(/[.;:,!?]+$/, "")));
+  }
+  return out.filter((p) => leakWorthy(p.norm));
+}
+
+/** What the problem version asks for: the final answer's values with their units, and its coordinate pairs. */
+function finalAnswerPhrases(finalAnswer: string): Phrase[] {
+  const text = plainWorking(finalAnswer);
+  const values = [...text.matchAll(VALUE_AND_UNIT)].map((m) => phrase(`${m[1]} ${m[2]}`)).filter((p) => leakWorthy(p.norm));
+  const points = [...text.matchAll(/\(\s*-?\d+(?:\.\d+)?\s*,\s*-?\d+(?:\.\d+)?\s*\)/g)].map((m) => phrase(m[0]));
+  return [...values, ...points];
 }
 
 /**
@@ -455,19 +516,43 @@ export function figureLeakWarnings(bundle: unknown, label: string): string[] {
   const out: string[] = [];
   const b = bundle && typeof bundle === "object" ? (bundle as Record<string, unknown>) : null;
   if (!b) return out;
-  // A worked example's figure sits above the twin's answer box, so it leaks the same way a question figure does:
-  // the twin's own answer phrases, and the coordinates the final answer names.
+  // Worked examples (WorkedExampleAsQuestion.tsx). The twin mode shows only the twin's figure, beside the twin's
+  // answer box. The example's own figure is shown in the full, faded and problem modes, so it must not print what
+  // those modes ask her to write: a step a faded version leaves to her, or the final answer the problem version
+  // asks for. Never the twin's answer, which is never beside that figure. scripts/qa/figure-leaks.mjs applies the
+  // same rule with its finer tiers.
   for (const we of onlyObjects(b.workedExamples)) {
+    const id = String(we.id);
     const fig = we.figure && typeof we.figure === "object" ? (we.figure as Record<string, unknown>) : null;
-    if (!fig) continue;
-    const text = figureText(fig);
-    const phrases: string[] = [];
+    if (fig) {
+      const stem = typeof we.stem === "string" ? we.stem : "";
+      const steps = onlyObjects(we.steps).filter((s) => typeof s.n === "number") as Array<Record<string, unknown> & { n: number }>;
+      const faded = onlyObjects(we.faded).map((f) => ({ showSteps: Number(f.showSteps), studentSupplies: Array.isArray(f.studentSupplies) ? (f.studentSupplies as number[]) : [] }));
+      const reported = new Set<number>();
+      for (const mode of ["faded1", "faded2"] as const) {
+        const plan = planFade({ steps: steps as never, faded }, mode);
+        const given = ` ${normaliseText([stem, ...steps.filter((s) => s.n <= plan.showSteps).map((s) => String(s.working ?? ""))].join(" \n "))} `;
+        for (const n of plan.supplied) {
+          const step = steps.find((s) => s.n === n);
+          if (!step || reported.has(n)) continue;
+          const hit = stepAnswerPhrases(step).find((p) => printedIn(fig, p.norm) && !given.includes(` ${p.norm} `));
+          if (hit) {
+            reported.add(n);
+            out.push(`${label} ${id}: the worked example's figure prints "${hit.raw}", which step ${n} asks her to write in a faded version`);
+          }
+        }
+      }
+      const givenStem = ` ${normaliseText(stem)} `;
+      const hit = finalAnswerPhrases(typeof we.finalAnswer === "string" ? we.finalAnswer : "").find((p) => printedIn(fig, p.norm) && !givenStem.includes(` ${p.norm} `));
+      if (hit) out.push(`${label} ${id}: the worked example's figure prints "${hit.raw}", which the problem version asks for as the final answer`);
+    }
     const twin = we.twin && typeof we.twin === "object" ? (we.twin as Record<string, unknown>) : null;
-    if (twin) phrases.push(...answerPhrases(twin));
-    const final = typeof we.finalAnswer === "string" ? we.finalAnswer : "";
-    for (const m of final.matchAll(/\(\s*-?\d+(?:\.\d+)?\s*,\s*-?\d+(?:\.\d+)?\s*\)/g)) phrases.push(normaliseText(m[0]));
-    const hit = phrases.find((p) => p && ` ${text} `.includes(` ${p} `));
-    if (hit) out.push(`${label} ${String(we.id)}: the worked example's figure prints "${hit}", which its answer gives`);
+    const twinFig = twin?.figure && typeof twin.figure === "object" ? (twin.figure as Record<string, unknown>) : null;
+    if (twin && twinFig) {
+      const stem = ` ${normaliseText(typeof twin.stem === "string" ? twin.stem : "")} `;
+      const hit = answerPhrases(twin).find((p) => p && printedIn(twinFig, p) && !stem.includes(` ${p} `));
+      if (hit) out.push(`${label} ${id}: the twin's figure prints "${hit}", which the twin asks her to give`);
+    }
   }
   // Two labels drawn on top of each other are unreadable: same anchor x and baselines within 12 px.
   const overlapIn = (fig: Record<string, unknown>): string | null => {
@@ -490,10 +575,10 @@ export function figureLeakWarnings(bundle: unknown, label: string): string[] {
   for (const q of onlyObjects(b.questions)) {
     const figs = [...onlyObjects(q.figures), ...onlyObjects(q.parts).flatMap((p) => onlyObjects(p.figures))];
     if (figs.length === 0) continue;
-    const texts = figs.map(figureText);
     for (const p of onlyObjects(q.parts)) {
       for (const phrase of answerPhrases(p)) {
-        const hit = texts.findIndex((t) => ` ${t} `.includes(` ${phrase} `));
+        // one text node, title or alt at a time: two labels side by side ("wheat", "hawthorn") are not one phrase
+        const hit = figs.findIndex((f) => printedIn(f, phrase));
         if (hit >= 0) {
           out.push(`${label} ${String(q.id)}(${String(p.id)}): figure ${hit + 1} prints "${phrase}", which this part asks her to give`);
           break;

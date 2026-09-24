@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { MarkPoint } from "@/lib/content/schema";
-import { markWorking, methodSteps } from "./working";
+import { ladderTotal, markWorking, methodSteps } from "./working";
 
 const point = (p: Partial<MarkPoint> & Pick<MarkPoint, "id" | "code" | "marks" | "for">): MarkPoint => p as MarkPoint;
 
@@ -169,5 +169,54 @@ describe("markWorking: a line of working read for what it says (engine item 1, 2
     expect(markWorking(["y = \\dfrac{5}{4 \\times 5^2} = \\dfrac{5}{100} = \\dfrac{1}{20}"], scheme, "").marks).toBe(1);
     const lowest = [point({ id: "m1", code: "M", marks: 1, for: "$\\dfrac{5}{14}$" })];
     expect(markWorking(["P = 1 - 9/14 = 5/14"], lowest, "").marks).toBe(0);
+  });
+});
+
+// Trial audit MK-04 (24 Sep 2026, reproduced 25 Sep on fm1/algebraic-fractions-simplify): the ladder paid the whole
+// tariff for a wrong answer from bare fragments. "(x+3)" alone paid "(x + 3) cancelled", "2(x-2)" alone paid "answer
+// fully simplified to 2(x - 2) over (x + 3)", "5(x+4)" alone paid "both lines factorised: 5(x + 4) over (x + 4)(x - 4)",
+// while the line a candidate writes for that mark, "5(x+4)/((x+4)(x-4))", paid nothing. Now: "A over B" in a point is
+// one piece of working that needs both A and B; a lone bracket such as "(x + 3)" is never evidence on its own; a point
+// earns only with the points it `dependsOn`; and a wrong answer never collects every mark (ladderTotal).
+describe("markWorking: fractions, lone brackets and dependent points (MK-04)", () => {
+  const q9 = [
+    point({ id: "MW1", code: "MW", marks: 1, for: "numerator factorised: 2(x + 3)(x - 2)" }),
+    point({ id: "MW2", code: "MW", marks: 1, for: "denominator factorised: (x + 3)²" }),
+    point({ id: "MW3", code: "MW", marks: 1, for: "(x + 3) cancelled", ft: true, dependsOn: ["MW1", "MW2"] }),
+    point({ id: "W1", code: "W", marks: 1, for: "answer fully simplified to 2(x - 2) over (x + 3), with no common factor left", dependsOn: ["MW3"] }),
+  ];
+  const q1 = [
+    point({ id: "MW1", code: "MW", marks: 1, for: "both lines factorised: 5(x + 4) over (x + 4)(x - 4)" }),
+    point({ id: "MW2", code: "MW", marks: 1, for: "(x + 4) cancelled and the answer left as 5 over (x - 4)", ft: true, dependsOn: ["MW1"] }),
+  ];
+  test("the audit's four fragments earn the two factorisations and nothing more", () => {
+    const w = markWorking(["2(x+3)(x-2)", "(x+3)^2", "(x+3)", "2(x-2)"], q9);
+    expect(w.earned.map((e) => e.id)).toEqual(["MW1", "MW2"]);
+    expect(w.marks).toBe(2);
+  });
+  test("a lone bracket or a lone numerator is no evidence", () => {
+    expect(markWorking(["(x+3)"], q9).marks).toBe(0);
+    expect(markWorking(["2(x-2)"], q9).marks).toBe(0);
+    expect(markWorking(["5(x+4)"], q1).marks).toBe(0);
+  });
+  test("the factorised fraction a candidate writes earns the factorising mark, as a line or as a chain", () => {
+    expect(markWorking(["5(x+4)/((x+4)(x-4))"], q1).earned.map((e) => e.id)).toEqual(["MW1"]);
+    expect(markWorking(["(5x+20)/(x^2-16) = 5(x+4)/((x+4)(x-4))"], q1).earned.map((e) => e.id)).toEqual(["MW1"]);
+    expect(markWorking(["(5x+20)/(x^2-16)"], q1).marks).toBe(0);
+    // The top and the bottom on lines of their own show both lines factorised too.
+    expect(markWorking(["5(x+4)", "(x+4)(x-4)", "5/(x-4)"], q1).earned.map((e) => e.id)).toEqual(["MW1", "MW2"]);
+  });
+  test("a point earns only with the points it depends on", () => {
+    // The fraction she reaches cannot pay "fully simplified" when nothing before it was shown.
+    expect(markWorking(["2(x-2)/(x+3)"], q9).earned.map((e) => e.id)).not.toContain("W1");
+    const all = markWorking(["2(x+3)(x-2)/(x+3)^2", "(x+3)^2", "2(x-2)/(x+3)"], q9);
+    expect(all.earned.map((e) => e.id)).toEqual(["MW1", "MW2"]);
+  });
+  test("ladderTotal: a wrong answer never collects every mark; a right one keeps its own", () => {
+    expect(ladderTotal({ correct: false, marksAwarded: 0 }, 4, 4)).toBe(3);
+    expect(ladderTotal({ correct: false, marksAwarded: 0 }, 2, 4)).toBe(2);
+    expect(ladderTotal({ correct: false, marksAwarded: 3 }, 1, 4)).toBe(3);
+    expect(ladderTotal({ correct: true, marksAwarded: 4 }, 0, 4)).toBe(4);
+    expect(ladderTotal({ correct: false, marksAwarded: 0 }, null, 4)).toBe(0);
   });
 });

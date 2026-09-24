@@ -38,22 +38,45 @@
  *               by the item's verification ref or its itemId, with status verified or published.
  *               A shortfall is a WARNING (one summary line by default; the note-by-note report
  *               with --depth) until the lead promotes it with --depth-fatal.
+ *   teach       teach → show → check (the owner's ruling of 24 Sep 2026, STANDARDS.md "Teach before
+ *               you check"): every gate in the body follows, within its own section, at least one
+ *               block that explains the idea and at least one that shows it worked (the definitions
+ *               are in scripts/qa/teach-show-check.mjs). A gate that comes first is a WARNING (one
+ *               summary line by default, the list with --teach or --depth) until --teach-fatal. The
+ *               Slides rule's "a gate at most every four cards" is a ceiling, never a quota, so the
+ *               report no longer asks for a gate every four cards.
+ *   prompts-few retrieval prompts are few, optional and short (the owner's verdict of 24 Sep 2026,
+ *               23:40): a note wires at most two, and no shipped prompt expects an answer of more
+ *               than 25 words (scripts/qa/prompt-few.mjs). A WARNING (the list with --prompts or
+ *               --depth) until --prompts-fatal. The depth row "prompts embedded in the note" reads
+ *               1–2 in every band to match.
  *
  * --unit <id>     check one unit only (m3, fm1, b1 …); may be repeated
  * --traps-fatal   count an unanswered examiner source as a breach rather than a warning
  * --depth         print the depth report note by note (band, each measure against its floor)
  * --depth-fatal   count a depth shortfall as a breach rather than a warning
- * --json          print the findings as JSON for an author's generator (the depth rows under `depth`)
+ * --teach         print every gate that comes before its section explains and shows the idea
+ * --teach-fatal   count such a gate as a breach rather than a warning
+ * --prompts       print every note that wires more than two prompts and every over-long prompt answer
+ * --prompts-fatal count those as breaches rather than warnings
+ * --json          print the findings as JSON for an author's generator (the depth rows under `depth`,
+ *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`)
  */
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { SEE_HEADING, describeFailure, teachShowCheck } from "./teach-show-check.mjs";
+import { ANSWER_WORDS, WIRED_MAX, promptFindings } from "./prompt-few.mjs";
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
 const trapsFatal = argv.includes("--traps-fatal");
 const depthReport = argv.includes("--depth");
 const depthFatal = argv.includes("--depth-fatal");
+const teachReport = argv.includes("--teach");
+const teachFatal = argv.includes("--teach-fatal");
+const promptsReport = argv.includes("--prompts");
+const promptsFatal = argv.includes("--prompts-fatal");
 const units = argv.flatMap((a, i) => (a === "--unit" ? [String(argv[i + 1] || "").toLowerCase()] : []));
 
 const ROOT = path.resolve("packs");
@@ -201,12 +224,14 @@ function everyString(block) {
 // `synoptic` is [parts, marks] for the one chain question an H bundle must hold; `tail` is the
 // smallest mixed set and `tailOnly` the tail-only items it must hold (a practice question that is
 // not a ladder rung, carrying "mixed-tail" in its emphasis); `recap` is [min, max] lines; `d4`/`d5`
-// count practice items at those rungs; `rp` is a minimum with no maximum.
+// count practice items at those rungs; `rp` is a minimum with no maximum. `embedded` (the prompts the
+// note wires) was a floor of 3–5 until the owner's verdict of 24 Sep 2026 (few, optional, short: one or
+// two per topic); it is now 1 to WIRED_MAX in every band, the same limit prompt-few.mjs warns on.
 const FLOOR = {
-  L: { sections: 4, gates: 5, words: [450, 750], variants: 1, whySection: false, twists: 0, further: false, recap: [3, 5], visuals: 3, we: 1, practice: [6, 9], d4: 0, d5: 0, tail: 0, tailOnly: 0, exam: 1, multi: 0, synoptic: null, ftm: 1, rp: 4, embedded: 3, pre: 3, post: 1 },
-  S: { sections: 6, gates: 7, words: [600, 950], variants: 2, whySection: false, twists: 2, further: false, recap: [3, 5], visuals: 4, we: 2, practice: [8, 10], d4: 1, d5: 0, tail: 3, tailOnly: 0, exam: 2, multi: 1, synoptic: null, ftm: 2, rp: 6, embedded: 4, pre: 3, post: 3 },
-  H4: { sections: 8, gates: 10, words: [850, 1300], variants: 3, whySection: true, twists: 3, further: true, recap: [4, 5], visuals: 6, we: 3, practice: [12, 16], d4: 3, d5: 1, tail: 4, tailOnly: 1, exam: 4, multi: 2, synoptic: [3, 8], ftm: 3, rp: 8, embedded: 5, pre: 3, post: 5 },
-  H5: { sections: 10, gates: 12, words: [1000, 1600], variants: 4, whySection: true, twists: 4, further: true, recap: [4, 5], visuals: 7, we: 4, practice: [14, 18], d4: 5, d5: 2, tail: 5, tailOnly: 1, exam: 4, multi: 3, synoptic: [4, 10], ftm: 3, rp: 10, embedded: 5, pre: 3, post: 6 },
+  L: { sections: 4, gates: 5, words: [450, 750], variants: 1, whySection: false, twists: 0, further: false, recap: [3, 5], visuals: 3, we: 1, practice: [6, 9], d4: 0, d5: 0, tail: 0, tailOnly: 0, exam: 1, multi: 0, synoptic: null, ftm: 1, rp: 4, embedded: [1, WIRED_MAX], pre: 3, post: 1 },
+  S: { sections: 6, gates: 7, words: [600, 950], variants: 2, whySection: false, twists: 2, further: false, recap: [3, 5], visuals: 4, we: 2, practice: [8, 10], d4: 1, d5: 0, tail: 3, tailOnly: 0, exam: 2, multi: 1, synoptic: null, ftm: 2, rp: 6, embedded: [1, WIRED_MAX], pre: 3, post: 3 },
+  H4: { sections: 8, gates: 10, words: [850, 1300], variants: 3, whySection: true, twists: 3, further: true, recap: [4, 5], visuals: 6, we: 3, practice: [12, 16], d4: 3, d5: 1, tail: 4, tailOnly: 1, exam: 4, multi: 2, synoptic: [3, 8], ftm: 3, rp: 8, embedded: [1, WIRED_MAX], pre: 3, post: 5 },
+  H5: { sections: 10, gates: 12, words: [1000, 1600], variants: 4, whySection: true, twists: 4, further: true, recap: [4, 5], visuals: 7, we: 4, practice: [14, 18], d4: 5, d5: 2, tail: 5, tailOnly: 1, exam: 4, multi: 3, synoptic: [4, 10], ftm: 3, rp: 10, embedded: [1, WIRED_MAX], pre: 3, post: 6 },
 };
 // Only shipped items count, by the pipeline's rule (pipeline/build-content.mts): a log is found by the
 // item's `verification` ref (worked examples, questions) or by `itemId` (diagnostics, find-the-mistake,
@@ -222,7 +247,7 @@ const ROLES = ["idea", "why", "variant", "see", "twists", "further", "derivation
 const ROLE_GUESS = [
   ["recap", /^you can now$/i],
   ["pointer", /^in the exam$/i],
-  ["see", /\bsee it\b|\bworked in full\b|\bstart to finish\b|\bwritten out\b|\bworked example\b/i],
+  ["see", SEE_HEADING], // shared with teach-show-check.mjs, so the two scripts agree on a see section
   ["twists", /\btwist|\bdisguis|\bthe ways the paper\b|\bhow the paper asks\b|\bhow it is asked\b/i],
   ["further", /\bgoing further\b|\bbeyond the routine\b|\bthe hard end\b|\bharder end\b/i],
   ["derivation", /\bderiv|\bwhere .* comes? from\b|\bproof\b|\bprov(e|ing)\b|\bfrom first principles\b/i],
@@ -231,11 +256,13 @@ const ROLE_GUESS = [
 const guessRole = (text) => ROLE_GUESS.find(([, re]) => re.test(String(text ?? "")))?.[0] ?? null;
 
 // Slides-readiness (decision 9): one idea per block, headings as card titles, captions that stand
-// alone, a gate at most every four cards, no two visuals back to back.
+// alone, no two visuals back to back. "A gate at most every four cards" is a ceiling, never a quota
+// (the owner's ruling, 24 Sep 2026): the report no longer asks for a gate every four cards; where a
+// gate may stand is the teach → show → check rule (teach-show-check.mjs). The longest run of cards
+// between gates is still measured and shown in the minutes line, for information.
 const CARD_WORDS = 75;
 const TITLE_WORDS = 8;
 const CAPTION_WORDS = 25;
-const CARDS_PER_GATE = 4;
 
 // Figures: a label renders at font-size × column ÷ viewBox width, and the phone column is 358 px.
 const PHONE_COLUMN = 358;
@@ -431,7 +458,15 @@ function depthOf(blocks, bundle) {
   if (floor.synoptic) row(`synoptic (≥ ${floor.synoptic[0]} parts, ≥ ${floor.synoptic[1]} marks)`, synoptic, synoptic >= 1, "≥ 1");
   row("find-the-mistake", findTheMistake.length, findTheMistake.length >= floor.ftm, `≥ ${floor.ftm}`);
   row("retrieval prompts", prompts.length, prompts.length >= floor.rp, `≥ ${floor.rp}`);
-  row("prompts embedded in the note", embedded, embedded >= floor.embedded, `≥ ${floor.embedded}`);
+  // The floor is one wired prompt; the ceiling of two is the prompts-few warning's business (its own
+  // summary line), so a note over it is not counted short of the depth floor twice over.
+  row(
+    "prompts embedded in the note",
+    embedded,
+    embedded >= floor.embedded[0],
+    `≥ ${floor.embedded[0]}, at most ${floor.embedded[1]}`,
+    embedded > floor.embedded[1] ? `${embedded - floor.embedded[1]} over the ceiling: unwire the rest (prompts-few warning; few, optional and short, the owner, 24 Sep)` : undefined,
+  );
   row("diagnostics pre", preEff, preEff >= floor.pre, `≥ ${floor.pre}`, pre === 0 && post === 0 && both ? "when=both, split by the app" : undefined);
   row("diagnostics post", postEff, postEff >= floor.post, `≥ ${floor.post}`);
   const structureOk = rows.every((r) => r.ok);
@@ -491,7 +526,6 @@ function depthOf(blocks, bundle) {
   if (noCaption) slides.push(`${noCaption} figure(s) without a caption`);
   if (longCaptions) slides.push(`${longCaptions} caption(s) over ${CAPTION_WORDS} words`);
   if (untitledCallouts) slides.push(`${untitledCallouts} callout(s) without a title`);
-  if (maxCards > CARDS_PER_GATE) slides.push(`${maxCards} cards between gates (max ${CARDS_PER_GATE})`);
 
   // figures: note figures and the bundle's own SVGs
   const noteFigures = blocks.map((b, i) => ({ where: `note#${i}`, svg: b.type === "figure" && b.svg ? b.svg : null })).filter((f) => f.svg);
@@ -537,7 +571,7 @@ function depthOf(blocks, bundle) {
     figures,
     maths: mathsLines,
     drafts: draftCount ? Object.entries(drafts).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(", ") : "",
-    minutes: { note: noteMinutes, learn: learnMinutes, sit: sitMinutes, topic: topicMinutes, slides: slidesMinutes, cards: cards + closingCards },
+    minutes: { note: noteMinutes, learn: learnMinutes, sit: sitMinutes, topic: topicMinutes, slides: slidesMinutes, cards: cards + closingCards, longestRun: maxCards },
   };
 }
 
@@ -655,7 +689,15 @@ function checkNote(file, orphans) {
     for (const s of [...depth.slides, ...depth.figures, ...depth.maths]) say.push({ check: "depth", detail: s, depth: true });
   }
 
-  const isWarning = (f) => (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal);
+  // teach → show → check: warnings unless --teach-fatal
+  const teach = teachShowCheck(blocks);
+  for (const f of teach.failures) say.push({ check: "teach", detail: describeFailure(f), teach: true });
+
+  // retrieval prompts few and short: warnings unless --prompts-fatal
+  const prompts = bundle ? promptFindings(blocks, bundle) : [];
+  for (const f of prompts) say.push({ check: "prompts", detail: f.detail, few: true });
+
+  const isWarning = (f) => (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !teachFatal) || (f.few && !promptsFatal);
   return {
     unit,
     slug,
@@ -663,6 +705,8 @@ function checkNote(file, orphans) {
     findings: say.filter((f) => !isWarning(f)),
     warnings: say.filter((f) => f.check === "traps" && !trapsFatal),
     depth,
+    teach,
+    prompts,
   };
 }
 
@@ -706,6 +750,19 @@ const depthLine = measured.length
       .join(", ")} meet their band's floor (structure ${perBand.reduce((a, p) => a + p.structure, 0)}, sections ${perBand.reduce((a, p) => a + p.sections, 0)}, labelled ${perBand.reduce((a, p) => a + p.labelled, 0)} of ${measured.length})${depthReport ? "" : "; run --depth for the report"}.`
   : "";
 
+// teach → show → check, over every note checked
+const teachGates = notes.reduce((a, n) => a + n.teach.gates, 0);
+const teachFailing = notes.filter((n) => n.teach.failures.length);
+const teachCount = teachFailing.reduce((a, n) => a + n.teach.failures.length, 0);
+const teachLine = `teach → show → check: ${teachGates - teachCount} of ${teachGates} gates come after their section explains and shows the idea; ${teachCount} in ${teachFailing.length} of ${notes.length} notes come before${teachFatal ? "" : " (warnings; --teach-fatal makes them breaches)"}${teachReport || depthReport || !teachCount ? "" : "; run --teach for the list"}.`;
+
+// retrieval prompts few and short, over every note checked
+const promptNotes = notes.filter((n) => n.prompts.length);
+const wiredOver = notes.filter((n) => n.prompts.some((f) => f.kind === "wired")).length;
+const longAnswers = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "long").length, 0);
+const longWired = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "long" && f.wired).length, 0);
+const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired)${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
+
 if (asJson) {
   console.log(
     JSON.stringify(
@@ -719,6 +776,10 @@ if (asJson) {
         warned,
         depth: measured.map((n) => ({ unit: n.unit, slug: n.slug, ...n.depth })),
         depthSummary: perBand,
+        teach: teachFailing.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, gates: n.teach.gates, failures: n.teach.failures })),
+        teachSummary: { gates: teachGates, failing: teachCount, notes: teachFailing.length },
+        prompts: promptNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, findings: n.prompts })),
+        promptsSummary: { notes: notes.length, wiredOver, wiredMax: WIRED_MAX, longAnswers, longWired, answerWords: ANSWER_WORDS },
       },
       null,
       2,
@@ -747,8 +808,26 @@ if (asJson) {
       for (const s of d.slides) console.log(`  slides   ${s}`);
       for (const s of d.figures) console.log(`  figures  ${s}`);
       for (const s of d.maths) console.log(`  maths    ${s}`);
+      const t = n.teach;
+      console.log(`  ${t.failures.length ? "short" : "ok   "} teach → show → check: ${t.gates - t.failures.length} of ${t.gates} gates after their section explains and shows the idea (longest run between gates ${d.minutes.longestRun} cards, a ceiling, not a quota)`);
+      for (const f of t.failures) console.log(`  teach    ${describeFailure(f)}`);
+      for (const f of n.prompts) console.log(`  prompts  ${f.detail}`);
     }
     console.log(`\nper band: ${perBand.filter((p) => p.notes).map((p) => `${p.band}: ${p.notes} notes, structure floor ${p.structure}, section floor ${p.sections}, both ${p.both}, labelled ${p.labelled}`).join(" | ")}`);
+  }
+  if (teachReport && teachCount) {
+    console.log(`\nteach → show → check — gates that come before their section explains the idea and shows it worked (the owner's ruling, 24 Sep 2026):`);
+    for (const n of teachFailing) {
+      console.log(`\n${n.unit}/${n.slug}  ${n.teach.failures.length} of ${n.teach.gates} gates`);
+      for (const f of n.teach.failures) console.log(`  ${describeFailure(f)}`);
+    }
+  }
+  if (promptsReport && promptNotes.length) {
+    console.log(`\nretrieval prompts — few, optional and short (the owner's verdict, 24 Sep 2026): at most ${WIRED_MAX} wired in a note, no answer over ${ANSWER_WORDS} words:`);
+    for (const n of promptNotes) {
+      console.log(`\n${n.unit}/${n.slug}`);
+      for (const f of n.prompts) console.log(`  ${f.detail}${f.kind === "long" && !f.wired ? " (not wired; the review queue asks it)" : ""}`);
+    }
   }
   if (stale.length) {
     console.log(`\nallow-list entries for sources no topic cites any more (${ALLOW_FILE}):`);
@@ -761,5 +840,7 @@ if (asJson) {
       : `\nlesson-v2: ${count} breach(es) in ${breached.length} of ${notes.length} note(s)${warnCount ? `, plus ${warnCount} warning(s)` : ""}${allowSaid}.`,
   );
   if (depthLine) console.log(depthLine);
+  console.log(teachLine);
+  console.log(promptsLine);
 }
 process.exit(count ? 1 : 0);

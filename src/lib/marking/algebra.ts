@@ -366,6 +366,9 @@ export function toLatex(input: string): string {
   // A numeric fraction written before a function ("1/2 log n", "3/4 sin x") is a coefficient, not a denominator:
   // implicit multiplication would otherwise bind the function into the denominator.
   s = s.replace(/(^|[^\w/.])(\d+)\/(\d+)\s*(?=\\?(?:log|ln|sin|cos|tan|sqrt)\b)/g, '$1\\frac{$2}{$3}');
+  // So is one followed by a space and then a letter or a bracket: "y = 1/2 x + 3" is half of x (FM3 D, 24 Sep 2026:
+  // it read as 1/(2x)). Written joined, "1/2x" keeps the reading 1/(2x).
+  s = s.replace(/(^|[^\w/.\\{])(\d+)\/(\d+)\s+(?=[A-Za-z(])/g, '$1\\frac{$2}{$3}');
 
   // MathLive / editor artefacts
   s = s
@@ -1023,9 +1026,27 @@ function shareCommonFactor(num: BoxedExpression, den: BoxedExpression, ctx: Ctx)
   return false;
 }
 
+/**
+ * A factor times one fraction, "2 × (x − 2)/(x + 2)" or "(1/3)(x − 6)", is that fraction with the factor on its
+ * numerator, as it is on paper: the × key (or "*") parsed it as a product with a fraction inside, which the form
+ * check called "not simplified" although it is the expected answer (trial audit MK-03, 24 Sep 2026). Anything else
+ * is returned as it was.
+ */
+function productAsOneFraction(e: MJ): MJ {
+  const h = head(e);
+  if (!h || !PRODUCT_HEADS.has(h)) return e;
+  const parts = args(e);
+  const fractions = parts.filter((p) => head(strip(p)) === 'Divide');
+  if (fractions.length !== 1) return e;
+  const others = parts.filter((p) => head(strip(p)) !== 'Divide');
+  if (others.some((p) => hasHead(p, new Set(['Divide'])))) return e;
+  const [n, d] = args(strip(fractions[0]!));
+  return ['Divide', ['Multiply', ...others, n], d] as unknown as MJ;
+}
+
 function checkSimplestFraction(student: Parsed, ctx: Ctx): FormResult {
   const whole = unwrapEquation(student.raw.json as unknown as MJ);
-  const e = stripNegate(whole);
+  const e = productAsOneFraction(stripNegate(whole));
   if (head(e) !== 'Divide') {
     if (hasHead(whole, new Set(['Divide']))) return fail('not-simplified', 'That is equivalent, but write it as a single fraction in its simplest form.');
     return { ok: true };

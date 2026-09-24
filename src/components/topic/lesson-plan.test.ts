@@ -1,20 +1,33 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import manifest from "@/generated/manifest.json";
+import type { RetrievalPrompt } from "@/lib/content/schema";
+import { cardSeconds, type Card } from "@/lib/slides/cards";
+import { deckFor } from "@/lib/slides/deck";
 import {
   countWords,
   displayTitle,
   estimateMinutes,
   gateStem,
   headingText,
+  heroPromise,
   initialOpen,
+  inlineLede,
   isReadV2,
   isReadV2Path,
   heroDataFor,
   hoistedFigureIndex,
   lessonBlocks,
+  lessonMinutes,
   lessonSections,
+  minutesHeading,
   namesTheTopic,
+  plusVideos,
   sameTitle,
+  SECONDS_PER_GATE,
+  SECONDS_PER_PROMPT,
+  videoSeconds,
   withPauses,
   withoutAsides,
   minutesForMarks,
@@ -64,6 +77,117 @@ describe("minutes", () => {
   it("counts a TeX span as one word and ignores markdown markers", () => {
     expect(countWords("**Two** words")).toBe(2);
     expect(countWords("The volume is $\\frac{1}{3}\\pi r^2 h$ exactly")).toBe(5);
+  });
+});
+
+describe("minutes: a prompt and a video, priced as Slides prices them (audit LD-04, CT-12)", () => {
+  const h = (text: string) => ({ type: "h", text });
+  const p = (words: number) => ({ type: "p", md: "word ".repeat(words).trim() });
+  const prompt = (id: string) => ({ type: "prompt", promptId: id });
+  const video = (extra: Record<string, unknown> = {}) => ({ type: "video", videoId: "abc", title: "A video", channel: "corbettmaths", ...extra });
+
+  it("prices a retrieval prompt inside the note at 30 seconds, what the same prompt costs as a Slides recall card", () => {
+    const withPrompts = lessonSections([h("1. One"), p(180), prompt("rp.1"), prompt("rp.2"), prompt("rp.3"), prompt("rp.4")]);
+    expect(withPrompts[0].minutes).toBe(3); // 1 minute of reading + 4 x 30 s
+    expect(lessonSections([h("1. One"), p(180)])[0].minutes).toBe(1);
+    // One price for the same work in both ways in: the deck's recall card and gate cost what the note's do.
+    const recall = { kind: "recall", key: "recall:rp.1", prompt: { id: "rp.1" } as unknown as RetrievalPrompt, index: 1, total: 1 } as Card;
+    const gate = { kind: "gate", key: "gate:g1", section: null, gate: { id: "g1" }, afterMedia: null, retry: false } as unknown as Card;
+    expect(cardSeconds(recall)).toBe(SECONDS_PER_PROMPT);
+    expect(cardSeconds(gate)).toBe(SECONDS_PER_GATE);
+  });
+
+  it("names a video with no stated length beside the minutes, and counts one that states its length", () => {
+    const untimed = lessonSections([h("1. See it done"), video(), p(90)]);
+    expect(untimed[0].untimedVideos).toBe(1);
+    expect(untimed[0].minutes).toBe(1);
+    const timed = lessonSections([h("1. See it done"), video({ start: 30, end: 330 }), p(90)]);
+    expect(timed[0].untimedVideos).toBe(0);
+    expect(timed[0].minutes).toBe(6); // 5 minutes of video + half a minute of reading
+    expect(videoSeconds(video({ end: 120 }))).toBe(120);
+    expect(videoSeconds(video())).toBeNull();
+    expect(videoSeconds(p(10))).toBeNull();
+    expect(plusVideos(0)).toBeNull();
+    expect(plusVideos(1)).toBe("plus a video");
+    expect(plusVideos(2)).toBe("plus two videos");
+    expect(heroDataFor([hero, h("1. One"), video(), p(20), h("2. Two"), video(), p(20)]).untimedVideos).toBe(2);
+  });
+
+  it("says one minute, not one minutes", () => {
+    expect(minutesHeading(1)).toBe("About 1 minute");
+    expect(minutesHeading(9)).toBe("About 9 minutes");
+  });
+});
+
+describe("inlineLede: a stacked fraction in the hero's lede takes the inline size (audit CD-06, CT-13)", () => {
+  it("reads an authored \\dfrac inside $…$ as \\frac, in the lede only", () => {
+    const lede = "$\\dfrac{12}{18}$ cancels to $\\dfrac{2}{3}$ because 6 divides the whole of the top and the whole of the bottom.";
+    expect(inlineLede(lede)).toBe("$\\frac{12}{18}$ cancels to $\\frac{2}{3}$ because 6 divides the whole of the top and the whole of the bottom.");
+  });
+
+  it("leaves display maths, \\frac, \\tfrac, other commands and plain words as written", () => {
+    for (const md of ["See $$\\dfrac{a}{b}$$ first.", "Half is $\\frac{1}{2}$ or $\\tfrac{1}{2}$.", "A ticket costs \\$5 and $x^{2}$ grows.", "No maths at all."]) {
+      expect(inlineLede(md), md).toBe(md);
+    }
+    expect(inlineLede("$\\dfrac{a}{b} + \\dfrac{c}{d}$")).toBe("$\\frac{a}{b} + \\frac{c}{d}$");
+  });
+
+  it("changes nothing else in the trial topic's own lede", () => {
+    const bundle = JSON.parse(readFileSync(path.resolve(__dirname, "../../../public/content/further-maths/fm.u1.algebraic-fractions-simplify.json"), "utf8")) as { noteBlocks: unknown[] };
+    const lede = heroDataFor(bundle.noteBlocks).lede;
+    expect(inlineLede(lede)).not.toMatch(/\\dfrac/);
+    expect(inlineLede(lede).replace(/\\frac/g, "\\dfrac")).toBe(lede);
+  });
+});
+
+describe("the hero's promise: each way in states its own numbers, named, from its own source (audit LD-04)", () => {
+  const shared = { untimedVideos: 1, checks: 7, workedExamples: 2, findings: 2, practicals: [] as string[] };
+
+  it("names Slides and Read with their own minutes and size, Slides first, and says the shared facts once", () => {
+    const promise = heroPromise({ read: { minutes: 11, sections: 7 }, slides: { minutes: 12, cards: 25 }, ...shared });
+    expect(promise.ways).toEqual([
+      { way: "slides", label: "Slides", minutes: "about 12 minutes", plus: "plus a video", size: "25 cards" },
+      { way: "read", label: "Read", minutes: "about 11 minutes", plus: "plus a video", size: "7 sections" },
+    ]);
+    expect(promise.facts).toEqual(["7 checks", "2 worked examples", "2 examiner findings"]);
+  });
+
+  it("keeps the one line on a topic with one way in", () => {
+    const promise = heroPromise({ read: { minutes: 9, sections: 1 }, slides: null, ...shared, untimedVideos: 0, checks: 1, workedExamples: 1, findings: 0, practicals: ["B3"] });
+    expect(promise.ways).toEqual([{ way: "read", label: null, minutes: "About 9 minutes", plus: null, size: "1 section" }]);
+    expect(promise.facts).toEqual(["1 check", "1 worked example", "Prescribed Practical B3"]);
+  });
+
+  it("on the trial topic, reads Read from the note and Slides from the deck, the numbers the track and the title card print", () => {
+    const bundle = JSON.parse(readFileSync(path.resolve(__dirname, "../../../public/content/further-maths/fm.u1.algebraic-fractions-simplify.json"), "utf8")) as {
+      noteBlocks: unknown[];
+      prompts: RetrievalPrompt[];
+    };
+    const blocks = bundle.noteBlocks;
+    const heroData = heroDataFor(blocks);
+    const sections = lessonSections(blocks, heroData.lede);
+    const deck = deckFor("fm.u1.algebraic-fractions-simplify", blocks, bundle.prompts).stats;
+    const promise = heroPromise({
+      read: { minutes: heroData.minutes, sections: sections.length },
+      slides: { minutes: deck.minutes, cards: deck.cards },
+      untimedVideos: heroData.untimedVideos,
+      checks: noteGateIds(blocks).length,
+      workedExamples: 2,
+      findings: 2,
+      practicals: [],
+    });
+    const [slides, read] = promise.ways;
+    // Read: the sections the track counts ("1 of 7") and the minutes its Contents heading prints.
+    expect(read.size).toBe(`${sections.length} sections`);
+    expect(read.minutes).toBe(`about ${lessonMinutes(blocks, heroData.lede)} minutes`);
+    // Slides: the deck's own cards and minutes, the numbers on its title card and its Start button.
+    expect(slides.size).toBe(`${deck.cards} cards`);
+    expect(slides.minutes).toBe(`about ${deck.minutes} minutes`);
+    // The note's video has no stated length: both ways name it, neither guesses it, and the deck agrees.
+    expect(heroData.untimedVideos).toBe(1);
+    expect(deck.untimedVideos).toBe(heroData.untimedVideos);
+    expect(slides.plus).toBe("plus a video");
+    expect(read.plus).toBe("plus a video");
   });
 });
 
@@ -224,7 +348,7 @@ describe("Read v2 (the trial)", () => {
 
   it("opens a returning visit where she stopped, and a finished lesson whole", () => {
     // The trial topic's shape: seven sections, gates g1 | g2 | g7 g3 | g4 | g5 g6 | none | none.
-    const s = (n: number, gateIds: string[]) => ({ n, title: `S${n}`, heading: `S${n}`, words: 50, gateIds, minutes: 1 });
+    const s = (n: number, gateIds: string[]) => ({ n, title: `S${n}`, heading: `S${n}`, words: 50, gateIds, minutes: 1, untimedVideos: 0 });
     const sections = [s(1, ["g1"]), s(2, ["g2"]), s(3, ["g7", "g3"]), s(4, ["g4"]), s(5, ["g5", "g6"]), s(6, []), s(7, [])];
     expect(initialOpen(sections, [])).toBe(1);
     expect(initialOpen(sections, ["g1"])).toBe(2);

@@ -1,0 +1,244 @@
+/**
+ * scripts/qa/teach-show-check.mjs — the "teach → show → check" rule (owner's ruling, 24 Sep 2026, 19:20;
+ * STANDARDS.md "Teach before you check"; pipeline/prompts/author-topic.md, Depth standard).
+ *
+ * A gate comes only after the idea has been explained AND shown worked in front of her, inside the
+ * teaching section the gate belongs to. For every gate in the teaching body this module asks whether
+ * its section holds, somewhere before the gate:
+ *
+ *   explained  an EXPLANATION block: a `p` carrying at least EXPLAIN_WORDS words of prose (words of two
+ *              or more letters, outside $…$ maths), or a titled `callout` of a teaching kind (why,
+ *              mustknow, examiner) with the same number of words. A spec callout quotes the statement
+ *              and a notonspec callout marks a boundary; neither teaches the idea, so neither counts.
+ *   shown      a SHOWN block: a `figure` or `photo` (the picture the prose reads: every figure carries a
+ *              caption and, by the depth standard, sits before the prose that reads it), a `video` or a
+ *              `sim` (the method carried out in front of her), or a stepped demonstration: a `p` or
+ *              `callout` holding at least two worked steps, or one complete calculation (numbers and an
+ *              operation on the left of "=", a number on the right: "1.5 ÷ 50 = 0.03 s", the whole of a
+ *              one-step method). A worked step is a maths segment ($…$ or $$…$$) relation (=, ≈, ≡, an
+ *              arrow; a chain $a = b = c$ is two steps; the inequality signs of one segment, as in the
+ *              range $1 \le a < 10$, are one), a maths segment reached from the one before it by a word
+ *              of working ("… becomes $5(x^2 - 9)$", "so", "gives", "then", "hence"), or a numbered or
+ *              bold-labelled line ("2.", "Step 2.", "**Differentiate**") that carries maths or a number.
+ *              Plain-text arithmetic counts as well, as science notes write it ("60 ÷ 10 = 6 daisies per
+ *              quadrat": an equals sign outside maths between numbers).
+ *
+ *              What the lint cannot see: whether a figure demonstrates the method or only illustrates
+ *              the idea (a method card of four headings counts as shown, as a worked table does), and
+ *              whether the demonstration is of the same step the gate asks for. Authors apply the rule
+ *              by judgement there; the lint finds the gates that come before anything at all.
+ *
+ * One paragraph may do both (the idea in words with its two lines of working); the rule asks that both
+ * have happened before the check, not that they sit in separate cards.
+ *
+ * Sections. The body runs to the recap heading ("You can now", role recap) or, failing that, the
+ * "In the exam" pointer. A section starts at each `h` block; the blocks before the first heading (the
+ * hook) are the opening section. A "See it done" section (role `see`, or an unlabelled heading the depth
+ * report reads as one) is the show step of the section above it, so for this rule it continues that
+ * section: its gate is checked against the teaching above it and the demonstration in it. So is a
+ * section that holds nothing but visuals before its first gate (a video, a sim, a figure: "Turn a cell
+ * round yourself"). A section with no gate of its own has not been closed by a check, so its teaching
+ * runs on into the next section ("the graph above"); a section that ends in a gate never lends its
+ * teaching past that gate. A section's index is its heading's position among the note's headings (the
+ * opening is 0).
+ *
+ * The four-card rule (a gate at most every four cards) is a ceiling, never a quota: nothing here asks
+ * for more gates, and a section may run several cards of explanation and demonstration before its one
+ * check.
+ */
+
+export const EXPLAIN_WORDS = 15;
+export const STEPS_SHOWN = 2;
+export const TEACHING_CALLOUTS = new Set(["why", "mustknow", "examiner"]);
+const VISUAL_SHOWN = new Set(["figure", "photo", "video", "sim"]);
+
+/**
+ * An unlabelled heading that reads as "See it done": the method carried out in front of her. The physics
+ * notes say "Watch it done", "Watch it explained", "Watch the construction done". lesson-v2.mjs guesses
+ * the `see` role from this same pattern, so the two scripts cannot disagree about what a see section is.
+ */
+export const SEE_HEADING = /\bsee it\b|\bworked in full\b|\bstart to finish\b|\bwritten out\b|\bworked example\b|\bwatch it\b|\bwatch the [a-z]+ (done|explained|drawn|worked)\b/i;
+export const isSeeHeading = (text) => SEE_HEADING.test(String(text ?? ""));
+const isRecap = (b) => b.type === "h" && (b.role === "recap" || /^you can now$/i.test(String(b.text ?? "").trim()));
+const isPointer = (b) => b.type === "h" && (b.role === "pointer" || /^in the exam$/i.test(String(b.text ?? "").trim()));
+const isSee = (b) => b.type === "h" && (b.role === "see" || (!b.role && isSeeHeading(b.text)));
+
+const MATHS = /\$\$([\s\S]+?)\$\$|\$([^$]+)\$/g;
+const RELATION = /=|\\approx|\\equiv|\\neq|≈|≡|->|\\to\b|\\rightarrow|\\Rightarrow|\\longrightarrow|⇒|→|<|>|\\le\b|\\ge\b|\\leq|\\geq|\\lt|\\gt|≤|≥/;
+const LABELLED_LINE = /^\s*(\*\*[^*]{1,40}\*\*|(step\s*)?\d+[.):])\s*/i;
+
+const wordsIn = (s) => String(s ?? "").split(/\s+/).filter((w) => /[A-Za-z]{2,}/.test(w)).length;
+const withoutMaths = (s) => String(s ?? "").replace(MATHS, " ").replace(/\*\*/g, "");
+
+/** Words of prose in a block's md: words outside maths. */
+export const proseWords = (md) => wordsIn(withoutMaths(md));
+
+const RELATIONS = new RegExp(RELATION.source, "g");
+// An inequality sign is a condition rather than a step of working when it shares its segment with
+// another one: "$1 \le a < 10$" states one range. So the inequality signs of one maths segment count
+// as a single step between them, while each equals sign, approximation and arrow counts on its own.
+const INEQUALITY = /^(<|>|\\le|\\ge|\\leq|\\geq|\\lt|\\gt|≤|≥)$/;
+const stepsInSegment = (tex) => {
+  const found = tex.match(RELATIONS) ?? [];
+  const inequalities = found.filter((r) => INEQUALITY.test(r)).length;
+  return found.length - inequalities + (inequalities ? 1 : 0);
+};
+
+/**
+ * A complete calculation: numbers and an operation on the left of an equals sign and a number on the
+ * right ("1.5 ÷ 50 = 0.03 s", "$400 \times 0.9 = 360$", "$\frac{60}{10} = 6$",
+ * "$3(3)^{2} - 8(3) + 2 = 5$"). One of these is the whole of a one-step method carried out in front of
+ * her, so on its own it counts as shown; a formula ("$y = mx + c$", "$A = \pi r^2$") is not one.
+ */
+const ARITHMETIC_RUN = /([\d.,()\s×÷*/+\-−^]+)=\s*[-−]?\d/g;
+const texToPlain = (tex) =>
+  String(tex)
+    .replace(/\\[,;:! ]/g, "")
+    .replace(/\\left|\\right|\\big|\\Big/g, "")
+    .replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
+    .replace(/\\times|\\cdot/g, "×")
+    .replace(/\\div/g, "÷")
+    .replace(/[{}]/g, "");
+export function calculations(md) {
+  const text = String(md ?? "");
+  const pieces = [withoutMaths(text), ...[...text.matchAll(MATHS)].map((m) => texToPlain(m[1] ?? m[2] ?? ""))];
+  let n = 0;
+  for (const piece of pieces)
+    for (const m of piece.matchAll(ARITHMETIC_RUN)) {
+      const left = m[1];
+      if ((left.match(/\d+(\.\d+)?/g) ?? []).length >= 2 && /[×÷*/+\-−^]/.test(left.replace(/^[\s\-−]+/, ""))) n += 1;
+    }
+  return n;
+}
+/** A maths segment reached from the one before it by a word of working ("so", "becomes", "gives" …) is a step too. */
+const CONNECTIVE = /\b(so|becomes?|gives|giving|then|leaves|leaving|to get|which is|hence|equals|simplifies to|cancels to|turns into)\b/i;
+
+/**
+ * Worked steps in a block's md: each relation inside a maths segment is one step, so a chain
+ * $a = b = c$ is two; a maths segment with no relation that follows another maths segment through a
+ * word of working ("… becomes $5(x^2 - 9)$") is one; and a numbered or bold-labelled line that
+ * carries maths or a number is one when its maths has not already counted.
+ */
+export function workedSteps(md) {
+  const text = String(md ?? "");
+  let steps = 0;
+  let last = -1;
+  for (const m of text.matchAll(MATHS)) {
+    const tex = m[1] ?? m[2] ?? "";
+    const rel = stepsInSegment(tex);
+    if (rel) steps += rel;
+    else if (last >= 0 && CONNECTIVE.test(text.slice(last, m.index))) steps += 1;
+    last = m.index + m[0].length;
+  }
+  // plain-text working, as science notes write it: "60 ÷ 10 = 6 daisies per quadrat" (an equals sign
+  // outside maths with a number beside it)
+  const PLAIN_RELATION = /[\d)]\s*(=|≈|→)\s*[-−£(\d]/g;
+  steps += (withoutMaths(text).match(PLAIN_RELATION) ?? []).length;
+  for (const line of text.split("\n")) {
+    if (!LABELLED_LINE.test(line)) continue;
+    const rest = line.replace(LABELLED_LINE, "");
+    const maths = [...rest.matchAll(MATHS)];
+    // a labelled line whose working already counted as a step adds nothing; one with maths or a number does
+    if (maths.some((m) => RELATION.test(m[1] ?? m[2] ?? "")) || new RegExp(PLAIN_RELATION.source).test(withoutMaths(rest))) continue;
+    if (maths.length || /\d/.test(withoutMaths(rest))) steps += 1;
+  }
+  return steps;
+}
+
+/** Does this block explain the idea? */
+export function explains(b) {
+  if (b.type === "p") return proseWords(b.md) >= EXPLAIN_WORDS;
+  if (b.type === "callout") return Boolean(String(b.title ?? "").trim()) && TEACHING_CALLOUTS.has(b.kind) && proseWords(b.md) >= EXPLAIN_WORDS;
+  return false;
+}
+
+/** Does this block show the idea worked in front of her? */
+export function shows(b) {
+  if (VISUAL_SHOWN.has(b.type)) return true;
+  if (b.type === "p" || b.type === "callout") return workedSteps(b.md) >= STEPS_SHOWN || calculations(b.md) >= 1;
+  return false;
+}
+
+/**
+ * Check one note.
+ * @param {Array<object>} blocks  note.blocks.json
+ * @returns {{ gates: number, sections: Array<{index:number, heading:string, role:string|null, joined:string[], gates:Array<{id:string, explained:boolean, shown:boolean}>}>, failures: Array<{gate:string, section:string, sectionIndex:number, role:string|null, missing:string[]}> }}
+ */
+export function teachShowCheck(blocks) {
+  const recapAt = blocks.findIndex(isRecap);
+  const pointerAt = blocks.findIndex(isPointer);
+  const end = recapAt >= 0 ? recapAt : pointerAt >= 0 ? pointerAt : blocks.length;
+  const body = blocks.slice(0, end).filter((b) => b.type !== "hero");
+
+  const sections = [];
+  let cur = { index: 0, heading: "(opening)", role: null, joined: [], items: [] };
+  sections.push(cur);
+  let headingNo = 0;
+  for (const b of body) {
+    if (b.type === "h") {
+      headingNo += 1;
+      if (isSee(b) && (cur.items.length || cur.index > 0)) {
+        cur.joined.push(String(b.text ?? ""));
+        continue;
+      }
+      cur = { index: headingNo, heading: String(b.text ?? ""), role: b.role ?? null, joined: [], items: [] };
+      sections.push(cur);
+      continue;
+    }
+    cur.items.push(b);
+  }
+  // A section that holds nothing but a demonstration before its first gate (a video, a sim, a figure:
+  // "Turn a cell round yourself") is the show step of the section above, like "See it done".
+  for (let i = sections.length - 1; i >= 1; i -= 1) {
+    const s = sections[i];
+    const first = s.items.findIndex((b) => b.type === "gate");
+    const before = first < 0 ? s.items : s.items.slice(0, first);
+    const prev = sections[i - 1];
+    // never for a section that names itself a new idea, variant, twist …: that is new teaching
+    const teachingRole = s.role && s.role !== "see";
+    if (!teachingRole && prev.items.length && before.length && before.every((b) => VISUAL_SHOWN.has(b.type))) {
+      prev.items.push(...s.items);
+      prev.joined.push(s.heading, ...s.joined);
+      sections.splice(i, 1);
+    }
+  }
+  // A section with no gate of its own has not been closed by a check: its explanation and its figure
+  // are still in front of her when the next section's gate arrives ("the graph above"), so it runs on
+  // into the next section. A section that ends in a gate never lends its teaching past that gate.
+  for (let i = sections.length - 2; i >= 0; i -= 1) {
+    const s = sections[i];
+    if (!s.items.length || s.items.some((b) => b.type === "gate")) continue;
+    const next = sections[i + 1];
+    next.items.unshift(...s.items);
+    next.joined.unshift(...(s.index > 0 ? [s.heading] : []), ...s.joined);
+    sections.splice(i, 1);
+  }
+
+  const rows = [];
+  const failures = [];
+  let gates = 0;
+  for (const s of sections) {
+    let explained = false;
+    let shown = false;
+    const row = { index: s.index, heading: s.heading, role: s.role, joined: s.joined, gates: [] };
+    for (const b of s.items) {
+      if (b.type === "gate") {
+        gates += 1;
+        row.gates.push({ id: b.id, explained, shown });
+        if (!explained || !shown)
+          failures.push({ gate: b.id, section: s.heading, sectionIndex: s.index, role: s.role, missing: [...(explained ? [] : ["explained"]), ...(shown ? [] : ["shown"])] });
+        continue;
+      }
+      explained ||= explains(b);
+      shown ||= shows(b);
+    }
+    if (s.items.length) rows.push(row);
+  }
+  return { gates, sections: rows, failures };
+}
+
+/** One line for a failure, naming the rule. */
+export function describeFailure(f) {
+  const lacks = f.missing.length === 2 ? "before anything in its section explains or shows the idea" : f.missing[0] === "explained" ? "before its section explains the idea (it is only shown)" : "before its section shows the idea worked (it is only explained)";
+  return `teach → show → check: gate ${f.gate} in "${f.section}"${f.role ? ` [${f.role}]` : ""} comes ${lacks}`;
+}

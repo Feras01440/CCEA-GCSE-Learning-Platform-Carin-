@@ -11,7 +11,7 @@ import type { RetrievalPrompt } from "@/lib/content/schema";
 import { Figure } from "./Figure";
 import { keywordsPresent } from "./text-marking";
 import { Tex } from "./Tex";
-import { btnCheck, cardCls, Eyebrow, fieldCls, MissMark, Rise, Tick } from "./ui";
+import { btnCheck, btnSecondary, cardCls, Eyebrow, fieldCls, MissMark, Rise, Tick } from "./ui";
 
 export type PromptGrade = "again" | "good" | "easy";
 
@@ -118,7 +118,10 @@ export function InlinePrompt({ prompt, mode, intervals, onGrade, index, total }:
             className={clsx(fieldCls, "text-[16px]")}
           />
           <div className="mt-2 flex items-center gap-3">
-            <button type="submit" className={btnCheck}>
+            {/* Inside a note the prompt is optional, so revealing its answer is secondary: at a lesson's end it sat
+                accent filled beside Continue, two accent controls on one screen (Read agent, 23 Sep 2026). On the
+                review screen the prompt is the whole task and Show answer stays its one primary. */}
+            <button type="submit" className={review ? btnCheck : btnSecondary}>
               Show answer
             </button>
             <span className="text-meta text-ink-2">Enter to reveal</span>

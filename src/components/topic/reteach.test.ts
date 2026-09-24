@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CommonError, MarkPoint } from "@/lib/content/schema";
-import { anotherWayFor, isRecognised, reteachFor, solutionLineFor, solutionLines, unreachedStep, type ReteachPart } from "./reteach";
+import { anotherWayFor, isRecognised, reteachFor, solutionLineFor, solutionLines, supportHintFor, supportOffer, unreachedStep, type ReteachPart } from "./reteach";
 import { markAnswer } from "@/components/items/mark";
 
 const point = (code: string, marks: number, forText: string): MarkPoint => ({ id: `${code}${marks}`, code, marks, for: forText });
@@ -236,5 +236,50 @@ describe("a part marked target by target names the target she missed (engine ite
     };
     expect(reteachFor(tree, { correct: false, marksAwarded: 1, unmet: ["i"] })?.step?.text).toBe("(i) 0.6");
     expect(reteachFor(tree, { correct: false, marksAwarded: 1, unmet: ["iii"] })?.step?.text).toBe("(ii) 0.75 and (iii) 0.9");
+  });
+});
+
+describe("two misses: the ways on, one of them accented (engine item 10.2, 24 Sep 2026)", () => {
+  // After a second miss a third guess teaches nothing (programme 0.1): she is offered a hint or the worked solution,
+  // the field stays closed, and the next attempt is a twin. The card carries exactly one accent-filled control, so the
+  // offer is a primary rung and at most one secondary; "Next part" is never the accented way out while one is open.
+  it("before she has chosen: the hint, with the worked solution beside it", () => {
+    expect(supportOffer({ hint: true, hintShown: false, workedOpen: false, twin: true })).toEqual({ primary: "hint", secondary: "worked" });
+    expect(supportOffer({ hint: true, hintShown: false, workedOpen: false, twin: false })).toEqual({ primary: "hint", secondary: "worked" });
+  });
+  it("with no hint to give, the worked solution leads and the twin sits beside it", () => {
+    expect(supportOffer({ hint: false, hintShown: false, workedOpen: false, twin: true })).toEqual({ primary: "worked", secondary: "twin" });
+    expect(supportOffer({ hint: false, hintShown: false, workedOpen: false, twin: false })).toEqual({ primary: "worked", secondary: null });
+  });
+  it("after the hint, the twin is the next attempt and the worked solution is still there", () => {
+    expect(supportOffer({ hint: true, hintShown: true, workedOpen: false, twin: true })).toEqual({ primary: "twin", secondary: "worked" });
+    expect(supportOffer({ hint: true, hintShown: true, workedOpen: false, twin: false })).toEqual({ primary: "worked", secondary: null });
+  });
+  it("after the worked solution, only the twin is left to offer", () => {
+    expect(supportOffer({ hint: true, hintShown: false, workedOpen: true, twin: true })).toEqual({ primary: "twin", secondary: null });
+    expect(supportOffer({ hint: true, hintShown: true, workedOpen: true, twin: false })).toEqual({ primary: null, secondary: null });
+  });
+});
+
+describe("the hint offered after two misses is one she has not already been shown", () => {
+  it("is the first hint that is not the one 'Another way to see it' already shows", () => {
+    const reteach = reteachFor(frustum, { correct: false, marksAwarded: 0 });
+    expect(reteach?.anotherWay).toBe("The cone formula is on the Higher formula sheet.");
+    expect(supportHintFor(frustum, reteach)).toBe("Square the radius before multiplying by the height.");
+  });
+  it("without a second hint, a line of the worked solution the screen is not already showing", () => {
+    const one: ReteachPart = { ...solving, hints: ["Clear the fractions first."] };
+    const reteach = reteachFor(one, { correct: false, marksAwarded: 0 });
+    const hint = supportHintFor(one, reteach);
+    expect(hint).not.toBeNull();
+    expect(hint).not.toBe(reteach?.anotherWay);
+    expect(hint).not.toBe(reteach?.step?.line);
+    expect(solutionLines(one.workedSolution)).toContain(hint);
+  });
+  it("a recognised error (no panel on screen) is offered the first hint", () => {
+    expect(supportHintFor(frustum, null)).toBe("The cone formula is on the Higher formula sheet.");
+  });
+  it("nothing when there is nothing new to say", () => {
+    expect(supportHintFor({ hints: ["Only this."], workedSolution: "" },{ step: null, anotherWay: "Only this." })).toBeNull();
   });
 });

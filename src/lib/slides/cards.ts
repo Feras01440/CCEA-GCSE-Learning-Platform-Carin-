@@ -21,6 +21,7 @@
 import type { GateBlock, NoteBlock } from "@/components/items/gates";
 import type { RetrievalPrompt } from "@/lib/content/schema";
 import { countWords, headingText, heroDataFor, lessonBlocks, spineTitle, type HeroFigure } from "@/components/topic/lesson-plan";
+import { chooseRecall } from "./recall";
 
 /** One idea per card: the depth standard's budget for a paragraph or callout (scripts/qa/lesson-v2.mjs CARD_WORDS). */
 export const CARD_WORDS = 75;
@@ -65,7 +66,9 @@ export interface DeckStats {
   gates: number;
   recall: number;
   videos: number;
-  /** An honest estimate of the cards and checks; a video's own length is not known and is named beside it. */
+  /** Videos whose block carries no length: named beside the minutes ("plus a video"), never guessed into them. */
+  untimedVideos: number;
+  /** An honest estimate of the cards and checks, and of a video only when its block says how long it runs. */
   minutes: number;
 }
 
@@ -176,6 +179,10 @@ export function buildDeck(blocks: readonly unknown[] | null | undefined, prompts
   const hero = heroDataFor(list);
   const body = lessonBlocks<unknown>(list, hero.lede).filter((b) => blockType(b) !== "pause");
   const promptById = new Map<string, RetrievalPrompt>(prompts.map((p) => [p.id, p]));
+  // The recall cards: of the prompts the note places, at most two light ones (src/lib/slides/recall.ts, the owner's
+  // trial: "it doesn't have to be always four … like writing an essay, not remembering").
+  const placed = body.flatMap((b) => (blockType(b) === "prompt" && promptById.has(str((b as Block).promptId)) ? [promptById.get(str((b as Block).promptId))!] : []));
+  const recallIds = new Set(chooseRecall(placed).map((p) => p.id));
 
   // First pass: where the recap and the pointer begin, so the teaching sections can be numbered.
   const isRecapHeading = (b: unknown) => blockType(b) === "h" && (str((b as Block).role) === "recap" || RECAP.test(str((b as Block).text)));
@@ -262,7 +269,7 @@ export function buildDeck(blocks: readonly unknown[] | null | undefined, prompts
     }
     if (t === "prompt") {
       const p = promptById.get(str((b as Block).promptId));
-      if (p) cards.push({ kind: "recall", key: unique(`recall:${p.id}`), prompt: p, index: 0, total: 0 });
+      if (p && recallIds.has(p.id)) cards.push({ kind: "recall", key: unique(`recall:${p.id}`), prompt: p, index: 0, total: 0 });
       continue;
     }
     // hero (already the title card), pause (Read's stopping points), or anything unknown: nothing.
@@ -288,6 +295,12 @@ export function buildDeck(blocks: readonly unknown[] | null | undefined, prompts
   return { cards, stats: deckStats(cards) };
 }
 
+/** A video's own length in seconds when its block says it (an `end`, from `start` or the beginning), else null. */
+export function videoSeconds(block: MediaBlock): number | null {
+  if (block.type !== "video" || typeof block.end !== "number") return null;
+  return Math.max(0, block.end - (typeof block.start === "number" ? block.start : 0));
+}
+
 /** Seconds a card costs: the minute model of lesson-plan.ts (180 words a minute, 40 s a check), never flattering. */
 export function cardSeconds(card: Card): number {
   switch (card.kind) {
@@ -299,8 +312,8 @@ export function cardSeconds(card: Card): number {
     case "callout":
       return Math.max(20, Math.round((countWords(card.block.md) / 180) * 60));
     case "media":
-      // A video's length is not known here; it is named on the title card instead of guessed.
-      return card.block.type === "video" ? 0 : 20;
+      // A video counts its own length only when its block carries one; otherwise it is named, not timed ("plus a video").
+      return card.block.type === "video" ? (videoSeconds(card.block) ?? 0) : 20;
     case "gate":
       return 40;
     case "interaction":
@@ -314,13 +327,20 @@ export function cardSeconds(card: Card): number {
   }
 }
 
+/**
+ * The deck's numbers, the one truth every surface prints (the title card, the topic hero's Slides button, the close):
+ * the cards actually in it, its checks (a retry is not a new check), its recall cards, its videos and which of them have
+ * no stated length, and the minutes.
+ */
 export function deckStats(cards: readonly Card[]): DeckStats {
   const seconds = cards.reduce((n, c) => n + cardSeconds(c), 0);
+  const videos = cards.filter((c): c is Extract<Card, { kind: "media" }> => c.kind === "media" && c.block.type === "video");
   return {
     cards: cards.length,
     gates: cards.filter((c) => c.kind === "gate" && !c.retry).length,
     recall: cards.filter((c) => c.kind === "recall").length,
-    videos: cards.filter((c) => c.kind === "media" && c.block.type === "video").length,
+    videos: videos.length,
+    untimedVideos: videos.filter((c) => videoSeconds(c.block) === null).length,
     minutes: Math.max(1, Math.round(seconds / 60)),
   };
 }
@@ -352,8 +372,40 @@ export function deckGateIds(cards: readonly Card[]): string[] {
   return cards.filter((c): c is Extract<Card, { kind: "gate" }> => c.kind === "gate" && !c.retry).map((c) => c.gate.id);
 }
 
-/** "About 11 minutes · 25 cards · 7 checks · 1 video": the title card's honest promise. */
+const NUMBER_WORDS = ["no", "a", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+/**
+ * "About 11 minutes plus a video": the minutes the deck is honestly worth, and, when a video has no stated length, the
+ * video named beside them rather than guessed into them (a Corbettmaths video runs five or six minutes; the card asks
+ * her to watch it).
+ */
+export function deckMinutesPhrase(stats: DeckStats): string {
+  const { minutes, plus } = deckMinutes(stats);
+  return plus ? `${minutes} ${plus}` : minutes;
+}
+
+/** The two halves of the minutes phrase, for a renderer that sets the minutes in bold: "About 11 minutes", "plus a video". */
+export function deckMinutes(stats: DeckStats): { minutes: string; plus: string | null } {
+  const minutes = `About ${stats.minutes} ${stats.minutes === 1 ? "minute" : "minutes"}`;
+  const n = stats.untimedVideos;
+  return { minutes, plus: n === 0 ? null : `plus ${n === 1 ? "a video" : `${NUMBER_WORDS[n] ?? n} videos`}` };
+}
+
+/**
+ * "23 cards · 7 checks": the counts beside the minutes. A timed video is listed with them; an untimed one is already
+ * named in the minutes phrase, so it is not said twice.
+ */
 export function promiseLine(stats: DeckStats): string {
-  const parts = [`${stats.cards} cards`, stats.gates > 0 ? `${stats.gates} ${stats.gates === 1 ? "check" : "checks"}` : null, stats.videos > 0 ? `${stats.videos} ${stats.videos === 1 ? "video" : "videos"}` : null].filter((p): p is string => p !== null);
+  const timed = stats.videos - stats.untimedVideos;
+  const parts = [
+    `${stats.cards} cards`,
+    stats.gates > 0 ? `${stats.gates} ${stats.gates === 1 ? "check" : "checks"}` : null,
+    timed > 0 ? `${timed} ${timed === 1 ? "video" : "videos"}` : null,
+  ].filter((p): p is string => p !== null);
   return parts.join(" · ");
+}
+
+/** The whole promise, as the title card prints it: "About 11 minutes plus a video · 23 cards · 7 checks". */
+export function deckPromise(stats: DeckStats): string {
+  return `${deckMinutesPhrase(stats)} · ${promiseLine(stats)}`;
 }

@@ -20,6 +20,34 @@ async function accentFilled(page: Page): Promise<string[]> {
   }, MAIN);
 }
 
+/** Whether the first Letter is recorded as read, from the app's own database (Dexie's `ccea-study`, store `companionState`). */
+async function letterSeen(page: Page): Promise<boolean> {
+  return page.evaluate(
+    () =>
+      new Promise<boolean>((resolve) => {
+        const open = indexedDB.open("ccea-study");
+        open.onerror = () => resolve(false);
+        open.onsuccess = () => {
+          const db = open.result;
+          try {
+            const req = db.transaction("companionState", "readonly").objectStore("companionState").get("state");
+            req.onsuccess = () => {
+              db.close();
+              resolve((req.result as { letterSeen?: boolean } | undefined)?.letterSeen === true);
+            };
+            req.onerror = () => {
+              db.close();
+              resolve(false);
+            };
+          } catch {
+            db.close();
+            resolve(false);
+          }
+        };
+      }),
+  );
+}
+
 test.describe("Today", () => {
   test.beforeEach(async ({ page }) => {
     await completeFirstRun(page);
@@ -124,6 +152,9 @@ test.describe("Today", () => {
     await expect(letter).toBeVisible();
     await letter.getByRole("button", { name: /^Close$/ }).click();
     await expect(letter).toHaveCount(0);
+    // Close records the Letter as read a moment after it leaves the screen; a reload before that record lands would
+    // find the Letter still owed and Rowan still waiting for it.
+    await expect.poll(() => letterSeen(page), { message: "the Letter is recorded as read" }).toBe(true);
     await page.reload();
     await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
 
@@ -133,18 +164,25 @@ test.describe("Today", () => {
     await expect(line).toHaveCount(1);
     await expect(line).not.toBeEmpty();
 
+    // Text node by text node, one per line, so "Tonight" and the headline beside it are never read as one sentence.
     const { said, printed } = await tonight.evaluate((section) => {
+      const lines = (root: Element) => {
+        const out: string[] = [];
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        for (let n = walker.nextNode(); n; n = walker.nextNode()) if ((n.textContent ?? "").trim()) out.push((n.textContent ?? "").trim());
+        return out.join("\n");
+      };
       const clone = section.cloneNode(true) as HTMLElement;
       const rowan = clone.querySelector("[data-companion]") as HTMLElement;
       rowan.querySelectorAll(".sr-only").forEach((n) => n.remove());
-      const said = rowan.textContent ?? "";
+      const said = lines(rowan);
       rowan.remove();
       clone.querySelectorAll(".sr-only, [aria-hidden]").forEach((n) => n.remove());
-      return { said, printed: clone.textContent ?? "" };
+      return { said, printed: lines(clone) };
     });
     const sentences = (text: string) =>
       text
-        .split(/(?<=[.?])\s+/)
+        .split(/(?<=[.?])\s+|\n+/)
         .map((s) => s.trim().toLowerCase())
         .filter(Boolean);
     const tileSentences = new Set(sentences(printed));

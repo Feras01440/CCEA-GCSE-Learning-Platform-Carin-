@@ -333,6 +333,15 @@ describe("figureLeakWarnings", () => {
     const clean = { questions: [{ id: "q.x.0001", figures: [{ kind: "svg", src: svg("<text>A</text><text>B</text>"), alt: "a plant cell with the parts lettered" }], parts: [{ id: "iii", answer: { kind: "text", accepted: ["chloroplasts"], keyWords: [{ any: ["chloroplast"], marks: 1 }] } }] }] };
     expect(figureLeakWarnings(clean, "x")).toEqual([]);
   });
+  test("two labels in separate text nodes are two labels, not one phrase (QA fixer, B1 food web)", () => {
+    // "wheat" and "hawthorn" are two organisms on the web; the build used to join the nodes and read "wheat hawthorn",
+    // the part's key word for naming both producers, as printed on the figure
+    const part = { id: "a", stem: "Name the two producers.", answer: { kind: "text", accepted: ["wheat and hawthorn"], keyWords: [{ any: ["wheat and hawthorn", "wheat hawthorn"], marks: 1 }] } };
+    const apart = { questions: [{ id: "q.x.0004", figures: [{ kind: "svg", src: svg("<text x='10' y='20'>wheat</text><text x='90' y='20'>hawthorn</text>"), alt: "a food web" }], parts: [part] }] };
+    expect(figureLeakWarnings(apart, "x")).toEqual([]);
+    const together = { questions: [{ id: "q.x.0004", figures: [{ kind: "svg", src: svg("<text x='10' y='20'>wheat hawthorn</text>"), alt: "a food web" }], parts: [part] }] };
+    expect(figureLeakWarnings(together, "x")).toEqual(['x q.x.0004(a): figure 1 prints "wheat hawthorn", which this part asks her to give']);
+  });
   test("generic words and numbers do not count", () => {
     const b = { questions: [{ id: "q.x.0002", figures: [{ kind: "svg", src: svg("<text>time / s</text><text>12</text>"), alt: "a graph" }], parts: [{ id: "a", answer: { kind: "text", accepted: ["time"], keyWords: [{ any: ["time"], marks: 1 }] } }, { id: "b", answer: { kind: "numeric", value: 12 } }] }] };
     expect(figureLeakWarnings(b, "x")).toEqual([]);
@@ -369,7 +378,55 @@ describe("worked-example figures and overlapping labels", () => {
   const svg = (inner: string) => "data:image/svg+xml;utf8," + encodeURIComponent(`<svg>${inner}</svg>`);
   test("a worked example whose figure plots its final answer's points is reported", () => {
     const b = { workedExamples: [{ id: "we.x.01", finalAnswer: "The curve crosses at (1, 0) and (5, 0).", figure: { kind: "svg", src: svg("<title>the curve through (1, 0) and (5, 0)</title><path d='M1 1'/>"), alt: "a sketch" } }] };
-    expect(figureLeakWarnings(b, "x")).toEqual(['x we.x.01: the worked example\'s figure prints "1 0", which its answer gives']);
+    expect(figureLeakWarnings(b, "x")).toEqual(['x we.x.01: the worked example\'s figure prints "(1, 0)", which the problem version asks for as the final answer']);
+  });
+
+  // WorkedExampleAsQuestion.tsx: the twin mode shows only we.twin.figure; the faded modes show we.figure while the
+  // steps they hide are hers to write, and the problem mode shows it above an empty answer line.
+  const enzyme = (figure: string, extra: Record<string, unknown> = {}) => ({
+    workedExamples: [
+      {
+        id: "we.x.02",
+        stem: "Groups A and B timed amylase at 30 °C: 148 s and 152 s. (a) Calculate the mean time. (b) Give the optimum temperature.",
+        figure: { kind: "svg", src: svg(figure), alt: "A graph of the time for the starch to disappear against temperature." },
+        steps: [
+          { n: 1, working: "mean = (148 + 152) ÷ 2", decision: "Add, then divide." },
+          { n: 2, working: "= 150 s", decision: "Finish.", input: { kind: "numeric", value: 150, unit: "s" } },
+          { n: 3, working: "optimum = 40 °C", decision: "Read the lowest point." },
+        ],
+        finalAnswer: "(a) 150 s (b) 40 °C",
+        twin: { stem: "Two groups recorded 96 s and 104 s. Calculate the mean.", answer: { kind: "numeric", value: 100, unit: "s" } },
+        faded: [{ showSteps: 2, studentSupplies: [3] }],
+        ...extra,
+      },
+    ],
+  });
+  test("a worked example's figure is not compared with the twin's answer: the twin mode never shows it", () => {
+    expect(figureLeakWarnings(enzyme("<text>the twin's mean is 100 s</text><path d='M1 1'/>"), "x")).toEqual([]);
+  });
+  test("a worked example's figure that prints a step a faded version hides is reported, with the step", () => {
+    // step 3 is hidden by faded1 as authored and by faded2 by default; 40 °C is also the final answer's (b)
+    expect(figureLeakWarnings(enzyme("<text>optimum 40 °C</text><path d='M1 1'/>"), "x")).toEqual([
+      'x we.x.02: the worked example\'s figure prints "40 °C", which step 3 asks her to write in a faded version',
+      'x we.x.02: the worked example\'s figure prints "40 °C", which the problem version asks for as the final answer',
+    ]);
+    // step 2's 150 s is hidden only when a faded version leaves it to her
+    const faded2 = enzyme("<text>mean 150 s</text><path d='M1 1'/>", { faded: [{ showSteps: 2, studentSupplies: [3] }, { showSteps: 1, studentSupplies: [2, 3] }] });
+    expect(figureLeakWarnings(faded2, "x")[0]).toBe('x we.x.02: the worked example\'s figure prints "150 s", which step 2 asks her to write in a faded version');
+  });
+  test("two axis ticks side by side are not the final answer's point", () => {
+    // m7 combined transformations: ticks "-2" and "2" printed next to each other read as (-2, 2) when the text is joined
+    const b = { workedExamples: [{ id: "we.x.03", stem: "Reflect T, then enlarge it.", finalAnswer: 'T" at (-2, 0), (1, 0), (-2, 2)', figure: { kind: "svg", src: svg("<text>-4</text><text>-2</text><text>2</text><text>4</text><path d='M1 1'/>"), alt: "a grid" } }] };
+    expect(figureLeakWarnings(b, "x")).toEqual([]);
+    const labelled = { workedExamples: [{ ...b.workedExamples[0], figure: { kind: "svg", src: svg("<text>(-2, 2)</text><path d='M1 1'/>"), alt: "a grid" } }] };
+    expect(figureLeakWarnings(labelled, "x")).toHaveLength(1);
+  });
+  test("a value the stem already gives is not a leak", () => {
+    expect(figureLeakWarnings(enzyme("<text>Group A: 148 s</text><path d='M1 1'/>"), "x")).toEqual([]);
+  });
+  test("the twin's own figure is compared with the twin's answer", () => {
+    const b = enzyme("<text>time / s</text><path d='M1 1'/>", { twin: { stem: "Two groups recorded 96 s and 104 s. Calculate the mean.", answer: { kind: "numeric", value: 100, unit: "s" }, figure: { kind: "svg", src: svg("<text>mean 100 s</text><path d='M1 1'/>"), alt: "a bar chart" } } });
+    expect(figureLeakWarnings(b, "x")).toEqual(['x we.x.02: the twin\'s figure prints "100 s", which the twin asks her to give']);
   });
   test("two labels on the same anchor within twelve pixels are reported", () => {
     const b = { questions: [{ id: "q.x.0015", figures: [{ kind: "svg", src: svg("<text x='260' y='238'>y m, the far side</text><text x='260' y='240'>36 m of fencing</text>"), alt: "two pens" }], parts: [{ id: "a", answer: { kind: "numeric", value: 6 } }] }] };

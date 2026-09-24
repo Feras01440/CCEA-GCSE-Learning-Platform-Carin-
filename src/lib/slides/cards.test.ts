@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { RetrievalPrompt } from "@/lib/content/schema";
-import { CARD_WORDS, buildDeck, deckGateIds, packParagraph, promiseLine, slug, splitSentences, withRetries, type Card } from "./cards";
+import { CARD_WORDS, buildDeck, cardSeconds, deckGateIds, deckMinutesPhrase, deckPromise, packParagraph, promiseLine, slug, splitSentences, withRetries, type Card } from "./cards";
 import { deckFor, slidesCardCount } from "./deck";
 import { enrichmentFor } from "./enrichment";
 
@@ -17,9 +17,9 @@ const trialPrompts = (): RetrievalPrompt[] => (readJson(path.join(TRIAL, "bundle
 const kinds = (cards: readonly Card[]) => cards.map((c) => c.kind);
 
 describe("the trial topic's deck (fm1/algebraic-fractions-simplify)", () => {
-  it("is 24 cards from the note alone: title, 15 teaching cards, recap, pointer, 4 recall, close", () => {
+  it("is 22 cards from the note alone: title, 15 teaching cards, recap, pointer, 2 light recall cards, close", () => {
     const deck = buildDeck(trialBlocks(), trialPrompts());
-    expect(deck.stats).toMatchObject({ cards: 24, gates: 7, recall: 4, videos: 1 });
+    expect(deck.stats).toMatchObject({ cards: 22, gates: 7, recall: 2, videos: 1, untimedVideos: 1 });
     expect(kinds(deck.cards)).toEqual([
       "title",
       "idea", // 1 Simplifying algebraic fractions: factorise first
@@ -40,23 +40,21 @@ describe("the trial topic's deck (fm1/algebraic-fractions-simplify)", () => {
       "gate", // g6
       "recap",
       "pointer",
-      "recall",
-      "recall",
-      "recall",
-      "recall",
+      "recall", // 04: the last thing to check (01, the three moves, is a list; 03, factor and term, an explanation)
+      "recall", // 06: what to do first with a cubic
       "close",
     ]);
   });
 
-  it("is 25 cards with its registered enrichment: the figure she acts on after the three moves", () => {
+  it("is 23 cards with its registered enrichment: the figure she acts on after the three moves", () => {
     const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    expect(deck.stats).toMatchObject({ cards: 25, gates: 7, recall: 4, videos: 1 });
+    expect(deck.stats).toMatchObject({ cards: 23, gates: 7, recall: 2, videos: 1, untimedVideos: 1 });
     const at = deck.cards.findIndex((c) => c.kind === "interaction");
     expect(at).toBeGreaterThan(0);
     expect(deck.cards[at - 1]).toMatchObject({ kind: "idea", key: "idea:the-three-moves:2" });
     expect(deck.cards[at]).toMatchObject({ kind: "interaction", id: "afs.tap-to-cancel" });
     expect(deck.cards[at + 1]).toMatchObject({ kind: "gate", key: "gate:g3" });
-    expect(slidesCardCount(TRIAL_ID, trialBlocks(), trialPrompts())).toBe(25);
+    expect(slidesCardCount(TRIAL_ID, trialBlocks(), trialPrompts())).toBe(23);
     // The card the interaction follows states moves 2 and 3, so the tap card comes exactly where the note says "cancel".
     const host = deck.cards[at - 1] as Extract<Card, { kind: "idea" }>;
     expect(host.md.startsWith("**2 Factorise the denominator fully**")).toBe(true);
@@ -107,20 +105,33 @@ describe("the trial topic's deck (fm1/algebraic-fractions-simplify)", () => {
     expect(title.figure?.kind).toBe("svg");
     expect(title.can).toHaveLength(3);
     expect(title.lede).toMatch(/^\$\\dfrac\{12\}\{18\}\$ cancels/);
-    expect(promiseLine(deck.stats)).toBe("25 cards · 7 checks · 1 video");
+    // The video has no stated length, so it is named beside the minutes, never guessed into them (audit LD-03).
+    expect(promiseLine(deck.stats)).toBe("23 cards · 7 checks");
+    expect(deckPromise(deck.stats)).toMatch(/^About \d+ minutes plus a video · 23 cards · 7 checks$/);
     // Honest minutes: 20 s a reading card, 40 s a check, 30 s a recall card, a minute on the figure, nothing for the video.
-    expect(deck.stats.minutes).toBeGreaterThanOrEqual(10);
-    expect(deck.stats.minutes).toBeLessThanOrEqual(13);
+    expect(deck.stats.minutes).toBeGreaterThanOrEqual(9);
+    expect(deck.stats.minutes).toBeLessThanOrEqual(12);
+    // Every card in the deck is counted, and only those.
+    expect(deck.stats.minutes).toBe(Math.max(1, Math.round(deck.cards.reduce((n, c) => n + cardSeconds(c), 0) / 60)));
   });
 
-  it("numbers the recall cards and reads them from the bundle's prompts", () => {
+  it("times a video only when its block says how long it runs", () => {
+    const withEnd = trialBlocks().map((b) => ((b as { type?: string }).type === "video" ? { ...(b as object), end: 341 } : b));
+    const timed = deckFor(TRIAL_ID, withEnd, trialPrompts());
+    const untimed = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
+    expect(timed.stats).toMatchObject({ videos: 1, untimedVideos: 0 });
+    expect(timed.stats.minutes).toBe(Math.max(1, Math.round((untimed.cards.reduce((n, c) => n + cardSeconds(c), 0) + 341) / 60)));
+    expect(promiseLine(timed.stats)).toBe("23 cards · 7 checks · 1 video");
+    expect(deckMinutesPhrase(timed.stats)).toBe(`About ${timed.stats.minutes} minutes`);
+    expect(deckMinutesPhrase({ ...untimed.stats, untimedVideos: 2, videos: 2 })).toMatch(/plus two videos$/);
+  });
+
+  it("keeps two of the note's four prompts as recall cards, the light ones, numbered among themselves", () => {
     const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
     const recalls = deck.cards.filter((c): c is Extract<Card, { kind: "recall" }> => c.kind === "recall");
     expect(recalls.map((c) => [c.index, c.total, c.prompt.id])).toEqual([
-      [1, 4, "rp.fm.u1.algebraic-fractions-simplify.01"],
-      [2, 4, "rp.fm.u1.algebraic-fractions-simplify.03"],
-      [3, 4, "rp.fm.u1.algebraic-fractions-simplify.04"],
-      [4, 4, "rp.fm.u1.algebraic-fractions-simplify.06"],
+      [1, 2, "rp.fm.u1.algebraic-fractions-simplify.04"],
+      [2, 2, "rp.fm.u1.algebraic-fractions-simplify.06"],
     ]);
     // Without the bundle's prompts the recall cards are absent, never invented.
     expect(buildDeck(trialBlocks(), []).stats.recall).toBe(0);
@@ -129,15 +140,15 @@ describe("the trial topic's deck (fm1/algebraic-fractions-simplify)", () => {
   it("brings a missed gate back once, before the recap, without a second record", () => {
     const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
     const again = withRetries(deck.cards, ["g2", "g5"]);
-    expect(again).toHaveLength(27);
+    expect(again).toHaveLength(25);
     const recapAt = again.findIndex((c) => c.kind === "recap");
     expect(again[recapAt - 2]).toMatchObject({ kind: "gate", key: "retry:g2", retry: true });
     expect(again[recapAt - 1]).toMatchObject({ kind: "gate", key: "retry:g5", retry: true });
     // The base gates are untouched and the retries are not counted as checks.
     expect(deckGateIds(again)).toEqual(["g1", "g2", "g7", "g3", "g4", "g5", "g6"]);
     // Calling again with the same misses replaces the retries rather than stacking them.
-    expect(withRetries(again, ["g2"])).toHaveLength(26);
-    expect(withRetries(again, [])).toHaveLength(25);
+    expect(withRetries(again, ["g2"])).toHaveLength(24);
+    expect(withRetries(again, [])).toHaveLength(23);
   });
 
   it("names every card with a stable key", () => {
@@ -148,7 +159,8 @@ describe("the trial topic's deck (fm1/algebraic-fractions-simplify)", () => {
     expect(keys).toContain("media:video:tlKN8NNNxdI");
     expect(keys).toContain("callout:examiner:summer-2024-fm1-q8-a");
     expect(keys).toContain("callout:why:why-the-last-look-at-the-numbers-matters");
-    expect(keys).toContain("recall:rp.fm.u1.algebraic-fractions-simplify.01");
+    expect(keys).toContain("recall:rp.fm.u1.algebraic-fractions-simplify.04");
+    expect(keys).not.toContain("recall:rp.fm.u1.algebraic-fractions-simplify.01");
     // The registered illustrations point at cards that exist.
     for (const key of Object.keys(enrichmentFor(TRIAL_ID)?.illustrations ?? {})) expect(keys).toContain(key);
   });

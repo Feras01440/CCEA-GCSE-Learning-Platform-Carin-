@@ -21,7 +21,8 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { clsx } from "clsx";
 import { CairnMark } from "@/components/companion/CairnArt";
-import { minutesHeading, type LessonSection } from "./lesson-plan";
+import { focusLanding } from "@/components/shell/input-modality";
+import { minutesHeading, plusVideos, type LessonSection } from "./lesson-plan";
 
 export interface SpineStage {
   /** The stage's DOM id on the page, e.g. "practice". */
@@ -180,6 +181,8 @@ export function LessonSpine({ sections, stages, minutes, answered, noteId = "not
 
   const gatesTotal = sections.reduce((n, s) => n + s.gateIds.length, 0);
   const gatesDone = sections.reduce((n, s) => n + s.gateIds.filter((id) => answered.has(id)).length, 0);
+  // A video with no stated length is named beside the minutes, as the hero names it (lesson-plan.ts plusVideos).
+  const videos = plusVideos(sections.reduce((n, s) => n + s.untimedVideos, 0));
   // The first gate still to answer: every section after it waits for it.
   const pendingGate = sections.flatMap((s) => s.gateIds).find((id) => !answered.has(id)) ?? null;
 
@@ -276,8 +279,7 @@ export function LessonSpine({ sections, stages, minutes, answered, noteId = "not
     // Clear the phone's own sticky bar, so what she asked for is not hidden under it.
     const clearance = window.innerWidth < 1024 ? 72 : 24;
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - clearance, behavior: reducedMotion() ? "auto" : "smooth" });
-    if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
-    el.focus({ preventScroll: true });
+    focusLanding(el);
   };
 
   const toggle = () => {
@@ -328,7 +330,7 @@ export function LessonSpine({ sections, stages, minutes, answered, noteId = "not
             id={sheetId}
             className="rise-in absolute inset-x-0 top-full z-30 max-h-[calc(100dvh-9rem)] overflow-y-auto rounded-b-[var(--radius)] border-b border-line-2 bg-surface px-2 py-2 shadow-[var(--shadow-2)]"
           >
-            <p className="px-2.5 pb-1 pt-1 text-meta font-medium text-ink-2">The lesson · {minutesHeading(minutes).toLowerCase()}</p>
+            <p className="px-2.5 pb-1 pt-1 text-meta font-medium text-ink-2">The lesson · {minutesHeading(minutes).toLowerCase()}{videos && ` ${videos}`}</p>
             <ol>
               {lessonRows.map((r) => (
                 <li key={r.key}>
@@ -369,7 +371,7 @@ export function LessonSpine({ sections, stages, minutes, answered, noteId = "not
         </div>
         {open ? (
           <div id={railListId} className="rise-in mt-3">
-            <p className="mb-1.5 px-1.5 text-meta text-ink-2">{minutesHeading(minutes)}</p>
+            <p className="mb-1.5 px-1.5 text-meta text-ink-2">{minutesHeading(minutes)}{videos && ` ${videos}`}</p>
             <ol className="flex flex-col">
               {lessonRows.map((r) => (
                 <li key={r.key}>
@@ -454,6 +456,8 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
   const total = sections.length;
   const gatesTotal = sections.reduce((n, s) => n + s.gateIds.length, 0);
   const gatesDone = sections.reduce((n, s) => n + s.gateIds.filter((id) => answered.has(id)).length, 0);
+  // The same minutes as the hero's Read line, with the same video named beside them (lesson-plan.ts heroPromise).
+  const videos = plusVideos(sections.reduce((n, s) => n + s.untimedVideos, 0));
   const pendingGate = sections.flatMap((s) => s.gateIds).find((id) => !answered.has(id)) ?? null;
   // Done: she has moved past it with every check in it answered, or finished the lesson.
   const done = (i: number): boolean => finished || (i + 1 < open && sections[i].gateIds.every((id) => answered.has(id)));
@@ -503,11 +507,13 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
     };
   }, [popover]);
 
-  /** Scrolls a place to just under the bar and puts the keyboard there. */
+  /**
+   * Scrolls a place to just under the bar and puts the keyboard there, as a landing place: the focus ring shows only
+   * when the keyboard chose the row (shell/input-modality.ts). A Continue it lands on keeps its ring for the keyboard.
+   */
   const take = (place: HTMLElement, focus: HTMLElement = place) => {
     window.scrollTo({ top: place.getBoundingClientRect().top + window.scrollY - barClearance(navRef.current), behavior: reducedMotion() ? "auto" : "smooth" });
-    if (!focus.hasAttribute("tabindex") && !focus.matches("button, a, input")) focus.setAttribute("tabindex", "-1");
-    focus.focus({ preventScroll: true });
+    focusLanding(focus);
   };
 
   const goSection = (i: number) => () => {
@@ -601,6 +607,7 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
         >
           <p className="tnum px-2.5 pb-1.5 pt-1 text-meta font-medium text-ink-2">
             The lesson · {minutesHeading(minutes).toLowerCase()}
+            {videos && ` ${videos}`}
             {gatesTotal > 0 && ` · ${gatesDone} of ${gatesTotal} checks`}
           </p>
           <ol className="flex flex-col">

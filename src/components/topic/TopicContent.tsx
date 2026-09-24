@@ -46,6 +46,7 @@ import {
   type LessonSection,
 } from "./lesson-plan";
 import { CardSkeleton } from "@/components/ux/Skeleton";
+import { focusLanding } from "@/components/shell/input-modality";
 import type { Subject } from "@/lib/content/taxonomy";
 import { REACTIONS } from "@/components/slides/enrich";
 import { enrichmentFor } from "@/lib/slides/enrichment";
@@ -90,11 +91,15 @@ function tintFor(subject: Subject, unit: string): string {
   return discipline === "C" ? "bg-tint-chem" : discipline === "P" ? "bg-tint-phys" : "bg-tint-bio";
 }
 
-/** A stage of the page: a hairline across the column, a sentence-case label with its cost, and the stage's title. */
+/**
+ * A stage of the page: a hairline across the column, a sentence-case label with its cost, and the stage's title. A link
+ * to the page with the stage's id as its hash lands on it (useStageLanding).
+ */
 function Stage({ id, label, title, first = false, children }: { id: string; label: string; title: string; first?: boolean; children: ReactNode }) {
   return (
     <section
       id={id}
+      data-stage
       aria-labelledby={`${id}-title`}
       className="section-rule scroll-mt-16 lg:scroll-mt-6"
       // .section-rule sets the gap before a section; between stages the gap is the larger --gap-stage.
@@ -150,6 +155,79 @@ function useLesson(subject: Subject, slug: string, topicId: string) {
   const markAnswered = useCallback((id: string) => setAnswered((prev) => (prev.has(id) ? prev : new Set([...prev, id]))), []);
 
   return { bundle, error, gateIds, answered, markAnswered };
+}
+
+/** How long a landing keeps its stage at the top while the page above it settles, and how still it must be to stop. */
+const LANDING_MAX_MS = 4000;
+const LANDING_STILL_FRAMES = 20;
+
+/** What tells the page she has taken over: a scroll of the wheel, a touch, a press, a key. */
+const HER_OWN = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+
+/**
+ * Keeps a stage at the top of the screen (under its scroll margin) while the lesson above it settles: the note opens to
+ * where she stopped, the maths and the fonts arrive, and each of them pushes the stage down. It lets go as soon as she
+ * scrolls, taps or presses a key herself (the page never fights her), once the stage has been still for a moment, after
+ * four seconds, or when the stage leaves the page. Returns the way to let go early.
+ */
+function holdAtTop(el: HTMLElement): () => void {
+  let stopped = false;
+  let frame = 0;
+  const stop = () => {
+    stopped = true;
+    window.cancelAnimationFrame(frame);
+    for (const type of HER_OWN) window.removeEventListener(type, stop, true);
+  };
+  for (const type of HER_OWN) window.addEventListener(type, stop, { capture: true, passive: true });
+  const started = performance.now();
+  let lastTop = Number.NaN;
+  let still = 0;
+  const align = () => {
+    if (stopped) return;
+    if (!el.isConnected) return stop();
+    const top = el.getBoundingClientRect().top;
+    still = top === lastTop ? still + 1 : 0;
+    lastTop = top;
+    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+    if (Math.abs(top - margin) > 1) window.scrollTo({ top: window.scrollY + top - margin, behavior: "auto" });
+    if (still < LANDING_STILL_FRAMES && performance.now() - started < LANDING_MAX_MS) frame = window.requestAnimationFrame(align);
+    else stop();
+  };
+  align();
+  return stop;
+}
+
+/**
+ * A link that names a stage of this page lands on it: the Slides close's "Practise this topic" is /…/#practice (audit
+ * LD-02, CQ-06). The stages are drawn only once the lesson has loaded, after the browser (a fresh load) or the router
+ * (an in-app link) has looked for the id and found nothing, so the page takes her there itself when they appear, and
+ * puts the keyboard on the stage as a landing place (the ring only for the keyboard). A later change of hash does the
+ * same. `ready` is true once the stages are on the page.
+ */
+function useStageLanding(ready: boolean): void {
+  useEffect(() => {
+    if (!ready) return;
+    let letGo: (() => void) | null = null;
+    const land = () => {
+      let id = "";
+      try {
+        id = decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        return;
+      }
+      const el = id ? document.getElementById(id) : null;
+      if (!el || !el.hasAttribute("data-stage")) return;
+      letGo?.();
+      focusLanding(el);
+      letGo = holdAtTop(el);
+    };
+    land();
+    window.addEventListener("hashchange", land);
+    return () => {
+      window.removeEventListener("hashchange", land);
+      letGo?.();
+    };
+  }, [ready]);
 }
 
 /**
@@ -423,6 +501,7 @@ export function TopicContent(props: Props) {
 function ClassicContent({ subject, unit, slug, topicId, displayTitle, seeIt, reference }: Props) {
   const item: Omit<ItemRef, "id"> = useMemo(() => ({ subject, unit, topicSlug: slug }), [subject, unit, slug]);
   const { bundle, error, gateIds, answered, markAnswered } = useLesson(subject, slug, topicId);
+  useStageLanding(Boolean(bundle && gateIds));
 
   if (error) return lessonError;
   if (!bundle || !gateIds)
@@ -479,6 +558,7 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
   const { bundle, error, gateIds, answered, markAnswered } = useLesson(subject, slug, topicId);
   const plan = useMemo(() => (bundle ? planFor(bundle, displayTitle, reference) : null), [bundle, displayTitle, reference]);
   const sections = plan?.noteSections ?? serverSections ?? [];
+  useStageLanding(Boolean(bundle && plan));
 
   // How far she has come: the sections open, and whether she has pressed the lesson's last Continue.
   const [open, setOpen] = useState<number | null>(null);
@@ -499,8 +579,8 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
           if (!el) return;
           const reduce = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 16, behavior: reduce ? "auto" : "smooth" });
-          if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
-          el.focus({ preventScroll: true });
+          // A landing place: the ring only when the keyboard pressed Continue (shell/input-modality.ts).
+          focusLanding(el);
         },
       }
     : undefined;

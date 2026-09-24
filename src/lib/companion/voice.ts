@@ -43,6 +43,8 @@ export interface PresenceCopy {
   options: Array<{ id: CompanionPresence; label: string; detail: string }>;
   /** What none of the three changes. */
   note: string;
+  /** Said only when the device could not save her choice, once the control has gone back to the stored one. */
+  unsaved: string;
 }
 
 export function describePresence(state: Pick<CompanionState, "name">): PresenceCopy {
@@ -55,6 +57,7 @@ export function describePresence(state: Pick<CompanionState, "name">): PresenceC
       { id: "quiet", label: "Quiet", detail: "Nothing said and nothing drawn, anywhere." },
     ],
     note: "Whichever you choose, your plan, your papers’ dates and what comes back stay on Today.",
+    unsaved: "That did not save on this device, so nothing has changed.",
   };
 }
 

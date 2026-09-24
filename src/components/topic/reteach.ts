@@ -180,3 +180,40 @@ export function reteachFor(part: ReteachPart, result: ReteachResult): Reteach | 
   if (!step && anotherWay === null) return null;
   return { step, anotherWay };
 }
+
+/**
+ * The ways on after a second miss on a part (engine item 10.2, 24 Sep 2026; programme 0.1). A third guess at the same
+ * question teaches nothing, so the field stays closed and she chooses support: a hint, the worked solution, and then
+ * a twin as the next attempt. The card carries one accent-filled control (the art direction), so this names the
+ * rung that takes the card's primary button and at most one that sits beside it; "Next part" is the accented way out
+ * only when nothing is left to offer.
+ *
+ * Before she has chosen, the hint leads (the smallest help first) with the worked solution beside it; once she has
+ * chosen, the twin leads, because it is the attempt the support was for, and the worked solution stays beside it
+ * until it is open.
+ */
+export type SupportRung = "hint" | "worked" | "twin";
+
+export function supportOffer(state: { hint: boolean; hintShown: boolean; workedOpen: boolean; twin: boolean }): {
+  primary: SupportRung | null;
+  secondary: SupportRung | null;
+} {
+  const open = (rung: SupportRung): boolean =>
+    rung === "hint" ? state.hint && !state.hintShown && !state.workedOpen : rung === "worked" ? !state.workedOpen : state.twin;
+  const chosen = state.hintShown || state.workedOpen;
+  const order: SupportRung[] = chosen ? ["twin", "worked"] : ["hint", "worked", "twin"];
+  const [primary = null, secondary = null] = order.filter(open);
+  return { primary, secondary };
+}
+
+/**
+ * The hint offered after two misses: one the screen is not already showing. The part's hints first, skipping the one
+ * "Another way to see it" re-presents; else a line of the worked solution that is neither that nor the line shown
+ * under "Where the next mark is". Null when there is nothing new to say, and then no hint is offered.
+ */
+export function supportHintFor(part: Pick<ReteachPart, "hints" | "workedSolution">, reteach: Reteach | null): string | null {
+  const onScreen = new Set([reteach?.anotherWay, reteach?.step?.line].filter((s): s is string => typeof s === "string"));
+  const hint = part.hints.map((h) => h.trim()).find((h) => h.length > 0 && !onScreen.has(h));
+  if (hint !== undefined) return hint;
+  return solutionLines(part.workedSolution).find((line) => !onScreen.has(line) && !onScreen.has(firstSentence(line))) ?? null;
+}

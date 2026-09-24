@@ -15,7 +15,7 @@ import { contentFor } from "@/lib/content/load";
 import { deckFor } from "@/lib/content/decks";
 import { mediaFor } from "@/lib/content/media";
 import type { RetrievalPrompt } from "@/lib/content/schema";
-import { slidesCardCount } from "@/lib/slides/deck";
+import { deckFor as slidesDeckFor } from "@/lib/slides/deck";
 import { slidesReadyFor } from "@/lib/slides/ready";
 
 /** The verified reading links for a topic: the taxonomy's hand-picked links first, then the media map's, deduplicated by URL. */
@@ -67,6 +67,7 @@ function referenceFor(subject: Subject, unitCode: string, unitShort: string, t: 
   const examined = [
     t.examinedIn.length ? `Examined in ${andList(t.examinedIn)}` : null,
     t.calculator === "calc" ? "calculator allowed" : t.calculator === "non-calc" ? "no calculator" : null,
+    // Only a Higher topic says so; an untiered qualification (taxonomy "untiered") says nothing about tiers.
     t.tier === "H" ? "Higher tier only" : null,
   ]
     .filter((s): s is string => Boolean(s))
@@ -110,6 +111,8 @@ export default async function TopicPage({ params }: { params: Promise<{ subject:
     const sections = lessonSections(blocks, hero.lede);
     const firstHeading = (blocks.find((b) => (b as { type?: string }).type === "h") as { text?: string } | undefined)?.text ?? null;
     const shownTitle = displayTitle(t.title, firstHeading, hero.short);
+    // A topic with Slides: the deck's own numbers, the ones its title card and its Start button print (src/lib/slides).
+    const deck = slidesReadyFor(subject, topic) ? slidesDeckFor(shipped.id, blocks, shippedFile.prompts).stats : null;
     const heroElement = (
       <TopicHero
         subject={subject as Subject}
@@ -126,8 +129,8 @@ export default async function TopicPage({ params }: { params: Promise<{ subject:
         checks={noteGateIds(blocks).length}
         workedExamples={shipped.counts.we}
         practicals={t.practicals}
-        // "Start the slides · 25 cards": the deck's own count, on a topic that has Slides (the slides agent's buttons).
-        slidesCards={slidesReadyFor(subject, topic) ? slidesCardCount(shipped.id, blocks, shippedFile.prompts) : undefined}
+        // Named beside Read's numbers on the promise line, and "Start the slides · 23 cards" on the button.
+        slides={deck ? { cards: deck.cards, minutes: deck.minutes } : undefined}
       />
     );
     const content = {

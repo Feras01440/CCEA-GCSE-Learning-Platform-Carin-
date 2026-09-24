@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { AnswerSpec, CommonError } from "@/lib/content/schema";
-import { instructsAccuracy, markAnswer, matchesCommonError } from "./mark";
+import { instructsAccuracy, markAnswer, matchesCommonError, variableLetters } from "./mark";
 
 const median: AnswerSpec = {
   kind: "numeric",
@@ -144,11 +144,13 @@ describe("markAnswer other kinds", () => {
     expect(crossed.explanation).toMatch(/paired wrongly/);
     expect(markAnswer("(1, 2)", two, { marks: 5 }).explanation).toMatch(/1 of the 2 pairs/);
   });
-  test("order: the arrangement must match exactly, and the feedback counts what is in place", () => {
+  test("order: the arrangement must match exactly for every mark, and the feedback counts what is in place", () => {
     const spec: AnswerSpec = { kind: "order", items: ["cell", "tissue", "organ", "organ system"], correctOrder: [0, 1, 2, 3] };
     expect(markAnswer("0,1,2,3", spec, { marks: 2 })).toMatchObject({ correct: true, marksAwarded: 2, marksAvailable: 2 });
+    // One swap on a 2-mark part keeps one mark (B2E-14, 24 Sep 2026: it scored 0; order-marking.ts orderMarks).
     const partial = markAnswer("0,2,1,3", spec, { marks: 2 });
-    expect(partial).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(partial).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("3,2,1,0", spec, { marks: 2 })).toMatchObject({ correct: false, marksAwarded: 0 });
     expect(partial.explanation).toMatch(/2 of 4/);
     expect(partial.expected).toBe("cell → tissue → organ → organ system");
     expect(markAnswer("0,1", spec).explanation).toMatch(/every item/i);
@@ -311,7 +313,7 @@ describe("markAnswer other kinds", () => {
     };
     expect(markAnswer("0,1,2,3", steps, { marks: 2 })).toMatchObject({ correct: true, marksAwarded: 2, marksAvailable: 2 });
     const partial = markAnswer("0,2,1,3", steps, { marks: 2 });
-    expect(partial).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(partial).toMatchObject({ correct: false, marksAwarded: 1 });
     expect(partial.explanation).toMatch(/2 of 4/);
     expect(partial.expected).toBe("width x, length x + 3 → area = x(x + 3) = 11 → x^2 + 3x = 11 → x^2 + 3x - 11 = 0");
     expect(markAnswer("0,1", steps).explanation).toMatch(/every item/i);
@@ -395,7 +397,13 @@ describe("markAnswer other kinds", () => {
     expect(alone).toMatchObject({ correct: false, marksAwarded: 1, marksAvailable: 2 });
     expect(alone.explanation).toMatch(/value/);
     expect(markAnswer("v = f × λ\n= 2 × 3 = 6 m/s", eq, { marks: 2 })).toMatchObject({ correct: true, marksAwarded: 2 });
-    expect(markAnswer("v = f × λ\nv = 6 m/s", eq, { marks: 2 })).toMatchObject({ correct: true, marksAwarded: 2 });
+    // A bare value under the equation cannot be checked: the spec has no expected value and there is no substitution
+    // to read it against, so "v = 999 m/s" would have earned 2 of 2 (24 Sep 2026). It keeps the equation mark and is
+    // asked for the numbers put in; the engine never pays for a value it cannot check.
+    const bare = markAnswer("v = f × λ\nv = 6 m/s", eq, { marks: 2 });
+    expect(bare).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(bare.explanation).toMatch(/numbers put in/);
+    expect(markAnswer("v = f × λ\nv = 999 m/s", eq, { marks: 2 })).toMatchObject({ correct: false, marksAwarded: 1 });
     // A value that does not follow from her own numbers keeps the equation mark only.
     const slip = markAnswer("v = f × λ\n= 2 × 3 = 5 m/s", eq, { marks: 2 });
     expect(slip).toMatchObject({ correct: false, marksAwarded: 1 });
@@ -576,5 +584,205 @@ describe("the right expression in the wrong form keeps all but the last mark", (
     expect(markAnswer("\\log 4x^3", spec, { marks: 3 }).marksAwarded).toBe(0);
     // A one-mark part has no working mark to keep.
     expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 1 }).marksAwarded).toBe(0);
+  });
+});
+
+describe("a letter the question uses as a variable is never read as a unit (24 Sep 2026)", () => {
+  // m7 index-laws-zero-and-negative-powers .0014 (d), "3m⁰ + m⁰" = 4: "4m" is the misconception the part is there to
+  // catch (m⁰ read as m), and the engine read it as 4 metres against a unit-free key and paid it. The coulomb makes
+  // "c" a unit letter too (fm3 line-of-best-fit .0004 asks for c in y = mx + c).
+  const four: AnswerSpec = { kind: "numeric", value: 4, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal", "fraction"] };
+  test("the variables are the single letters of the stem's maths, less any the stem also uses as a unit", () => {
+    expect(variableLetters("(d) $3m^{0} + m^{0}$")).toEqual(["m"]);
+    expect(variableLetters("Find the value of $c$ in $y = mx + c$.")).toEqual(["c", "y", "m", "x"]);
+    expect(variableLetters("$\\dfrac{c^{24}}{(c^{3})^{4}} = c^{\\square}$")).toEqual(["c"]);
+    // "144 m" and "m/s" use m and s as units outside the maths: they stay units.
+    expect(variableLetters("The distance is 144 m. Use $s = ut + \\tfrac{1}{2}at^2$ with $u = 3$ m/s.")).toEqual(["u", "t", "a"]);
+    expect(variableLetters("The tangent at $t = 6$ s has been drawn.")).toEqual(["t"]);
+    expect(variableLetters(undefined)).toEqual([]);
+  });
+  test("m7 index-laws .0014 (d): 4m is not 4", () => {
+    const prompt = "(d) $3m^{0} + m^{0}$";
+    const r = markAnswer("4m", four, { marks: 1, prompt });
+    expect(r.correct).toBe(false);
+    expect(r.explanation).toMatch(/m is a letter in this question/);
+    expect(markAnswer("4 m", four, { marks: 1, prompt }).correct).toBe(false);
+    expect(markAnswer("4", four, { marks: 1, prompt }).correct).toBe(true);
+    expect(markAnswer("m = 4", four, { marks: 1, prompt }).correct).toBe(true);
+  });
+  test("fm3 line-of-best-fit .0004: c = 96 is right, 96c is not", () => {
+    const c: AnswerSpec = { kind: "numeric", value: 96, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] };
+    const prompt = "The line of best fit has gradient $-8$ and passes through the mean point $(4, 64)$. Find the value of $c$ in $y = mx + c$.";
+    expect(markAnswer("c = 96", c, { marks: 1, prompt }).correct).toBe(true);
+    expect(markAnswer("96", c, { marks: 1, prompt }).correct).toBe(true);
+    expect(markAnswer("96c", c, { marks: 1, prompt }).correct).toBe(false);
+  });
+  test("a unit letter the stem also uses as a unit is still a unit, and a keyed unit is always one", () => {
+    const t: AnswerSpec = { kind: "numeric", value: 4, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] };
+    const prompt = "A particle travels 144 m. Using $s = ut$, find the time taken in s.";
+    expect(markAnswer("4 s", t, { marks: 1, prompt }).correct).toBe(true);
+    const keyed: AnswerSpec = { kind: "numeric", value: 4, tolerance: { type: "exact" }, unit: "m", unitRequired: true, acceptForms: ["decimal"] };
+    expect(markAnswer("4 m", keyed, { marks: 1, prompt: "Find the length $m$ of the side." }).correct).toBe(true);
+  });
+  test("without a stem nothing changes", () => {
+    expect(markAnswer("4m", four, { marks: 1 }).correct).toBe(true);
+  });
+});
+
+describe("a hedge with one of the part's common errors in it earns nothing (C2 D F12, 24 Sep 2026)", () => {
+  // c2-addition-polymerisation .0002, as published: "Name the polymer formed from ethene."
+  const spec: AnswerSpec = {
+    kind: "text",
+    accepted: ["poly(ethene)", "polythene"],
+    keyWords: [{ any: ["poly(ethene)", "polyethene", "polythene"], marks: 1 }],
+    listingRule: false,
+  };
+  const polyEthane: CommonError = {
+    misconception: "sci.organic.polymer-name",
+    pattern: { kind: "text", regex: String.raw`\bpolyethane\b|\bpoly ?\(ethane\)|\bpoly ethane\b` },
+    feedback: "The chain has only single bonds, but the name comes from the monomer, and the monomer is ethene: poly(ethene).",
+    marksTypicallyEarned: 0,
+  };
+  const opts = { marks: 1, commonErrors: [polyEthane], prompt: "Name the polymer formed from ethene." };
+  test("the hedge is refused, and the named error's diagnosis is what she reads", () => {
+    const r = markAnswer("poly(ethene) or poly(ethane)", spec, opts);
+    expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["sci.organic.polymer-name"] });
+    expect(r.explanation).toMatch(/monomer is ethene/);
+  });
+  test("the right answer alone, or with its other right spelling, keeps the mark", () => {
+    expect(markAnswer("poly(ethene)", spec, opts)).toMatchObject({ correct: true, marksAwarded: 1 });
+    expect(markAnswer("polythene or poly(ethene)", spec, opts)).toMatchObject({ correct: true, marksAwarded: 1 });
+  });
+});
+
+// Engine brief item 3 (reversed reasons, fm2-c-1.md: "Up the slope, because friction opposes the motion." earned the
+// reason's mark with the direction wrong). Opt-in through the scheme the author already writes: where a text part's
+// key-word groups stand one for one beside its mark points (same count, same marks), a point's `dependsOn` holds for
+// its group, as CCEA's "dep" marks do. 41 published parts carry dependsOn; a part without it is marked as before.
+describe("a key-word group earns only with the groups its mark point depends on", () => {
+  const theorem: AnswerSpec = {
+    kind: "text",
+    accepted: [],
+    keyWords: [
+      { any: ["64"], marks: 1 },
+      { any: ["angle at the centre is twice the angle at the circumference"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  const scheme = [
+    { id: "A1", code: "A", marks: 1, for: "x = 64" },
+    { id: "MA1", code: "MA", marks: 1, for: "reason: the angle at the centre is twice the angle at the circumference", dependsOn: ["A1"] },
+  ] as never;
+  test("circle-theorems .0001: the reason with the wrong angle earns nothing", () => {
+    const r = markAnswer("x = 58 because the angle at the centre is twice the angle at the circumference", theorem, { marks: 2, scheme });
+    expect(r).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(r.explanation).toMatch(/depends on/);
+  });
+  test("the angle alone keeps its own mark; both earn both", () => {
+    expect(markAnswer("x = 64", theorem, { marks: 2, scheme })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("x = 64 because the angle at the centre is twice the angle at the circumference", theorem, { marks: 2, scheme })).toMatchObject({
+      correct: true,
+      marksAwarded: 2,
+    });
+  });
+  test("without dependsOn, or when the groups do not stand one for one beside the points, nothing changes", () => {
+    const free = [
+      { id: "A1", code: "A", marks: 1, for: "x = 64" },
+      { id: "MA1", code: "MA", marks: 1, for: "reason" },
+    ] as never;
+    expect(markAnswer("x = 58 because the angle at the centre is twice the angle at the circumference", theorem, { marks: 2, scheme: free }).marksAwarded).toBe(1);
+    const uneven = [
+      { id: "A1", code: "A", marks: 2, for: "x = 64 with the reason" },
+    ] as never;
+    expect(markAnswer("x = 58 because the angle at the centre is twice the angle at the circumference", theorem, { marks: 2, scheme: uneven }).marksAwarded).toBe(1);
+    expect(markAnswer("x = 58 because the angle at the centre is twice the angle at the circumference", theorem, { marks: 2 }).marksAwarded).toBe(1);
+  });
+  test("a chain of dependencies: a point whose point is lost is lost too", () => {
+    const three: AnswerSpec = {
+      kind: "text",
+      accepted: [],
+      keyWords: [
+        { any: ["x^2 + 3x"], marks: 1 },
+        { any: ["a = 4"], marks: 1 },
+        { any: ["b = 12"], marks: 1 },
+      ],
+      listingRule: false,
+    };
+    const chain = [
+      { id: "MA1", code: "MA", marks: 1, for: "expanded" },
+      { id: "A1", code: "A", marks: 1, for: "a = 4", dependsOn: ["MA1"] },
+      { id: "A2", code: "A", marks: 1, for: "b = 12", dependsOn: ["A1"] },
+    ] as never;
+    expect(markAnswer("a = 4, b = 12", three, { marks: 3, scheme: chain }).marksAwarded).toBe(0);
+    expect(markAnswer("x^2 + 3x, a = 5, b = 12", three, { marks: 3, scheme: chain }).marksAwarded).toBe(1);
+    expect(markAnswer("x^2 + 3x, a = 4, b = 12", three, { marks: 3, scheme: chain }).marksAwarded).toBe(3);
+  });
+});
+
+// Addenda (B), 24 Sep 2026: a numeric part could pay only all or nothing, so where the unit is required a right value
+// without it scored 0 of 4 where the scheme gives 3 of 4 (P2 D topic 1 left its unit unrequired for that reason). The
+// unit is the answer's last mark: a right value with the unit missing or wrong keeps every mark but that one.
+describe("a right value without its required unit keeps every mark but the unit's", () => {
+  const charge: AnswerSpec = { kind: "numeric", value: 36, tolerance: { type: "exact" }, unit: "C", unitRequired: true, acceptForms: ["decimal"] };
+  test("36 for 36 C on a 4-mark part is 3 of 4; the wrong unit the same", () => {
+    const bare = markAnswer("36", charge, { marks: 4 });
+    expect(bare).toMatchObject({ correct: false, marksAwarded: 3, marksAvailable: 4 });
+    expect(bare.explanation).toMatch(/needs a unit/);
+    expect(bare.explanation).toMatch(/3 of 4/);
+    expect(markAnswer("36 A", charge, { marks: 4 })).toMatchObject({ correct: false, marksAwarded: 3 });
+  });
+  test("the right value with its unit is every mark; a wrong value is none; a 1-mark part is the unit's too", () => {
+    expect(markAnswer("36 C", charge, { marks: 4 })).toMatchObject({ correct: true, marksAwarded: 4 });
+    expect(markAnswer("30 C", charge, { marks: 4 })).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(markAnswer("30", charge, { marks: 4 })).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(markAnswer("30 A", charge, { marks: 4 })).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(markAnswer("36", charge, { marks: 1 })).toMatchObject({ correct: false, marksAwarded: 0 });
+  });
+});
+
+// Addenda (B): a letter the question uses as a variable is never a unit, in a table's cells as in a numeric part. With
+// the coulomb, "4c" in a table of values for y = 2x + c read as 4 coulombs and was paid.
+describe("a variable's letter after a number in a table cell is not a unit", () => {
+  const table: AnswerSpec = { kind: "table", cells: [{ row: 1, col: 1, value: 4 }, { row: 1, col: 2, value: 6 }] };
+  const row = (values: string[]) => JSON.stringify({ cells: values.map((value, i) => ({ row: 1, col: i + 1, value })) });
+  const prompt = "Complete the table of values for $y = 2x + c$ when $c = 2$.";
+  test("4c is not 4; 4 is", () => {
+    expect(markAnswer(row(["4", "6"]), table, { marks: 2, prompt })).toMatchObject({ correct: true, marksAwarded: 2 });
+    expect(markAnswer(row(["4c", "6"]), table, { marks: 2, prompt })).toMatchObject({ correct: false, marksAwarded: 1 });
+  });
+  test("without the stem nothing changes", () => {
+    expect(markAnswer(row(["4c", "6"]), table, { marks: 2 })).toMatchObject({ correct: true, marksAwarded: 2 });
+  });
+});
+
+// Trial audit MK-02 (24 Sep 2026, reproduced 25 Sep): a common error written as the expression the question gives
+// was matched by equivalence, and every unsimplified answer is equivalent to it, so "10/(2x − 8)" and the factorised
+// but uncancelled line were told "That is the expression you were given" and tagged with that misconception. A common
+// error equivalent to the part's own answer is an error of form, so it is matched only as written (the same expression
+// in the same form), never by value.
+describe("a common error of form is matched as written, not by value", () => {
+  const spec: AnswerSpec = { kind: "algebraic", latex: String.raw`\frac{5}{x-4}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" };
+  const given: CommonError = {
+    misconception: "fm.algfrac.not-factorised-first",
+    pattern: { kind: "algebraic", latex: String.raw`\frac{5x+20}{x^{2}-16}` },
+    feedback: "That is the expression you were given, so nothing has been credited yet.",
+    marksTypicallyEarned: 0,
+  };
+  const opts = { marks: 2, commonErrors: [given] };
+  test("the expression typed back is the named error", () => {
+    const r = markAnswer("(5x+20)/(x^2-16)", spec, opts);
+    expect(r.tags).toEqual(["fm.algfrac.not-factorised-first"]);
+    expect(r.explanation).toMatch(/expression you were given/);
+  });
+  test("another unsimplified spelling is not that error: it keeps the form check's own diagnosis", () => {
+    for (const typed of ["10/(2x-8)", "5(x+4)/((x+4)(x-4))"]) {
+      const r = markAnswer(typed, spec, opts);
+      expect(r.tags ?? [], typed).not.toContain("fm.algfrac.not-factorised-first");
+      expect(r.explanation, typed).not.toMatch(/expression you were given/);
+    }
+  });
+  test("a common error of value (not equivalent to the answer) is still matched by value", () => {
+    const sign: CommonError = { misconception: "fm.algfrac.sign", pattern: { kind: "algebraic", latex: String.raw`\frac{5}{x+4}` }, feedback: "Check the sign.", marksTypicallyEarned: 1 };
+    expect(markAnswer("5/(4+x)", spec, { marks: 2, commonErrors: [sign] }).tags).toEqual(["fm.algfrac.sign"]);
   });
 });

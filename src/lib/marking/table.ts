@@ -41,6 +41,8 @@ export interface TableOptions {
    * "2.9" for 2.90 passed in silence). Without one the tolerance is only a closeness test.
    */
   accuracyInstructed?: boolean;
+  /** Letters the question uses as variables: after a number in a cell they are not a unit (numeric.ts `variables`). */
+  variables?: readonly string[];
 }
 
 export interface TableVerdict {
@@ -105,6 +107,7 @@ export function numericCellMatches(typed: string, value: number, tolerance?: Tol
 /** The numeric engine's spec for a cell: its tolerance, and the accuracy the stem demands of it, if any. */
 function cellSpec(value: number, tolerance: Tolerance | undefined, opts: TableOptions): NumericSpec {
   const spec: NumericSpec = { value, tolerance: engineTolerance(tolerance) };
+  if (opts.variables && opts.variables.length > 0) spec.variables = opts.variables;
   if (opts.accuracyInstructed && tolerance?.type === "dp") spec.dp = tolerance.places;
   if (opts.accuracyInstructed && tolerance?.type === "sf") spec.sigfigs = tolerance.figures;
   return spec;

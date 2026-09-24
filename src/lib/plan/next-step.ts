@@ -65,6 +65,7 @@ export function chooseNextStep(
 
 /** Trim an examiner note for a tile: first sentence, max ~140 chars. */
 export function shortReason(reason: string, max = 150): string {
-  const first = reason.split(/(?<=[.;])\s/)[0] ?? reason;
+  // The split keeps the delimiter on the first clause; a clause cut at a semicolon ends as a sentence on Today.
+  const first = (reason.split(/(?<=[.;])\s/)[0] ?? reason).replace(/;$/, ".");
   return first.length > max ? first.slice(0, max - 1).trimEnd() + "…" : first;
 }

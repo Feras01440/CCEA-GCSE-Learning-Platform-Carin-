@@ -24,7 +24,15 @@ export interface SlidesPosition {
   checked: Record<string, { correct: boolean }>;
   /** Recall cards graded, by card key. */
   graded: Record<string, "again" | "good" | "easy">;
+  /** What she typed on a recall card, by card key, so the answer shows beside it after a reload. */
+  typed: Record<string, string>;
+  /** Recall cards she skipped, by card key: nothing was recorded for them. */
+  skipped: Record<string, true>;
+  /** What she did to a figure she acts on, by card key: the pills struck, and after a Check the ones still lit. */
+  figures: Record<string, { struck: string[]; lit: string[] }>;
 }
+
+const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((s): s is string => typeof s === "string") : []);
 
 const KEY = (topicId: string) => `cairn.slides.${topicId}`;
 
@@ -43,6 +51,11 @@ export function readPosition(topicId: string): SlidesPosition | null {
       answers: isRecord(v.answers) ? (v.answers as Record<string, RunAnswer>) : {},
       checked: isRecord(v.checked) ? (v.checked as Record<string, { correct: boolean }>) : {},
       graded: isRecord(v.graded) ? (v.graded as Record<string, "again" | "good" | "easy">) : {},
+      typed: isRecord(v.typed) ? Object.fromEntries(Object.entries(v.typed).filter((e): e is [string, string] => typeof e[1] === "string")) : {},
+      skipped: isRecord(v.skipped) ? Object.fromEntries(Object.keys(v.skipped).map((k) => [k, true as const])) : {},
+      figures: isRecord(v.figures)
+        ? Object.fromEntries(Object.entries(v.figures).filter((e) => isRecord(e[1])).map(([k, f]) => [k, { struck: strings((f as Record<string, unknown>).struck), lit: strings((f as Record<string, unknown>).lit) }]))
+        : {},
     };
   } catch {
     return null;

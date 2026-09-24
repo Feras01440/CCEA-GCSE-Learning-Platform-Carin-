@@ -55,6 +55,9 @@ function tidy(line: string): string {
     .replace(/≈/g, "=")
     // A hyphen between letters joins a compound word ("nitrogen-fixing"), so it must not read as a minus.
     .replace(/(?<=[A-Za-z])-(?=[A-Za-z])/g, " ")
+    // "at right angles to" says "perpendicular to" (fm2-c-1.md D4: "perpendicular to the slope" was refused against a
+    // correction written "at right angles to the slope").
+    .replace(/\bat right angles to\b/gi, "perpendicular to")
     .trim();
 }
 
@@ -76,12 +79,21 @@ function prepare(line: string): string {
 }
 
 /**
+ * A chemical formula written as a word of a label or a line ("O2", "H2O", "CO2", "C2H5OH"): element symbols with at
+ * least one count. A capital letter and a number are a formula's symbol and count; a number before a letter ("3R",
+ * "2x") is a coefficient, which is algebra.
+ */
+const FORMULA_WORD = String.raw`(?:[A-Z][a-z]?\d*)*[A-Z][a-z]?\d+(?:[A-Z][a-z]?\d*)*`;
+/** A label's words: letters, or a formula (C2 D F01, 24 Sep 2026: "O2 molecules needed" was not a label). */
+const LABEL_RE = new RegExp(String.raw`^((?:${FORMULA_WORD}|[A-Za-z]+)(?: +(?:${FORMULA_WORD}|[A-Za-z]+))* *(?:\([^()]*\))?)\s*=\s*`);
+
+/**
  * The label a line is written under, and what it says: "Median = 30 + …" → "Median" and "30 + …";
  * "P(A given B) = 21/40" → "P(A given B)" and "21/40". A continuation line ("= 36.2") has no label and
  * its equals sign is not part of what it states, so "36.2" and "= 36.2" say the same thing.
  */
 function splitLabel(line: string): { label: string | null; body: string; continuation: boolean } {
-  const m = /^([A-Za-z][A-Za-z ]*(?:\([^()]*\))?)\s*=\s*/.exec(line);
+  const m = LABEL_RE.exec(line);
   if (m) return { label: m[1]!.trim(), body: line.slice(m[0].length), continuation: false };
   const lead = /^[=≈]\s*/.exec(line);
   if (lead) return { label: null, body: line.slice(lead[0].length), continuation: true };
@@ -452,7 +464,8 @@ function isEquation(first: string): boolean {
   // Only what follows the last gap a colon or comma left is the maths ("j: −2 + 9" is the label j and the sum
   // −2 + 9; "Setting it to zero: 2x − 6" is prose and then 2x − 6).
   const parts = first.split(/\s{2,}/);
-  let s = parts[parts.length - 1] ?? "";
+  // A formula in the name ("O2 molecules needed", C2 D F01) is a word of the name, not an unknown with a number.
+  let s = (parts[parts.length - 1] ?? "").replace(new RegExp(String.raw`(?<![\w.])${FORMULA_WORD}(?![\w.])`, "g"), " ");
   for (let i = 0; i < 6 && /\\[dt]?frac\{/.test(s); i += 1) s = s.replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)");
   s = s
     .replace(/\\(?:times|cdot)\b/g, "×")
@@ -478,6 +491,45 @@ function copulaValue(s: string): Stated | null {
   const m = /\b(?:is|are|was|equals|gives|giving|makes|becomes|comes to|to|totals?|totalling|sums? to|adds? up to)\s+(?:about\s+|approximately\s+)?([-−]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)((?:\s*(?:°C|°|%)|(?:\s+[A-Za-z][A-Za-z'-]*[²³]?(?:\/[A-Za-z]{1,3}[²³]?)?){1,3})?)[.,;]*\s*$/i.exec(s);
   if (!m) return null;
   return stated(m[1]);
+}
+
+/**
+ * A value, then its reason or qualifier in words: "25 °C at most, to avoid growing pathogens", "25 °C, so pathogens
+ * do not grow" (B2E-01, 24 Sep 2026: an authored correction written so stated no value, and the fix box refused even
+ * the bare 25). The words may hold no number, no operator and no letter standing alone ("8 i" is a vector, "3 x" a
+ * term), so "= 4x − 9", "= 7π + 14 cm" and "20 people under 18" are not values; and they may not open by denying it
+ * ("25 is not right"). Group 2 is the unit, when there is one.
+ */
+const VALUE_UNIT = String.raw`(?:\s*(?:°C|°|%|Ω)|\s+${UNIT_WORD}(?:\^?\{?[-−]?\d\}?|[²³]|⁻[¹²³])?(?![A-Za-z]))`;
+const VALUE_THEN_WORDS = new RegExp(
+  String.raw`^\s*([-−+]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)` +
+    String.raw`(${VALUE_UNIT}?)` +
+    String.raw`(?:\s*[,;]\s*|\s+)(?!(?:is\s+|are\s+)?(?:not|wrong|incorrect|never)\b)` +
+    String.raw`(?![A-Za-z](?![A-Za-z']))[A-Za-z][A-Za-z']*(?:[ ,;-]+(?:a|[A-Za-z][A-Za-z']+))*[.!]?\s*$`,
+);
+/**
+ * On her side the words after the value and its unit must open as a reason or a qualifier does: a comma, or "so",
+ * "to", "because", "at", "as", "since", "which", "maximum", "minimum". "= 6 cm⁻¹ after." is the end of a sentence
+ * about another quantity (the corpus guard's catch: a later step's line read as step 1's value).
+ */
+const TYPED_QUALIFIER = new RegExp(
+  String.raw`^\s*[-−+]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?${VALUE_UNIT}(?:\s*[,;]|\s+(?:so|to|because|as|since|which|at|maximum|minimum|max|min)\b)`,
+  "i",
+);
+/** A count against the formula it counts: "3O2", "3 O2 molecules" (C2 D F01). */
+const VALUE_THEN_FORMULA = new RegExp(String.raw`^\s*(\d+)\s*${FORMULA_WORD}(?:\s+[A-Za-z]{2,}){0,2}[.!]?\s*$`);
+
+/**
+ * The value `VALUE_THEN_WORDS` or `VALUE_THEN_FORMULA` reads. On her side of the comparison the value must carry its
+ * unit or its formula ("25 °C, to avoid growing pathogens", "3O2"): a bare number followed by a clause ("= 13,
+ * because the atom has no overall charge", "= 0.6, and both angles are inside the range") is a check or a reason
+ * about a value already on the page, and reading it as a result let other lines of the working pass as the fix.
+ */
+function valueThenWords(text: string, side: "typed" | "authored"): Stated | null {
+  const words = VALUE_THEN_WORDS.exec(text);
+  if (words && (side === "authored" || TYPED_QUALIFIER.test(text))) return stated(words[1]);
+  const formula = VALUE_THEN_FORMULA.exec(text);
+  return formula ? stated(formula[1]) : null;
 }
 
 /** A check written with squares ("37.08² + 19.72² = 42²") states its value squared: the value is the base. */
@@ -514,7 +566,7 @@ function resultOf(line: string, side: "typed" | "authored"): Stated | null {
     const restarts = penultParts.length > 1 && /^[A-Za-z][A-Za-z ]*$/.test((penultParts[penultParts.length - 1] ?? "").trim());
     if (!restarts && (isEquation(sides[0]!) || isEquation(penult))) return null;
     const after = s.slice(eq + 1);
-    const bare = bareStated(after);
+    const bare = bareStated(after) ?? valueThenWords(after, side);
     if (bare !== null || side === "authored") return bare;
     const squared = SQUARED_VALUE.exec(after);
     if (squared) return stated(squared[1]);
@@ -524,7 +576,7 @@ function resultOf(line: string, side: "typed" | "authored"): Stated | null {
   }
   const whole = bareStated(s);
   if (whole !== null) return whole;
-  if (side === "typed") return worked(s) ?? copulaValue(s);
+  if (side === "typed") return worked(s) ?? copulaValue(s) ?? valueThenWords(s, side);
   // An authored sentence ending on its value: the last number must stand alone, after a word, not after an operator.
   const tail = /(?:^|\s)([-−]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)((?:\s*(?:°C|°|%|Ω)|\s+[A-Za-z]{1,6}[²³]?(?:\/[A-Za-z]{1,3}[²³]?)?)?)[.,;:]*\s*$/.exec(s);
   if (!tail) return null;

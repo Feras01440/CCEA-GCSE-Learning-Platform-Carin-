@@ -8,7 +8,16 @@ import sciTopics from "../../../data/spec/double-award-science-topics.json";
 import sciSpec from "../../../data/spec/double-award-science.json";
 
 export type Subject = "maths" | "further-maths" | "science";
-export type Tier = "F" | "H" | "mixed";
+/**
+ * A topic's or a statement's tier, as its specification states it. "untiered" is a qualification that sets no tier at
+ * all (every candidate sits the same papers, as in GCSE Further Mathematics): nothing may call its content Higher.
+ */
+export type Tier = "F" | "H" | "mixed" | "untiered";
+
+/** The tier a specification file gives, or "untiered" where it gives none (audit CT-06, 24 Sep 2026). */
+function specTier(value: unknown): Tier {
+  return value === "F" || value === "H" || value === "mixed" ? value : "untiered";
+}
 
 export interface SubjectInfo {
   id: Subject;
@@ -216,11 +225,15 @@ function fmTopic(t: (typeof fm)["topics"][number]): TopicInfo {
     unit: t.unit,
     slug: t.slug,
     title: t.title,
-    tier: "H",
+    // The specification sets no tier for any topic or statement, so they are untiered: never "Higher tier only".
+    tier: specTier((t as { tier?: unknown }).tier),
     strand: t.area,
     difficulty: t.difficulty,
     calculator: "calc",
-    statements: t.statementIds.map((id) => ({ id, text: fmStatements.get(id)?.text ?? id, tier: "H" as Tier })),
+    statements: t.statementIds.map((id) => {
+      const s = fmStatements.get(id);
+      return { id, text: s?.text ?? id, tier: specTier((s as { tier?: unknown } | undefined)?.tier) };
+    }),
     prerequisites: t.prerequisites.filter((p) => !p.startsWith("maths:")),
     examinedIn: [t.unit],
     examinerEvidence: t.examinerEvidence.map((e) => ({ series: e.series, note: e.note })),

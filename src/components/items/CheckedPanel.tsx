@@ -15,6 +15,8 @@ import { btnSecondary, fieldCls } from "./ui";
 export interface CheckedPanelProps {
   log: VerificationLog;
   onReport: (text: string) => void;
+  /** The reports she has sent on this item from this device, oldest first (src/lib/db/reports.ts), shown back to her. */
+  sent?: ReadonlyArray<{ at: Date; text: string }>;
   defaultOpen?: boolean;
   className?: string;
 }
@@ -27,9 +29,9 @@ const RESULT: Record<Check["result"], { word: string; icon: React.ReactNode }> =
   waived: { word: "Waived", icon: <Minus size={14} aria-hidden className="text-warn" /> },
 };
 
-function formatWhen(iso: string): string {
+function formatWhen(iso: string | Date): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
+  if (Number.isNaN(d.getTime())) return String(iso);
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
@@ -44,7 +46,7 @@ export function summariseChecks(log: VerificationLog): string {
   return parts.join(" · ");
 }
 
-export function CheckedPanel({ log, onReport, defaultOpen = false, className }: CheckedPanelProps) {
+export function CheckedPanel({ log, onReport, sent: yours = [], defaultOpen = false, className }: CheckedPanelProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [text, setText] = useState("");
   const [sent, setSent] = useState(false);
@@ -122,6 +124,22 @@ export function CheckedPanel({ log, onReport, defaultOpen = false, className }: 
           </div>
         )}
 
+        {/* What she has sent from this device, so a report is visibly kept (engine item 10.4, 24 Sep 2026). */}
+        {yours.length > 0 && (
+          <div className="mt-3">
+            <p className="text-meta font-medium text-ink-2">What you sent</p>
+            <ul className="mt-1.5 space-y-2" aria-label="What you sent">
+              {yours.map((r, i) => (
+                <li key={i} className="rounded-[var(--radius-sm)] bg-surface-2/60 px-3 py-2 text-meta">
+                  <span className="text-ink-2">{formatWhen(r.at)} · </span>
+                  {r.text}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-1.5 text-meta text-ink-2">Kept on this device and in your backup until the item is re-checked.</p>
+          </div>
+        )}
+
         <form
           className="mt-4"
           onSubmit={(e) => {
@@ -136,7 +154,7 @@ export function CheckedPanel({ log, onReport, defaultOpen = false, className }: 
           <label htmlFor={`${id}-report`} className="text-meta font-medium">
             Something wrong?
           </label>
-          <p className="mt-0.5 text-meta text-ink-2">Say what looks off — an answer, a mark, a wording. The item is re-checked and you see the outcome here.</p>
+          <p className="mt-0.5 text-meta text-ink-2">Say what looks off — an answer, a mark, a wording. Your words are kept with this item on this device and in your backup, so it can be re-checked.</p>
           <textarea
             id={`${id}-report`}
             value={text}

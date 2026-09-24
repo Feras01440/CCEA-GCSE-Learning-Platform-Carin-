@@ -45,7 +45,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: `npx serve out -l ${PORT}`,
+    command: `npx serve out -l ${PORT} --no-etag`,
     url: `${BASE_URL}/`,
     reuseExistingServer: true,
     timeout: 120_000,

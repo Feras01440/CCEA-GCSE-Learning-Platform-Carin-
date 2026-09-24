@@ -380,3 +380,112 @@ describe("a worked-example step: its result, its pieces, and nothing it only res
     expect(stepLineMatches("The area is least when x = 6", "The area is greatest when $x = 6$").match).toBe(false);
   });
 });
+
+// B2E-01 and C2 D F01 (24 Sep 2026, confirmed by the verifiers): the fix box refused the natural corrections.
+// (1) An authored correction whose value is followed by its reason ("= 25 °C at most, to avoid growing pathogens.")
+// stated no value, so even the bare "25" was refused. (2) A label with a formula in it ("O2 molecules needed") was read
+// as an equation in an unknown, so the line stated no value and "3" was refused.
+describe("the fix box reads a value followed by its reason, and a label with a formula in it", () => {
+  const aseptic = {
+    studentWorking: [
+      "Sterilise: wipe the bench with disinfectant; heat the loop until red hot, then let it cool.",
+      "Transfer: lift the lid of the dish only a little and streak the bacteria across the agar.",
+      "Seal: tape the lid on the dish and label it.",
+      "Incubation temperature = 37 °C, so the bacteria grow as quickly as possible.",
+    ],
+    mistakeLine: 4,
+    correction: [
+      "Sterilise: wipe the bench with disinfectant; heat the loop until red hot, then let it cool.",
+      "Transfer: lift the lid of the dish only a little and streak the bacteria across the agar.",
+      "Seal: tape the lid on the dish and label it.",
+      "Incubation temperature = 25 °C at most, to avoid growing pathogens.",
+    ],
+  };
+  test.each([
+    "25",
+    "25 °C",
+    "25°C",
+    "25 degrees C",
+    "Incubation temperature = 25 °C",
+    "Incubation temperature = 25 °C, to avoid growing pathogens",
+    "25 °C, to avoid growing pathogens",
+    "Incubation temperature = 25°C so pathogens do not grow",
+    "Incubation temperature = 25 °C at most, to avoid growing pathogens.",
+  ])("b2 aseptic ftm.01: %s is the fix", (typed) => {
+    expect(markFix(typed, aseptic).match).toBe(true);
+  });
+  test.each(["37 °C", "30 °C", "Incubation temperature = 37 °C", "Incubation temperature = 37 °C, so the bacteria grow as quickly as possible.", "25 is not right"])(
+    "b2 aseptic ftm.01: %s is not the fix",
+    (typed) => {
+      expect(markFix(typed, aseptic).match).toBe(false);
+    },
+  );
+
+  const ethanol = {
+    studentWorking: ["Products = CO2 and H2O", "Two carbons give 2CO2; six hydrogens give 3H2O", "Oxygen atoms on the right = 2 × 2 + 3 = 7", "O2 molecules needed = 7 ÷ 2 = 3.5"],
+    mistakeLine: 4,
+    correction: ["O2 molecules needed = (7 − 1) ÷ 2 = 3"],
+  };
+  test.each(["3", "= 3", "3O2", "3 O2 molecules", "O2 = 6 ÷ 2 = 3", "O2 molecules needed = 6 ÷ 2 = 3", "6 ÷ 2 = 3", "O2 molecules needed = 3", "(7 - 1) / 2 = 3"])(
+    "c2 alcohols ftm.01: %s is the fix",
+    (typed) => {
+      expect(markFix(typed, ethanol).match).toBe(true);
+    },
+  );
+  test.each(["3.5", "7 ÷ 2 = 3.5", "O2 molecules needed = 7 ÷ 2 = 3.5", "4", "7", "Oxygen atoms on the right = 2 × 2 + 3 = 7", "2 × 2 + 3 = 7"])(
+    "c2 alcohols ftm.01: %s is not the fix",
+    (typed) => {
+      expect(markFix(typed, ethanol).match).toBe(false);
+    },
+  );
+});
+
+// The corpus guard's catches (25 Sep 2026) while the value-then-words reading was being written: each line below was
+// read right before it and must stay so.
+describe("a value then words: a vector, a check and a reason are not new results", () => {
+  test("fm2 ij-vector-calculations ftm.02: \"8 i\" on the flagged line is a vector, not the value 8", () => {
+    const ij = {
+      studentWorking: ["Two vectors are equal, so their components match", "x i + 5 j - 8 i - y j = 0", "x i - 8 i = 0 and 5 j - y j = 0, so x i = 8 i and 5 j = y j", "x i = 8 i, so x = 8 i and y = 5 j"],
+      mistakeLine: 4,
+      correction: ["Two vectors are equal, so their components match", "Equating the i coefficients: x = 8", "Equating the j coefficients: 5 = y", "x = 8 and y = 5"],
+    };
+    expect(markFix("Equating the i coefficients: x = 8", ij).match).toBe(true);
+    expect(markFix("x = 8 and y = 5", ij).match).toBe(true);
+    expect(markFix("x = 8", ij).match).toBe(true);
+    expect(markFix("x = 8 i", ij).match).toBe(false);
+  });
+  test("fm1 trig-equations ftm.01: the check line, typed as printed, is still the fix", () => {
+    const trig = {
+      studentWorking: ["sin x = 3 / 5 = 0.6", "x = sin inverse of 0.6 = 36.87", "Second solution: 360 - 36.87 = 323.13", "x = 36.87 or x = 323.13"],
+      mistakeLine: 3,
+      correction: ["sin x = 0.6", "x = 36.87", "Second solution: 180 - 36.87 = 143.13", "Check: sin 143.13 = 0.6, and both angles are inside the range"],
+    };
+    expect(markFix("Check: sin 143.13 = 0.6, and both angles are inside the range", trig).match).toBe(true);
+    expect(markFix("143.13", trig).match).toBe(true);
+    expect(markFix("0.6", trig).match).toBe(false);
+  });
+});
+
+describe("a later step's line is not this step's value because the numbers agree (guard catch, 25 Sep 2026)", () => {
+  test("c2 collision-theory we.03: step 4's ratio line is not step 1's surface area", () => {
+    const step1 = "Each small cube has side 1 cm, so its surface area is 6 × 1² = 6 cm².";
+    expect(stepLineMatches("Ratios: 24 ÷ 8 = 3 cm⁻¹ before, and 48 ÷ 8 = 6 cm⁻¹ after.", step1).match).toBe(false);
+    expect(stepLineMatches("6 × 1² = 6 cm²", step1).match).toBe(true);
+  });
+});
+
+// Engine brief item 4 (fm2-c-1.md D4 residual): "perpendicular to the slope" did not match a correction written
+// "at right angles to the slope"; the two say the same thing.
+describe("at right angles to is perpendicular to", () => {
+  const item = {
+    studentWorking: ["the weight acts vertically downwards", "the normal reaction acts vertically upwards", "the rope's tension acts up the slope", "the slope is smooth, so no friction acts"],
+    mistakeLine: 2,
+    correction: ["the normal reaction acts at right angles to the slope"],
+  };
+  test("either wording is the fix; the flagged line is not", () => {
+    expect(markFix("the normal reaction acts perpendicular to the slope", item).match).toBe(true);
+    expect(markFix("the normal reaction acts at right angles to the slope", item).match).toBe(true);
+    expect(markFix("the normal reaction acts vertically upwards", item).match).toBe(false);
+    expect(markFix("the normal reaction acts parallel to the slope", item).match).toBe(false);
+  });
+});

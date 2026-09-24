@@ -94,6 +94,11 @@ export interface NumericSpec {
   alternatives?: Array<number | string>;
   /** Reserved for follow-through marking. Currently ignored. */
   followThrough?: { from: number };
+  /**
+   * Letters the question uses as variables (mark.ts variableLetters). Against a unit-free key, one of them typed after
+   * the number is the variable, not a unit: "4m" for 3m⁰ + m⁰ is not 4 metres (24 Sep 2026).
+   */
+  variables?: readonly string[];
 }
 
 export type VerdictReason =
@@ -121,6 +126,11 @@ export interface NumericVerdict {
   nearMiss?: string;
   /** True when the spec expects a unit, the student omitted it, and the answer was still accepted. */
   missingUnit?: boolean;
+  /**
+   * True when the value is right and only the required unit is missing or wrong: the answer's last mark is the
+   * unit's, so a multi-mark part keeps the rest (mark.ts; addenda (B), 24 Sep 2026).
+   */
+  valueRight?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -443,7 +453,11 @@ const UNIT_TABLE: Record<string, UnitInfo> = {
   V: { dim: "voltage", factor: [1, 1] },
   A: { dim: "current", factor: [1, 1] },
   mA: { dim: "current", factor: [1, 1000] },
+  // Charge, in coulombs (CCEA P2: Q = I × t). Before this entry "36 C" could not be read at all (P2D-R1, 24 Sep 2026).
+  C: { dim: "charge", factor: [1, 1] },
   "Ω": { dim: "resistance", factor: [1, 1] },
+  // The gradient of a resistance–length graph (CCEA Unit 7 Booklet B: "ohm/metre or Ω/m"; P2D-R2, 24 Sep 2026).
+  "Ω/m": { dim: "resistance per length", factor: [1, 1] },
   Hz: { dim: "frequency", factor: [1, 1] },
   kHz: { dim: "frequency", factor: [1000, 1] },
   Pa: { dim: "pressure", factor: [1, 1] },
@@ -493,13 +507,19 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   [/^(?:v|volts?)$/i, "V"],
   [/^(?:a|amps?|amperes?)$/i, "A"],
   [/^(?:ma|milliamps?)$/i, "mA"],
+  // Before the plain ohm, so "Ω/m" is never read as an ohm with a stray "/m".
+  [/^(?:(?:Ω|ohms?) ?(?:\/|per) ?met(?:re|er)|(?:Ω|ohms?) ?(?:\/|per) ?m|Ω ?m\^?-1|Ω ?m⁻¹|ohms? m\^?-1|ohms? m⁻¹)$/i, "Ω/m"],
   [/^(?:ohms?|Ω)$/i, "Ω"],
   [/^(?:hz|hertz)$/i, "Hz"],
   [/^(?:khz|kilohertz)$/i, "kHz"],
   [/^(?:pa|pascals?)$/i, "Pa"],
   [/^(?:kpa|kilopascals?)$/i, "kPa"],
-  [/^(?:°c|degrees? ?c(?:elsius)?|deg ?c)$/i, "°C"],
-  [/^(?:°|deg|degrees?)$/i, "°"],
+  // Celsius as a keyboard allows it (B2E-02, 24 Sep 2026): "25oC" and "25 ºC" (the ordinal º sits where ° should)
+  // and the word alone. A bare "C" is the coulomb below; reconcileUnits reads it as °C against a temperature key.
+  [/^(?:[°º] ?c|oc|degrees? ?c(?:elsius)?|deg ?c|degrees? centigrade|celsius|centigrade)$/i, "°C"],
+  // After the Celsius spellings, so "°C" and "degrees C" stay temperatures (P2D-R1).
+  [/^(?:c|coulombs?)$/i, "C"],
+  [/^(?:[°º]|deg|degrees?)$/i, "°"],
   [/^(?:%|percent|per cent|pc)$/i, "%"],
   [/^(?:£|pounds?|gbp|quid)$/i, "£"],
   [/^(?:p|pence|penny)$/i, "p"],
@@ -869,9 +889,35 @@ function stripPrefixes(s: string): string {
   t = t.replace(/^[≈~]\s*/, "");
   // "x = ", "y=", "n = ", "= "
   t = t.replace(/^[a-zA-Z]\s*[=≈]\s*/, "");
+  // A quantity's name: "Mr = 62.5", "M_r = 62.5", "relative formula mass = 62.5", "Mr of C2H3Cl = 62.5",
+  // "O2 molecules needed = 3" (C2 D F06, 24 Sep 2026: only a one-letter name came off, so an answer written as the
+  // worked solutions write it could not be read). A function of a letter ("cos x = 0.5") is working, not a name.
+  const name = NAME_LABEL_RE.exec(t);
+  if (name && !name[1]!.split(/\s+/).some((w) => NOT_A_NAME.has(w.toLowerCase()))) t = t.slice(name[0].length);
+  // A probability's name: "P(A) = 0.3", "P(A ∩ B) = 0.12", "P(not red) = 0.75".
+  t = t.replace(/^P\s*\(\s*[^()=\d]{1,30}\)\s*[=≈]\s*/, "");
   t = t.replace(/^[=≈]\s*/, "");
   return t.trim();
 }
+
+/** A word of a quantity's name: letters with an optional subscript ("M_r", "M_{r}"), or a formula ("C2H3Cl"). */
+const NAME_WORD = String.raw`(?:[A-Za-z]+(?:_\{?[A-Za-z0-9]+\}?)?|(?:[A-Z][a-z]?\d*){1,8})`;
+const NAME_LABEL_RE = new RegExp(String.raw`^(${NAME_WORD}(?:\s+${NAME_WORD}){0,5})\s*[=≈]\s*`);
+/** Words that make the text before "=" working or a list, not a name. */
+const NOT_A_NAME = new Set(["sin", "cos", "tan", "log", "ln", "lg", "sqrt", "exp", "arcsin", "arccos", "arctan", "or", "and"]);
+
+/** A small whole number in words, the whole answer ("three"), as a stem that shows "___ O₂" invites. */
+const NUMBER_WORDS = new Map<string, number>(
+  ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen",
+    "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"].map((w, i) => [w, i]),
+);
+
+/**
+ * A coefficient against the formula it counts, as a balanced equation writes it: "3O2", "3O₂", "2CO2" (C2 D F06).
+ * The formula is kept as the answer's unit, as "3 O2" with a space already was. It must hold a digit or two element
+ * symbols, so a unit letter joined to a number ("36C", "5N") is still read as that unit first.
+ */
+const COEFFICIENT_RE = /^([+-]?\d+)\s*((?:[A-Z][a-z]?[\d₀-₉]*){1,8})$/;
 
 /** A decimal followed by an ellipsis: 0.333..., 0.1666…, -0.27... */
 const RECURRING_ELLIPSIS_RE = /^([+-]?\d*\.\d+)\s*(?:\.{2,}|…)$/;
@@ -881,6 +927,8 @@ function normaliseInput(raw: string): string {
   s = s.replace(/[−–—]/g, "-");
   s = s.replace(/ | | /g, " ");
   s = s.replace(/⁄/g, "/");
+  // The ohm sign (U+2126) that symbol pickers offer is the Greek capital omega (U+03A9) the unit table uses.
+  s = s.replace(/Ω/g, "Ω");
   s = s.replace(/√\s+/g, "√");
   s = s.replace(/\s+/g, " ").trim();
   // Trailing sentence punctuation — but a recurring-decimal ellipsis (0.333...) is meaningful.
@@ -990,7 +1038,8 @@ const MAX_INPUT_LENGTH = 256;
 // A single-letter unit counts when a slash or a power follows it ("g/s", "s⁻¹", "m³"); a bare letter is a variable.
 // A power typed with a plain hyphen is a power too: no keyboard has ⁻¹, so "0.031 s-1" and "9.8 m s-2" are how the
 // unit gets typed (engine item 5, 23 Sep 2026: both were "could not be read").
-const UNKNOWN_UNIT_RE = /^(.*?[\d)π½¼¾⅓⅔⅛])\s+((?:\/[a-zA-Z°µ]{1,4}|[a-zA-Z°µ]{2,}|[a-zA-Z°µ](?=[²³\d/^⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]|-\d| per\b|\s[a-zA-Z]+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^]|-\d)))(?:[a-zA-Z°µ⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^\d/.·-]|\s(?=\S))*)$/;
+// The ohm sign counts as a unit letter, so a composite such as "Ω/cm" or "Ω per km" reads as a unit (P2D-R2).
+const UNKNOWN_UNIT_RE = /^(.*?[\d)π½¼¾⅓⅔⅛])\s+((?:\/[a-zA-Z°µΩ]{1,4}|[a-zA-Z°µΩ]{2,}|[a-zA-Z°µΩ](?=[²³\d/^⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]|-\d| per\b|\s[a-zA-Z]+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^]|-\d)))(?:[a-zA-Z°µΩ⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^\d/.·-]|\s(?=\S))*)$/;
 const MAX_UNIT_LENGTH = 48;
 
 /**
@@ -1005,8 +1054,10 @@ function looseUnitKey(unit: string): string {
   return superscriptToAscii(unit)
     .toLowerCase()
     .replace(/\^/g, "")
-    // "g s-1" is "g/s": a negative first power on the last unit is a division.
+    // "g s-1" is "g/s" and "mol dm-3" is "mol/dm3": a unit with a negative power after another unit is a
+    // denominator, whatever the power (C2 E, 24 Sep 2026: only -1 folded, so "mol dm⁻³" was not "mol/dm³").
     .replace(/\s+([a-z]+)-1\b/g, "/$1")
+    .replace(/\s+([a-z]+)-([2-9])\b/g, "/$1$2")
     .replace(/\bper\b/g, "/")
     .replace(/\s*\/\s*/g, "/")
     .replace(/\b(?:minutes?|mins?)\b/g, "min")
@@ -1024,6 +1075,8 @@ function looseUnitKey(unit: string): string {
     .replace(/\b(?:joules?)\b/g, "j")
     .replace(/\b(?:kilojoules?)\b/g, "kj")
     .replace(/\b(?:newtons?)\b/g, "n")
+    // "Ω" lower-cases to "ω"; the word is the same unit (P2D-R2).
+    .replace(/\b(?:ohms?)\b/g, "ω")
     .replace(/\b(?:degrees? (?:celsius|c))\b/g, "°c")
     .replace(/\bcubic (cm|m|mm|dm)\b/g, "$1³")
     .replace(/\b(cm|m|mm|dm)(?:3|\^3)\b/g, "$1³")
@@ -1047,11 +1100,18 @@ function parseNumericInner(input: string): ParsedNumber | null {
   if (s === "") return null;
   s = stripPrefixes(s);
   if (s === "") return null;
+  {
+    const word = NUMBER_WORDS.get(s.toLowerCase());
+    if (word !== undefined) s = String(word);
+  }
   // Working typed into the box ("3 × 10 = 30", "F = ma = 3 × 10 = 30 N"): the answer is what follows the last
   // "=", but only when what precedes it is arithmetic and the line is not a pair ("x = 5, y = 3").
   {
     const eq = Math.max(s.lastIndexOf("="), s.lastIndexOf("≈"));
-    if (eq > 0 && !/[,;]|\b(?:or|and)\b/i.test(s) && /[×x*÷/+\-^()√]/.test(s.slice(0, eq)) && /\d/.test(s.slice(0, eq))) {
+    // TeX operators count as working too ("800 \times \dfrac{21}{40} = 420"): before quantity names came off (F06)
+    // such a line read only because the name in front happened to hold an x or a bracket.
+    const before = s.slice(0, eq);
+    if (eq > 0 && !/[,;]|\b(?:or|and)\b/i.test(s) && /[×x*÷/+\-^()√]|\\(?:times|cdot|div|d?frac|tfrac|sqrt)\b/.test(before) && /\d/.test(before)) {
       s = s.slice(eq + 1).trim();
       if (s === "") return null;
     }
@@ -1086,6 +1146,13 @@ function parseNumericInner(input: string): ParsedNumber | null {
   }
 
   if (s === "") return null;
+  if (unit === null && (m = COEFFICIENT_RE.exec(s))) {
+    const formula = m[2]!.replace(/[₀-₉]/g, (d) => String(d.charCodeAt(0) - 0x2080));
+    if (/\d/.test(formula) || (formula.match(/[A-Z]/g) ?? []).length >= 2) {
+      unit = formula;
+      s = m[1]!;
+    }
+  }
   return parseBody(s, unit, raw, true);
 }
 
@@ -1312,7 +1379,8 @@ function resolveTarget(v: number | string, specUnit: string | null): Target | nu
 interface Reconciled {
   value: number;
   term: Term | null;
-  status: "ok" | "missing" | "wrong" | "converted" | "ignored";
+  /** "degrees": a bare degree unit against a temperature key (right unless the unit is marked). */
+  status: "ok" | "missing" | "wrong" | "converted" | "ignored" | "degrees";
 }
 
 function scaleTerm(t: Term | null, num: number, den: number): Term | null {
@@ -1339,6 +1407,14 @@ function reconcileUnits(p: ParsedNumber, targetUnit: string | null): Reconciled 
   }
   if (aUnit === null) return { value: p.value, term, status: "missing" };
   if (aUnit === targetUnit) return { value: p.value, term, status: "ok" };
+  if (targetUnit === "°C") {
+    // A bare letter C reads as the coulomb, but against a temperature it is degrees Celsius typed without the degree
+    // sign, which no keyboard offers. The word "coulombs" is never a temperature, so only the letter counts (B2E-02).
+    if (aUnit === "C" && /(?:^|[^a-z])c$/i.test(p.raw.trim().replace(/[.,;:]+$/, ""))) return { value: p.value, term, status: "ok" };
+    // "25 degrees" for a temperature means Celsius, but on its own it is also the angle's unit: right where the unit
+    // is not marked, with a reminder; the unit's mark needs °C (checkNumericInner).
+    if (aUnit === "°") return { value: p.value, term, status: "degrees" };
+  }
   const a = UNIT_TABLE[aUnit];
   const t = UNIT_TABLE[targetUnit];
   if (a && t && a.dim === t.dim) {
@@ -1502,7 +1578,7 @@ function verdict(
   parsed: ParsedNumber | null,
   reason: VerdictReason,
   feedback: string,
-  extra: { correct?: boolean; nearMiss?: string; missingUnit?: boolean } = {},
+  extra: { correct?: boolean; nearMiss?: string; missingUnit?: boolean; valueRight?: boolean } = {},
 ): NumericVerdict {
   const v: NumericVerdict = {
     correct: extra.correct ?? (reason === "exact" || reason === "within-tolerance"),
@@ -1511,6 +1587,7 @@ function verdict(
     feedback,
   };
   if (extra.nearMiss) v.nearMiss = extra.nearMiss;
+  if (extra.valueRight) v.valueRight = true;
   if (extra.missingUnit) v.missingUnit = true;
   return v;
 }
@@ -1532,6 +1609,14 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
   }
 
   const specUnit = normaliseUnit(spec?.unit ?? null);
+  // A unit-free key ignores a unit, so a letter of the question typed after the number would be paid as one: "4m" for
+  // 3m⁰ + m⁰ = 4 is the very misconception the part tests. Such a letter is the variable, not a unit.
+  if (specUnit === null && parsed.unit !== null && spec.variables && spec.variables.length > 0) {
+    const tail = /(?:^|[\d).\s])([A-Za-z])$/.exec(normaliseInput(String(answer)));
+    if (tail && spec.variables.includes(tail[1]!)) {
+      return verdict(parsed, "wrong-form", `${tail[1]} is a letter in this question, not a unit: the answer is the number on its own.`, { correct: false });
+    }
+  }
   const target = resolveTarget(spec?.value, specUnit);
   if (!target) {
     return verdict(parsed, "unparseable", "This question's answer key could not be read, so the answer has not been marked.", { correct: false });
@@ -1546,7 +1631,9 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
   if (!tol && requiredDp !== undefined && Number.isFinite(requiredDp)) tol = { type: "dp", n: requiredDp };
   else if (!tol && requiredSf !== undefined && Number.isFinite(requiredSf)) tol = { type: "sigfigs", n: requiredSf };
 
-  const rec = reconcileUnits(parsed, targetUnit);
+  const reconciled = reconcileUnits(parsed, targetUnit);
+  // Degrees alone for a temperature: where the unit earns a mark it must be °C, so it is the wrong unit there.
+  const rec: Reconciled = reconciled.status === "degrees" && spec.requireUnit ? { ...reconciled, status: "wrong" } : reconciled;
   const aVal = rec.value;
   const aTerm = rec.term;
 
@@ -1567,14 +1654,14 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
     // Maybe the value is right in the student's own unit (e.g. cm² vs cm³).
     const rawMatch = withinTolerance(parsed.value, parsed.exact ?? null, parsed, target, tol);
     if (rawMatch) {
-      return verdict(parsed, "wrong-unit", `The number is right but the unit is not. The answer should be in ${targetUnit}, not ${parsed.unit}.`, { correct: false });
+      return verdict(parsed, "wrong-unit", `The number is right but the unit is not. The answer should be in ${targetUnit}, not ${parsed.unit}.`, { correct: false, valueRight: true });
     }
   }
 
   if (match) {
     // --- Unit problems take precedence over form problems only when the unit is wrong.
     if (rec.status === "wrong") {
-      return verdict(parsed, "wrong-unit", `The number is right but the unit is not. The answer should be in ${targetUnit}, not ${parsed.unit}.`, { correct: false });
+      return verdict(parsed, "wrong-unit", `The number is right but the unit is not. The answer should be in ${targetUnit}, not ${parsed.unit}.`, { correct: false, valueRight: true });
     }
 
     // --- Required form -----------------------------------------------------------------
@@ -1606,7 +1693,7 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
     // --- Units -------------------------------------------------------------------------
     if (rec.status === "missing") {
       if (spec.requireUnit) {
-        return verdict(parsed, "missing-unit", `The number is right, but the answer needs a unit. Give it in ${targetUnit}.`, { correct: false });
+        return verdict(parsed, "missing-unit", `The number is right, but the answer needs a unit. Give it in ${targetUnit}.`, { correct: false, valueRight: true });
       }
       return withNote(
         verdict(parsed, match, match === "exact" ? `Correct. Remember to include the unit (${targetUnit}) in an exam.` : `Correct, within the accepted accuracy. Remember to include the unit (${targetUnit}).`, {
@@ -1616,6 +1703,9 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
     }
     if (rec.status === "converted") {
       return verdict(parsed, match, `Correct. ${parsed.raw.trim()} is equivalent to the expected answer in ${targetUnit}.`);
+    }
+    if (rec.status === "degrees") {
+      return withNote(verdict(parsed, match, `${match === "exact" ? "Correct." : "Correct, within the accepted accuracy."} On the paper write the unit as °C: degrees alone could be an angle.`));
     }
     return withNote(verdict(parsed, match, match === "exact" ? "Correct." : "Correct, within the accepted accuracy."));
   }

@@ -39,7 +39,9 @@ describe("numeric cells", () => {
     expect(numericCellMatches("3.60", 3.6)).toBe(true);
     expect(numericCellMatches("3.5", 3.6)).toBe(false);
     expect(numericCellMatches("-3", -3)).toBe(true);
-    expect(numericCellMatches("three", 3)).toBe(false);
+    // A small whole number in words is a spelling of the number too (numeric.ts NUMBER_WORDS, C2 D F06, 24 Sep 2026).
+    expect(numericCellMatches("three", 3)).toBe(true);
+    expect(numericCellMatches("four", 3)).toBe(false);
     expect(numericCellMatches("0.5", 0.5, { type: "exact" })).toBe(true);
   });
   test("a decimal-places tolerance accepts the rounded value and the fuller one", () => {

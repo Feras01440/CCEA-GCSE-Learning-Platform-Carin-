@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_PLAN, nextPaper, planUnits, type ExamPlan } from "./exam-plan";
-import { chooseNextStep } from "./next-step";
+import { chooseNextStep, shortReason } from "./next-step";
 
 const TODAY = "2026-09-23";
 
@@ -70,5 +70,13 @@ describe("Today's next step", () => {
 
   it("is null once every paper in the plan has been sat", () => {
     expect(chooseNextStep(DEFAULT_PLAN, [], "2027-07-01")).toBeNull();
+  });
+});
+
+describe("the short reason on Today", () => {
+  it("keeps the first clause and never ends on a semicolon", () => {
+    expect(shortReason("Two marks dropped for the unit; the method was full marks")).toBe("Two marks dropped for the unit.");
+    expect(shortReason("The next paper is M8 on 11 May. Everything else counts back from it.")).toBe("The next paper is M8 on 11 May.");
+    expect(shortReason("One clause with no stop")).toBe("One clause with no stop");
   });
 });

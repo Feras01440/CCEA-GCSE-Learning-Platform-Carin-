@@ -33,6 +33,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { pdfLayoutText } from "./cer-pdf-lines.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..", "..");
@@ -87,8 +88,11 @@ export function cleanLine(line) {
     .replace(/\s+$/g, "");
 }
 
+/** The running footer with its letter-spacing read as spaces ("( S u m m e r S e r ies) 2025"), as the PDF's own text layer gives it. */
+const FOOTER_SPACED_RE = /^CCEAGCSE(Mathematics|FurtherMathematics|DoubleAwardScience)\((Summer|November|March)Series\)\d{4}$/;
+
 function isNoise(line) {
-  return FOOTER_RE.test(line) || PAGE_NO_RE.test(line) || /^\f?\s*$/.test(line);
+  return FOOTER_RE.test(line) || FOOTER_SPACED_RE.test(line.replace(/\s+/g, "")) || PAGE_NO_RE.test(line) || /^\f?\s*$/.test(line);
 }
 
 // ---------------------------------------------------------------- heading detection
@@ -102,7 +106,10 @@ const SCI_UNIT_RE = /^\s*Assessment Unit\s+(\d)\s+(.*)$/;
 const TIER_RE = /^\s*(Foundation|Higher) Tier\s*$/;
 const DISC_RE = /^\s*(Biology|Chemistry|Physics)\s*$/;
 const BOOKLET_RE = /^\s*Booklet ([AB])\s*$/;
-const Q_RE = /^Q(\d{1,2})\b\s*(.*)$/;
+/** A question label in the report's left column. Up to three spaces of indent: a few labels are printed
+ *  a point or two right of the margin (Summer 2025 P2F Q6, Summer 2023 M1 Q28); a reference to a question
+ *  inside a finding is indented as body text and never starts a block. */
+const Q_RE = /^\s{0,3}Q(\d{1,2})\b\s*(.*)$/;
 const CONTENTS_ROW_RE = /\s\d{1,3}\s*$/; // contents rows end with a page number
 
 function mathsUnitCode(m) {
@@ -242,7 +249,30 @@ export function blockFileName(series, unit) {
   return `${series}-${unit}.json`;
 }
 
-export function writeBlocks(subject, entry, parsed) {
+/**
+ * The report's text for splitting. Question labels are read from the PDF by position when the PDF is held
+ * beside the text file (cer-pdf-lines.mjs: one line per printed baseline, so a label stays on the row of
+ * the finding printed beside it). The pdftotext file is the fallback, and there a label is only as good
+ * as the order pdftotext emitted it in: its label column drifts away from its rows in the Biology Unit 2
+ * tables (Summer 2023, 2024 and 2025), which filed findings under the wrong question.
+ * @returns {Promise<{text: string, from: "pdf" | "txt", file: string}>}
+ */
+export async function reportText(entry, { from = "auto" } = {}) {
+  const pdf = entry.pdf ?? entry.file.replace(/\.txt$/i, ".pdf");
+  if (from !== "txt" && fs.existsSync(pdf)) {
+    try {
+      return { text: await pdfLayoutText(pdf), from: "pdf", file: pdf };
+    } catch (e) {
+      if (from === "pdf") throw e;
+      console.warn(`  ! ${path.relative(ROOT, pdf)}: ${e.message}; falling back to the text file`);
+    }
+  } else if (from === "pdf") {
+    throw new Error(`no PDF beside ${path.relative(ROOT, entry.file)}`);
+  }
+  return { text: fs.readFileSync(entry.file, "utf8"), from: "txt", file: entry.file };
+}
+
+export function writeBlocks(subject, entry, parsed, source = { from: "txt", file: entry.file }) {
   const outDir = path.join(OUT_ROOT, subject);
   fs.mkdirSync(outDir, { recursive: true });
   const written = [];
@@ -254,7 +284,10 @@ export function writeBlocks(subject, entry, parsed) {
       unit: u.unit,
       tier: u.tier,
       title: u.title,
-      file: path.relative(ROOT, entry.file).replace(/\\/g, "/"),
+      file: path.relative(ROOT, source.file).replace(/\\/g, "/"),
+      // How the question labels were read: "pdf-position" (the label printed on the finding's row)
+      // or "txt-order" (the fallback: the order pdftotext emitted the labels in).
+      labels: source.from === "pdf" ? "pdf-position" : "txt-order",
       url: entry.url,
       sourceIdPrefix: `ccea-cer:${subject}:${entry.series}:${u.unit}:`,
       overview: u.overview,
@@ -271,15 +304,15 @@ export function writeBlocks(subject, entry, parsed) {
   return written;
 }
 
-export function runEntry(subject, entry, { list = false } = {}) {
+export async function runEntry(subject, entry, { list = false, from = "auto" } = {}) {
   if (!fs.existsSync(entry.file)) {
     console.warn(`  ! missing ${path.relative(ROOT, entry.file)}`);
     return [];
   }
-  const text = fs.readFileSync(entry.file, "utf8");
-  const parsed = splitReport(text, { subject });
-  if (list) return parsed.units.map((u) => ({ unit: u.unit, questions: u.questions.length }));
-  return writeBlocks(subject, entry, parsed);
+  const source = await reportText(entry, { from });
+  const parsed = splitReport(source.text, { subject });
+  if (list) return parsed.units.map((u) => ({ unit: u.unit, questions: u.questions.length, from: source.from }));
+  return writeBlocks(subject, entry, parsed, source).map((w) => ({ ...w, from: source.from }));
 }
 
 /** Read one block back (for a reviewer): returns { source, url, overview, text } or null. */
@@ -302,6 +335,7 @@ function parseArgs(argv) {
     else if (a === "--series") args.series = argv[++i];
     else if (a === "--url") args.url = argv[++i];
     else if (a === "--list") args.list = true;
+    else if (a === "--from") args.from = argv[++i]; // auto (PDF positions, text fallback) | pdf | txt
     else if (a === "--show") args.show = argv.slice(i + 1, i + 5);
     else if (a === "--help" || a === "-h") args.help = true;
   }
@@ -334,10 +368,10 @@ if (isMain) {
     }
     console.log(`\n${subject}`);
     for (const entry of entries) {
-      const res = runEntry(subject, entry, { list: args.list });
+      const res = await runEntry(subject, entry, { list: args.list, from: args.from ?? "auto" });
       const summary = res.map((r) => `${r.unit}:${r.questions}`).join(" ");
       total += res.reduce((n, r) => n + r.questions, 0);
-      console.log(`  ${entry.series.padEnd(14)} ${summary}`);
+      console.log(`  ${entry.series.padEnd(14)} ${res[0]?.from === "pdf" ? "[labels by position] " : "[labels in text order] "}${summary}`);
     }
   }
   console.log(`\n${total} question blocks${args.list ? " (list only)" : ` written under ${path.relative(ROOT, OUT_ROOT)}`}`);

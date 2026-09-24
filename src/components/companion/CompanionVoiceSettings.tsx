@@ -13,9 +13,12 @@
  * Owned by the companion agent (since 24 September the app-surfaces agent); SettingsPanel renders it in place of
  * the card it used to carry (the lead's ruling of 23 September 2026). The state row is read without seeding,
  * because a write inside a liveQuery throws and would leave the switch showing the wrong state on a new device.
+ *
+ * The presence radios show her choice from the moment she makes it (presence-pick.ts): drawn from the stored row
+ * alone, React put the radio back on her old choice straight after the tap until the row caught up (24 September).
  */
 
-import { useId, useState } from "react";
+import { useEffect, useId, useReducer, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { clsx } from "clsx";
 import {
@@ -28,12 +31,61 @@ import {
   setPlainMode,
   setPresence,
   setRowanName,
+  type CompanionPresence,
   type CompanionState,
+  type PresenceCopy,
 } from "@/lib/companion";
+import { NO_PICK, pickPresence, shownPresence } from "./presence-pick";
 
 const controlCls =
   "tap rounded-[var(--radius-sm)] border border-line-2 bg-surface px-3 text-ui text-ink focus-visible:border-accent";
 const buttonCls = "tap rounded-[var(--radius-sm)] border border-line-2 px-4 text-meta font-medium hover:bg-surface-2";
+
+export interface PresenceChoiceProps {
+  copy: PresenceCopy;
+  /** The choice to draw checked: hers while it is being saved, the stored one otherwise (shownPresence). */
+  shown: CompanionPresence;
+  /** Her last choice could not be saved: one line says so under the options. */
+  unsaved: boolean;
+  onChoose: (presence: CompanionPresence) => void;
+  /** Unique on the page: names the group and labels it. */
+  id: string;
+}
+
+/** Full, Words only or Quiet: three native radios (arrow keys move and choose), each a 44 px row with what it shows. */
+export function PresenceChoice({ copy, shown, unsaved, onChoose, id }: PresenceChoiceProps) {
+  return (
+    <div role="radiogroup" aria-labelledby={`${id}-legend`} data-testid="presence">
+      <p id={`${id}-legend`} className="text-meta font-medium">
+        {copy.legend}
+      </p>
+      <div className="mt-1 flex flex-col">
+        {copy.options.map((o) => (
+          // A 44 px row each (the tap floor), the choice's name in the ink and what it shows under it.
+          <label key={o.id} className="tap flex cursor-pointer items-start gap-3 py-2">
+            <input
+              type="radio"
+              name={`${id}-presence`}
+              value={o.id}
+              checked={shown === o.id}
+              onChange={() => onChoose(o.id)}
+              className="mt-1 shrink-0"
+            />
+            <span className="flex flex-col">
+              <span className="text-ui text-ink">{o.label}</span>
+              <span className="text-meta text-ink-2">{o.detail}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+      <p className="mt-1 text-meta text-ink-2">{copy.note}</p>
+      {/* Always in the page, so a screen reader hears the line when it arrives; empty, it takes no room. */}
+      <p role="status" className="text-meta text-ink-2 [&:not(:empty)]:mt-1">
+        {unsaved ? copy.unsaved : null}
+      </p>
+    </div>
+  );
+}
 
 export interface CompanionVoiceSettingsProps {
   className?: string;
@@ -65,8 +117,25 @@ export function CompanionVoiceSettings({ className }: CompanionVoiceSettingsProp
   const name = rowanName(state);
   const voice = state ? describeVoice(state) : null;
   const presence = state ? describePresence(state) : null;
-  const chosen = state ? presenceOf(state) : null;
+  const stored = state ? presenceOf(state) : null;
   const presenceId = useId();
+
+  // Her choice, held from the tap until the device has saved it and the row says the same (presence-pick.ts).
+  const [pick, dispatch] = useReducer(pickPresence, NO_PICK);
+  const choices = useRef(0);
+  useEffect(() => {
+    if (stored) dispatch({ type: "stored", presence: stored });
+    // `pick` too: the row may agree before the save is reported, and the hand-back waits for both.
+  }, [stored, pick]);
+
+  function choose(next: CompanionPresence) {
+    const n = ++choices.current;
+    dispatch({ type: "chose", presence: next, n });
+    setPresence(next).then(
+      () => dispatch({ type: "saved", n }),
+      () => dispatch({ type: "not-saved", n }),
+    );
+  }
 
   return (
     <section className={clsx("rounded-[var(--radius)] border border-line bg-surface p-5 shadow-[var(--shadow-1)]", className)}>
@@ -103,32 +172,8 @@ export function CompanionVoiceSettings({ className }: CompanionVoiceSettingsProp
           </p>
         </div>
 
-        {presence && chosen && (
-          <div role="radiogroup" aria-labelledby={`${presenceId}-legend`} data-testid="presence">
-            <p id={`${presenceId}-legend`} className="text-meta font-medium">
-              {presence.legend}
-            </p>
-            <div className="mt-1 flex flex-col">
-              {presence.options.map((o) => (
-                // A 44 px row each (the tap floor), the choice's name in the ink and what it shows under it.
-                <label key={o.id} className="tap flex cursor-pointer items-start gap-3 py-2">
-                  <input
-                    type="radio"
-                    name={`${presenceId}-presence`}
-                    value={o.id}
-                    checked={chosen === o.id}
-                    onChange={() => void setPresence(o.id).catch(() => {})}
-                    className="mt-1 shrink-0"
-                  />
-                  <span className="flex flex-col">
-                    <span className="text-ui text-ink">{o.label}</span>
-                    <span className="text-meta text-ink-2">{o.detail}</span>
-                  </span>
-                </label>
-              ))}
-            </div>
-            <p className="mt-1 text-meta text-ink-2">{presence.note}</p>
-          </div>
+        {presence && stored && (
+          <PresenceChoice copy={presence} shown={shownPresence(stored, pick)} unsaved={pick.unsaved} onChoose={choose} id={presenceId} />
         )}
 
         {voice && (

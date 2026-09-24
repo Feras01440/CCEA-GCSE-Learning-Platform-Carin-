@@ -11,7 +11,7 @@ export function generateStaticParams() {
   return allUnitParams();
 }
 
-const TIER_NOTE: Record<TopicInfo["tier"], string> = { H: "Higher only", mixed: "some Higher", F: "" };
+const TIER_NOTE: Record<TopicInfo["tier"], string> = { H: "Higher only", mixed: "some Higher", F: "", untiered: "" };
 
 /** "nine", "twenty-nine": a count said as a word where a sentence reads better for it. */
 function inWords(n: number): string {

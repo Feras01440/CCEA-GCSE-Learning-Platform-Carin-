@@ -142,7 +142,84 @@ export function countListedItems(raw: string): number {
     .filter((p) => p.length > 0);
   // A long segment anywhere makes the whole answer prose; a short clause that continues the previous one is not an item.
   if (segments.some((s) => s.split(/\s+/).length > LIST_ITEM_MAX_WORDS)) return 1;
-  return segments.filter((p, i) => i === 0 || !CLAUSE_OPENER.test(p)).length;
+  const items = segments.filter((p, i) => i === 0 || !CLAUSE_OPENER.test(p));
+  // A name and a formula side by side are one answer (C2 D F04, 24 Sep 2026: "ethanol, C2H5OH" was two). CCEA's general
+  // marking instructions (C2 Higher MS Summer 2021, "Both name and formula provided by candidate"): where a name is
+  // asked for the formula beside it is ignored, and where a formula is asked for the name beside it is ignored. Only a
+  // pair is read so: in a longer list a formula may be one more answer.
+  if (items.length === 2 && items.filter(isFormula).length === 1) return 1;
+  return items.length;
+}
+
+/**
+ * A chemical formula as typed: element symbols with counts, brackets, a hydrate dot or bonds ("C2H5OH", "Mg(NO3)2",
+ * "CH2=CHCH3", "CuSO4.5H2O"). It must hold a digit or two element symbols, so a capitalised word ("Propene") and a
+ * lone letter are not formulae.
+ */
+/**
+ * A name given with its formula as one answer: "Propene (C3H6)", "propene, C3H6", "C3H6 (propene)", "propene / C3H6".
+ * Null unless the answer is exactly two parts and exactly one of them is a formula.
+ */
+export function nameWithFormula(raw: string): { name: string; formula: string } | null {
+  const t = raw.trim().replace(/[.!]+$/, "");
+  const m = /^(.+?)\s*\(([^()]+)\)$/.exec(t) ?? /^([^,/]+?)\s*[,/]\s*([^,/]+)$/.exec(t);
+  if (!m) return null;
+  const [a, b] = [m[1]!.trim(), m[2]!.trim()];
+  if (isFormula(a) === isFormula(b)) return null;
+  return isFormula(a) ? { name: b, formula: a } : { name: a, formula: b };
+}
+
+export function isFormula(segment: string): boolean {
+  const t = segment
+    .trim()
+    .replace(/[₀-₉]/g, (c) => String("₀₁₂₃₄₅₆₇₈₉".indexOf(c)))
+    .replace(/\s+/g, "");
+  if (!/^(?:[A-Z][a-z]?\d*|\(|\)\d*|[=≡.·-])+$/.test(t)) return false;
+  return /\d/.test(t) || (t.match(/[A-Z]/g) ?? []).length >= 2;
+}
+
+/**
+ * A hydrocarbon's condensed formula in one spelling for either end: "CH2=CHCH3", "CH3CH=CH2", "H2C=CHCH3" and
+ * "CH3-CH=CH2" are all the same (C2 D F11, 24 Sep 2026: the formula written from the other end was refused). The
+ * carbon groups are read in order ("CH3", "CH", "=", "CH2"; a group written hydrogen first, "H2C", is "CH2") and the
+ * smaller of the forward and reversed spellings is the key. Null for anything that is not a chain of two or more
+ * carbon groups of carbon and hydrogen only, which is left to be matched as written.
+ */
+export function hydrocarbonKey(s: string): string | null {
+  const t = s
+    .trim()
+    .replace(/[₀-₉]/g, (c) => String("₀₁₂₃₄₅₆₇₈₉".indexOf(c)))
+    .replace(/[-–—−]/g, "");
+  if (!/^(?:H\d*C|C(?:H\d*)?|=|≡)+$/.test(t)) return null;
+  const groups = (t.match(/H\d*C|C(?:H\d*)?|=|≡/g) ?? []).map((g) => (/^H(\d*)C$/.test(g) ? `CH${g.slice(1, -1)}` : g));
+  if (groups.filter((g) => g.startsWith("C")).length < 2) return null;
+  const forward = groups.join("");
+  const reversed = [...groups].reverse().join("");
+  return forward < reversed ? forward : reversed;
+}
+
+/** Does the answer hold the hydrocarbon key word, written from either end? */
+function hydrocarbonIn(raw: string, keyWord: string): boolean {
+  const key = hydrocarbonKey(keyWord);
+  if (key === null) return false;
+  return raw.split(/[\s,;:()]+/).some((token) => token.length > 0 && hydrocarbonKey(token.replace(/[.!?]+$/, "")) === key);
+}
+
+/**
+ * The alternatives of a hedge: an answer, or one clause of it, that offers short answers joined by "or" or a slash
+ * ("poly(ethene) or poly(ethane)", "ethene/ethane"). A clause with a long alternative is prose, not a hedge; a slash
+ * in a clause with a number in it is a unit ("g/cm³"), not a hedge.
+ */
+function hedges(raw: string): string[][] {
+  const out: string[][] = [];
+  for (const clause of raw.split(/\n|;|,/)) {
+    const parts = clause
+      .split(/\d/.test(clause) ? /\s+or\s+/i : /\s+or\s+|\s*\/\s*/i)
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0);
+    if (parts.length >= 2 && parts.every((p) => p.split(/\s+/).length <= LIST_ITEM_MAX_WORDS)) out.push(parts);
+  }
+  return out;
 }
 
 export interface TextMarkResult {
@@ -156,7 +233,20 @@ export interface TextMarkResult {
   feedback: string;
 }
 
-export function markText(raw: string, spec: TextSpec): TextMarkResult {
+export interface MarkTextOptions {
+  /**
+   * Named wrong answers (the part's common errors written as text patterns). One offered beside the right answer in a
+   * hedge cancels the mark the right answer would earn (C2 D F12, 24 Sep 2026: "poly(ethene) or poly(ethane)" was paid).
+   */
+  wrongAnswers?: readonly RegExp[];
+  /**
+   * For each key-word group, the groups it depends on (indices), from the mark scheme's `dependsOn` (mark.ts
+   * `groupDependencies`): a group earns only when every group it depends on has earned, as CCEA's "dep" marks do.
+   */
+  dependsOn?: ReadonlyArray<readonly number[]>;
+}
+
+export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}): TextMarkResult {
   const answer = normaliseText(raw);
   const groups = spec.keyWords;
   const marksAvailable = groups.length > 0 ? groups.reduce((a, g) => a + g.marks, 0) : 1;
@@ -182,16 +272,56 @@ export function markText(raw: string, spec: TextSpec): TextMarkResult {
   // A key word earns one group only. "Give two symptoms" is written as two groups with the same list, and a
   // single symptom must not collect both marks; two groups that merely overlap are handled the same way.
   const used = new Set<string>();
+  // A group's key word is in a piece of the answer as written or, for a hydrocarbon's condensed formula, from either end.
+  const hits = (text: string, g: TextSpec["keyWords"][number]) => {
+    const norm = normaliseText(text);
+    return g.any.filter((k) => phraseIn(norm, normaliseText(k)) || hydrocarbonIn(text, k));
+  };
+  // A hedge that offers a named wrong answer beside a right one: CCEA's general marking instructions (C2 Higher MS
+  // Summer 2021) "Additional incorrect responses cancel out a correct response". The groups the hedge's other
+  // alternatives earn are cancelled; a reject word counts as a named wrong answer here as it does everywhere.
+  const cancelled = new Set<number>();
+  let cancelledBy: string | null = null;
+  const isWrong = (p: string) =>
+    (opts.wrongAnswers ?? []).some((re) => re.test(p)) || groups.some((g) => (g.reject ?? []).some((r) => phraseIn(normaliseText(p), normaliseText(r))));
+  for (const alternatives of hedges(raw)) {
+    const wrong = alternatives.filter(isWrong);
+    if (wrong.length === 0) continue;
+    for (const p of alternatives) {
+      if (isWrong(p)) continue;
+      groups.forEach((g, i) => {
+        if (hits(p, g).length > 0) {
+          cancelled.add(i);
+          cancelledBy ??= wrong[0]!;
+        }
+      });
+    }
+  }
   groups.forEach((g, i) => {
-    const hit = g.any.map(normaliseText).find((k) => !used.has(k) && phraseIn(answer, k));
+    const hit = hits(raw, g).map(normaliseText).find((k) => !used.has(k));
     const bad = (g.reject ?? []).filter((r) => phraseIn(answer, normaliseText(r)));
     rejected.push(...bad);
-    if (hit !== undefined && bad.length === 0) {
+    if (hit !== undefined && bad.length === 0 && !cancelled.has(i)) {
       used.add(hit);
       matchedGroups.push(i);
       marks += g.marks;
     }
   });
+
+  // A dependent mark (engine brief item 3: a reason earned its mark with the direction it explains reversed). Lost
+  // groups are taken off until every group left has what it depends on.
+  let lostTo: { group: number; needs: number } | null = null;
+  for (let changed = true; changed && opts.dependsOn; ) {
+    changed = false;
+    for (const i of [...matchedGroups]) {
+      const needs = (opts.dependsOn[i] ?? []).find((d) => !matchedGroups.includes(d));
+      if (needs === undefined) continue;
+      matchedGroups.splice(matchedGroups.indexOf(i), 1);
+      marks -= groups[i]!.marks;
+      lostTo ??= { group: i, needs };
+      changed = true;
+    }
+  }
 
   let penalty = 0;
   if (spec.listingRule && groups.length > 0) {
@@ -207,6 +337,10 @@ export function markText(raw: string, spec: TextSpec): TextMarkResult {
   else if (groups.length === 0) feedback = "That does not match the expected wording.";
   else if (penalty > 0)
     feedback = `Listing rule: more answers were given than asked for, so ${penalty} mark${penalty === 1 ? " is" : "s are"} lost. Give only what the question asks for.`;
+  else if (lostTo !== null && matchedGroups.length === 0)
+    feedback = `The mark for "${groups[lostTo.group]!.any[0]}" depends on "${groups[lostTo.needs]!.any[0]}", which is not there yet.`;
+  else if (cancelledBy !== null)
+    feedback = `"${cancelledBy}" beside the right answer cancels its mark: an incorrect answer given with a right one earns nothing. Give one answer.`;
   else if (rejected.length > 0) feedback = `"${rejected[0]}" cancels the mark it sits with. Leave it out.`;
   else if (matchedGroups.length === 0) feedback = `The marking points are not there yet. Expected: ${missingIdeas.join(", ")}.`;
   else feedback = `${marksAwarded} of ${marksAvailable}: still missing ${missingIdeas.join(", ")}.`;

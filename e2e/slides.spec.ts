@@ -24,6 +24,8 @@ const CONTENT = "/content/further-maths/fm.u1.algebraic-fractions-simplify.json"
 const DB_NAME = "ccea-study";
 const PHONE = { width: 390, height: 844 };
 const DESKTOP = { width: 1280, height: 800 };
+/** The trial deck's length: 23 cards (the note's 22 with the figure she acts on; two light recall cards, 24 Sep). */
+const DECK = 23;
 
 interface Gate {
   id: string;
@@ -244,8 +246,9 @@ test.describe("Slides: the title card", () => {
       await openSlides(page);
       await expect(page.locator("nav[aria-label='Primary']")).toHaveCount(0);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText("Simplifying algebraic fractions");
-      await expect(page.locator("[data-card='title']")).toContainText("25 cards · 7 checks · 1 video");
-      await expect(page.locator("[data-card='title']")).toContainText(/About \d+ minutes/);
+      await expect(page.locator("[data-card='title']")).toContainText(`${DECK} cards · 7 checks`);
+      // The video has no stated length: it is named beside the minutes, not guessed into them (audit LD-03).
+      await expect(page.locator("[data-promise]")).toHaveText(new RegExp(`^About \\d+ minutes plus a video · ${DECK} cards · 7 checks$`));
       expect(await accentControls(page)).toEqual(["Start the slides"]);
       const scroll = await page.evaluate(() => {
         const body = document.querySelector("[data-body]")!;
@@ -274,14 +277,14 @@ test.describe("Slides: the gate", () => {
     await page.setViewportSize(PHONE);
     await openSlides(page);
     await control(page).click(); // Start
-    await expect(count(page)).toHaveText("2 of 25");
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
     await control(page).click(); // Continue past the first idea
-    await expect(count(page)).toHaveText("3 of 25");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
     await expect(page.locator("[data-gate='g1']")).toBeVisible();
 
     // Locked: the arrow key and a swipe do nothing, the control says Check and is disabled until an option is chosen.
     await page.keyboard.press("ArrowRight");
-    await expect(count(page)).toHaveText("3 of 25");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
     await expect(control(page)).toHaveText("Check");
     await expect(control(page)).toBeDisabled();
     expect(await page.locator("[data-companion], [data-companion-figure]").count(), "nothing signed on a gate card").toBe(0);
@@ -302,19 +305,19 @@ test.describe("Slides: the gate", () => {
     expect(okEdge).not.toBe(missEdge);
     expect(await animations(page)).toBe(0);
     // The deck grew by the retry.
-    await expect(count(page)).toHaveText("3 of 26");
+    await expect(count(page)).toHaveText(`3 of ${DECK + 1}`);
     // One attempt, with the id Read uses, and a review card for it.
     const rows = await attempts(page);
     expect(rows).toEqual([{ itemId: `${TOPIC_ID}#gate:g1`, itemKind: "practice", correct: false }]);
 
     // Back re-reads, forward returns to the marked gate, Continue moves on.
     await page.keyboard.press("ArrowLeft");
-    await expect(count(page)).toHaveText("2 of 26");
+    await expect(count(page)).toHaveText(`2 of ${DECK + 1}`);
     await page.keyboard.press("ArrowRight");
     await expect(page.locator("[data-verdict='miss']")).toBeVisible();
     await expect(control(page)).toHaveText("Continue");
     await control(page).click();
-    await expect(count(page)).toHaveText("4 of 26");
+    await expect(count(page)).toHaveText(`4 of ${DECK + 1}`);
     expect((await attempts(page)).length, "no second record").toBe(1);
   });
 
@@ -374,6 +377,120 @@ async function walkTo(page: Page, kind: string, gateId?: string): Promise<void> 
   throw new Error(`did not reach ${kind} ${gateId ?? ""}`);
 }
 
+/** A review card's due time in ms, read from the device's database; null when there is no card. */
+async function cardDue(page: Page, id: string): Promise<number | null> {
+  return page.evaluate(
+    ({ name, id }) =>
+      new Promise<number | null>((resolve) => {
+        const open = indexedDB.open(name);
+        open.onerror = () => resolve(null);
+        open.onsuccess = () => {
+          const db = open.result;
+          try {
+            const req = db.transaction("cards", "readonly").objectStore("cards").get(id);
+            req.onsuccess = () => {
+              db.close();
+              const row = req.result as { due?: Date } | undefined;
+              resolve(row?.due ? new Date(row.due).getTime() : null);
+            };
+            req.onerror = () => {
+              db.close();
+              resolve(null);
+            };
+          } catch {
+            db.close();
+            resolve(null);
+          }
+        };
+      }),
+    { name: DB_NAME, id },
+  );
+}
+
+test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to be always four … like writing an essay')", () => {
+  test("two light cards; Skip records nothing; what she typed stays beside the answer; the three grades say three returns; the tap stores the day it said", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    await control(page).click();
+    await walkTo(page, "recall");
+    await expect(page.locator("[data-header]")).toContainText("Recall · 1 of 2");
+    await expect(page.locator("[data-recall]")).toContainText("What is the last thing to check");
+
+    // Skip moves on and records nothing: no attempt, no review card, never a miss.
+    const promptRows = async () => (await attempts(page)).filter((r) => r.itemKind === "prompt").length;
+    expect(await promptRows()).toBe(0);
+    await page.locator("[data-skip]").click();
+    await expect(page.locator("[data-header]")).toContainText("Recall · 2 of 2");
+    expect(await promptRows()).toBe(0);
+    expect(await cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.04")).toBeNull();
+
+    // She types, then shows the answer: her words stand above the model answer (audit LD-06).
+    await page.locator("[data-recall] textarea").fill("take the x out first");
+    await control(page).click();
+    await expect(page.locator("[data-typed]")).toContainText("take the x out first");
+    await expect(page.locator("[data-model-answer]")).toContainText("Take the common factor");
+
+    // Three grades, three different returns: a new card's Again is a minute away, Good ten minutes, Easy days (LD-07).
+    const whens = page.locator("[data-grades] [data-when]");
+    await expect(whens.nth(0)).toHaveText("in a minute");
+    await expect(whens.nth(1)).toHaveText("in 10 minutes");
+    const easy = ((await whens.nth(2).textContent()) ?? "").trim();
+    expect(easy).not.toMatch(/minute|later today|^$/);
+    const shownAt = Date.now();
+    await page.locator("[data-grade='easy']").click();
+    await expect(page.locator("[data-card='close']")).toBeVisible();
+
+    // Easy is stored as Easy: days away, not the ten minutes a Good gets (audit CQ-02). One attempt row, a prompt.
+    await expect.poll(() => cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.06")).not.toBeNull();
+    const due = (await cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.06"))!;
+    expect(due - shownAt).toBeGreaterThan(86_400_000);
+    expect(await promptRows()).toBe(1);
+    // The close counts what was graded, and says nothing of the one she skipped.
+    await expect(page.locator("[data-card='close']")).toContainText("1 recall card graded");
+  });
+});
+
+test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: 'most of the correct answers are option A')", () => {
+  test("the seven right answers are spread over A, B and C, the gates that name options by place keep their order, and Read shows the same order", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    await control(page).click();
+    const all = await gates(page);
+    const byId = new Map(all.map((g) => [g.id, g]));
+    const shown = new Map<string, string[]>();
+    for (let step = 0; step < 60 && shown.size < all.length; step += 1) {
+      const k = await card(page).getAttribute("data-card");
+      if (k === "gate") {
+        const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
+        shown.set(id, await page.locator("[data-gate] [role='radio']").evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? "")));
+        await answerChoice(page, byId.get(id)!.answer);
+        await control(page).click();
+      } else if (k === "interaction") {
+        for (const pill of ["t-b", "b-b", "t-2x", "b-4"]) await page.locator(`[data-pill='${pill}']`).click();
+        await control(page).click();
+        await control(page).click();
+      } else {
+        await control(page).click();
+      }
+      await page.waitForTimeout(60);
+    }
+    expect([...shown.keys()]).toEqual(["g1", "g2", "g7", "g3", "g4", "g5", "g6"]);
+    const at = [...shown.entries()].map(([id, order]) => order.indexOf(byId.get(id)!.answer));
+    const counts = [0, 1, 2].map((p) => at.filter((a) => a === p).length);
+    // Build 7 showed A, A, A, A, B, A, B (five at A, none at C). Seven in three places: never more than three in one.
+    expect(new Set(at).size, `answers at ${at.map((a) => "ABC"[a]).join("")}`).toBeGreaterThan(1);
+    expect(Math.max(...counts), `answers at ${at.map((a) => "ABC"[a]).join("")}`).toBeLessThanOrEqual(3);
+    // g4 and g5 explain themselves by place ("the second option … the third"), so they keep the order they were written in.
+    for (const id of ["g4", "g5"]) expect(shown.get(id), id).toEqual(byId.get(id)!.options);
+
+    // Read shows g1, the first gate, in the same order (the lesson's order is one function of the note).
+    await page.goto(TOPIC);
+    const readG1 = page.locator("#note [data-gate='g1'] [role='radio']");
+    await expect(readG1.first()).toBeVisible();
+    expect(await readG1.evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? ""))).toEqual(shown.get("g1"));
+  });
+});
+
 test.describe("Slides: the figure she acts on, and the drawn labels", () => {
   test("the shared factors strike in pairs, a mismatch is named, Check draws the simplified fraction", async ({ page }) => {
     await page.setViewportSize(PHONE);
@@ -392,12 +509,106 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     await page.locator("[data-pill='b-4']").click();
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(4);
     await expect(page.locator("[data-pill='b-m'][data-struck]")).toHaveCount(0);
+    // 2x and 4 share a factor of 2, not themselves: the 2 is struck out of each and x and 2 are left (audit MK-05).
+    await expect(page.locator("[data-pill='t-2x']")).toHaveAttribute("data-struck", "2");
+    await expect(page.locator("[data-pill='t-2x']")).toHaveAttribute("data-left", "x");
+    await expect(page.locator("[data-pill='b-4']")).toHaveAttribute("data-struck", "2");
+    await expect(page.locator("[data-pill='b-4']")).toHaveAttribute("data-left", "2");
+    await expect(page.locator("[data-pill='t-b']")).toHaveAttribute("data-struck", "all");
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("the 2 divides out of both, leaving x and 2");
     await control(page).click();
-    await expect(page.locator("[data-result]")).toBeVisible();
-    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("(x − 5) stays");
+    await expect(page.locator("[data-result='done']")).toBeVisible();
+    await expect(page.locator("[data-result] [role='img']")).toHaveAttribute("aria-label", "x over 2(x − 5)");
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("x and 2(x − 5) share nothing");
     await expect(control(page)).toHaveText("Continue");
     expect(await animations(page)).toBe(0);
   });
+
+  test("what she struck stays struck when she goes back a card and returns, and after a reload (audit CQ-04)", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    await walkTo(page, "interaction");
+    await page.locator("[data-pill='t-b']").click();
+    await page.locator("[data-pill='b-b']").click();
+    // Before Check: back a card and forward again.
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.locator("[data-card='idea']")).toBeVisible();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator("[data-pill][data-struck]")).toHaveCount(2);
+    await page.locator("[data-pill='t-2x']").click();
+    await page.locator("[data-pill='b-4']").click();
+    await control(page).click();
+    await expect(page.locator("[data-result='done']")).toBeVisible();
+    // After Check: a reload keeps the strikes, what is left, and the result.
+    await page.reload();
+    await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
+    await expect(page.locator("[data-card='interaction']")).toBeVisible();
+    await expect(page.locator("[data-pill][data-struck]")).toHaveCount(4);
+    await expect(page.locator("[data-pill='b-4']")).toHaveAttribute("data-left", "2");
+    await expect(page.locator("[data-result='done']")).toBeVisible();
+    await expect(control(page)).toHaveText("Continue");
+  });
+
+  test("a Check with a factor still shared lights it, shows the answer, and lets her finish it now (audit LD-11)", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    await walkTo(page, "interaction");
+    await page.locator("[data-pill='t-b']").click();
+    await page.locator("[data-pill='b-b']").click();
+    await control(page).click();
+    // What is still shared is lit in fern and named; the simplified fraction is shown; nothing is red.
+    await expect(page.locator("[data-pill][data-lit]")).toHaveCount(2);
+    await expect(page.locator("[data-pill='t-2x'][data-lit]")).toBeEnabled();
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("A factor of 2 still divides both 2x and 4.");
+    await expect(page.locator("[data-result='shown']")).toContainText("It simplifies to");
+    expect(await reddish(page)).toEqual([]);
+    // She finishes it: the pair strikes, the lit set clears, and the line says so.
+    await page.locator("[data-pill='t-2x']").click();
+    await page.locator("[data-pill='b-4']").click();
+    await expect(page.locator("[data-pill][data-lit]")).toHaveCount(0);
+    await expect(page.locator("[data-pill][data-struck]")).toHaveCount(4);
+    await expect(page.locator("[data-result='done']")).toBeVisible();
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("Finished");
+    await expect(control(page)).toHaveText("Continue");
+  });
+
+  for (const scheme of ["light", "dark"] as const) {
+    test(`the pills' edges hold 3:1 against their stage, ${scheme} (WCAG 1.4.11; audit CD-05)`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      for (const [i, size] of [PHONE, DESKTOP].entries()) {
+        await page.setViewportSize(size);
+        // Each size starts the deck afresh: the first run's place would otherwise open it at the figure.
+        if (i > 0) await page.evaluate(() => localStorage.clear());
+        await openSlides(page);
+        await walkTo(page, "interaction");
+        const ratios = await page.evaluate(() => {
+          const canvas = document.createElement("canvas");
+          canvas.width = canvas.height = 1;
+          const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+          const rgb = (color: string) => {
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.fillStyle = "#000";
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, 1, 1);
+            const d = ctx.getImageData(0, 0, 1, 1).data;
+            return [d[0], d[1], d[2]];
+          };
+          const lum = (c: number[]) => c.map((v) => (v / 255 <= 0.04045 ? v / 255 / 12.92 : Math.pow((v / 255 + 0.055) / 1.055, 2.4))).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+          const ratio = (a: string, b: string) => {
+            const [x, y] = [lum(rgb(a)), lum(rgb(b))];
+            return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+          };
+          const stage = getComputedStyle(document.querySelector("[data-interaction] [data-stage]")!).backgroundColor;
+          return Array.from(document.querySelectorAll<HTMLElement>("[data-pill]")).map((p) => {
+            const cs = getComputedStyle(p);
+            return Math.min(ratio(cs.borderTopColor, stage), ratio(cs.borderTopColor, cs.backgroundColor));
+          });
+        });
+        expect(ratios).toHaveLength(5);
+        for (const r of ratios) expect(r, `${scheme} at ${size.width}`).toBeGreaterThanOrEqual(3);
+      }
+    });
+  }
 
   test("the idea's illustration and the miss's consequence keep every label at 13 px or more at 390", async ({ page }) => {
     await page.setViewportSize(PHONE);
@@ -419,6 +630,38 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
     expect(await reddish(page)).toEqual([]);
   });
+
+  // g2, "In (x + 4)/x, what cancels?": each wrong option draws its own consequence at x = 1 (audit CT-19, CQ-03), and the
+  // two labels under the tiles never meet, on the phone or at the verdict's full 356 px (audit CT-11, CD-02, LD-10).
+  for (const [option, value] of [
+    ["The $x$, leaving $4$", "4"],
+    ["The $x$ and the $4$", "1"],
+  ] as const) {
+    test(`g2 answered "${option}" draws x = 1 giving 5 against her ${value}, with labels that never overlap`, async ({ page }) => {
+      for (const [i, size] of [PHONE, DESKTOP].entries()) {
+        await page.setViewportSize(size);
+        if (i > 0) await page.evaluate(() => localStorage.clear());
+        await openSlides(page);
+        await control(page).click();
+        await walkTo(page, "gate", "g2");
+        await answerChoice(page, option);
+        const figure = page.locator("[data-reaction='afs.substitute']");
+        await expect(figure).toBeVisible();
+        await expect(figure.locator("[data-value]")).toHaveText(value);
+        await expect(figure).toHaveAttribute("aria-label", new RegExp(`your cancelled version is ${value}\\.`));
+        const boxes = await figure.evaluate((svg) =>
+          ["fraction", "hers"].map((k) => {
+            const r = svg.querySelector(`[data-label='${k}']`)!.getBoundingClientRect();
+            return { left: r.left, right: r.right, top: r.top, bottom: r.bottom };
+          }),
+        );
+        const [fraction, hers] = boxes;
+        const apart = fraction.right <= hers.left || hers.right <= fraction.left || fraction.bottom <= hers.top || hers.bottom <= fraction.top;
+        expect(apart, `labels at ${size.width}: ${JSON.stringify(boxes)}`).toBe(true);
+        expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
+      }
+    });
+  }
 });
 
 test.describe("Slides: moving on", () => {
@@ -426,31 +669,31 @@ test.describe("Slides: moving on", () => {
     test.skip(!isMobile, "the swipe is a phone gesture");
     await openSlides(page);
     await control(page).click();
-    await expect(count(page)).toHaveText("2 of 25");
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
     const box = (await card(page).boundingBox())!;
     const y = box.y + box.height / 2;
     await page.mouse.move(box.x + box.width - 40, y);
     await page.mouse.down();
     await page.mouse.move(box.x + 40, y, { steps: 8 });
     await page.mouse.up();
-    await expect(count(page)).toHaveText("3 of 25");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
     await page.mouse.move(box.x + 40, y);
     await page.mouse.down();
     await page.mouse.move(box.x + box.width - 40, y, { steps: 8 });
     await page.mouse.up();
-    await expect(count(page)).toHaveText("2 of 25");
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
   });
 
   test("the Next button at the screen's edge and the arrow keys move on, on the desktop", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await openSlides(page);
     await page.keyboard.press("Enter");
-    await expect(count(page)).toHaveText("2 of 25");
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
     await page.locator("[data-next]").click();
-    await expect(count(page)).toHaveText("3 of 25");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
     await expect(page.locator("[data-next]")).toBeDisabled(); // a gate: locked
     await page.locator("[data-prev]").click();
-    await expect(count(page)).toHaveText("2 of 25");
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
   });
 });
 
@@ -464,7 +707,7 @@ test.describe("Slides: the whole deck and the close", () => {
 
     await expect(page.locator("[data-card='close']")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Done for tonight.");
-    await expect(page.locator("[data-card='close']")).toContainText("7 checks answered · the one that came back held · 4 recall cards graded");
+    await expect(page.locator("[data-card='close']")).toContainText("7 checks answered · the one that came back held · 2 recall cards graded");
     await expect(page.locator("[data-companion-figure='close']")).toHaveCount(1);
     await expect(page.locator("[data-companion='session-close']")).toBeVisible();
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("!");
@@ -478,7 +721,7 @@ test.describe("Slides: the whole deck and the close", () => {
     const gateRows = rows.filter((r) => r.itemId.includes("#gate:"));
     expect(gateRows.map((r) => r.itemId.split("#gate:")[1]).sort()).toEqual(["g1", "g2", "g3", "g4", "g5", "g6", "g7"]);
     expect(gateRows.find((r) => r.itemId.endsWith("g2"))?.correct).toBe(false);
-    expect(rows.filter((r) => r.itemKind === "prompt")).toHaveLength(4);
+    expect(rows.filter((r) => r.itemKind === "prompt")).toHaveLength(2);
 
     // Done for tonight goes home; the run is finished, so the slides start afresh next time.
     await page.getByRole("link", { name: /^Done for tonight$/ }).click();
@@ -535,9 +778,9 @@ test.describe("Slides: the hero's two ways in", () => {
       await expect(page.locator("[data-card='title']")).toBeVisible();
       await control(page).click();
       await control(page).click();
-      await expect(count(page)).toHaveText("3 of 25");
+      await expect(count(page)).toHaveText(`3 of ${DECK}`);
       await page.locator("[data-exit]").click();
-      await expect(page.locator("a[data-way='slides']").first()).toHaveText(/^Continue the slides · card 3 of 25$/);
+      await expect(page.locator("a[data-way='slides']").first()).toHaveText(`Continue the slides · card 3 of ${DECK}`);
     });
   }
 });

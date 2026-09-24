@@ -46,12 +46,14 @@ describe("what she sees of it, in Settings (Full, Words only, Quiet)", () => {
     expect(copy.options[1].detail).toBe("The same lines, with nothing drawn.");
     expect(copy.options[2].detail).toBe("Nothing said and nothing drawn, anywhere.");
     expect(copy.note).toBe("Whichever you choose, your plan, your papers’ dates and what comes back stay on Today.");
+    // Shown only when the device could not save her choice; the control has gone back to the stored one by then.
+    expect(copy.unsaved).toBe("That did not save on this device, so nothing has changed.");
   });
 
   it("uses the name she gave it, and passes the constitution", () => {
     for (const state of [fresh, { ...fresh, name: "Fern" }]) {
       const copy = describePresence(state);
-      const strings = [copy.legend, copy.note, ...copy.options.flatMap((o) => [o.label, o.detail])];
+      const strings = [copy.legend, copy.note, copy.unsaved, ...copy.options.flatMap((o) => [o.label, o.detail])];
       for (const s of strings) {
         expect(bannedIn(s), s).toEqual([]);
         expect(s, s).not.toContain("!");

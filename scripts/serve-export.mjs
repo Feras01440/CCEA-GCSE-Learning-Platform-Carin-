@@ -1,7 +1,9 @@
 // Serves the static export (out/) on a port and restarts `serve` whenever it dies.
-// Why: under parallel load (a Playwright run with six workers, several headless audits at once) `serve`
+// Why: serve-handler opens a file for every "304 Not Modified" reply and never closes it (measured 25 Sep 2026:
+// 50 conditional requests, 50 leaked handles), so under load `serve`
 // crashes with EMFILE on Windows (seen 24 Sep 2026, 18:45) and every later request is refused. A
-// supervisor turns a dead server into a two-second gap. Usage: node scripts/serve-export.mjs [port]
+// supervisor turns a dead server into a two-second gap, and --no-etag stops the 304s (and the leak) at the source.
+// Usage: node scripts/serve-export.mjs [port]
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -16,7 +18,7 @@ let child = null;
 let restarts = 0;
 
 function start() {
-  child = spawn(process.execPath, [serveBin, "out", "-l", port], { stdio: "inherit" });
+  child = spawn(process.execPath, [serveBin, "out", "-l", port, "--no-etag"], { stdio: "inherit" });
   child.on("exit", (code, signal) => {
     if (stopping) return;
     restarts += 1;

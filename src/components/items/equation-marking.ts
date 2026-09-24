@@ -92,7 +92,9 @@ export function normaliseEquation(input: string, opts: NormaliseEquationOptions 
   s = unwrapBraces(s, "text");
   s = unwrapBraces(s, "mathrm");
   s = unwrapBraces(s, "textbf");
-  s = s.replace(/\\(left|right|,|;|!|quad|qquad| )/g, "");
+  // "\left" and "\right" as whole commands only: "\rightarrow" is an arrow, and stripping its "\right" left "arrow"
+  // (25 Sep 2026: every typed arrow was refused against a key written with \rightarrow).
+  s = s.replace(/\\(?:left|right)(?![A-Za-z])|\\(?:,|;|!|quad|qquad| )/g, "");
   s = fracToSlash(s);
   s = s.replace(/\\(times|cdot)\b/g, "*").replace(/[×·⋅]/g, "*");
   s = s.replace(/\\div\b/g, "/").replace(/÷/g, "/");
@@ -133,13 +135,42 @@ function terms(side: string): Term[] {
     .filter((t) => t.length > 0)
     .map((t) => {
       const m = /^(\d+(?:\.\d+)?)(.*)$/.exec(t);
-      return m ? { coefficient: Number(m[1]), species: m[2] } : { coefficient: 1, species: t };
+      return m ? { coefficient: Number(m[1]), species: speciesKey(m[2]) } : { coefficient: 1, species: speciesKey(t) };
     })
     .sort((a, b) => a.species.localeCompare(b.species));
 }
 
-/** Same species on each side, coefficients in one common ratio (so 2H2 + O2 → 2H2O ≡ 4H2 + 2O2 → 4H2O). */
-function sameUpToMultiple(a: string, b: string): boolean {
+/**
+ * The species a formula names, for comparing equations. An organic compound (carbon and hydrogen both in it) is the
+ * same species whatever correct formula it is written with, so it is read as its atom counts: CH3CH2OH, C2H5OH and
+ * C2H6O are one species (C2 D F05, 24 Sep 2026; CCEA credits "C3H8O/C3H7OH" for propanol, C2 Higher MS Summer 2021).
+ * Anything else keeps its spelling: an inorganic formula has one conventional order (H2O, not OH2), and an ion, an
+ * electron or a hydrate is left exactly as written. A state symbol stays attached.
+ */
+function speciesKey(species: string): string {
+  const m = /^(.*?)(\((?:s|l|g|aq)\))?$/i.exec(species);
+  // A bond drawn in a structural formula ("CH2=CH2") is part of the same compound's formula.
+  const formula = (m?.[1] ?? species).replace(/[=≡]/g, "");
+  const state = m?.[2] ?? "";
+  if (!/^(?:[A-Z][a-z]?\d*|\((?:[A-Z][a-z]?\d*)+\)\d*)+$/.test(formula)) return species;
+  const counts = new Map<string, number>();
+  const add = (el: string, n: number) => counts.set(el, (counts.get(el) ?? 0) + n);
+  for (const g of formula.matchAll(/\(((?:[A-Z][a-z]?\d*)+)\)(\d*)|([A-Z][a-z]?)(\d*)/g)) {
+    if (g[1] !== undefined) {
+      const times = g[2] ? Number(g[2]) : 1;
+      for (const a of g[1].matchAll(/([A-Z][a-z]?)(\d*)/g)) add(a[1]!, (a[2] ? Number(a[2]) : 1) * times);
+    } else add(g[3]!, g[4] ? Number(g[4]) : 1);
+  }
+  if (!counts.has("C") || !counts.has("H")) return species;
+  const order = ["C", "H", ...[...counts.keys()].filter((e) => e !== "C" && e !== "H").sort()];
+  return `{${order.map((e) => `${e}${counts.get(e)}`).join("")}}${state}`;
+}
+
+/**
+ * Same species on each side, coefficients in one common ratio (so 2H2 + O2 → 2H2O ≡ 4H2 + 2O2 → 4H2O). With
+ * `exact`, the ratio must be 1: the same equation, its species in any order and spelt any correct way.
+ */
+function sameUpToMultiple(a: string, b: string, exact = false): boolean {
   const sa = sides(a);
   const sb = sides(b);
   if (sa.length !== sb.length) return false;
@@ -156,7 +187,7 @@ function sameUpToMultiple(a: string, b: string): boolean {
       else if (Math.abs(ratio - r) > 1e-9) return false;
     }
   }
-  return ratio !== null;
+  return ratio !== null && (!exact || Math.abs(ratio - 1) < 1e-9);
 }
 
 export interface EquationMatchOptions {
@@ -170,6 +201,11 @@ export interface EquationMatchOptions {
   stripStates?: boolean;
   /** Treat `m × a`, `m*a` and `ma` as the same product (physics). */
   implicitMultiply?: boolean;
+  /**
+   * Compare as a chemical equation: the same species on each side in any order, an organic compound in any correct
+   * formula (C2 D F05), at the same coefficients.
+   */
+  species?: boolean;
 }
 
 export function equationsMatch(typed: string, expected: string, opts: EquationMatchOptions = {}): boolean {
@@ -183,6 +219,7 @@ export function equationsMatch(typed: string, expected: string, opts: EquationMa
     if (r !== undefined && `${r}=${l}` === b) return true;
   }
   if (opts.acceptMultiples && sameUpToMultiple(a, b)) return true;
+  if (opts.species && sameUpToMultiple(a, b, true)) return true;
   return false;
 }
 
@@ -197,6 +234,34 @@ export interface EquationMarkResult {
   missingStateSymbols?: boolean;
 }
 
+/** A species typed with its charge after it on a keyboard: "e-", "Cl-", "Zn2+", "2O2-", "NH4+(aq)". */
+const KEYBOARD_CHARGE = /^(\d*)((?:[A-Z][a-z]?\d*|\((?:[A-Z][a-z]?\d*)+\)\d*)+|e)([+-])(\((?:s|l|g|aq)\))?$/;
+
+/**
+ * The ways a line with charges typed on a keyboard can be read (C2 E, 24 Sep 2026: "Zn²⁺ + 2e- → Zn" was refused
+ * while "2e⁻" passed). A species followed by + or − and then a space or the line's end carries that charge: "e-" is
+ * an electron, never an element or a separator. A digit before the sign may be the charge's size ("Zn2+", "O2-") or
+ * the formula's last count ("NH4+"): both readings are offered, and the key decides which she meant. At most 16.
+ */
+export function keyboardChargeReadings(line: string): string[] {
+  const tokens = line.trim().split(/(\s+)/);
+  let readings: string[][] = [[]];
+  let changed = false;
+  for (const token of tokens) {
+    const m = KEYBOARD_CHARGE.exec(token);
+    let options = [token];
+    if (m) {
+      const [, coefficient = "", formula = "", sign = "", state = ""] = m;
+      const size = /^(.*?[A-Za-z)])(\d+)$/.exec(formula);
+      options = [`${coefficient}${formula}^${sign}${state}`];
+      if (formula !== "e" && size) options.unshift(`${coefficient}${size[1]}^{${size[2]}${sign}}${state}`);
+      changed = true;
+    }
+    readings = readings.flatMap((r) => options.map((o) => [...r, o])).slice(0, 16);
+  }
+  return changed ? readings.map((r) => r.join("")) : [];
+}
+
 export function markEquation(raw: string, spec: EquationSpec): EquationMarkResult {
   const lines = raw.replace(/\r/g, "").split("\n");
   const equationLine = (lines[0] ?? "").trim();
@@ -204,9 +269,18 @@ export function markEquation(raw: string, spec: EquationSpec): EquationMarkResul
   if (equationLine.length === 0) {
     return { correct: false, feedback: "Write the equation on the first line before any numbers.", equationLine, working };
   }
+  const first = markEquationLine(equationLine, working, spec);
+  if (first.correct || spec.kindOf === "physics") return first;
+  // Charges typed on a keyboard: the first reading the key accepts, else the first that says more than "not the
+  // expected equation" (unbalanced, or the state symbols), else the line as typed.
+  const read = keyboardChargeReadings(equationLine).map((r) => ({ ...markEquationLine(r, working, spec), equationLine }));
+  return read.find((r) => r.correct) ?? read.find((r) => r.feedback !== first.feedback && !/not the expected equation/.test(r.feedback)) ?? first;
+}
+
+function markEquationLine(equationLine: string, working: string, spec: EquationSpec): EquationMarkResult {
   const physics = spec.kindOf === "physics";
   const hasStates = /\((s|l|g|aq)\)/i.test(equationLine);
-  const compare = { allowSwap: physics, lowercase: physics, implicitMultiply: physics, acceptMultiples: spec.acceptMultiples };
+  const compare = { allowSwap: physics, lowercase: physics, implicitMultiply: physics, acceptMultiples: spec.acceptMultiples, species: !physics };
   const matched = equationsMatch(equationLine, spec.balancedLatex, { ...compare, stripStates: true });
   if (matched && spec.stateSymbolsRequired) {
     if (!hasStates) {
@@ -242,4 +316,118 @@ export function markEquation(raw: string, spec: EquationSpec): EquationMarkResul
     equationLine,
     working,
   };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Point by point: a chemical equation part marked against its own scheme
+// ---------------------------------------------------------------------------------------------
+
+/** What one mark point of a chemical equation part is for, as far as the engine can read it. */
+type EquationPointNeed =
+  | { kind: "lhs" | "rhs" | "both" | "both-no-electrons" | "balanced" | "states" | "reversible" | "electrons" }
+  | { kind: "species"; side: 0 | 1; species: string; coefficient: number | null };
+
+interface ReadEquation {
+  sides: Term[][];
+  reversible: boolean;
+}
+
+/** An equation line read into its two sides of terms, or null when it has not got two sides. */
+function readEquation(line: string, opts: { stripStates: boolean; lowercase: boolean }): ReadEquation | null {
+  const n = normaliseEquation(line, { stripStates: opts.stripStates, lowercase: opts.lowercase });
+  const s = sides(n);
+  if (s.length !== 2) return null;
+  return { sides: s.map(terms), reversible: n.includes("<->") };
+}
+
+const isElectron = (t: Term) => /^e\^?-?$/i.test(t.species);
+const speciesSet = (ts: readonly Term[], electrons = true) =>
+  [...new Set(ts.filter((t) => electrons || !isElectron(t)).map((t) => t.species))].sort().join("+");
+
+/**
+ * The needs of one mark point, read from its words: "reactants" / "left-hand side", "products" / "right-hand side",
+ * "formulae on both sides", "balancing", "state symbols", "the reversible sign", "electrons on the correct side",
+ * "ion and product", or a species of the key named on its own ("6CO₂", "carbon dioxide"). Null when the point is
+ * about something else, and the part is then marked all or nothing.
+ */
+function equationPointNeeds(text: string, key: ReadEquation, lowercase: boolean): EquationPointNeed[] | null {
+  const t = text.toLowerCase();
+  const needs: EquationPointNeed[] = [];
+  if (/state symbol/.test(t)) needs.push({ kind: "states" });
+  if (/reversible/.test(t)) needs.push({ kind: "reversible" });
+  if (/balanc/.test(t)) needs.push({ kind: "balanced" });
+  if (needs.length > 0) return needs;
+  if (/electron/.test(t)) return [{ kind: "electrons" }];
+  if (/\b(?:ion|reactant) and product\b/.test(t)) return [{ kind: "both-no-electrons" }];
+  if (/both sides|reactants and products|left.hand side and right.hand side/.test(t)) return [{ kind: "both" }];
+  if (/reactant|left.hand side/.test(t)) return [{ kind: "lhs" }];
+  if (/product|right.hand side/.test(t)) return [{ kind: "rhs" }];
+  // A species of the key named on its own, perhaps with a note in brackets ("(muscle) lactic acid").
+  const bare = text.replace(/\([^()]*\)\s*/g, " ").trim();
+  if (bare.length === 0 || /[:;,]|\b(?:and|or|correct|seen)\b/i.test(bare)) return null;
+  const named = terms(normaliseEquation(bare, { stripStates: true, lowercase }));
+  if (named.length !== 1) return null;
+  const coefficient = /^\s*\d/.test(normaliseEquation(bare, { stripStates: true, lowercase })) ? named[0]!.coefficient : null;
+  const side = key.sides.findIndex((s) => s.some((k) => k.species === named[0]!.species));
+  if (side < 0) return null;
+  return [{ kind: "species", side: side as 0 | 1, species: named[0]!.species, coefficient }];
+}
+
+/**
+ * The marks an equation line earns point by point against the part's scheme, or null when some point is one the
+ * engine cannot read (the part is then all or nothing, as before). Each point is paid on its own: the reactants'
+ * formulae, the products', the balancing (the whole equation right, any multiple where the part accepts one, the
+ * arrow aside where the reversible sign has a point of its own), the state symbols (on the right formulae), the
+ * reversible sign, the electrons' side, a named species on its side (with its coefficient when the point gives
+ * one). Charges typed on a keyboard are read every way `keyboardChargeReadings` allows, and the best reading counts.
+ */
+export function equationSchemeMarks(raw: string, spec: EquationSpec, scheme: readonly { marks: number; for: string }[]): number | null {
+  if (spec.kindOf === "physics" || scheme.length === 0) return null;
+  const line = (raw.replace(/\r/g, "").split("\n")[0] ?? "").trim();
+  if (line.length === 0) return 0;
+  const lowercase = spec.kindOf === "word";
+  const key = readEquation(spec.balancedLatex, { stripStates: true, lowercase });
+  const keyStates = readEquation(spec.balancedLatex, { stripStates: false, lowercase });
+  if (!key || !keyStates) return null;
+  const needs = scheme.map((p) => equationPointNeeds(p.for, key, lowercase));
+  if (needs.some((n) => n === null)) return null;
+  const separateArrow = needs.some((n) => n!.some((x) => x.kind === "reversible"));
+  const score = (typedLine: string): number => {
+    const typed = readEquation(typedLine, { stripStates: true, lowercase });
+    const typedStates = readEquation(typedLine, { stripStates: false, lowercase });
+    if (!typed || !typedStates) return 0;
+    const sameSide = (i: 0 | 1, electrons = true) => speciesSet(typed.sides[i]!, electrons) === speciesSet(key.sides[i]!, electrons);
+    const arrowless = (s: string) => s.replace(/⇌|<=>|<->|\\rightleftharpoons/g, "->");
+    const balanced = equationsMatch(separateArrow ? arrowless(typedLine) : typedLine, separateArrow ? arrowless(spec.balancedLatex) : spec.balancedLatex, {
+      acceptMultiples: spec.acceptMultiples,
+      stripStates: true,
+      species: true,
+      lowercase,
+    });
+    const electronSide = key.sides.findIndex((s) => s.some(isElectron));
+    const holds = (n: EquationPointNeed): boolean => {
+      switch (n.kind) {
+        case "lhs":
+          return sameSide(0);
+        case "rhs":
+          return sameSide(1);
+        case "both":
+          return sameSide(0) && sameSide(1);
+        case "both-no-electrons":
+          return sameSide(0, false) && sameSide(1, false);
+        case "balanced":
+          return balanced;
+        case "states":
+          return sameSide(0) && sameSide(1) && [0, 1].every((i) => speciesSet(typedStates.sides[i]!) === speciesSet(keyStates.sides[i]!));
+        case "reversible":
+          return typed.reversible === key.reversible;
+        case "electrons":
+          return electronSide >= 0 && typed.sides[electronSide]!.some(isElectron) && !typed.sides[1 - electronSide]!.some(isElectron);
+        case "species":
+          return typed.sides[n.side]!.some((t) => t.species === n.species && (n.coefficient === null || Math.abs(t.coefficient - n.coefficient) < 1e-9));
+      }
+    };
+    return scheme.reduce((sum, p, i) => sum + (needs[i]!.every(holds) ? p.marks : 0), 0);
+  };
+  return Math.max(score(line), ...keyboardChargeReadings(line).map(score));
 }

@@ -30,8 +30,9 @@ import { InlineSvg } from "./Figure";
 import { PhotoFigure } from "@/components/media/PhotoFigure";
 import { SimEmbed } from "@/components/media/SimEmbed";
 import { VideoEmbed } from "@/components/media/VideoEmbed";
+import { deckGateOrders, shownOptions } from "@/lib/gate-order";
 import { formatExaminerSource, optionLetter } from "./format";
-import { gateOptions, markGate, visibleBlocks, type GateBlock, type NoteBlock } from "./gates";
+import { markGate, visibleBlocks, type GateBlock, type NoteBlock } from "./gates";
 import { Md, MdInlines } from "./Markdown";
 import { parseInline } from "./md";
 import { Tex } from "./Tex";
@@ -122,6 +123,7 @@ interface GateState {
 
 function Gate({
   gate,
+  options,
   state,
   onAnswer,
   focusOnMount,
@@ -129,6 +131,8 @@ function Gate({
   afterVideo = false,
 }: {
   gate: GateBlock;
+  /** A choice gate's options in the order shown (src/lib/gate-order.ts: balanced over the lesson, as Slides shows them). */
+  options: readonly string[];
   state: GateState | null;
   onAnswer: (answer: string) => void;
   focusOnMount: boolean;
@@ -168,8 +172,8 @@ function Gate({
 
       {gate.kind === "choice" && gate.options ? (
         <div role="radiogroup" aria-label="Choose" className="mt-3 grid gap-2">
-          {/* In the gate's seeded order, not the authored one, where the answer is nearly always first (engine item 11). */}
-          {gateOptions(gate).map((opt, i) => {
+          {/* In the lesson's balanced order, not the authored one, where the answer is nearly always first. */}
+          {options.map((opt, i) => {
             const chosen = answered && state.answer === opt;
             const right = answered && markGate(gate, opt);
             return (
@@ -275,6 +279,9 @@ function ClassicNote({ blocks, onGate, renderPrompt, initiallyAnswered, single =
   );
   const answeredIds = useMemo(() => new Set(Object.keys(answers)), [answers]);
   const view = useMemo(() => visibleBlocks(blocks, answeredIds), [blocks, answeredIds]);
+  // Every choice gate's shown order, balanced over the whole note (not only the stretch on screen), so a gate reads the
+  // same before and after the gates above it are answered, and the same as in Slides.
+  const orders = useMemo(() => deckGateOrders(blocks), [blocks]);
   const interacted = useRef(false);
   const total = sections?.length ?? 0;
 
@@ -374,6 +381,7 @@ function ClassicNote({ blocks, onGate, renderPrompt, initiallyAnswered, single =
               <Rise key={key} as="div">
                 <Gate
                   gate={b}
+                  options={b.kind === "choice" ? shownOptions(b, orders) : []}
                   state={answers[b.id] ?? null}
                   onAnswer={(raw) => answer(b, raw)}
                   focusOnMount={interacted.current}
@@ -536,6 +544,7 @@ function Verdict({ gate, state, reaction }: { gate: GateBlock; state: GateState;
  */
 function GateV2({
   gate,
+  options,
   state,
   onAnswer,
   focusOnMount,
@@ -543,6 +552,8 @@ function GateV2({
   reaction,
 }: {
   gate: GateBlock;
+  /** A choice gate's options in the order shown: the lesson's balanced order, the one Slides shows (src/lib/gate-order.ts). */
+  options: readonly string[];
   state: GateState | null;
   onAnswer: (answer: string) => void;
   focusOnMount: boolean;
@@ -563,8 +574,6 @@ function GateV2({
   const answered = state !== null;
   const restored = answered && state.answer === "";
   const promptId = `gate-${gate.id}-prompt`;
-  // The options in the gate's seeded order, the same every visit; the authored order puts the answer first (engine item 11).
-  const options = useMemo(() => (gate.kind === "choice" ? gateOptions(gate) : []), [gate]);
   const submit = () => {
     if (answered) return;
     if (gate.kind === "choice") {
@@ -770,6 +779,8 @@ function PacedNoteView({ blocks, onGate, renderPrompt, initiallyAnswered, sectio
   );
   const answeredIds = useMemo(() => new Set(Object.keys(answers)), [answers]);
   const view = useMemo(() => visibleBlocks(blocks, answeredIds), [blocks, answeredIds]);
+  // Every choice gate's shown order, balanced over the whole note: the same order Slides shows (src/lib/gate-order.ts).
+  const orders = useMemo(() => deckGateOrders(blocks), [blocks]);
   const interacted = useRef(false);
   const [lastAnswered, setLastAnswered] = useState<string | null>(null);
   const articleRef = useRef<HTMLElement>(null);
@@ -913,6 +924,7 @@ function PacedNoteView({ blocks, onGate, renderPrompt, initiallyAnswered, sectio
           <Rise key={key} as="div">
             <GateV2
               gate={b}
+              options={b.kind === "choice" ? shownOptions(b, orders) : []}
               state={answers[b.id] ?? null}
               onAnswer={(raw) => answer(b, raw)}
               focusOnMount={interacted.current}

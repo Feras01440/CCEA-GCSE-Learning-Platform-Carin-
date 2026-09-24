@@ -38,38 +38,31 @@
  *
  * A phrase the part's own stem already uses is never a leak: the figure is repeating the question.
  *
+ * Worked examples (WorkedExampleAsQuestion.tsx). The twin mode shows only the twin's figure, so the twin's
+ * figure is tested against the twin's answer (a LEAK, as for a question part). The example's own figure is
+ * shown in the full, faded and problem modes, so it is tested against what those modes hide: every step a
+ * faded mode leaves to her (its input spec's spellings, or, with no spec, the working's results and short
+ * statements; scripts/qa/we-hidden-steps.mjs says which steps, as fade.ts does) and, for the problem mode, the
+ * final answer's values and points, minus whatever the stem and the steps that mode shows already give. Never
+ * against the twin's answer: that figure is never beside the twin's answer box. These are the WE-LEAK tier,
+ * printed and counted but not gating until --we-fatal, because the fix is usually an unannotated copy of the
+ * figure for those modes, which the schema does not hold yet.
+ *
  * Usage:
  *   node scripts/qa/figure-leaks.mjs                  every subject, every unit
  *   node scripts/qa/figure-leaks.mjs --unit b1        one unit (repeatable)
  *   node scripts/qa/figure-leaks.mjs --subject science
  *   node scripts/qa/figure-leaks.mjs --json out.json  findings as JSON as well
  *   node scripts/qa/figure-leaks.mjs --quiet          counts only, no review list
+ *   node scripts/qa/figure-leaks.mjs --we-fatal       count the worked-example tier as leaks (exit 1)
  */
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { hiddenSteps } from "./we-hidden-steps.mjs";
 
-// ---------------------------------------------------------------------------
-// Arguments
-// ---------------------------------------------------------------------------
-
-const argv = process.argv.slice(2);
-const units = [];
-const subjects = [];
-let jsonOut = null;
-let quiet = false;
-for (let i = 0; i < argv.length; i += 1) {
-  const a = argv[i];
-  if (a === "--unit") units.push(String(argv[++i]).toLowerCase());
-  else if (a === "--subject") subjects.push(String(argv[++i]).toLowerCase());
-  else if (a === "--json") jsonOut = argv[++i];
-  else if (a === "--quiet") quiet = true;
-  else {
-    console.error(`unknown argument: ${a}`);
-    process.exit(2);
-  }
-}
-
-const PACKS = path.resolve("packs");
+/** Run as a script (the CLI below) or imported for its pure sweep (src/lib/build/we-figure-leaks.test.ts). */
+const isMain = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 // ---------------------------------------------------------------------------
 // Text
@@ -258,6 +251,27 @@ const ALLOWED = new Map([
   // (The m7 inequalities q0001 entry that stood here went on 22 Sep: norm() now keeps = < > and
   // folds the two spellings of each of >= and <=, so the boundary label "x = 3" no longer reads as
   // the answer "x > 3" and the exemption had stopped firing.)
+
+  // A wave graph read for its amplitude and wavelength. The drawing carries no value but the axis
+  // ticks; the alt is that drawing in words for a screen-reader user (the grid's scale, then how
+  // many squares the curve rises and how many one wave spans), which is exactly the reading a
+  // sighted learner makes off the grid. Where a square is 1 m or 1 s the count is the answer, as
+  // the printed grid is for everyone else. Reworded to hide the count, the alt would set a blind
+  // learner a different question (24 Sep).
+  ["q.science.p2.p2-wave-types-and-properties.0004#b", "the alt gives the grid's scale and the squares one wave spans, which is the reading the part asks for; the mark is for taking it off the drawn wave"],
+  ["q.science.p2.p2-wave-types-and-properties.0010#b", "the alt gives the grid's scale and the squares one wave spans, which is the reading the part asks for; the mark is for taking it off the drawn wave"],
+  ["q.science.p2.p2-wave-types-and-properties.0011#a", "the alt gives the grid's scale and the squares one up-and-down movement spans, which is the period the part asks for; the mark is for taking it off the drawn wave"],
+  // A box plot read for its median: the alt places the whiskers, the box and the line inside the box on
+  // the scale, which is the drawing in words; the mark is for knowing that the line inside the box is the
+  // median (the alt no longer calls it that, 24 Sep).
+  ["q.maths.m3.box-plots-and-comparing-distributions.0001#a", "the alt places the line inside the box on the scale, as the drawing does; the mark is for reading it as the median"],
+  ["q.maths.m3.box-plots-and-comparing-distributions.0015#a", "the alt places the line inside each box on the scale, as the drawing does; the mark is for reading Ashvale's as the median"],
+  // The same for the worked example's two box plots (25 Sep, QA fixer): the alt says where each box and the
+  // line inside it are drawn ("the line inside the box at 11"), the drawing in words for a screen reader; the
+  // faded steps ask her to read that line as Moira's median (11) and to work out Moira's IQR (16 - 5, which
+  // is also 11). Both are readings or sums from the plot, as a sighted learner makes them.
+  ["we.maths.m3.box-plots-and-comparing-distributions.03#step 1", "the alt places the boxes and the line inside each box on the scale, as the drawing does; the step is to read the medians off it and work out the IQRs"],
+  ["we.maths.m3.box-plots-and-comparing-distributions.03#step 3", "the alt places Moira's box from 5 to 16 on the scale, as the drawing does; the step compares the IQRs worked out from it (16 - 5 = 11)"],
 ]);
 
 const objects = (v) => (Array.isArray(v) ? v.filter((x) => x && typeof x === "object") : []);
@@ -341,11 +355,16 @@ function compactEquation(s) {
 // The check
 // ---------------------------------------------------------------------------
 
-const leaks = [];
-const reviews = [];
-const allowed = [];
+/**
+ * A value the part asks for, printed where a reader takes it as a reading: a piece of figure text that carries
+ * the value and words ("mean time 150 s"), not a bare axis tick or a description of the scale. Worked-example
+ * steps and final answers are also read against a whole text node ("optimum (40 °C)" is one label, though the
+ * bracket splits it into two pieces); question parts keep the piece rule they were calibrated on.
+ */
+const VALUE_SOURCES = new Set(["numericValue", "stepValue", "finalValue"]);
+const WHOLE_NODE_SOURCES = new Set(["stepValue", "finalValue", "finalPoint"]);
 
-function check({ figs, phrases, stem, answerKind, groups = 0, meta }) {
+function check(acc, { figs, phrases, stem, answerKind, groups = 0, meta }) {
   const stemNorm = norm(stem ?? "");
   const naming = answerKind === "label" || answerKind === "numeric" || ASKS_TO_NAME.test(stem ?? "");
   for (const fig of figs) {
@@ -367,13 +386,16 @@ function check({ figs, phrases, stem, answerKind, groups = 0, meta }) {
         if (stemNorm && contains(stemNorm, p.norm)) continue;
         // A value the part asks for is a leak wherever it is printed in words; a bare number on an
         // axis, or a description of the axis range, is the reading the question is FOR.
+        const worded = (c) => contains(c, p.norm) && /[a-z]{2}/.test(c) && !SCALE_PROSE.test(c);
         const hit =
-          p.source === "numericValue"
-            ? ps.find((c) => contains(c, p.norm) && /[a-z]{2}/.test(c) && !SCALE_PROSE.test(c))
-            : ps.find((c) => namesIt(c, p.norm));
+          p.source === "finalPoint"
+            ? (contains(hay, p.norm) ? hay : undefined) // a coordinate pair printed is the pair, words or none
+            : VALUE_SOURCES.has(p.source)
+              ? ps.find(worded) ?? (WHOLE_NODE_SOURCES.has(p.source) && ch.channel === "text" && worded(hay) ? hay : undefined)
+              : ps.find((c) => namesIt(c, p.norm));
         // A one- or two-character number that no worded piece carries is an axis tick or a count
         // in passing ("2" on every scale): not worth a reader's time even as a review line.
-        if (p.source === "numericValue" && !hit && p.norm.length < 3) continue;
+        if (VALUE_SOURCES.has(p.source) && !hit && p.norm.length < 3) continue;
         found.push({ ...meta, figure: id, figureName: name, channel: ch.channel, source: p.source, phrase: p.phrase, printed: hit ?? (ch.text.length > 120 ? `${ch.text.slice(0, 120)}…` : ch.text), asLabel: Boolean(hit) });
       }
     }
@@ -396,27 +418,195 @@ function check({ figs, phrases, stem, answerKind, groups = 0, meta }) {
 
     for (const row of found) {
       const named =
-        row.source === "accepted" || row.source === "mcqCorrect" || row.source === "orderItem" || row.source === "step" || row.source === "tableCell" || row.source === "numericValue" || row.source === "equation" || row.source.startsWith("label:");
+        row.source === "accepted" || row.source === "mcqCorrect" || row.source === "orderItem" || row.source === "step" || row.source === "tableCell" || VALUE_SOURCES.has(row.source) || row.source === "finalPoint" || row.source === "stepResult" || row.source === "stepStatement" || row.source === "equation" || row.source.startsWith("label:");
       const keyWordCounts = row.source.startsWith("keyWord:") && (naming || coversEveryGroup);
       if (!(row.asLabel && (named || keyWordCounts))) {
-        reviews.push(row);
+        acc.reviews.push(row);
         continue;
       }
       const reason = ALLOWED.get(`${meta.item}#${meta.part}`);
-      if (reason) allowed.push({ ...row, reason });
-      else leaks.push(row);
+      if (reason) acc.allowed.push({ ...row, reason });
+      else acc.leaks.push(row);
     }
   }
 }
 
-function sweepBundle(file, subject, unit, slug) {
-  let b;
-  try {
-    b = JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch (e) {
-    console.error(`unreadable: ${file}: ${e.message}`);
-    return 0;
+// ---------------------------------------------------------------------------
+// Worked examples: what each mode hides
+// ---------------------------------------------------------------------------
+
+/** A step's or a final answer's text as plain words: maths unwrapped, bold and italics dropped, TeX spelled out. */
+function plainWorking(s) {
+  return String(s ?? "")
+    .replace(/\$\$?([^$]*)\$\$?/g, "$1")
+    .replace(/\\(?:text|mathrm|textrm|mathbf)\s*\{([^}]*)\}/g, "$1")
+    .replace(/\\d?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, "$1/$2")
+    .replace(/\^\s*\{?\\circ\}?/g, "°")
+    .replace(/\\times|\\cdot/g, "×")
+    .replace(/\\div/g, "÷")
+    .replace(/\\[,;:! ]/g, " ")
+    .replace(/\\left|\\right/g, "")
+    .replace(/[{}]/g, "")
+    .replace(/\*\*|__|(?<![a-z])\*(?![a-z])/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * A number and the unit printed after it: "150 s", "40 °C", "28.8 m", "5 m/s²". Only units of measure count, so
+ * a coefficient ("3x") or a count in passing is never read as a value with a unit.
+ */
+const UNIT = String.raw`°\s?C|°|%|m\/s²|m\/s\^2|m\/s|km\/h|cm³|cm²|dm³|m³|m²|mm|cm|km|kg|mg|kJ|kW|kPa|Pa|Hz|mol|ms|min|hours?|minutes?|seconds?|metres?|degrees?|Ω|[smgJWNVAKp](?![a-z])`;
+const VALUE_WITH_UNIT = new RegExp(String.raw`(?<![\w.^])(-?\d+(?:\.\d+)?)(?![\w.^])(?:\s?(${UNIT}))?`, "g");
+/** Every number in a text, with its unit when one follows. */
+function valuesIn(text) {
+  return [...plainWorking(text).matchAll(VALUE_WITH_UNIT)].map((m) => ({ value: m[1], unit: (m[2] ?? "").replace(/\s+/g, " ").trim() }));
+}
+/**
+ * A value worth checking for on a figure: with its unit, or of two digits or more. A bare single digit is on every
+ * method card and axis of a worked example ("2" in "y = 2x + 1"), so on its own it says nothing.
+ */
+const significant = ({ value, unit }) => Boolean(unit) || value.replace(/[^0-9]/g, "").length >= 2;
+const spellings = ({ value, unit }) => (unit ? [`${value} ${unit}`, ...(significant({ value, unit: "" }) ? [value] : [])] : significant({ value, unit }) ? [value] : []);
+
+/** Words that carry no step's meaning on their own, however long. */
+const COMMON = new Set("because therefore between before during always cannot should answer number figure diagram graph values value reading between another second things change changes result results reason reasons method measure measured amount people doesn't nothing another".split(" "));
+
+/**
+ * What a learner writes for one step of a worked example, as phrases the figure must not print.
+ *   input spec   the step is marked against it, so every spelling it accepts (answerPhrases);
+ *   no input     her line is compared with the authored working, so the working's results: every "= value"
+ *                (stepValue for a number, with its unit; stepResult for an expression), a short statement
+ *                of six words or fewer ("Purple."), and, for a longer sentence, its distinctive terms
+ *                (stepTerm: a REVIEW line only, because which word of a sentence is the mark cannot be read
+ *                off the working).
+ * A value counts when it carries its unit or has two digits or more (see `significant`).
+ */
+function stepPhrases(step) {
+  // a bare single digit is on every method card of a worked example; with its unit it still counts
+  if (step.input && typeof step.input === "object") return answerPhrases(step.input).filter((p) => !(p.source === "numericValue" && /^-?\d$/.test(p.norm)));
+  const out = [];
+  const seen = new Set();
+  const add = (source, value) => {
+    // a statement's closing full stop is not part of what she writes ("Purple." is the word purple)
+    const n = norm(String(value).replace(/[.;:,!?]+\s*$/, ""));
+    if (!n || seen.has(`${source}:${n}`) || STOP.has(n) || (n.length < 3 && source !== "stepValue")) return;
+    seen.add(`${source}:${n}`);
+    out.push({ source, phrase: String(value).trim(), norm: n });
+  };
+  for (const raw of String(step.working ?? "").split("\n")) {
+    const line = plainWorking(raw);
+    if (!line || line.startsWith("|")) continue;
+    const rel = line.split(/=|≈/);
+    if (rel.length > 1) {
+      const result = rel[rel.length - 1].replace(/[.;,]\s*$/, "").trim();
+      const values = valuesIn(result);
+      // a number result ("= 150 s") is its value; an expression ("= (x + 3)(x - 2)") is named whole
+      if (values.length && /^[-−]?\d/.test(result)) for (const v of values.slice(0, 1)) for (const s of spellings(v)) add("stepValue", s);
+      else if (result && /[a-z]/i.test(result) && norm(result).length >= 4) add("stepResult", result);
+      continue;
+    }
+    for (const v of valuesIn(line)) if (v.unit) for (const s of spellings(v)) add("stepValue", s); // "60 s" in a sentence, with its unit
+    const words = line.replace(/^\(?[a-z]\)\s*/i, "").split(/\s+/).filter(Boolean);
+    if (words.length <= 6) add("stepStatement", line);
+    else for (const w of line.toLowerCase().match(/[a-z]{6,}/g) ?? []) if (!COMMON.has(w)) add("stepTerm", w);
   }
+  return out;
+}
+
+/**
+ * What the problem mode asks for, read off the final answer: each value that answers something (a number after
+ * "=", a number with its unit, or an answer that is only a number) and each coordinate pair. A coefficient inside
+ * an expression ("y = 3x - 5") is not a value.
+ */
+function finalPhrases(finalAnswer) {
+  const out = [];
+  const seen = new Set();
+  const push = (source, phrase) => {
+    const n = norm(phrase);
+    if (n && !seen.has(n)) out.push({ source, phrase, norm: n }), seen.add(n);
+  };
+  const text = plainWorking(finalAnswer);
+  const picked = [];
+  for (const v of valuesIn(text)) if (v.unit) picked.push(v);
+  for (const m of text.matchAll(/(?:=|≈)\s*(-?\d+(?:\.\d+)?)(?![\w.^])(?!\s*[a-z(])/gi)) picked.push({ value: m[1], unit: "" });
+  if (/^\s*-?\d+(?:\.\d+)?\s*\.?\s*$/.test(text)) picked.push({ value: text.replace(/[\s.]+$/, "").trim(), unit: "" });
+  for (const v of picked) for (const s of spellings(v)) push("finalValue", s);
+  for (const m of text.matchAll(/\(\s*-?\d+(?:\.\d+)?\s*,\s*-?\d+(?:\.\d+)?\s*\)/g)) push("finalPoint", m[0]);
+  return out;
+}
+
+/** Drop a phrase the learner has already been given (the stem, the steps the mode shows): it is not hers to produce. */
+const notGiven = (phrases, given) => {
+  const g = norm(given);
+  return phrases.filter((p) => p.source === "equation" || !contains(g, p.norm));
+};
+
+/**
+ * The worked example's own figure, against what each mode that shows it hides: every step a faded mode leaves
+ * to her (minus the stem and the steps that mode shows), and the final answer for the problem mode (minus the
+ * stem). Its twin figure, against the twin's answer, as before: TwinMode shows only that.
+ */
+function sweepWorkedExample(acc, we, meta) {
+  let figures = 0;
+  // The faded and problem findings are their own tier (WE-LEAK) until the lead promotes it with --we-fatal:
+  // they are real (the figure hands over a step she is asked to write) but most need an unannotated copy of
+  // the figure for those modes, which the schema does not hold yet.
+  const weAcc = { leaks: acc.weLeaks, reviews: [], allowed: acc.allowed };
+  if (we.figure && typeof we.figure === "object") {
+    figures += 1;
+    const steps = objects(we.steps);
+    const byN = new Map(steps.map((s) => [s.n, s]));
+    // a step hidden by both faded modes is checked once, against the least that either mode gives
+    const hidden = new Map();
+    for (const plan of hiddenSteps(we)) {
+      const given = [we.stem, ...steps.filter((s) => s.n <= plan.showSteps).map((s) => s.working)].join("\n");
+      for (const n of plan.supplied) if (!hidden.has(n) || hidden.get(n).length > given.length) hidden.set(n, given);
+    }
+    for (const [n, given] of [...hidden].sort((a, b) => a[0] - b[0])) {
+      const step = byN.get(n);
+      if (!step) continue;
+      check(weAcc, {
+        figs: [we.figure],
+        phrases: notGiven(stepPhrases(step), given),
+        stem: given,
+        answerKind: step.input?.kind ?? "text",
+        groups: (step.input?.keyWords ?? []).length,
+        meta: { ...meta, item: we.id, part: `step ${n}`, kind: "worked example (faded)" },
+      });
+    }
+    check(weAcc, {
+      figs: [we.figure],
+      phrases: notGiven(finalPhrases(we.finalAnswer), we.stem ?? ""),
+      stem: we.stem,
+      answerKind: "numeric",
+      meta: { ...meta, item: we.id, part: "final", kind: "worked example (problem)" },
+    });
+  }
+  // A worked example's figure is annotated by design, so a word it merely shares with a step is everywhere: only a
+  // label that IS a step's term or value is worth a reader's look.
+  acc.reviews.push(...weAcc.reviews.filter((r) => r.asLabel));
+  if (we.twin?.figure) {
+    figures += 1;
+    check(acc, {
+      figs: [we.twin.figure],
+      phrases: answerPhrases(we.twin.answer),
+      stem: we.twin.stem,
+      answerKind: we.twin.answer?.kind,
+      groups: (we.twin.answer?.keyWords ?? []).length,
+      meta: { ...meta, item: we.id, part: "twin", kind: "worked-example twin" },
+    });
+  }
+  return figures;
+}
+
+/**
+ * Sweep one bundle. Pure apart from what it returns: { figures, leaks, weLeaks, reviews, allowed } (weLeaks: a worked example's figure printing what a faded or the problem mode hides).
+ * @param {object} b  a parsed bundle.json
+ * @param {{ subject: string, unit: string, slug: string }} where
+ */
+export function sweepBundle(b, { subject, unit, slug }) {
+  const acc = { leaks: [], weLeaks: [], reviews: [], allowed: [] };
   let figures = 0;
 
   for (const q of objects(b.questions)) {
@@ -424,7 +614,7 @@ function sweepBundle(file, subject, unit, slug) {
     figures += figs.length;
     if (figs.length === 0) continue;
     for (const part of objects(q.parts)) {
-      check({
+      check(acc, {
         figs,
         phrases: answerPhrases(part.answer),
         stem: part.stem,
@@ -439,7 +629,7 @@ function sweepBundle(file, subject, unit, slug) {
     for (const item of objects(set.items)) {
       if (!item.figure) continue;
       figures += 1;
-      check({
+      check(acc, {
         figs: [item.figure],
         phrases: answerPhrases({ options: item.options }),
         stem: item.stem,
@@ -449,24 +639,13 @@ function sweepBundle(file, subject, unit, slug) {
     }
   }
 
-  for (const we of objects(b.workedExamples)) {
-    if (!we.twin?.figure) continue;
-    figures += 1;
-    check({
-      figs: [we.twin.figure],
-      phrases: answerPhrases(we.twin.answer),
-      stem: we.twin.stem,
-      answerKind: we.twin.answer?.kind,
-      groups: (we.twin.answer?.keyWords ?? []).length,
-      meta: { subject, unit, slug, item: we.id, part: "twin", kind: "worked-example twin" },
-    });
-  }
+  for (const we of objects(b.workedExamples)) figures += sweepWorkedExample(acc, we, { subject, unit, slug });
 
   for (const f of objects(b.findTheMistake)) {
     const figs = [f.figure, f.image].filter((x) => x && typeof x === "object");
     if (figs.length === 0) continue;
     figures += figs.length;
-    check({
+    check(acc, {
       figs,
       phrases: strings(f.correction).map((line) => ({ source: "correction", phrase: line, norm: norm(line) })).filter((p) => p.norm.length >= 4),
       stem: f.stem,
@@ -481,21 +660,46 @@ function sweepBundle(file, subject, unit, slug) {
     const phrases = [];
     if (typeof p.answer === "string" && norm(p.answer).length >= 4) phrases.push({ source: "promptAnswer", phrase: p.answer, norm: norm(p.answer) });
     for (const w of strings(p.keyWords)) if (norm(w).length >= 3 && !STOP.has(norm(w))) phrases.push({ source: "promptKeyWord", phrase: w, norm: norm(w) });
-    check({ figs: [p.image], phrases, stem: p.prompt, answerKind: "text", meta: { subject, unit, slug, item: p.id, part: "-", kind: "retrieval prompt" } });
+    check(acc, { figs: [p.image], phrases, stem: p.prompt, answerKind: "text", meta: { subject, unit, slug, item: p.id, part: "-", kind: "retrieval prompt" } });
   }
 
-  return figures;
+  return { figures, ...acc };
 }
 
 // ---------------------------------------------------------------------------
-// Walk packs/<subject>/content/<unit>/<slug>/bundle.json
+// The script: arguments, walk packs/<subject>/content/<unit>/<slug>/bundle.json, report
 // ---------------------------------------------------------------------------
 
+function main() {
+const argv = process.argv.slice(2);
+const units = [];
+const subjects = [];
+let jsonOut = null;
+let quiet = false;
+let weFatal = false;
+for (let i = 0; i < argv.length; i += 1) {
+  const a = argv[i];
+  if (a === "--unit") units.push(String(argv[++i]).toLowerCase());
+  else if (a === "--subject") subjects.push(String(argv[++i]).toLowerCase());
+  else if (a === "--json") jsonOut = argv[++i];
+  else if (a === "--quiet") quiet = true;
+  else if (a === "--we-fatal") weFatal = true;
+  else {
+    console.error(`unknown argument: ${a}`);
+    process.exit(2);
+  }
+}
+
+const PACKS = path.resolve("packs");
 if (!fs.existsSync(PACKS)) {
   console.error("run this from the repository root: packs/ not found");
   process.exit(2);
 }
 
+const leaks = [];
+const weLeaks = [];
+const reviews = [];
+const allowed = [];
 const perUnit = [];
 for (const subject of fs.readdirSync(PACKS)) {
   const contentDir = path.join(PACKS, subject, "content");
@@ -506,6 +710,7 @@ for (const subject of fs.readdirSync(PACKS)) {
     if (!fs.statSync(unitDir).isDirectory()) continue;
     if (units.length && !units.includes(unit.toLowerCase())) continue;
     const before = leaks.length;
+    const beforeWe = weLeaks.length;
     const beforeReview = reviews.length;
     const beforeAllowed = allowed.length;
     let bundles = 0;
@@ -514,9 +719,21 @@ for (const subject of fs.readdirSync(PACKS)) {
       const file = path.join(unitDir, slug, "bundle.json");
       if (!fs.existsSync(file)) continue;
       bundles += 1;
-      figures += sweepBundle(file, subject, unit, slug);
+      let b;
+      try {
+        b = JSON.parse(fs.readFileSync(file, "utf8"));
+      } catch (e) {
+        console.error(`unreadable: ${file}: ${e.message}`);
+        continue;
+      }
+      const r = sweepBundle(b, { subject, unit, slug });
+      figures += r.figures;
+      leaks.push(...r.leaks);
+      weLeaks.push(...r.weLeaks);
+      reviews.push(...r.reviews);
+      allowed.push(...r.allowed);
     }
-    perUnit.push({ subject, unit, bundles, figures, leaks: leaks.length - before, reviews: reviews.length - beforeReview, allowed: allowed.length - beforeAllowed });
+    perUnit.push({ subject, unit, bundles, figures, leaks: leaks.length - before, weLeaks: new Set(weLeaks.slice(beforeWe).map((r) => `${r.item}#${r.part}`)).size, reviews: reviews.length - beforeReview, allowed: allowed.length - beforeAllowed });
   }
 }
 
@@ -545,6 +762,22 @@ for (const [, rows] of groupBy(leaks, (r) => `${r.subject}/${r.unit}/${r.slug}/$
   }
 }
 
+// A worked example's figure in the faded and problem modes: the same figure she read in full, now beside the
+// steps she has to write. One line per figure, then each step (or the final answer) it gives away.
+if (weLeaks.length) {
+  console.log("");
+  console.log(`WE-LEAK  worked examples whose own figure prints what a faded mode or the problem mode asks her to write${weFatal ? "" : " (warnings until --we-fatal)"}:`);
+  for (const [, rows] of groupBy(weLeaks, (r) => `${r.subject}/${r.unit}/${r.slug}/${r.figure}`)) {
+    console.log(`  ${rows[0].subject}/${rows[0].unit}/${rows[0].slug}  figure ${rows[0].figure} — ${rows[0].figureName}`);
+    for (const [, prows] of groupBy(rows, (r) => `${r.item}\t${r.part}`)) {
+      const r0 = prows[0];
+      const words = [...new Set(prows.map((r) => `"${r.phrase}"`))].join(", ");
+      const channels = [...new Set(prows.map((r) => r.channel))].join("/");
+      console.log(`        ${r0.item} (${r0.part === "final" ? "final answer, problem mode" : `${r0.part}, faded`}) <${channels}> names ${words}`);
+    }
+  }
+}
+
 if (allowed.length) {
   console.log("");
   console.log("ALLOWED  reviewed exemptions — the figure has to name these for its question to be answerable:");
@@ -567,8 +800,12 @@ if (!quiet && reviews.length) {
 
 console.log("");
 for (const u of perUnit) {
-  console.log(`${u.subject}/${u.unit}: ${u.bundles} bundle(s), ${u.figures} figure(s) checked, ${u.leaks} leak(s), ${u.allowed} allowed, ${u.reviews} review line(s)`);
+  console.log(`${u.subject}/${u.unit}: ${u.bundles} bundle(s), ${u.figures} figure(s) checked, ${u.leaks} leak(s), ${u.weLeaks} worked-example step(s) printed, ${u.allowed} allowed, ${u.reviews} review line(s)`);
 }
+const weParts = new Set(weLeaks.map((r) => `${r.item}#${r.part}`)).size;
+const weFigures = new Set(weLeaks.map((r) => `${r.subject}/${r.unit}/${r.slug}/${r.figure}`)).size;
+const weItems = new Set(weLeaks.map((r) => r.item)).size;
+const weLine = `worked examples: ${weParts} step(s) or final answer(s) in ${weItems} worked example(s) (${weFigures} figure(s)) printed by the example's own figure in a faded or the problem mode${weFatal ? "" : " (warnings; --we-fatal makes them leaks)"}`;
 const partsLeaking = new Set(leaks.map((r) => `${r.item}#${r.part}`)).size;
 const figuresLeaking = new Set(leaks.map((r) => `${r.subject}/${r.unit}/${r.slug}/${r.figure}`)).size;
 console.log(
@@ -576,10 +813,14 @@ console.log(
     ? `figure-leaks: 0 leaks in ${perUnit.reduce((n, u) => n + u.figures, 0)} figure(s) across ${perUnit.length} unit(s); ${allowed.length} allowed, ${reviews.length} review line(s)`
     : `figure-leaks: ${leaks.length} leak(s) in ${partsLeaking} part(s) across ${figuresLeaking} figure(s) — each one prints an answer its own part asks for`,
 );
+console.log(weLine);
 
 if (jsonOut) {
-  fs.writeFileSync(jsonOut, `${JSON.stringify({ perUnit, leaks, allowed, reviews }, null, 2)}\n`);
+  fs.writeFileSync(jsonOut, `${JSON.stringify({ perUnit, leaks, weLeaks, allowed, reviews }, null, 2)}\n`);
   console.log(`findings → ${jsonOut}`);
 }
 
-process.exit(leaks.length ? 1 : 0);
+process.exit(leaks.length || (weFatal && weLeaks.length) ? 1 : 0);
+}
+
+if (isMain) main();

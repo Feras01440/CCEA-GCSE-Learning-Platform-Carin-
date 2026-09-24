@@ -2,11 +2,11 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { clsx } from "clsx";
+import { useLiveQuery } from "dexie-react-hooks";
 import type { MarkPoint, Part, Question, VerificationLog } from "@/lib/content/schema";
 import {
   AnswerField,
   CheckedPanel,
-  EncouragementCard,
   FeedbackCard,
   Figure,
   Md,
@@ -24,9 +24,9 @@ import { btnOption, btnPrimary, btnSecondary, cardCls, quietFocus } from "@/comp
 import { CompanionLine } from "@/components/companion/CompanionLine";
 import { useCompanionContext } from "@/lib/companion";
 import { recordAttempt, touchSession, type ItemRef } from "@/lib/session/record";
-import { saveReport } from "@/lib/db/reports";
-import { markWorking, methodSteps, workingToLines, type EarnedMark } from "@/lib/marking/working";
-import { reteachFor, solutionLines, type Reteach } from "./reteach";
+import { reportsFor, saveReport } from "@/lib/db/reports";
+import { ladderTotal, markWorking, methodSteps, workingToLines, type EarnedMark } from "@/lib/marking/working";
+import { reteachFor, supportHintFor, supportOffer, type Reteach, type SupportRung } from "./reteach";
 import { WorkingField } from "./WorkingField";
 
 interface Props {
@@ -100,7 +100,7 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
   /** Misses on the part in front of her, which is what brings the companion's support line at two. */
   const [partMisses, setPartMisses] = useState(0);
   /** After two misses on a part she chooses support rather than a third guess (engine item 10.2): the hint she
-   *  asked for stays on the part while she tries again, or the worked solution opens. Cleared at the next part. */
+   *  asked for, shown under the card, and whether she opened the worked solution. Cleared at the next part. */
   const [hintShown, setHintShown] = useState<string | null>(null);
   const [workedOpen, setWorkedOpen] = useState(false);
   /** Unrecognised misses in an exam-style run, kept back until the run is over. */
@@ -164,7 +164,7 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
   }
 
   function submit(raw: string) {
-    const marked = markAnswer(raw, part.answer, { marks: part.marks, commonErrors: part.commonErrors, prompt: part.stem });
+    const marked = markAnswer(raw, part.answer, { marks: part.marks, commonErrors: part.commonErrors, prompt: part.stem, scheme: part.scheme });
     setLastRaw(raw);
     // A banded answer is not marked yet: nothing is recorded until she has placed it on the descriptors.
     if (marked.decision === "qwc-band" && part.answer.kind === "text-long") {
@@ -177,8 +177,8 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
     // common error has usually been paid for that very method — so the higher of them stands, capped
     // at the part's tariff.
     const evidence = !marked.correct && working.trim() ? markWorking(workingToLines(working), part.scheme, part.workedSolution) : null;
-    const accuracyEarned = marked.correct ? marked.marksAwarded : 0;
-    const total = evidence ? Math.min(part.marks, Math.max(marked.marksAwarded, evidence.marks + accuracyEarned)) : marked.marksAwarded;
+    // A wrong answer never collects every mark from its working (ladderTotal; trial audit MK-04).
+    const total = ladderTotal(marked, evidence ? evidence.marks : null, part.marks);
     const r = total > marked.marksAwarded ? { ...marked, marksAwarded: total } : marked;
     setSeen(evidence?.earned ?? []);
     setResult(r);
@@ -280,15 +280,20 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
           // Being asked again is the accented thing on a miss. Where the topic has a twin, the twin
           // takes the card's primary button and another go sits under the teaching; where it has none,
           // another go takes that button instead, so "Next part" is never the accented way out.
-          // Two misses on a part: a third guess teaches nothing, so another go is not offered again until she has
-          // chosen support, a hint or the worked example (engine item 10.2: the EncouragementCard that says so was
-          // mounted nowhere but the dev gallery).
+          // Two misses on a part: a third guess teaches nothing, so the field stays closed and the card offers support
+          // instead: a hint, the worked solution, and a twin as the next attempt (engine item 10.2; programme 0.1). The
+          // offer is the card's own buttons, so the screen keeps one accent-filled control: the EncouragementCard that
+          // first carried it sat its accented hint beside the card's accented Next (it is retired from the runner).
           const offerSupport = state === "live" && !!result && !result.correct && kind !== "exam" && partMisses >= 2;
           const retryInCard = reteach !== null && !onTwin && !offerSupport;
-          const cardTwin = kind === "exam" || offerSupport ? undefined : retryInCard ? retry : onTwin;
-          // The hint not already on the screen ("Another way to see it" shows the first), else the worked solution's
-          // first line: a real next step, never the same sentence twice.
-          const nextHint = p.hints.map((h) => h.trim()).find((h) => h.length > 0 && h !== reteach?.anotherWay) ?? solutionLines(p.workedSolution)[0] ?? null;
+          // A hint the screen is not already showing: never the same sentence twice.
+          const supportHint = offerSupport ? supportHintFor(p, reteach) : null;
+          const offer = offerSupport ? supportOffer({ hint: supportHint !== null, hintShown: hintShown !== null, workedOpen, twin: !!onTwin }) : null;
+          const take = (rung: SupportRung): (() => void) | undefined =>
+            rung === "hint" ? () => setHintShown(supportHint) : rung === "worked" ? () => setWorkedOpen(true) : onTwin;
+          const cardTwin = offer ? (offer.primary ? take(offer.primary) : undefined) : kind === "exam" ? undefined : retryInCard ? retry : onTwin;
+          const cardTwinLabel = offer ? (offer.primary ? SUPPORT_LABEL[offer.primary] : undefined) : reteach ? (retryInCard ? "Try again" : "Try a twin") : undefined;
+          const secondary = offer?.secondary ?? null;
           // The examiner's slot holds only what an examiners' report said: a matched common error the report named,
           // cited by its series (engine item 10.3). A hint is not the examiner's sentence and no longer sits there.
           const examinerLine = state === "live" && result?.source ? "Examiners reported this same error on a real paper." : undefined;
@@ -306,7 +311,6 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
                       {earned[i]} / {p.marks}
                     </p>
                   )}
-                  {state === "live" && !result && !decision && auto && hintShown && <SupportHint hint={hintShown} />}
                   {state === "live" && !result && !decision && auto && (
                     <div className="mt-2">
                       <AnswerField
@@ -360,7 +364,7 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
                         withholdExpected={!!reteach && partMisses < 2}
                         // Nothing re-teaches between the parts of an exam question: the twin waits for the end.
                         onTwin={cardTwin}
-                        twinLabel={reteach ? (retryInCard ? "Try again" : "Try a twin") : undefined}
+                        twinLabel={cardTwinLabel}
                         nextLabel={partIndex + 1 < q.parts.length ? "Next part" : "Done"}
                         // The scheme's codes beside the meter, the points her working was seen to earn, the kind (a
                         // piecewise kind shows its codes unmarked) and the item her review card is under (surfaces 2e).
@@ -369,10 +373,19 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
                         answerKind={p.answer.kind}
                         returnsFor={`${q.id}#${p.id}`}
                         actions={
-                          p.answer.kind === "text" && !result.correct ? (
-                            <button type="button" className={btnSecondary} onClick={() => void selfAward()}>
-                              My answer matches the solution: award {p.marks}/{p.marks}
-                            </button>
+                          (p.answer.kind === "text" && !result.correct) || secondary ? (
+                            <>
+                              {secondary && (
+                                <button type="button" className={btnSecondary} onClick={take(secondary)}>
+                                  {SUPPORT_LABEL[secondary]}
+                                </button>
+                              )}
+                              {p.answer.kind === "text" && !result.correct && (
+                                <button type="button" className={btnSecondary} onClick={() => void selfAward()}>
+                                  My answer matches the solution: award {p.marks}/{p.marks}
+                                </button>
+                              )}
+                            </>
                           ) : undefined
                         }
                       />
@@ -384,16 +397,7 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
                       )}
                       {/* A recognised error has no panel; its second miss gets the support line all the same (companion, lead 14:10). */}
                       {!reteach && partMisses >= 2 && !result.correct && p.hints[0] && <CompanionLine moment="support" context={companion} className="mt-3" />}
-                      {offerSupport && hintShown === null && !workedOpen && (
-                        <div className="mt-3">
-                          <EncouragementCard
-                            misses={partMisses}
-                            onHint={() => setHintShown(nextHint ?? "")}
-                            onWorkedExample={() => (onTwin ? onTwin() : setWorkedOpen(true))}
-                          />
-                        </div>
-                      )}
-                      {offerSupport && hintShown && <SupportHint hint={hintShown} onRetry={retry} />}
+                      {offerSupport && hintShown && <SupportHint hint={hintShown} />}
                       <SolutionDetails workedSolution={p.workedSolution} scheme={p.scheme} open={workedOpen} />
                     </div>
                   )}
@@ -432,8 +436,7 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
 
       {kind === "exam" && verification && (
         <div className="mt-4">
-          {/* Her report is kept with the item so it can be re-checked (engine item 10.4: it was thrown away). */}
-          <CheckedPanel log={verification} onReport={(text) => void saveReport({ itemId: q.id, subject: item.subject, topicSlug: item.topicSlug, text })} />
+          <CheckedWithReports log={verification} itemId={q.id} subject={item.subject} topicSlug={item.topicSlug} />
         </div>
       )}
     </article>
@@ -441,23 +444,39 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
 }
 
 /**
- * The hint she chose after two misses (engine item 10.2): the same quiet block as the re-teach panel, with another
- * go under it. While she tries again it stays above the field, without the button.
+ * The Checked panel with her own reports: what she sends is kept with the item (src/lib/db/reports.ts) and read back
+ * into the panel, so a report visibly survives a reload (engine item 10.4: the handler used to throw it away). The
+ * query only reads, as a liveQuery must; the write is the panel's submit handler.
  */
-function SupportHint({ hint, onRetry }: { hint: string; onRetry?: () => void }) {
+function CheckedWithReports({ log, itemId, subject, topicSlug }: { log: VerificationLog; itemId: string; subject: ItemRef["subject"]; topicSlug: string }) {
+  const sent = useLiveQuery(async () => {
+    try {
+      return await reportsFor(itemId);
+    } catch {
+      return [];
+    }
+  }, [itemId]);
+  return <CheckedPanel log={log} sent={sent ?? []} onReport={(text) => void saveReport({ itemId, subject, topicSlug, text })} />;
+}
+
+/** The words on the card's buttons for each way on after two misses (engine item 10.2). */
+const SUPPORT_LABEL: Record<SupportRung, string> = {
+  hint: "Show me a hint",
+  worked: "Show the worked solution",
+  twin: "Try a twin",
+};
+
+/**
+ * The hint she chose after two misses (engine item 10.2): the same quiet block as the re-teach panel, under the card.
+ * The card's buttons carry what comes next (the twin, or the worked solution), so the block has none of its own.
+ */
+function SupportHint({ hint }: { hint: string }) {
   return (
     <div className="rise-in mt-3 rounded-[var(--radius-sm)] bg-surface-2 p-3.5">
       <p className="text-meta font-medium text-ink-2">A hint</p>
       <p className="mt-1.5 text-ui leading-relaxed">
         <Tex text={hint} />
       </p>
-      {onRetry && (
-        <div className="mt-4">
-          <button type="button" className={btnSecondary} onClick={onRetry}>
-            Try again
-          </button>
-        </div>
-      )}
     </div>
   );
 }

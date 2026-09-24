@@ -5,9 +5,9 @@
  * column and, where the canvas draws one, its figure column. The frame (SlidesRun) owns the header, the track, the
  * one control and the navigation; a card body never navigates.
  */
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { clsx } from "clsx";
-import { InlineSvg, MdInlines, Tex, gateOptions, parseInline, formatExaminerSource, optionLetter } from "@/components/items";
+import { InlineSvg, MdInlines, MissMark, Tex, Tick, keywordsPresent, parseInline, formatExaminerSource, optionLetter } from "@/components/items";
 import { fieldCls } from "@/components/items/ui";
 import { gateStem } from "@/components/topic/lesson-plan";
 import { PhotoFigure } from "@/components/media/PhotoFigure";
@@ -16,6 +16,7 @@ import { VideoEmbed } from "@/components/media/VideoEmbed";
 import type { Card } from "@/lib/slides/cards";
 import { ILLUSTRATIONS, INTERACTIONS, REACTIONS, RecapGlyphFor } from "./enrich";
 import type { TapResult } from "./enrich/afs";
+import type { TapState } from "./enrich/afs-model";
 import { Caption, CardTitle, Eyebrow, Option, Prose, Recess, Stage, Verdict, type OptionState } from "./ui";
 
 export type IdeaCard = Extract<Card, { kind: "idea" }>;
@@ -63,7 +64,8 @@ export function ideaParts(card: IdeaCard, illustration: string | null): CardPart
     eyebrow: card.first ? `Section ${card.section.n} of ${card.section.total}` : `Section ${card.section.n} of ${card.section.total} · ${card.section.title}`,
     title: card.first ? <MdInlines inlines={parseInline(card.section.heading)} /> : null,
     left: <Prose md={card.md} />,
-    right: illustration ? <Illustrated id={illustration} caption={<Caption>A matching pair of brackets divides out. A matching pair of terms does not.</Caption>} /> : null,
+    // The drawing divides out everything both lines share, the bracket and a 2 (audit CT-10); the caption says why.
+    right: illustration ? <Illustrated id={illustration} caption={<Caption>Both lines are multiplied by (x + 5) and by 2, so both divide out. A term never does.</Caption>} /> : null,
   };
 }
 
@@ -104,6 +106,14 @@ export function mediaParts(card: MediaCard): CardParts {
 /* ---------------------------------------------------------------------------------------------------------- */
 /* The gate                                                                                                   */
 
+/**
+ * What happens to an answer, said once per gate card (on the phone in the foot, on the desktop beside the gate). True in
+ * the behaviour: a first miss comes back once before the recap; an answer asked again is not recorded, and the first
+ * answer's review card brings it back either way (audit LD-18, LD-19: "Nothing here is scored" sat beside "Recorded").
+ */
+export const GATE_NOTE = "A miss comes back once, before the recap.";
+export const RETRY_NOTE = "Asked once more. Whatever you choose, it comes back in your reviews.";
+
 export interface GateAnswer {
   answer: string;
   correct: boolean;
@@ -139,12 +149,21 @@ export function GateStem({ prompt }: { prompt: string }) {
   );
 }
 
-export function gateParts(card: GateCard, state: { selected: string | null; answer: GateAnswer | null; onSelect: (option: string) => void; reactionId: string | null }): CardParts {
+export function gateParts(
+  card: GateCard,
+  state: {
+    selected: string | null;
+    answer: GateAnswer | null;
+    onSelect: (option: string) => void;
+    reactionId: string | null;
+    /** The options in the order shown: the lesson's balanced order (src/lib/gate-order.ts), the one Read shows. */
+    options: readonly string[];
+  },
+): CardParts {
   const { gate } = card;
   const { selected, answer, onSelect, reactionId } = state;
-  // The shown order is the seeded shuffle Read shows (engine item 11: the answer is not always A); marking is by the
-  // option picked, so the order changes nothing about what is right.
-  const options = gate.kind === "choice" ? gateOptions(gate) : [];
+  // Marking is by the option picked, so the order changes nothing about what is right.
+  const options = gate.kind === "choice" ? state.options : [];
   const optionState = (opt: string): OptionState => {
     if (!answer) return selected === opt ? "chosen" : "";
     const right = opt.trim() === gate.answer.trim();
@@ -186,7 +205,7 @@ export function gateParts(card: GateCard, state: { selected: string | null; answ
       <Verdict kind={answer.correct ? "ok" : "miss"} explain={gate.explain} meta={meta} reaction={Reaction ? <Reaction hers={answer.answer} correct={answer.correct} /> : undefined} />
     ) : (
       <Caption className="hidden lg:block">
-        {gate.kind === "choice" ? "One tap, or the keys 1 to 3, then Enter." : "Type it, then Enter."} Nothing here is scored; a miss comes back before the recap.
+        {gate.kind === "choice" ? "Choose with a tap or the keys 1 to 3, then Check or Enter." : "Type it, then Check or Enter."} {card.retry ? RETRY_NOTE : GATE_NOTE}
       </Caption>
     ),
   };
@@ -243,9 +262,14 @@ export function calloutParts(card: CalloutCard): CardParts {
   };
 }
 
-export function interactionParts(card: InteractionCard, state: { checked: TapResult | null; checkSignal: number; onChecked: (r: TapResult) => void }): CardParts {
+export function interactionParts(
+  card: InteractionCard,
+  state: { checked: TapResult | null; checkSignal: number; onChecked: (r: TapResult) => void; figure?: TapState; onFigure?: (s: TapState) => void },
+): CardParts {
   const spec = INTERACTIONS[card.id];
-  if (!spec) return { eyebrow: "Try it", title: null, left: <Caption>This figure is not drawn yet.</Caption>, right: null };
+  // A descriptor naming a drawing the registry lacks is caught by the registry test; were one to slip through, the card
+  // says nothing false and the frame lets her past it (SlidesRun: an unregistered interaction never locks the way on).
+  if (!spec) return { eyebrow: sectionEyebrow(card, "Try it"), title: null, left: null, right: null };
   const { Component } = spec;
   return {
     eyebrow: sectionEyebrow(card, "Try it"),
@@ -258,7 +282,7 @@ export function interactionParts(card: InteractionCard, state: { checked: TapRes
     ),
     right: (
       <div className="flex flex-col gap-2.5">
-        <Component checked={state.checked} checkSignal={state.checkSignal} onChecked={state.onChecked} />
+        <Component checked={state.checked} checkSignal={state.checkSignal} onChecked={state.onChecked} state={state.figure} onState={state.onFigure} />
         <Caption className="lg:hidden">{spec.caption}</Caption>
       </div>
     ),
@@ -316,9 +340,26 @@ const KIND_LABEL: Record<RecallCard["prompt"]["kind"], string> = {
   quotation: "Quotation",
 };
 
-export function RecallBody({ card, revealed }: { card: RecallCard; revealed: boolean }) {
-  const [typed, setTyped] = useState("");
+const GRADE_LABEL = { again: "Again", good: "Good", easy: "Easy" } as const;
+
+export interface RecallState {
+  revealed: boolean;
+  /** What she typed, kept by the run so it stands beside the model answer (audit LD-06). */
+  typed: string;
+  onType: (text: string) => void;
+  graded: keyof typeof GRADE_LABEL | null;
+  skipped: boolean;
+}
+
+/**
+ * Try it, then show the answer: what she typed stays on the card, above the model answer, with the scheme's key words
+ * ticked where hers has them, so the comparison is hers to make. Nothing she types is marked or kept beyond this run.
+ */
+export function RecallBody({ card, revealed, typed, onType, graded, skipped }: { card: RecallCard } & RecallState) {
   const p = card.prompt;
+  const keys = p.keyWords ?? [];
+  const mine = typed.trim();
+  const check = revealed && mine && keys.length > 0 ? keywordsPresent(mine, keys) : null;
   return (
     <div className="rounded-[12px] border border-line-2 bg-surface p-5" data-recall={p.id}>
       <p className="font-serif-lesson text-[length:var(--fs-stem)] font-semibold leading-[1.4] text-ink">
@@ -332,35 +373,63 @@ export function RecallBody({ card, revealed }: { card: RecallCard; revealed: boo
           <textarea
             id={`slide-recall-${p.id}`}
             value={typed}
-            onChange={(e) => setTyped(e.target.value)}
+            onChange={(e) => onType(e.target.value)}
             rows={2}
             autoComplete="off"
             spellCheck={false}
             className={clsx(fieldCls, "font-sans text-[16px]")}
           />
+          {skipped && <p className="mt-2 font-sans text-[14px] text-ink-2">Skipped. Nothing was recorded.</p>}
         </div>
       ) : (
-        <div className="motion-reveal mt-4 border-t border-line pt-3.5" role="status">
-          <p className="font-sans text-[13px] font-medium text-ink-2">Answer</p>
-          <div className="mt-1.5 font-serif-lesson text-[17px] leading-[1.45] text-ink">
-            <Tex text={p.answer} />
-          </div>
-          {p.keyWords && p.keyWords.length > 0 && (
-            <p className="mt-2.5 font-sans text-[13px] text-ink-2">
-              <span className="font-medium text-ink">Key words the scheme rewards:</span> {p.keyWords.join("; ")}.
-            </p>
+        <div className="motion-reveal mt-4 flex flex-col gap-3 border-t border-line pt-3.5" role="status">
+          {mine && (
+            <div data-typed>
+              <p className="font-sans text-[13px] font-medium text-ink-2">You wrote</p>
+              <p className="mt-1 whitespace-pre-wrap break-words font-sans text-[16px] leading-[1.45] text-ink">{mine}</p>
+            </div>
           )}
+          <div data-model-answer>
+            <p className="font-sans text-[13px] font-medium text-ink-2">The answer</p>
+            <div className="mt-1 font-serif-lesson text-[17px] leading-[1.45] text-ink">
+              <Tex text={p.answer} />
+            </div>
+          </div>
+          {keys.length > 0 &&
+            (check ? (
+              <div>
+                <ul className="flex flex-wrap gap-1.5" aria-label="The key words, and whether yours has each">
+                  {keys.map((k) => {
+                    const present = check.present.includes(k);
+                    return (
+                      <li key={k} className={clsx("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-sans text-[13px]", present ? "border-ink-3 text-ink" : "border-line-3 text-ink-2")}>
+                        {present ? <Tick size={12} label="in yours" /> : <MissMark size={12} label="not in yours" />}
+                        <Tex text={k} />
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="mt-1.5 font-sans text-[13px] text-ink-2">{check.all ? "Every key word the scheme rewards is in yours." : "The scheme rewards each of these words."}</p>
+              </div>
+            ) : (
+              <p className="font-sans text-[13px] text-ink-2">
+                <span className="font-medium text-ink">Key words the scheme rewards:</span> {keys.join("; ")}.
+              </p>
+            ))}
+          {graded && <p className="font-sans text-[14px] text-ink-2">Graded {GRADE_LABEL[graded]}. It comes back in your reviews.</p>}
         </div>
       )}
     </div>
   );
 }
 
-export function recallParts(card: RecallCard, revealed: boolean): CardParts {
+export function recallParts(card: RecallCard, state: RecallState): CardParts {
   return {
     eyebrow: `Recall · ${card.index} of ${card.total} · ${KIND_LABEL[card.prompt.kind]}`,
     title: null,
-    left: <RecallBody card={card} revealed={revealed} />,
-    right: revealed ? null : <Caption className="hidden lg:block">Say it, then show the answer and grade yourself: Again, Good or Easy says when it comes back.</Caption>,
+    left: <RecallBody card={card} {...state} />,
+    right: state.revealed ? null : (
+      <Caption className="hidden lg:block">Say it or type it, then show the answer. Grading is yours to choose: Skip moves on and records nothing.</Caption>
+    ),
   };
 }

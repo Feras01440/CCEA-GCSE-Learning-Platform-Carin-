@@ -192,24 +192,47 @@ export function rowanName(state: Pick<CompanionState, "name"> | null | undefined
 
 // ---------------------------------------------------------------------------
 // Dexie helpers. Every one of them is safe to call when the store is empty.
+//
+// Every change to the state row is one read-write transaction (changeCompanionState): the row is read, changed and
+// written back with nothing able to land in between. Several writers share the row (Today's seed, the Letter's day,
+// the line just said, her choices in Settings), and until 25 September each helper read in one transaction and wrote
+// in another, so a write that landed in the gap was overwritten with the stale copy: two quick choices in Settings
+// kept only the second, and a line's record could undo her choice. None of this is called inside a liveQuery (a
+// write there throws); the queriers read through live.ts's readCompanionState.
 // ---------------------------------------------------------------------------
+
+/** The stored row over the defaults, so a row written before a field existed reads that field's default. */
+function withDefaults(row: CompanionState, now: Date): CompanionState {
+  return { ...freshState(now), ...row, id: COMPANION_STATE_ID };
+}
+
+/**
+ * Reads the row (or a fresh one, if there is none), applies `change` and writes the result, in one transaction.
+ * `change` returns the row unchanged (the same object) when there is nothing to write; a missing row is still seeded
+ * then, so plain mode's fortnight starts on the first real open.
+ */
+async function changeCompanionState(now: Date, change: (current: CompanionState) => CompanionState): Promise<CompanionState> {
+  const db = getDB();
+  return db.transaction("rw", db.companionState, async () => {
+    const row = await db.companionState.get(COMPANION_STATE_ID);
+    const current = row ? withDefaults(row, now) : freshState(now);
+    const next = change(current);
+    if (next !== current || !row) await db.companionState.put(next);
+    return next;
+  });
+}
 
 /** The state row, seeding it on first read so plain mode's fortnight starts the day she upgrades. */
 export async function getCompanionState(now = new Date()): Promise<CompanionState> {
-  const db = getDB();
-  const row = await db.companionState.get(COMPANION_STATE_ID);
-  if (row) return { ...freshState(now), ...row, id: COMPANION_STATE_ID };
-  const seeded = freshState(now);
-  await db.companionState.put(seeded);
-  return seeded;
+  return changeCompanionState(now, (current) => current);
 }
 
 export async function updateCompanionState(patch: Partial<Omit<CompanionState, "id">>, now = new Date()): Promise<CompanionState> {
-  const current = await getCompanionState(now);
-  const next: CompanionState = { ...current, ...patch, id: COMPANION_STATE_ID, updatedAt: now };
-  next.recent = pruneRecent(next.recent, now);
-  await getDB().companionState.put(next);
-  return next;
+  return changeCompanionState(now, (current) => {
+    const next: CompanionState = { ...current, ...patch, id: COMPANION_STATE_ID, updatedAt: now };
+    next.recent = pruneRecent(next.recent, now);
+    return next;
+  });
 }
 
 /** She renamed it on the first Letter. An empty name returns it to the default. */
@@ -227,9 +250,10 @@ export async function markLetterSeen(now = new Date()): Promise<CompanionState> 
  * once; a later offer of the same Letter never moves the date.
  */
 export async function markLetterOffered(now = new Date()): Promise<CompanionState> {
-  const current = await getCompanionState(now);
-  if (current.letterOfferedOn) return current;
-  return updateCompanionState({ letterOfferedOn: todayISOFrom(now) }, now);
+  return changeCompanionState(now, (current) => {
+    if (current.letterOfferedOn) return current;
+    return { ...current, letterOfferedOn: todayISOFrom(now), recent: pruneRecent(current.recent, now), updatedAt: now };
+  });
 }
 
 /** The voice off, or on again. Off costs her nothing else in the product. */
@@ -250,9 +274,11 @@ export async function setPlainMode(on: boolean, now = new Date()): Promise<Compa
 
 /** Records that a line was used, so the selector varies without repeating inside the cooldown. */
 export async function noteLineShown(lineId: string, now = new Date()): Promise<void> {
-  const current = await getCompanionState(now);
-  const recent = pruneRecent([{ id: lineId, at: now.toISOString() }, ...current.recent.filter((r) => r.id !== lineId)], now);
-  await getDB().companionState.put({ ...current, recent, updatedAt: now });
+  await changeCompanionState(now, (current) => ({
+    ...current,
+    recent: pruneRecent([{ id: lineId, at: now.toISOString() }, ...current.recent.filter((r) => r.id !== lineId)], now),
+    updatedAt: now,
+  }));
 }
 
 /** Everything she left, newest first. This is the list Settings shows her. */
@@ -283,17 +309,21 @@ export async function deleteNote(id: number): Promise<void> {
  */
 export async function forgetEverything(now = new Date()): Promise<void> {
   const db = getDB();
-  const current = await getCompanionState(now);
-  await db.companionNotes.clear();
-  await db.companionState.put({
-    ...freshState(now),
-    plainModeUntil: current.plainModeUntil,
-    silenced: current.silenced,
-    figure: current.figure,
-    letterSeen: current.letterSeen,
-    letterOfferedOn: current.letterOfferedOn,
-    name: null,
-    recent: [],
-    updatedAt: now,
+  // One transaction over both stores: the notes go and the row is rebuilt from what it says at that moment.
+  await db.transaction("rw", db.companionNotes, db.companionState, async () => {
+    const row = await db.companionState.get(COMPANION_STATE_ID);
+    const current = row ? withDefaults(row, now) : freshState(now);
+    await db.companionNotes.clear();
+    await db.companionState.put({
+      ...freshState(now),
+      plainModeUntil: current.plainModeUntil,
+      silenced: current.silenced,
+      figure: current.figure,
+      letterSeen: current.letterSeen,
+      letterOfferedOn: current.letterOfferedOn,
+      name: null,
+      recent: [],
+      updatedAt: now,
+    });
   });
 }
