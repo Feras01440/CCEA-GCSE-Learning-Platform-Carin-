@@ -114,6 +114,18 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const [answeredBefore, setAnsweredBefore] = useState<Set<string> | null>(null);
   const [startedAt] = useState(() => Date.now());
   const [restored, setRestored] = useState(false);
+  // Writes to the device still in flight (a gate's attempt, a recall grade): the close waits for them before it reads
+  // what returns, so it counts the card graded a moment before it appeared.
+  const [writing, setWriting] = useState(0);
+  const write = useCallback((job: () => Promise<unknown>) => {
+    setWriting((n) => n + 1);
+    void job()
+      .then(() => touchSession(subject))
+      .catch(() => {
+        // Storage unavailable: the answer still shows; nothing else to do on a study screen.
+      })
+      .finally(() => setWriting((n) => n - 1));
+  }, [subject]);
 
   const cards = useMemo(() => withRetries(deck.cards, missed), [deck.cards, missed]);
   const N = cards.length;
@@ -254,13 +266,9 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     if (!correct) setMissed((m) => (m.includes(id) ? m : [...m, id]));
     if (!before) {
       setAnsweredBefore((s) => new Set([...(s ?? []), id]));
-      void recordAttempt({ item: { subject, unit, topicSlug: slug, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct, answerRaw: raw })
-        .then(() => touchSession(subject))
-        .catch(() => {
-          // Storage unavailable: the answer still shows; nothing else to do on a study screen.
-        });
+      write(() => recordAttempt({ item: { subject, unit, topicSlug: slug, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct, answerRaw: raw }));
     }
-  }, [answeredBefore, card, gateAnswer, selected, slug, subject, topicId, unit]);
+  }, [answeredBefore, card, gateAnswer, selected, slug, subject, topicId, unit, write]);
 
   /* ---- the recall card -------------------------------------------------------------------------------- */
   const grade = useCallback(
@@ -276,14 +284,10 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
         delete rest[card.key];
         return rest;
       });
-      void recordRecallGrade({ subject, unit, topicSlug: slug, id: card.prompt.id }, g, at)
-        .then(() => touchSession(subject))
-        .catch(() => {
-          // As above.
-        });
+      write(() => recordRecallGrade({ subject, unit, topicSlug: slug, id: card.prompt.id }, g, at));
       go(index + 1, "forward");
     },
-    [card, go, graded, index, revealed, slug, subject, unit, when],
+    [card, go, graded, index, revealed, slug, subject, unit, when, write],
   );
   const skip = useCallback(() => {
     if (card.kind !== "recall" || graded[card.key]) return;
@@ -549,7 +553,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     return (
       <div data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
         <div ref={cardRef} key={index} className={clsx("min-h-0 flex-1 overflow-y-auto", motionCls)} data-body data-card="close">
-          <SlidesClose subject={subject} unit={unit} slug={slug} title={title} displayTitle={displayTitle} count={count} startedAt={startedAt} facts={facts} />
+          <SlidesClose subject={subject} unit={unit} slug={slug} title={title} displayTitle={displayTitle} count={count} startedAt={startedAt} facts={facts} settled={writing === 0} />
         </div>
       </div>
     );

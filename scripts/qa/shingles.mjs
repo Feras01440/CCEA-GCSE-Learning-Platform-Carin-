@@ -33,6 +33,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { allowEntries, allowedBy as allowEntryFor, verdict } from "./shingles-allow.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const PACKS = path.join(ROOT, "packs");
@@ -196,16 +197,14 @@ const ALLOW = (() => {
   const file = path.join(ROOT, "scripts", "qa", "shingles.allow.json");
   if (!fs.existsSync(file)) return [];
   try {
-    return Object.entries(JSON.parse(fs.readFileSync(file, "utf8")))
-      .filter(([k]) => !k.startsWith("$"))
-      .map(([statement, reason]) => ({ statement, reason, normalised: words(statement).join(" ") }));
+    return allowEntries(JSON.parse(fs.readFileSync(file, "utf8")));
   } catch {
     return [];
   }
 })();
 
-/** The allow-list entry a run sits inside, or null. */
-const allowedBy = (seq) => ALLOW.find((a) => a.normalised.includes(seq)) ?? null;
+/** The allow-list entry a run sits inside (a leading "because" or "that" allowed), or null: shingles-allow.mjs. */
+const allowedBy = (seq) => allowEntryFor(seq, ALLOW);
 
 /**
  * Is this run part of an instruction?
@@ -307,10 +306,12 @@ const allowed = [];
 for (const [seq, h] of hits) {
   const at = ours.get(seq);
   const allow = allowedBy(seq);
-  if (allow && h.schemes.size === 0 && h.reports.size === 0) {
-    // a named theorem, law or definition in its standard form: common language, not the board's
-    allowed.push({ sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, papers: h.papers.size, statement: allow.statement, reason: allow.reason });
-  } else if (h.schemes.size > 0 || h.reports.size > 0) {
+  const kind = verdict({ papers: h.papers.size, schemes: h.schemes.size, reports: h.reports.size }, allow, () => isCommandMaterial(at, seq), STOCK_PAPERS);
+  if (kind === "allowed") {
+    // a named theorem, law or definition in its standard form: common language, not the board's, even where a
+    // mark scheme prints it as the reason to give (shingles-allow.mjs)
+    allowed.push({ sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, papers: h.papers.size, schemes: h.schemes.size + h.reports.size, statement: allow.statement, reason: allow.reason });
+  } else if (kind === "scheme-or-report") {
     breaches.push({
       kind: "scheme-or-report",
       sequence: seq,
@@ -318,9 +319,10 @@ for (const [seq, h] of hits) {
       sources: [...h.schemes, ...h.reports].slice(0, 3),
       papers: h.papers.size,
     });
-  } else if (h.papers.size >= STOCK_PAPERS) {
-    if (isCommandMaterial(at, seq)) stock.push({ sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, papers: h.papers.size });
-    else breaches.push({ kind: "stimulus-copy", sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, sources: [...h.papers].slice(0, 3), papers: h.papers.size });
+  } else if (kind === "stock") {
+    stock.push({ sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, papers: h.papers.size });
+  } else if (kind === "stimulus-copy") {
+    breaches.push({ kind: "stimulus-copy", sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, sources: [...h.papers].slice(0, 3), papers: h.papers.size });
   } else {
     breaches.push({ kind: "paper-copy", sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, sources: [...h.papers], papers: h.papers.size });
   }

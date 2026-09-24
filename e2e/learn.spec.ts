@@ -1004,6 +1004,20 @@ test.describe("The lesson's end: one accent-filled control on the screen", () =>
       }
     });
   }
+
+  test("the last Continue places the last segment, and a reload keeps the lesson finished", async ({ page }) => {
+    // Build 7 (audit CQ-15): after a reload the last section went back to "here" on a lesson she had finished.
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await openTrial(page);
+    await walkToLessonEnd(page);
+    const segments = page.locator("[data-read-track] [data-segment]");
+    await page.locator("#note [data-finish]").click();
+    await expect(page.locator("#examples")).toBeFocused();
+    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(7).fill("done"));
+    await page.reload();
+    await expect(page.locator("#note article")).toBeVisible();
+    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(7).fill("done"));
+  });
 });
 
 /**

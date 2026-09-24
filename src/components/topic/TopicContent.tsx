@@ -50,6 +50,7 @@ import { focusLanding } from "@/components/shell/input-modality";
 import type { Subject } from "@/lib/content/taxonomy";
 import { REACTIONS } from "@/components/slides/enrich";
 import { enrichmentFor } from "@/lib/slides/enrichment";
+import { recordRecallGrade } from "@/lib/slides/returns";
 
 interface Props {
   subject: Subject;
@@ -304,10 +305,14 @@ function planFor(bundle: ShippedBundle, displayTitle: string | undefined, refere
 
 type Plan = ReturnType<typeof planFor>;
 
-/** A retrieval prompt graded: an attempt, and the session touched. */
+/**
+ * A retrieval prompt graded: the grade she chose is the one stored, as the Slides recall card and the review inbox store
+ * it (src/lib/slides/returns.ts recordRecallGrade; audit CQ-02). A first grade makes the prompt's card with that grade
+ * (Easy is Easy, not Good), a later grade moves the card on, one attempt row either way; then the session is touched.
+ */
 function onPromptFor(item: Omit<ItemRef, "id">, subject: Subject) {
   return (p: RetrievalPrompt) => async (grade: PromptGrade) => {
-    await recordAttempt({ item: { ...item, id: p.id }, itemKind: "prompt", correct: grade !== "again" });
+    await recordRecallGrade({ ...item, id: p.id }, grade, new Date());
     await touchSession(subject);
   };
 }

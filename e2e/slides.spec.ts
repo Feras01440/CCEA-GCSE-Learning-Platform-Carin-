@@ -713,10 +713,16 @@ test.describe("Slides: the whole deck and the close", () => {
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("!");
     expect(await page.locator("[data-card='close'] :is(input, textarea, [role='radio'])").count()).toBe(0);
     await expect(page.locator("[data-card='close']")).toContainText("What returns");
+    // Every card counted, with no reason that is not one (audit CT-07, LD-05): the run's nine cards come back tonight.
+    await expect(page.locator("[data-returns] li").first()).toHaveText("Later today · 7 checks and 2 recall cards from Simplifying algebraic fractions.");
+    // And so Rowan does not say there is nothing else to do (the library's own line for a night with nothing due).
+    await expect(page.locator("[data-companion='session-close']")).not.toContainText("nothing else to do");
     expect(await accentControls(page)).toEqual(["Done for tonight"]);
     expect(await animations(page)).toBe(0);
+    // Practise this topic goes to the topic page's Practice stage (the anchor the topic page scrolls to once it renders).
+    await expect(page.locator("[data-exit='practise']")).toHaveAttribute("href", `${TOPIC}#practice`);
 
-    // The records: seven gates once each with Read's ids, the miss on g2 kept as the record, four prompts.
+    // The records: seven gates once each with Read's ids, the miss on g2 kept as the record, two prompts.
     const rows = await attempts(page);
     const gateRows = rows.filter((r) => r.itemId.includes("#gate:"));
     expect(gateRows.map((r) => r.itemId.split("#gate:")[1]).sort()).toEqual(["g1", "g2", "g3", "g4", "g5", "g6", "g7"]);
