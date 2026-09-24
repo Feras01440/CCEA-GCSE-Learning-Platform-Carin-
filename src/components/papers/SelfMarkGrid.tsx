@@ -134,33 +134,48 @@ export function SelfMarkGrid({
 
   return (
     <div>
-      {/* `relative`: the screen-reader-only header text is absolutely positioned, and without a positioned scroller it
-          escaped the clip and scrolled the whole page sideways on a phone (554 px wide at 390, found 23 Sep 2026). */}
-      <div className="relative overflow-x-auto rounded-[var(--radius)] border border-line">
-        <table className="w-full min-w-[520px] border-collapse text-ui">
+      {/* One table, two layouts by CSS alone (pass 3, 24 Sep 2026). From `sm` it is a table that scrolls inside this box
+          if it must (520 px minimum; `relative` keeps the screen-reader-only header inside the clip, which once scrolled
+          the whole page sideways at 390). Below `sm` there is no minimum width and no scroller: each question is one
+          block, a grid with named areas (the question and its page link and Remove on the first line, the two inputs
+          under their own labels on the second, the lost marks and their tags on the third, left out until a mark is
+          entered), so nothing on a phone is ever off screen. The table's meaning is kept for a screen reader by the
+          explicit roles, which hold even where a cell's display is no longer table-cell. */}
+      <div className="relative rounded-[var(--radius)] border border-line sm:overflow-x-auto">
+        <table role="table" className="w-full border-collapse text-ui max-sm:block sm:min-w-[520px]">
           <caption className="sr-only">Marks per question</caption>
-          <thead>
-            <tr className="border-b border-line bg-surface-2 text-left text-meta font-medium text-ink-2">
-              <th scope="col" className="px-3 py-2">Q</th>
-              <th scope="col" className="px-3 py-2">Page</th>
-              <th scope="col" className="px-3 py-2 text-center">Available</th>
-              <th scope="col" className="px-3 py-2 text-center">Awarded</th>
-              <th scope="col" className="px-3 py-2">Lost</th>
-              <th scope="col" className="px-2 py-2">
+          <thead role="rowgroup" className="max-sm:sr-only">
+            <tr role="row" className="border-b border-line bg-surface-2 text-left text-meta font-medium text-ink-2">
+              <th role="columnheader" scope="col" className="px-3 py-2">Q</th>
+              <th role="columnheader" scope="col" className="px-3 py-2">Page</th>
+              <th role="columnheader" scope="col" className="px-3 py-2 text-center">Available</th>
+              <th role="columnheader" scope="col" className="px-3 py-2 text-center">Awarded</th>
+              <th role="columnheader" scope="col" className="px-3 py-2">Lost</th>
+              <th role="columnheader" scope="col" className="px-2 py-2">
                 <span className="sr-only">Remove</span>
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody role="rowgroup" className="max-sm:block">
             {rows.map((row, i) => {
               const lost = row.awarded !== null && row.available !== null ? Math.max(0, row.available - row.awarded) : null;
               return (
-                <tr key={row.id} className="border-b border-line align-top last:border-b-0">
-                  <th scope="row" className="px-3 py-2 text-left font-medium">
-                    <span className="tnum block pt-3">{row.q}</span>
+                <tr
+                  key={row.id}
+                  role="row"
+                  className="border-b border-line align-top last:border-b-0 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] max-sm:items-start max-sm:gap-x-3 max-sm:gap-y-2 max-sm:px-3 max-sm:py-3 max-sm:[grid-template-areas:'q_page_remove'_'available_awarded_.'_'lost_lost_lost']"
+                >
+                  <th role="rowheader" scope="row" className="p-0 text-left font-medium sm:px-3 sm:py-2 max-sm:[grid-area:q]">
+                    {/* "Question 2" on the phone, where the Q column header is no longer visible; "2" under it on the desktop. */}
+                    <span className="tnum block sm:pt-3">
+                      <span className="sm:hidden">Question </span>
+                      {row.q}
+                    </span>
                     {row.label && <span className="block max-w-[14ch] text-meta font-normal leading-tight text-ink-2">{row.label}</span>}
                   </th>
-                  <td className="px-3 py-2">
+                  {/* On the phone the page link and Remove are 44 px tap boxes beside a 24 px line of text: lifted 10 px so
+                      their centres sit on the question's first line, inside the block's own 12 px of padding. */}
+                  <td role="cell" className="p-0 sm:px-3 sm:py-2 max-sm:-mt-2.5 max-sm:[grid-area:page]">
                     {row.page ? (
                       <a
                         href={pdfPageHref(paperUrl, row.page)}
@@ -172,10 +187,11 @@ export function SelfMarkGrid({
                         p. <span className="tnum">{row.page}</span> <ExternalLink size={13} aria-hidden />
                       </a>
                     ) : (
-                      <span className="block pt-3 text-ink-2">—</span>
+                      <span className="block text-ink-2 sm:pt-3">—</span>
                     )}
                   </td>
-                  <td className="w-24 px-2 py-2">
+                  <td role="cell" className="p-0 sm:w-24 sm:px-2 sm:py-2 max-sm:[grid-area:available]">
+                    <span className="sm:hidden mb-1 block text-meta text-ink-2">Available</span>
                     <input
                       className={inputClass}
                       inputMode="numeric"
@@ -185,7 +201,8 @@ export function SelfMarkGrid({
                       onChange={(e) => setAvailable(row, e.target.value)}
                     />
                   </td>
-                  <td className="w-24 px-2 py-2">
+                  <td role="cell" className="p-0 sm:w-24 sm:px-2 sm:py-2 max-sm:[grid-area:awarded]">
+                    <span className="sm:hidden mb-1 block text-meta text-ink-2">Awarded</span>
                     <input
                       ref={(el) => {
                         if (el) inputs.current.set(row.id, el);
@@ -200,13 +217,13 @@ export function SelfMarkGrid({
                       onKeyDown={(e) => onKey(e, i)}
                     />
                   </td>
-                  <td className="px-3 py-2">
+                  <td role="cell" className={clsx("p-0 sm:px-3 sm:py-2 max-sm:[grid-area:lost]", lost === null && "max-sm:hidden")}>
                     {lost === null ? (
-                      <span className="block pt-3 text-ink-2">—</span>
+                      <span className="block text-ink-2 sm:pt-3">—</span>
                     ) : lost === 0 ? (
-                      <span className="block pt-3 text-ink-2">full marks</span>
+                      <span className="block text-ink-2 sm:pt-3">full marks</span>
                     ) : (
-                      <div className="pt-1">
+                      <div className="sm:pt-1">
                         <span className="tnum inline-block rounded-md border border-line-2 px-2 py-1 text-meta font-medium">−{lost}</span>
                         <div className="mt-1.5 flex flex-wrap gap-1" role="group" aria-label={`Question ${row.q}: tag the ${lost} lost mark${lost === 1 ? "" : "s"}`}>
                           {MARK_TAGS.map((t) => {
@@ -234,7 +251,7 @@ export function SelfMarkGrid({
                       </div>
                     )}
                   </td>
-                  <td className="px-2 py-2">
+                  <td role="cell" className="p-0 sm:px-2 sm:py-2 max-sm:-mt-2.5 max-sm:[grid-area:remove] max-sm:justify-self-end">
                     <button
                       type="button"
                       onClick={() => removeRow(row.id)}

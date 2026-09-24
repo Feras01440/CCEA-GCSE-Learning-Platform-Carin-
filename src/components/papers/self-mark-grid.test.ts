@@ -17,12 +17,14 @@ import { SelfMarkGrid, gridTotals, rowsFromTemplate, type GridRow } from "./Self
 const template: QuestionTemplate = {
   source: "page-map",
   verified: true,
+  pageCount: 8,
+  formulaSheetPage: null,
   rows: [
     { q: "1", available: 3, page: 2 },
     { q: "2", available: 5, page: 3, label: "Bounds" },
     { q: "3", available: 4, page: 4 },
   ],
-} as QuestionTemplate;
+};
 
 function render(rows: GridRow[]): string {
   return renderToStaticMarkup(createElement(SelfMarkGrid, { rows, onChange: () => {}, paperMarks: 12, paperUrl: "https://ccea.org.uk/x.pdf", template }));
@@ -42,7 +44,7 @@ describe("the marking grid below sm", () => {
     expect(html).toMatch(/<table[^>]*class="[^"]*max-sm:block/);
     expect(html).toMatch(/<thead[^>]*class="[^"]*max-sm:sr-only/);
     expect(html).toMatch(/<tbody[^>]*class="[^"]*max-sm:block/);
-    const rows = html.match(/<tr[^>]*role="row"[^>]*>/g) ?? [];
+    const rows = html.split("<tbody")[1].match(/<tr[^>]*role="row"[^>]*>/g) ?? [];
     expect(rows).toHaveLength(3);
     for (const tr of rows) {
       expect(tr).toContain("max-sm:grid");

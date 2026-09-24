@@ -87,6 +87,35 @@ test.describe("Today", () => {
     await expectNoHorizontalOverflow(page);
   });
 
+  test("the eyebrow is the device's own date, in the locator's style, with no hydration error", async ({ page }) => {
+    // The static export is rendered once at build time; the date must come from her device when the page runs (seen
+    // 24 Sep 2026: "Wednesday 23 September" on a Thursday). During hydration the server snapshot is a blank of the
+    // same height, so React never reports a mismatch and nothing shifts when the date arrives.
+    const problems: string[] = [];
+    page.on("pageerror", (e) => problems.push(`pageerror: ${e.message}`));
+    page.on("console", (m) => {
+      if ((m.type() === "error" || m.type() === "warning") && /hydrat|did not match|Minified React error/i.test(m.text())) problems.push(`console: ${m.text()}`);
+    });
+
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
+    const eyebrow = page.locator("#main header p").first();
+    const expected = await page.evaluate(() => new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }));
+    expect(expected).toMatch(/^[A-Z][a-z]+day \d{1,2} [A-Z][a-z]+$/);
+    await expect(eyebrow).toHaveText(expected);
+
+    // The locator style (PageHeader's locatorCls): 13 px, uppercase, one line.
+    const style = await eyebrow.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { fontSize: cs.fontSize, transform: cs.textTransform, height: el.getBoundingClientRect().height, lineHeight: parseFloat(cs.lineHeight) };
+    });
+    expect(style.fontSize).toBe("13px");
+    expect(style.transform).toBe("uppercase");
+    expect(style.height).toBeLessThanOrEqual(style.lineHeight + 1);
+
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
+
   test("when nothing is back, the tile and Rowan never say the same sentence", async ({ page }) => {
     // The first Today after first run carries the Letter, and Rowan's arrival line waits for it; once the Letter is
     // read, the next open has the tile's fact and Rowan's own line under it (found 24 Sep 2026: both said "Nothing
