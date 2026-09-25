@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculations, describeFailure, explains, isSeeHeading, proseWords, shows, teachShowCheck, workedSteps } from "../../../scripts/qa/teach-show-check.mjs";
+import { calculations, describeFailure, inlineMaths, explains, isSeeHeading, proseWords, shows, teachShowCheck, workedSteps } from "../../../scripts/qa/teach-show-check.mjs";
 
 /**
  * The owner's ruling of 24 Sep 2026 ("Teach before you check", STANDARDS.md; the Depth standard in
@@ -100,6 +100,8 @@ describe("teach → show → check", () => {
     expect(shows(reflex)).toBe(true);
     expect(shows(p("Take moments about the pivot: $400 \\times 0.9 = 360$ N m on the left."))).toBe(true);
     expect(shows(p("The mean is $\\frac{60}{10} = 6$ daisies per quadrat."))).toBe(true);
+    // m7/adding-and-multiplying-probabilities: \tfrac is a fraction too
+    expect(shows(p("Red then green: $\\tfrac{2}{5} \\times \\tfrac{1}{5} = \\tfrac{2}{25}$."))).toBe(true);
     // a formula, or a condition, is not a calculation carried out
     expect(shows(p("The straight line is $y = mx + c$, where $m$ is the gradient."))).toBe(false);
     expect(shows(p("Its area is $A = \\pi r^2$ for a circle of radius $r$."))).toBe(false);
@@ -240,8 +242,29 @@ describe("teach → show → check", () => {
       // worked lines set as display maths, bracket form and aligned form
       expect(shows(p("\\[\\frac{4.8}{24} = 0.2\\]\n\\[0.2 \\times 40 = 8.0\\]"))).toBe(true);
       expect(calculations("$$\\begin{aligned} 2 \\times 3 &= 6 \\\\ 6 + 4 &= 10 \\end{aligned}$$")).toBe(2);
+      // the long-maths check (lesson-v2) measures inline segments only: display maths scrolls, which is its fix
+      expect(inlineMaths("$$\\ce{2C3H7OH + 9O2 -> 6CO2 + 8H2O}$$ and $x = 2$")).toEqual(["x = 2"]);
+      expect(inlineMaths("\\[\\frac{4.8}{24} = 0.2\\] then \\(y\\) and $z$")).toEqual(["y", "z"]);
       // prose between display lines is prose, not maths
       expect(proseWords("\\[\\frac{4.8}{24} = 0.2\\] so the moles are known")).toBe(5);
+    });
+
+    it("reads step numbers in every form authors write them: 1. 1) 1: Step 1. Step 1: **Step 1: title.** Step one (P2 C author)", () => {
+      const lines = (a: string, b: string) => `Then a drought leaves only large, hard seeds.\n${a} Birds with deeper beaks can crack them, so they survive.\n${b} They reproduce and pass on the genes for deep beaks.`;
+      for (const [a, b] of [
+        ["1.", "2."],
+        ["1)", "2)"],
+        ["1:", "2:"],
+        ["Step 1.", "Step 2."],
+        ["Step 1:", "Step 2:"],
+        ["**Step 1:**", "**Step 2:**"],
+        ["**Step 1: the survivors.**", "**Step 2: the next generation.**"],
+        ["Step one:", "Step two:"],
+        ["**Step one.**", "**Step two.**"],
+      ])
+        expect(shows(p(lines(a, b))), `${a} ${b}`).toBe(true);
+      // a number that is not a step number is not one ("2 beaks: …")
+      expect(shows(p("Then a drought leaves only large, hard seeds.\n2 beaks: deep and shallow."))).toBe(false);
     });
 
     it("counts a see block (the design case's See it) as shown", () => {

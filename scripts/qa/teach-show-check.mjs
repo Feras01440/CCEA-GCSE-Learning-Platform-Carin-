@@ -20,6 +20,9 @@
  *              case answered line by line (appliedSteps); under a "See it done" heading, which names the case,
  *              ordered steps count without the case named again; a `see` block. A list of terms with their
  *              definitions, or a process told in general with no case, is the explanation, not its show.
+ *              Step numbers are read in every usual form (NUMBERED); maths in $…$, $$…$$, \[…\] and \(…\) (MATHS);
+ *              a charge on a species is part of the species, never an operation (withoutCharges); a word of working
+ *              links two pieces of maths only on one line or within eight words (isWorkingLink).
  *              A figure or a photo alone is NOT shown (25 Sep 2026, the verifier's
  *              reading of the ruling: a picture explains; it does not carry the method out step by step).
  *              A worked step is a maths relation that works with numbers (=, ≈, ≡, an arrow; a chain
@@ -79,8 +82,10 @@ const isSee = (b) => b.type === "h" && (b.role === "see" || (!b.role && isSeeHea
 // worked line set as \[…\] display maths was read as prose, so it never counted as shown). texOf reads the segment.
 const MATHS = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$([^$]+)\$/g;
 const texOf = (m) => m[1] ?? m[2] ?? m[3] ?? m[4] ?? "";
+/** The inline segments of a string, \(…\) and $…$, never a display segment ($$…$$, \[…\]), which scrolls rather than clips. */
+export const inlineMaths = (s) => [...String(s ?? "").matchAll(MATHS)].filter((m) => m[3] !== undefined || m[4] !== undefined).map((m) => (m[3] ?? m[4]).trim());
 const RELATION = /=|\\approx|\\equiv|\\neq|≈|≡|->|\\to\b|\\rightarrow|\\Rightarrow|\\longrightarrow|⇒|→|<|>|\\le\b|\\ge\b|\\leq|\\geq|\\lt|\\gt|≤|≥/;
-const LABELLED_LINE = /^\s*(\*\*[^*]{1,40}\*\*|(step\s*)?\d+[.):])\s*/i;
+const LABELLED_LINE = /^\s*(\*\*[^*]{1,40}\*\*|(step\s*)?(\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s*[.):])\s*/i;
 
 const wordsIn = (s) => String(s ?? "").split(/\s+/).filter((w) => /[A-Za-z]{2,}/.test(w)).length;
 const withoutMaths = (s) => String(s ?? "").replace(MATHS, " ").replace(/\*\*/g, "");
@@ -99,7 +104,7 @@ const INEQUALITY = /^(<|>|\\le|\\ge|\\leq|\\geq|\\lt|\\gt|≤|≥)$/;
 // list of laws). Powers and subscripts are not the numbers that count.
 const bare = (s) => String(s).replace(/[\^_]\s*(\{[^{}]*\}|\d+|[A-Za-z])/g, "");
 const hasNumber = (s) => /\d/.test(bare(s));
-const hasLetter = (s) => /[A-Za-z]/.test(String(s).replace(/\\(times|div|cdot|d?frac|left|right|sqrt|ce|quad|,)/g, " "));
+const hasLetter = (s) => /[A-Za-z]/.test(String(s).replace(/\\(times|div|cdot|[dt]?frac|left|right|sqrt|ce|quad|,)/g, " "));
 const isSymbol = (s) => /^\s*\\?[A-Za-z]+'?\s*$/.test(bare(s));
 const works = (left, right) => {
   if (!String(left).trim()) return hasNumber(right); // "$= 2$" continues a line above
@@ -130,7 +135,7 @@ const stepsInSegment = (tex) => {
  * "$3(3)^{2} - 8(3) + 2 = 5$"). One of these is the whole of a one-step method carried out in front of
  * her, so on its own it counts as shown; a formula ("$y = mx + c$", "$A = \pi r^2$") is not one.
  */
-const ARITHMETIC_RUN = /([\d.,()\s×÷*/+\-−^]+)=\s*[-−]?\d/g;
+const ARITHMETIC_RUN = /([\d.,()\s×÷*/+\-−^]+)=\s*[-−(]?\d/g;
 const texToPlain = (tex) =>
   String(tex)
     // an aligned or gathered display: its rows are lines of working, its & only aligns them
@@ -139,7 +144,7 @@ const texToPlain = (tex) =>
     .replace(/&/g, "")
     .replace(/\\[,;:! ]/g, "")
     .replace(/\\left|\\right|\\big|\\Big/g, "")
-    .replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
+    .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
     .replace(/\\times|\\cdot/g, "×")
     .replace(/\\div/g, "÷")
     .replace(/[{}]/g, "");
@@ -177,7 +182,9 @@ const withoutCharges = (s) =>
     .replace(/\(\s*[+\-−]\s*\)/g, "")
     .replace(/(^|[\s(])\d[+\-−](?=[\s,.;:)]|$)/g, "$1");
 
-const isWorkingLink = (between) => CONNECTIVE.test(between) && !between.includes("\n") && between.trim().split(/\s+/).length <= 8;
+// A link that runs on across a line break and past eight words joins two separate statements, not one line of working
+// (c2-aluminium-extraction: "… Al³⁺ ion gains three electrons and becomes aluminium … / **Anode (+).** Each O²⁻ …").
+const isWorkingLink = (between) => CONNECTIVE.test(between) && !(between.includes("\n") && between.trim().split(/\s+/).length > 8);
 
 /** An operation carried out, in words or signs. */
 const OPERATION = /\b(times|multipl\w*|divid\w*|plus|minus|add\w*|subtract\w*|squar\w*|root|halv\w*|doubl\w*|leav\w*|gives?|makes?|cancel\w*|expand\w*|factoris\w*|substitut\w*)\b|[×÷*/+−]|\\times|\\div|\\frac/i;
@@ -198,8 +205,8 @@ export function workedSteps(md) {
     const tex = texOf(m);
     const rel = stepsInSegment(tex);
     if (rel >= 0) steps += rel; // a relation, counted only where it works with numbers
-    // "… becomes $5(x^2 - 9)$": the word of working joins two pieces of maths on one line, a few words apart; a
-    // "becomes" three sentences and a line away joins nothing
+    // "… becomes $5(x^2 - 9)$": the word of working joins two pieces of maths on one line, or across a line break
+    // within eight words; a "becomes" three sentences and a line away joins nothing
     else if (last >= 0 && isWorkingLink(text.slice(last, m.index))) steps += 1;
     last = m.index + m[0].length;
   }
@@ -236,8 +243,11 @@ export function explains(b) {
  * worked answer ("worked", "answer", "the marks", "for example"), or a situation set up before the list ("Then a
  * drought …", "If …", "Say …", "Wanted: …"). A process told in general, with no case, is the explanation, not its show.
  */
-const NUMBERED = /^\s*(\*\*)?(step\s+)?\d+[.)](\*\*)?\s+\S/i;
-const NUMBERING = /^\s*(\*\*)?(step\s+)?\d+[.)](\*\*)?\s+/i;
+// A step number in any form authors write it (P2 C author, 25 Sep 2026): "1." "1)" "1:" "Step 1." "Step 1:"
+// "**Step 1:**" "**Step 1: the equation.**" "Step one:", bold or not.
+const STEP_WORDS = "one|two|three|four|five|six|seven|eight|nine|ten";
+const NUMBERED = new RegExp(String.raw`^\s*(\*\*)?(step\s+(\d+|${STEP_WORDS})|\d+)\s*[.):]([^*\n]{0,40}\*\*)?\s+\S`, "i");
+const NUMBERING = new RegExp(String.raw`^\s*(\*\*)?(step\s+(\d+|${STEP_WORDS})|\d+)\s*[.):]([^*\n]{0,40}\*\*)?\s+`, "i");
 const DEFINITION_LINE = /^\s*(\*\*)?\d+[.)](\*\*)?\s+(\*\*[^*]+\*\*\s*[:—–-]|\*\*[^*]+[:—–-]\*\*)/;
 /** Two or more numbered lines that are not a list of terms with their definitions. */
 export function orderedSteps(md) {

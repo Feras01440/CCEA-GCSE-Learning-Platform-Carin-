@@ -65,7 +65,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { SEE_HEADING, describeFailure, teachShowCheck } from "./teach-show-check.mjs";
+import { SEE_HEADING, describeFailure, inlineMaths, teachShowCheck } from "./teach-show-check.mjs";
 import { ANSWER_WORDS, WIRED_MAX, promptFindings } from "./prompt-few.mjs";
 
 const argv = process.argv.slice(2);
@@ -308,8 +308,9 @@ function mathsIssues(strings) {
   const fracs = [];
   const lists = [];
   for (const s of strings) {
-    for (const m of String(s ?? "").matchAll(/\$(?!\$)([^$]+)\$/g)) {
-      const tex = m[1];
+    // inline segments only: display maths ($$…$$, \[…\]) scrolls rather than clips, and is the standard's fix for a
+    // long line (the old pattern read the inside of $$…$$ as an inline segment; C2 E author, 25 Sep 2026)
+    for (const tex of inlineMaths(s)) {
       const compact = tex.replace(/\s+/g, "");
       if (compact.length > TEX_CHARS) long.push(tex.trim());
       if (/(?:-?\d+(?:\.\d+)?\s*,\s*){5,}/.test(tex)) lists.push(tex.trim());
