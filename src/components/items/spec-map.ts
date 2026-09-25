@@ -124,7 +124,8 @@ export function expectedDisplay(spec: AnswerSpec, opts: NumericSpecOptions = {})
       return `${v}${unit}`;
     }
     case "algebraic":
-      return `$${spec.latex}$`;
+      // A fraction at display size: inline \frac set the expected answer at about 11.5 px beside 15 px text (MK-13).
+      return `$${spec.latex.replace(/\\frac(?=\s*\{)/g, "\\dfrac")}$`;
     case "mcq":
       return spec.options
         .filter((o) => o.correct)

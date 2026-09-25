@@ -43,3 +43,16 @@ describe("WorkedExampleAsQuestion renders the figure for its mode", () => {
     for (const fade of ["full", "faded1", "faded2", "problem"] as const) expect(html(without, fade), fade).toContain("/figures/annotated.svg");
   });
 });
+
+describe("a faded rung's heading says what it asks (trial audit MK-09)", () => {
+  test("fm1 algebraic-fractions-simplify WE01: the first rung asks for the last step and says so", () => {
+    const b = JSON.parse(readFileSync(join(process.cwd(), "packs/further-maths/content/fm1/algebraic-fractions-simplify/bundle.json"), "utf8"));
+    const we = b.workedExamples[0] as WorkedExample;
+    const first = renderToStaticMarkup(createElement(WorkedExampleAsQuestion, { we, fade: "faded1" }));
+    expect(first).toContain("Your turn · the last step is yours");
+    expect(first).toContain("Step 3 is yours");
+    const second = renderToStaticMarkup(createElement(WorkedExampleAsQuestion, { we, fade: "faded2" }));
+    expect(second).toContain("Your turn · the last 2 steps are yours");
+    expect(second).toContain("Step 2 is yours");
+  });
+});

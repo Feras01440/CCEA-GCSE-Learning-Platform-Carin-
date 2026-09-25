@@ -359,3 +359,18 @@ describe("keywordsPresent reads TeX and operator spacing as typed", () => {
     expect(keywordsPresent(String.raw`$\dfrac{ad+bc}{bd}$`, ["ad - bc"]).all).toBe(false);
   });
 });
+
+describe("keywordsPresent: a spaced dash in prose, and a minus between letters", () => {
+  test("the factor pair ticks beside a dash, and (a + b)(a - b) ticks in its closed-up spelling", () => {
+    expect(keywordsPresent("$(2x+1)(2x-1)$ and $(3x+1)(3x-1)$ — a square minus a square", ["(3x + 1)(3x - 1)"]).all).toBe(true);
+    expect(keywordsPresent("$(a+b)(a-b)$, the difference of two squares", ["(a + b)(a - b)"]).all).toBe(true);
+    expect(keywordsPresent("$(a+b)(a+b)$", ["(a + b)(a - b)"]).all).toBe(false);
+  });
+});
+
+describe("keywordsPresent: subscripts and degrees in TeX", () => {
+  test("x₁ ticks in $x_1$, and 180 in $180^{\circ}$", () => {
+    expect(keywordsPresent("$y - y_1 = m(x - x_1)$", ["y₁", "x₁"]).all).toBe(true);
+    expect(keywordsPresent(String.raw`A rotation of $180^{\circ}$ about $C$`, ["180"]).all).toBe(true);
+  });
+});

@@ -13,7 +13,7 @@ import { ArrowRight, ChevronDown, Eye } from "lucide-react";
 import { clsx } from "clsx";
 import type { AnswerSpec, WorkedExample, WorkedExampleStep } from "@/lib/content/schema";
 import { AnswerField, MathsLineInput } from "./AnswerField";
-import { accuracyOf, planFade, type FadeLevel } from "./fade";
+import { accuracyOf, fadeHeading, planFade, type FadeLevel } from "./fade";
 import { FeedbackCard } from "./FeedbackCard";
 import { Figure } from "./Figure";
 import { markAnswer, type MarkResult } from "./mark";
@@ -262,7 +262,7 @@ export function figureForMode(we: WorkedExample, fade: FadeLevel): WorkedExample
   return fade === "full" ? we.figure : (we.figurePlain ?? we.figure);
 }
 
-function Header({ we, fade }: { we: WorkedExample; fade: FadeLevel }) {
+function Header({ we, fade, heading }: { we: WorkedExample; fade: FadeLevel; heading?: string }) {
   const label: Record<FadeLevel, string> = {
     full: "Worked example · read each step, then say why",
     faded1: "Your turn · the last step is yours",
@@ -272,7 +272,7 @@ function Header({ we, fade }: { we: WorkedExample; fade: FadeLevel }) {
   };
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-      <Eyebrow>{label[fade]}</Eyebrow>
+      <Eyebrow>{heading ?? label[fade]}</Eyebrow>
       <span className="text-meta text-ink-2">
         {we.paper.unit} · {we.paper.calculator ? "calculator" : "non-calculator"}
       </span>
@@ -344,7 +344,12 @@ function StepsMode({
 
   return (
     <section className={cardCls} aria-label="Worked example">
-      <Header we={we} fade={fade} />
+      {/* A faded rung says what it really asks (fadeHeading; trial audit MK-09). */}
+      <Header
+        we={we}
+        fade={fade}
+        heading={fade === "faded1" || fade === "faded2" ? fadeHeading({ mode: "steps", showSteps, sequence, supplied: sequence.filter((s) => s.role === "input").map((s) => s.n) }, we.steps.length) : undefined}
+      />
       <div className="mt-3">
         <Md md={we.stem} />
       </div>

@@ -118,3 +118,14 @@ describe("expectedDisplay", () => {
     expect(expectedDisplay({ ...qwc, indicativeContent: [] })).toBe("See the worked solution.");
   });
 });
+
+// Trial audit MK-13 (24 Sep 2026): the expected answer was set as inline maths, so a fraction in it rendered at about
+// 11.5 px beside 15 px text, the smallest text on the miss card. A fraction in the expected answer is set at display
+// size (\dfrac), as the stems set theirs; everything else is unchanged.
+describe("expectedDisplay sets a fraction at display size (MK-13)", () => {
+  test("\frac becomes \dfrac; \dfrac and \tfrac-free answers are left alone", () => {
+    expect(expectedDisplay({ kind: "algebraic", latex: String.raw`\frac{2(x-2)}{x+3}`, equivalence: "equivalent", variables: ["x"] })).toBe(String.raw`$\dfrac{2(x-2)}{x+3}$`);
+    expect(expectedDisplay({ kind: "algebraic", latex: String.raw`\dfrac{5}{x-4}`, equivalence: "equivalent", variables: ["x"] })).toBe(String.raw`$\dfrac{5}{x-4}$`);
+    expect(expectedDisplay({ kind: "algebraic", latex: "3(x+3)(x-3)", equivalence: "equivalent", variables: ["x"] })).toBe("$3(x+3)(x-3)$");
+  });
+});

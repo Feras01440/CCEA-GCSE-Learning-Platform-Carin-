@@ -145,6 +145,9 @@ function HeroFigure({ hero, staged = false, topicId }: { hero: TopicHeroData; st
   );
 }
 
+/** "About 10 minutes" as the compact hero prints it beside a second way: "about 10 min". */
+const shortMinutes = (heading: string): string => heading.replace(/^About /, "about ").replace(/ minutes?$/, " min");
+
 export function TopicHero({ subject, unit, slug, locator, title, displayTitle, hero, sections, checks, workedExamples, findings = 0, practicals = [], topicId, gateSections = [], slides }: TopicHeroProps) {
   const canId = useId();
   const paper = usePaperPhrase(subject, unit);
@@ -210,20 +213,26 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
       {/* The promise: the one line that answers "why is this worth my time", in the first five seconds. With two ways in,
           each is named with its own minutes and size (Slides first, the primary way), then what both share. */}
       {promise.ways.length > 1 ? (
-        <div data-hero-promise className="mt-4 flex flex-col gap-1 text-ui text-ink-2">
-          <p className="flex flex-wrap gap-x-5 gap-y-1">
+        // Compact on purpose (audit LD-21): with two ways the block ran to five lines at 390 and pushed the hero's
+        // figure below the first screen (746 px against the 720 px rule). Each way is one short line; the untimed
+        // video is named once, beside the facts, so it is not repeated on both ways.
+        <div data-hero-promise className="mt-3 flex flex-col gap-0.5 text-ui text-ink-2">
+          <p className="flex flex-wrap gap-x-5 gap-y-0.5">
             {promise.ways.map((w) => (
               <span key={w.way} data-way-length={w.way}>
-                <span className="font-medium">{w.label}:</span> <span className="font-semibold text-ink">{w.minutes}</span>
-                {w.plus && ` ${w.plus}`}
+                <span className="font-medium">{w.label}</span>
+                <span aria-hidden> · </span>
+                <span className="sr-only">: </span>
+                {w.size}
                 <span aria-hidden> · </span>
                 <span className="sr-only">, </span>
-                {w.size}
+                <span className="font-semibold text-ink">{shortMinutes(w.minutes)}</span>
               </span>
             ))}
           </p>
-          {promise.facts.length > 0 && (
-            <p className="flex flex-wrap gap-x-4 gap-y-1">
+          {(promise.ways[0].plus || promise.facts.length > 0) && (
+            <p className="flex flex-wrap gap-x-4 gap-y-0.5">
+              {promise.ways[0].plus && <span data-video-fact>{promise.ways[0].plus}, not timed</span>}
               {promise.facts.map((f) => (
                 <span key={f}>{f}</span>
               ))}

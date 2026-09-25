@@ -523,3 +523,63 @@ describe("fm2 connected particles: a quantity's symbol, and clauses joined by so
     expect(markFix(typed, system).match).toBe(false);
   });
 });
+
+// Trial audit MK-07 (24 Sep 2026, reproduced 25 Sep): the fix written as the cancel, "3x²/x = 3x", was refused; only the
+// bare "3x" passed, though the box asks for "the corrected line, ending with the value". A chain of equal expressions
+// that arrives at the correction's answer is the fix, provided each side really equals the next.
+describe("the fix written as a chain that arrives at the answer (MK-07)", () => {
+  const erin = {
+    studentWorking: ["Top: 3x³ - 12x² = 3x²(x - 4)", "Bottom: x² - 4x = x(x - 4)", "Cancel (x - 4)", "Answer (3x²) over x"],
+    mistakeLine: 4,
+    correction: ["3x²(x - 4) over x(x - 4)", "Cancel (x - 4), then cancel the x that is a factor of both lines", "Answer: 3x"],
+  };
+  test.each(["3x²/x = 3x", "3x² ÷ x = 3x", "Answer 3x²/x = 3x", "3x", "Answer: 3x", "= 3x"])("%s is the fix", (typed) => {
+    expect(markFix(typed, erin).match).toBe(true);
+  });
+  test.each(["3x²/x = 3x²", "3x²/x", "3x²/x = 2x", "3x² = 3x", "Answer (3x²) over x"])("%s is not", (typed) => {
+    expect(markFix(typed, erin).match).toBe(false);
+  });
+});
+
+// Trial audit MK-08: right worked-example lines were told "Not the same line yet" when written in an equal form: step 2
+// "4(x−5)(x+5)" (the factors in the other order), step 3 "x/(2x−10)" (equal to x/(2(x−5)) and fully simplified),
+// WE02 step 3 "(4+x)/(3+x)", step 2 "(x−3)(x+3)". A line that ends the step's chain is its result in any equal spelling
+// that keeps the result's form: a fraction in its simplest form, a product fully factorised.
+describe("a step's result in an equal spelling of the same form (MK-08)", () => {
+  const step2 = String.raw`$4x^{2}-100 = 4(x+5)(x-5)$`;
+  const step3 = String.raw`$\frac{2x(x+5)}{4(x+5)(x-5)} = \frac{x}{2(x-5)}$`;
+  const we2step2 = String.raw`$x^{2}-9 = (x+3)(x-3)$`;
+  const we2step3 = String.raw`$\frac{(x+4)(x-3)}{(x+3)(x-3)} = \frac{x+4}{x+3}$`;
+  test.each([
+    [step2, "4(x-5)(x+5)"],
+    [step2, "4(x+5)(x-5)"],
+    [step3, "x/(2x-10)"],
+    [step3, "x/(2(x-5))"],
+    [we2step2, "(x-3)(x+3)"],
+    [we2step3, "(4+x)/(3+x)"],
+    [we2step3, "(x+4)/(x+3)"],
+  ])("%s: %s is the step", (working, typed) => {
+    expect(stepLineMatches(typed, working, { pieces: true }).match).toBe(true);
+  });
+  test.each([
+    [step2, "4(x^2-25)"],
+    [step2, "4x^2-100"],
+    [step3, "2x/(4(x-5))"],
+    [step3, "x/(2(x+5))"],
+    [we2step3, "(x-4)/(x+3)"],
+  ])("%s: %s is not", (working, typed) => {
+    expect(stepLineMatches(typed, working, { pieces: true }).match).toBe(false);
+  });
+});
+
+describe("a later step's result is not an earlier step's line (guard catch, 25 Sep 2026)", () => {
+  test("m3 algebraic fractions we.04: the cancelled answer is not step 3's uncancelled fraction", () => {
+    const step3 = String.raw`$(5 - w) = -(w - 5)$, so $\dfrac{(5 + w)(5 - w)}{(w - 5)(w + 2)} = \dfrac{-(5 + w)(w - 5)}{(w - 5)(w + 2)}$`;
+    expect(stepLineMatches(String.raw`-\dfrac{5 + w}{w + 2}`, step3, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("-(5+w)/(w+2)", step3, { pieces: true }).match).toBe(false);
+  });
+  test("fm1 add-subtract we.02: step 4's chain is not step 2's line", () => {
+    const step2 = String.raw`$\frac{3(x+2) - 12}{(x-2)(x+2)}$`;
+    expect(stepLineMatches(String.raw`\frac{3(x-2)}{(x-2)(x+2)} = \frac{3}{x+2}`, step2, { pieces: true }).match).toBe(false);
+  });
+});

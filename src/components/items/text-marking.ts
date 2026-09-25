@@ -120,6 +120,8 @@ function texAsTyped(s: string): string {
   let t = s.replace(/\$/g, " ").replace(/\\left|\\right/g, "");
   for (let i = 0; i < 6 && /\\[dt]?frac\s*\{/.test(t); i += 1) t = t.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, "($1)/($2)");
   return t
+    .replace(/\^\s*\{?\s*\\circ\s*\}?/g, "°")
+    .replace(/_\{?([A-Za-z0-9]+)\}?/g, "$1")
     .replace(/\\sqrt\s*\{([^{}]*)\}/g, "√$1")
     .replace(/\\(?:text|mathrm|mathbf|operatorname)\s*\{([^{}]*)\}/g, "$1")
     .replace(/\\times\b|\\cdot\b/g, "×")
@@ -139,8 +141,12 @@ function texAsTyped(s: string): string {
  * is ignored as it is between numbers ("ad - bc" is in "(ad-bc)/(bd)"; the QA fixer and trial audit MK-16, 25 Sep 2026).
  */
 export function keywordsPresent(raw: string, keyWords: readonly string[]): KeywordCheck {
-  const h = normaliseText(texAsTyped(raw));
+  // A spaced dash in prose ("$(3x+1)(3x-1)$ — a square minus a square") is a pause, not a minus to glue to the maths.
+  const h = normaliseText(texAsTyped(raw).replace(/\s[—–]\s/g, ", "));
+  // With the operators closed up, a minus between letters is read as normaliseText reads it, a space ("a-b" is "a b").
+  const chip = (s: string) => compactOperators(s).replace(/([a-z])-(?=[a-z])/g, "$1 ");
   const tight = ` ${compactOperators(h)} `;
+  const chipped = ` ${chip(h)} `;
   const present: string[] = [];
   const missing: string[] = [];
   for (const k of keyWords) {
@@ -149,7 +155,7 @@ export function keywordsPresent(raw: string, keyWords: readonly string[]): Keywo
     // looked for that way.
     const found =
       phraseIn(h, key) ||
-      (/[+\-/^*]/.test(key) && tight.includes(` ${compactOperators(key)} `)) ||
+      (/[+\-/^*]/.test(key) && (tight.includes(` ${compactOperators(key)} `) || chipped.includes(` ${chip(key)} `))) ||
       (/[a-z]\s*-\s*[a-z]/.test(key) && phraseIn(h, key.replace(/([a-z])\s*-\s*(?=[a-z])/g, "$1 ")));
     (found ? present : missing).push(k);
   }

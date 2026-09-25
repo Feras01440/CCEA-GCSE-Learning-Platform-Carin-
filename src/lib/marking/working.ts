@@ -432,14 +432,22 @@ function evidences(typed: string, evidence: string): boolean {
   if (evidence.includes(OVER)) {
     // A fraction she wrote whose top holds the point's top (when it names one) and whose bottom holds its bottom.
     const [top = "", bottom = ""] = evidence.split(OVER);
-    return workingLines(typed)
-      .join(" ")
-      .split("=")
-      .some((side) => {
-        const parts = fractionParts(side);
-        if (parts.length !== 2) return false;
-        return (top.trim() === "" || holdsMaths(mathsKey(parts[0]!), mathsKey(top))) && holdsMaths(mathsKey(parts[1]!), mathsKey(bottom));
-      });
+    const plain = workingLines(typed).join(" ");
+    const asFraction = plain.split("=").some((side) => {
+      const parts = fractionParts(side);
+      if (parts.length !== 2) return false;
+      return (top.trim() === "" || holdsMaths(mathsKey(parts[0]!), mathsKey(top))) && holdsMaths(mathsKey(parts[1]!), mathsKey(bottom));
+    });
+    if (asFraction) return true;
+    // Or both written out in one line, neither inside the other ("the numerator gives 5(x + 4) and the denominator gives
+    // (x + 4)(x − 4)"): each part must be working in its own right, and the bottom must stand outside the top.
+    if (top.trim() === "" || !substantial(top) || !substantial(bottom)) return false;
+    const key = mathsKey(plain);
+    const topKey = mathsKey(top);
+    const at = key.indexOf(topKey);
+    if (at < 0 || !holdsMaths(key, topKey)) return false;
+    const rest = `${key.slice(0, at)}¦${key.slice(at + topKey.length)}`;
+    return holdsMaths(rest, mathsKey(bottom));
   }
   if (evidencesWhole(typed, evidence)) return true;
   // Even a one-statement line is read as its statement: "So L = …" states "L = …".
@@ -447,7 +455,15 @@ function evidences(typed: string, evidence: string): boolean {
   if (chainStates(typed, evidence) || sideOfChain(typed, evidence)) return true;
   // The top or the bottom of a fraction she wrote is a whole piece of working: "2(x+3)(x-2)/(x+3)^2" shows the
   // numerator factorised (trial audit MK-04: the factorised line a candidate writes paid nothing).
-  if (workingLines(typed).join(" ").split("=").some((side) => fractionParts(side).some((part) => evidencesWhole(part, evidence)))) return true;
+  // Only a piece of algebra or working counts: a bare number on top or underneath ("1/100", "649/11") is a value on the
+  // way to another, not the evidence a point's "1" or "n = 11" names (the corpus guard's catch, 25 Sep 2026).
+  if (
+    workingLines(typed)
+      .join(" ")
+      .split("=")
+      .some((side) => fractionParts(side).some((part) => /[A-Za-z(]/.test(part) && substantial(part) && evidencesWhole(part, evidence)))
+  )
+    return true;
   const maths = findableMaths(evidence);
   return maths !== null && holdsMaths(mathsKey(typed), maths);
 }

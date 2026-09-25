@@ -36,7 +36,10 @@ export function planFade(we: WeShape, fade: FadeLevel): FadePlan {
     return { mode: "steps", showSteps: total, sequence: we.steps.map((s) => ({ n: s.n, role: "shown" })), supplied: [] };
   }
   const index = fade === "faded1" ? 0 : 1;
-  const authored = we.faded[index];
+  // The lighter rung first, whatever order the plans are written in: fewer steps to supply, then more shown (trial
+  // audit MK-09, 24 Sep 2026: a bundle whose faded[0] hands over two steps opened with the harder rung).
+  const ordered = [...we.faded].sort((a, b) => a.studentSupplies.length - b.studentSupplies.length || b.showSteps - a.showSteps);
+  const authored = ordered[index];
   const plan = authored && authored.showSteps < total ? authored : defaultFaded(total, index + 1);
   const supplied = plan.studentSupplies.filter((n) => n > plan.showSteps && n <= total).sort((a, b) => a - b);
   return {
@@ -45,6 +48,19 @@ export function planFade(we: WeShape, fade: FadeLevel): FadePlan {
     sequence: we.steps.map((s) => ({ n: s.n, role: supplied.includes(s.n) ? "input" : "shown" })),
     supplied,
   };
+}
+
+/**
+ * The heading of a faded rung, from what it really asks: "the last step is yours", "the last 2 steps are yours",
+ * "steps 2 and 4 are yours" (MK-09: a fixed "the last step is yours" headed a rung that asked for steps 2 and 3).
+ */
+export function fadeHeading(plan: FadePlan, total: number): string {
+  const s = plan.supplied;
+  const toTheEnd = s.length > 0 && s.every((n, i) => n === total - s.length + 1 + i);
+  if (toTheEnd && s.length === 1) return "Your turn · the last step is yours";
+  if (toTheEnd) return `Your turn · the last ${s.length} steps are yours`;
+  const list = s.length <= 1 ? `step ${s[0] ?? ""}` : `steps ${s.slice(0, -1).join(", ")} and ${s[s.length - 1]}`;
+  return `Your turn · ${list} ${s.length <= 1 ? "is" : "are"} yours`;
 }
 
 /** Fraction correct, or 1 when nothing was asked (an example read to the end counts as done). */

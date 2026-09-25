@@ -892,9 +892,70 @@ function endsTheChain(typedBody: string, reference: string): boolean {
   // A TeX command ("\frac", "\sqrt") is maths, not a word of prose.
   const words = last.replace(/\\[A-Za-z]+/g, "").replace(FUNCTION_WORDS, "");
   if (last.replace(/\s+/g, "").length < 2 || bareValue(last) !== null || /[A-Za-z]{3,}/.test(words)) return false;
-  if (!equationsMatch(typedBody, last, LINE_OPTS)) return false;
+  if (!equationsMatch(typedBody, last, LINE_OPTS) && !sameResultForm(typedBody, last)) return false;
   try {
     return checkAlgebraic(asExpression(first), { answer: asExpression(last), mode: "equivalent" }).correct;
+  } catch {
+    return false;
+  }
+}
+
+/** Is there a + or − outside every bracket (a sum, not a product)? A sign at the very start is the term's own. */
+function topLevelSum(s: string): boolean {
+  let depth = 0;
+  for (let i = 0; i < s.length; i += 1) {
+    const c = s[i]!;
+    if (c === "(" || c === "[" || c === "{") depth += 1;
+    else if (c === ")" || c === "]" || c === "}") depth -= 1;
+    else if (depth === 0 && i > 0 && /[+\-−]/.test(c) && !/[\^eE(]/.test(s[i - 1] ?? "")) return true;
+  }
+  return false;
+}
+
+/**
+ * The result of a step in an equal spelling that keeps the result's form (trial audit MK-08, 24 Sep 2026: "4(x−5)(x+5)"
+ * for "4(x+5)(x−5)" and "x/(2x−10)" for "x/(2(x−5))" were "Not the same line yet"): a fraction in its simplest form for
+ * a fraction, a product fully factorised for a product, otherwise the same numbers and letters in an equivalent
+ * expression. "x² + 5x + 6" is still not "(x + 2)(x + 3)": the form is what the step is for.
+ */
+function sameResultForm(typed: string, result: string): boolean {
+  if (/=/.test(typed) || /=/.test(result)) return false;
+  // Both sides as typed maths: a TeX fraction ("\frac{x}{2(x-5)}") is read as the slash form it stands for.
+  const a = asExpression(normaliseEquation(typed.trim()));
+  const b = asExpression(normaliseEquation(result.trim()));
+  if (!isMaths(a) || !isMaths(b) || !/[A-Za-z]/.test(b) || hasMatrixProduct(a) || hasMatrixProduct(b)) return false;
+  try {
+    // Only a result that is itself in that form: a fraction not yet cancelled ("-(5+w)(w-5)/((w-5)(w+2))") is the step's
+    // point, and the cancelled fraction a later step reaches is not it (the corpus guard's catch, 25 Sep 2026).
+    const form = (x: string, f: "simplest-fraction" | "factorised") => checkAlgebraic(x, { answer: b, mode: "form", form: f }).correct;
+    if (/\//.test(b)) return form(b, "simplest-fraction") && form(a, "simplest-fraction");
+    if (/\(/.test(b) && !topLevelSum(b)) return form(b, "factorised") && form(a, "factorised");
+    return atomsOf(a) === atomsOf(b) && checkAlgebraic(a, { answer: b, mode: "equivalent" }).correct;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Her line as a chain of equal expressions that arrives at a correction's result: "3x²/x = 3x" and "Answer 3x²/x = 3x"
+ * for "Answer: 3x" (trial audit MK-07: only the bare "3x" passed). Every side must equal the next, and the last side
+ * must be the result, as written or in an equal spelling of its form.
+ */
+function chainArrives(typed: string, reference: string): boolean {
+  const sides = splitLabel(typed)
+    .body.split("=")
+    .map((x, i) => (i === 0 ? x.replace(/^(?:[A-Za-z]{2,}:?\s+)+/, "") : x).trim())
+    .filter((x) => x.length > 0);
+  if (sides.length < 2) return false;
+  const ref = splitLabel(reference).body.replace(/^[A-Za-z][A-Za-z ]*:\s*/, "").trim();
+  if (ref.length === 0 || /=/.test(ref) || bareValue(ref) !== null || !/[A-Za-z]/.test(ref) || !isMaths(ref)) return false;
+  const last = sides[sides.length - 1]!;
+  if (!equationsMatch(last, ref, LINE_OPTS) && !sameResultForm(last, ref)) return false;
+  try {
+    for (let i = 0; i + 1 < sides.length; i += 1) {
+      if (!checkAlgebraic(asExpression(sides[i]!), { answer: asExpression(sides[i + 1]!), mode: "equivalent" }).correct) return false;
+    }
+    return true;
   } catch {
     return false;
   }
@@ -974,6 +1035,9 @@ export function fixMatches(typed: string, correction: readonly string[], opts: F
     // The result a chain of equal expressions arrives at ("x/(2(x-5))" for "\frac{2x(x+5)}{4(x+5)(x-5)} =
     // \frac{x}{2(x-5)}", "9 : 25" for "45 : 125 = 9 : 25").
     if ([canon(r), ...clauses(r), ...mathsPieces(r)].some((k) => !fromEarlier(k) && endsTheChain(body, k))) return LINE;
+    // Her own chain arriving at the result ("3x²/x = 3x" for "Answer: 3x"; MK-07).
+    // Only in the fix box: a worked-example step is one line of a chain, and a later step's chain is not its line.
+    if (ctx && /=/.test(t) && [canon(r), ...clauses(r)].some((k) => !fromEarlier(k) && chainArrives(t, k))) return LINE;
     // Her line stopping part-way along the chain ("P(wet given late) = 0.10 / 0.16" of "… = 0.10 / 0.16 = 5/8 =
     // 0.625", "k = 10^0.602" of "k = 10^0.602 = 4.0"): its sides are the chain's, in order.
     if (/=/.test(t) && [canon(r), ...clauses(r)].some((k) => !fromEarlier(k) && chainStates(k, t))) return LINE;

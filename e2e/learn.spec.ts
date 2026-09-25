@@ -876,19 +876,34 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
  * track and Contents, Slides' on its Start button and its title card.
  */
 test.describe("The way in: each way states its own numbers, the ones it prints itself", () => {
+  test("the trial hero's figure starts on the first screen (within 720 px) at 390 x 844, two ways in and all", async ({ page }) => {
+    // 04-critique.md R5 and e2e/appearance.spec.ts's rule for every topic: a first screen with no picture is the real
+    // "plain". The trial hero carries two ways in and their numbers; they must not push the figure below the fold.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const figure = page.locator(`${MAIN} header figure`).first();
+    await expect(figure).toBeVisible();
+    const top = await figure.evaluate((el) => el.getBoundingClientRect().top);
+    expect(top, `the figure's top edge at ${Math.round(top)} px`).toBeLessThan(720);
+  });
+
   test("the hero's Slides and Read lines agree with the Slides title card, the Start button and the Read track", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await openTrial(page);
     const num = (text: string, re: RegExp) => Number(re.exec(text)?.[1] ?? Number.NaN);
     const slidesLine = (await page.locator(`${MAIN} header [data-way-length="slides"]`).textContent()) ?? "";
     const readLine = (await page.locator(`${MAIN} header [data-way-length="read"]`).textContent()) ?? "";
-    // A video with no stated length is named beside each way's minutes (the note's one video has none today).
-    expect(slidesLine).toMatch(/^Slides: about \d+ minutes?( plus [a-z]+ videos?)?\s*·\s*,?\s*\d+ cards$/);
-    expect(readLine).toMatch(/^Read: about \d+ minutes?( plus [a-z]+ videos?)?\s*·\s*,?\s*\d+ sections$/);
-    const plus = / plus [a-z ]*videos?/.exec(readLine)?.[0] ?? "";
-    expect(/ plus [a-z ]*videos?/.exec(slidesLine)?.[0] ?? "", "both ways name the same untimed video").toBe(plus);
-    const slides = { minutes: num(slidesLine, /about (\d+) minute/), cards: num(slidesLine, /(\d+) cards/) };
-    const read = { minutes: num(readLine, /about (\d+) minute/), sections: num(readLine, /(\d+) sections/) };
+    // Each way is one short line ("Slides · 23 cards · about 10 min"; the sr-only ": " and ", " sit between), and a
+    // video with no stated length is named once beside the facts, not on each way (audit LD-21: the hero's figure
+    // must stay on the first screen at 390).
+    expect(slidesLine).toMatch(/^Slides\s*·\s*:?\s*\d+ cards\s*·\s*,?\s*about \d+ min$/);
+    expect(readLine).toMatch(/^Read\s*·\s*:?\s*\d+ sections\s*·\s*,?\s*about \d+ min$/);
+    const videoFact = (await page.locator(`${MAIN} header [data-hero-promise] [data-video-fact]`).textContent().catch(() => "")) ?? "";
+    const plus = / ?plus [a-z ]*videos?/.exec(videoFact)?.[0].replace(/^ ?/, " ") ?? "";
+    if (videoFact) expect(videoFact, "the untimed video is named as not timed").toMatch(/^plus [a-z ]*videos?, not timed$/);
+    const slides = { minutes: num(slidesLine, /about (\d+) min/), cards: num(slidesLine, /(\d+) cards/) };
+    const read = { minutes: num(readLine, /about (\d+) min/), sections: num(readLine, /(\d+) sections/) };
 
     // Read's numbers are the track's: "1 of 7", and the Contents heading's minutes with the same video named.
     const track = page.locator("[data-read-track]");

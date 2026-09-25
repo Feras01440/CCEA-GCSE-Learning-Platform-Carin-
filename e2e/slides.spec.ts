@@ -812,7 +812,7 @@ test.describe("Slides: the whole deck and the close", () => {
     expect(await page.locator("[data-card='close'] :is(input, textarea, [role='radio'])").count()).toBe(0);
     await expect(page.locator("[data-card='close']")).toContainText("What returns");
     // Every card counted, with no reason that is not one (audit CT-07, LD-05): the run's nine cards come back tonight.
-    await expect(page.locator("[data-returns] li").first()).toHaveText("Later today · 7 checks and 2 recall cards from Simplifying algebraic fractions.");
+    await expect(page.locator("[data-returns] li").first()).toHaveText("Tonight · 7 checks and 2 recall cards from Simplifying algebraic fractions.");
     // And so Rowan does not say there is nothing else to do (the library's own line for a night with nothing due).
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("nothing else to do");
     expect(await accentControls(page)).toEqual(["Done for tonight"]);
@@ -852,6 +852,24 @@ test.describe("Slides: the whole deck and the close", () => {
     await expect
       .poll(async () => practice.evaluate((el) => Math.round(el.getBoundingClientRect().top)), { timeout: 10_000 })
       .toBeLessThan(200);
+  });
+
+  test("on a phone the verdict's last line is brought into view after Check, not left under the foot (audit LD-14)", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    await control(page).click();
+    await walkTo(page, "gate", "g4");
+    await answerChoice(page, "$\\frac{7x+10}{3x-10}$");
+    await expect(page.locator("[data-verdict='miss']")).toContainText("comes back once more before the recap");
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const verdict = document.querySelector("[data-verdict]")!.getBoundingClientRect();
+          const body = document.querySelector("[data-card]")!.getBoundingClientRect();
+          return Math.round(body.bottom - verdict.bottom);
+        }),
+      )
+      .toBeGreaterThanOrEqual(0);
   });
 
   test("the retry card sits just before the recap and is asked once more, unrecorded", async ({ page }) => {

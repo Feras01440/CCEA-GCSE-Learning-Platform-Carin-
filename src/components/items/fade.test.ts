@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { accuracyOf, nextFade, planFade } from "./fade";
+import { accuracyOf, fadeHeading, nextFade, planFade } from "./fade";
 
 const steps = [1, 2, 3, 4].map((n) => ({ n, working: `w${n}`, decision: `d${n}` }));
 
@@ -46,5 +46,24 @@ describe("accuracy and the governor", () => {
     expect(nextFade("faded1", 0.49)).toBe("full");
     // The full example asks nothing, so reading it to the end (accuracy 1) opens the first faded version.
     expect(nextFade("full", 1)).toBe("faded1");
+  });
+});
+
+// Trial audit MK-09 (24 Sep 2026): fm1 algebraic-fractions-simplify WE01's first rung was headed "the last step is yours"
+// but asked for steps 2 and 3, because its authored plans are in the other order (faded[0] hands over two steps,
+// faded[1] one). Backward fading gives the lighter rung first, whatever order the plans are written in, and the heading
+// says what the rung really asks for (fadeHeading).
+describe("the rungs in order of what they ask, and a heading that says so", () => {
+  const three = [1, 2, 3].map((n) => ({ n, working: `w${n}`, decision: `d${n}` }));
+  const reversed = { steps: three, faded: [{ showSteps: 1, studentSupplies: [2, 3] }, { showSteps: 2, studentSupplies: [3] }] };
+  test("faded1 is the rung that hands over fewer steps", () => {
+    expect(planFade(reversed, "faded1")).toMatchObject({ showSteps: 2, supplied: [3] });
+    expect(planFade(reversed, "faded2")).toMatchObject({ showSteps: 1, supplied: [2, 3] });
+  });
+  test("the heading names the steps she supplies", () => {
+    expect(fadeHeading(planFade(reversed, "faded1"), 3)).toBe("Your turn · the last step is yours");
+    expect(fadeHeading(planFade(reversed, "faded2"), 3)).toBe("Your turn · the last 2 steps are yours");
+    const middle = { steps: [1, 2, 3, 4].map((n) => ({ n, working: `w${n}`, decision: `d${n}` })), faded: [{ showSteps: 1, studentSupplies: [2, 4] }] };
+    expect(fadeHeading(planFade(middle, "faded1"), 4)).toBe("Your turn · steps 2 and 4 are yours");
   });
 });
