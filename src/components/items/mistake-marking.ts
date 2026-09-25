@@ -106,6 +106,28 @@ function splitLabel(line: string): { label: string | null; body: string; continu
  * symbol still agree, and so do two probabilities: "P(all three blue)" is "P(all three blue and at least two
  * blue)" when one event holds the other, which a label cannot show.
  */
+/** The words a quantity's usual symbol names, by the symbol as written (its case matters: T is a tension, t a time). */
+const QUANTITY_SYMBOLS: Record<string, readonly string[]> = {
+  F: ["force", "friction"],
+  R: ["force", "reaction"],
+  T: ["force", "tension"],
+  W: ["force", "weight"],
+  N: ["force", "reaction"],
+  a: ["acceleration"],
+  v: ["velocity", "speed"],
+  u: ["velocity", "speed"],
+  s: ["displacement", "distance"],
+  t: ["time"],
+  m: ["mass"],
+  g: ["gravity"],
+  E: ["energy"],
+  P: ["power", "pressure"],
+  I: ["current"],
+  V: ["voltage", "potential difference", "volume"],
+  Q: ["charge"],
+  f: ["frequency"],
+};
+
 function labelsAgree(a: string | null, b: string | null): boolean {
   if (!a || !b) return true;
   // A lead-in before a colon ("Resolving horizontally: F") left a wide gap; the label is what follows it.
@@ -125,7 +147,11 @@ function labelsAgree(a: string | null, b: string | null): boolean {
   if (symbol(x) !== symbol(y)) {
     // "eliminating and reaching y" names y; "Therefore c" names c.
     const [sym, phrase] = symbol(x) ? [x, y] : [y, x];
-    return phrase.startsWith(sym) || phrase.endsWith(` ${sym}`) || initials(phrase).startsWith(sym.replace(/_/g, ""));
+    if (phrase.startsWith(sym) || phrase.endsWith(` ${sym}`) || initials(phrase).startsWith(sym.replace(/_/g, ""))) return true;
+    // A quantity's usual symbol names it ("R" for a force, "a" for an acceleration; FM2 D, 25 Sep 2026: "R = 35√2 =
+    // 49.5" was refused against "Force = … = 49.50 N"). The letter's case matters: T is a tension, t a time.
+    const rawSym = (symbol(x) ? a : b).trim().split(/\s{2,}/).pop()!.trim();
+    return (QUANTITY_SYMBOLS[rawSym] ?? []).some((word) => new RegExp(`\\b${word}`).test(phrase));
   }
   const words = (s: string) => s.split(" ").filter(Boolean).length;
   return !(words(x) >= 3 && words(y) >= 3);
@@ -562,7 +588,9 @@ function resultOf(line: string, side: "typed" | "authored"): Stated | null {
     const sides = s.split(/[=≈]/);
     // A new statement after a gap ("From y + z = 24, z = 9": "z" alone before the last "=") is its own result.
     const penult = sides[sides.length - 2]!;
-    const penultParts = penult.split(/\s{2,}/);
+    // "So", "therefore", "hence", "thus", "giving" and "⇒" join two statements as a comma does ("48 = 10a so a = 4.8";
+    // FM2 D, 25 Sep 2026: only the comma was read as a break).
+    const penultParts = penult.split(/\s{2,}|\s+(?:so|therefore|hence|thus|giving|gives|then)\s+|\s*(?:[⇒∴→]|->)\s*/i);
     const restarts = penultParts.length > 1 && /^[A-Za-z][A-Za-z ]*$/.test((penultParts[penultParts.length - 1] ?? "").trim());
     if (!restarts && (isEquation(sides[0]!) || isEquation(penult))) return null;
     const after = s.slice(eq + 1);

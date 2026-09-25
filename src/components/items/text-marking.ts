@@ -111,12 +111,48 @@ export interface KeywordCheck {
   all: boolean;
 }
 
-/** Which key words / phrases appear in the answer (case-insensitive, punctuation-blind). */
+/**
+ * TeX as it would be typed: "$\dfrac{ad-bc}{bd}$" is "(ad-bc)/(bd)", "$\log(ab)$" is "log(ab)", "$y \, dx$" is "y dx",
+ * "$4x^{-2}$" is "4x^-2", "$2\sqrt{5}$" is "2√5". Text with no TeX is returned as it was.
+ */
+function texAsTyped(s: string): string {
+  if (!/[$\\]/.test(s)) return s;
+  let t = s.replace(/\$/g, " ").replace(/\\left|\\right/g, "");
+  for (let i = 0; i < 6 && /\\[dt]?frac\s*\{/.test(t); i += 1) t = t.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, "($1)/($2)");
+  return t
+    .replace(/\\sqrt\s*\{([^{}]*)\}/g, "√$1")
+    .replace(/\\(?:text|mathrm|mathbf|operatorname)\s*\{([^{}]*)\}/g, "$1")
+    .replace(/\\times\b|\\cdot\b/g, "×")
+    .replace(/\\div\b/g, "÷")
+    .replace(/\\pm\b/g, "±")
+    .replace(/\\pi\b/g, "π")
+    .replace(/\\[,;:! ]/g, " ")
+    .replace(/\^\{([^{}]*)\}/g, "^$1")
+    .replace(/_\{([^{}]*)\}/g, "_$1")
+    .replace(/\\([A-Za-z]+)/g, " $1 ")
+    .replace(/[{}]/g, " ");
+}
+
+/**
+ * Which key words / phrases appear in the answer (case-insensitive, punctuation-blind). For the retrieval prompt's
+ * chips, which award nothing: TeX on either side is read as typed, and the spacing round an operator between letters
+ * is ignored as it is between numbers ("ad - bc" is in "(ad-bc)/(bd)"; the QA fixer and trial audit MK-16, 25 Sep 2026).
+ */
 export function keywordsPresent(raw: string, keyWords: readonly string[]): KeywordCheck {
-  const h = normaliseText(raw);
+  const h = normaliseText(texAsTyped(raw));
+  const tight = ` ${compactOperators(h)} `;
   const present: string[] = [];
   const missing: string[] = [];
-  for (const k of keyWords) (phraseIn(h, normaliseText(k)) ? present : missing).push(k);
+  for (const k of keyWords) {
+    const key = normaliseText(texAsTyped(k));
+    // A minus between letters reads as a hyphen in normaliseText ("ad-bc" → "ad bc"), so a key word with one is also
+    // looked for that way.
+    const found =
+      phraseIn(h, key) ||
+      (/[+\-/^*]/.test(key) && tight.includes(` ${compactOperators(key)} `)) ||
+      (/[a-z]\s*-\s*[a-z]/.test(key) && phraseIn(h, key.replace(/([a-z])\s*-\s*(?=[a-z])/g, "$1 ")));
+    (found ? present : missing).push(k);
+  }
   return { present, missing, all: keyWords.length > 0 && missing.length === 0 };
 }
 

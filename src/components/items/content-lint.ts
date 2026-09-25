@@ -483,6 +483,15 @@ const VALUE_AND_UNIT = /(?<![\w.^])(-?\d+(?:\.\d+)?)(?![\w.^])\s?(°\s?C|°|%|m\
  * with no spec (her line is compared with the authored working), the working's values with their units and any
  * statement of four words or fewer ("Purple.").
  */
+/**
+ * The figure a worked-example mode shows, as WorkedExampleAsQuestion.tsx figureForMode chooses it (mirrored here so
+ * the build's lint does not import a client component; content-lint.test.ts holds the two together): the annotated
+ * `figure` for the full example, `figurePlain` when present, else `figure`, for the faded and problem modes.
+ */
+export function weFigureFor(we: Record<string, unknown>, mode: "full" | "faded1" | "faded2" | "twin" | "problem"): unknown {
+  return mode === "full" ? we.figure : (we.figurePlain ?? we.figure);
+}
+
 type Phrase = { raw: string; norm: string };
 const phrase = (raw: string): Phrase => ({ raw: raw.trim(), norm: normaliseText(raw) });
 
@@ -523,7 +532,9 @@ export function figureLeakWarnings(bundle: unknown, label: string): string[] {
   // same rule with its finer tiers.
   for (const we of onlyObjects(b.workedExamples)) {
     const id = String(we.id);
-    const fig = we.figure && typeof we.figure === "object" ? (we.figure as Record<string, unknown>) : null;
+    // the figure the faded and problem modes show (figurePlain when present); the full example's hides nothing
+    const shown = weFigureFor(we, "faded1");
+    const fig = shown && typeof shown === "object" ? (shown as Record<string, unknown>) : null;
     if (fig) {
       const stem = typeof we.stem === "string" ? we.stem : "";
       const steps = onlyObjects(we.steps).filter((s) => typeof s.n === "number") as Array<Record<string, unknown> & { n: number }>;

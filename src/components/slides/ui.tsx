@@ -94,10 +94,15 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
   return <p className={clsx("font-sans text-[13px] font-medium leading-[1.4] text-ink-2", className)}>{children}</p>;
 }
 
-/** The card's title: 24 px Literata 500 on the phone, 28 from md (§4). */
+/**
+ * The card's title: 24 px Literata 500 on the phone, 28 from md (§4). It is where the keyboard lands when the card
+ * changes (SlidesRun): out of the tab order and marked quiet, so it wears the focus ring only when the keyboard brought
+ * her here (the focus contract: html[data-input], app/globals.css; the owner's trial, 24 Sep: "a purple rectangular
+ * line around the texts that appears but disappears when I click").
+ */
 export function CardTitle({ children, id, className }: { children: ReactNode; id?: string; className?: string }) {
   return (
-    <h2 id={id} tabIndex={-1} className={clsx("font-serif-lesson text-[length:var(--fs-card-title)] font-medium leading-[1.2] text-ink outline-none", className)}>
+    <h2 id={id} tabIndex={-1} data-card-title data-focus-quiet="" className={clsx("font-serif-lesson text-[length:var(--fs-card-title)] font-medium leading-[1.2] text-ink", className)}>
       {children}
     </h2>
   );

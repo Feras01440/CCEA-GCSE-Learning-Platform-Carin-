@@ -5,7 +5,7 @@ import { gateOptions, markGate, type GateBlock } from "@/components/items/gates"
 import { heroDataFor, lessonBlocks } from "@/components/topic/lesson-plan";
 import type { RetrievalPrompt } from "@/lib/content/schema";
 import { deckFor } from "@/lib/slides/deck";
-import { deckGateOrders, deckGatePlacements, positionalSentences, positionalWording, retryOrder, shownOptions } from "./gate-order";
+import { deckGateOrders, deckGatePlacements, optionTex, positionalSentences, positionalWording, retryOrder, shownOptions } from "./gate-order";
 
 const ROOT = path.resolve(__dirname, "../..");
 const readJson = (file: string) => JSON.parse(fs.readFileSync(file, "utf8"));
@@ -214,6 +214,15 @@ describe("the gate asked once more before the recap (Slides' retry)", () => {
         expect(retryOrder(g, first)).toEqual(again);
       }
     }
+  });
+});
+
+describe("how an option's maths is set, in Slides and in Read (audit LD-16)", () => {
+  it("sets a stacked fraction at text size, and leaves the value as authored for marking", () => {
+    const g4 = choiceGates(TRIAL.blocks).find((g) => g.id === "g4")!;
+    expect(g4.options!.map(optionTex)).toEqual(["$\\dfrac{x+2}{x-2}$", "$\\dfrac{(x+5)(x+2)}{(x+5)(x-2)}$", "$\\dfrac{7x+10}{3x-10}$"]);
+    for (const opt of g4.options!) expect(markGate(g4, opt)).toBe(opt === g4.answer);
+    expect(optionTex("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words")).toBe("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words");
   });
 });
 

@@ -14,6 +14,7 @@ import { PhotoFigure } from "@/components/media/PhotoFigure";
 import { SimEmbed } from "@/components/media/SimEmbed";
 import { VideoEmbed } from "@/components/media/VideoEmbed";
 import type { Card } from "@/lib/slides/cards";
+import { optionTex } from "@/lib/gate-order";
 import { ILLUSTRATIONS, INTERACTIONS, REACTIONS, RecapGlyphFor } from "./enrich";
 import type { TapResult } from "./enrich/afs";
 import type { TapState } from "./enrich/afs-model";
@@ -35,12 +36,6 @@ export interface CardParts {
   left: ReactNode;
   right: ReactNode | null;
 }
-
-/**
- * A stacked fraction in an option is shown at text size, not scriptstyle: the answers must be as legible as the stem.
- * Display only: the authored string stays the option's value, so marking and the record never see the change.
- */
-const fullSizeFractions = (text: string): string => text.replace(/\\frac\{/g, "\\dfrac{");
 
 const sectionEyebrow = (card: { section: { n: number; total: number; title: string } | null }, what: string) =>
   card.section ? `${card.section.n} of ${card.section.total} · ${what}` : what;
@@ -193,7 +188,8 @@ export function gateParts(
         {gate.kind === "choice" ? (
           <div role="radiogroup" aria-label="Choose" className="flex flex-col" style={{ marginTop: "var(--gap-maths-field)", gap: "var(--gap-option)" }}>
             {options.map((opt, i) => (
-              <Option key={opt} index={i + 1} value={opt} letter={optionLetter(i)} text={fullSizeFractions(opt)} state={optionState(opt)} disabled={answer !== null} onSelect={() => onSelect(opt)} />
+              // A stacked fraction at text size, the answers as legible as the question (optionTex, shared with Read).
+              <Option key={opt} index={i + 1} value={opt} letter={optionLetter(i)} text={optionTex(opt)} state={optionState(opt)} disabled={answer !== null} onSelect={() => onSelect(opt)} />
             ))}
           </div>
         ) : (

@@ -161,7 +161,7 @@ export function SlidesClose({ subject, unit, slug, title, displayTitle, count, s
             {!desktop && <CompanionScene context={ctx} variant="wide" />}
           </div>
         )}
-        <h1 tabIndex={-1} data-focus-quiet className="mt-5 font-serif-lesson text-[28px] font-medium leading-[1.15] text-ink outline-none lg:mt-10 lg:text-[40px] lg:leading-[1.1]">
+        <h1 tabIndex={-1} data-focus-quiet="" className="mt-5 font-serif-lesson text-[28px] font-medium leading-[1.15] text-ink lg:mt-10 lg:text-[40px] lg:leading-[1.1]">
           Done for tonight.
         </h1>
         <div className="mt-2.5 max-w-[44ch] font-serif-lesson text-[17px] leading-[1.5] lg:mt-4 lg:text-[19px]">{words}</div>

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { figureLeakWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, svgDrawDefects } from "./content-lint";
+import { figureLeakWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, svgDrawDefects, weFigureFor } from "./content-lint";
+import { figureForMode } from "./WorkedExampleAsQuestion";
 
 describe("lintContent", () => {
   test("duplicate option texts in a diagnostic item or an mcq part are reported once per pair", () => {
@@ -431,5 +432,32 @@ describe("worked-example figures and overlapping labels", () => {
   test("two labels on the same anchor within twelve pixels are reported", () => {
     const b = { questions: [{ id: "q.x.0015", figures: [{ kind: "svg", src: svg("<text x='260' y='238'>y m, the far side</text><text x='260' y='240'>36 m of fencing</text>"), alt: "two pens" }], parts: [{ id: "a", answer: { kind: "numeric", value: 6 } }] }] };
     expect(figureLeakWarnings(b, "x")).toEqual(['x q.x.0015: figure 1 labels "y m, the far side" and "36 m of fencing" overlap']);
+  });
+});
+
+describe("figurePlain: the build warning reads the figure each mode shows", () => {
+  const svg = (inner: string) => "data:image/svg+xml;utf8," + encodeURIComponent(`<svg>${inner}<path d='M1 1'/></svg>`);
+  const annotated = { kind: "svg", src: svg("<text>optimum 40 °C</text>"), alt: "an annotated graph" };
+  const plain = { kind: "svg", src: svg("<text>temperature / °C</text>"), alt: "the same graph, unannotated" };
+  const we = (extra: Record<string, unknown>) => ({
+    id: "we.x.04",
+    stem: "Give the optimum temperature.",
+    steps: [
+      { n: 1, working: "Find the lowest point of the curve.", decision: "Look." },
+      { n: 2, working: "optimum = 40 °C", decision: "Read it." },
+    ],
+    finalAnswer: "40 °C",
+    twin: { stem: "Give the optimum.", answer: { kind: "numeric", value: 35, unit: "°C" } },
+    faded: [],
+    ...extra,
+  });
+  test("chooses the renderer's figure in every mode, with and without figurePlain", () => {
+    for (const w of [we({ figure: annotated }), we({ figure: annotated, figurePlain: plain })])
+      for (const mode of ["full", "faded1", "faded2", "problem"] as const) expect(weFigureFor(w, mode)).toBe(figureForMode(w as never, mode));
+  });
+  test("compares figurePlain for the faded and problem modes; the full example's annotated figure hides nothing", () => {
+    expect(figureLeakWarnings({ workedExamples: [we({ figure: annotated, figurePlain: plain })] }, "x")).toEqual([]);
+    expect(figureLeakWarnings({ workedExamples: [we({ figure: annotated })] }, "x")).toHaveLength(2);
+    expect(figureLeakWarnings({ workedExamples: [we({ figure: plain, figurePlain: annotated })] }, "x")).toHaveLength(2);
   });
 });

@@ -30,13 +30,14 @@ import { InlineSvg } from "./Figure";
 import { PhotoFigure } from "@/components/media/PhotoFigure";
 import { SimEmbed } from "@/components/media/SimEmbed";
 import { VideoEmbed } from "@/components/media/VideoEmbed";
-import { deckGateOrders, shownOptions } from "@/lib/gate-order";
+import { deckGateOrders, optionTex, shownOptions } from "@/lib/gate-order";
 import { formatExaminerSource, optionLetter } from "./format";
 import { markGate, visibleBlocks, type GateBlock, type NoteBlock } from "./gates";
 import { Md, MdInlines } from "./Markdown";
 import { parseInline } from "./md";
 import { Tex } from "./Tex";
-import { btnCheck, btnOption, btnPrimary, fieldCls, Letter, MissMark, quietFocus, recessCls, Rise, Tick } from "./ui";
+import { btnCheck, btnOption, btnPrimary, fieldCls, Letter, MissMark, recessCls, Rise, Tick } from "./ui";
+import { focusLanding } from "@/components/shell/input-modality";
 
 export type { GateBlock, NoteBlock } from "./gates";
 
@@ -513,12 +514,11 @@ function Verdict({ gate, state, reaction }: { gate: GateBlock; state: GateState;
     <div
       data-verdict-block
       role="status"
+      // A landing place: the keyboard is put here after Check. Quiet after a click, ringed when the keyboard brought her
+      // (the focus contract, src/components/shell/input-modality.ts; the owner's trial, 24 Sep).
       tabIndex={-1}
-      className={clsx(
-        "motion-reveal mt-3 scroll-mb-24 rounded-[var(--radius)] border-2 border-l-4 bg-surface px-4 py-3.5",
-        state.correct ? "border-ok" : "border-miss",
-        quietFocus,
-      )}
+      data-focus-quiet=""
+      className={clsx("motion-reveal mt-3 scroll-mb-24 rounded-[var(--radius)] border-2 border-l-4 bg-surface px-4 py-3.5", state.correct ? "border-ok" : "border-miss")}
     >
       <div data-verdict className={clsx("font-serif-lesson text-[length:var(--fs-verdict)] font-semibold leading-tight", state.correct ? "text-ok" : "text-ink")}>
         {state.correct ? "Yes." : "Not quite."}
@@ -667,7 +667,8 @@ function GateV2({
                     >
                       <OptionBadge letter={optionLetter(i)} state={look} />
                       <span className="font-serif-lesson flex-1 text-[length:var(--fs-option)] leading-[1.35]">
-                        <Tex text={opt} />
+                        {/* A stacked fraction at text size, as Slides sets it (optionTex; audit LD-16); the value stays authored. */}
+                        <Tex text={optionTex(opt)} />
                       </span>
                       {look === "ok" && <span className="sr-only">{chosen ? " (your answer, and right)" : " (the right answer)"}</span>}
                       {look === "miss" && <span className="sr-only"> (your answer)</span>}
@@ -817,7 +818,7 @@ function PacedNoteView({ blocks, onGate, renderPrompt, initiallyAnswered, sectio
     if (!lastAnswered) return;
     const verdict = articleRef.current?.querySelector<HTMLElement>(`[data-gate="${lastAnswered}"] [data-verdict-block]`);
     if (!verdict) return;
-    verdict.focus({ preventScroll: true });
+    focusLanding(verdict);
     verdict.scrollIntoView({ block: "nearest", behavior: prefersReducedMotion() ? "auto" : "smooth" });
   }, [lastAnswered]);
 
@@ -830,11 +831,9 @@ function PacedNoteView({ blocks, onGate, renderPrompt, initiallyAnswered, sectio
     const wrapper = articleRef.current?.querySelector<HTMLElement>(`[data-lesson-section="${paced.open}"]`);
     if (!wrapper) return;
     window.scrollTo({ top: wrapper.getBoundingClientRect().top + window.scrollY - underTheBar(), behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    // The heading is a landing place: quiet after a click or a tap, ringed after Enter on Continue (the focus contract).
     const heading = wrapper.querySelector<HTMLElement>("[data-section]");
-    if (heading) {
-      heading.setAttribute("tabindex", "-1");
-      heading.focus({ preventScroll: true });
-    }
+    if (heading) focusLanding(heading);
   }, [paced.open]);
 
   const onContinue = (n: number) => {

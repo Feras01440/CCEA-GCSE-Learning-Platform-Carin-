@@ -74,7 +74,8 @@ export function FigCancel({ result = true, variant = "idea", className }: { resu
       viewBox={variant === "title" ? "0 0 340 140" : "0 0 340 170"}
       role="img"
       aria-label="2x(x + 5) over 4(x + 5)(x − 5). The (x + 5) on each line is struck through, and a 2 is struck out of 2x and out of 4, leaving x on top and 2(x − 5) underneath: x over 2(x − 5). Only a factor divides out."
-      className={clsx("block h-auto w-full max-w-[400px]", className)}
+      // Up to the canvas's 560 px, so it fills the Read hero's wide stage (audit CD-09); a Slides host caps it smaller.
+      className={clsx("block h-auto w-full max-w-[560px]", className)}
       data-figure="afs.cancel"
     >
       <Pill x={12} y={24} w={58} text="2x" state="split" split={two} />

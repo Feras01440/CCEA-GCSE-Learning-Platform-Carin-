@@ -30,3 +30,15 @@ export function hiddenSteps(we) {
     return { mode, showSteps: plan.showSteps, supplied };
   });
 }
+
+/**
+ * The figure a mode shows, as src/components/items/WorkedExampleAsQuestion.tsx figureForMode chooses it (the
+ * renderer is a .tsx the QA scripts cannot import; src/lib/build/we-figure-leaks.test.ts holds the two together):
+ * the annotated `figure` for the full example; `figurePlain` when the example has one, else `figure`, for the
+ * faded and problem modes. The twin mode shows only the twin's own figure.
+ * @param {{ figure?: object, figurePlain?: object }} we
+ * @param {"full" | "faded1" | "faded2" | "twin" | "problem"} mode
+ */
+export function weFigureFor(we, mode) {
+  return mode === "full" ? we.figure : (we.figurePlain ?? we.figure);
+}

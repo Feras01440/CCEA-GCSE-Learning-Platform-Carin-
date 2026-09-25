@@ -442,6 +442,8 @@ const UNIT_TABLE: Record<string, UnitInfo> = {
   "m/s²": { dim: "acceleration", factor: [1, 1] },
   // physics
   N: { dim: "force", factor: [1, 1] },
+  // The moment of a force (CCEA FM2), in newton metres: "N m", "N·m", "Nm" (FM2 D, 25 Sep 2026: only "Nm" half read).
+  "N m": { dim: "moment", factor: [1, 1] },
   kN: { dim: "force", factor: [1000, 1] },
   J: { dim: "energy", factor: [1, 1] },
   kJ: { dim: "energy", factor: [1000, 1] },
@@ -495,6 +497,9 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   [/^(?:s|secs?|seconds?)$/i, "s"],
   [/^(?:min|mins|minutes?)$/i, "min"],
   [/^(?:h|hr|hrs|hours?)$/i, "h"],
+  // Before the newton, so "N m" is never a newton with a stray metre. Case-sensitive: "nm" is a nanometre, not N m.
+  [/^(?:N ?[·⋅]? ?m|N-m)$/, "N m"],
+  [/^newtons?[ -]?met(?:re|er)s?$/i, "N m"],
   [/^(?:n|newtons?)$/i, "N"],
   [/^(?:kn|kilonewtons?)$/i, "kN"],
   [/^(?:j|joules?)$/i, "J"],

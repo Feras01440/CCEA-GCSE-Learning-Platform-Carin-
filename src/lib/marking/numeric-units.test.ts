@@ -167,3 +167,29 @@ describe("a negative power is a denominator, whatever the power", () => {
     expect(checkNumeric("2 cm/s", acc).correct).toBe(false);
   });
 });
+
+// The FM2 D author (25 Sep 2026): the moment of a force, in newton metres. "48 N m" and "48 N·m" scored 0 and "48 Nm"
+// 1 of 2 against 48 N m; every spelling of the unit is the one unit. A newton metre is not a nanometre: "nm" in lower
+// case stays the nanometre.
+describe("the newton metre", () => {
+  const moment: NumericSpec = { value: 48, unit: "N m", requireUnit: true };
+  test.each(["48 N m", "48 N·m", "48 N⋅m", "48 Nm", "48 N m", "48 N m", "48 newton metres", "48 newton-metres", "48 newton meters"])("%s is right", (typed) => {
+    expect(checkNumeric(typed, moment).correct).toBe(true);
+  });
+  test.each([
+    ["48", "missing-unit"],
+    ["48 N", "wrong-unit"],
+    ["48 J", "wrong-unit"],
+  ])("%s is not (%s)", (typed, reason) => {
+    const v = checkNumeric(typed, moment);
+    expect(v.correct).toBe(false);
+    expect(v.reason).toBe(reason);
+  });
+  test("the spec may spell the unit any of those ways", () => {
+    expect(checkNumeric("48 N m", { value: 48, unit: "Nm", requireUnit: true }).correct).toBe(true);
+    expect(checkNumeric("48 Nm", { value: 48, unit: "N·m", requireUnit: true }).correct).toBe(true);
+  });
+  test("nm in lower case is still the nanometre", () => {
+    expect(normaliseUnit("nm")).not.toBe(normaliseUnit("N m"));
+  });
+});

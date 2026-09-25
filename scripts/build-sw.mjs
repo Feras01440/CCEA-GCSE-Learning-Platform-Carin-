@@ -42,7 +42,11 @@ const urls = files
 
 // The on-demand set: single topic pages (and their RSC payloads), the published content, single paper pages.
 const ON_DEMAND_RE = [/^\/learn\/[^/]+\/[^/]+\/[^/]+\//, /^\/content\//, /^\/papers\/[^/]+\//];
-const onDemand = urls.filter((u) => ON_DEMAND_RE.some((re) => re.test(u)));
+// Except Slides: the export builds a /learn/<subject>/<unit>/<topic>/slides/ route only for the topics that have Slides
+// (src/lib/slides/ready.ts), and the hero's "Start the slides" is the way in, so each is precached with its RSC payloads.
+// On demand, a topic page kept from one online visit offered a way in that led to Today offline (audit CQ-07).
+const SLIDES_RE = /^\/learn\/[^/]+\/[^/]+\/[^/]+\/slides\//;
+const onDemand = urls.filter((u) => ON_DEMAND_RE.some((re) => re.test(u)) && !SLIDES_RE.test(u));
 const onDemandSet = new Set(onDemand);
 const shell = urls.filter((u) => !onDemandSet.has(u));
 const sizeOf = (u) => {

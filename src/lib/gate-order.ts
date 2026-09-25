@@ -251,6 +251,15 @@ export function deckGatePlacements(blocks: readonly unknown[] | null | undefined
   return out;
 }
 
+/**
+ * How an option's maths is set, in Slides and in Read alike: a stacked fraction at text size (`\dfrac`), because the
+ * answers must be as legible as the question (audit LD-16: Read set them at scriptstyle, 13.9 px under a 28 px stem).
+ * Display only: the authored string stays the option's value, so marking and the record never see the change.
+ */
+export function optionTex(option: string): string {
+  return option.replace(/\\frac\{/g, "\\dfrac{");
+}
+
 /** The shown order of every choice gate in a lesson, by gate id (see `deckGatePlacements`). */
 export function deckGateOrders(blocks: readonly unknown[] | null | undefined): Map<string, string[]> {
   return new Map([...deckGatePlacements(blocks)].map(([id, p]) => [id, p.order]));

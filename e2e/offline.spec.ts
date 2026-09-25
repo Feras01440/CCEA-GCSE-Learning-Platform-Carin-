@@ -149,6 +149,41 @@ test.describe("Offline", () => {
     }
   });
 
+  test("Start the slides works offline from a topic page kept from one online visit (the slides route is precached)", async ({ page, context }) => {
+    // Audit CQ-07: with the slides route on demand, the hero's accent way in led offline to Today after a hydration
+    // error. build-sw.mjs now precaches every exported /learn/…/slides/ route with its RSC payloads.
+    const TRIAL = "/learn/further-maths/FM1/algebraic-fractions-simplify/";
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto("/learn/");
+    const sw = await serviceWorkerState(page);
+    test.skip(!sw.controlled, `service worker did not control the page (${sw.why})`);
+    const manifest = await (await page.request.get("/sw.js")).text();
+    const precache = manifest.slice(manifest.indexOf("const PRECACHE"), manifest.indexOf("const ON_DEMAND"));
+    expect(precache, "the slides route is in the precache list").toContain(`"${TRIAL}slides/"`);
+
+    // One online visit to the topic page, as she would make it.
+    await page.goto(TRIAL);
+    await expect(page.locator("a[data-way='slides']").first()).toBeVisible();
+
+    await context.setOffline(true);
+    try {
+      const topic = await page.goto(TRIAL);
+      expect(topic?.ok(), "the visited topic page served from the cache while offline").toBe(true);
+      await page.locator("a[data-way='slides']").first().click();
+      await expect(page).toHaveURL(new RegExp(`${TRIAL.replace(/\//g, "\\/")}slides\\/$`));
+      await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Simplifying algebraic fractions");
+      // And a direct load of the slides while offline, as from a bookmark or the hero after a reload.
+      const direct = await page.goto(`${TRIAL}slides/`);
+      expect(direct?.ok(), "the slides route served from the precache while offline").toBe(true);
+      await expect(page.locator("[data-card='title']")).toBeVisible();
+      expect(errors, "no page error (a hydration error meant the shell had been served instead)").toEqual([]);
+    } finally {
+      await context.setOffline(false);
+    }
+  });
+
   test("the service worker is served with its precache manifest", async ({ page }) => {
     const res = await page.request.get("/sw.js");
     expect(res.status()).toBe(200);

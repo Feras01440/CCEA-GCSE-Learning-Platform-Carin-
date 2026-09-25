@@ -45,8 +45,9 @@
  * statements; scripts/qa/we-hidden-steps.mjs says which steps, as fade.ts does) and, for the problem mode, the
  * final answer's values and points, minus whatever the stem and the steps that mode shows already give. Never
  * against the twin's answer: that figure is never beside the twin's answer box. These are the WE-LEAK tier,
- * printed and counted but not gating until --we-fatal, because the fix is usually an unannotated copy of the
- * figure for those modes, which the schema does not hold yet.
+ * printed and counted but not gating until --we-fatal. Those modes show `figurePlain` when the example has one
+ * (figureForMode in the renderer; weFigureFor mirrors it), so that is the figure compared; the full example's
+ * annotated figure is compared with nothing, because the full example hides nothing.
  *
  * Usage:
  *   node scripts/qa/figure-leaks.mjs                  every subject, every unit
@@ -59,7 +60,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { hiddenSteps } from "./we-hidden-steps.mjs";
+import { hiddenSteps, weFigureFor } from "./we-hidden-steps.mjs";
 
 /** Run as a script (the CLI below) or imported for its pure sweep (src/lib/build/we-figure-leaks.test.ts). */
 const isMain = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
@@ -216,7 +217,7 @@ const STOP = new Set([
  * defect, and the fix is an unannotated, lettered copy for the question. Add a line here only with
  * a reason a reviewer would accept, never to quieten the gate.
  */
-const ALLOWED = new Map([
+export const ALLOWED = new Map([
   ["q.science.b1.b1-competition-food-webs.0001#a", "a food web has to name its organisms; the mark is for seeing that no arrow points into wheat or hawthorn (the question's copy carries no row or level labels, 23 Sep)"],
   ["q.science.b1.b1-competition-food-webs.0001#b", "a food web has to name its organisms; the mark is for following the arrows to a primary consumer"],
   ["q.science.b1.b1-competition-food-webs.0002#a", "the mcq options ARE the organisms named on the web; the mark is for reading the trophic level"],
@@ -232,7 +233,6 @@ const ALLOWED = new Map([
   ["q.science.b1.b1-aerobic-respiration.0005#c", "the stem says 'Explain why the results show that respiration is exothermic'"],
   ["q.science.b1.b1-decomposition-carbon-cycle.0004#c", "the stem says 'environment C (warm, waterlogged, no air)'"],
   ["q.science.b1.b1-nitrogen-cycle.0004#b", "the stem says 'the condition in the flooded corner'"],
-  ["q.science.b1.b1-respiratory-surfaces-breathing.0003#main", "the stem says the frog's skin 'is thin, kept moist, and richly supplied with blood capillaries'"],
 
   // Multi-panel graph cards. "Which graph shows y = x cubed minus 4x?" is asked of four graphs
   // printed side by side, and the options ARE the panel names. The panel labels are the question's
@@ -318,7 +318,11 @@ function answerPhrases(answer) {
   for (const o of objects(answer.options)) if (o.correct === true) add("mcqCorrect", o.text);
   if (answer.kind === "order") for (const it of strings(answer.items)) add("orderItem", it);
   if (answer.kind === "steps") for (const s of strings(answer.expectedOrder)) add("step", s);
-  if (answer.kind === "table") for (const row of objects(answer.rows)) for (const c of row.cells ?? []) add("tableCell", typeof c === "string" ? c : c?.accepted?.[0]);
+  // The table spec is `cells: [{ row, col, value }]` (schema.ts). The script read `rows[].cells[]` until 25 Sep
+  // 2026, a shape no bundle has, so no table cell was ever checked. A text cell is named like an accepted answer;
+  // number cells are read by bareCellLeaks (two or more printed as bare numbers), not one by one: a table of small
+  // numbers shares digits with every alt that describes the drawing.
+  if (answer.kind === "table") for (const c of objects(answer.cells)) if (typeof c.value === "string" && bareNumber(c.value) === null) add("tableCell", c.value);
   if (answer.kind === "numeric" && typeof answer.value === "number") {
     add("numericValue", String(answer.value));
     if (typeof answer.unit === "string") add("numericValue", `${answer.value} ${answer.unit}`);
@@ -352,6 +356,68 @@ function compactEquation(s) {
 }
 
 // ---------------------------------------------------------------------------
+// Bare numbers: a table's cells printed one to a text node
+// ---------------------------------------------------------------------------
+
+/** A text that is only a number ("12", "−3", "0.25", "1,260"), as that number; else null. */
+function bareNumber(s) {
+  if (typeof s === "number") return Number.isFinite(s) ? s : null;
+  const t = String(s ?? "").replace(/[−–]/g, "-").replace(/,(?=\d{3}(?!\d))/g, "").trim();
+  return /^-?\d+(?:\.\d+)?$/.test(t) ? Number(t) : null;
+}
+
+/** The numbers a multi-value answer asks for, one per cell: a table's number cells, a matrix's entries, a solution set's or a pair's values. */
+function answerCells(answer) {
+  if (!answer || typeof answer !== "object") return [];
+  if (answer.kind === "table") return objects(answer.cells).map((c) => bareNumber(c.value)).filter((v) => v !== null);
+  if (answer.kind === "matrix") return (Array.isArray(answer.entries) ? answer.entries.flat() : []).map(bareNumber).filter((v) => v !== null);
+  if (answer.kind === "algebraic" && typeof answer.latex === "string" && answer.latex.includes(","))
+    return [...answer.latex.replace(/[−–]/g, "-").matchAll(/(?<![\w.^{])-?\d+(?:\.\d+)?(?![\w.])/g)].map((m) => Number(m[0]));
+  return [];
+}
+
+/**
+ * Two or more of a multi-value answer's cells printed as bare-number text nodes of the part's own figures is a
+ * LEAK (QA fixer, 25 Sep 2026: m4 stratified-sampling q0015 printed 12, 16, 10, 22 beside the table asking for
+ * them). The piece rule above passes a bare short number, because axis ticks would drown the report; here a node
+ * counts only when it is not one step of an evenly spaced run of three or more numbers in the figure's order (an
+ * axis), and not a number the stem prints. Each node is spent once, so one 6 is not two cells of 6. One printed
+ * cell stays exempt, and the cells matched must be at least half of the answer's, so a coincidence in a figure
+ * full of numbers does not gate.
+ */
+function bareCellLeaks(acc, { figs, answer, stem, meta }) {
+  const cells = answerCells(answer);
+  if (cells.length < 2) return;
+  const stemNumbers = new Set([...String(stem ?? "").replace(/[−–]/g, "-").matchAll(/-?\d+(?:\.\d+)?/g)].map((m) => Number(m[0])));
+  for (const fig of figs) {
+    if (!fig || typeof fig !== "object") continue;
+    const nodes = figureChannels(fig).filter((c) => c.channel === "text").map((c) => bareNumber(c.text)).filter((v) => v !== null);
+    // an axis: a run of 3+ numbers, in the order drawn, that climbs or falls by one fixed step (a constant run is not)
+    const tick = new Array(nodes.length).fill(false);
+    for (let i = 0; i + 2 < nodes.length; i += 1) {
+      const d = nodes[i + 1] - nodes[i];
+      if (d === 0 || Math.abs(nodes[i + 2] - nodes[i + 1] - d) > 1e-9) continue;
+      let j = i + 2;
+      while (j + 1 < nodes.length && Math.abs(nodes[j + 1] - nodes[j] - d) < 1e-9) j += 1;
+      for (let k = i; k <= j; k += 1) tick[k] = true;
+    }
+    const pool = nodes.filter((v, i) => !tick[i] && !stemNumbers.has(v));
+    const matched = [];
+    for (const c of cells) {
+      const at = pool.findIndex((v) => Math.abs(v - c) < 1e-9);
+      if (at >= 0) matched.push(pool.splice(at, 1)[0]);
+    }
+    if (matched.length >= 2 && matched.length * 2 >= cells.length) {
+      const row = { ...meta, figure: figureId(fig), figureName: figureName(fig), channel: "text", source: "tableCells", phrase: matched.join(", "), printed: `${matched.length} of the answer's ${cells.length} cells as bare numbers`, asLabel: true };
+      const reason = ALLOWED.get(`${meta.item}#${meta.part}`);
+      if (reason) acc.allowed.push({ ...row, reason });
+      else acc.leaks.push(row);
+      return;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // The check
 // ---------------------------------------------------------------------------
 
@@ -364,7 +430,14 @@ function compactEquation(s) {
 const VALUE_SOURCES = new Set(["numericValue", "stepValue", "finalValue"]);
 const WHOLE_NODE_SOURCES = new Set(["stepValue", "finalValue", "finalPoint"]);
 
+/** The ALLOWED keys no checked part answers to: the part, its item or its figure has gone, so the exemption is dead. */
+export function staleAllowances(targets) {
+  return [...ALLOWED.keys()].filter((k) => !targets.has(k));
+}
+
 function check(acc, { figs, phrases, stem, answerKind, groups = 0, meta }) {
+  // every part checked against at least one figure is a live target for an ALLOWED entry
+  if (acc.targets && figs.some((f) => f && typeof f === "object")) acc.targets.add(`${meta.item}#${meta.part}`);
   const stemNorm = norm(stem ?? "");
   const naming = answerKind === "label" || answerKind === "numeric" || ASKS_TO_NAME.test(stem ?? "");
   for (const fig of figs) {
@@ -552,8 +625,11 @@ function sweepWorkedExample(acc, we, meta) {
   // The faded and problem findings are their own tier (WE-LEAK) until the lead promotes it with --we-fatal:
   // they are real (the figure hands over a step she is asked to write) but most need an unannotated copy of
   // the figure for those modes, which the schema does not hold yet.
-  const weAcc = { leaks: acc.weLeaks, reviews: [], allowed: acc.allowed };
-  if (we.figure && typeof we.figure === "object") {
+  const weAcc = { leaks: acc.weLeaks, reviews: [], allowed: acc.allowed, targets: acc.targets };
+  // The faded and problem modes show figurePlain when the example has one, else its figure (figureForMode in the
+  // renderer); the full example's annotated figure hides nothing, so it is compared with nothing.
+  const shown = weFigureFor(we, "faded1");
+  if (shown && typeof shown === "object") {
     figures += 1;
     const steps = objects(we.steps);
     const byN = new Map(steps.map((s) => [s.n, s]));
@@ -567,7 +643,7 @@ function sweepWorkedExample(acc, we, meta) {
       const step = byN.get(n);
       if (!step) continue;
       check(weAcc, {
-        figs: [we.figure],
+        figs: [shown],
         phrases: notGiven(stepPhrases(step), given),
         stem: given,
         answerKind: step.input?.kind ?? "text",
@@ -576,7 +652,7 @@ function sweepWorkedExample(acc, we, meta) {
       });
     }
     check(weAcc, {
-      figs: [we.figure],
+      figs: [shown],
       phrases: notGiven(finalPhrases(we.finalAnswer), we.stem ?? ""),
       stem: we.stem,
       answerKind: "numeric",
@@ -606,7 +682,7 @@ function sweepWorkedExample(acc, we, meta) {
  * @param {{ subject: string, unit: string, slug: string }} where
  */
 export function sweepBundle(b, { subject, unit, slug }) {
-  const acc = { leaks: [], weLeaks: [], reviews: [], allowed: [] };
+  const acc = { leaks: [], weLeaks: [], reviews: [], allowed: [], targets: new Set() };
   let figures = 0;
 
   for (const q of objects(b.questions)) {
@@ -622,6 +698,7 @@ export function sweepBundle(b, { subject, unit, slug }) {
         groups: (part.answer?.keyWords ?? []).length,
         meta: { subject, unit, slug, item: q.id, part: part.id, kind: "question" },
       });
+      bareCellLeaks(acc, { figs, answer: part.answer, stem: part.stem, meta: { subject, unit, slug, item: q.id, part: part.id, kind: "question" } });
     }
   }
 
@@ -700,6 +777,7 @@ const leaks = [];
 const weLeaks = [];
 const reviews = [];
 const allowed = [];
+const targets = new Set();
 const perUnit = [];
 for (const subject of fs.readdirSync(PACKS)) {
   const contentDir = path.join(PACKS, subject, "content");
@@ -732,6 +810,7 @@ for (const subject of fs.readdirSync(PACKS)) {
       weLeaks.push(...r.weLeaks);
       reviews.push(...r.reviews);
       allowed.push(...r.allowed);
+      for (const t of r.targets) targets.add(t);
     }
     perUnit.push({ subject, unit, bundles, figures, leaks: leaks.length - before, weLeaks: new Set(weLeaks.slice(beforeWe).map((r) => `${r.item}#${r.part}`)).size, reviews: reviews.length - beforeReview, allowed: allowed.length - beforeAllowed });
   }
@@ -815,8 +894,16 @@ console.log(
 );
 console.log(weLine);
 
+// An exemption whose part, item or figure has gone is dead config: say so (only on a full run, where every
+// target has been visited).
+const stale = units.length || subjects.length ? [] : staleAllowances(targets);
+if (stale.length) {
+  console.log(`\nALLOWED entries whose target no longer exists (remove them from ALLOWED in scripts/qa/figure-leaks.mjs):`);
+  for (const k of stale) console.log(`  ${k}`);
+}
+
 if (jsonOut) {
-  fs.writeFileSync(jsonOut, `${JSON.stringify({ perUnit, leaks, weLeaks, allowed, reviews }, null, 2)}\n`);
+  fs.writeFileSync(jsonOut, `${JSON.stringify({ perUnit, leaks, weLeaks, allowed, reviews, staleAllowances: stale }, null, 2)}\n`);
   console.log(`findings → ${jsonOut}`);
 }
 

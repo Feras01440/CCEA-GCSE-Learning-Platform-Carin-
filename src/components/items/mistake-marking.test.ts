@@ -489,3 +489,37 @@ describe("at right angles to is perpendicular to", () => {
     expect(markFix("the normal reaction acts parallel to the slope", item).match).toBe(false);
   });
 });
+
+// The FM2 D author (25 Sep 2026, probe-0925.mts). (2) A symbol against a word label disagreed although it names that
+// quantity: "R = 35√2 = 49.5" was refused against the correction "Force = … = 49.50 N" (R is a reaction force). A symbol
+// agrees with a word label when it is that quantity's usual symbol (R, F, T, W for a force; a for an acceleration; v, u
+// for a velocity or speed; s for a displacement or distance; t for a time; m for a mass); another letter does not.
+// (3) A line whose clauses are joined by "so" was not read clause by clause: "48 = 10a so a = 4.8" was refused while
+// "48 = 10a, a = 4.8" was accepted; "so", "therefore", "hence", "giving", "=>" and "⇒" join clauses as a comma does.
+describe("fm2 connected particles: a quantity's symbol, and clauses joined by so", () => {
+  const pulley = {
+    studentWorking: ["The force on the pulley is the resultant of the two tensions", "Each section pulls with 35 N", "Force = 2 × 35 = 70 N"],
+    mistakeLine: 3,
+    correction: ["The force on the pulley is the resultant of the two tensions", "Each section pulls with 35 N, one horizontally and one vertically", "Force = √(35² + 35²) = 49.50 N"],
+  };
+  test.each(["R = 35√2 = 49.5", "F = 49.5 N", "R = 49.50", "Force = 49.5", "49.5 N"])("%s is the fix", (typed) => {
+    expect(markFix(typed, pulley).match).toBe(true);
+  });
+  test.each(["x = 49.5", "a = 49.5", "t = 49.5", "R = 70 N"])("%s is not", (typed) => {
+    expect(markFix(typed, pulley).match).toBe(false);
+  });
+  const system = {
+    studentWorking: ["For the whole system:", "Driving weight = 60 N", "60 - 12 - 40 = 10a", "a = 0.80 m/s²"],
+    mistakeLine: 3,
+    correction: ["For the whole system:", "Driving weight = 60 N", "60 - 12 = 10a", "a = 4.8 m/s²"],
+  };
+  test.each(["48 = 10a so a = 4.8", "48 = 10a, a = 4.8", "48 = 10a therefore a = 4.8", "48 = 10a hence a = 4.8", "48 = 10a => a = 4.8", "48 = 10a ⇒ a = 4.8", "60 - 12 = 10a so a = 4.8"])(
+    "%s is the fix",
+    (typed) => {
+      expect(markFix(typed, system).match).toBe(true);
+    },
+  );
+  test.each(["8 = 10a so a = 0.8", "60 - 12 - 40 = 10a so a = 0.8"])("%s is not", (typed) => {
+    expect(markFix(typed, system).match).toBe(false);
+  });
+});

@@ -176,8 +176,8 @@ describe("markWorking: a line of working read for what it says (engine item 1, 2
 // tariff for a wrong answer from bare fragments. "(x+3)" alone paid "(x + 3) cancelled", "2(x-2)" alone paid "answer
 // fully simplified to 2(x - 2) over (x + 3)", "5(x+4)" alone paid "both lines factorised: 5(x + 4) over (x + 4)(x - 4)",
 // while the line a candidate writes for that mark, "5(x+4)/((x+4)(x-4))", paid nothing. Now: "A over B" in a point is
-// one piece of working that needs both A and B; a lone bracket such as "(x + 3)" is never evidence on its own; a point
-// earns only with the points it `dependsOn`; and a wrong answer never collects every mark (ladderTotal).
+// one piece of working that needs both A and B; a lone bracket such as "(x + 3)" is never evidence on its own; and a
+// wrong answer never collects every mark (ladderTotal).
 describe("markWorking: fractions, lone brackets and dependent points (MK-04)", () => {
   const q9 = [
     point({ id: "MW1", code: "MW", marks: 1, for: "numerator factorised: 2(x + 3)(x - 2)" }),
@@ -206,11 +206,11 @@ describe("markWorking: fractions, lone brackets and dependent points (MK-04)", (
     // The top and the bottom on lines of their own show both lines factorised too.
     expect(markWorking(["5(x+4)", "(x+4)(x-4)", "5/(x-4)"], q1).earned.map((e) => e.id)).toEqual(["MW1", "MW2"]);
   });
-  test("a point earns only with the points it depends on", () => {
-    // The fraction she reaches cannot pay "fully simplified" when nothing before it was shown.
-    expect(markWorking(["2(x-2)/(x+3)"], q9).earned.map((e) => e.id)).not.toContain("W1");
-    // With both factorisations shown, the simplified fraction earns its point: "(x + 3) cancelled" is wording no line
-    // reproduces, so it stands for what it depends on in turn.
+  test("the simplified fraction, as one line, is the answer point's evidence; its top alone is not", () => {
+    // dependsOn is not applied on the ladder (a prerequisite written in words it cannot find would take away marks
+    // right working earned), so the fraction line earns its own point; the cap keeps a wrong answer below full marks.
+    expect(markWorking(["2(x-2)/(x+3)"], q9).earned.map((e) => e.id)).toEqual(["W1"]);
+    expect(markWorking(["2(x-2)", "(x+3)"], q9).earned.map((e) => e.id)).toEqual([]);
     const all = markWorking(["2(x+3)(x-2)/(x+3)^2", "(x+3)^2", "2(x-2)/(x+3)"], q9);
     expect(all.earned.map((e) => e.id)).toEqual(["MW1", "MW2", "W1"]);
   });
@@ -220,5 +220,30 @@ describe("markWorking: fractions, lone brackets and dependent points (MK-04)", (
     expect(ladderTotal({ correct: false, marksAwarded: 3 }, 1, 4)).toBe(3);
     expect(ladderTotal({ correct: true, marksAwarded: 4 }, 0, 4)).toBe(4);
     expect(ladderTotal({ correct: false, marksAwarded: 0 }, null, 4)).toBe(0);
+  });
+});
+
+// The QA fixer (25 Sep 2026): a method point that gives an example, "a difference over a difference formed, e.g.
+// (73 − 37)/(4 − 1)", was never paid: the example was read with its "e.g." attached, and working with other points read
+// off the same line ("(85 − 25)/(5 − 0)") could never match it. An example stands for any working of the same shape
+// that comes to the same value; and a fraction whose bottom a point names ("… over (x + 1)(x − 2)") is found only as a
+// fraction, so the bracket inside a numerator is not it.
+describe("markWorking: an example in a point, and a named denominator", () => {
+  const gradient = [
+    point({ id: "M1", code: "M", marks: 1, for: "two points read with the scales and a difference over a difference formed, e.g. (73 − 37)/(4 − 1)" }),
+    point({ id: "A1", code: "A", marks: 1, for: "12", dependsOn: ["M1"] }),
+  ];
+  test.each([["(73 - 37)/(4 - 1)"], ["(85 - 25)/(5 - 0)"], ["m = (85 - 25)/(5 - 0) = 60/5 = 12"], ["(61 - 25)/(3 - 0)"]])("%s shows the method", (line) => {
+    expect(markWorking([line], gradient).marks).toBe(1);
+  });
+  test.each([["(85 - 25)/(5 - 1)"], ["85 - 25 = 60"], ["(85 + 25)/(5 + 0)"], ["12"]])("%s does not", (line) => {
+    expect(markWorking([line], gradient).marks).toBe(0);
+  });
+  const common = [
+    point({ id: "MA1", code: "MA", marks: 2, for: "all three terms over (x + 1)(x − 2), the 2 written as 2(x + 1)(x − 2): [2(x + 1)(x − 2) + 3(x − 2) − (x + 1)] over (x + 1)(x − 2)" }),
+  ];
+  test("m4 algebraic fractions .0006: the fraction over the common denominator earns it; the numerator alone does not", () => {
+    expect(markWorking(["(2(x+1)(x-2) + 3(x-2) - (x+1))/((x+1)(x-2))"], common).marks).toBe(2);
+    expect(markWorking(["2(x+1)(x-2) + 3(x-2) - (x+1)"], common).marks).toBe(0);
   });
 });

@@ -377,6 +377,18 @@ async function walkTo(page: Page, kind: string, gateId?: string): Promise<void> 
   throw new Error(`did not reach ${kind} ${gateId ?? ""}`);
 }
 
+/** A finger's sideways swipe, as the phone sends it (touch events, so the page sees pointerType "touch"). */
+async function touchSwipe(page: Page, fromX: number, toX: number, y: number): Promise<void> {
+  const cdp = await page.context().newCDPSession(page);
+  const steps = 8;
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: fromX, y }] });
+  for (let i = 1; i <= steps; i += 1) {
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: fromX + ((toX - fromX) * i) / steps, y }] });
+  }
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await cdp.detach();
+}
+
 /** A review card's due time in ms, read from the device's database; null when there is no card. */
 async function cardDue(page: Page, id: string): Promise<number | null> {
   return page.evaluate(
@@ -664,6 +676,56 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
   }
 });
 
+/**
+ * The owner's trial (24 Sep 2026): "a purple rectangular line around the texts that appears but disappears when I click
+ * on something". Slides puts the keyboard on each new card's landing place (the title, else the card's section) so a
+ * screen reader reads it; the focus contract (src/components/shell/input-modality.ts, html[data-input], app/globals.css)
+ * keeps the ring off it unless the keyboard brought her there.
+ */
+test.describe("Slides: the focus ring follows the keyboard, not the page", () => {
+  const ring = (el: ReturnType<Page["locator"]>) =>
+    el.evaluate((node) => {
+      const cs = getComputedStyle(node);
+      return { style: cs.outlineStyle, width: cs.outlineWidth };
+    });
+
+  test("no ring on load, after a click on Continue or after the arrow keys; the ring after Enter on the control", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    const html = page.locator("html");
+    await expect(html).toHaveAttribute("data-input", "pointer");
+    // On load the title has the keyboard (a screen reader starts there), with no ring (audit CD-03).
+    const h1 = page.locator("[data-card='title'] h1");
+    await expect(h1).toBeFocused();
+    expect((await ring(h1)).style).toBe("none");
+
+    // A click on Continue: the new card's title takes the keyboard, quietly.
+    await control(page).click();
+    const title = page.locator("[data-card-title]");
+    await expect(title).toBeFocused();
+    expect((await ring(title)).style).toBe("none");
+
+    // The arrows turn the cards and are reading keys on a landing place: still pointer, still no ring, and on a card with
+    // no title it is the card's section that is focused, not the whole body (audit CQ-13).
+    await page.keyboard.press("ArrowRight");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
+    const section = page.locator("[data-card-section]");
+    await expect(section).toBeFocused();
+    await expect(html).toHaveAttribute("data-input", "pointer");
+    expect((await ring(section)).style).toBe("none");
+
+    // Enter on the control, a button, is the keyboard: the next landing place wears the accent ring.
+    await page.keyboard.press("ArrowLeft");
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
+    await control(page).focus();
+    await page.keyboard.press("Enter");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
+    await expect(html).toHaveAttribute("data-input", "keyboard");
+    await expect(section).toBeFocused();
+    expect(await ring(section)).toMatchObject({ style: "solid", width: "2px" });
+  });
+});
+
 test.describe("Slides: moving on", () => {
   test("a swipe moves on and back on a touch phone", async ({ page, isMobile }) => {
     test.skip(!isMobile, "the swipe is a phone gesture");
@@ -672,16 +734,52 @@ test.describe("Slides: moving on", () => {
     await expect(count(page)).toHaveText(`2 of ${DECK}`);
     const box = (await card(page).boundingBox())!;
     const y = box.y + box.height / 2;
-    await page.mouse.move(box.x + box.width - 40, y);
-    await page.mouse.down();
-    await page.mouse.move(box.x + 40, y, { steps: 8 });
-    await page.mouse.up();
+    // A finger, not a mouse: only a touch or a pen swipes (src/lib/slides/gesture.ts).
+    await touchSwipe(page, box.x + box.width - 40, box.x + 40, y);
     await expect(count(page)).toHaveText(`3 of ${DECK}`);
-    await page.mouse.move(box.x + 40, y);
-    await page.mouse.down();
-    await page.mouse.move(box.x + box.width - 40, y, { steps: 8 });
-    await page.mouse.up();
+    await touchSwipe(page, box.x + 40, box.x + box.width - 40, y);
     await expect(count(page)).toHaveText(`2 of ${DECK}`);
+  });
+
+  test("a mouse drag that selects a sentence keeps the card and the selection (audit CQ-05)", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    await control(page).click();
+    await expect(count(page)).toHaveText(`2 of ${DECK}`);
+    const prose = page.locator("[data-card='idea'] p").first();
+    const box = (await prose.boundingBox())!;
+    for (const [from, to] of [
+      [box.x + 4, box.x + Math.min(250, box.width - 8)],
+      [box.x + Math.min(250, box.width - 8), box.x + 4],
+    ]) {
+      await page.mouse.move(from, box.y + 12);
+      await page.mouse.down();
+      await page.mouse.move(to, box.y + 12, { steps: 10 });
+      await page.mouse.up();
+      await expect(count(page)).toHaveText(`2 of ${DECK}`);
+      expect((await page.evaluate(() => window.getSelection()?.toString() ?? "")).trim().length, "the words she selected are still selected").toBeGreaterThan(3);
+    }
+  });
+
+  test("on a gate the arrows move the choice and Enter checks it (audit CQ-12)", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    await control(page).click();
+    await control(page).click();
+    await expect(page.locator("[data-gate='g1']")).toBeVisible();
+    const radios = page.locator("[data-gate] [role='radio']");
+    await radios.nth(0).click();
+    await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
+    await page.keyboard.press("ArrowDown");
+    await expect(radios.nth(1)).toHaveAttribute("aria-checked", "true");
+    await expect(radios.nth(1)).toBeFocused();
+    await page.keyboard.press("ArrowUp");
+    await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
+    await expect(count(page)).toHaveText(`3 of ${DECK}`);
+    await page.keyboard.press("Enter");
+    await expect(page.locator("[data-verdict]")).toBeVisible();
+    await expect(control(page)).toHaveText("Continue");
+    await expect(page.locator("[data-hints]")).toContainText("continue");
   });
 
   test("the Next button at the screen's edge and the arrow keys move on, on the desktop", async ({ page }) => {
@@ -732,6 +830,28 @@ test.describe("Slides: the whole deck and the close", () => {
     // Done for tonight goes home; the run is finished, so the slides start afresh next time.
     await page.getByRole("link", { name: /^Done for tonight$/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
+  });
+
+  test("a close where Rowan is silent draws no empty scene, and Practise this topic lands on Practice", async ({ page }) => {
+    // A device that has not been through first run: the companion says nothing, so there is no hare and no hill, and
+    // no evening-coloured block where they would have stood (audit CQ-09).
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    await control(page).click();
+    await walkToClose(page);
+    await expect(page.locator("[data-card='close']")).toBeVisible();
+    await expect(page.locator("[data-companion='session-close']")).toHaveCount(0);
+    await expect(page.locator("[data-scene]")).toHaveCount(0);
+    await expect(page.locator("[data-companion-figure]")).toHaveCount(0);
+    // The exit lands on the Practice stage, in view (audit LD-02, CQ-06; the topic page scrolls to #practice once the stage
+    // has rendered, which is the topic agent's half).
+    await page.locator("[data-exit='practise']").click();
+    await expect(page).toHaveURL(new RegExp(`${TOPIC.replace(/\//g, "\\/")}#practice$`));
+    const practice = page.locator("#practice");
+    await expect(practice).toBeAttached();
+    await expect
+      .poll(async () => practice.evaluate((el) => Math.round(el.getBoundingClientRect().top)), { timeout: 10_000 })
+      .toBeLessThan(200);
   });
 
   test("the retry card sits just before the recap and is asked once more, unrecorded", async ({ page }) => {

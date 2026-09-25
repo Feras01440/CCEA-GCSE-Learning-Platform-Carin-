@@ -244,8 +244,9 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
         </p>
       )}
 
-      {/* The two ways in (the slides agent's block, TRIAL-BRIEF.md): Slides on the accent on a first visit, Read as the
-          outlined second way, the last-chosen way remembered on this device; one Read button on a topic without Slides. */}
+      {/* The two ways in (the slides agent's block, TRIAL-BRIEF.md): Slides on the accent unless she chose Read herself
+          (lesson-way.ts: her answers on the topic never move it), Read as the outlined second way naming where she was;
+          one Read button on a topic without Slides. */}
       <StartButtons
         subject={subject}
         unit={unit}

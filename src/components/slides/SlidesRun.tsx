@@ -16,9 +16,12 @@
  * answer only, a recall card as its prompt id (itemKind "prompt"), exactly as TopicContent does. Her place on this
  * device is the card she was on (src/lib/slides/position.ts); Exit keeps it and the hero offers "Continue the slides".
  *
- * Keyboard: arrows move, Enter checks or continues, 1 to 9 choose an option or grade a recall card. Swipe: a horizontal
- * pointer drag of 60 px. Motion: the card advance (200 ms, translateX 24 to 0), the verdict's reveal, the placed result;
- * all static under prefers-reduced-motion (the classes turn off, and the figure's strike takes duration 0).
+ * Keyboard: arrows move, Enter checks or continues, 1 to 9 choose an option or grade a recall card; on an option the
+ * arrows move the choice and Enter checks it. Swipe: a finger or a pen moved 60 px sideways (a mouse drag selects text
+ * and never turns a card; src/lib/slides/gesture.ts); the card and its frame are `touch-action: pan-y`, or the browser
+ * takes a sideways finger for itself and cancels it. Motion: the card advance (200 ms, translateX 24 to 0), the
+ * verdict's reveal, the placed result; all static under prefers-reduced-motion (the classes turn off, and the figure's
+ * strike takes duration 0).
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import Link from "next/link";
@@ -26,6 +29,7 @@ import { clsx } from "clsx";
 import { InlineSvg, MdInlines, markGate, parseInline } from "@/components/items";
 import { deckGateOrders, retryOrder, shownOptions } from "@/lib/gate-order";
 import { rememberLessonWay } from "@/components/topic/lesson-way";
+import { focusLanding } from "@/components/shell/input-modality";
 import { locatorCls } from "@/components/shell/PageHeader";
 import type { Subject } from "@/lib/content/taxonomy";
 import { DEFAULT_PLAN, paperPhrase, todayISO } from "@/lib/plan/exam-plan";
@@ -35,6 +39,7 @@ import { recordAttempt, touchSession } from "@/lib/session/record";
 import { deckMinutes, deckStats, promiseLine, splitSentences, withRetries, type Card, type Deck } from "@/lib/slides/cards";
 import { enrichmentFor } from "@/lib/slides/enrichment";
 import { clearPosition, readPosition, writePosition } from "@/lib/slides/position";
+import { swipeDirection } from "@/lib/slides/gesture";
 import { gradeReturnDates, recordRecallGrade, returnWord } from "@/lib/slides/returns";
 import { tap as haptic } from "@/lib/ux/haptics";
 import { GATE_NOTE, RETRY_NOTE, calloutParts, gateParts, ideaParts, interactionParts, mediaParts, pointerParts, recallParts, recapParts, type CardParts, type GateAnswer } from "./cards";
@@ -64,8 +69,6 @@ const GRADES: Array<{ grade: Grade; label: string; hint: string }> = [
   { grade: "good", label: "Good", hint: "Got it with effort" },
   { grade: "easy", label: "Easy", hint: "Instant" },
 ];
-
-const SWIPE_PX = 60;
 
 function isTypingTarget(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
@@ -193,16 +196,22 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     revealRecall();
   }, [card, graded, revealRecall, revealed, when]);
 
-  // Focus follows the card: its title, else the card itself; the body starts at its top.
+  // Focus follows the card, so a screen reader reads the new one and Tab carries on from it: the card's title (the h1 of
+  // the title and close cards, the header's h2 on a card that has one), else the card's own section. Each is a landing
+  // place, out of the tab order and marked quiet (focusLanding, the focus contract in src/components/shell/
+  // input-modality.ts): no ring after a click, a tap or the arrow keys that turn the cards; the ring when the keyboard
+  // brought her there (Tab, or Enter on a control). The body starts at its top. (Owner's finding c; audit CD-03, CQ-13:
+  // the h2 lives in the header, so it is looked for in the frame, not only in the body.)
+  const frameRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!restored) return;
-    const root = cardRef.current;
-    if (!root) return;
-    const target = root.querySelector<HTMLElement>("h1, h2") ?? root;
-    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-    target.focus({ preventScroll: true });
-    root.scrollTo({ top: 0 });
+    const frame = frameRef.current;
+    const body = cardRef.current;
+    if (!frame || !body) return;
+    const target = frame.querySelector<HTMLElement>("[data-card-title]") ?? body.querySelector<HTMLElement>("h1") ?? body.querySelector<HTMLElement>("[data-card-section]") ?? body;
+    focusLanding(target);
+    body.scrollTo({ top: 0 });
   }, [index, restored]);
 
   // The page behind must not scroll: the layer is the page.
@@ -319,6 +328,28 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       const typing = isTypingTarget(e.target);
+      // On an option of an open gate the keys are the radio group's (WAI-ARIA, and Read's gate): the arrows move the
+      // choice, Enter checks it, as the card's own caption says (audit CQ-12: Enter re-chose, ArrowLeft left the gate).
+      const option = e.target instanceof HTMLElement && e.target.getAttribute("role") === "radio" ? e.target.closest<HTMLElement>("[data-gate]") && e.target : null;
+      if (option && card.kind === "gate" && !gateAnswer) {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "ArrowUp" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          const radios = Array.from(option.closest("[data-gate]")!.querySelectorAll<HTMLElement>("[role='radio']"));
+          const by = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : -1;
+          const to = radios[(radios.indexOf(option) + by + radios.length) % radios.length];
+          const value = to?.getAttribute("data-value");
+          if (to && value !== null && value !== undefined) {
+            setSelected((s) => ({ ...s, [card.key]: value }));
+            to.focus();
+          }
+          return;
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (primary && !primary.disabled) primary.action();
+          return;
+        }
+      }
       if (e.key === "ArrowRight" && !typing) {
         if (unlocked && !isLast && card.kind !== "close") {
           e.preventDefault();
@@ -362,18 +393,18 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   /* ---- swipe ------------------------------------------------------------------------------------------ */
   const swipe = useRef<{ x: number; y: number; id: number } | null>(null);
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
+    // Only a finger or a pen can swipe; a mouse drag selects text (src/lib/slides/gesture.ts).
+    if (e.pointerType === "mouse") return;
     swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
   };
   const onPointerUp = (e: ReactPointerEvent<HTMLDivElement>) => {
     const s = swipe.current;
     swipe.current = null;
     if (!s || s.id !== e.pointerId) return;
-    const dx = e.clientX - s.x;
-    const dy = e.clientY - s.y;
-    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy) * 2) return;
-    if (dx < 0) next();
-    else back();
+    const selection = typeof window.getSelection === "function" ? (window.getSelection()?.toString() ?? "") : "";
+    const turn = swipeDirection({ pointerType: e.pointerType, dx: e.clientX - s.x, dy: e.clientY - s.y, selection });
+    if (turn === "next") next();
+    else if (turn === "back") back();
   };
 
   /* ---- the card's parts ------------------------------------------------------------------------------- */
@@ -551,7 +582,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
 
   if (card.kind === "close") {
     return (
-      <div data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
+      <div ref={frameRef} data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
         <div ref={cardRef} key={index} className={clsx("min-h-0 flex-1 overflow-y-auto", motionCls)} data-body data-card="close">
           <SlidesClose subject={subject} unit={unit} slug={slug} title={title} displayTitle={displayTitle} count={count} startedAt={startedAt} facts={facts} settled={writing === 0} />
         </div>
@@ -564,7 +595,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     const Fig = figureId ? ILLUSTRATIONS[figureId] : null;
     const figure = Fig ? <Fig variant="title" /> : card.figure?.kind === "svg" ? <InlineSvg svg={card.figure.svg} alt={card.figure.alt} className="m-0 w-full" /> : null;
     return (
-      <div data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
+      <div ref={frameRef} data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
         <div ref={cardRef} key={index} className={clsx("flex min-h-0 flex-1 flex-col overflow-y-auto lg:grid lg:grid-cols-[minmax(0,1fr)_520px] lg:overflow-hidden", motionCls)} data-body data-card="title">
           {/* The text column: on the phone its head (Exit, the locator, the title, the figure) carries the wash. */}
           <div className="flex min-h-0 flex-col lg:min-h-0 lg:overflow-y-auto">
@@ -582,7 +613,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
                   </span>
                 )}
               </p>
-              <h1 tabIndex={-1} className="mt-3 max-w-[18ch] font-serif-lesson text-[30px] font-medium leading-[1.15] tracking-[-0.015em] text-ink outline-none lg:mt-4 lg:max-w-[16ch] lg:text-[44px] lg:leading-[1.1]">
+              <h1 tabIndex={-1} data-focus-quiet="" className="mt-3 max-w-[18ch] font-serif-lesson text-[30px] font-medium leading-[1.15] tracking-[-0.015em] text-ink lg:mt-4 lg:max-w-[16ch] lg:text-[44px] lg:leading-[1.1]">
                 <MdInlines inlines={parseInline(displayTitle)} />
               </h1>
               {figure && (
@@ -614,7 +645,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   }
 
   return (
-    <div data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
+    <div ref={frameRef} data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
       {/* The header: the wash band with Exit, the topic, the count, the track, then the card's eyebrow and title. */}
       <header className="bg-[var(--tint-wash)] px-6 pb-4 pt-3 lg:px-10 lg:pb-6 lg:pt-5" data-header>
         <div className="flex items-center gap-4 lg:gap-6">
@@ -643,8 +674,8 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
         <button type="button" aria-label="Previous card" onClick={back} disabled={index === 0} className="absolute left-10 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-2 bg-surface text-[18px] text-ink-2 hover:bg-surface-2 disabled:opacity-40 lg:flex" data-prev>
           <span aria-hidden>‹</span>
         </button>
-        <div ref={cardRef} key={index} className={clsx("flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pb-4 pt-4 lg:w-[1000px] lg:max-w-full lg:flex-none lg:px-0 lg:pt-0", motionCls)} data-card={card.kind}>
-          <section aria-label={`Card ${count}`} className={clsx("flex flex-col gap-3 lg:grid lg:items-start lg:gap-14", parts?.right ? "lg:grid-cols-[minmax(0,1fr)_400px]" : "lg:grid-cols-[minmax(0,640px)]")}>
+        <div ref={cardRef} key={index} className={clsx("flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pb-4 pt-4 lg:w-[1000px] lg:max-w-full lg:flex-none lg:px-0 lg:pt-0", motionCls)} data-card={card.kind} style={{ touchAction: "pan-y" }}>
+          <section aria-label={`Card ${count}`} tabIndex={-1} data-card-section data-focus-quiet="" className={clsx("flex flex-col gap-3 lg:grid lg:items-start lg:gap-14", parts?.right ? "lg:grid-cols-[minmax(0,1fr)_400px]" : "lg:grid-cols-[minmax(0,640px)]")}>
             <div className="flex min-w-0 flex-col gap-3.5">{parts?.left}</div>
             {parts?.right && <div className="flex min-w-0 flex-col gap-2.5">{parts.right}</div>}
           </section>

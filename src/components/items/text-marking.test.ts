@@ -334,3 +334,28 @@ describe("a hedge with a named wrong answer", () => {
     expect(r).toMatchObject({ marksAwarded: 1, matchedGroups: [1] });
   });
 });
+
+// The QA fixer (25 Sep 2026: 478 of 1,567 retrieval prompts cannot tick all their key words from their own model
+// answer) and trial audit MK-16 (the key-word check calls right prompt answers incomplete). The chips read her typed
+// recall, and a model answer or a key word may be written in TeX ("$\log(ab)$", "$\dfrac{ad-bc}{bd}$", "$y \, dx$") or
+// with its operators spaced ("ad - bc"). The chips now read TeX as it would be typed and ignore the spacing round an
+// operator between letters, as they already did between numbers. They award nothing: they only show which key words
+// her recall has, so what is left after this is the authored key words' wording (the residual list, for content).
+describe("keywordsPresent reads TeX and operator spacing as typed", () => {
+  test.each([
+    [String.raw`$\log(ab)$, since the plus outside becomes a times inside`, "log ab"],
+    [String.raw`$\dfrac{ad-bc}{bd}$, provided $b$ and $d$ share no factor`, "ad - bc"],
+    [String.raw`Area $= \int_{a}^{b} y \, dx$`, "y dx"],
+    [String.raw`$\log a + \log b = \log(ab)$, and $n\log a = \log a^{n}$`, "n log a"],
+    [String.raw`$(2x+1)(2x-1)$ and $(3x+1)(3x-1)$`, "(3x + 1)(3x - 1)"],
+    [String.raw`Rewrite it as $4x^{-2}$ first`, "4x^-2"],
+    [String.raw`$\sqrt{20} = 2\sqrt{5}$`, "2√5"],
+  ])("%s ticks %s", (answer, key) => {
+    expect(keywordsPresent(answer, [key]).all).toBe(true);
+  });
+  test("a key word that is not there is still missing", () => {
+    expect(keywordsPresent(String.raw`$\log(a + b)$`, ["log ab"]).all).toBe(false);
+    expect(keywordsPresent("ad plus bc over bd", ["ad - bc"]).all).toBe(false);
+    expect(keywordsPresent(String.raw`$\dfrac{ad+bc}{bd}$`, ["ad - bc"]).all).toBe(false);
+  });
+});

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { planFade } from "@/components/items/fade";
-import { hiddenSteps } from "../../../scripts/qa/we-hidden-steps.mjs";
+import { hiddenSteps, weFigureFor } from "../../../scripts/qa/we-hidden-steps.mjs";
 import { sweepBundle } from "../../../scripts/qa/figure-leaks.mjs";
 
 /**
@@ -144,5 +144,30 @@ describe("figure-leaks: a worked example's figure against the steps the faded mo
     const w = we(["Temperature / °C"], { twin: { stem: "Two groups recorded 96 s and 104 s. Calculate the mean.", answer: numeric(100, "s"), figure: { kind: "svg", src: svg("mean = 100 s"), alt: "a bar chart" } } });
     expect(leakParts(bundleOf(w))).toEqual(["we.science.b1.x.01 twin"]);
     expect([...new Set(run(bundleOf(w)).leaks.map((r: Row) => r.part))]).toEqual(["twin"]); // the twin stays in the gating tier
+  });
+});
+
+describe("figurePlain: the checker reads the figure each mode shows (renderer: figureForMode, 25 Sep 2026)", () => {
+  const annotated = { kind: "svg", src: svg("Temperature / °C", "shortest time = fastest rate = optimum (40 °C)"), alt: "An annotated graph." };
+  const plain = { kind: "svg", src: svg("Temperature / °C", "0", "20", "40", "60"), alt: "The same graph, unannotated." };
+
+  it("chooses the same figure as the renderer, with and without figurePlain, in every mode", async () => {
+    const { figureForMode } = await import("@/components/items/WorkedExampleAsQuestion");
+    for (const w of [we([]), we([], { figurePlain: plain })])
+      for (const mode of ["full", "faded1", "faded2", "problem"] as const) expect(weFigureFor(w, mode), mode).toBe(figureForMode(w as never, mode));
+  });
+
+  it("compares figurePlain, not the annotated figure, for the faded and problem modes", () => {
+    const w = { ...we([]), figure: annotated, figurePlain: plain };
+    expect(leakParts(bundleOf(w))).toEqual([]);
+  });
+
+  it("still reports a figurePlain that prints a hidden step", () => {
+    const w = { ...we([]), figure: plain, figurePlain: annotated };
+    expect(leakParts(bundleOf(w))).toEqual(["we.science.b1.x.01 step 3", "we.science.b1.x.01 final"]);
+  });
+
+  it("without figurePlain the annotated figure is what those modes show, and is compared", () => {
+    expect(leakParts(bundleOf({ ...we([]), figure: annotated }))).toEqual(["we.science.b1.x.01 step 3", "we.science.b1.x.01 final"]);
   });
 });

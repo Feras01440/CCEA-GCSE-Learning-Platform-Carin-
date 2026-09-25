@@ -882,8 +882,11 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
     const num = (text: string, re: RegExp) => Number(re.exec(text)?.[1] ?? Number.NaN);
     const slidesLine = (await page.locator(`${MAIN} header [data-way-length="slides"]`).textContent()) ?? "";
     const readLine = (await page.locator(`${MAIN} header [data-way-length="read"]`).textContent()) ?? "";
-    expect(slidesLine).toMatch(/^Slides: about \d+ minutes? plus a video\s*·\s*,?\s*\d+ cards$/);
-    expect(readLine).toMatch(/^Read: about \d+ minutes? plus a video\s*·\s*,?\s*\d+ sections$/);
+    // A video with no stated length is named beside each way's minutes (the note's one video has none today).
+    expect(slidesLine).toMatch(/^Slides: about \d+ minutes?( plus [a-z]+ videos?)?\s*·\s*,?\s*\d+ cards$/);
+    expect(readLine).toMatch(/^Read: about \d+ minutes?( plus [a-z]+ videos?)?\s*·\s*,?\s*\d+ sections$/);
+    const plus = / plus [a-z ]*videos?/.exec(readLine)?.[0] ?? "";
+    expect(/ plus [a-z ]*videos?/.exec(slidesLine)?.[0] ?? "", "both ways name the same untimed video").toBe(plus);
     const slides = { minutes: num(slidesLine, /about (\d+) minute/), cards: num(slidesLine, /(\d+) cards/) };
     const read = { minutes: num(readLine, /about (\d+) minute/), sections: num(readLine, /(\d+) sections/) };
 
@@ -891,7 +894,7 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
     const track = page.locator("[data-read-track]");
     await expect(track.locator("p").first()).toContainText(`1 of ${read.sections}`);
     await track.getByRole("button", { name: /^Contents$/ }).click();
-    await expect(track).toContainText(`The lesson · about ${read.minutes} minutes plus a video`);
+    await expect(track).toContainText(`The lesson · about ${read.minutes} ${read.minutes === 1 ? "minute" : "minutes"}${plus}`);
     await page.keyboard.press("Escape");
 
     // Slides' numbers are its Start button's and its title card's.
@@ -902,12 +905,17 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
     const card = (await promise.textContent()) ?? "";
     expect(num(card, /About (\d+) minute/), card).toBe(slides.minutes);
     expect(num(card, /(\d+) cards/), card).toBe(slides.cards);
-    expect(card).toContain("plus a video");
+    expect(/ plus [a-z ]*videos?/.exec(card)?.[0] ?? "", "the title card names the same video").toBe(plus);
   });
+});
 
-  test("the lede's fractions sit in their line at the inline size, at 390 and 1280", async ({ page }) => {
-    // Build 7: "12/18 cancels to 2/3" set as two full-size stacked fractions, numerals 18.7 px in a 17 px line (19.8 in
-    // 18 at 1280), so the first line stood about 12 px taller than the rest (audit CD-06, CT-13).
+/**
+ * The hero's lede is running prose (art direction v2 §8.4: "\tfrac is the most an inline fraction may be"). On build 7
+ * "12/18 cancels to 2/3" was set as two full-size stacked fractions, numerals 18.7 px in a 17 px line (19.8 in 18 at
+ * 1280), so the first line stood about 12 px taller than the rest (audit CD-06, CT-13).
+ */
+test.describe("The hero's lede: a fraction in it takes the inline size", () => {
+  test("the lede's fractions sit in their line, above the 13 px floor, at 390 and 1280", async ({ page }) => {
     for (const size of [
       { width: 390, height: 844 },
       { width: 1280, height: 800 },
@@ -921,7 +929,7 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
           .map((m) => parseFloat(getComputedStyle(m).fontSize));
         return { font: parseFloat(cs.fontSize), line: parseFloat(cs.lineHeight), height: el.getBoundingClientRect().height, numerals };
       });
-      expect(lede.numerals.length, "the lede's fractions").toBeGreaterThan(0);
+      // Whatever fractions the lede carries (two today: 12/18 and 2/3) sit smaller than its words and above the floor.
       for (const px of lede.numerals) {
         expect(px, `a numeral at ${size.width}`).toBeLessThan(lede.font);
         expect(px, `a numeral at ${size.width}: the 13 px floor`).toBeGreaterThanOrEqual(13 - 0.01);

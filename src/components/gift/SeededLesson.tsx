@@ -21,7 +21,7 @@ import { MdInlines, parseInline, Tex } from "@/components/items";
 import { PhotoFigure } from "@/components/media/PhotoFigure";
 import { sanitizeInlineSvg } from "@/lib/ux/svg";
 import { QuestionRunner } from "@/components/topic/QuestionRunner";
-import { heroDataFor, lessonBlocks, lessonSections, spineTitle, type TopicHeroData } from "@/components/topic/lesson-plan";
+import { heroDataFor, lessonBlocks, lessonSections, spineTitle, type TopicHeroData, inlineLede } from "@/components/topic/lesson-plan";
 import { CairnStack } from "@/components/ux/CairnStack";
 import { CardSkeleton } from "@/components/ux/Skeleton";
 import { loadBundle, type ShippedBundle } from "@/lib/content/load";
@@ -156,7 +156,7 @@ export function SeededLesson({ plan, today, onDone }: { plan: ExamPlan; today: s
         <h1 className="mt-2 text-[24px] font-semibold leading-tight tracking-tight">{seed.title}</h1>
         {view.hero.lede && (
           <p className="prose-note mt-3 text-[16px] leading-relaxed">
-            <Tex text={view.hero.lede} />
+            <Tex text={inlineLede(view.hero.lede)} />
           </p>
         )}
         {view.hero.can[0] && (
