@@ -118,7 +118,7 @@
         "Take a common factor, including a numerical one, out of a numerator or denominator",
         "Factorise a quadratic of the form x² + bx + c and one with a leading coefficient, such as 2x² + 7x + 6",
         "Recognise and factorise a difference of two squares, including 4x² − 25 and 9x² − 1",
-        "Spot two squares hidden behind a common factor, such as 3x² − 300 = 3(x + 10)(x − 10)",
+        "Spot two squares hidden behind a common factor, such as 2x² − 392 = 2(x + 14)(x − 14)",
         "Cancel a factor that appears on both lines, and explain why a term cannot be cancelled",
         "Cancel a remaining numerical factor so the answer is fully simplified",
         "Check a simplified answer by substituting a value into both the original and the answer"
@@ -411,14 +411,14 @@
               "id": "a",
               "text": "Divide the numbers by 3, giving $\\frac{2}{x-3}$",
               "correct": true,
-              "feedback": "The brackets are done and the numbers are not. The last mark on these questions is almost always for the number."
+              "feedback": "The brackets are done and the numbers are not: the 6 and the 3 still share a 3. The last mark goes to the fully simplified answer, so the numbers have to be finished too."
             },
             {
               "id": "b",
               "text": "Nothing more — it is already fully simplified",
               "correct": false,
               "misconception": "fm.algfrac.not-fully-simplified",
-              "feedback": "The 6 and the 3 share a factor of 3. Summer 2024 examiners reported a high number of candidates stopping exactly here."
+              "feedback": "The 6 and the 3 share a factor of 3, so this is not fully simplified yet. Summer 2024 examiners reported a high number of candidates losing the last mark by leaving a factor of 2 in an answer."
             },
             {
               "id": "c",
@@ -1862,7 +1862,7 @@
         "MW1",
         "MW1"
       ],
-      "feedback": "Both method-and-working marks for factorising are safe, and the cancelling started correctly. The final mark is for a fraction with nothing left in common, and an $x$ is still a factor of both lines. Summer 2023 examiners reported this exact shape of unfinished answer as the commonest loss on this question. Read your answer line once more and ask whether anything divides both parts.",
+      "feedback": "Both method-and-working marks for factorising are safe, and the cancelling started correctly. The final mark is for a fraction with nothing left in common, and an $x$ is still a factor of both lines. Summer 2023 examiners saw several candidates stop at exactly this kind of answer, with an $x$ still on both lines. Read your answer line once more and ask whether anything divides both parts.",
       "source": "ccea-cer:further-maths:2023-summer:FM1:Q9"
     },
     {
@@ -1884,7 +1884,7 @@
       "correction": [
         "Top: 3x² + 27x = 3x(x + 9)",
         "Bottom: x² + 6x - 27 = (x + 9)(x - 3)",
-        "Answer: 3x over (x - 3)"
+        "Answer: 3x/(x - 3), that is 3x over (x - 3)"
       ],
       "marksEarnedAsWritten": [
         "MW1"
@@ -1921,8 +1921,8 @@
       "prompt": "$a^{2}-b^{2} = $ ?",
       "answer": "$(a+b)(a-b)$, the difference of two squares.",
       "keyWords": [
-        "(a + b)(a - b)",
-        "difference of two squares"
+        "a + b",
+        "a - b"
       ],
       "examUnit": "FM1",
       "difficultyPrior": 2
@@ -2019,8 +2019,7 @@
       "prompt": "After the brackets, what is the last check before the answer line?",
       "answer": "The numbers: no numerical factor left on both lines",
       "keyWords": [
-        "numbers",
-        "numerical factor"
+        "numbers"
       ],
       "examUnit": "FM1",
       "difficultyPrior": 5
@@ -2235,7 +2234,7 @@
           "type": "maths-numeric",
           "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
           "result": "pass",
-          "detail": "25 Sep trial pass: every worked line, figure and gate in the rebuilt note re-evaluated at six sample points by the script (hero 3x(x + 7)/6(x + 7)(x − 7) = x/2(x − 7); x(x + 8)/5x = (x + 8)/5 and the term test at x = 2, 1 against 8/5; x² − 49, 16x² − 81, 25x² − 1, 3x² − 300, x³ − 100x, 2x² − 128 over x² + 17x + 72, 8/4(x − 7), 5x²/x, 12x/3x, and every gate and option). Correction to the 13 Sep entry above: the term counter-example's cancelled value was 4, not 0 (the figure always printed 4); that figure is replaced.",
+          "detail": "25 Sep trial pass: every worked line, figure and gate in the rebuilt note re-evaluated at six sample points by the script (hero 3x(x + 7)/6(x + 7)(x − 7) = x/2(x − 7); x(x + 8)/5x = (x + 8)/5 and the term test at x = 2, 1 against 8/5; x² − 49, 16x² − 81, 25x² − 1, 2x² − 392, x³ − 196x, 2x² − 128 over x² + 17x + 72, 8/4(x − 7), 5x²/x, 12x/3x, and every gate and option). Correction to the 13 Sep entry above: the term counter-example's cancelled value was 4, not 0 (the figure always printed 4); that figure is replaced.",
           "at": "2026-09-25T04:20:00Z",
           "by": "claude"
         },
@@ -2583,6 +2582,14 @@
           "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
           "result": "pass",
           "detail": "Correction to the 13 Sep entry above: item 01's cancelled-term value at x = 1 is 4, not 0 (the printed feedback always said 4). Items 07 and 08: every value in their feedback computed by the script (13/4 against 11/2; 15/4 against 13/2; 4).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass (review R-03): item 04's feedback said the last mark is almost always for the number. The final mark is for the whole fully simplified answer (2018 Q8(i), 2022 Q9(b), 2023 Q9); only Summer 2024 Q8(a) turned on a leftover factor of 2. Options a and b reworded to say so.",
           "at": "2026-09-25T04:20:00Z",
           "by": "claude"
         }
@@ -3484,6 +3491,14 @@
           "detail": "Line 3 of the working and the second line of the correction named the cancelled factor as (x). The explanation says the bracket was cancelled, and the bracket that divides out of 3x²(x - 4) over x(x - 4) is (x - 4), so both lines now say Cancel (x - 4); the flagged line (4), the misconception and the marks are unchanged. The correction's last line is now Answer: 3x, so the fix box reads 3x typed on its own. The fix box (markFix) refuses every line of the working typed back and accepts 3x, Answer 3x and the correction's lines (scratchpad/fm1-batch-g/probe-afs-ftm01.mts).",
           "at": "2026-09-23T18:55:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass (review R-02): the feedback ranked the unfinished answer 'the commonest loss'; the Summer 2023 report says 'several candidates' left 3x(x − 2)/x. Reworded to what the report says.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3653,6 +3668,14 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass (review R-09): key words were the bracket pair written one way and the name 'difference of two squares', so a right recall such as (a-b)(a+b) or (a+b)(a-b) alone was told a key word was missing. Now each bracket is its own key word, met in either order; the answer is unchanged.",
+          "at": "2026-09-25T04:20:00Z",
           "by": "claude"
         }
       ],
