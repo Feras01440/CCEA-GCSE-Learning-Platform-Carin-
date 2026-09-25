@@ -26,7 +26,7 @@ const ok = (cond: boolean, label: string, detail = "") => {
 
 // ---- gates: every option marks exactly as the answer says, by text and by position --------------------------------
 const gates = note.filter((b: any) => b.type === "gate");
-ok(gates.map((g: any) => g.id).join(",") === "g2,g1,g3,g7,g4,g5,g6,g8", "gate order", gates.map((g: any) => g.id).join(","));
+ok(gates.map((g: any) => g.id).join(",") === "g2,g12,g9,g13,g4,g10,g11,g8", "gate order", gates.map((g: any) => g.id).join(","));
 for (const g of gates) {
   ok(g.options.includes(g.answer), `${g.id}: its answer is one of its options`);
   g.options.forEach((o: string, i: number) => {
@@ -37,8 +37,54 @@ for (const g of gates) {
 }
 const g = (id: string) => gates.find((x: any) => x.id === id);
 ok(g("g2").prompt === "What cancels in this fraction? $\\dfrac{x+4}{x}$", "g2 carries its fraction after the sentence (CD-01)", g("g2").prompt);
-ok(g("g5").prompt === "Is this fully simplified? $\\dfrac{6}{3(x-3)}$", "g5 carries its fraction after the sentence (CD-01)", g("g5").prompt);
-ok(!/one tap/i.test(g("g1").prompt), "g1 no longer says One tap (CT-16)", g("g1").prompt);
+ok(g("g10").prompt === "Is this fully simplified? $\\dfrac{14}{7(x-9)}$", "g10 (replacing g5) carries its fraction after the sentence (CD-01)", g("g10").prompt);
+for (const w of ["g1", "g3", "g5", "g6", "g7"]) {
+  ok(!g(w), `${w} withdrawn from the note`);
+  ok(new RegExp(`Gate ${w} withdrawn`).test(JSON.stringify(B.verification)), `${w} kept in full on the note's log with its reason`);
+}
+// the ruling's defect, checked for every gate and every shipped diagnostic: no maths it shows is a question's, a worked
+// example's, a find-the-mistake line's or a prompt's own expression (TeX and plain spellings compared the same way)
+{
+  const plain = (s: string) =>
+    String(s)
+      .replace(/\^\{?2\}?|²/g, "^2")
+      .replace(/\^\{?3\}?|³/g, "^3")
+      .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
+      .replace(/\s+over\s+/g, "/")
+      .replace(/−/g, "-")
+      .replace(/[\s{}$\\]|left|right/g, "")
+      .replace(/[()]/g, "");
+  // a whole expression inside the later text: not the front or the back of a longer one ("x^2+7x" is not "x^2+7x+10")
+  const TERM = /[0-9x^+\-.]/;
+  const contains = (l: string, t: string) => {
+    for (let i = l.indexOf(t); i >= 0; i = l.indexOf(t, i + 1)) {
+      const before = l[i - 1];
+      const after = l[i + t.length];
+      if ((before === undefined || !TERM.test(before)) && (after === undefined || !TERM.test(after))) return true;
+    }
+    return false;
+  };
+  const spans = (s: string) => [...String(s).matchAll(/\$([^$]+)\$/g)].map((m) => plain(m[1])).filter((t) => t.length >= 6);
+  const later: string[] = [];
+  for (const q of B.questions) for (const p of q.parts) later.push(plain(p.stem));
+  for (const we of B.workedExamples) later.push(plain(we.stem), plain(we.twin.stem), ...we.steps.map((st: any) => plain(st.working)));
+  for (const f of B.findTheMistake) later.push(plain(f.stem), ...f.studentWorking.map(plain), ...f.correction.map(plain));
+  const shipped = (itemId: string) => B.verification.find((v: any) => v.itemId === itemId)?.status === "verified";
+  for (const p of B.prompts.filter((x: any) => shipped(x.id))) later.push(plain(p.prompt));
+  const ask = (where: string, text: string) => {
+    for (const t of spans(text)) {
+      const hit = later.find((l) => contains(l, t));
+      ok(!hit, `${where}: "${t}" is not a later item's expression`, hit ?? "");
+    }
+  };
+  for (const x of gates) ask(`gate ${x.id}`, [x.prompt, ...x.options, x.explain].join(" "));
+  note.forEach((x: any, i: number) => {
+    if (x.type === "p" || x.type === "callout") ask(`note block ${i}`, x.md);
+  });
+  const liveSet = B.diagnostics.find((d: any) => d.id === "dx.fm.u1.algebraic-fractions-simplify");
+  for (const it of liveSet.items) ask(`dx ${it.id}`, [it.stem, ...it.options.map((o: any) => `${o.text} ${o.feedback}`)].join(" "));
+}
+for (const x of gates) ok(!/one tap/i.test(x.prompt), `${x.id} does not say One tap (CT-16)`);
 for (const x of gates) ok(/^[\s\S]*\S/.test(x.explain) && !/second option|third option|first option/i.test(x.explain), `${x.id}: the explanation names no option by position (LD-01)`);
 
 // ---- the note: hero lede, video, wired prompts ---------------------------------------------------------------------
@@ -77,19 +123,19 @@ kw("10", "(3x+2)(3x-2)", true);
 kw("10", "(3x-2)(3x+2)", true);
 kw("10", "(3x + 2)(3x - 2)", true);
 kw("10", "(9x+2)(9x-2)", false);
-kw("11", "the common factor 3", true);
-kw("11", "take out the common factor, 3(x^2-49)", true);
-kw("11", "3(x+7)(x-7)", false);
-kw("12", "4/(x-7)", true);
-kw("12", "4/(x - 7)", true);
-kw("12", "\\frac{4}{x-7}", true);
-kw("12", "4/(x+7)", false);
+kw("11", "the common factor 2", true);
+kw("11", "take out the common factor, 2(x^2-121)", true);
+kw("11", "2(x+11)(x-11)", false);
+kw("12", "3/(x-13)", true);
+kw("12", "3/(x - 13)", true);
+kw("12", "\\frac{3}{x-13}", true);
+kw("12", "3/(x+13)", false);
 // engine finding, not a content fault: the key-word check drops brackets, so "4/x-7" (which reads as 4/x - 7) also
 // gets the chip; the chip awards nothing, and the answer beside it shows the bracketed form
 {
   const p = B.prompts.find((x: any) => x.id === ID("rp", "12"));
-  const r = keywordsPresent("4/x-7", p.keyWords);
-  console.log(`ENGINE rp.12 typed "4/x-7" -> ${r.all ? "chip shown (brackets ignored)" : "missing"}`);
+  const r = keywordsPresent("3/x-13", p.keyWords);
+  console.log(`ENGINE rp.12 typed "3/x-13" -> ${r.all ? "chip shown (brackets ignored)" : "missing"}`);
 }
 // MK-15 reproduced on the withdrawn prompt: its TeX key word is what the chip printed
 {
@@ -100,12 +146,14 @@ kw("12", "4/(x+7)", false);
 
 // ---- diagnostics: the live set, the withdrawn set, the new items ---------------------------------------------------
 const live = B.diagnostics.find((d: any) => d.id === "dx.fm.u1.algebraic-fractions-simplify");
-ok(live.items.map((i: any) => i.id).join(",") === "07,02,03,04,05,06,08", "live set order 07,02..06,08", live.items.map((i: any) => i.id).join(","));
-ok(statusOf("dx.fm.u1.algebraic-fractions-simplify.withdrawn-01") === "withdrawn", "item 01 kept in a withdrawn set");
-for (const it of live.items.filter((i: any) => ["07", "08"].includes(i.id))) {
+ok(live.items.map((i: any) => i.id).join(",") === "07,09,03,04,10,11,08", "live set order 07,09,03,04,10,11,08", live.items.map((i: any) => i.id).join(","));
+ok(statusOf("dx.fm.u1.algebraic-fractions-simplify.withdrawn") === "withdrawn", "the withdrawn set is withdrawn");
+ok(B.diagnostics.find((d: any) => d.id === "dx.fm.u1.algebraic-fractions-simplify.withdrawn").items.map((i: any) => i.id).join(",") === "01,02,05,06", "items 01, 02, 05 and 06 kept in it");
+for (const it of live.items.filter((i: any) => ["07", "08", "09", "10", "11"].includes(i.id))) {
   ok(it.options.filter((o: any) => o.correct).length === 1, `dx ${it.id}: exactly one correct option`);
   for (const o of it.options) if (!o.correct) ok(typeof o.misconception === "string" && o.misconception.startsWith("fm.algfrac."), `dx ${it.id}/${o.id}: names a misconception`);
-  ok(!it.options.some((o: any) => /—|because|term|factor/.test(o.text)), `dx ${it.id}: no option carries its own reason (CT-20)`);
+  // CT-20's rule is for items whose options are answers (07, 08, 11); 09 and 10 keep 02's and 05's described moves
+  if (["07", "08", "11"].includes(it.id)) ok(!it.options.some((o: any) => /—|because|term|factor/.test(o.text)), `dx ${it.id}: no option carries its own reason (CT-20)`);
 }
 
 // ---- question 0011 through markAnswer -------------------------------------------------------------------------------
