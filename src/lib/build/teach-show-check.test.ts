@@ -23,14 +23,14 @@ const note = (...body: Block[]) => [hero, ...body, ...recap, ...pointer];
 
 describe("teach → show → check", () => {
   it("passes a section that explains, then shows, then checks", () => {
-    const r = teachShowCheck(note(h("What cancelling is", "idea"), EXPLAIN, figure, gate("g1")));
+    const r = teachShowCheck(note(h("What cancelling is", "idea"), EXPLAIN, WORKED, gate("g1")));
     expect(r.failures).toEqual([]);
     expect(r.gates).toBe(1);
     expect(r.sections[0].gates).toEqual([{ id: "g1", explained: true, shown: true }]);
   });
 
   it("fails a gate that comes before its explanation", () => {
-    const r = teachShowCheck(note(h("What cancelling is", "idea"), figure, gate("g1"), EXPLAIN));
+    const r = teachShowCheck(note(h("What cancelling is", "idea"), WORKED, gate("g1"), EXPLAIN));
     expect(r.failures).toEqual([{ gate: "g1", section: "What cancelling is", sectionIndex: 1, role: "idea", missing: ["explained"] }]);
     expect(describeFailure(r.failures[0])).toMatch(/^teach → show → check: gate g1 .* before its section explains the idea/);
   });
@@ -41,7 +41,7 @@ describe("teach → show → check", () => {
   });
 
   it("does not carry teaching across a heading: each section teaches its own check", () => {
-    const r = teachShowCheck(note(h("Idea", "idea"), EXPLAIN, figure, gate("g1"), h("Second case", "variant"), gate("g2")));
+    const r = teachShowCheck(note(h("Idea", "idea"), EXPLAIN, WORKED, gate("g1"), h("Second case", "variant"), gate("g2")));
     expect(r.failures.map((f: { gate: string; missing: string[] }) => [f.gate, f.missing])).toEqual([["g2", ["explained", "shown"]]]);
   });
 
@@ -56,7 +56,7 @@ describe("teach → show → check", () => {
     const notonspec = { type: "callout", kind: "notonspec", title: "Beyond CCEA", md: "The clip also draws diverging lenses, which the Double Award does not ask you to draw." };
     for (const heading of ["6. Watch it done", "8. Watch the construction done", "5. Watch it explained"]) {
       expect(isSeeHeading(heading)).toBe(true);
-      const watch = teachShowCheck(note(h("The method"), EXPLAIN, figure, gate("g0"), h(heading), video, notonspec, gate("g1")));
+      const watch = teachShowCheck(note(h("The method"), EXPLAIN, WORKED, gate("g0"), h(heading), video, notonspec, gate("g1")));
       expect(watch.failures).toEqual([]);
     }
     expect(isSeeHeading("5. Watch it happen")).toBe(true);
@@ -88,7 +88,7 @@ describe("teach → show → check", () => {
   it("counts a chain of equalities and maths joined by a word of working as steps", () => {
     expect(workedSteps("$5x^2 - 45 = 5(x^2 - 9) = 5(x + 3)(x - 3)$")).toBe(2);
     expect(workedSteps("Take out the 5 and $5x^2 - 45$ becomes $5(x^2 - 9)$.")).toBe(1);
-    expect(workedSteps("$y = mx + c$")).toBe(1);
+    expect(workedSteps("$y = mx + c$")).toBe(0); // a formula stated is not a step worked
     // science writes its arithmetic as plain text
     expect(workedSteps("The total is **60**, so the mean is **60 ÷ 10 = 6 daisies per quadrat**, and 6 × 4000 = 24 000.")).toBe(2);
     expect(workedSteps("**Step 1.** 60 ÷ 10 = 6")).toBe(1);
@@ -127,25 +127,72 @@ describe("teach → show → check", () => {
     expect(explains({ type: "callout", kind: "spec", title: "Specification", md })).toBe(false);
   });
 
-  it("carries a section with no check of its own into the next section: nothing has closed it", () => {
-    // "What changes an enzyme's rate" teaches with the graph and asks nothing; "1. One graph" reads
-    // "the graph above" and checks. The graph was shown one card before the check.
-    const r = teachShowCheck(note(h("What changes the rate"), EXPLAIN, figure, h("1. One graph, two explanations", "idea"), EXPLAIN, gate("g1")));
+  it("carries a teaching section with no check of its own into the next section: nothing has closed it", () => {
+    const r = teachShowCheck(note(h("Idea", "idea"), EXPLAIN, WORKED, gate("g0"), h("The method, worked"), EXPLAIN, WORKED, h("2. Your turn", "variant"), EXPLAIN, gate("g1")));
     expect(r.failures).toEqual([]);
-    const row = r.sections.find((s: { heading: string }) => s.heading === "1. One graph, two explanations");
-    expect(row?.joined).toEqual(["What changes the rate"]);
+    const row = r.sections.find((s: { heading: string }) => s.heading === "2. Your turn");
+    expect(row?.joined).toEqual(["The method, worked"]);
     // …but a section closed by its own gate never lends its teaching to the next one
-    const closed = teachShowCheck(note(h("What changes the rate"), EXPLAIN, figure, gate("g0"), h("1. One graph", "idea"), EXPLAIN, gate("g1")));
+    const closed = teachShowCheck(note(h("What changes the rate"), EXPLAIN, WORKED, gate("g0"), h("1. One graph", "idea"), EXPLAIN, gate("g1")));
     expect(closed.failures.map((f: { gate: string; missing: string[] }) => [f.gate, f.missing])).toEqual([["g1", ["shown"]]]);
   });
 
+  it("never carries the opening (the hook and the hero figure) into the first section (verifier, b1-fieldwork-sampling g1, g2)", () => {
+    // the hook sits before the first heading, or under the note's first heading: either way it is not a section's show
+    const bare = teachShowCheck(note(p("Ecologists count a few squares and scale up."), WORKED, h("Six terms", "idea"), EXPLAIN, gate("g1")));
+    expect(bare.failures.map((f: { gate: string; missing: string[] }) => [f.gate, f.missing])).toEqual([["g1", ["shown"]]]);
+    const headed = teachShowCheck(note(h("Ecological terms and the quadrat"), p("Ecologists count a few squares and scale up."), WORKED, h("Six terms", "idea"), EXPLAIN, gate("g1")));
+    expect(headed.failures.map((f: { gate: string; missing: string[] }) => [f.gate, f.missing])).toEqual([["g1", ["shown"]]]);
+  });
+
+  it("does not count a figure or a photo alone as shown: a picture explains, it does not work the method (verifier; ruling)", () => {
+    const photo = { type: "photo", src: "/img/x.jpg", alt: "A quadrat", credit: "c", licence: "CC BY" };
+    expect(shows(figure)).toBe(false);
+    expect(shows(photo)).toBe(false);
+    expect(teachShowCheck(note(h("Idea", "idea"), EXPLAIN, figure, gate("g1"))).failures[0].missing).toEqual(["shown"]);
+    // a video or a sim still carries the method out in front of her
+    expect(shows({ type: "video", videoId: "v", title: "t", channel: "c" })).toBe(true);
+    expect(shows({ type: "sim", provider: "phet", url: "u", title: "t", attribution: "a", licence: "l", task: "k" })).toBe(true);
+  });
+
+  it("does not count a formula list, a must-know callout or a labelled number as worked (verifier, m7/standard-form g14)", () => {
+    expect(workedSteps("The circle: $A = \\pi r^2$ and $C = 2\\pi r$.")).toBe(0);
+    expect(workedSteps("The laws: $a^m \\times a^n = a^{m+n}$ and $a^m \\div a^n = a^{m-n}$.")).toBe(0);
+    expect(workedSteps("**Mean** is 5\n**Range** is 12")).toBe(0);
+    const mustknow = { type: "callout", kind: "mustknow", title: "Must be known", md: "$10^{0} = 1$, $10^{-1} = 0.1$, $10^{a} \\times 10^{b} = 10^{a+b}$" };
+    expect(shows(mustknow)).toBe(false);
+    // a result and a calculation still count
+    expect(workedSteps("So $x = 4$ and then $y = 2(4) + 1 = 9$.")).toBe(3);
+  });
+
+  it("recognises a worked conversion written as 'X is Y, because …' (verifier, m7/standard-form g8)", () => {
+    const conv = p("Convert first. $1.05 \\times 10^{7}$ grams is $1.05 \\times 10^{4}$ kilograms, because dividing by 1000 lowers the power by 3.");
+    expect(shows(conv)).toBe(true);
+    expect(shows(p("The mean is 5 and the range is 12."))).toBe(false);
+    // g10: a calculator display written out on the answer line is the same conversion, shown
+    expect(shows(p("Some calculators show **6.82E8**. Copy it onto the answer line in full: $6.82 \\times 10^{8}$."))).toBe(true);
+    expect(shows(p("Some calculators show **6.82E8**; never copy the E."))).toBe(false);
+  });
+
+  it("resets 'shown' after each check: the next check needs its own demonstration, unless it follows straight on (two turns on one demonstration)", () => {
+    // m8/equation-of-a-circle g11: its move is taught only after it
+    const later = teachShowCheck(note(h("Tangent", "variant"), EXPLAIN, WORKED, gate("g4"), EXPLAIN, gate("g11"), WORKED, gate("g5")));
+    expect(later.failures.map((f: { gate: string; missing: string[] }) => [f.gate, f.missing])).toEqual([["g11", ["shown"]]]);
+    // "explained" persists through the section: a second worked example needs no fresh paragraph
+    const again = teachShowCheck(note(h("Adding", "variant"), EXPLAIN, WORKED, gate("g12"), WORKED, gate("g6")));
+    expect(again.failures).toEqual([]);
+    // two turns straight after one demonstration (the design case's "1 of 2, 2 of 2")
+    const pair = teachShowCheck(note(h("Two cases", "variant"), EXPLAIN, WORKED, WORKED, gate("g3"), gate("g7")));
+    expect(pair.failures).toEqual([]);
+  });
+
   it("treats the four-card figure as a ceiling, not a quota: long teaching before one check passes", () => {
-    const r = teachShowCheck(note(h("Idea", "idea"), EXPLAIN, figure, EXPLAIN, WORKED, EXPLAIN, figure, gate("g1")));
+    const r = teachShowCheck(note(h("Idea", "idea"), EXPLAIN, figure, EXPLAIN, WORKED, EXPLAIN, WORKED, gate("g1")));
     expect(r.failures).toEqual([]);
   });
 
   it("checks the hook's opening section and ignores anything after the recap", () => {
-    const r = teachShowCheck([hero, p("Short hook."), gate("g0"), h("Idea", "idea"), EXPLAIN, figure, gate("g1"), h("You can now", "recap"), p("a\nb\nc"), gate("g9")]);
+    const r = teachShowCheck([hero, p("Short hook."), gate("g0"), h("Idea", "idea"), EXPLAIN, WORKED, gate("g1"), h("You can now", "recap"), p("a\nb\nc"), gate("g9")]);
     expect(r.failures.map((f: { gate: string; section: string }) => [f.gate, f.section])).toEqual([["g0", "(opening)"]]);
     expect(r.gates).toBe(2);
   });

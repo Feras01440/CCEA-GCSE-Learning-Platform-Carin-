@@ -23,8 +23,10 @@ function defaultFaded(total, hide) {
  */
 export function hiddenSteps(we) {
   const total = (we.steps ?? []).length;
+  // the lighter rung first, whatever order the plans are written in (fade.ts, trial audit MK-09, 25 Sep 2026)
+  const ordered = [...(we.faded ?? [])].sort((a, b) => a.studentSupplies.length - b.studentSupplies.length || b.showSteps - a.showSteps);
   return ["faded1", "faded2"].map((mode, index) => {
-    const authored = (we.faded ?? [])[index];
+    const authored = ordered[index];
     const plan = authored && authored.showSteps < total ? authored : defaultFaded(total, index + 1);
     const supplied = plan.studentSupplies.filter((n) => n > plan.showSteps && n <= total).sort((a, b) => a - b);
     return { mode, showSteps: plan.showSteps, supplied };

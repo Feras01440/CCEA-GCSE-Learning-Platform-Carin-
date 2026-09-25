@@ -10,23 +10,27 @@
  *              or more letters, outside $…$ maths), or a titled `callout` of a teaching kind (why,
  *              mustknow, examiner) with the same number of words. A spec callout quotes the statement
  *              and a notonspec callout marks a boundary; neither teaches the idea, so neither counts.
- *   shown      a SHOWN block: a `figure` or `photo` (the picture the prose reads: every figure carries a
- *              caption and, by the depth standard, sits before the prose that reads it), a `video` or a
- *              `sim` (the method carried out in front of her), or a stepped demonstration: a `p` or
- *              `callout` holding at least two worked steps, or one complete calculation (numbers and an
- *              operation on the left of "=", a number on the right: "1.5 ÷ 50 = 0.03 s", the whole of a
- *              one-step method). A worked step is a maths segment ($…$ or $$…$$) relation (=, ≈, ≡, an
- *              arrow; a chain $a = b = c$ is two steps; the inequality signs of one segment, as in the
- *              range $1 \le a < 10$, are one), a maths segment reached from the one before it by a word
- *              of working ("… becomes $5(x^2 - 9)$", "so", "gives", "then", "hence"), or a numbered or
- *              bold-labelled line ("2.", "Step 2.", "**Differentiate**") that carries maths or a number.
- *              Plain-text arithmetic counts as well, as science notes write it ("60 ÷ 10 = 6 daisies per
- *              quadrat": an equals sign outside maths between numbers).
+ *   shown      a SHOWN block: a `video` or a `sim` (the method carried out in front of her), or a stepped
+ *              demonstration: a `p` or a callout (not a must-know list) holding at least two worked steps,
+ *              or one complete calculation (numbers and an operation on the left of "=", a number on the
+ *              right: "1.5 ÷ 50 = 0.03 s"), or a conversion worked in words ("$1.05 \times 10^{7}$ grams is
+ *              $1.05 \times 10^{4}$ kilograms, because …"; a calculator display written out, "6.82E8" and
+ *              "$6.82 \times 10^{8}$"). A figure or a photo alone is NOT shown (25 Sep 2026, the verifier's
+ *              reading of the ruling: a picture explains; it does not carry the method out step by step).
+ *              A worked step is a maths relation that works with numbers (=, ≈, ≡, an arrow; a chain
+ *              $a = b = c$ is two steps; the inequality signs of one segment, as in $1 \le a < 10$, are
+ *              one), a maths segment reached from the one before it by a word of working ("… becomes
+ *              $5(x^2 - 9)$"), or a numbered or bold-labelled line that carries out an operation on a number
+ *              in words ("Multiply out: 3 times 4 is 12"). NOT a step: a formula stated ("$A = \pi r^2$",
+ *              "$y = mx + c$"), a law ("$a^m \times a^n = a^{m+n}$"), a label with its value ("**Mean** is
+ *              5"). Plain-text arithmetic counts, as science notes write it ("60 ÷ 10 = 6").
  *
- *              What the lint cannot see: whether a figure demonstrates the method or only illustrates
- *              the idea (a method card of four headings counts as shown, as a worked table does), and
- *              whether the demonstration is of the same step the gate asks for. Authors apply the rule
- *              by judgement there; the lint finds the gates that come before anything at all.
+ *              What the lint cannot see: whether the demonstration is of the same step the gate asks for.
+ *              Authors apply the rule by judgement there.
+ *
+ * Checks in a section. "Explained" holds for the whole section (it explains once, then may show and check more
+ * than once). "Shown" is spent by a check: the next check needs a demonstration after the previous one, unless it
+ * follows straight on (checks with nothing between share the demonstration before them: two turns on one See it).
  *
  * One paragraph may do both (the idea in words with its two lines of working); the rule asks that both
  * have happened before the check, not that they sit in separate cards.
@@ -38,8 +42,8 @@
  * section: its gate is checked against the teaching above it and the demonstration in it. So is a
  * section that holds nothing but visuals before its first gate (a video, a sim, a figure: "Turn a cell
  * round yourself"). A section with no gate of its own has not been closed by a check, so its teaching
- * runs on into the next section ("the graph above"); a section that ends in a gate never lends its
- * teaching past that gate. A section's index is its heading's position among the note's headings (the
+ * runs on into the next section; a section that ends in a gate never lends its teaching past that gate,
+ * and the opening (the hook and the hero figure, before or under the note's first heading) never carries. A section's index is its heading's position among the note's headings (the
  * opening is 0).
  *
  * The four-card rule (a gate at most every four cards) is a ceiling, never a quota: nothing here asks
@@ -50,7 +54,10 @@
 export const EXPLAIN_WORDS = 15;
 export const STEPS_SHOWN = 2;
 export const TEACHING_CALLOUTS = new Set(["why", "mustknow", "examiner"]);
-const VISUAL_SHOWN = new Set(["figure", "photo", "video", "sim"]);
+// A video or a sim carries the method out in front of her. A figure or a photo explains, but alone it does not show the
+// method worked (the owner's ruling as the verifier read it, 25 Sep 2026: 535 gates passed on a picture alone).
+const VISUAL_SHOWN = new Set(["video", "sim"]);
+const VISUALS = new Set(["figure", "photo", "video", "sim"]);
 
 /**
  * An unlabelled heading that reads as "See it done": the method carried out in front of her. The physics
@@ -78,10 +85,35 @@ const RELATIONS = new RegExp(RELATION.source, "g");
 // another one: "$1 \le a < 10$" states one range. So the inequality signs of one maths segment count
 // as a single step between them, while each equals sign, approximation and arrow counts on its own.
 const INEQUALITY = /^(<|>|\\le|\\ge|\\leq|\\geq|\\lt|\\gt|≤|≥)$/;
+// A relation is a step of working only when it works with numbers. A formula stated ("$A = \pi r^2$", "$C = 2\pi r$",
+// "$y = mx + c$": one symbol defined by an expression in letters) or a law ("$a^m \times a^n = a^{m+n}$": no number on
+// either side) states the method; it does not carry it out (verifier, 25 Sep 2026: m7/standard-form g14 passed on a
+// list of laws). Powers and subscripts are not the numbers that count.
+const bare = (s) => String(s).replace(/[\^_]\s*(\{[^{}]*\}|\d+|[A-Za-z])/g, "");
+const hasNumber = (s) => /\d/.test(bare(s));
+const hasLetter = (s) => /[A-Za-z]/.test(String(s).replace(/\\(times|div|cdot|d?frac|left|right|sqrt|ce|quad|,)/g, " "));
+const isSymbol = (s) => /^\s*\\?[A-Za-z]+'?\s*$/.test(bare(s));
+const works = (left, right) => {
+  if (!String(left).trim()) return hasNumber(right); // "$= 2$" continues a line above
+  if (!hasNumber(left) && !hasNumber(right)) return false; // a law
+  const formula = (sym, expr) => isSymbol(sym) && hasLetter(expr) && !isSymbol(expr); // one symbol defined by letters
+  return !(formula(left, right) || formula(right, left));
+};
+const SPLIT = new RegExp(`(${RELATION.source})`);
+/** Steps in one maths segment: -1 when it holds no relation at all (the connective rule may then apply). */
 const stepsInSegment = (tex) => {
-  const found = tex.match(RELATIONS) ?? [];
-  const inequalities = found.filter((r) => INEQUALITY.test(r)).length;
-  return found.length - inequalities + (inequalities ? 1 : 0);
+  const parts = String(tex).split(SPLIT);
+  if (parts.length === 1) return -1;
+  let steps = 0;
+  let inequality = false;
+  for (let i = 1; i < parts.length; i += 2) {
+    if (!works(parts[i - 1], parts[i + 1] ?? "")) continue;
+    if (INEQUALITY.test(parts[i])) {
+      if (!inequality) steps += 1;
+      inequality = true;
+    } else steps += 1;
+  }
+  return steps;
 };
 
 /**
@@ -103,6 +135,16 @@ export function calculations(md) {
   const text = String(md ?? "");
   const pieces = [withoutMaths(text), ...[...text.matchAll(MATHS)].map((m) => texToPlain(m[1] ?? m[2] ?? ""))];
   let n = 0;
+  // A conversion worked in words: "$1.05 \times 10^{7}$ grams is $1.05 \times 10^{4}$ kilograms, because dividing by
+  // 1000 lowers the power by 3" (verifier, 25 Sep 2026: m7/standard-form g8, g10). A number in a worked form (an
+  // operation or a power in it) is another number, with the reason given; a label with a value ("the mean is 5") is not.
+  const inline = text.replace(MATHS, (m, a, b) => ` ${texToPlain(a ?? b ?? "")} `).replace(/\*\*/g, "");
+  for (const m of inline.matchAll(/(-?\d[\d.,]*\s*(?:[×÷*/^]\s*-?\d[\d.,]*\s*)+(?:[a-z]+\s+)?)(?:is|equals|makes|gives)\s+-?\d(?:[^.;]|\.\d)*?\b(because|since|as)\b/gi)) if (m[1]) n += 1;
+  // A calculator display turned into the written answer: "others show **6.82E8** … Copy it onto the answer line in
+  // full: $6.82 \times 10^{8}$" (verifier: m7/standard-form g10). The same number in both spellings is the conversion shown.
+  const displays = [...inline.matchAll(/(\d+(?:\.\d+)?)E([+-]?\d+)/g)].map((m) => Number(m[1]) * 10 ** Number(m[2]));
+  const written = [...inline.matchAll(/(\d+(?:\.\d+)?)\s*[×x]\s*10\s*\^\s*\(?([+-]?\d+)/g)].map((m) => Number(m[1]) * 10 ** Number(m[2]));
+  if (displays.some((d) => written.some((w) => Math.abs(d - w) <= Math.abs(w) * 1e-9))) n += 1;
   for (const piece of pieces)
     for (const m of piece.matchAll(ARITHMETIC_RUN)) {
       const left = m[1];
@@ -110,6 +152,8 @@ export function calculations(md) {
     }
   return n;
 }
+/** An operation carried out, in words or signs. */
+const OPERATION = /\b(times|multipl\w*|divid\w*|plus|minus|add\w*|subtract\w*|squar\w*|root|halv\w*|doubl\w*|leav\w*|gives?|makes?|cancel\w*|expand\w*|factoris\w*|substitut\w*)\b|[×÷*/+−]|\\times|\\div|\\frac/i;
 /** A maths segment reached from the one before it by a word of working ("so", "becomes", "gives" …) is a step too. */
 const CONNECTIVE = /\b(so|becomes?|gives|giving|then|leaves|leaving|to get|which is|hence|equals|simplifies to|cancels to|turns into)\b/i;
 
@@ -126,7 +170,7 @@ export function workedSteps(md) {
   for (const m of text.matchAll(MATHS)) {
     const tex = m[1] ?? m[2] ?? "";
     const rel = stepsInSegment(tex);
-    if (rel) steps += rel;
+    if (rel >= 0) steps += rel; // a relation, counted only where it works with numbers
     else if (last >= 0 && CONNECTIVE.test(text.slice(last, m.index))) steps += 1;
     last = m.index + m[0].length;
   }
@@ -138,9 +182,11 @@ export function workedSteps(md) {
     if (!LABELLED_LINE.test(line)) continue;
     const rest = line.replace(LABELLED_LINE, "");
     const maths = [...rest.matchAll(MATHS)];
-    // a labelled line whose working already counted as a step adds nothing; one with maths or a number does
+    // a labelled line whose working already counted as a step adds nothing; one that carries out an operation on a
+    // number in words ("Multiply out: 3 times 4 is 12", "Subtract 5 to leave 7") is one. A label with a value
+    // ("**Mean** is 5", "**Range** is 12") reports a result; it works nothing (verifier, 25 Sep 2026).
     if (maths.some((m) => RELATION.test(m[1] ?? m[2] ?? "")) || new RegExp(PLAIN_RELATION.source).test(withoutMaths(rest))) continue;
-    if (maths.length || /\d/.test(withoutMaths(rest))) steps += 1;
+    if ((maths.length || /\d/.test(withoutMaths(rest))) && OPERATION.test(rest.replace(/\*\*/g, ""))) steps += 1;
   }
   return steps;
 }
@@ -155,6 +201,8 @@ export function explains(b) {
 /** Does this block show the idea worked in front of her? */
 export function shows(b) {
   if (VISUAL_SHOWN.has(b.type)) return true;
+  // a must-know callout lists the facts to carry into the paper; a list of facts is not the method carried out
+  if (b.type === "callout" && b.kind === "mustknow") return false;
   if (b.type === "p" || b.type === "callout") return workedSteps(b.md) >= STEPS_SHOWN || calculations(b.md) >= 1;
   return false;
 }
@@ -196,7 +244,7 @@ export function teachShowCheck(blocks) {
     const prev = sections[i - 1];
     // never for a section that names itself a new idea, variant, twist …: that is new teaching
     const teachingRole = s.role && s.role !== "see";
-    if (!teachingRole && prev.items.length && before.length && before.every((b) => VISUAL_SHOWN.has(b.type))) {
+    if (!teachingRole && prev.items.length && before.length && before.every((b) => VISUALS.has(b.type))) {
       prev.items.push(...s.items);
       prev.joined.push(s.heading, ...s.joined);
       sections.splice(i, 1);
@@ -205,9 +253,13 @@ export function teachShowCheck(blocks) {
   // A section with no gate of its own has not been closed by a check: its explanation and its figure
   // are still in front of her when the next section's gate arrives ("the graph above"), so it runs on
   // into the next section. A section that ends in a gate never lends its teaching past that gate.
+  // The opening (the hook and the hero figure, before the first heading or under the note's first heading) is not
+  // teaching: it never carries into the first section as its show (verifier, 25 Sep 2026: b1-fieldwork-sampling g1
+  // and g2 passed on the hook's quadrat pictures).
+  const opening = sections.find((s) => s.items.length);
   for (let i = sections.length - 2; i >= 0; i -= 1) {
     const s = sections[i];
-    if (!s.items.length || s.items.some((b) => b.type === "gate")) continue;
+    if (s === opening || !s.items.length || s.items.some((b) => b.type === "gate")) continue;
     const next = sections[i + 1];
     next.items.unshift(...s.items);
     next.joined.unshift(...(s.index > 0 ? [s.heading] : []), ...s.joined);
@@ -221,17 +273,23 @@ export function teachShowCheck(blocks) {
     let explained = false;
     let shown = false;
     const row = { index: s.index, heading: s.heading, role: s.role, joined: s.joined, gates: [] };
-    for (const b of s.items) {
+    s.items.forEach((b, k) => {
       if (b.type === "gate") {
         gates += 1;
         row.gates.push({ id: b.id, explained, shown });
         if (!explained || !shown)
           failures.push({ gate: b.id, section: s.heading, sectionIndex: s.index, role: s.role, missing: [...(explained ? [] : ["explained"]), ...(shown ? [] : ["shown"])] });
-        continue;
+        // A check spends its demonstration: the next check in the section needs its own, shown after this one
+        // (verifier, 25 Sep 2026: m8/equation-of-a-circle g11 passed on a demonstration before the previous
+        // check while its own move is taught after it). Checks that follow one another with nothing between
+        // share the demonstration before them (two turns on one See it, the design case's "1 of 2, 2 of 2").
+        // The explanation is not spent: a section explains once, then may show and check more than once.
+        if (s.items[k + 1]?.type !== "gate") shown = false;
+        return;
       }
       explained ||= explains(b);
       shown ||= shows(b);
-    }
+    });
     if (s.items.length) rows.push(row);
   }
   return { gates, sections: rows, failures };

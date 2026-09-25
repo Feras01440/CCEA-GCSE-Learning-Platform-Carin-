@@ -588,6 +588,41 @@ function stepPhrases(step) {
 }
 
 /**
+ * A sentence a faded mode leaves to her, written on the figure in other words (verifier, 25 Sep 2026: b1-reflex-arc.02
+ * hides "the impulse cannot cross the gap directly: a chemical has to be released and diffuse across" beside a figure
+ * whose text reads "The impulse cannot jump the gap: a chemical is released and diffuses across"). For a step with no
+ * input spec and more than six words: its own words (four letters or more, read by their first five letters, minus
+ * any the stem or the shown steps use); one piece of the figure's text (a text node, the title, the alt, the caption)
+ * that carries at least three of them and at least 60 per cent is a WE-LEAK (stepProse); two or more is a review line.
+ */
+const PROSE_STOP = new Set("that this with from have when then than into each which their there they what will would could should".split(" "));
+const contentWords = (s) =>
+  new Set((String(s).toLowerCase().match(/[a-z]{4,}/g) ?? []).filter((w) => !STOP.has(w) && !COMMON.has(w) && !PROSE_STOP.has(w)).map((w) => w.slice(0, 5)));
+function proseStepLeak(acc, fig, step, given, meta) {
+  if (step.input || !fig || typeof fig !== "object") return;
+  const working = plainWorking(step.working);
+  if (working.split(/\s+/).filter(Boolean).length <= 6) return;
+  const known = contentWords(plainWorking(given));
+  const own = [...contentWords(working)].filter((w) => !known.has(w));
+  if (own.length < 3) return;
+  let best = null;
+  for (const ch of figureChannels(fig)) {
+    const here = contentWords(ch.text);
+    const shared = own.filter((w) => here.has(w));
+    if (!best || shared.length > best.shared.length) best = { ch, shared };
+  }
+  if (!best || best.shared.length < 2) return;
+  const leak = best.shared.length >= 3 && best.shared.length / own.length >= 0.6;
+  const row = { ...meta, figure: figureId(fig), figureName: figureName(fig), channel: best.ch.channel, source: "stepProse", phrase: working, printed: best.ch.text.length > 120 ? `${best.ch.text.slice(0, 120)}…` : best.ch.text, asLabel: true };
+  if (!leak) acc.reviews.push(row);
+  else {
+    const reason = ALLOWED.get(`${meta.item}#${meta.part}`);
+    if (reason) acc.allowed.push({ ...row, reason });
+    else acc.leaks.push(row);
+  }
+}
+
+/**
  * What the problem mode asks for, read off the final answer: each value that answers something (a number after
  * "=", a number with its unit, or an answer that is only a number) and each coordinate pair. A coefficient inside
  * an expression ("y = 3x - 5") is not a value.
@@ -650,6 +685,7 @@ function sweepWorkedExample(acc, we, meta) {
         groups: (step.input?.keyWords ?? []).length,
         meta: { ...meta, item: we.id, part: `step ${n}`, kind: "worked example (faded)" },
       });
+      proseStepLeak(weAcc, shown, step, given, { ...meta, item: we.id, part: `step ${n}`, kind: "worked example (faded)" });
     }
     check(weAcc, {
       figs: [shown],

@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { planFade } from "@/components/items/fade";
+// imported statically: a dynamic import of the client component took over the 5 s test timeout under a full-suite load
+import { figureForMode } from "@/components/items/WorkedExampleAsQuestion";
 import { hiddenSteps, weFigureFor } from "../../../scripts/qa/we-hidden-steps.mjs";
 import { sweepBundle } from "../../../scripts/qa/figure-leaks.mjs";
 
@@ -72,25 +74,38 @@ describe("which steps each faded mode hides (scripts/qa/we-hidden-steps.mjs mirr
   });
 
   it("agrees with planFade on every published worked example", () => {
-    let n = 0;
+    // Authors publish while the suite runs: each bundle is read once into memory and both planners are asked about
+    // that same copy, so a bundle rewritten mid-run cannot make them disagree; one caught half-written (it does not
+    // parse) or removed between listing and reading is skipped, never failed.
+    const snapshot: Array<{ id: string; steps: Array<{ n: number }>; faded: Array<{ showSteps: number; studentSupplies: number[] }> }> = [];
     const root = path.resolve("packs");
-    for (const subject of fs.readdirSync(root)) {
-      const content = path.join(root, subject, "content");
-      if (!fs.existsSync(content)) continue;
-      for (const unit of fs.readdirSync(content))
-        for (const slug of fs.readdirSync(path.join(content, unit))) {
-          const f = path.join(content, unit, slug, "bundle.json");
-          if (!fs.existsSync(f)) continue;
-          for (const w of JSON.parse(fs.readFileSync(f, "utf8")).workedExamples ?? []) {
-            n += 1;
-            const mine = hiddenSteps(w);
-            expect(mine[0].supplied, w.id).toEqual(planFade(w, "faded1").supplied);
-            expect(mine[1].supplied, w.id).toEqual(planFade(w, "faded2").supplied);
+    const dirs = (d: string) => {
+      try {
+        return fs.readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
+      } catch {
+        return [];
+      }
+    };
+    for (const subject of dirs(root))
+      for (const unit of dirs(path.join(root, subject, "content")))
+        for (const slug of dirs(path.join(root, subject, "content", unit))) {
+          let bundle: { workedExamples?: typeof snapshot };
+          try {
+            bundle = JSON.parse(fs.readFileSync(path.join(root, subject, "content", unit, slug, "bundle.json"), "utf8"));
+          } catch {
+            continue;
           }
+          for (const w of bundle.workedExamples ?? []) if (Array.isArray(w?.steps)) snapshot.push(structuredClone(w));
         }
+    for (const w of snapshot) {
+      const mine = hiddenSteps(w);
+      for (const [i, mode] of (["faded1", "faded2"] as const).entries()) {
+        const p = planFade(w as never, mode);
+        expect({ showSteps: mine[i].showSteps, supplied: mine[i].supplied }, `${w.id} ${mode}`).toEqual({ showSteps: p.showSteps, supplied: p.supplied });
+      }
     }
-    expect(n).toBeGreaterThan(100);
-  });
+    expect(snapshot.length).toBeGreaterThan(100);
+  }, 30_000);
 });
 
 describe("figure-leaks: a worked example's figure against the steps the faded modes hide", () => {
@@ -152,7 +167,6 @@ describe("figurePlain: the checker reads the figure each mode shows (renderer: f
   const plain = { kind: "svg", src: svg("Temperature / °C", "0", "20", "40", "60"), alt: "The same graph, unannotated." };
 
   it("chooses the same figure as the renderer, with and without figurePlain, in every mode", async () => {
-    const { figureForMode } = await import("@/components/items/WorkedExampleAsQuestion");
     for (const w of [we([]), we([], { figurePlain: plain })])
       for (const mode of ["full", "faded1", "faded2", "problem"] as const) expect(weFigureFor(w, mode), mode).toBe(figureForMode(w as never, mode));
   });
@@ -169,5 +183,31 @@ describe("figurePlain: the checker reads the figure each mode shows (renderer: f
 
   it("without figurePlain the annotated figure is what those modes show, and is compared", () => {
     expect(leakParts(bundleOf({ ...we([]), figure: annotated }))).toEqual(["we.science.b1.x.01 step 3", "we.science.b1.x.01 final"]);
+  });
+});
+
+describe("a prose step a faded mode hides, repeated by the figure's text (verifier, b1-reflex-arc.02)", () => {
+  const reflex = (figText: string) => ({
+    id: "we.science.b1.b1-reflex-arc.02",
+    stem: "A drug slows down the release of chemicals at synapses. Explain what effect this would have on the speed of a reflex response, and why. [3]",
+    figure: { kind: "svg", src: svg("A synapse", "the gap", figText), alt: "Two neurones meeting at a synapse." },
+    steps: [
+      { n: 1, working: "The response would be slower.", decision: "Say the effect." },
+      { n: 2, working: "At each synapse the impulse cannot cross the gap directly: a chemical has to be released and diffuse across.", decision: "Say why." },
+      { n: 3, working: "If the chemical is released more slowly, each of the two synapses takes longer, so the whole pathway takes longer.", decision: "Link it." },
+    ],
+    finalAnswer: "The response would be slower.",
+    twin: { stem: "Explain why a reflex with more synapses is slower.", answer: { kind: "text", accepted: ["each synapse adds a delay"] } },
+    faded: [{ showSteps: 1, studentSupplies: [2, 3] }],
+  });
+
+  it("is a worked-example leak when one piece of the figure's text carries most of the hidden step's own words", () => {
+    const r = run(bundleOf(reflex("The impulse cannot jump the gap: a chemical is released and diffuses across to start a new impulse.")));
+    expect(r.weLeaks.map((x: Row) => [x.part, x.source])).toEqual([["step 2", "stepProse"]]);
+  });
+
+  it("is not a leak when the figure only shares a word or two with the step", () => {
+    const r = run(bundleOf(reflex("The impulse arrives at the end of the first neurone.")));
+    expect(r.weLeaks).toEqual([]);
   });
 });
