@@ -1046,6 +1046,137 @@
       "version": 1
     },
     {
+      "id": "q.fm.u2.moments-uniform-rod.0022",
+      "topic": "fm.u2.moments-uniform-rod",
+      "specRefs": [
+        "FM2-MOM-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Calculate"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "The moment of a hanging mass",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "marks": 2,
+          "stem": "A uniform rod AB, of length 3 m, rests on a pivot at C, where AC = 0.8 m. A mass of 6 kg hangs from the end A.\n\nCalculate the moment of the mass's weight about C.\n\nTake $g = 10$ m/s².\n\nAnswer ________ N m",
+          "answer": {
+            "kind": "numeric",
+            "value": 48,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N m",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$60 \\times 0.8$",
+              "accept": [
+                "6 \\times 10 \\times 0.8",
+                "60 \\times 0.8"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$48$ N m",
+              "dependsOn": [
+                "MW1"
+              ]
+            }
+          ],
+          "hints": [
+            "Turn the mass into a weight first.",
+            "Measure the distance from C, the point the moment is about."
+          ],
+          "workedSolution": "The weight is $6 \\times 10 = 60$ N, acting 0.8 m from C, so its moment about C is $60 \\times 0.8 = 48$ N m, anticlockwise.",
+          "commonErrors": [
+            {
+              "misconception": "fm.forces.g-omitted-weight",
+              "pattern": {
+                "kind": "numeric",
+                "value": 4.8,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That multiplies the mass, 6 kg, by the distance. A moment needs the weight in newtons: $6 \\times 10 = 60$ N first, then $60 \\times 0.8$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2022-summer:FM2:Q6"
+            },
+            {
+              "misconception": "fm.moments.distance-from-wrong-point",
+              "pattern": {
+                "kind": "numeric",
+                "value": 132,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That uses 2.2 m, the distance from B. A moment about C uses the distance from C to the force, which is 0.8 m.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2023-summer:FM2:Q5"
+            },
+            {
+              "misconception": "fm.moments.distance-from-wrong-point",
+              "pattern": {
+                "kind": "numeric",
+                "value": 180,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That uses the rod's whole length. Only the distance from C to the line of the force counts: 0.8 m.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2023-summer:FM2:Q5"
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 2,
+      "timeAllowanceSec": 144,
+      "skeleton": "(main)calculate2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM2:Q5"
+      ],
+      "verification": "ver.q.fm.u2.moments-uniform-rod.0022",
+      "version": 1,
+      "solutionProgram": "W = 6*10; M = W*0.8"
+    },
+    {
       "id": "q.fm.u2.moments-uniform-rod.0002",
       "topic": "fm.u2.moments-uniform-rod",
       "specRefs": [
@@ -4492,7 +4623,7 @@
       "itemIds": [
         "dx.fm.u2.moments-uniform-rod.pre",
         "dx.fm.u2.moments-uniform-rod.post",
-        "q.fm.u2.moments-uniform-rod.0001",
+        "q.fm.u2.moments-uniform-rod.0022",
         "q.fm.u2.moments-uniform-rod.0002",
         "q.fm.u2.moments-uniform-rod.0003",
         "q.fm.u2.moments-uniform-rod.0004",
@@ -6351,6 +6482,111 @@
     {
       "id": "ver.q.fm.u2.moments-uniform-rod.0001",
       "itemId": "q.fm.u2.moments-uniform-rod.0001",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. FM2-MOM-01: the Principle of Moments and equilibrium of a horizontal uniform rod on one or two pivots, which CCEA sets both as a rod on pivots and as a rod hung from vertical strings. Hinges and ladders (excluded by the Teacher Guidance), non-uniform rods, non-horizontal rods and forces at an angle to the rod are listed in notOnThisSpec and appear nowhere in the items.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "The Unit 2 formula sheet has nothing on moments: moment = force x perpendicular distance, the midpoint of a uniform rod, the two equilibrium conditions and the zero reaction on the point of tipping are recall and are listed in mustKnow.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, range 2 to 6) and Identify. Schemes use CCEA's moments pattern: M1 for taking moments about a point, MW1 for each correct side of the equation, W1 for the value, then MW1 and W1 for resolving vertically.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4; per-question median 8 and 90th percentile 13. The exam-style questions are 6, 11 and 9 marks, against Summer 2019 Q4 and Summer 2024 Q5 (a diagram then 6 for the two tensions), Summer 2022 Q6 (2 + 5 + 2 + 5) and Summer 2023 Q5 and Summer 2025 Q5 (2 + 1 + 4). The force-diagram mark is served by an Identify item, since a drawing cannot be auto-marked. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "g = 10 m/s²; every rod solved once by moments about one point and up = down, and checked by moments about a second point (solveTwo, solveOne). Worked 1: 6 m plank, 250 N, trestles at A and 5 m, 400 N at 4 m: R_C = 470, R_A = 180; twin 4 m, 100 N, 300 N at 1 m: R_B = 125. Worked 2: 3 m rod, 4 kg, strings at 0.4 m and 2.4 m, 5 kg at A, 7 kg at B: T_D = 103, T_C = 57; twin T_D = 25. Worked 3: 4 m plank, 15 kg, supports 1 m in from each end, 30 kg child: 225 N each at the middle, tips 0.5 m beyond D; twin 0.6 m. Practice: moment 60 x 0.8 = 48; see-saw 45 x 1.6 = 60x gives 1.2; beam 5 m, 300 N, 200 N at 1.5 m gives R_B = 210, R_A = 290; R + 3R = 240 gives 60; strings 2.4 m rod gives T_D = 68, T_C = 32; rod 5 m on A and 3 m gives R_C = 66.67; R_B = 2R_A with a 400 N person gives AP = 3; single string gives T = 300 and d = 3.4; box moved from 1 m to 2.5 m gives R_B = 287.5 from 175; tipping 5 m plank gives 0.9 m. Exam: strings rod 4 m gives T_D = 138, T_C = 52; ratio plank gives R = 90, AP = 3.6, then 315 and 45 with the box at B; single pivot gives R = 80, x = 1.25, then 100 N and 1.8 m. Find-the-mistake: 110 N (the omitted plank weight gives 50), 32 N (distances from A give 60), 450 N (the kept reaction gives 200). Added 23 Sep 2026: practice q.0019, a 5 m rod's weight at 2.5 m; exam-style q.0020, a 5 m rod of 12 kg on pivots at A and C (AC = 4 m) with R_C = 3R_A and M kg at B: about B 5R + 1 x 3R = 120 x 2.5 gives R = 37.5 and R_C = 112.5, checked about A; 37.5 + 112.5 = 120 + 10M gives M = 3; then 10 kg at D with equal reactions gives X = 110 and 110 x 4 = 120 x 2.5 + 100x gives x = 1.4. Note: see-saw 400 x 0.9 = 300 x 1.2 = 360; single pivot R = 100, x = 1.4; strings beyond the supports T_D = 75; strings with a load at E T_D = 110, T_C = 70; tipping plank x = 1; ratio R = 100, AP = 3; the chain R = 80, M = 4, X = 240, d = 0.8; gates g3 180, g4 52.5, g5 57, g7 0.5, g9 0, g10 75, g11 1, g15 150, each solved by the generator before it is printed. No length or mass set here is taken from a CCEA paper.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Masses in kg, forces in N, distances in m, moments in N m. Every numeric spec carries its unit with unitRequired false; no answer is a moment, because the marker does not yet read the unit N m. Answers that are not exact are given to 2 decimal places, and the stem says so in those words.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Summer 2019 Q4, 2022 Q6, 2023 Q5, 2024 Q5 and 2025 Q5: each common error is a report finding, produced by running its own route on this item's own lengths and masses.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Marked back through the app's own engines by scratchpad/fm2-batch-d/check-marking.mts: every accepted spelling of the answer earns full marks, and every commonError value is refused, matches its own pattern, tags its own misconception and earns exactly the marks its entry claims. Every numeric commonError value is the result of an error route in scratchpad/fm2-batch-d/routes.mjs, re-executed against the published JSON by verify-published.mjs.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM2 batch D, fourth session: semantic audit, audit-errors.mjs)",
+          "result": "pass",
+          "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t4-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
+          "at": "2026-09-25T05:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM2 batch D, fourth session)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep 2026: an mcq only because the numeric engine could not read the moment unit N m. The engine now reads N m, N·m, Nm and newton metres, so the same question is asked as a calculation by q.0022, with a method mark and its own answer line.",
+          "at": "2026-09-25T04:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-09-25T04:50:00Z",
+          "by": "developer",
+          "text": "Withdrawn 25 Sep 2026: an mcq only because the numeric engine could not read the moment unit N m. The engine now reads N m, N·m, Nm and newton metres, so the same question is asked as a calculation by q.0022, with a method mark and its own answer line.",
+          "resolvedAt": "2026-09-25T04:50:00Z",
+          "resolution": "Withdrawn; replaced by a new item with a new id (see the reason)."
+        }
+      ]
+    },
+    {
+      "id": "ver.q.fm.u2.moments-uniform-rod.0022",
+      "itemId": "q.fm.u2.moments-uniform-rod.0022",
       "version": 1,
       "checks": [
         {

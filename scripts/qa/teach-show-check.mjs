@@ -15,7 +15,12 @@
  *              or one complete calculation (numbers and an operation on the left of "=", a number on the
  *              right: "1.5 ÷ 50 = 0.03 s"), or a conversion worked in words ("$1.05 \times 10^{7}$ grams is
  *              $1.05 \times 10^{4}$ kilograms, because …"; a calculator display written out, "6.82E8" and
- *              "$6.82 \times 10^{8}$"). A figure or a photo alone is NOT shown (25 Sep 2026, the verifier's
+ *              "$6.82 \times 10^{8}$"), or, as science demonstrates (coordinator's ruling, 25 Sep 2026), a worked
+ *              answer applied to a named case in two or more numbered lines, or two or more questions about the
+ *              case answered line by line (appliedSteps); under a "See it done" heading, which names the case,
+ *              ordered steps count without the case named again; a `see` block. A list of terms with their
+ *              definitions, or a process told in general with no case, is the explanation, not its show.
+ *              A figure or a photo alone is NOT shown (25 Sep 2026, the verifier's
  *              reading of the ruling: a picture explains; it does not carry the method out step by step).
  *              A worked step is a maths relation that works with numbers (=, ≈, ≡, an arrow; a chain
  *              $a = b = c$ is two steps; the inequality signs of one segment, as in $1 \le a < 10$, are
@@ -70,7 +75,10 @@ const isRecap = (b) => b.type === "h" && (b.role === "recap" || /^you can now$/i
 const isPointer = (b) => b.type === "h" && (b.role === "pointer" || /^in the exam$/i.test(String(b.text ?? "").trim()));
 const isSee = (b) => b.type === "h" && (b.role === "see" || (!b.role && isSeeHeading(b.text)));
 
-const MATHS = /\$\$([\s\S]+?)\$\$|\$([^$]+)\$/g;
+// Maths in every form an author writes it: display $$…$$ and \[…\], inline \(…\) and $…$ (C2 E author, 25 Sep 2026: a
+// worked line set as \[…\] display maths was read as prose, so it never counted as shown). texOf reads the segment.
+const MATHS = /\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$([^$]+)\$/g;
+const texOf = (m) => m[1] ?? m[2] ?? m[3] ?? m[4] ?? "";
 const RELATION = /=|\\approx|\\equiv|\\neq|≈|≡|->|\\to\b|\\rightarrow|\\Rightarrow|\\longrightarrow|⇒|→|<|>|\\le\b|\\ge\b|\\leq|\\geq|\\lt|\\gt|≤|≥/;
 const LABELLED_LINE = /^\s*(\*\*[^*]{1,40}\*\*|(step\s*)?\d+[.):])\s*/i;
 
@@ -125,6 +133,10 @@ const stepsInSegment = (tex) => {
 const ARITHMETIC_RUN = /([\d.,()\s×÷*/+\-−^]+)=\s*[-−]?\d/g;
 const texToPlain = (tex) =>
   String(tex)
+    // an aligned or gathered display: its rows are lines of working, its & only aligns them
+    .replace(/\\begin\{[^}]*\}|\\end\{[^}]*\}/g, " ")
+    .replace(/\\\\/g, " ; ")
+    .replace(/&/g, "")
     .replace(/\\[,;:! ]/g, "")
     .replace(/\\left|\\right|\\big|\\Big/g, "")
     .replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
@@ -133,12 +145,12 @@ const texToPlain = (tex) =>
     .replace(/[{}]/g, "");
 export function calculations(md) {
   const text = String(md ?? "");
-  const pieces = [withoutMaths(text), ...[...text.matchAll(MATHS)].map((m) => texToPlain(m[1] ?? m[2] ?? ""))];
+  const pieces = [withoutMaths(text), ...[...text.matchAll(MATHS)].map((m) => texToPlain(texOf(m)))];
   let n = 0;
   // A conversion worked in words: "$1.05 \times 10^{7}$ grams is $1.05 \times 10^{4}$ kilograms, because dividing by
   // 1000 lowers the power by 3" (verifier, 25 Sep 2026: m7/standard-form g8, g10). A number in a worked form (an
   // operation or a power in it) is another number, with the reason given; a label with a value ("the mean is 5") is not.
-  const inline = text.replace(MATHS, (m, a, b) => ` ${texToPlain(a ?? b ?? "")} `).replace(/\*\*/g, "");
+  const inline = text.replace(MATHS, (m, a, b, c, d) => ` ${texToPlain(a ?? b ?? c ?? d ?? "")} `).replace(/\*\*/g, "");
   for (const m of inline.matchAll(/(-?\d[\d.,]*\s*(?:[×÷*/^]\s*-?\d[\d.,]*\s*)+(?:[a-z]+\s+)?)(?:is|equals|makes|gives)\s+-?\d(?:[^.;]|\.\d)*?\b(because|since|as)\b/gi)) if (m[1]) n += 1;
   // A calculator display turned into the written answer: "others show **6.82E8** … Copy it onto the answer line in
   // full: $6.82 \times 10^{8}$" (verifier: m7/standard-form g10). The same number in both spellings is the conversion shown.
@@ -152,6 +164,21 @@ export function calculations(md) {
     }
   return n;
 }
+/**
+ * A charge or an oxidation state is part of its species, never arithmetic (C2 E author, 25 Sep 2026): "Al³⁺",
+ * "$\ce{Al^{3+}}$", "Fe3+", "Cl−", "a 3+ charge", "a 1− charge", an electrode's "(−)" or "(+)". They go before an
+ * operation is looked for, so a line that only states a charge is not a worked line.
+ */
+const withoutCharges = (s) =>
+  String(s)
+    .replace(/\^\s*\{?\s*\d*\s*[+\-−]\s*\}?/g, "")
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻]/g, "")
+    .replace(/([A-Za-z\])])\d*[+\-−](?=[\s,.;:)}]|$)/g, "$1")
+    .replace(/\(\s*[+\-−]\s*\)/g, "")
+    .replace(/(^|[\s(])\d[+\-−](?=[\s,.;:)]|$)/g, "$1");
+
+const isWorkingLink = (between) => CONNECTIVE.test(between) && !between.includes("\n") && between.trim().split(/\s+/).length <= 8;
+
 /** An operation carried out, in words or signs. */
 const OPERATION = /\b(times|multipl\w*|divid\w*|plus|minus|add\w*|subtract\w*|squar\w*|root|halv\w*|doubl\w*|leav\w*|gives?|makes?|cancel\w*|expand\w*|factoris\w*|substitut\w*)\b|[×÷*/+−]|\\times|\\div|\\frac/i;
 /** A maths segment reached from the one before it by a word of working ("so", "becomes", "gives" …) is a step too. */
@@ -168,10 +195,12 @@ export function workedSteps(md) {
   let steps = 0;
   let last = -1;
   for (const m of text.matchAll(MATHS)) {
-    const tex = m[1] ?? m[2] ?? "";
+    const tex = texOf(m);
     const rel = stepsInSegment(tex);
     if (rel >= 0) steps += rel; // a relation, counted only where it works with numbers
-    else if (last >= 0 && CONNECTIVE.test(text.slice(last, m.index))) steps += 1;
+    // "… becomes $5(x^2 - 9)$": the word of working joins two pieces of maths on one line, a few words apart; a
+    // "becomes" three sentences and a line away joins nothing
+    else if (last >= 0 && isWorkingLink(text.slice(last, m.index))) steps += 1;
     last = m.index + m[0].length;
   }
   // plain-text working, as science notes write it: "60 ÷ 10 = 6 daisies per quadrat" (an equals sign
@@ -185,8 +214,8 @@ export function workedSteps(md) {
     // a labelled line whose working already counted as a step adds nothing; one that carries out an operation on a
     // number in words ("Multiply out: 3 times 4 is 12", "Subtract 5 to leave 7") is one. A label with a value
     // ("**Mean** is 5", "**Range** is 12") reports a result; it works nothing (verifier, 25 Sep 2026).
-    if (maths.some((m) => RELATION.test(m[1] ?? m[2] ?? "")) || new RegExp(PLAIN_RELATION.source).test(withoutMaths(rest))) continue;
-    if ((maths.length || /\d/.test(withoutMaths(rest))) && OPERATION.test(rest.replace(/\*\*/g, ""))) steps += 1;
+    if (maths.some((m) => RELATION.test(texOf(m))) || new RegExp(PLAIN_RELATION.source).test(withoutMaths(rest))) continue;
+    if ((maths.length || /\d/.test(withoutMaths(rest))) && OPERATION.test(withoutCharges(rest.replace(/\*\*/g, "")))) steps += 1;
   }
   return steps;
 }
@@ -198,12 +227,44 @@ export function explains(b) {
   return false;
 }
 
+/**
+ * A worked answer applied to a case, in ordered steps (the coordinator's ruling, 25 Sep 2026, from the B2 D author):
+ * science demonstrates by applying the idea to a named situation line by line, with no arithmetic ("The figure's
+ * weeds as a full answer: 1. Some weeds had a mutation … [1] 2. The weedkiller killed …"). Counts when the block has
+ * two or more numbered lines, they are not a list of terms with definitions ("1. **Variation:** the individuals
+ * differ"), and the block names its case: a mark per line ("[1]"), a number, the figure or a drawn thing it reads, a
+ * worked answer ("worked", "answer", "the marks", "for example"), or a situation set up before the list ("Then a
+ * drought …", "If …", "Say …", "Wanted: …"). A process told in general, with no case, is the explanation, not its show.
+ */
+const NUMBERED = /^\s*(\*\*)?(step\s+)?\d+[.)](\*\*)?\s+\S/i;
+const NUMBERING = /^\s*(\*\*)?(step\s+)?\d+[.)](\*\*)?\s+/i;
+const DEFINITION_LINE = /^\s*(\*\*)?\d+[.)](\*\*)?\s+(\*\*[^*]+\*\*\s*[:—–-]|\*\*[^*]+[:—–-]\*\*)/;
+/** Two or more numbered lines that are not a list of terms with their definitions. */
+export function orderedSteps(md) {
+  const numbered = String(md ?? "").split("\n").filter((l) => NUMBERED.test(l));
+  return numbered.length >= 2 && numbered.filter((l) => DEFINITION_LINE.test(l)).length * 2 < numbered.length;
+}
+const CASE_CUE = /\[\d\]|\bthe (figure|diagram|graph|table|photo|photograph|dish|curve|cross|pedigree|drawing)('s)?\b|\bworked\b|\banswers?\b|\bthe marks?\b|\bmarks'|\bfor example\b|\be\.g\.|\bwanted\b/i;
+const SITUATION_OPENER = /^\s*(then|when|if|suppose|say|imagine|take|here)\b/i;
+/** Worked questions answered line by line: "**Which is most effective against bacteria A?** Y: it has the largest …". */
+const QA_LINE = /^\s*\*\*[^*]+\?\*\*\s*\S/;
+export function appliedSteps(md) {
+  // two or more questions about the case, each answered from it, are the case worked through
+  if (String(md ?? "").split("\n").filter((l) => QA_LINE.test(l)).length >= 2) return true;
+  if (!orderedSteps(md)) return false;
+  const lines = String(md ?? "").split("\n");
+  const intro = lines.slice(0, lines.findIndex((l) => NUMBERED.test(l))).join(" ");
+  const withoutNumbering = lines.map((l) => l.replace(NUMBERING, "")).join("\n");
+  return CASE_CUE.test(md) || /\d/.test(withoutMaths(withoutNumbering)) || SITUATION_OPENER.test(intro);
+}
+
 /** Does this block show the idea worked in front of her? */
 export function shows(b) {
   if (VISUAL_SHOWN.has(b.type)) return true;
+  if (b.type === "see") return true; // the design case's See it block: the method carried out, step by step
   // a must-know callout lists the facts to carry into the paper; a list of facts is not the method carried out
   if (b.type === "callout" && b.kind === "mustknow") return false;
-  if (b.type === "p" || b.type === "callout") return workedSteps(b.md) >= STEPS_SHOWN || calculations(b.md) >= 1;
+  if (b.type === "p" || b.type === "callout") return workedSteps(b.md) >= STEPS_SHOWN || calculations(b.md) >= 1 || appliedSteps(b.md);
   return false;
 }
 
@@ -222,9 +283,14 @@ export function teachShowCheck(blocks) {
   let cur = { index: 0, heading: "(opening)", role: null, joined: [], items: [] };
   sections.push(cur);
   let headingNo = 0;
+  // Blocks under a "See it done" heading: there the heading names the case ("See it done: one aseptic transfer"), so
+  // ordered steps count as the demonstration without a case named in the block itself.
+  const inSeeSection = new Set();
+  let inSee = false;
   for (const b of body) {
     if (b.type === "h") {
       headingNo += 1;
+      inSee = isSee(b);
       if (isSee(b) && (cur.items.length || cur.index > 0)) {
         cur.joined.push(String(b.text ?? ""));
         continue;
@@ -233,6 +299,7 @@ export function teachShowCheck(blocks) {
       sections.push(cur);
       continue;
     }
+    if (inSee) inSeeSection.add(b);
     cur.items.push(b);
   }
   // A section that holds nothing but a demonstration before its first gate (a video, a sim, a figure:
@@ -288,7 +355,7 @@ export function teachShowCheck(blocks) {
         return;
       }
       explained ||= explains(b);
-      shown ||= shows(b);
+      shown ||= shows(b) || (inSeeSection.has(b) && (b.type === "p" || b.type === "callout") && orderedSteps(b.md));
     });
     if (s.items.length) rows.push(row);
   }

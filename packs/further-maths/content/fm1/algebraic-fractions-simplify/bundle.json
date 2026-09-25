@@ -28,14 +28,14 @@
     "mustMemorise": [
       "Factorise every numerator and denominator before cancelling anything",
       "Only factors cancel — a term of a sum never does",
-      "a² − b² = (a + b)(a − b), including when a coefficient is involved: 4x² − 25 = (2x + 5)(2x − 5)",
-      "Take a common factor out first; it is what makes a cubic or a hidden difference of two squares factorise",
+      "a² − b² = (a + b)(a − b), including when a number is in front: 16x² − 81 = (4x + 9)(4x − 9)",
+      "Take a common factor out first; it is what uncovers a hidden difference of two squares",
       "Check the numbers at the end as well as the brackets: 2 over 4 is not fully simplified"
     ],
     "onFormulaSheet": [],
     "notOnThisSpec": [
       "Partial fractions — splitting one fraction back into two is not named anywhere in this specification",
-      "Cubic denominators that need the factor theorem; the statement names linear and quadratic numerators and denominators, and a cubic only ever appears with a common factor that can be taken out",
+      "Cubic numerators or denominators: the statement names linear and quadratic ones, and no FM1 paper from 2018 to 2026 sets a cubic to factorise (if one appears, the common factor comes out first)",
       "Domain restrictions written out formally (stating that x ≠ 3): no FM1 paper read asks for them, although the cancelled factor is never zero",
       "Simplifying fractions with surds or indices in them, which belong to other statements"
     ],
@@ -43,7 +43,7 @@
       {
         "kind": "corbettmaths",
         "videos": [
-          25
+          24
         ],
         "practiceUrl": "https://corbettmaths.com/wp-content/uploads/2019/10/Algebraic-Fractions.pdf"
       },
@@ -85,14 +85,14 @@
       "mustKnow": [
         "Factorise every numerator and denominator before cancelling anything",
         "Only factors cancel — a term of a sum never does",
-        "a² − b² = (a + b)(a − b), including when a coefficient is involved: 4x² − 25 = (2x + 5)(2x − 5)",
-        "Take a common factor out first; it is what makes a cubic or a hidden difference of two squares factorise",
+        "a² − b² = (a + b)(a − b), including when a number is in front: 16x² − 81 = (4x + 9)(4x − 9)",
+        "Take a common factor out first; it is what uncovers a hidden difference of two squares",
         "Check the numbers at the end as well as the brackets: 2 over 4 is not fully simplified"
       ]
     },
     "notOnThisSpec": [
       "Partial fractions — splitting one fraction back into two is not named anywhere in this specification",
-      "Cubic denominators that need the factor theorem; the statement names linear and quadratic numerators and denominators, and a cubic only ever appears with a common factor that can be taken out",
+      "Cubic numerators or denominators: the statement names linear and quadratic ones, and no FM1 paper from 2018 to 2026 sets a cubic to factorise (if one appears, the common factor comes out first)",
       "Domain restrictions written out formally (stating that x ≠ 3): no FM1 paper read asks for them, although the cancelled factor is never zero",
       "Simplifying fractions with surds or indices in them, which belong to other statements"
     ],
@@ -102,7 +102,7 @@
       {
         "kind": "corbettmaths",
         "videos": [
-          25
+          24
         ],
         "practiceUrl": "https://corbettmaths.com/wp-content/uploads/2019/10/Algebraic-Fractions.pdf"
       },
@@ -118,7 +118,7 @@
         "Take a common factor, including a numerical one, out of a numerator or denominator",
         "Factorise a quadratic of the form x² + bx + c and one with a leading coefficient, such as 2x² + 7x + 6",
         "Recognise and factorise a difference of two squares, including 4x² − 25 and 9x² − 1",
-        "Factorise a cubic numerator by taking out the common factor first, then splitting what is left",
+        "Spot two squares hidden behind a common factor, such as 3x² − 300 = 3(x + 10)(x − 10)",
         "Cancel a factor that appears on both lines, and explain why a term cannot be cancelled",
         "Cancel a remaining numerical factor so the answer is fully simplified",
         "Check a simplified answer by substituting a value into both the original and the answer"
@@ -127,16 +127,17 @@
       "traps": [
         "Not factorising first, so cubic numerators and denominators appear and nothing can be cancelled (Summer 2018 Q8)",
         "Cancelling a term of a sum rather than a factor, which changes the value of the expression (Summer 2018 Q8, Summer 2024 Q8)",
-        "Missing a difference of two squares, especially with a coefficient such as 4x² − 1 or 9x² − 25 (Summer 2023 Q9)",
+        "Missing a difference of two squares, especially with a number in front such as 4x² − 1 (Summer 2022 Q9(b)); a plain one such as x² − 4 inside a longer question was missed too (Summer 2023 Q9)",
         "Stopping before the numerical factor has been cancelled, so 2 over 4 is left on the answer line (Summer 2024 Q8(a), where a high number of candidates missed the factor of 2)",
         "Leaving an x that is still a factor of both lines (Summer 2023 Q9)",
         "Dividing the numerator by a constant before factorising, which loses a factor (Summer 2019 Q12)",
-        "Multiplying the brackets out instead of leaving the answer factorised, which hides whatever is left in common"
+        "Multiplying the brackets out instead of leaving the answer factorised, which hides whatever is left in common",
+        "Stopping one step short of a whole-number answer: Summer 2025 Q7 simplified to 2, and many left it in factorised form"
       ]
     },
     "verification": "ver.note.fm.u1.algebraic-fractions-simplify",
     "version": 1,
-    "updated": "2026-09-13"
+    "updated": "2026-09-25"
   },
   "workedExamples": [
     {
@@ -312,29 +313,29 @@
       "when": "both",
       "items": [
         {
-          "id": "01",
-          "stem": "What, if anything, cancels in $\\dfrac{x+4}{x}$?",
+          "id": "07",
+          "stem": "In which fraction does the $x$ on the bottom cancel?",
           "skill": "Tell a factor from a term",
           "options": [
             {
               "id": "a",
-              "text": "Nothing — the $x$ on top is a term, not a factor",
-              "correct": true,
-              "feedback": "Cancelling divides the whole of each line, and the $x$ on top is added to the $4$ rather than multiplied by it. At $x = 1$ the fraction is $5$, while $4$ is $4$."
+              "text": "$\\frac{x+11}{2x}$",
+              "correct": false,
+              "misconception": "fm.algfrac.cancel-across-addition",
+              "feedback": "The $x$ on top is added to the $11$, so it is a term, not a factor of the whole top. At $x=2$ the fraction is $\\frac{13}{4}$, but striking the $x$ gives $\\frac{11}{2}$."
             },
             {
               "id": "b",
-              "text": "The $x$, leaving $4$",
-              "correct": false,
-              "misconception": "fm.algfrac.cancel-across-addition",
-              "feedback": "Test it: at $x = 1$ the fraction is $5$, and $4$ is $4$. A term of a sum can never be cancelled."
+              "text": "$\\frac{x(x+11)}{2x}$",
+              "correct": true,
+              "feedback": "The whole top is $x$ times $(x+11)$, so $x$ is a factor of both lines and divides out, leaving $\\frac{x+11}{2}$."
             },
             {
               "id": "c",
-              "text": "The $x$, leaving $x+4$ over $1$",
+              "text": "$\\frac{x^{2}+11}{2x}$",
               "correct": false,
               "misconception": "fm.algfrac.cancel-across-addition",
-              "feedback": "Removing the bottom without changing the top changes the value. Cancelling has to divide both lines by the same thing."
+              "feedback": "The $x$ divides the $x^{2}$ but not the $11$, so it is not a factor of the whole top. At $x=2$ the fraction is $\\frac{15}{4}$, but striking an $x$ gives $\\frac{13}{2}$."
             }
           ],
           "secondsExpected": 25,
@@ -488,6 +489,76 @@
             }
           ],
           "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "08",
+          "stem": "What is $\\frac{4x^{2}+36x}{x^{2}+9x}$ fully simplified?",
+          "skill": "Simplify all the way, to a whole number if that is what is left",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\frac{4x}{x}$",
+              "correct": false,
+              "misconception": "fm.algfrac.not-fully-simplified",
+              "feedback": "The bracket $(x+9)$ has gone, but an $x$ still divides both lines. Strike it too and $4$ is left."
+            },
+            {
+              "id": "b",
+              "text": "$1$",
+              "correct": false,
+              "misconception": "fm.algfrac.divide-before-factorise",
+              "feedback": "Dividing only the top by $4$ changes the fraction's value. Factorise instead: the top is $4x(x+9)$ and the bottom $x(x+9)$, so $4$ is left."
+            },
+            {
+              "id": "c",
+              "text": "$4$",
+              "correct": true,
+              "feedback": "The top is $4x(x+9)$ and the bottom is $x(x+9)$. Both $x$ and $(x+9)$ divide out, and a whole number is left."
+            }
+          ],
+          "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.algebraic-fractions-simplify.withdrawn-01",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "when": "both",
+      "items": [
+        {
+          "id": "01",
+          "stem": "What, if anything, cancels in $\\dfrac{x+4}{x}$?",
+          "skill": "Tell a factor from a term",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nothing — the $x$ on top is a term, not a factor",
+              "correct": true,
+              "feedback": "Cancelling divides the whole of each line, and the $x$ on top is added to the $4$ rather than multiplied by it. At $x = 1$ the fraction is $5$, while $4$ is $4$."
+            },
+            {
+              "id": "b",
+              "text": "The $x$, leaving $4$",
+              "correct": false,
+              "misconception": "fm.algfrac.cancel-across-addition",
+              "feedback": "Test it: at $x = 1$ the fraction is $5$, and $4$ is $4$. A term of a sum can never be cancelled."
+            },
+            {
+              "id": "c",
+              "text": "The $x$, leaving $x+4$ over $1$",
+              "correct": false,
+              "misconception": "fm.algfrac.cancel-across-addition",
+              "feedback": "Removing the bottom without changing the top changes the value. Cancelling has to divide both lines by the same thing."
+            }
+          ],
+          "secondsExpected": 25,
           "confidence": true,
           "hypercorrectionQueue": true
         }
@@ -750,7 +821,7 @@
             "Two numbers with product 10 and sum 7.",
             "Two numbers with product -10 and sum 3."
           ],
-          "workedSolution": "Factorising the numerator gives $(x+5)(x+2)$ and the denominator gives $(x+5)(x-2)$.\nSo $\\frac{x^{2}+7x+10}{x^{2}+3x-10} = \\frac{(x+5)(x+2)}{(x+5)(x-2)}$.\nCancelling $(x+5)$ leaves $\\frac{x+2}{x-2}$.",
+          "workedSolution": "Factorising the numerator gives $(x+5)(x+2)$ and the denominator gives $(x+5)(x-2)$.\nSo $\\frac{x^{2}+7x+10}{x^{2}+3x-10}$ becomes $\\frac{(x+5)(x+2)}{(x+5)(x-2)}$.\nCancelling $(x+5)$ leaves $\\frac{x+2}{x-2}$.",
           "commonErrors": [
             {
               "misconception": "fm.algfrac.not-factorised-first",
@@ -1284,6 +1355,126 @@
       "solutionProgram": "numerator x³ - 9x = x(x - 3)(x + 3); denominator x² + 5x + 6 = (x + 2)(x + 3); cancel (x + 3); answer (x(x - 3)) over (x + 2); identity checked at three sample points"
     },
     {
+      "id": "q.fm.u1.algebraic-fractions-simplify.0011",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Simplify"
+      ],
+      "emphasis": [
+        "simplify fully"
+      ],
+      "context": {
+        "setting": "Pure algebra, no context",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Simplify fully\n$\\dfrac{2x^{2}+11x+14}{4x^{2}-16}$",
+          "marks": 4,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "\\frac{2x+7}{4(x-2)}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "form": "simplest-fraction"
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "numerator factorised: (2x + 7)(x + 2)"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "denominator factorised fully: 4(x + 2)(x - 2)"
+            },
+            {
+              "id": "MW3",
+              "code": "MW",
+              "marks": 1,
+              "for": "(x + 2) cancelled",
+              "ft": true,
+              "dependsOn": [
+                "MW1",
+                "MW2"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "answer (2x + 7) over 4(x - 2), with the 4 kept and nothing cancelled out of 2x + 7",
+              "dependsOn": [
+                "MW3"
+              ]
+            }
+          ],
+          "hints": [
+            "Split the top into two brackets: the x² term needs 2x and x.",
+            "Take the 4 out of the bottom first, then look for two squares.",
+            "Check the numbers at the end: does 2 divide the whole of 2x + 7?"
+          ],
+          "workedSolution": "The numerator factorises as $(2x+7)(x+2)$.\nThe denominator is $4(x^{2}-4)$, which is $4(x+2)(x-2)$.\nCancelling $(x+2)$ leaves $\\frac{2x+7}{4(x-2)}$.\nNothing else cancels: $2x+7$ has no factor of 2, because 7 is odd.",
+          "commonErrors": [
+            {
+              "misconception": "fm.algfrac.cancel-across-addition",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "\\frac{x+7}{2(x-2)}"
+              },
+              "feedback": "The 2 in $2x$ belongs to one term: $2x+7$ has no factor of 2, because 7 is odd. Only something that divides the whole top can be cancelled, so the 4 underneath stays whole.",
+              "marksTypicallyEarned": 3,
+              "source": "ccea-cer:further-maths:2024-summer:FM1:Q8"
+            },
+            {
+              "misconception": "fm.algfrac.divide-before-factorise",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "\\frac{2x+7}{x-2}"
+              },
+              "feedback": "The 4 is a factor of the whole bottom, $4(x+2)(x-2)$, so it stays in the answer. Dividing only the bottom by 4 makes the fraction four times too big.",
+              "marksTypicallyEarned": 2,
+              "source": "ccea-cer:further-maths:2019-summer:FM1:Q12"
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 4,
+      "timeAllowanceSec": 288,
+      "skeleton": "(main)simplify4",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM1:Q8"
+      ],
+      "verification": "ver.q.fm.u1.algebraic-fractions-simplify.0011",
+      "version": 1,
+      "solutionProgram": "numerator 2x² + 11x + 14 = (2x + 7)(x + 2); denominator 4x² - 16 = 4(x + 2)(x - 2); cancel (x + 2); answer (2x + 7) over 4(x - 2); identity and both common errors checked at sample points"
+    },
+    {
       "id": "q.fm.u1.algebraic-fractions-simplify.0009",
       "topic": "fm.u1.algebraic-fractions-simplify",
       "specRefs": [
@@ -1367,7 +1558,7 @@
             "The bottom is a perfect square.",
             "Check the numbers at the end as well as the brackets."
           ],
-          "workedSolution": "Factorising the numerator gives $2(x+3)(x-2)$ and the denominator gives $(x+3)^{2}$.\nSo $\\frac{2x^{2}+2x-12}{x^{2}+6x+9} = \\frac{2(x+3)(x-2)}{(x+3)^{2}}$.\nCancelling $(x+3)$ leaves $\\frac{2(x-2)}{x+3}$.",
+          "workedSolution": "Factorising the numerator gives $2(x+3)(x-2)$ and the denominator gives $(x+3)^{2}$.\nSo $\\frac{2x^{2}+2x-12}{x^{2}+6x+9}$ becomes $\\frac{2(x+3)(x-2)}{(x+3)^{2}}$.\nCancelling $(x+3)$ leaves $\\frac{2(x-2)}{x+3}$.",
           "commonErrors": [
             {
               "misconception": "fm.algfrac.not-factorised-first",
@@ -1523,7 +1714,7 @@
             "The denominator needs two numbers with product -15 and sum 2.",
             "One bracket appears on both lines."
           ],
-          "workedSolution": "From part (a) the numerator is $3(x+3)(x-3)$.\nThe denominator factorises as $(x+5)(x-3)$.\nSo $\\frac{3x^{2}-27}{x^{2}+2x-15} = \\frac{3(x+3)(x-3)}{(x+5)(x-3)} = \\frac{3(x+3)}{x+5}$.",
+          "workedSolution": "From part (a) the numerator is $3(x+3)(x-3)$.\nThe denominator factorises as $(x+5)(x-3)$.\nSo $\\frac{3x^{2}-27}{x^{2}+2x-15}$ becomes $\\frac{3(x+3)(x-3)}{(x+5)(x-3)}$, and cancelling $(x-3)$ gives $\\frac{3(x+3)}{x+5}$.",
           "commonErrors": [
             {
               "misconception": "fm.algfrac.not-factorised-first",
@@ -1583,6 +1774,33 @@
       ],
       "feedback": "Both method-and-working marks for factorising are safe, and the cancelling started correctly. The final mark is for a fraction with nothing left in common, and an $x$ is still a factor of both lines. Summer 2023 examiners reported this exact shape of unfinished answer as the commonest loss on this question. Read your answer line once more and ask whether anything divides both parts.",
       "source": "ccea-cer:further-maths:2023-summer:FM1:Q9"
+    },
+    {
+      "id": "ftm.fm.u1.algebraic-fractions-simplify.02",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "stem": "Dev was asked to simplify fully $\\frac{3x^{2}+27x}{x^{2}+6x-27}$. His working:",
+      "studentWorking": [
+        "Divide the top by 3: x² + 9x",
+        "Top: x² + 9x = x(x + 9)",
+        "Bottom: x² + 6x - 27 = (x + 9)(x - 3)",
+        "Answer: x over (x - 3)"
+      ],
+      "mistakeLine": 1,
+      "misconception": "fm.algfrac.divide-before-factorise",
+      "whatWentWrong": "Dividing only the top by 3 changes the fraction's value. The 3 is a factor of the top, so it has to be taken out and kept: 3x² + 27x = 3x(x + 9).",
+      "correction": [
+        "Top: 3x² + 27x = 3x(x + 9)",
+        "Bottom: x² + 6x - 27 = (x + 9)(x - 3)",
+        "Answer: 3x over (x - 3)"
+      ],
+      "marksEarnedAsWritten": [
+        "MW1"
+      ],
+      "feedback": "The bottom is factorised correctly, and that mark is safe. The top was divided by 3 before it was factorised, which changes the value, so the answer is a third of the right one. Summer 2019 examiners saw this: candidates who divided by 3 before factorising lost it from the answer. Take a common factor out; never divide it away.",
+      "source": "ccea-cer:further-maths:2019-summer:FM1:Q12"
     }
   ],
   "prompts": [
@@ -1700,6 +1918,84 @@
       ],
       "examUnit": "FM1",
       "difficultyPrior": 3
+    },
+    {
+      "id": "rp.fm.u1.algebraic-fractions-simplify.08",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "kind": "trap",
+      "prompt": "After the brackets, what is the last check before the answer line?",
+      "answer": "The numbers: no numerical factor left on both lines",
+      "keyWords": [
+        "numbers",
+        "numerical factor"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 5
+    },
+    {
+      "id": "rp.fm.u1.algebraic-fractions-simplify.09",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "kind": "procedure",
+      "prompt": "What is always the first step in simplifying an algebraic fraction?",
+      "answer": "Factorise the top and the bottom fully, common factor first.",
+      "keyWords": [
+        "factorise",
+        "common factor"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.fm.u1.algebraic-fractions-simplify.10",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "kind": "novel-example",
+      "prompt": "Factorise $9x^{2}-4$.",
+      "answer": "$(3x+2)(3x-2)$, since $9x^{2}=(3x)^{2}$ and $4=2^{2}$.",
+      "keyWords": [
+        "3x + 2",
+        "3x - 2"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 4
+    },
+    {
+      "id": "rp.fm.u1.algebraic-fractions-simplify.11",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "kind": "procedure",
+      "prompt": "What comes out first when you factorise $3x^{2}-147$?",
+      "answer": "The common factor 3: $3(x^{2}-49)$, then $3(x+7)(x-7)$.",
+      "keyWords": [
+        "common factor"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 4
+    },
+    {
+      "id": "rp.fm.u1.algebraic-fractions-simplify.12",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "kind": "novel-example",
+      "prompt": "Simplify fully $\\frac{4x+28}{x^{2}-49}$.",
+      "answer": "$\\frac{4}{x-7}$: the top is $4(x+7)$, the bottom $(x+7)(x-7)$, and $(x+7)$ divides out.",
+      "keyWords": [
+        "4/(x - 7)"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 3
     }
   ],
   "insight": {
@@ -1747,11 +2043,13 @@
         "dx.fm.u1.algebraic-fractions-simplify",
         "q.fm.u1.algebraic-fractions-simplify.0001",
         "q.fm.u1.algebraic-fractions-simplify.0002",
-        "rp.fm.u1.algebraic-fractions-simplify.01",
+        "rp.fm.u1.algebraic-fractions-simplify.09",
         "q.fm.u1.algebraic-fractions-simplify.0004",
         "q.fm.u1.algebraic-fractions-simplify.0005",
         "ftm.fm.u1.algebraic-fractions-simplify.01",
-        "q.fm.u1.algebraic-fractions-simplify.0009"
+        "q.fm.u1.algebraic-fractions-simplify.0009",
+        "q.fm.u1.algebraic-fractions-simplify.0011",
+        "ftm.fm.u1.algebraic-fractions-simplify.02"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -1841,6 +2139,30 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass: every worked line, figure and gate in the rebuilt note re-evaluated at six sample points by the script (hero 3x(x + 7)/6(x + 7)(x − 7) = x/2(x − 7); x(x + 8)/5x = (x + 8)/5 and the term test at x = 2, 1 against 8/5; x² − 49, 16x² − 81, 25x² − 1, 3x² − 300, x³ − 100x, 2x² − 128 over x² + 17x + 72, 8/4(x − 7), 5x²/x, 12x/3x, and every gate and option). Correction to the 13 Sep entry above: the term counter-example's cancelled value was 4, not 0 (the figure always printed 4); that figure is replaced.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass: pointer tariffs and positions read from the FM1 papers and schemes 2018-2026 (2018 Q8(i) 5, 2019 Q12(ii) 4, 2021 Q8 5 + 5, 2022 Q9(b) 5, 2023 Q9 4, 2024 Q8 4 + 5, 2025 Q7 7, 2026 Q10 6); twists from those questions' shapes; the Summer 2022 (4x² − 1), 2019 (dividing by 3 before factorising), 2023 (x left over) and 2024 (a factor of 2 left in; 'most', not 'nearly everyone', audit CT-15) findings read in the reports themselves. Nothing in the note works a line that a later question of this bundle asks.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass: node scripts/qa/lesson-v2.mjs --unit fm1 --depth --teach --prompts reports every gate after its section explains and shows the idea; gate answers and ids unchanged (frozen-surface check); the three figures are 400-unit viewBoxes with labels of 14 units or more.",
+          "at": "2026-09-25T04:20:00Z",
           "by": "claude"
         }
       ],
@@ -2092,6 +2414,22 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "25 Sep trial pass (audit CT-20): item 01 re-asked note gate g2 word for word straight after the lesson, and its correct option carried its own justification, so it could be got right for the wrong reason. It is withdrawn into dx.fm.u1.algebraic-fractions-simplify.withdrawn-01 (kept, never shipped). Item 07 asks the same skill on new numbers with bare fractions as options and opens the check; item 08 (a fraction that simplifies to 4) is a third check after practice. Both re-evaluated at sample points by the script and marked through the check's own option records.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Correction to the 13 Sep entry above: item 01's cancelled-term value at x = 1 is 4, not 0 (the printed feedback always said 4). Items 07 and 08: every value in their feedback computed by the script (13/4 against 11/2; 15/4 against 13/2; 4).",
+          "at": "2026-09-25T04:20:00Z",
           "by": "claude"
         }
       ],
@@ -3073,9 +3411,17 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep (trial pass): a 28-word numbered procedure, over the 25-word cap for a retrieval prompt (depth standard, 'few, optional and short'); the procedure is now the note's recap, and its first step is the short prompt rp.09.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
+      "status": "withdrawn",
       "reports": []
     },
     {
@@ -3316,9 +3662,17 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep (trial pass): a 40-word answer, over the 25-word cap; its frozen answer cannot be cut in place, so the short form ('The numbers: no numerical factor left on both lines') is rp.08, and the Summer 2024 sentence it carried is the Sheet's trap.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
+      "status": "withdrawn",
       "reports": []
     },
     {
@@ -3397,9 +3751,17 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep (trial pass): a 31-word answer, over the 25-word cap; what it asked (nothing left in common, numbers included) is rp.08 and the note's 'Fully means fully' section.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
+      "status": "withdrawn",
       "reports": []
     },
     {
@@ -3478,9 +3840,17 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep (trial pass, audit CT-04): its answer misreported the Summer 2018 report, which ties the cubics to not factorising the quadratics in an addition of two fractions, not to a common factor left in; it was also a 42-word anecdote, and no FM1 paper sets a cubic (audit CT-05). The common-factor-first move is rp.11.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
+      "status": "withdrawn",
       "reports": []
     },
     {
@@ -3558,6 +3928,494 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep (trial pass, audit MK-15): its key word was TeX (\\frac{5}{x-4}), which the chip printed raw and which she cannot type, and its prompt was practice question 0001 word for word. Replaced by rp.12 on new numbers with a typed key word.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.algebraic-fractions-simplify.08",
+      "itemId": "rp.fm.u1.algebraic-fractions-simplify.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The prompt uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every expression in the prompt and answer re-evaluated at six sample points by the script (rp.fm.u1.algebraic-fractions-simplify.08).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Traced to the note's 'Fully means fully' section and the Summer 2024 Q8(a) report (a factor of 2 left in).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Answer 9 words (cap 25); key words [\"numbers\",\"numerical factor\"] found in the answer and in her typed spellings by keywordsPresent (probe-trial-pass-0925.mts).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.algebraic-fractions-simplify.09",
+      "itemId": "rp.fm.u1.algebraic-fractions-simplify.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The prompt uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every expression in the prompt and answer re-evaluated at six sample points by the script (rp.fm.u1.algebraic-fractions-simplify.09).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Traced to the note's recap line 1 and the Summer 2018 Q8 report (factorise all quadratics first).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Answer 10 words (cap 25); key words [\"factorise\",\"common factor\"] found in the answer and in her typed spellings by keywordsPresent (probe-trial-pass-0925.mts).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.algebraic-fractions-simplify.10",
+      "itemId": "rp.fm.u1.algebraic-fractions-simplify.10",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The prompt uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every expression in the prompt and answer re-evaluated at six sample points by the script (rp.fm.u1.algebraic-fractions-simplify.10).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Traced to the note's 'Two squares with a number in front' section and the Summer 2022 Q9(b) report (4x² − 1 not factorised).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Answer 5 words (cap 25); key words [\"3x + 2\",\"3x - 2\"] found in the answer and in her typed spellings by keywordsPresent (probe-trial-pass-0925.mts).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.algebraic-fractions-simplify.11",
+      "itemId": "rp.fm.u1.algebraic-fractions-simplify.11",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The prompt uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every expression in the prompt and answer re-evaluated at six sample points by the script (rp.fm.u1.algebraic-fractions-simplify.11).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Traced to the note's 'A common factor first' section and the Summer 2019 Q12 report (a factor divided away before factorising).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Answer 7 words (cap 25); key words [\"common factor\"] found in the answer and in her typed spellings by keywordsPresent (probe-trial-pass-0925.mts).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.algebraic-fractions-simplify.12",
+      "itemId": "rp.fm.u1.algebraic-fractions-simplify.12",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The prompt uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every expression in the prompt and answer re-evaluated at six sample points by the script (rp.fm.u1.algebraic-fractions-simplify.12).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Traced to the note's 'The three moves' section; new numbers, not any question of this bundle.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Answer 12 words (cap 25); key words [\"4/(x - 7)\"] found in the answer and in her typed spellings by keywordsPresent (probe-trial-pass-0925.mts).",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.algebraic-fractions-simplify.withdrawn-01",
+      "itemId": "dx.fm.u1.algebraic-fractions-simplify.withdrawn-01",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "fail",
+          "detail": "Withdrawn 25 Sep (trial pass, audit CT-20): diagnostic item 01 of dx.fm.u1.algebraic-fractions-simplify, kept here with its id so a review card that points at it resolves to 'withdrawn'. It re-asked note gate g2 word for word minutes after the lesson, and its correct option carried its own justification. Replaced by item 07 of the live set.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.algebraic-fractions-simplify.0011",
+      "itemId": "q.fm.u1.algebraic-fractions-simplify.0011",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The question uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "4 marks, as Summer 2024 Q8(a) and Summer 2023 Q9 (FM1 per part: median 3, p90 6, max 8, packs/further-maths/exam-true/tariffs.json)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "(2x² + 11x + 14)/(4x² - 16) = (2x + 7)/(4(x - 2)); both lines and both common errors re-evaluated at sample points by the script; each common error differs from the answer in value.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "The number left underneath is the Summer 2024 Q8(a) finding (a factor of 2 missed); the two common errors are the Summer 2024 term-cancelling and the Summer 2019 divide-before-factorising findings.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Marked through markAnswer (probe-trial-pass-0925.mts): the answer in five spellings earns full marks, both common errors are recognised, and the question typed back does not earn the answer mark.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.algebraic-fractions-simplify.02",
+      "itemId": "ftm.fm.u1.algebraic-fractions-simplify.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01 (linear and quadratic numerators and denominators)",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach. The item uses new expressions and our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "(3x² + 27x)/(x² + 6x - 27) = 3x/(x - 3); every line of the working and the correction re-evaluated at sample points by the script; her answer x/(x - 3) is a third of the right value, as the feedback says.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Summer 2019 FM1 Q12 report: candidates who had the numerator right often divided by 3 before factorising and lost it from the answer.",
+          "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (25 Sep trial pass: scratchpad/fm1-batch-a/fix-trial-pass-0925.mjs, every identity re-evaluated at sample points in the script; marking probed by probe-trial-pass-0925.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "The fix box probed through markFix (probe-trial-pass-0925.mts): every line of the correction is accepted, every line of her working is refused.",
+          "at": "2026-09-25T04:20:00Z",
           "by": "claude"
         }
       ],

@@ -7,49 +7,59 @@
       "Take the overlap off once, so nobody is counted twice",
       "Tell an 'or' question from an 'and' question before you start"
     ],
-    "minutes": 11
+    "minutes": 12
   },
   {
     "type": "h",
+    "role": "idea",
     "text": "Some hands go up twice"
   },
   {
     "type": "p",
-    "md": "A form group of 40 students is asked two questions. 22 bring a packed lunch. 15 have a bus pass. 8 students put a hand up for both.\nIf you want to know how many do **at least one** of the two, adding 22 and 15 gives 37. But 11 of the 40 put no hand up at all, so only 29 did at least one: the 8 were counted in each total."
+    "md": "A form group of 40 students is asked two questions. 22 bring a packed lunch, 15 have a bus pass, and 8 put a hand up for both.\nAdd 22 and 15 and you get 37. But 11 of the 40 put no hand up at all, so only 29 did at least one: the 8 were counted in each total."
   },
   {
     "type": "figure",
     "alt": "A two-circle Venn diagram inside a rectangle. The left circle is labelled packed lunch, the right circle bus pass. The regions read 14, 8 and 7 from left to right, with 11 outside both circles.",
-    "svg": "<svg viewBox='0 0 440 250' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-circle Venn diagram for 40 students: 14 bring a packed lunch only, 8 do both, 7 have a bus pass only and 11 do neither'><title>A two-circle Venn diagram for 40 students: 14 bring a packed lunch only, 8 do both, 7 have a bus pass only and 11 do neither</title><rect x='12' y='26' width='416' height='188' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='176' cy='130' r='82' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='264' cy='130' r='82' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='120' y='44' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle' font-weight='600'>Packed lunch</text><text x='320' y='44' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle' font-weight='600'>Bus pass</text><text x='146' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>14</text><text x='220' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>8</text><text x='294' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>7</text><text x='400' y='212' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>11</text><text x='18' y='234' font-family='inherit' font-size='12' fill='currentColor' text-anchor='start' fill-opacity='0.85'>40 students in the form group</text></svg>",
+    "svg": "<svg viewBox='0 0 360 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-circle Venn diagram for 40 students: 14 bring a packed lunch only, 8 do both, 7 have a bus pass only and 11 do neither'><title>A two-circle Venn diagram for 40 students: 14 bring a packed lunch only, 8 do both, 7 have a bus pass only and 11 do neither</title><rect x='8' y='22' width='344' height='174' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='144' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='216' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='122.6' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Packed lunch</text><text x='220.6' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Bus pass</text><text x='114' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>14</text><text x='180' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>8</text><text x='246' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>7</text><text x='326' y='188' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>11</text><text x='10' y='218' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>40 students in the form group</text></svg>",
     "caption": "The overlap holds the 8 students in both groups. Every student sits in exactly one region, so the four regions total 40."
+  },
+  {
+    "type": "p",
+    "md": "Fill a Venn diagram from the overlap outwards. The bus-pass total is 15, and 8 of those are in the overlap, so $15 - 8 = 7$ go in the bus-pass-only region."
   },
   {
     "type": "gate",
     "id": "g1",
     "kind": "number",
-    "prompt": "On the Venn diagram above, how many of the 40 students bring a packed lunch but have no bus pass?",
+    "prompt": "On the form group's Venn diagram, how many of the 40 students bring a packed lunch but have no bus pass?",
     "answer": "14",
-    "explain": "14. The 22 packed-lunch students split into the 8 in the overlap and the 14 outside it."
+    "explain": "14. The 22 packed-lunch students split into the 8 in the overlap and the 14 outside it: $22 - 8 = 14$, as the bus-pass side gave 7."
   },
   {
     "type": "h",
-    "text": "1. What 'or' means in a probability question"
+    "role": "idea",
+    "text": "1. What 'or' means in probability"
   },
   {
     "type": "p",
-    "md": "In everyday speech 'or' can mean one or the other but not both. In probability it never does. $A$ **or** $B$ means at least one of them happens, and that includes the case where both happen.\nSo the group you want is the whole of both circles together, overlap included — written $A \\cup B$ and read 'A union B'."
+    "md": "In everyday speech 'or' can mean one or the other but not both. In probability it never does. $A$ **or** $B$ means at least one of them happens, and that includes the case where both happen.\nSo the group you want is the whole of both circles together, overlap included, written $A \\cup B$ and read 'A union B'."
   },
   {
     "type": "figure",
     "alt": "Two bars, 22 and 15 long, laid end to end against a scale of 40 students: together they make 37. A third bar shows the 29 students who do at least one; the 8 between 29 and 37 are the students counted in both totals.",
-    "svg": "<svg viewBox='0 0 460 186' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two bars, 22 and 15 long, laid end to end on a scale of 40 students: together they reach 37. A third bar shows the 29 students who do at least one; the stretch from 29 to 37 is the 8 students counted in both totals'><title>Two bars, 22 and 15 long, laid end to end on a scale of 40 students: together they reach 37. A third bar shows the 29 students who do at least one; the stretch from 29 to 37 is the 8 students counted in both totals</title><text x='22' y='18' font-family='inherit' font-size='12' fill='currentColor' text-anchor='start'>the two groups add to 37, but only 29 students did at least one</text><rect x='22' y='28' width='224.4' height='24' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.2'/><text x='134.2' y='45' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>packed lunch 22</text><rect x='246.4' y='28' width='153.0' height='24' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.2'/><text x='322.9' y='45' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>bus pass 15</text><path d='M317.8 58 L317.8 64 L399.4 64 L399.4 58' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='358.6' y='80' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the 8 in both, counted twice</text><path d='M22 92 L430 92' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M22 88 L22 96' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M430 88 L430 96' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='226' y='110' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>40 students altogether</text><rect x='22' y='120' width='295.8' height='24' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.2'/><text x='169.9' y='137' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>at least one of the two: 29</text><text x='22' y='172' font-family='inherit' font-size='11.5' fill='currentColor' fill-opacity='0.85' text-anchor='start'>take the 8 off once: 22 + 15 − 8 = 29</text></svg>",
+    "svg": "<svg viewBox='0 0 360 176' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two bars, 22 and 15 long, laid end to end on a scale of 40 students: together they reach 37. A third bar shows the 29 students who do at least one; the stretch from 29 to 37 is the 8 students counted in both totals'><title>Two bars, 22 and 15 long, laid end to end on a scale of 40 students: together they reach 37. A third bar shows the 29 students who do at least one; the stretch from 29 to 37 is the 8 students counted in both totals</title><rect x='12' y='10' width='184.8' height='28' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.2'/><text x='104.4' y='29' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>packed lunch 22</text><rect x='196.8' y='10' width='126.0' height='28' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.2'/><text x='259.8' y='29' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>bus pass 15</text><path d='M255.6 44 L255.6 50 L322.8 50 L322.8 44' stroke='currentColor' stroke-width='1.3' fill='none'/><text x='322.8' y='70' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8 counted twice</text><path d='M12 84 L348 84' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M12 79 L12 89' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M348 79 L348 89' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='180' y='104' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>all 40 students</text><rect x='12' y='114' width='243.6' height='28' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.2'/><text x='133.8' y='133' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>at least one: 29</text><text x='12' y='166' font-family='inherit' font-size='14' fill='currentColor' fill-opacity='0.9' text-anchor='start'>22 + 15 − 8 = 29</text></svg>",
     "caption": "Adding the totals reaches 37, which is 8 too many. Taking the overlap off once leaves 29."
+  },
+  {
+    "type": "p",
+    "md": "Count the 'or' group region by region and nobody is counted twice: $14 + 8 + 7 = 29$. The two totals give $22 + 15 = 37$ instead."
   },
   {
     "type": "gate",
     "id": "g2",
     "kind": "choice",
-    "prompt": "In the bar picture above, 22 plus 15 comes to 37, but only 29 students do at least one. Why?",
+    "prompt": "In the form group, 22 plus 15 comes to 37, but only 29 students do at least one. Why?",
     "options": [
       "The 8 students in both groups are counted in each total",
       "The 11 who do neither were added in by mistake",
@@ -60,17 +70,22 @@
   },
   {
     "type": "h",
+    "role": "idea",
     "text": "2. The rule your formula sheet gives you"
   },
   {
     "type": "p",
-    "md": "Page 2 of the Unit 3 booklet prints $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$.\nRead it as three steps. Add the two probabilities. Subtract the probability of the overlap, $P(A \\cap B)$, read 'A intersection B'. What is left is the probability of at least one.\nYou do not have to remember it, but you do have to notice when a question needs it."
+    "md": "Page 2 of the Unit 3 booklet prints $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$.\nAdd the two probabilities, then subtract the overlap, $P(A \\cap B)$, read 'A intersection B'. What is left is the probability of at least one."
+  },
+  {
+    "type": "p",
+    "md": "Probabilities work the same way. If $P(A) = 0.55$, $P(B) = 0.25$ and $P(A \\cap B) = 0.1$, then $P(A \\cup B)$ is $0.55 + 0.25 - 0.1 = 0.7$."
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why subtract once and not twice?",
-    "md": "Every student in the overlap was counted exactly twice: once in $P(A)$ and once in $P(B)$. Subtracting the overlap once brings each of them back to a single count. Subtract twice and they vanish from the answer altogether."
+    "md": "Every student in the overlap was counted exactly twice, once in $P(A)$ and once in $P(B)$. Subtracting the overlap once brings each back to a single count; subtract twice and they vanish from the answer."
   },
   {
     "type": "gate",
@@ -78,20 +93,21 @@
     "kind": "number",
     "prompt": "For the form group of 40 students, where 22 bring a packed lunch, 15 have a bus pass and 8 do both, work out $P(\\text{packed lunch or bus pass})$ as a decimal.",
     "answer": "29/40 | 0.725 | 0.73",
-    "explain": "$\\dfrac{22}{40} + \\dfrac{15}{40} - \\dfrac{8}{40} = \\dfrac{29}{40} = 0.725$. Leaving the overlap in would give 0.925."
+    "explain": "$\\dfrac{22}{40} + \\dfrac{15}{40} - \\dfrac{8}{40}$ is $\\dfrac{29}{40}$, which is 0.725. Leaving the overlap in would give 0.925."
   },
   {
     "type": "h",
-    "text": "3. When there is no overlap to take off"
+    "role": "variant",
+    "text": "3. No overlap: mutually exclusive events"
   },
   {
     "type": "p",
-    "md": "Two events are **mutually exclusive** when they cannot both happen, so $P(A \\cap B) = 0$ and the rule loses its last term.\nA spinner with 8 equal sections has 3 red, 2 blue and 3 green. One spin cannot land red and blue at once, so $P(\\text{red or blue}) = \\dfrac{3}{8} + \\dfrac{2}{8} = \\dfrac{5}{8}$."
+    "md": "Two events are **mutually exclusive** when they cannot both happen, so $P(A \\cap B) = 0$ and the rule loses its last term.\nA spinner with 8 equal sections has 3 red, 2 blue and 3 green. One spin cannot land red and blue at once, so $P(\\text{red or blue}) = \\dfrac{3}{8} + \\dfrac{2}{8}$, which is $\\dfrac{5}{8}$."
   },
   {
     "type": "figure",
     "alt": "Two circles that do not touch, inside a rectangle. One holds 3, the other 2, and 3 sits outside both.",
-    "svg": "<svg viewBox='0 0 440 250' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two circles that do not overlap: 3 red sections in one, 2 blue sections in the other and 3 green sections outside both'><title>Two circles that do not overlap: 3 red sections in one, 2 blue sections in the other and 3 green sections outside both</title><rect x='12' y='26' width='416' height='188' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='128' cy='130' r='82' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='312' cy='130' r='82' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='128' y='44' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle' font-weight='600'>Red</text><text x='312' y='44' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle' font-weight='600'>Blue</text><text x='128' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='312' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='220' y='206' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='18' y='234' font-family='inherit' font-size='12' fill='currentColor' text-anchor='start' fill-opacity='0.85'>8 equal sections</text></svg>",
+    "svg": "<svg viewBox='0 0 360 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two circles that do not overlap: 3 red sections in one, 2 blue sections in the other and 3 green sections outside both'><title>Two circles that do not overlap: 3 red sections in one, 2 blue sections in the other and 3 green sections outside both</title><rect x='8' y='22' width='344' height='174' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='94' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='266' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='94' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Red</text><text x='266' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Blue</text><text x='94' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>3</text><text x='266' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>2</text><text x='180' y='188' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>3</text><text x='10' y='218' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>8 equal sections</text></svg>",
     "caption": "Mutually exclusive events are circles that do not overlap, so there is nothing to subtract."
   },
   {
@@ -109,11 +125,16 @@
   },
   {
     "type": "h",
-    "text": "4. A worked example, with the last line yours"
+    "role": "see",
+    "text": "4. See it done: the choir"
   },
   {
     "type": "p",
-    "md": "A choir of 60 singers: 27 sing alto, 38 sing soprano and 14 sing in both sections. One singer is chosen at random.\n**Step 1.** Name the events, because the rule is written in letters. $A$ is alto, $S$ is soprano.\n**Step 2.** Write the three probabilities over the same total: $\\dfrac{27}{60}$, $\\dfrac{38}{60}$, $\\dfrac{14}{60}$.\n**Step 3.** Put them into the rule: $\\dfrac{27}{60} + \\dfrac{38}{60} - \\dfrac{14}{60}$. The denominators already match, so only the numerators combine, and that last line is yours in the check below."
+    "md": "A choir of 60 singers: 27 sing alto, 38 sing soprano and 14 sing in both sections. One singer is chosen at random.\n**Step 1.** Name the events, because the rule is written in letters. $A$ is alto, $S$ is soprano.\n**Step 2.** Write the three probabilities over the same total: $\\dfrac{27}{60}$, $\\dfrac{38}{60}$ and $\\dfrac{14}{60}$."
+  },
+  {
+    "type": "p",
+    "md": "**Step 3.** Put them into the rule: $\\dfrac{27}{60} + \\dfrac{38}{60} - \\dfrac{14}{60}$.\nThe denominators already match, so only the numerators combine. That last line is yours, in the check below."
   },
   {
     "type": "video",
@@ -128,15 +149,16 @@
     "kind": "number",
     "prompt": "In the choir of 60 singers, 27 sing alto, 38 sing soprano and 14 sing both. What is $P(\\text{alto or soprano})$? Give a fraction or a decimal.",
     "answer": "17/20 | 0.85 | 51/60",
-    "explain": "$\\dfrac{27 + 38 - 14}{60} = \\dfrac{17}{20}$. The unreduced form $\\dfrac{51}{60}$ earns the same mark."
+    "explain": "$\\dfrac{27 + 38 - 14}{60}$ is $\\dfrac{17}{20}$. The unreduced form $\\dfrac{51}{60}$ earns the same mark."
   },
   {
     "type": "h",
+    "role": "variant",
     "text": "5. 'Or' adds, 'and' multiplies"
   },
   {
     "type": "p",
-    "md": "**Or** means at least one, so you add and take the overlap off once.\n**And**, for two events that do not affect each other, means multiply. If the chance of rain tomorrow is $0.30$, the chance of a strong wind is $0.45$ and the question says the two are independent, then $P(\\text{both}) = 0.30 \\times 0.45 = 0.135$. Rain and wind often go together, so only that sentence lets you multiply."
+    "md": "**Or** means at least one, so you add and take the overlap off once.\n**And**, for two events that do not affect each other, means multiply. If the chance of rain tomorrow is $0.30$, the chance of a strong wind is $0.45$ and the question says the two are independent, then $P(\\text{both}) = 0.30 \\times 0.45$, which is $0.135$. Rain and wind often go together, so only that sentence lets you multiply."
   },
   {
     "type": "callout",
@@ -160,14 +182,37 @@
   },
   {
     "type": "h",
+    "role": "twists",
+    "text": "Exam twists"
+  },
+  {
+    "type": "p",
+    "md": "**The union is given, the overlap is not.** Rearrange the rule: the overlap is $P(A) + P(B) - P(A \\cup B)$. With $P(A) = 0.65$, $P(B) = 0.3$ and $P(A \\cup B) = 0.8$, that is $0.65 + 0.3 - 0.8 = 0.15$."
+  },
+  {
+    "type": "p",
+    "md": "**'Neither' is what is left.** It is the space outside both circles, so it is $1 - P(A \\cup B)$: here $1 - 0.8 = 0.2$. And an answer above 1 means the overlap was never taken off, which Summer 2019 examiners reported."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "$P(A) = 0.35$, $P(B) = 0.5$ and $P(A \\cup B) = 0.6$. What is $P(A \\cap B)$?",
+    "answer": "0.25 | 1/4",
+    "explain": "Rearrange the rule, as for the twist above: $0.35 + 0.5 - 0.6 = 0.25$. The two probabilities add to more than the union by exactly the overlap."
+  },
+  {
+    "type": "h",
+    "role": "recap",
     "text": "You can now"
   },
   {
     "type": "p",
-    "md": "Read 'or' as at least one, overlap included.\nWrite the three probabilities of the rule over the same total.\nSubtract the overlap exactly once, and check the answer is at most 1.\nSay when two events are mutually exclusive, so the last term is zero.\nDecide whether a question is an 'or' or an 'and' before you calculate."
+    "md": "Read 'or' as at least one, overlap included.\nWrite the three probabilities over the same total, and subtract the overlap exactly once.\nSay when two events are mutually exclusive, so the last term is zero.\nFind the overlap from the union, and 'neither' as 1 minus the union.\nDecide whether a question is an 'or' or an 'and' before you calculate."
   },
   {
     "type": "h",
+    "role": "pointer",
     "text": "In the exam"
   },
   {
@@ -177,14 +222,6 @@
   {
     "type": "prompt",
     "promptId": "rp.fm.u3.addition-rule-probability.01"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.addition-rule-probability.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.addition-rule-probability.03"
   },
   {
     "type": "prompt",

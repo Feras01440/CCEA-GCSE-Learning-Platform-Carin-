@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describeFailure, explains, isSeeHeading, shows, teachShowCheck, workedSteps } from "../../../scripts/qa/teach-show-check.mjs";
+import { calculations, describeFailure, explains, isSeeHeading, proseWords, shows, teachShowCheck, workedSteps } from "../../../scripts/qa/teach-show-check.mjs";
 
 /**
  * The owner's ruling of 24 Sep 2026 ("Teach before you check", STANDARDS.md; the Depth standard in
@@ -172,6 +172,81 @@ describe("teach → show → check", () => {
     // g10: a calculator display written out on the answer line is the same conversion, shown
     expect(shows(p("Some calculators show **6.82E8**. Copy it onto the answer line in full: $6.82 \\times 10^{8}$."))).toBe(true);
     expect(shows(p("Some calculators show **6.82E8**; never copy the E."))).toBe(false);
+  });
+
+  describe("a worked answer applied to a case, in ordered steps with no arithmetic (coordinator's ruling, B2 D, 25 Sep 2026)", () => {
+    // real B2 blocks (b2-natural-selection-selective-breeding, b2-genetic-engineering), copied so a later edit of the
+    // note cannot change what the rule is tested on
+    const weeds = p(
+      "The figure's weeds as a full answer:\n1. Some weeds had a mutation that made them resistant. [1]\n2. The weedkiller killed the weeds that were not resistant. [1]\n3. The resistant weeds survived and reproduced. [1]\n4. They passed the resistance gene on to their offspring. [1]",
+    );
+    const drought = p("Then a drought leaves only large, hard seeds.\n1. Birds with deeper beaks can crack them, so they survive.\n2. They reproduce and pass on the genes for deep beaks.\n3. Over many generations the peak moves to deeper beaks: the dashed curve.");
+    const cows = p(
+      "How a farmer breeds cows for milk:\n1. Choose the cows that give the most milk.\n2. Breed them, with a bull whose mother gave a lot.\n3. From the calves, choose those with the highest yield, and breed them.\n4. Repeat over many generations until all the offspring give a high yield. In the figure the yield climbs from 25 to 30 litres between generation 1 and generation 6.",
+    );
+    const chain = p(
+      "The survivors breed, and their characteristics are passed on in their **genes**. So the steps always run in this order:\n1. **Variation:** the individuals differ.\n2. **Competition:** not all survive.\n3. The **best adapted** survive and **reproduce**.\n4. They **pass on their genes**, so the characteristic becomes more common.",
+    );
+    const general = p("1. The bacteria **multiply**.\n2. Their plasmids are **copied** each time, so every new bacterium has the gene.\n3. The bacteria make their proteins, and one of them is **human insulin**.");
+
+    it("counts a stepped worked answer to a named case as shown", () => {
+      for (const b of [weeds, drought, cows]) expect(shows(b), String(b.md).slice(0, 40)).toBe(true);
+      const explain = p("The paper gives a population that stopped dying from a poison or an antibiotic and asks how most became resistant. Each step is a mark.");
+      expect(teachShowCheck(note(h("4. The four-mark resistance answer", "variant"), explain, weeds, gate("g5"))).failures).toEqual([]);
+    });
+
+    it("does not count a list of facts or definitions, or a process told with no case", () => {
+      expect(shows(chain)).toBe(false);
+      expect(shows(general)).toBe(false);
+      expect(teachShowCheck(note(h("2. Why it works", "why"), EXPLAIN, figure, chain, gate("g2"))).failures[0].missing).toEqual(["shown"]);
+    });
+
+    it("counts ordered steps under a See it done heading, which names the case (b2-health-communicable-diseases-aseptic)", () => {
+      const transfer = p(
+        "**1.** Heat the loop in the flame until it glows red, then let it cool, or it will kill the bacteria it carries.\n**2.** Take the lid off the culture bottle, keep hold of the lid, and pass the neck through the flame.\n**3.** Dip the loop into the culture, flame the neck again and replace the lid.",
+      );
+      const r = teachShowCheck(note(h("8. Sterilise before you start", "variant"), EXPLAIN, WORKED, gate("g10"), h("9. See it done: one aseptic transfer", "see"), transfer, gate("g11")));
+      expect(r.failures).toEqual([]);
+      // the same steps with no See it heading and no case named are a procedure told in general
+      expect(shows(transfer)).toBe(false);
+    });
+
+    it("counts worked questions answered from the case, line by line (b2-antibiotics-resistance-vaccines, three plates)", () => {
+      const plates = p(
+        "**Which antibiotic affects all three types?** X: it has a clear zone on every plate.\n**Which is most effective against bacteria A?** Y: it has the **largest** clear zone on plate A, so it killed the most bacteria.\n**Which types is Z not effective against?** A and B: there is no clear zone round Z on either plate.",
+      );
+      expect(shows(plates)).toBe(true);
+      // one question answered is a line, not a worked sequence
+      expect(shows(p("**Which antibiotic affects all three types?** X: it has a clear zone on every plate."))).toBe(false);
+    });
+
+    it("reads a charge on a species as part of the species, never as arithmetic (C2 E author; c2-aluminium-extraction)", () => {
+      // what happens at each electrode, told: the + in Al³⁺ and the (−) of the electrode are not operations
+      const told = p(
+        "**Cathode (−).** Each $\\ce{Al^{3+}}$ ion gains three electrons and becomes aluminium: a silvery-grey liquid that collects at the bottom and is **tapped off**.\n**Anode (+).** Each $\\ce{O^{2-}}$ ion loses two electrons, and oxygen gas forms: colourless bubbles at the graphite anodes.",
+      );
+      expect(workedSteps(told.md as string)).toBe(0);
+      expect(shows(told)).toBe(false);
+      expect(workedSteps("**Ion.** The ion is Fe3+, a 3+ charge.\n**Other ion.** Cl− carries a 1− charge.")).toBe(0);
+      // the charges added up, worked: still shown
+      const worked = p("Follow one unit of $\\ce{Al2O3}$ as it melts:\n**Towards the cathode:** two Al³⁺ ions carry 2 × (+3) = +6.\n**Towards the anodes:** three O²⁻ ions carry 3 × (−2) = −6.\nBoth kinds move, carrying the charge.");
+      expect(shows(worked)).toBe(true);
+    });
+
+    it("reads display maths as maths in every form an author writes it (C2 E author)", () => {
+      // c2-alcohols-fermentation's display equation is one balanced line: one step, in either display form
+      expect(workedSteps("$$\\ce{2C3H7OH + 9O2 -> 6CO2 + 8H2O}$$")).toBe(1);
+      expect(workedSteps("\\[\\ce{2C3H7OH + 9O2 -> 6CO2 + 8H2O}\\]")).toBe(1);
+      // worked lines set as display maths, bracket form and aligned form
+      expect(shows(p("\\[\\frac{4.8}{24} = 0.2\\]\n\\[0.2 \\times 40 = 8.0\\]"))).toBe(true);
+      expect(calculations("$$\\begin{aligned} 2 \\times 3 &= 6 \\\\ 6 + 4 &= 10 \\end{aligned}$$")).toBe(2);
+      // prose between display lines is prose, not maths
+      expect(proseWords("\\[\\frac{4.8}{24} = 0.2\\] so the moles are known")).toBe(5);
+    });
+
+    it("counts a see block (the design case's See it) as shown", () => {
+      expect(shows({ type: "see", stem: "x", steps: [{ working: "a", because: "b" }, { working: "c", because: "d" }] })).toBe(true);
+    });
   });
 
   it("resets 'shown' after each check: the next check needs its own demonstration, unless it follows straight on (two turns on one demonstration)", () => {
