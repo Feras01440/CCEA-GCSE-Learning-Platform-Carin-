@@ -3188,6 +3188,55 @@
         "status": {
           "$ref": "#/$defs/VerificationStatus"
         },
+        "withdrawn": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "gate",
+                  "diagnostic",
+                  "prompt",
+                  "question",
+                  "workedExample",
+                  "findTheMistake"
+                ]
+              },
+              "replacedBy": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "on": {
+                "$ref": "#/$defs/IsoDateLike"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "replacedBy",
+              "reason",
+              "on"
+            ],
+            "additionalProperties": false
+          }
+        },
         "reports": {
           "type": "array",
           "items": {

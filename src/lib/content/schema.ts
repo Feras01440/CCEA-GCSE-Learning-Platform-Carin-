@@ -1389,6 +1389,16 @@ export const VerificationStatus = named(
 );
 export type VerificationStatus = z.infer<typeof VerificationStatus>;
 
+/**
+ * The withdraw-and-replace record (25 Sep 2026; pipeline/prompts/author-topic.md, "Withdraw and replace: one record";
+ * checked by scripts/qa/withdrawn.mjs). Any log may carry
+ *   withdrawn: [{ id, kind, replacedBy, reason, on }]
+ * id: a gate id ("g3"), a bundle item id, or a diagnostic item as "<set id>#<item id>"; kind: "gate" | "diagnostic" |
+ * "prompt" | "question" | "workedExample" | "findTheMistake"; replacedBy: the replacing id of the same kind, or null;
+ * reason: a sentence; on: an ISO date-time. The note's own log lists withdrawn gates; a bundle item's own log lists the
+ * item and has status "withdrawn"; a diagnostic set's log lists its withdrawn items. (Declared on the object
+ * below as `withdrawn`, so the published copy carries the records.)
+ */
 export const VerificationLog = named(
   z.object({
     id: VerificationRef,
@@ -1405,6 +1415,18 @@ export const VerificationLog = named(
       }),
     ),
     status: VerificationStatus,
+    /** Withdraw-and-replace records (25 Sep 2026 ruling): one shape the app can read, never guess. */
+    withdrawn: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          kind: z.enum(["gate", "diagnostic", "prompt", "question", "workedExample", "findTheMistake"]),
+          replacedBy: z.string().min(1).nullable(),
+          reason: z.string().min(1),
+          on: IsoDateLike,
+        }),
+      )
+      .optional(),
     reports: z.array(
       z.object({
         at: IsoDateLike,

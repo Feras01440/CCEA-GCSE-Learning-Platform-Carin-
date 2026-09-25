@@ -59,6 +59,8 @@
  * --teach-fatal   count such a gate as a breach rather than a warning
  * --prompts       print every note that wires more than two prompts and every over-long prompt answer
  * --prompts-fatal count those as breaches rather than warnings
+ * --withdrawn     print every topic's withdraw-and-replace records and their problems (scripts/qa/withdrawn.mjs)
+ * --withdrawn-fatal count a withdrawn-record problem as a breach rather than a warning
  * --json          print the findings as JSON for an author's generator (the depth rows under `depth`,
  *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`)
  */
@@ -67,6 +69,7 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { SEE_HEADING, describeFailure, inlineMaths, teachShowCheck } from "./teach-show-check.mjs";
 import { ANSWER_WORDS, WIRED_MAX, promptFindings } from "./prompt-few.mjs";
+import { withdrawnFindings } from "./withdrawn.mjs";
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
@@ -77,6 +80,8 @@ const teachReport = argv.includes("--teach");
 const teachFatal = argv.includes("--teach-fatal");
 const promptsReport = argv.includes("--prompts");
 const promptsFatal = argv.includes("--prompts-fatal");
+const withdrawnReport = argv.includes("--withdrawn");
+const withdrawnFatal = argv.includes("--withdrawn-fatal");
 const units = argv.flatMap((a, i) => (a === "--unit" ? [String(argv[i + 1] || "").toLowerCase()] : []));
 
 const ROOT = path.resolve("packs");
@@ -698,7 +703,11 @@ function checkNote(file, orphans) {
   const prompts = bundle ? promptFindings(blocks, bundle) : [];
   for (const f of prompts) say.push({ check: "prompts", detail: f.detail, few: true });
 
-  const isWarning = (f) => (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !teachFatal) || (f.few && !promptsFatal);
+  // withdraw-and-replace records (scripts/qa/withdrawn.mjs): warnings unless --withdrawn-fatal
+  const withdrawn = bundle ? withdrawnFindings(blocks, bundle) : { records: [], problems: [] };
+  for (const p of withdrawn.problems) say.push({ check: "withdrawn", detail: `${p.id}: ${p.problem} (log ${p.log})`, wd: true });
+
+  const isWarning = (f) => (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !teachFatal) || (f.few && !promptsFatal) || (f.wd && !withdrawnFatal);
   return {
     unit,
     slug,
@@ -708,6 +717,7 @@ function checkNote(file, orphans) {
     depth,
     teach,
     prompts,
+    withdrawn,
   };
 }
 
@@ -764,6 +774,12 @@ const longAnswers = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind ==
 const longWired = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "long" && f.wired).length, 0);
 const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired)${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
 
+// withdraw-and-replace records, over every note checked
+const wdNotes = notes.filter((n) => n.withdrawn.records.length || n.withdrawn.problems.length);
+const wdRecords = notes.reduce((a, n) => a + n.withdrawn.records.length, 0);
+const wdProblems = notes.reduce((a, n) => a + n.withdrawn.problems.length, 0);
+const withdrawnLine = `withdrawn: ${wdRecords} record(s) in ${wdNotes.length} topic(s); ${wdProblems} problem(s)${withdrawnFatal ? "" : " (warnings; --withdrawn-fatal makes them breaches)"}${withdrawnReport || !wdNotes.length ? "" : "; run --withdrawn for the list"}.`;
+
 if (asJson) {
   console.log(
     JSON.stringify(
@@ -781,6 +797,8 @@ if (asJson) {
         teachSummary: { gates: teachGates, failing: teachCount, notes: teachFailing.length },
         prompts: promptNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, findings: n.prompts })),
         promptsSummary: { notes: notes.length, wiredOver, wiredMax: WIRED_MAX, longAnswers, longWired, answerWords: ANSWER_WORDS },
+        withdrawn: wdNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, records: n.withdrawn.records, problems: n.withdrawn.problems })),
+        withdrawnSummary: { records: wdRecords, topics: wdNotes.length, problems: wdProblems },
       },
       null,
       2,
@@ -830,6 +848,14 @@ if (asJson) {
       for (const f of n.prompts) console.log(`  ${f.detail}${f.kind === "long" && !f.wired ? " (not wired; the review queue asks it)" : ""}`);
     }
   }
+  if (withdrawnReport && wdNotes.length) {
+    console.log(`\nwithdrawn — the withdraw-and-replace records (verification[].withdrawn: { id, kind, replacedBy, reason, on }), topic by topic:`);
+    for (const n of wdNotes) {
+      console.log(`\n${n.unit}/${n.slug}  ${n.withdrawn.records.length} record(s)${n.withdrawn.problems.length ? `, ${n.withdrawn.problems.length} problem(s)` : ""}`);
+      for (const r of n.withdrawn.records) console.log(`  ${String(r.kind ?? "?").padEnd(14)} ${String(r.id).padEnd(34)} -> ${r.replacedBy ?? "(nothing)"}   ${String(r.on ?? "")}`);
+      for (const p of n.withdrawn.problems) console.log(`  PROBLEM ${p.id}: ${p.problem} (log ${p.log})`);
+    }
+  }
   if (stale.length) {
     console.log(`\nallow-list entries for sources no topic cites any more (${ALLOW_FILE}):`);
     for (const s of stale) console.log(`  ${s}`);
@@ -843,5 +869,6 @@ if (asJson) {
   if (depthLine) console.log(depthLine);
   console.log(teachLine);
   console.log(promptsLine);
+  console.log(withdrawnLine);
 }
 process.exit(count ? 1 : 0);

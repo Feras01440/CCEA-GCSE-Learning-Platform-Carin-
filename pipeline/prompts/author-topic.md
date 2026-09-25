@@ -368,3 +368,19 @@ lesson-v2.mjs computes every count above from note.blocks.json and bundle.json, 
 ### Depth passes over published topics
 
 A depth pass adds; it never invalidates what a learner has already done or what a pre-read has verified. A pass may change: note.blocks.json (new sections, roles, gates with **new** ids, figures, captions, the hero), new worked examples, questions, find-the-mistake items and prompts with new ids appended, the Sheet's text, the insight text, and `sets`. What stays byte-identical: every published question's part `answer`, `scheme`, `commonErrors`, `marks`, ids, `totalMarks` and `skeleton`; every diagnostic item's id, options, correct flags and misconception tags; every find-the-mistake item's id, `studentWorking`, `mistakeLine` and `misconception`; every prompt's id, `answer` and `keyWords`; every worked example's id, step `input` specs, `earns`, `faded` and twin `answer`; every gate's id and `answer`; the topic id, slug and statement ids. Nothing published is deleted (a review card may point at it); an item found wrong is set to `withdrawn` in its verification log with the reason. The guard: snapshot the frozen surface before the pass and check it after (`node <scratchpad>/platform/depth-standard/frozen-surface.mjs snapshot|check`; 0 differences before you file), then the usual finish checks with `--depth`. The programme — pilot fm1/laws-of-logarithms and fm1/tangents-and-normals, then FM1 → FM2 → FM3 → M8 → M4 → M7 → M3 → C2 → B2 → B1 → P2, H bands first within each unit — is in docs/plan/review/2026-09-22-depth-standard.md.
+
+#### Withdraw and replace: one record (25 Sep 2026)
+
+When a pass withdraws a published gate, diagnostic item, prompt, question, worked example or find-the-mistake item, record it in ONE machine-readable shape, which the app reads to resolve a review card that points at the withdrawn id. Any verification log in `bundle.json`'s `verification` may carry:
+
+```json
+"withdrawn": [{ "id": "g3", "kind": "gate", "replacedBy": "g3b", "reason": "It worked the fraction practice question 0007 asks; g3b checks the same step on new numbers.", "on": "2026-09-25T01:30:00Z" }]
+```
+
+- `id`: what was withdrawn: a gate id (`g3`), a bundle item id (`rp.…`, `q.…`, `we.…`, `ftm.…`), or a diagnostic item written `<set id>#<item id>` (`dx.fm.u1.algebraic-fractions-simplify#01`).
+- `kind`: `"gate"`, `"diagnostic"`, `"prompt"`, `"question"`, `"workedExample"` or `"findTheMistake"`.
+- `replacedBy`: the id that replaces it, of the same kind and in the same form, or `null` when nothing does (then the reason says why).
+- `reason`: one sentence, the case for the withdrawal.
+- `on`: when, as an ISO date-time.
+
+Where: the **note's own log** (the entry whose `id` is `note.verification`) lists the note's withdrawn gates; a **bundle item's own log** lists the item itself and has `status: "withdrawn"`; a **diagnostic set's log** lists the withdrawn items of that set (a whole set withdrawn: its log has `status: "withdrawn"` and lists every item). A withdrawn gate leaves the note (its id never reappears there, and its replacement takes a new id); a withdrawn bundle item stays in the bundle with its log, so a card that points at it resolves. A `human-spot` check may still tell the story in words, but the record is what the app and the lint read. `node scripts/qa/lesson-v2.mjs --withdrawn` lists every topic's records and their problems (`scripts/qa/withdrawn.mjs`: the shape, a `replacedBy` that exists as the same kind or `null` with a reason, a record for every log that says withdrawn, no withdrawn gate still in the note); a warning today, `--withdrawn-fatal` to gate.
