@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { finalValue, firstSentence, fixMatches, lastNumber, markFix, sameAsMistakeLine, stepLineMatches, workingLines } from "./mistake-marking";
+import { finalValue, firstSentence, fixMatches, lastNumber, markFix, resultValue, sameAsMistakeLine, stepLineMatches, workingLines } from "./mistake-marking";
 
 const correction = ["Values still needed: 30 − 22 = 8 of the 26 in the class.", "Median ≈ 30 + (8 ÷ 26) × 20 = 36.2 cm"];
 
@@ -581,5 +581,53 @@ describe("a later step's result is not an earlier step's line (guard catch, 25 S
   test("fm1 add-subtract we.02: step 4's chain is not step 2's line", () => {
     const step2 = String.raw`$\frac{3(x+2) - 12}{(x-2)(x+2)}$`;
     expect(stepLineMatches(String.raw`\frac{3(x-2)}{(x-2)(x+2)} = \frac{3}{x+2}`, step2, { pieces: true }).match).toBe(false);
+  });
+});
+
+// The P2 D author (25 Sep 2026, probe-ftm-t2c.mts, probe-ftm-variants.mts). (a) A converted value compared by its
+// written form: with "400 mA = 0.40 A" in the correction, "0.4 A", "I = 0.4 A" and "400 mA = 0.4 A" were refused. (b) A
+// bare converted value ("2300 W") was refused unless the correction had a line "P = 2300 W". (c) "I = 1265 ÷ 230 =
+// 5.5 A" was refused though "I = 1265 ÷ 230" and "5.5 A" each match. Values compare by value, the unit folded, and a
+// chain whose sides are the correction's lines in order is the fix.
+describe("the fix box compares a converted value by its value (P2 D)", () => {
+  const ohms = { studentWorking: ["R = V ÷ I", "R = 2.0 ÷ 400", "R = 0.005 Ω"], mistakeLine: 2, correction: ["R = V ÷ I", "400 mA = 0.40 A", "R = 2.0 ÷ 0.40", "R = 5.0 Ω"] };
+  test.each(["0.40 A", "0.4 A", "I = 0.4 A", "400 mA = 0.4 A", "400 mA = 0.40 A", "R = 2.0 ÷ 0.40", "R = 2 ÷ 0.4", "5 Ω"])("%s fixes R = 2.0 ÷ 400", (typed) => {
+    expect(markFix(typed, ohms).match).toBe(true);
+  });
+  test.each(["R = 2.0 ÷ 400", "0.005 Ω", "4 A", "400 mA = 4 A"])("%s does not", (typed) => {
+    expect(markFix(typed, ohms).match).toBe(false);
+  });
+  const kettle = { studentWorking: ["I = P ÷ V", "I = 2.3 ÷ 230", "I = 0.01 A", "fuse = 3 A"], mistakeLine: 2, correction: ["I = P ÷ V", "2.3 kW = 2300 W", "I = 2300 ÷ 230", "I = 10 A", "fuse = 13 A"] };
+  test.each(["2300 W", "P = 2300 W", "2.3 kW = 2300 W", "I = 2300 ÷ 230", "I = 2300/230 = 10 A", "10 A"])("%s fixes I = 2.3 ÷ 230", (typed) => {
+    expect(markFix(typed, kettle).match).toBe(true);
+  });
+  test.each(["2.3 W", "230 W", "I = 2.3 ÷ 230"])("%s does not", (typed) => {
+    expect(markFix(typed, kettle).match).toBe(false);
+  });
+  const iron = { studentWorking: ["1.265 kW = 126.5 W", "I = 126.5 ÷ 230", "I = 0.55 A", "fuse = 3 A"], mistakeLine: 1, correction: ["1.265 kW = 1265 W", "P = 1265 W", "I = 1265 ÷ 230", "I = 5.5 A", "fuse = 13 A"] };
+  test.each(["1265 W", "1.265 kW = 1265 W", "I = 1265 ÷ 230 = 5.5 A", "I = 1265/230 = 5.5 A"])("%s fixes 1.265 kW = 126.5 W", (typed) => {
+    expect(markFix(typed, iron).match).toBe(true);
+  });
+  test.each(["126.5 W", "I = 126.5 ÷ 230 = 0.55 A", "I = 1265 ÷ 230 = 55 A"])("%s does not", (typed) => {
+    expect(markFix(typed, iron).match).toBe(false);
+  });
+});
+
+// (d) A unit-only correction ("unit = Ω/m") could not be read, so "ohms per metre" was refused. A line that states a
+// unit is compared by the unit it names.
+describe("the fix box reads a unit-only correction", () => {
+  const item = { studentWorking: ["gradient = 12 ÷ 2.0 = 6", "unit = Ω"], mistakeLine: 2, correction: ["gradient = 12 ÷ 2.0 = 6", "unit = Ω/m"] };
+  test.each(["unit = Ω/m", "Ω/m", "ohms per metre", "unit = ohm/m", "Ω m⁻¹", "6 Ω/m"])("%s is the fix", (typed) => {
+    expect(markFix(typed, item).match).toBe(true);
+  });
+  test.each(["Ω", "ohms", "m/Ω", "unit = Ω"])("%s is not", (typed) => {
+    expect(markFix(typed, item).match).toBe(false);
+  });
+});
+
+describe("a value then a unit letter and words is still a value (guard catch, 25 Sep 2026)", () => {
+  test("m3 trigonometry .0015: '= 24.6265 m above her hand' states 24.6265; '= 8 i' states nothing", () => {
+    expect(resultValue("h = 40 sin 38 = 24.6265 m above her hand", "typed")).toBeCloseTo(24.6265, 9);
+    expect(resultValue("x = 8 i", "typed")).toBeNull();
   });
 });

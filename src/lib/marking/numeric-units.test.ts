@@ -193,3 +193,25 @@ describe("the newton metre", () => {
     expect(normaliseUnit("nm")).not.toBe(normaliseUnit("N m"));
   });
 });
+
+// The P2 D author (25 Sep 2026): "only the rounded value" fired on a coincidence. Expected 22.5, "20" was told it was the
+// rounded value (it is 1 significant figure of 22.5 by chance); a graph read-off "3" against 2.7 the same. The advice
+// fires only when the value she wrote carries at least 2 significant figures, or a decimal place, and is within 10 %.
+describe("the rounded-value advice is not given on a one-figure coincidence", () => {
+  test.each([
+    ["20", 22.5],
+    ["3", 2.7],
+    ["300", 250],
+  ])("%s against %d is a wrong value, not a rounding", (typed, value) => {
+    const v = checkNumeric(typed, { value, tolerance: { type: "absolute", value: 0.05 } });
+    expect(v.correct).toBe(false);
+    expect(v.feedback).not.toMatch(/only the rounded value/);
+  });
+  test.each([
+    ["23", 22.5],
+    ["2.8", 2.75],
+    ["0.29", 0.2941],
+  ])("%s against %d is still the rounded value", (typed, value) => {
+    expect(checkNumeric(typed, { value, tolerance: { type: "absolute", value: 0.001 } }).feedback).toMatch(/only the rounded value/);
+  });
+});

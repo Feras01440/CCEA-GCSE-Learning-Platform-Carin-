@@ -941,7 +941,21 @@ function checkFactorised(student: Parsed, spec: Parsed): FormResult {
 }
 
 function checkExpanded(student: Parsed, spec: Parsed): FormResult {
-  const e = unwrapEquation(student.raw.json as unknown as MJ);
+  const whole = unwrapEquation(student.raw.json as unknown as MJ);
+  const specWhole = unwrapEquation(spec.expr.json as unknown as MJ);
+  // A single fraction expanded is one with its numerator multiplied out; the denominator may stay in factors, as the
+  // key writes it (25 Sep 2026: "\frac{x^2+2x+6}{(x+2)(x-1)}" refused itself).
+  if (head(stripNegate(whole)) === 'Divide' && head(stripNegate(specWhole)) === 'Divide') {
+    const num = args(stripNegate(whole))[0]!;
+    if (!sumsOnlyAtTop(num)) {
+      return fail('equivalent-wrong-form', 'That is equivalent, but the question asks for the numerator multiplied out – expand the brackets on top and collect like terms.');
+    }
+    const specNum = args(stripNegate(specWhole))[0]!;
+    const specTerms = head(specNum) === 'Add' ? args(specNum).length : 1;
+    if (flattenSum(num).length > specTerms) return fail('not-simplified', 'Almost there – collect the like terms on top to finish simplifying.');
+    return { ok: true };
+  }
+  const e = whole;
   if (!sumsOnlyAtTop(e)) {
     return fail('equivalent-wrong-form', 'That is equivalent, but the question asks for the expanded form – multiply out the brackets and collect like terms.');
   }

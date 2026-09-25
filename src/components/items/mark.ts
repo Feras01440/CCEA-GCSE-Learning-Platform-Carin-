@@ -19,7 +19,7 @@ import { checkTable, tableResponseText } from "@/lib/marking/table";
 import { checkMatrix, matrixResponseText, parseMatrix, sameMatrixEntries } from "@/lib/marking/matrix";
 import { checkLabel, labelResponseText } from "@/lib/marking/label";
 import { qwcEvidence, qwcSummary } from "@/lib/marking/qwc";
-import { equationSchemeMarks, markEquation } from "./equation-marking";
+import { equationSchemeMarks, markEquation, normaliseEquation } from "./equation-marking";
 import { evaluateArithmetic } from "./mistake-marking";
 import { expectedDisplay, isAutoMarkable, toAlgebraSpec, toNumericSpec, toNumericTolerance } from "./spec-map";
 import { markMcq, markText } from "./text-marking";
@@ -68,6 +68,64 @@ export interface MarkOptions {
   prompt?: string;
   /** The part's mark scheme. A text part's key-word groups follow its points' `dependsOn` when they stand one for one. */
   scheme?: readonly MarkPoint[];
+  /** Follow-through from an earlier part (the part's `followThrough`, "use-candidate-value"): see `followThroughValue`. */
+  followThrough?: FollowThrough;
+}
+
+/** What follow-through needs: her answer to the earlier part, that part's answer spec, and how the value carries. */
+export interface FollowThrough {
+  earlierRaw: string;
+  earlierSpec: AnswerSpec;
+  /** An expression in x, her earlier value ("x - 5", "x * 4.0"), when the author wrote one. */
+  relation?: string;
+  /** The later part's worked solution, read for the chain that turns the earlier value into the answer. */
+  workedSolution?: string;
+}
+
+/**
+ * The value this part should have, given her own answer to the earlier part (P2 D, 25 Sep 2026: `followThrough` was
+ * metadata only, so a fuse chosen consistently with a wrong current scored 0, where CCEA's "ft" pays it). Null when
+ * her earlier answer was right (the key decides), unreadable, or when the relation cannot be known: the authored
+ * `relation` first; else the worked solution's chain whose last side is this part's value and whose earlier side holds
+ * the earlier part's value, with her value put in its place.
+ */
+export function followThroughValue(ft: FollowThrough, spec: AnswerSpec): number | null {
+  if (ft.earlierSpec.kind !== "numeric") return null;
+  const x = parseNumeric(ft.earlierRaw.trim())?.value;
+  if (x === undefined || !Number.isFinite(x)) return null;
+  if (markAnswer(ft.earlierRaw, ft.earlierSpec, { marks: 1 }).correct) return null;
+  const v0 = ft.earlierSpec.value;
+  if (ft.relation) return evaluateArithmetic(ft.relation.replace(/\bx\b/g, `(${x})`));
+  if (spec.kind !== "numeric" || !ft.workedSolution) return null;
+  const target = spec.value;
+  for (const line of ft.workedSolution.split(/\n|(?<=[.;])\s+(?=[A-Z])/)) {
+    const sides = normaliseEquation(line.replace(/\$/g, " ")).replace(/\*/g, "×").split("=");
+    const lastValue = parseNumeric(sides[sides.length - 1] ?? "")?.value;
+    if (lastValue === undefined || Math.abs(lastValue - target) > 1e-9 * Math.max(1, Math.abs(target))) continue;
+    for (const side of sides.slice(0, -1).reverse()) {
+      // The side must be arithmetic that comes to the answer and holds the earlier value as a number of its own.
+      // Its arithmetic is the run of numbers and operators it ends on ("… so 4.0 m has 3.2 × 4.0" is 3.2×4.0).
+      const plain = (/[\d.()+\-×*/÷^√π]+$/.exec(side)?.[0] ?? "").replace(/^[.)+\-×*/÷^]+/, "");
+      const worked = evaluateArithmetic(plain);
+      if (worked === null || Math.abs(worked - target) > 1e-6 * Math.max(1, Math.abs(target))) continue;
+      let found = false;
+      const put = plain.replace(/\d+(?:\.\d+)?/g, (n) => {
+        if (Math.abs(Number(n) - v0) > 1e-9 * Math.max(1, Math.abs(v0))) return n;
+        found = true;
+        return `(${x})`;
+      });
+      if (found) return evaluateArithmetic(put);
+    }
+  }
+  return null;
+}
+
+/** For a choice among numbered options (fuses: 3 A, 5 A, 13 A): the option just above her value. */
+function nextOptionAbove(spec: Extract<AnswerSpec, { kind: "mcq" }>, x: number): string | null {
+  const valued = spec.options.map((o) => ({ id: o.id, v: parseNumeric(o.text)?.value })).filter((o): o is { id: string; v: number } => o.v !== undefined);
+  if (valued.length !== spec.options.length) return null;
+  const above = valued.filter((o) => o.v > x).sort((a, b) => a.v - b.v);
+  return above[0]?.id ?? null;
 }
 
 /**
@@ -97,6 +155,34 @@ export function instructsAccuracy(prompt: string | undefined): boolean {
       /\b(decimal places?|significant figures?|dp|sf|nearest)\b/i.test(s) &&
       (/^\s*(give|write|work out|calculate|find|round|state|express|estimate)\b/i.test(s) || /\byour answers?\b|\bgiving\b|\brounding\b|\bround\b/i.test(s)),
   );
+}
+
+/** The instructions that make the form the task: an equivalent answer in another form has not done it. */
+const FORM_TASK = /\b(?:simplif(?:y|ied)|factori[sz]e|factori[sz]ed|expand|multiply out|rationali[sz]e|as a single (?:fraction|logarithm|log))\b|\bexpress\b(?![^.?!]*\bin terms of\b)[^.?!]*\bas\b/i;
+
+/**
+ * Does the stem instruct the form the value is given in ("leave your answer in terms of π", "in surd form", "as a
+ * fraction", "exactly", "in its lowest terms", "in standard form")? Then a right value in another form keeps every
+ * mark but the final one, as the accuracy mark is withheld; without such an instruction a value equal within the
+ * tolerance earns every mark (the verifier's ruling, 25 Sep 2026).
+ */
+const FORM_INSTRUCTION = /\b(?:in terms of|in the form|show that|surd form|exact(?:ly)?|as an? (?:exact |single |mixed |improper )?(?:fraction|mixed number|decimal|percentage|whole number|integer)|lowest terms|simplest form|standard form)\b/i;
+export function instructsForm(prompt: string | undefined): boolean {
+  return prompt !== undefined && FORM_INSTRUCTION.test(prompt);
+}
+
+/**
+ * Is the form the task (MK-01 ruling, narrowed 25 Sep 2026)? The part's `formTask` flag decides when it is set;
+ * otherwise the stem's instruction does, and only where the whole task is the form: simplify, simplify fully,
+ * factorise, expand, rationalise, write as a single fraction, express as a single logarithm, express … as … ("Express
+ * 1/√8 as √a/b"; not "express … in terms of"). A finishing instruction on
+ * a multi-step part ("give your answer in the form y = mx + c") is not: the method marks stand.
+ * Only the stem's words count, not its maths ("Write $\\frac{2}{x}$ …" is read without the fraction).
+ */
+export function isFormTask(prompt: string | undefined, spec: AnswerSpec): boolean {
+  if ((spec.kind === "numeric" || spec.kind === "algebraic") && spec.formTask !== undefined) return spec.formTask;
+  if (!prompt) return false;
+  return FORM_TASK.test(prompt.replace(/\$[^$]*\$/g, " "));
 }
 
 /** Function names that may be typed into a stem's maths without a backslash; their letters are not variables. */
@@ -262,16 +348,36 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
   switch (spec.kind) {
     case "numeric": {
       const v = checkNumeric(trimmed, { ...toNumericSpec(spec, { accuracyInstructed: instructsAccuracy(opts.prompt) }), variables: variableLetters(opts.prompt) });
-      // A right value whose required unit is missing or wrong keeps every mark but the unit's, the answer's last.
+      // A right value whose required unit is missing or wrong keeps every mark but the unit's, the answer's last; so
+      // does a right value in another form, unless the form is the task (MK-01 ruling), where it earns nothing.
       const unitOnly = !v.correct && v.valueRight === true && marks > 1;
+      const formTask = !v.correct && v.formOnly === true && isFormTask(opts.prompt, spec);
+      // A right value in another form: every mark where the stem does not instruct the form, the marks less the final
+      // one where it does, and nothing where the form is the whole task.
+      if (!v.correct && v.formOnly === true && !formTask && !instructsForm(opts.prompt)) {
+        return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Correct." };
+      }
+      const formOnly = !v.correct && v.formOnly === true && !formTask && marks > 1;
       const base: MarkResult = {
         correct: v.correct,
-        marksAwarded: v.correct ? marks : unitOnly ? marks - 1 : 0,
+        marksAwarded: v.correct ? marks : unitOnly || formOnly ? marks - 1 : 0,
         marksAvailable: marks,
         expected,
-        explanation: unitOnly ? `${v.feedback} ${marks - 1} of ${marks}: only the unit's mark is lost.` : v.feedback,
+        explanation: unitOnly
+          ? `${v.feedback} ${marks - 1} of ${marks}: only the unit's mark is lost.`
+          : formOnly
+            ? `${v.feedback} ${marks - 1} of ${marks}: only the form's mark is lost.`
+            : formTask
+              ? `${v.feedback} The question asks for that form, and the form is what the marks are for.`
+              : v.feedback,
       };
       if (v.nearMiss) base.nearMiss = v.nearMiss;
+      if (!v.correct && opts.followThrough) {
+        const t = followThroughValue(opts.followThrough, spec);
+        if (t !== null && checkNumeric(trimmed, { ...toNumericSpec(spec), value: t, variables: variableLetters(opts.prompt) }).correct) {
+          return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Right for your answer to the earlier part: the marks follow through." };
+        }
+      }
       return v.correct ? base : withCommonError(base, trimmed, opts);
     }
     case "algebraic": {
@@ -286,13 +392,17 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       const v = checkAlgebraic(trimmed, toAlgebraSpec(spec));
       // The right expression in the wrong form (unsimplified, not yet a single log, not factorised) keeps every mark
       // but the last on a multi-mark part: the scheme's final mark is the form, the earlier ones the working.
-      const rightValueWrongForm = !v.correct && (v.reason === "equivalent-wrong-form" || v.reason === "not-simplified") && marks > 1;
+      // Not where the form IS the task (MK-01 ruling, 25 Sep 2026: "simplify fully" with the question typed back was
+      // paid marks − 1): there the right value in another form earns nothing, or a matched common error's own marks.
+      const wrongForm = !v.correct && (v.reason === "equivalent-wrong-form" || v.reason === "not-simplified");
+      const formTask = wrongForm && isFormTask(opts.prompt, spec);
+      const rightValueWrongForm = wrongForm && !formTask && marks > 1;
       const base: MarkResult = {
         correct: v.correct,
         marksAwarded: v.correct ? marks : rightValueWrongForm ? marks - 1 : 0,
         marksAvailable: marks,
         expected,
-        explanation: v.feedback,
+        explanation: formTask ? `${v.feedback} The value is right, but the question asks for that form, and the form is what the marks are for.` : v.feedback,
       };
       return v.correct ? base : withCommonError(base, trimmed, opts, undefined, undefined, spec.variables, spec.latex);
     }
@@ -307,6 +417,14 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
         explanation: v.feedback,
       };
       if (v.misconception) base.tags = [v.misconception];
+      // Follow-through: the option her own earlier value leads to (the fuse just above her current).
+      if (!v.correct && opts.followThrough && opts.followThrough.earlierSpec.kind === "numeric" && ids.length === 1) {
+        const x = parseNumeric(opts.followThrough.earlierRaw.trim())?.value;
+        const earlierRight = markAnswer(opts.followThrough.earlierRaw, opts.followThrough.earlierSpec, { marks: 1 }).correct;
+        if (x !== undefined && !earlierRight && nextOptionAbove(spec, x) === ids[0]) {
+          return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Right for your answer to the earlier part: the marks follow through." };
+        }
+      }
       return base;
     }
     case "text": {

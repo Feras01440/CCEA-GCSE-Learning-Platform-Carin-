@@ -218,6 +218,10 @@ export function equationsMatch(typed: string, expected: string, opts: EquationMa
     const [l, r] = a.split("=");
     if (r !== undefined && `${r}=${l}` === b) return true;
   }
+  // A single arrow and a reversible sign are different equations (the independent verifier, 25 Sep 2026: "N2 + 3H2 →
+  // 2NH3" scored full marks against "⇌"; CCEA C2 H 2021: "proper reversible sign needed").
+  const arrow = (e: string) => (e.includes("<->") ? "<->" : e.includes("->") ? "->" : "=");
+  if (arrow(a) !== arrow(b)) return false;
   if (opts.acceptMultiples && sameUpToMultiple(a, b)) return true;
   if (opts.species && sameUpToMultiple(a, b, true)) return true;
   return false;
@@ -381,7 +385,11 @@ function equationPointNeeds(text: string, key: ReadEquation, lowercase: boolean)
  * reversible sign, the electrons' side, a named species on its side (with its coefficient when the point gives
  * one). Charges typed on a keyboard are read every way `keyboardChargeReadings` allows, and the best reading counts.
  */
-export function equationSchemeMarks(raw: string, spec: EquationSpec, scheme: readonly { marks: number; for: string }[]): number | null {
+export function equationSchemeMarks(
+  raw: string,
+  spec: EquationSpec,
+  scheme: readonly { marks: number; for: string; id?: string; dependsOn?: readonly string[] }[],
+): number | null {
   if (spec.kindOf === "physics" || scheme.length === 0) return null;
   const line = (raw.replace(/\r/g, "").split("\n")[0] ?? "").trim();
   if (line.length === 0) return 0;
@@ -427,7 +435,15 @@ export function equationSchemeMarks(raw: string, spec: EquationSpec, scheme: rea
           return typed.sides[n.side]!.some((t) => t.species === n.species && (n.coefficient === null || Math.abs(t.coefficient - n.coefficient) < 1e-9));
       }
     };
-    return scheme.reduce((sum, p, i) => sum + (needs[i]!.every(holds) ? p.marks : 0), 0);
+    // A point is paid only with the points it depends on ("second mark dependent on first", C1 H 2018; the verifier).
+    const met = scheme.map((_, i) => needs[i]!.every(holds));
+    const paid = (i: number, seen: Set<number> = new Set()): boolean =>
+      met[i]! &&
+      (scheme[i]!.dependsOn ?? []).every((d) => {
+        const j = scheme.findIndex((x) => x.id === d);
+        return j < 0 || seen.has(j) || paid(j, new Set([...seen, i]));
+      });
+    return scheme.reduce((sum, p, i) => sum + (paid(i) ? p.marks : 0), 0);
   };
   return Math.max(score(line), ...keyboardChargeReadings(line).map(score));
 }

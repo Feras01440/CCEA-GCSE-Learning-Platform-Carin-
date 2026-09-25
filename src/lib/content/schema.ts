@@ -528,6 +528,12 @@ export const AnswerSpec = named(
         acceptForms: z.array(NumericForm),
         mustBeSimplified: z.boolean().optional(),
         moneyFormat: z.boolean().optional(),
+        /**
+         * The form is the task (MK-01 ruling, 25 Sep 2026): true where the question asks for this form ("simplify
+         * fully", "factorise", "write in the form …"), false where the value is what is asked. Unset, the stem's
+         * instruction decides (mark.ts isFormTask). On a form task the right value in another form earns nothing.
+         */
+        formTask: z.boolean().optional(),
       })
       .refine((a) => !a.unitRequired || a.unit !== undefined, {
         message: "unitRequired needs a unit",
@@ -550,6 +556,12 @@ export const AnswerSpec = named(
       mustBeFactorised: z.boolean().optional(),
       mustBeExpanded: z.boolean().optional(),
       keepInequalitySign: z.boolean().optional(),
+      /**
+       * The form is the task (MK-01 ruling, 25 Sep 2026): true where the question asks for this form ("simplify
+       * fully", "factorise", "write in the form …"), false where the value is what is asked. Unset, the stem's
+       * instruction decides (mark.ts isFormTask). On a form task the right value in another form earns nothing.
+       */
+      formTask: z.boolean().optional(),
     }),
     z
       .object({
@@ -741,7 +753,15 @@ export const Part = named(
       commonErrors: z.array(CommonError),
       requiresWorking: z.boolean(),
       followThrough: z
-        .object({ fromPart: z.string().min(1), rule: z.enum(["use-candidate-value", "use-candidate-diagram"]) })
+        .object({
+          fromPart: z.string().min(1),
+          rule: z.enum(["use-candidate-value", "use-candidate-diagram"]),
+          /**
+           * How her earlier value carries into this part, as an expression in x ("x - 5", "x * 4.0"). Optional: without
+           * it the engine reads the worked solution's chain, or a choice's next option above (mark.ts followThroughValue).
+           */
+          relation: z.string().min(1).optional(),
+        })
         .optional(),
     })
     .superRefine((part, ctx) => {

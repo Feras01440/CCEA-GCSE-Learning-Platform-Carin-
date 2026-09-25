@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { AnswerSpec, MarkPoint } from "@/lib/content/schema";
 import { markAnswer } from "./mark";
-import { equationSchemeMarks } from "./equation-marking";
+import { equationSchemeMarks, markEquation } from "./equation-marking";
 
 // C2 D F05 (verifier, 24 Sep 2026): a chemical equation part paid all or nothing, so the right products with the wrong
 // reactants, or every formula right and the balancing wrong, earned 0 of 3 where CCEA's scheme ("LHS [1], RHS [1],
@@ -90,5 +90,39 @@ describe("markAnswer pays an equation part point by point, never every mark on a
   test("right: 3 of 3; without a scheme, all or nothing as before", () => {
     expect(markAnswer("C2H5OH + 3O2 → 2CO2 + 3H2O", ethanol, { marks: 3, scheme })).toMatchObject({ correct: true, marksAwarded: 3 });
     expect(markAnswer("C2H5OH + O2 → CO2 + H2O", ethanol, { marks: 3 })).toMatchObject({ correct: false, marksAwarded: 0 });
+  });
+});
+
+// The independent verifier (25 Sep 2026). (1) A missing reversible sign scored full marks: the like-for-like species
+// comparison ignored the arrow. CCEA C2 H 2021: "(proper reversible sign needed) Reversible sign [1] correct equation
+// [1]". A match compares arrows; the scheme's reversible point runs. (2) Equation scheme points ignored dependsOn:
+// "Zn + 2e- → Zn2+" earned 1/3 on a 3-point half equation whose later points depend on the first ("second mark
+// dependent on first", C1 H 2018). A point is paid only with the points it depends on.
+describe("the reversible sign and dependent points in an equation", () => {
+  const hydrate = { kind: "equation" as const, kindOf: "symbol" as const, balancedLatex: "CuSO4.5H2O <=> CuSO4 + 5H2O", stateSymbolsRequired: false, acceptMultiples: true };
+  const hydrateScheme = [point("P1", 1, "correct reactant: CuSO4.5H2O"), point("P2", 1, "correct products: CuSO4 and H2O"), point("P3", 1, "balancing (5H2O) and the reversible sign")];
+  test("c2-equilibrium .0004: a single arrow is not the equation, and loses the reversible point", () => {
+    expect(markEquation("CuSO4.5H2O → CuSO4 + 5H2O", hydrate).correct).toBe(false);
+    expect(markAnswer("CuSO4.5H2O → CuSO4 + 5H2O", hydrate, { marks: 3, scheme: hydrateScheme })).toMatchObject({ correct: false, marksAwarded: 2 });
+    expect(markAnswer("CuSO4.5H2O ⇌ CuSO4 + 5H2O", hydrate, { marks: 3, scheme: hydrateScheme })).toMatchObject({ correct: true, marksAwarded: 3 });
+  });
+  test("c2-equilibrium .0009(a): N2 + 3H2 → 2NH3 is 1 of 2", () => {
+    const s = { ...hydrate, balancedLatex: "N2 + 3H2 <=> 2NH3" };
+    const pts = [point("P1", 1, "correct formulae and balancing: N2 + 3H2 and 2NH3"), point("P2", 1, "the reversible sign in place of a single arrow")];
+    expect(markAnswer("N2 + 3H2 → 2NH3", s, { marks: 2, scheme: pts })).toMatchObject({ correct: false, marksAwarded: 1 });
+  });
+  test("a reversible sign where a single arrow belongs is not the equation either", () => {
+    const s = { ...hydrate, balancedLatex: "2H2 + O2 -> 2H2O" };
+    expect(markEquation("2H2 + O2 ⇌ 2H2O", s).correct).toBe(false);
+  });
+  test("c2-electrolysis .0010: a dependent point is not paid without the point it depends on", () => {
+    const zinc = { kind: "equation" as const, kindOf: "half" as const, balancedLatex: "Zn^{2+} + 2e^- -> Zn", stateSymbolsRequired: false, acceptMultiples: false };
+    const pts = [
+      { ...point("P1", 1, "correct ion and product with an arrow: Zn²⁺ → Zn") },
+      { ...point("P2", 1, "electrons on the correct side (on the left, because they are gained)"), dependsOn: ["P1"] },
+      { ...point("P3", 1, "correct balancing: two electrons"), dependsOn: ["P1"] },
+    ];
+    expect(markAnswer("Zn + 2e- → Zn2+", zinc, { marks: 3, scheme: pts }).marksAwarded).toBe(0);
+    expect(markAnswer("Zn2+ + e- → Zn", zinc, { marks: 3, scheme: pts }).marksAwarded).toBe(2);
   });
 });

@@ -111,6 +111,8 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
   const [seen, setSeen] = useState<EarnedMark[]>([]);
   // The marks so far, readable after a self-award has replaced the engine's mark for the current part.
   const earnedRef = useRef<number[]>([]);
+  // Her answer to each part so far, for a later part that follows through from it (mark.ts followThroughValue).
+  const answersRef = useRef<Record<string, string>>({});
   // The part the last number in `earned` belongs to, so a second go at it replaces that number.
   const committedFor = useRef<string | null>(null);
 
@@ -164,7 +166,14 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
   }
 
   function submit(raw: string) {
-    const marked = markAnswer(raw, part.answer, { marks: part.marks, commonErrors: part.commonErrors, prompt: part.stem, scheme: part.scheme });
+    const from = part.followThrough?.rule === "use-candidate-value" ? q.parts.find((p) => p.id === part.followThrough!.fromPart) : undefined;
+    const earlierRaw = from ? answersRef.current[from.id] : undefined;
+    const followThrough =
+      from && earlierRaw !== undefined
+        ? { earlierRaw, earlierSpec: from.answer, relation: part.followThrough?.relation, workedSolution: part.workedSolution }
+        : undefined;
+    const marked = markAnswer(raw, part.answer, { marks: part.marks, commonErrors: part.commonErrors, prompt: part.stem, scheme: part.scheme, followThrough });
+    answersRef.current = { ...answersRef.current, [part.id]: raw };
     setLastRaw(raw);
     // A banded answer is not marked yet: nothing is recorded until she has placed it on the descriptors.
     if (marked.decision === "qwc-band" && part.answer.kind === "text-long") {

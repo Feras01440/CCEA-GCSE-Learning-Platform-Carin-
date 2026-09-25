@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { AnswerSpec, CommonError } from "@/lib/content/schema";
-import { instructsAccuracy, markAnswer, matchesCommonError, variableLetters } from "./mark";
+import { instructsAccuracy, isFormTask, markAnswer, matchesCommonError, variableLetters } from "./mark";
 
 const median: AnswerSpec = {
   kind: "numeric",
@@ -784,5 +784,87 @@ describe("a common error of form is matched as written, not by value", () => {
   test("a common error of value (not equivalent to the answer) is still matched by value", () => {
     const sign: CommonError = { misconception: "fm.algfrac.sign", pattern: { kind: "algebraic", latex: String.raw`\frac{5}{x+4}` }, feedback: "Check the sign.", marksTypicallyEarned: 1 };
     expect(markAnswer("5/(4+x)", spec, { marks: 2, commonErrors: [sign] }).tags).toEqual(["fm.algfrac.sign"]);
+  });
+});
+
+// Trial audit MK-01, the lead's ruling (25 Sep 2026): "right value, wrong form earns marks − 1" is right where the form
+// is not the task (a decimal where a fraction was expected), and wrong where it IS the task (simplify, simplify fully,
+// factorise, expand, rationalise, write as a single fraction, write in the form …, express … in terms of …, or a part
+// flagged `formTask`). There an equivalent answer not in the required form has done none of the work CCEA pays for:
+// an authored common error that matches pays its own marksTypicallyEarned and gives its diagnosis; otherwise 0, and
+// the feedback says the value is right but the question asked for the form.
+describe("a form task pays nothing for the right value in the wrong form (MK-01 ruling)", () => {
+  const q9: AnswerSpec = { kind: "algebraic", latex: String.raw`\frac{2(x-2)}{x+3}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" };
+  const given: CommonError = {
+    misconception: "fm.algfrac.not-factorised-first",
+    pattern: { kind: "algebraic", latex: String.raw`\frac{2x^{2}+2x-12}{x^{2}+6x+9}` },
+    feedback: "That is the expression you were given, so nothing has been credited yet.",
+    marksTypicallyEarned: 0,
+  };
+  const prompt = String.raw`Simplify fully $\dfrac{2x^{2}+2x-12}{x^{2}+6x+9}$`;
+  test("fm1 algebraic-fractions-simplify .0009: the question typed back earns 0 and names the error", () => {
+    const r = markAnswer("(2x^2+2x-12)/(x^2+6x+9)", q9, { marks: 4, commonErrors: [given], prompt });
+    expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["fm.algfrac.not-factorised-first"] });
+    expect(r.explanation).toMatch(/expression you were given/);
+  });
+  test("an uncancelled line with no named error earns 0, and the feedback says the form was the task", () => {
+    const r = markAnswer("2(x+3)(x-2)/(x+3)^2", q9, { marks: 4, commonErrors: [given], prompt });
+    expect(r.marksAwarded).toBe(0);
+    expect(r.explanation).toMatch(/value is right.*asks for/i);
+  });
+  test("the answer in the required form is still every mark", () => {
+    expect(markAnswer("2(x-2)/(x+3)", q9, { marks: 4, commonErrors: [given], prompt })).toMatchObject({ correct: true, marksAwarded: 4 });
+  });
+  test.each([
+    "Factorise fully $3x^2 - 27$.",
+    "Expand and simplify $(x+2)(x+3)$.",
+    "Rationalise the denominator of $\\frac{6}{\\sqrt{3}}$.",
+    "Write $\\frac{2}{x} + \\frac{3}{x+1}$ as a single fraction.",
+    "Express $\\log 2 + \\log 5$ as a single logarithm.",
+  ])("%s is a form task", (stem) => {
+    expect(isFormTask(stem, q9)).toBe(true);
+  });
+  // The narrowed ruling (25 Sep 2026): a finishing instruction on a multi-step part is not a form task; the method marks
+  // stand and only the final answer's mark is withheld.
+  test.each([
+    "Find the equation of the tangent. Give your answer in the form $y = mx + c$.",
+    "Find the equation of the normal. Give your answer in the form $ax + by = c$.",
+    "Express $y$ in terms of $x$.",
+    "Make $t$ the subject of the formula.",
+  ])("%s is not a form task", (stem) => {
+    expect(isFormTask(stem, q9)).toBe(false);
+  });
+  test("fm1 tangents-and-normals .0013: '5y = x + 31' for y = x/5 + 31/5 keeps 6 of 7", () => {
+    const tangent: AnswerSpec = { kind: "algebraic", latex: String.raw`y = \frac{1}{5}x + \frac{31}{5}`, equivalence: "equivalent", variables: ["x", "y"], form: "y=mx+c" };
+    const prompt = "Find the equation of the normal to the curve at the point where $x = 1$. Give your answer in the form $y = mx + c$.";
+    expect(markAnswer("5y = x + 31", tangent, { marks: 7, prompt }).marksAwarded).toBe(6);
+  });
+  test("an explicit flag decides either way; a stem without a form instruction is not a form task", () => {
+    expect(isFormTask("Find the value of the expression.", { ...q9, formTask: true } as AnswerSpec)).toBe(true);
+    expect(isFormTask("Simplify fully.", { ...q9, formTask: false } as AnswerSpec)).toBe(false);
+    expect(isFormTask("Find the probability that both are red.", q9)).toBe(false);
+    expect(isFormTask(undefined, q9)).toBe(false);
+  });
+  test("a numeric part: 0.5 for ½ earns marks − 1 where the stem instructs the form, and every mark where it does not", () => {
+    const half: AnswerSpec = { kind: "numeric", value: 0.5, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["fraction"] };
+    const told = markAnswer("0.5", half, { marks: 2, prompt: "Find the probability that the counter is red. Give your answer as a fraction." });
+    expect(told).toMatchObject({ correct: false, marksAwarded: 1, marksAvailable: 2 });
+    expect(markAnswer("0.5", half, { marks: 2, prompt: "Find the probability that the counter is red." })).toMatchObject({ correct: true, marksAwarded: 2 });
+    expect(markAnswer("1/2", half, { marks: 2, prompt: "Find the probability that the counter is red." })).toMatchObject({ correct: true, marksAwarded: 2 });
+    const twoPi: AnswerSpec = { kind: "numeric", value: 2 * Math.PI, tolerance: { type: "absolute", value: 0.01 }, unit: "cm", unitRequired: false, acceptForms: ["pi"] };
+    expect(markAnswer("6.28 cm", twoPi, { marks: 2, prompt: "Find the length of its arc. Leave your answer in terms of $\\pi$." }).marksAwarded).toBe(1);
+    expect(markAnswer("6.28 cm", twoPi, { marks: 2, prompt: "Find the length of its arc." })).toMatchObject({ correct: true, marksAwarded: 2 });
+    // "Express 1/√8 as √a/b" is the form as the whole task; "Show that the radius is 3√2 cm" instructs the exact form.
+    const surd: AnswerSpec = { kind: "numeric", value: Math.SQRT2 / 4, tolerance: { type: "absolute", value: 0.001 }, unitRequired: false, acceptForms: ["surd"] };
+    expect(markAnswer("0.3536", surd, { marks: 3, prompt: "Express $\\dfrac{1}{\\sqrt{8}}$ as $\\dfrac{\\sqrt{a}}{b}$, where $a$ and $b$ are integers." }).marksAwarded).toBe(0);
+    const radius: AnswerSpec = { kind: "numeric", value: 3 * Math.SQRT2, tolerance: { type: "absolute", value: 0.01 }, unit: "cm", unitRequired: false, acceptForms: ["surd"] };
+    expect(markAnswer("4.24 cm", radius, { marks: 2, prompt: "A circle has area $18\\pi$ cm². Show that the radius of the circle is $3\\sqrt{2}$ cm." }).marksAwarded).toBe(1);
+    // A letter of the question after the number is a wrong answer, not a form: still 0.
+    expect(markAnswer("4m", { kind: "numeric", value: 4, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] }, { marks: 2, prompt: "(d) $3m^{0} + m^{0}$" }).marksAwarded).toBe(0);
+  });
+  test("an algebraic part whose stem is not a form task keeps marks − 1", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: "\\log 8x^3", equivalence: "equivalent", variables: ["x"], form: "single-log-expanded" };
+    expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Use the laws of logarithms on your answer to part (a)." }).marksAwarded).toBe(2);
+    expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(0);
   });
 });

@@ -17,7 +17,7 @@
  *   - takes a value only when it is a result the corrected working states — the flagged line's own corrected value
  *     or the final answer — and never a value her working had already reached.
  */
-import { checkNumeric, parseNumeric } from "@/lib/marking/numeric";
+import { checkNumeric, normaliseUnit, parseNumeric } from "@/lib/marking/numeric";
 import { checkAlgebraic } from "@/lib/marking/algebra";
 import { parseMatrix } from "@/lib/marking/matrix";
 import { equationsMatch, normaliseEquation } from "./equation-marking";
@@ -474,11 +474,12 @@ function bareValue(text: string): number | null {
 const SOLUTION_SET = /(?<![\w.])([A-Za-z])\s*=[^=]*\b(?:or|and)\s+\1\s*=/;
 
 /**
+ * (A lone letter after the value is a term or a vector, "= 8 i", unless it is a unit letter, "= 24.6 m above": 25 Sep 2026.)
  * A value at the start of what follows an equals sign, when a few words and nothing more follow it ("= 17 directly",
  * "= −9/2, or as a decimal"): no operator, no glued term, and no further number, which would make the words a
  * clause of their own ("x = 20/3 it is 14, so …", "= 12.25. A scone is £1.40 …").
  */
-const LEADING_VALUE = /^\s*([-−+]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)(?=\s*[°%]?\s*[,;.]?\s*$|\s*[°%]?\s*[,;.]?\s+(?:[A-Za-z£][A-Za-z'-]*[,;.]?\s*){1,4}$)/;
+const LEADING_VALUE = /^\s*([-−+]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)(?=\s*[°%]?\s*[,;.]?\s*$|\s*[°%]?\s*[,;.]?\s+(?:(?:[A-Za-z£][A-Za-z'-]+|[mgsthKNJWVACLl](?![A-Za-z]))[,;.]?\s*){1,4}$)/;
 
 /**
  * Is what comes before a line's first "=" an expression in an unknown — a letter joined to a number or an operator
@@ -1036,8 +1037,9 @@ export function fixMatches(typed: string, correction: readonly string[], opts: F
     // \frac{x}{2(x-5)}", "9 : 25" for "45 : 125 = 9 : 25").
     if ([canon(r), ...clauses(r), ...mathsPieces(r)].some((k) => !fromEarlier(k) && endsTheChain(body, k))) return LINE;
     // Her own chain arriving at the result ("3x²/x = 3x" for "Answer: 3x"; MK-07).
-    // Only in the fix box: a worked-example step is one line of a chain, and a later step's chain is not its line.
-    if (ctx && /=/.test(t) && [canon(r), ...clauses(r)].some((k) => !fromEarlier(k) && chainArrives(t, k))) return LINE;
+    // In the fix box and in a worked-example step alike: every side must equal the next and the last be the result in
+    // its own form (sameResultForm), so a later step's chain never arrives at an earlier step's uncancelled result.
+    if (/=/.test(t) && [canon(r), ...clauses(r)].some((k) => !fromEarlier(k) && chainArrives(t, k))) return LINE;
     // Her line stopping part-way along the chain ("P(wet given late) = 0.10 / 0.16" of "… = 0.10 / 0.16 = 5/8 =
     // 0.625", "k = 10^0.602" of "k = 10^0.602 = 4.0"): its sides are the chain's, in order.
     if (/=/.test(t) && [canon(r), ...clauses(r)].some((k) => !fromEarlier(k) && chainStates(k, t))) return LINE;
@@ -1054,6 +1056,18 @@ export function fixMatches(typed: string, correction: readonly string[], opts: F
     if (refs.some((r) => sameProseValue(typed, r))) return LINE;
   }
 
+  // A correction that is a unit ("unit = Ω/m"): her line names the same unit, in any spelling ("ohms per metre").
+  if (ctx) {
+    const unitOf = (line: string): string | null => {
+      const body = splitLabel(canon(line)).body.replace(/^(?:the\s+)?units?\s*(?:=|:|is)\s*/i, "").replace(/^[-−+]?\d+(?:\.\d+)?\s*/, "").trim();
+      if (body.length === 0 || /\d/.test(body.replace(/[⁻¹²³]|\^-?\d/g, ""))) return null;
+      const p = parseNumeric(`1 ${body}`);
+      return p?.unit ? normaliseUnit(p.unit) : null;
+    };
+    const unitRefs = refs.filter((r) => /^(?:the\s+)?units?\s*(?:=|:|is)/i.test(canon(r).trim()));
+    const typedUnit = unitOf(typed);
+    if (typedUnit !== null && unitRefs.some((r) => unitOf(r) === typedUnit) && unitOf(ctx.flagged) !== typedUnit) return LINE;
+  }
   const typedResult = resultOf(t, "typed");
   if (typedResult === null) return NONE;
   const lastLine = correction[correction.length - 1]!;
@@ -1063,8 +1077,11 @@ export function fixMatches(typed: string, correction: readonly string[], opts: F
   const finalClause = last[last.length - 1];
   const finalLabel = finalClause !== undefined ? splitLabel(finalClause).label : null;
   if (ctx) {
-    // The flagged line's own corrected value (the correction line under the same label), and the final answer.
-    const own = ctx.flaggedLabel === null ? [] : refs.flatMap((r) => (lineLabel(r) === ctx.flaggedLabel ? statedResults(r) : []));
+    // A value any correction line states that her working never reached: the flagged line's own corrected value, a
+    // conversion the fix needs ("400 mA = 0.40 A", "2.3 kW = 2300 W"), what follows from it ("I = 5.5 A"), and the final
+    // answer (P2 D, 25 Sep 2026: only the flagged line's label and the last line were read, so "0.4 A" and "2300 W"
+    // were refused). A correction line that restates her working is not in `refs`, and a value she reached is no fix.
+    const own = refs.flatMap((r) => statedResults(r));
     const final = finalClause !== undefined ? resultOf(finalClause, "authored") : null;
     targets = [...own, ...(final === null ? [] : [{ ...final, label: finalLabel, what: numericWhat(finalClause!) }])].filter((x) => !reached(x.value));
   } else {

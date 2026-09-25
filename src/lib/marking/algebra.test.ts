@@ -866,3 +866,19 @@ describe("a factor times a fraction is one fraction for the simplest-form check"
     expect(checkAlgebraic("1/x + 1/x", spec(String.raw`\frac{2}{x}`)).correct).toBe(false);
   });
 });
+
+// Found by the MK-01 guard (25 Sep 2026): a single fraction "with a quadratic numerator" (m4 algebraic fractions with
+// linear denominators .0004, .0005, .0015 and two twins, mustBeExpanded) refused its own key, because the expanded
+// check read the factorised denominator as brackets left unmultiplied. In a fraction the numerator is what is expanded;
+// the denominator may stay in factors, as the key writes it.
+describe("expanded form of a single fraction: the numerator is expanded", () => {
+  const spec = { answer: String.raw`\frac{x^2+2x+6}{(x+2)(x-1)}`, mode: "form", form: "expanded" } as never;
+  test("the key, and the same fraction with its denominator multiplied out, are in the form", () => {
+    expect(checkAlgebraic(String.raw`\frac{x^2+2x+6}{(x+2)(x-1)}`, spec).correct).toBe(true);
+    expect(checkAlgebraic("(x^2+2x+6)/((x+2)(x-1))", spec).correct).toBe(true);
+    expect(checkAlgebraic("(x^2+2x+6)/(x^2+x-2)", spec).correct).toBe(true);
+  });
+  test("a numerator left in brackets is not", () => {
+    expect(checkAlgebraic("(x(x-1) + 3(x+2))/((x+2)(x-1))", spec).correct).toBe(false);
+  });
+});

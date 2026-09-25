@@ -176,7 +176,7 @@ function mathsFragments(pointText: string): string[] {
   // "e.g. (73 − 37)/(4 − 1)": what an example introduces is marked, so it is read as an example (`EXAMPLE`).
   text = text.replace(/\b(?:e\.\s?g\.?|for example|for instance)[,:]?\s*/gi, EXAMPLE);
   // Prose words split the line; function names are maths and do not.
-  const marked = text.replace(FUNCTION_WORDS, (w) => " ".repeat(w.length));
+  const marked = text.replace(FUNCTION_WORDS, (w) => "\u0000".repeat(w.length));
   const chunks: string[] = [];
   // overAfter[i]: the word after chunk i is "over", so chunk i and chunk i + 1 are one fraction's top and bottom.
   const overAfter: boolean[] = [];

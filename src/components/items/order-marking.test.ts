@@ -84,6 +84,10 @@ describe("orderMarks: partial credit on an order", () => {
   test("a link scheme is never overpaid: one item carried to the back of a 2-mark chain earns nothing in place", () => {
     expect(orderMarks(markOrder("1,2,3,4,5,0", six), 2)).toBe(0);
   });
+  test("the lower reading stands where the in-place reading alone would pay: two items moved on a 2-mark chain", () => {
+    // In place: items 1–4 (4 of 6, so 1 of 2); in order: 4, so two items to move (2 − 2 = 0). The award is 0.
+    expect(orderMarks(markOrder("5,1,2,3,4,0", six), 2)).toBe(0);
+  });
   test("a miss never earns every mark, even on a long chain", () => {
     const nine: OrderSpec = { kind: "order", items: "abcdefghi".split(""), correctOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8] };
     expect(orderMarks(markOrder("0,1,2,3,4,5,6,8,7", nine), 3)).toBe(2);

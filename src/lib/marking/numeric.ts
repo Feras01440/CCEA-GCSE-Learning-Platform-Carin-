@@ -131,6 +131,11 @@ export interface NumericVerdict {
    * unit's, so a multi-mark part keeps the rest (mark.ts; addenda (B), 24 Sep 2026).
    */
   valueRight?: boolean;
+  /**
+   * True when the value is right and only its form is not the one asked for (a decimal for a fraction, a fraction not
+   * in its lowest terms, a number not in standard form). mark.ts pays marks − 1 unless the form is the task (MK-01).
+   */
+  formOnly?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -1583,7 +1588,7 @@ function verdict(
   parsed: ParsedNumber | null,
   reason: VerdictReason,
   feedback: string,
-  extra: { correct?: boolean; nearMiss?: string; missingUnit?: boolean; valueRight?: boolean } = {},
+  extra: { correct?: boolean; nearMiss?: string; missingUnit?: boolean; valueRight?: boolean; formOnly?: boolean } = {},
 ): NumericVerdict {
   const v: NumericVerdict = {
     correct: extra.correct ?? (reason === "exact" || reason === "within-tolerance"),
@@ -1593,6 +1598,7 @@ function verdict(
   };
   if (extra.nearMiss) v.nearMiss = extra.nearMiss;
   if (extra.valueRight) v.valueRight = true;
+  if (extra.formOnly) v.formOnly = true;
   if (extra.missingUnit) v.missingUnit = true;
   return v;
 }
@@ -1680,7 +1686,7 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
     const writtenForm = targetUnit === "%" && parsed.form === "percent" ? "decimal" : parsed.form;
     if (spec.acceptedForms && spec.acceptedForms.length > 0 && !spec.acceptedForms.includes(writtenForm)) {
       const list = spec.acceptedForms.map(describeForm).join(" or ");
-      return verdict(parsed, "wrong-form", `The value is right, but the question wants ${list} rather than ${describeForm(parsed.form)}.`, { correct: false });
+      return verdict(parsed, "wrong-form", `The value is right, but the question wants ${list} rather than ${describeForm(parsed.form)}.`, { correct: false, formOnly: true });
     }
 
     // --- Required accuracy -------------------------------------------------------------
@@ -1722,8 +1728,8 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
 function checkRequiredForm(parsed: ParsedNumber, rf: RequiredForm, spec: NumericSpec, target: Target): NumericVerdict | null {
   const wants = describeRequiredForm(rf, spec);
   const wrongForm = () =>
-    verdict(parsed, "wrong-form", `${parsed.raw.trim()} has the right value, but the question asks for ${wants}.`, { correct: false });
-  const notSimplest = (msg: string) => verdict(parsed, "not-simplest", msg, { correct: false });
+    verdict(parsed, "wrong-form", `${parsed.raw.trim()} has the right value, but the question asks for ${wants}.`, { correct: false, formOnly: true });
+  const notSimplest = (msg: string) => verdict(parsed, "not-simplest", msg, { correct: false, formOnly: true });
 
   switch (rf) {
     case "fraction": {
@@ -1761,7 +1767,7 @@ function checkRequiredForm(parsed: ParsedNumber, rf: RequiredForm, spec: Numeric
       if (parsed.form !== "standard-form") return wrongForm();
       const mant = Math.abs(parsed.standardForm?.mantissa ?? NaN);
       if (!(mant >= 1 && mant < 10)) {
-        return verdict(parsed, "wrong-form", `${parsed.raw.trim()} has the right value, but in standard form the first number must be at least 1 and less than 10.`, { correct: false });
+        return verdict(parsed, "wrong-form", `${parsed.raw.trim()} has the right value, but in standard form the first number must be at least 1 and less than 10.`, { correct: false, formOnly: true });
       }
       return null;
     }
@@ -1882,9 +1888,13 @@ function diagnoseWrongValue(
     const dpGiven = parsed.decimalPlaces;
     const sfGiven = parsed.sigFigs;
     const sfForm = parsed.form === "integer" || parsed.form === "standard-form";
+    // Never on a one-figure coincidence ("20" for 22.5, a read-off "3" for 2.7: P2 D, 25 Sep 2026): the value must carry a
+    // decimal place or at least 2 significant figures, and be within 10 % of the answer.
+    const close = T !== 0 && Math.abs(aVal - T) <= 0.1 * Math.abs(T);
     const roundsToTarget =
-      (dpGiven !== null && dpGiven >= 1 && nearlyEqual(roundDp(T, dpGiven), aVal, 1e-9)) ||
-      (sfForm && sfGiven !== null && nearlyEqual(roundSf(T, sfGiven), aVal, 1e-9) && !nearlyEqual(T, aVal, 1e-9));
+      close &&
+      ((dpGiven !== null && dpGiven >= 1 && nearlyEqual(roundDp(T, dpGiven), aVal, 1e-9)) ||
+        (sfForm && sfGiven !== null && sfGiven >= 2 && nearlyEqual(roundSf(T, sfGiven), aVal, 1e-9) && !nearlyEqual(T, aVal, 1e-9)));
     if (roundsToTarget) {
       if (requiredDp !== undefined) {
         return verdict(parsed, "wrong-accuracy", `${parsed.raw.trim()} is rounded too far. Give the answer to ${plural(requiredDp, "decimal place")}: ${formatNumber(T, { dp: requiredDp })}${unitLabel}.`, { correct: false });
