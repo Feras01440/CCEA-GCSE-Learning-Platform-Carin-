@@ -272,10 +272,9 @@ export const ALLOWED = new Map([
   // is also 11). Both are readings or sums from the plot, as a sighted learner makes them.
   ["we.maths.m3.box-plots-and-comparing-distributions.03#step 1", "the alt places the boxes and the line inside each box on the scale, as the drawing does; the step is to read the medians off it and work out the IQRs"],
   ["we.maths.m3.box-plots-and-comparing-distributions.03#step 3", "the alt places Moira's box from 5 to 16 on the scale, as the drawing does; the step compares the IQRs worked out from it (16 - 5 = 11)"],
-  // Two m7 worked examples whose question is to read a drawn graph (25 Sep, QA fixer): the alt is the drawing
+  // An m7 worked example whose question is to match drawn graphs (25 Sep, QA fixer): the alt is the drawing
   // in words for a screen reader, so it says what a sighted learner sees, and the faded step is that reading.
-  // A blank copy would leave nothing to read.
-  ["we.maths.m7.quadratic-graphs-and-intersections-with-straight-lines.02#step 3", "the stem says the graph is drawn and asks for its minimum; the alt lists the points the drawn curve passes through, as the drawing shows them; the step is to read the lowest ones off it"],
+  // A blank copy would leave nothing to match.
   ["we.maths.m7.recognising-and-sketching-linear-quadratic-cubic-and-reciprocal-graphs.01#step 4", "the question is to match four drawn graphs to equations; the alt has to describe each graph's shape (Graph A turns twice and crosses the x-axis three times), which is what a sighted learner sees; the step is the matching"],
 ]);
 

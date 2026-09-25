@@ -207,16 +207,31 @@
         "any": [
          "lot of energy",
          "lots of energy",
-         "much energy",
+         "loads of energy",
+         "huge amount of energy",
+         "so much energy",
+         "a great deal of energy",
          "large amount of energy",
-         "high energy",
-         "energy to break",
+         "large amounts of energy",
+         "high amount of energy",
          "strong",
          "very strong",
          "hard to break",
          "difficult to break"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "little energy",
+         "not much energy",
+         "not a lot of energy",
+         "small amount of energy",
+         "low energy",
+         "easy to break",
+         "easily broken",
+         "weak",
+         "not strong",
+         "not very strong"
+        ]
        }
       ],
       "listingRule": false
@@ -242,22 +257,41 @@
         "n≡n",
         "triple"
        ],
-       "marks": 1
+       "marks": 1,
+       "reject": [
+        "weak triple",
+        "weak bond"
+       ]
       },
       {
        "any": [
         "lot of energy",
         "lots of energy",
-        "much energy",
+        "loads of energy",
+        "huge amount of energy",
+        "so much energy",
+        "a great deal of energy",
         "large amount of energy",
-        "high energy",
-        "energy to break",
+        "large amounts of energy",
+        "high amount of energy",
         "strong",
         "very strong",
         "hard to break",
         "difficult to break"
        ],
-       "marks": 1
+       "marks": 1,
+       "reject": [
+        "little energy",
+        "not much energy",
+        "not a lot of energy",
+        "small amount of energy",
+        "low energy",
+        "easy to break",
+        "easily broken",
+        "weak",
+        "not strong",
+        "not very strong"
+       ]
       }
      ],
      "listingRule": false
@@ -775,27 +809,36 @@
       "keyWords": [
        {
         "any": [
-         "argon",
-         "ar"
+         "argon"
         ],
         "marks": 1
        }
       ],
-      "listingRule": false
+      "listingRule": true
      },
      "scheme": [
       {
        "id": "P1",
        "code": "P",
        "marks": 1,
-       "for": "argon"
+       "for": "argon (the name: a symbol alone does not answer 'Name')"
       }
      ],
      "hints": [
       "It makes up about 1% of the air, the third most common gas."
      ],
-     "workedSolution": "Argon, about 1% of the air.",
-     "commonErrors": [],
+     "workedSolution": "Argon (about 1% of the air).",
+     "commonErrors": [
+      {
+       "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\b(helium|neon|krypton|xenon|radon|nitrogen|oxygen)\\b"
+       },
+       "feedback": "Argon is the noble gas with by far the largest share, about 1% of the air; the other noble gases are only traces, and nitrogen and oxygen are not noble gases.",
+       "marksTypicallyEarned": 0
+      }
+     ],
      "requiresWorking": false
     }
    ],
@@ -851,15 +894,14 @@
        {
         "any": [
          "water vapour",
+         "water vapor",
          "water",
-         "h2o",
-         "moisture",
-         "steam"
+         "moisture"
         ],
         "marks": 1
        }
       ],
-      "listingRule": false
+      "listingRule": true
      },
      "scheme": [
       {
@@ -873,7 +915,17 @@
       "Think about a damp day and a dry day."
      ],
      "workedSolution": "Water vapour: there is more on a damp day and less on a dry one.",
-     "commonErrors": [],
+     "commonErrors": [
+      {
+       "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\b(carbon dioxide|co2|nitrogen|oxygen|argon)\\b"
+       },
+       "feedback": "The fixed shares are nitrogen, oxygen, argon and carbon dioxide. The one left out of the dry-air figures, because its amount changes with the weather, is water vapour.",
+       "marksTypicallyEarned": 0
+      }
+     ],
      "requiresWorking": false
     }
    ],
@@ -929,13 +981,23 @@
        {
         "any": [
          "colourless",
+         "colorless",
+         "no colour",
+         "no color",
          "odourless",
+         "odorless",
          "no smell",
          "no odour",
+         "no odor",
          "tasteless",
          "no taste",
          "low boiling point",
+         "boiling point is low",
          "boils at -196",
+         "boiling point -196",
+         "boiling point of -196",
+         "boiling point is -196",
+         "boils at minus 196",
          "gas at room temperature"
         ],
         "marks": 1
@@ -943,13 +1005,23 @@
        {
         "any": [
          "colourless",
+         "colorless",
+         "no colour",
+         "no color",
          "odourless",
+         "odorless",
          "no smell",
          "no odour",
+         "no odor",
          "tasteless",
          "no taste",
          "low boiling point",
+         "boiling point is low",
          "boils at -196",
+         "boiling point -196",
+         "boiling point of -196",
+         "boiling point is -196",
+         "boils at minus 196",
          "gas at room temperature"
         ],
         "marks": 1
@@ -1063,10 +1135,26 @@
        },
        {
         "any": [
-         "oxygen",
+         "no oxygen",
+         "keeps oxygen out",
+         "keep oxygen out",
+         "keeps out oxygen",
+         "keeps the oxygen out",
+         "keeps oxygen away",
+         "without oxygen",
+         "removes oxygen",
+         "removes the oxygen",
+         "pushes out the oxygen",
+         "pushes the oxygen out",
+         "displaces oxygen",
+         "displaces the oxygen",
+         "replaces the oxygen",
+         "replaces oxygen",
+         "instead of oxygen",
          "stale",
          "go off",
          "goes off",
+         "going off",
          "spoil",
          "rot",
          "decay",
@@ -1074,11 +1162,17 @@
          "last longer",
          "lasts longer",
          "oxidis",
-         "bacteria",
-         "mould",
+         "oxidiz",
+         "oxidation",
          "shelf life"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "nitrogen is reactive",
+         "it is reactive",
+         "nitrogen reacts with",
+         "it reacts with the"
+        ]
        }
       ],
       "listingRule": false
@@ -1158,7 +1252,12 @@
        {
         "any": [
          "low boiling point",
+         "boiling point is low",
          "boils at -196",
+         "boiling point -196",
+         "boiling point of -196",
+         "boils at minus 196",
+         "minus 196",
          "boils at a very low temperature",
          "boils at a low temperature",
          "-196"
@@ -1244,22 +1343,41 @@
          "n≡n",
          "triple"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "weak triple",
+         "weak bond"
+        ]
        },
        {
         "any": [
          "lot of energy",
          "lots of energy",
-         "much energy",
+         "loads of energy",
+         "huge amount of energy",
+         "so much energy",
+         "a great deal of energy",
          "large amount of energy",
-         "high energy",
-         "energy to break",
+         "large amounts of energy",
+         "high amount of energy",
          "strong",
          "very strong",
          "hard to break",
          "difficult to break"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "little energy",
+         "not much energy",
+         "not a lot of energy",
+         "small amount of energy",
+         "low energy",
+         "easy to break",
+         "easily broken",
+         "weak",
+         "not strong",
+         "not very strong"
+        ]
        }
       ],
       "listingRule": false
@@ -1284,6 +1402,16 @@
      ],
      "workedSolution": "Nitrogen molecules have a triple covalent bond between the two atoms, and it takes a lot of energy to break, so nitrogen reacts with very few substances.",
      "commonErrors": [
+      {
+       "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\b(little|not much|small amount of|low) energy\\b|\\beas(y|ily) (to )?break|\\bweak\\b|\\bnot (very )?strong\\b"
+       },
+       "feedback": "The other way round: the triple bond is very strong and takes a lot of energy to break. That is exactly why nitrogen reacts with so few substances.",
+       "marksTypicallyEarned": 0,
+       "source": "ccea-cer:science:2024-summer:C2F:Q6"
+      },
       {
        "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
        "pattern": {
@@ -1472,9 +1600,13 @@
          "acids",
          "an acid",
          "nitric acid",
-         "sulfuric acid"
+         "sulfuric acid",
+         "sulphuric acid"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "amino acid"
+        ]
        }
       ],
       "listingRule": false
@@ -1680,8 +1812,7 @@
       "keyWords": [
        {
         "any": [
-         "nitrogen",
-         "n2"
+         "nitrogen"
         ],
         "marks": 1
        }
@@ -1715,7 +1846,8 @@
       "keyWords": [
        {
         "any": [
-         "n2"
+         "n2",
+         "n_2"
         ],
         "marks": 1
        }
@@ -1764,13 +1896,23 @@
        {
         "any": [
          "colourless",
+         "colorless",
+         "no colour",
+         "no color",
          "odourless",
+         "odorless",
          "no smell",
          "no odour",
+         "no odor",
          "tasteless",
          "no taste",
          "low boiling point",
+         "boiling point is low",
          "boils at -196",
+         "boiling point -196",
+         "boiling point of -196",
+         "boiling point is -196",
+         "boils at minus 196",
          "gas at room temperature"
         ],
         "marks": 1
@@ -1827,22 +1969,41 @@
          "n≡n",
          "triple"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "weak triple",
+         "weak bond"
+        ]
        },
        {
         "any": [
          "lot of energy",
          "lots of energy",
-         "much energy",
+         "loads of energy",
+         "huge amount of energy",
+         "so much energy",
+         "a great deal of energy",
          "large amount of energy",
-         "high energy",
-         "energy to break",
+         "large amounts of energy",
+         "high amount of energy",
          "strong",
          "very strong",
          "hard to break",
          "difficult to break"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "little energy",
+         "not much energy",
+         "not a lot of energy",
+         "small amount of energy",
+         "low energy",
+         "easy to break",
+         "easily broken",
+         "weak",
+         "not strong",
+         "not very strong"
+        ]
        }
       ],
       "listingRule": false
@@ -1866,6 +2027,16 @@
      ],
      "workedSolution": "Nitrogen molecules have a triple covalent bond, and it takes a lot of energy to break.",
      "commonErrors": [
+      {
+       "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\b(little|not much|small amount of|low) energy\\b|\\beas(y|ily) (to )?break|\\bweak\\b|\\bnot (very )?strong\\b"
+       },
+       "feedback": "The other way round: the triple bond is very strong and takes a lot of energy to break. That is exactly why nitrogen reacts with so few substances.",
+       "marksTypicallyEarned": 0,
+       "source": "ccea-cer:science:2024-summer:C2F:Q6"
+      },
       {
        "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
        "pattern": {
@@ -1952,13 +2123,12 @@
       "keyWords": [
        {
         "any": [
-         "argon",
-         "ar"
+         "argon"
         ],
         "marks": 1
        }
       ],
-      "listingRule": false
+      "listingRule": true
      },
      "scheme": [
       {
@@ -1971,8 +2141,18 @@
      "hints": [
       "Nitrogen and oxygen come first. What fills most of the last 1%?"
      ],
-     "workedSolution": "Argon, about 1%.",
-     "commonErrors": [],
+     "workedSolution": "Argon (about 1% of dry air).",
+     "commonErrors": [
+      {
+       "misconception": "sci.gases.nitrogen-unreactive-triple-bond",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\b(carbon dioxide|co2|oxygen|nitrogen|neon|helium|water vapou?r)\\b"
+       },
+       "feedback": "Nitrogen (78%) and oxygen (21%) come first; the third is argon, about 1%. Carbon dioxide is only 0.03–0.04%.",
+       "marksTypicallyEarned": 0
+      }
+     ],
      "requiresWorking": false
     },
     {
@@ -1987,8 +2167,7 @@
       "keyWords": [
        {
         "any": [
-         "carbon dioxide",
-         "co2"
+         "carbon dioxide"
         ],
         "marks": 1
        }
@@ -2093,9 +2272,13 @@
          "acids",
          "an acid",
          "nitric acid",
-         "sulfuric acid"
+         "sulfuric acid",
+         "sulphuric acid"
         ],
-        "marks": 1
+        "marks": 1,
+        "reject": [
+         "amino acid"
+        ]
        }
       ],
       "listingRule": false
@@ -2131,8 +2314,7 @@
       "keyWords": [
        {
         "any": [
-         "ammonium nitrate",
-         "nh4no3"
+         "ammonium nitrate"
         ],
         "marks": 1
        }

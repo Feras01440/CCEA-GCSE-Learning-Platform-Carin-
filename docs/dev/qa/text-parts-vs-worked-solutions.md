@@ -1,13 +1,25 @@
-# Key-word marker versus each part's own worked solution — 2026-09-25 04:17
+# Key-word marker versus each part's own worked solution — 2026-09-25 05:11
 
-Every text part of 2+ marks (618 across the packs) was marked with its own workedSolution as the answer. 618 earn full marks; 0 earn some; 0 earn none. Fix rule (pipeline/prompts/author-topic.md): every key-word group must include the phrasing the worked solution uses, and "explain" groups accept the reasoning words as well as the number. Rerun: `npx tsx scripts/qa/text-parts-vs-solutions.mts`.
+Every text part of 2+ marks (643 across the packs) was marked with its own workedSolution as the answer. 631 earn full marks; 11 earn some; 1 earn none. Fix rule (pipeline/prompts/author-topic.md): every key-word group must include the phrasing the worked solution uses, and "explain" groups accept the reasoning words as well as the number. Rerun: `npx tsx scripts/qa/text-parts-vs-solutions.mts`.
 
-## Zero marks (0)
-
-| Bundle | Item | Part | Earned | Key-word groups | Marker said | Worked solution (start) |
-|---|---|---|---|---|---|---|
-
-## Partial marks (0)
+## Zero marks (1)
 
 | Bundle | Item | Part | Earned | Key-word groups | Marker said | Worked solution (start) |
 |---|---|---|---|---|---|---|
+| science/content/b1/b1-fieldwork-sampling | 0007 | b | 0/2 | [not the same every time / different rule / inconsistent] [not comparable / overestimate / too high] | The marking points are not there yet. Expected: not the same every time, not comparable. | The decision about what counts as being inside the frame has to be the same in every quadrat. Counting plants rooted outside it in some quadrats and not others  |
+
+## Partial marks (11)
+
+| Bundle | Item | Part | Earned | Key-word groups | Marker said | Worked solution (start) |
+|---|---|---|---|---|---|---|
+| maths/content/m7/combined-transformations-and-reflections-in-y-equals-plus-or-minus-x | 0010 | main | 2/3 | [rotation / rotate / rotated / …] [90° clockwise / 90 clockwise / 90 degrees clockwise / …] [(-1, -1) / -1, -1 / -1 -1] | "Turn" is not the word the scheme wants. Write *rotation* and the naming mark is safe. | Joining $(-5, 1)$ to $(1, 3)$ and $(-5, 4)$ to $(4, 3)$ and bisecting both at right angles gives a crossing point at $(-1, -1)$. A quarter turn clockwise about  |
+| science/content/b1/b1-anaerobic-respiration | 0003 | c | 1/2 | [oxygen] [cannot be delivered / not enough / faster than / …] | 1 of 2: still missing oxygen. | Sprinting uses energy very quickly. The lungs and blood cannot deliver oxygen to the muscles fast enough to keep up, so the muscles respire anaerobically to rel |
+| science/content/b1/b1-leaf-structure-gas-exchange | 0005 | b | 2/3 | [no photosynthesis / dark / cannot photosynthesise] [respiration / respires / respir] [carbon dioxide / co2] | 2 of 3: still missing no photosynthesis. | Without light the leaf cannot photosynthesise, but it goes on respiring, which releases carbon dioxide into the sealed tube. The carbon dioxide concentration th |
+| science/content/b1/b1-leaf-structure-gas-exchange | 0011 | b | 1/2 | [could not photosynthesise / no photosynthesis / cannot photosynthesise] [respiring / respiration / uses up / …] | 1 of 2: still missing could not photosynthesise. | Without light the plant cannot photosynthesise, so it makes no new glucose. It goes on respiring day and night, using up the starch it had stored, and once thos |
+| science/content/b1/b1-minerals-eutrophication | 0007 | a | 1/2 | [less fertiliser / less slurry / less manure / …] [less fertiliser / less slurry / less manure / …] | 1 of 2: still missing less fertiliser. | Apply no more fertiliser than the crop can absorb, so none is left in the soil to be washed away; and leave an unfertilised strip of land between the field and  |
+| science/content/b1/b1-photosynthesis-investigations | 0003 | b | 2/3 | [yellow-brown / yellow brown / stays the same / …] [no carbon dioxide / carbon dioxide absorbed / no co2] [no photosynthesis / no starch] | 2 of 3: still missing no photosynthesis. | It stays yellow-brown. The sodium hydroxide absorbed the carbon dioxide inside the flask, so the leaf had no carbon dioxide, could not photosynthesise and made  |
+| science/content/c1/c1-isotopes-relative-atomic-mass | 0001 | main | 1/2 | [same atomic number / share an atomic number / same number of protons / …] [different mass number / different mass numbers / differ in mass number / …] | "an atom" cancels the mark it sits with. Leave it out. | Atoms of one element that share an atomic number (the same number of protons) but differ in mass number (different numbers of neutrons). |
+| science/content/c1/c1-isotopes-relative-atomic-mass | 0009 | a | 1/2 | [same atomic number / share an atomic number / same number of protons / …] [different mass number / different mass numbers / differ in mass number / …] | "an atom" cancels the mark it sits with. Leave it out. | Atoms of one element that share an atomic number (the same number of protons) but differ in mass number (different numbers of neutrons). |
+| science/content/c2/c2-equilibrium | 0007 | main | 1/2 | [nothing can escape / no substance can escape / enter or escape / …] [react back / reverse reaction / reactants again / …] | 1 of 2: still missing nothing can escape. | In a closed system no substance can enter or escape, so the products stay in the container and can react back. In an open container the product escapes, the rev |
+| science/content/c2/c2-rusting-and-iron | 0012 | d | 2/3 | [zinc] [zinc is more reactive / more reactive than iron / zinc is above iron / …] [zinc corrodes / the zinc corrodes / zinc is sacrificed / …] | 2 of 3: still missing zinc corrodes. | Galvanising is coating the steel with zinc. Zinc is above iron in the reactivity series, so it gives up its electrons first; wherever the coating is scratched t |
+| science/content/p2/p2-refraction-and-dispersion | 0013 | c | 2/3 | [red] [different speeds / travel at different speeds / changes speed / …] [red is slowed the least / red is refracted the least / red is slowed least / …] | 2 of 3: still missing red is slowed the least. | Red is deviated least. Different colours travel at different speeds in the glass, and red is slowed the least, so it is refracted the least. Violet is slowed th |
