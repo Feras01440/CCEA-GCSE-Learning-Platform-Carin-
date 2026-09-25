@@ -123,7 +123,7 @@
       "howExamined": "Unit 3 is one 1-hour calculator paper of 50 marks, sat every Summer. Page 2 of the booklet prints the addition rule, and in the papers read for this topic (Summer 2019 and 2021 to 2026) it is never a question on its own: it does its work inside the Venn and tree questions, in parts worded 'or', 'either' or 'at least one', such as the chance of rain on at least one day of a weekend (Summer 2026 Q4(ii), 2 marks). The add-or-multiply decision is tested directly: Summer 2022 Q1 was a 2-mark opener, M1 for the product and W1 for the answer. The command word is Calculate, sometimes with 'You must show your working'. Answers are exact fractions or decimals to 2 decimal places unless the question says otherwise, so the marks are for choosing the rule and substituting correctly.",
       "traps": [
         "Multiplying two probabilities when the question does not ask for both events: a one-mark part that gave the first outcome and asked for the second was read as an 'and' question (Summer 2024 FM3 Q3)",
-        "Adding two probabilities that belonged to successive events, where 'and' wanted them multiplied: examiners called this a straightforward question that many got wrong (Summer 2022 FM3 Q1)",
+        "Adding the probabilities of two successive events where 'and' needed them multiplied, on one of the easier questions of the paper (Summer 2022 FM3 Q1)",
         "Leaving the overlap in, so the answer comes out above 1; answers greater than 1 were reported as disappointing (Summer 2019 FM3 Q7)",
         "Giving a bare count where a probability was asked for (Summer 2019 FM3 Q7)",
         "Misreading 'only', so an overlap goes in the wrong region of the Venn diagram, and leaving out the value that belongs outside the circles (Summer 2025 FM3 Q3)",
@@ -234,6 +234,101 @@
         }
       ],
       "verification": "ver.we.fm.u3.addition-rule-probability.01",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u3.addition-rule-probability.02",
+      "topic": "fm.u3.addition-rule-probability",
+      "specRefs": [
+        "FM3-PRB-01"
+      ],
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "stem": "A leisure centre has 50 members. 31 of them swim, 24 use the gym and 12 do both.\nOne member is chosen at random. Calculate the probability that this member swims or uses the gym.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-circle Venn diagram for 50 leisure-centre members: 19 swim only, 12 do both, 12 use the gym only and 7 do neither'><title>A two-circle Venn diagram for 50 leisure-centre members: 19 swim only, 12 do both, 12 use the gym only and 7 do neither</title><rect x='8' y='22' width='344' height='174' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='144' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='216' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='144' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Swim</text><text x='216' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Gym</text><text x='114' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>19</text><text x='180' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>12</text><text x='246' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>12</text><text x='326' y='188' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>7</text><text x='10' y='218' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>50 members</text></svg>",
+        "alt": "A two-circle Venn diagram for 50 members showing 19 who swim only, 12 who do both, 12 who use the gym only and 7 outside both circles."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "$S$ is 'swims', $G$ is 'uses the gym'. $P(S) = \\dfrac{31}{50}$, $P(G) = \\dfrac{24}{50}$, $P(S \\cap G) = \\dfrac{12}{50}$.",
+          "decision": "Name the events and write all three probabilities over the same total. The rule on the sheet is written in letters, so the letters have to mean something before it can be used."
+        },
+        {
+          "n": 2,
+          "working": "$P(S \\cup G) = \\dfrac{31}{50} + \\dfrac{24}{50} - \\dfrac{12}{50}$",
+          "decision": "Substitute into $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$. The last term is there because the 12 members who do both were counted in each of the first two.",
+          "whyMenu": {
+            "options": [
+              "Subtract $\\dfrac{12}{50}$ once, because those members were counted twice",
+              "Subtract $\\dfrac{12}{50}$ twice, because they appear in two circles",
+              "Add $\\dfrac{12}{50}$, because they belong to the group as well"
+            ],
+            "correct": 0,
+            "explain": "Each of the 12 appears once in the 31 and once in the 24. One subtraction brings each back to a single count; two would remove them from the answer entirely."
+          },
+          "earns": [
+            "M1"
+          ]
+        },
+        {
+          "n": 3,
+          "working": "$= \\dfrac{31 + 24 - 12}{50} = \\dfrac{43}{50}$",
+          "decision": "The denominators already match, so only the numerators need combining. Keep the unreduced fraction until the end; the scheme accepts it either way."
+        },
+        {
+          "n": 4,
+          "working": "$P(S \\cup G) = \\dfrac{43}{50} = 0.86$",
+          "decision": "Simplify or convert, and check the answer is between 0 and 1. 0.86 is under 1, which the un-subtracted version 1.10 would not have been.",
+          "earns": [
+            "W1"
+          ]
+        }
+      ],
+      "finalAnswer": "$P(S \\cup G) = \\dfrac{43}{50}$, which is 0.86",
+      "twin": {
+        "stem": "A drama club has 200 raffle tickets on sale, of which 45 are blue and 32 are green. No ticket is both colours.\nOne ticket is drawn at random. Calculate the probability that it is blue or green.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.385,
+          "tolerance": {
+            "type": "dp",
+            "places": 2
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "fraction",
+            "decimal"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u3.addition-rule-probability.02",
       "version": 1
     }
   ],
@@ -1601,8 +1696,8 @@
           "type": "maths-numeric",
           "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
           "result": "pass",
-          "detail": "Every count, fraction and decimal in the note and its three figures is emitted by scratchpad/fm3-batch-b/topic1.mjs from exact rationals in lib.mjs; every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): every heading carries its role; each gate follows a worked demonstration in its own section, with fresh numbers so that no gate's answer is printed above it (g1 the bus-pass-only region, g2 the regions added, g3 a union from three decimals); an \"Exam twists\" section (the overlap from a given union, 'neither' as 1 minus the union, answers above 1 from Summer 2019) with a new gate g7; headings of at most 8 words and no card over 75 words (the worked example split in two); every figure redrawn phone-native (360-unit viewBox, no label under 13.5 units, no sentence drawn in a picture); two prompts wired, not four, and prompt 03 (a 34-word answer) withdrawn for the short 06. Fix pass of 23 Sep: the bar figure lays the two totals end to end, so it shows 22 + 15 reaching 37 against the 29 who did at least one (its old text said 37 ran past the 40 in the room), the mutually exclusive circles are drawn apart, captions sit below the box, gate 2's premise and gate 6's two-bead option are corrected, gate 3 accepts 0.73 and states the form group's numbers (it pointed at 'the Venn diagram above', where the nearest figure is the bar picture), section 4's worked example leaves its last line to gate 5 (it printed the 17/20 the gate asks for), section 5 multiplies rain and wind only because the question says they are independent (it multiplied them unasked, the very step the registry records as an error), the Sheet's traps and exam description now say what the Summer 2019 and 2021 to 2026 papers and reports say, and this log counts the note's three figures (it said four).",
-          "at": "2026-09-25T04:24:00Z",
+          "detail": "Every count, fraction and decimal in the note and its three figures is emitted by scratchpad/fm3-batch-b/topic1.mjs from exact rationals in lib.mjs; every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): every heading carries its role; each gate follows a worked demonstration in its own section, with fresh numbers so that no gate's answer is printed above it (g1 the bus-pass-only region, g2 the regions added, g3 a union from three decimals); an \"Exam twists\" section (the overlap from a given union, 'neither' as 1 minus the union, answers above 1 from Summer 2019) with a new gate g7; headings of at most 8 words and no card over 75 words (the worked example split in two); every figure redrawn phone-native (360-unit viewBox, no label under 13.5 units, no sentence drawn in a picture); two prompts wired, not four, and prompt 03 (a 34-word answer) withdrawn for the short 06. Fix pass of 23 Sep: the bar figure lays the two totals end to end, so it shows 22 + 15 reaching 37 against the 29 who did at least one (its old text said 37 ran past the 40 in the room), the mutually exclusive circles are drawn apart, captions sit below the box, gate 2's premise and gate 6's two-bead option are corrected, gate 3 accepts 0.73 and states the form group's numbers (it pointed at 'the Venn diagram above', where the nearest figure is the bar picture), section 4's worked example leaves its last line to gate 5 (it printed the 17/20 the gate asks for), section 5 multiplies rain and wind only because the question says they are independent (it multiplied them unasked, the very step the registry records as an error), the Sheet's traps and exam description now say what the Summer 2019 and 2021 to 2026 papers and reports say, and this log counts the note's three figures (it said four). Review pass (25 Sep 2026): the note teaches on its own numbers (a year group of 50, a theatre group, fog and frost), so no value a question, twin or find-the-mistake asks is worked in front of her (scratchpad/overlap-scan.mjs prints nothing for this topic); gates g1, g2, g3 and g5 withdrawn for g8-g11, recorded above; the hook's figure leaves g8's region blank; the twists cite Summer 2026 and Summer 2019; the rule used backwards has its own section before g7.",
+          "at": "2026-09-25T05:15:00Z",
           "by": "claude"
         },
         {
@@ -1631,7 +1726,37 @@
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "It asked the form group's packed-lunch-only count, which the hook's figure printed and question 0001 uses; g8 asks the note's own year group, with that region left blank.",
+          "on": "2026-09-25T05:15:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g9",
+          "reason": "It worked with the form group of 40, the data of questions 0001-0003 and the find-the-mistake; g9 asks the same idea of the note's own year group.",
+          "on": "2026-09-25T05:15:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "Its answer, 29/40, is the answer to question 0002 and the find-the-mistake; g10 asks the note's own union, 38/50.",
+          "on": "2026-09-25T05:15:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "Its answer, 17/20, is question 0008(a)'s; g11 asks the note's own theatre group.",
+          "on": "2026-09-25T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u3.addition-rule-probability.01",
@@ -1708,6 +1833,104 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose.",
           "at": "2026-09-23T13:29:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-09-25T05:15:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the 25 Sep 2026 review pass: Its steps earned four marks (M1, MW1, W1, W1) on a calculation the schemes mark M1 W1; we.02 is the same walk-through with the scheme's two marks.",
+          "resolvedAt": "2026-09-25T05:15:00Z",
+          "resolution": "Replaced by we.fm.u3.addition-rule-probability.02."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "we.fm.u3.addition-rule-probability.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u3.addition-rule-probability.02",
+          "reason": "Its steps earned four marks (M1, MW1, W1, W1) on a calculation the schemes mark M1 W1; we.02 is the same walk-through with the scheme's two marks.",
+          "on": "2026-09-25T05:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.we.fm.u3.addition-rule-probability.02",
+      "itemId": "we.fm.u3.addition-rule-probability.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (WorkedExample) by pipeline/build-content.mts",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator throughout; content limited to statement FM3-PRB-01. Three-event unions and formal set algebra are outside the specification and do not appear.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The Unit 3 sheet prints the addition rule, so the note quotes it and spends its marks on choosing and substituting it; the multiplication of independent events is not on the sheet and is listed as must-know.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Calculate, Find, Write down, You must show your working).",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Two marks, as the 2022 and 2024 schemes mark a two-mark addition-rule part: M1 at step 2 (the rule with the three probabilities substituted), W1 at step 4 (the answer). Steps 1 and 3 are working that earns nothing on its own.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The leisure-centre union 43/50 and the twin's 77/200 is emitted by scratchpad/fm3-batch-b/topic1.mjs from exact rationals in lib.mjs; every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): added in the review pass (reviewer F31) to replace we.01, whose steps earned four marks on a two-mark calculation.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The why-menu at step 2 exercises the overlap-not-subtracted route reported in ccea-cer:further-maths:2019-summer:FM3:Q7.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers and mark schemes read for this batch (Summer 2019 Q2 and Q7, Summer 2021 Q5, Summer 2022 Q1 and Q6, Summer 2023 Q3, Summer 2024 Q3 and Q6, Summer 2025 Q3 and Q7, Summer 2026 Q5 and Q7): every context, count and sentence is new, and scratchpad/fm3-batch-b/verify-text.mjs reports no eight-word sequence in common.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose.",
+          "at": "2026-09-25T04:24:00Z",
           "by": "claude"
         }
       ],
