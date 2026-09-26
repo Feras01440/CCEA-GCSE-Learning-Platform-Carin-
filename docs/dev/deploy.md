@@ -9,7 +9,14 @@ npm run build
 npx serve out
 ```
 
-Open the printed address, then on her phone open the same address on the home Wi-Fi (the laptop's IP is shown by `ipconfig`) and use "Add to Home Screen" so it installs as an app. The service worker keeps it working offline afterwards.
+Open the printed address. On the laptop itself (`http://localhost:…`) this is the whole app, offline copy included.
+
+On her phone over the home Wi-Fi it is not (corrected 26 Sep 2026). Browsers register a service worker only in a secure context, meaning HTTPS or localhost. At the laptop's plain address (`http://192.168.…:3200`, the IP from `ipconfig`):
+
+- The app runs and keeps her progress, but there is no offline copy and no background update. "Add to Home Screen" gives a bookmark, not an installed app.
+- Her progress is stored under that exact address. If the laptop's IP changes, the browser treats it as a different site, and her progress seems to vanish until the old address comes back.
+
+For the phone, use the private HTTPS URL below.
 
 ## Vercel (private URL, installable anywhere)
 
