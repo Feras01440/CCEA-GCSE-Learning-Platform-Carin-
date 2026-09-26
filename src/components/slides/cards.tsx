@@ -15,7 +15,7 @@ import { SimEmbed } from "@/components/media/SimEmbed";
 import { VideoEmbed } from "@/components/media/VideoEmbed";
 import type { Card } from "@/lib/slides/cards";
 import { optionTex } from "@/lib/gate-order";
-import { ILLUSTRATIONS, INTERACTIONS, REACTIONS, RecapGlyphFor } from "./enrich";
+import { ILLUSTRATIONS, ILLUSTRATION_CAPTIONS, INTERACTIONS, REACTIONS, RecapGlyphFor } from "./enrich";
 import type { TapResult } from "./enrich/afs";
 import type { TapState } from "./enrich/afs-model";
 import { Caption, CardTitle, Eyebrow, Option, Prose, Recess, Stage, Verdict, type OptionState } from "./ui";
@@ -59,8 +59,8 @@ export function ideaParts(card: IdeaCard, illustration: string | null): CardPart
     eyebrow: card.first ? `Section ${card.section.n} of ${card.section.total}` : `Section ${card.section.n} of ${card.section.total} · ${card.section.title}`,
     title: card.first ? <MdInlines inlines={parseInline(card.section.heading)} /> : null,
     left: <Prose md={card.md} />,
-    // The drawing divides out everything both lines share, the bracket and a 2 (audit CT-10); the caption says why.
-    right: illustration ? <Illustrated id={illustration} caption={<Caption>Both lines are multiplied by (x + 5) and by 2, so both divide out. A term never does.</Caption>} /> : null,
+    // The drawing divides out everything both lines share (audit CT-10); its caption, kept beside it in the registry, says why.
+    right: illustration ? <Illustrated id={illustration} caption={ILLUSTRATION_CAPTIONS[illustration] ? <Caption>{ILLUSTRATION_CAPTIONS[illustration]}</Caption> : undefined} /> : null,
   };
 }
 

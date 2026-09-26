@@ -16,7 +16,7 @@ describe("what comes back, said from the cards themselves", () => {
       card("rp.fm.u1.algebraic-fractions-simplify.06", at(10 * MIN)),
     ];
     const { rows, more } = returnRows(tonight, now, title);
-    expect(rows).toEqual([{ key: expect.any(String), when: "Later today", what: "7 checks and 2 recall cards from Simplifying algebraic fractions", reason: null, count: 9 }]);
+    expect(rows).toEqual([{ key: expect.any(String), when: "Tonight", what: "7 checks and 2 recall cards from Simplifying algebraic fractions", reason: null, count: 9 }]);
     expect(more).toBe(0);
   });
 
@@ -47,6 +47,13 @@ describe("what comes back, said from the cards themselves", () => {
   it("never names a weekday that could mean today next week", () => {
     expect(returnDay(at(6 * DAY), now)).toBe("Wednesday");
     expect(returnDay(at(7 * DAY), now)).toBeNull();
+  });
+
+  it("says tonight for what comes due before the evening ends, past midnight too", () => {
+    expect(returnDay(new Date("2026-09-25T00:10:00"), new Date("2026-09-24T23:50:00"))).toBe("Tonight");
+    expect(returnDay(new Date("2026-09-25T02:50:00"), new Date("2026-09-25T02:40:00"))).toBe("Tonight");
+    expect(returnDay(new Date("2026-09-25T18:00:00"), new Date("2026-09-25T02:40:00"))).toBe("Later today");
+    expect(returnDay(new Date("2026-09-25T21:00:00"), now)).toBe("Tomorrow");
   });
 
   it("ends the evening at four in the morning", () => {

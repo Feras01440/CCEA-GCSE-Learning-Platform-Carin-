@@ -19,7 +19,7 @@ export interface ReturnCard {
 
 export interface ReturnRow {
   key: string;
-  /** "Later today", "Tomorrow", "Thursday". */
+  /** "Tonight", "Tomorrow", "Thursday". */
   when: string;
   /** "7 checks and 2 recall cards from Simplifying algebraic fractions". */
   what: string;
@@ -44,10 +44,15 @@ export function eveningEnd(now: Date): Date {
   return end;
 }
 
-/** "Later today", "Tomorrow", a weekday within six days (so a weekday name never means the same day next week), else null. */
+/**
+ * "Tonight" for what comes due before this evening ends (eveningEnd, the close's own count of what is due tonight, so a
+ * card made at ten to midnight is not "Tomorrow" and one made at two in the morning is not "Later today"), then "Later
+ * today", "Tomorrow", a weekday within six days (so a weekday name never means the same day next week), else null.
+ */
 export function returnDay(due: Date, now: Date): string | null {
   const days = Math.round((startOfDay(due) - startOfDay(now)) / 86_400_000);
   if (days < 0 || days > 6) return null;
+  if (due.getTime() <= eveningEnd(now).getTime()) return "Tonight";
   if (days === 0) return "Later today";
   if (days === 1) return "Tomorrow";
   return WEEKDAYS[due.getDay()];

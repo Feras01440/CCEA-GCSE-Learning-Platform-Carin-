@@ -136,7 +136,8 @@ describe("inlineLede: a stacked fraction in the hero's lede takes the inline siz
     const bundle = JSON.parse(readFileSync(path.resolve(__dirname, "../../../public/content/further-maths/fm.u1.algebraic-fractions-simplify.json"), "utf8")) as { noteBlocks: unknown[] };
     const lede = heroDataFor(bundle.noteBlocks).lede;
     expect(inlineLede(lede)).not.toMatch(/\\dfrac/);
-    expect(inlineLede(lede).replace(/\\frac/g, "\\dfrac")).toBe(lede);
+    // Only a stacked fraction changes size; the lede is otherwise the note's, word for word (it is authored at \\frac now).
+    expect(inlineLede(lede)).toBe(lede.replace(/\\dfrac/g, "\\frac"));
   });
 });
 
@@ -183,11 +184,11 @@ describe("the hero's promise: each way in states its own numbers, named, from it
     // Slides: the deck's own cards and minutes, the numbers on its title card and its Start button.
     expect(slides.size).toBe(`${deck.cards} cards`);
     expect(slides.minutes).toBe(`about ${deck.minutes} minutes`);
-    // The note's video has no stated length: both ways name it, neither guesses it, and the deck agrees.
-    expect(heroData.untimedVideos).toBe(1);
+    // The note's video states its length now (5 min 41 s): both ways count it in their minutes, and neither adds "plus a video".
+    expect(heroData.untimedVideos).toBe(0);
     expect(deck.untimedVideos).toBe(heroData.untimedVideos);
-    expect(slides.plus).toBe("plus a video");
-    expect(read.plus).toBe("plus a video");
+    expect(slides.plus).toBeNull();
+    expect(read.plus).toBeNull();
   });
 });
 

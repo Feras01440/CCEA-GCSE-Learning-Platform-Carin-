@@ -5,9 +5,9 @@
  * outlines, one accent element, labels on the figure, and every figure an object to act on where the card asks for
  * one. Ported from the approved canvas (scratchpad/mockups-v2/art.mjs: figCancel, figTap, figSubstitute, recapGlyph),
  * with one correction the canvas needed too (audit MK-05, LD-08, CT-10): a strike means "divides out of both lines",
- * so 2x and 4, which share a factor of 2 and are not the same factor, each lose their 2 and keep the rest (x on top, 2
- * underneath). What is left unstruck is exactly the answer, x over 2(x − 5), in the idea's drawing and on the card she
- * acts on alike. The mathematics is in ./afs-model.ts, tested on its own.
+ * so 3x and 6, which share a factor of 3 and are not the same factor, each lose their 3 and keep the rest (x on top, 2
+ * underneath). What is left unstruck is exactly the answer, x over 2(x − 7), in the idea's drawing and on the card she
+ * acts on alike: the note's own figure since the content pass of 25 Sep 2026 (see ./afs-model.ts). The mathematics is in ./afs-model.ts, tested on its own.
  *
  * Colours are the tokens: the subject accent for the thing the sentence is about, ink for the rest, fern for what is
  * right, the warm neutral for not yet. Text inside a figure is Literata for the maths and Inter for a label, sized
@@ -25,7 +25,7 @@ const UI = "var(--font-inter), ui-sans-serif, system-ui, sans-serif";
 /**
  * A factor drawn as a pill: a rounded rectangle with the expression inside. `struck`: the whole factor divides out (a
  * diagonal in the accent across it). `split`: a number whose common factor divides out: the factor is struck, "×"
- * and what is left stay, so 2x reads 2̶ × x.
+ * and what is left stay, so 3x reads 3̶ × x.
  */
 function Pill({ x, y, w, text, state = "", split, h = 34, fs = 18 }: { x: number; y: number; w: number; text: string; state?: "" | "struck" | "split"; split?: { factor: string; left: string }; h?: number; fs?: number }) {
   const stroke = state === "" ? "var(--line-2)" : "var(--accent)";
@@ -61,29 +61,29 @@ function Pill({ x, y, w, text, state = "", split, h = 34, fs = 18 }: { x: number
 const Vinculum = ({ x1, x2, y }: { x1: number; x2: number; y: number }) => <path d={`M${x1} ${y} L${x2} ${y}`} stroke="var(--ink)" strokeWidth={2} strokeLinecap="round" />;
 
 /**
- * The idea figure: 2x(x + 5) over 4(x + 5)(x − 5), with every factor the two lines share divided out, the bracket whole
- * and a 2 out of 2x and out of 4, equals x over 2(x − 5), which is what is left. On the title card (`variant="title"`) it
+ * The idea figure: 3x(x + 7) over 6(x + 7)(x − 7), with every factor the two lines share divided out, the bracket whole
+ * and a 3 out of 3x and out of 6, equals x over 2(x − 7), which is what is left. On the title card (`variant="title"`) it
  * carries no label inside the drawing: the lede says it, and at the title's 248 px width a 15-unit label would render
  * under the 13 px floor.
  */
 export function FigCancel({ result = true, variant = "idea", className }: { result?: boolean; variant?: "title" | "idea"; className?: string }) {
-  const two = pillOf("t-2x").split!;
-  const four = pillOf("b-4").split!;
+  const three = pillOf("t-3x").split!;
+  const six = pillOf("b-6").split!;
   return (
     <svg
       viewBox={variant === "title" ? "0 0 340 140" : "0 0 340 170"}
       role="img"
-      aria-label="2x(x + 5) over 4(x + 5)(x − 5). The (x + 5) on each line is struck through, and a 2 is struck out of 2x and out of 4, leaving x on top and 2(x − 5) underneath: x over 2(x − 5). Only a factor divides out."
+      aria-label="3x(x + 7) over 6(x + 7)(x − 7). The (x + 7) on each line is struck through, and a 3 is struck out of 3x and out of 6, leaving x on top and 2(x − 7) underneath: x over 2(x − 7). Only a factor divides out."
       // Up to the canvas's 560 px, so it fills the Read hero's wide stage (audit CD-09); a Slides host caps it smaller.
       className={clsx("block h-auto w-full max-w-[560px]", className)}
       data-figure="afs.cancel"
     >
-      <Pill x={12} y={24} w={58} text="2x" state="split" split={two} />
-      <Pill x={76} y={24} w={78} text="(x + 5)" state="struck" />
+      <Pill x={12} y={24} w={58} text="3x" state="split" split={three} />
+      <Pill x={76} y={24} w={78} text="(x + 7)" state="struck" />
       <Vinculum x1={8} x2={242} y={78} />
-      <Pill x={12} y={96} w={58} text="4" state="split" split={four} />
-      <Pill x={76} y={96} w={78} text="(x + 5)" state="struck" />
-      <Pill x={160} y={96} w={78} text="(x − 5)" />
+      <Pill x={12} y={96} w={58} text="6" state="split" split={six} />
+      <Pill x={76} y={96} w={78} text="(x + 7)" state="struck" />
+      <Pill x={160} y={96} w={78} text="(x − 7)" />
       {result && (
         <g>
           <text x={250} y={86} fontSize={22} fill="var(--ink)" fontFamily={MATHS}>
@@ -134,7 +134,7 @@ function StrikeMark({ animate }: { animate: boolean }) {
 
 /**
  * The tap-to-cancel card's body. Pairing is the teaching: a factor must have a match on the other line. She taps one
- * pill (pending, an accent ring), then a pill on the other line: a bracket on both lines strikes whole; 2x with 4 strikes
+ * pill (pending, an accent ring), then a pill on the other line: a bracket on both lines strikes whole; 3x with 6 strikes
  * the 2 out of each and leaves x and 2 (the `react` motion, 250 ms); a mismatch clears the pending pill and says why in
  * one line. Check marks: every shared factor divided out and nothing else, and the simplified fraction rises in; or
  * what still divides both lines is lit in fern and named, the answer is shown, and the lit pills stay live so she can
@@ -253,7 +253,7 @@ export function TapToCancel({
     checked === null
       ? note ?? "Tap a factor on top, then its match underneath."
       : checked.correct
-        ? "Both lines shared (x + 5) and a factor of 2. With both gone, x and 2(x − 5) share nothing: that is the answer."
+        ? "Both lines shared (x + 7) and a factor of 3. With both gone, x and 2(x − 7) share nothing: that is the answer."
         : allGone
           ? "Finished: nothing is shared by both lines any more."
           : note ?? `${checkTap(state).diagnosis ?? "Something is still shared."} Tap the lit ${state.lit.length > 2 ? "pairs" : "pair"} to finish it.`;
@@ -263,7 +263,7 @@ export function TapToCancel({
       <div className="rounded-[12px] border border-line bg-surface p-4 lg:border-0 lg:bg-[var(--tint-wash)]" data-stage>
         <div role="group" aria-labelledby={groupId} className="flex flex-col items-start gap-2">
           <span id={groupId} className="sr-only">
-            The fraction 2x(x + 5) over 4(x + 5)(x − 5), each factor a button
+            The fraction 3x(x + 7) over 6(x + 7)(x − 7), each factor a button
           </span>
           <div className="flex flex-wrap items-center gap-2">{TOP.map(pill)}</div>
           <div className="h-[2px] w-[min(100%,300px)] rounded bg-ink" aria-hidden />
@@ -345,7 +345,7 @@ export function Substitute({ hers, correct }: { hers: string; correct: boolean }
 }
 
 /* ------------------------------------------------------------------------------------------------------------ */
-/* Recap glyphs: factorise, cancel, check the numbers.                                                             */
+/* Recap glyphs: factorise, cancel, check the numbers, turn a division into a multiplication.                       */
 
 export function RecapGlyph({ kind, size = 44 }: { kind: string; size?: number }) {
   const box = { width: size, height: size, viewBox: "0 0 44 44", "aria-hidden": true as const, className: "shrink-0" };
@@ -366,6 +366,20 @@ export function RecapGlyph({ kind, size = 44 }: { kind: string; size?: number })
         <rect x={9} y={25} width={26} height={12} rx={6} fill="var(--surface)" stroke="var(--accent)" strokeWidth={1.6} />
         <path d="M7 22 L37 22" stroke="var(--ink)" strokeWidth={1.6} />
         <path d="M12 36 L32 8" stroke="var(--accent)" strokeWidth={2.8} strokeLinecap="round" />
+      </svg>
+    );
+  // "Turn a division into a multiplication first": ÷ becomes ×, the accent on what she writes.
+  if (kind === "flip")
+    return (
+      <svg {...box} data-glyph="flip">
+        <rect x={1} y={1} width={42} height={42} rx={10} fill="var(--tint-wash)" />
+        <text x={12} y={28} textAnchor="middle" fontSize={18} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
+          ÷
+        </text>
+        <path d="M19 22 L25.5 22 M22.5 18.5 L26 22 L22.5 25.5" stroke="var(--ink-2)" strokeWidth={1.6} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <text x={33} y={28} textAnchor="middle" fontSize={18} fontWeight={600} fill="var(--accent)" fontFamily={MATHS}>
+          ×
+        </text>
       </svg>
     );
   // "Check the numbers": 2 over 4 is still 1 over 2. No tick: fern means right, and 2 over 4 is not finished (audit CT-09).

@@ -26,7 +26,8 @@ export const ENRICHMENT: Record<string, SlidesEnrichmentSpec> = {
       "idea:why-cancelling-works-and-when-it-does-not:1": "afs.cancel",
     },
     reactions: { g2: "afs.substitute" },
-    recapGlyphs: ["factorise", "cancel", "numbers"],
+    // One glyph per line of the note's recap, in its order: factorise, cancel, check the numbers, turn ÷ into ×.
+    recapGlyphs: ["factorise", "cancel", "numbers", "flip"],
   },
 };
 

@@ -28,6 +28,11 @@ export const ILLUSTRATIONS: Record<string, ComponentType<{ className?: string; v
   "afs.cancel": FigCancel,
 };
 
+/** What each registered illustration shows, said under it on an idea card; it names the drawing's own factors. */
+export const ILLUSTRATION_CAPTIONS: Record<string, string> = {
+  "afs.cancel": "Both lines are multiplied by 3 and by (x + 7), so both divide out. A term never does.",
+};
+
 export const INTERACTIONS: Record<string, { Component: ComponentType<InteractionProps>; title: string; verb: string; caption: string }> = {
   "afs.tap-to-cancel": {
     Component: TapToCancel,

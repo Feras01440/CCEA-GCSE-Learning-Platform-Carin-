@@ -43,30 +43,25 @@ const choiceGates = (blocks: readonly unknown[]): GateBlock[] =>
 const TRIAL = NOTES.find((n) => n.topicId === "fm.u1.algebraic-fractions-simplify")!;
 
 describe("the trial topic: the owner's finding that the right answer was nearly always A", () => {
-  it("spreads the seven right answers over A, B and C, never more than three in one place", () => {
+  it("spreads the eight right answers over A, B and C, never more than three in one place", () => {
     const placed = deckGatePlacements(TRIAL.blocks);
-    expect([...placed.keys()]).toEqual(["g1", "g2", "g7", "g3", "g4", "g5", "g6"]);
+    expect([...placed.keys()]).toEqual(["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"]);
     const at = [...placed.values()].map((p) => p.answerAt);
     const counts = [0, 1, 2].map((p) => at.filter((a) => a === p).length);
-    // Seven gates in three places: 3, 2, 2 is the best there is, and two of the seven are held at A (below).
+    // Eight gates in three places: 3, 3, 2 is the best there is.
     expect(Math.max(...counts)).toBeLessThanOrEqual(3);
     expect(Math.min(...counts)).toBeGreaterThanOrEqual(2);
-    // The seeded shuffle alone had put five of the seven at A and none at C (build 7, measured 24 Sep 23:59).
+    // As authored, seven of the eight put the right answer first; the seeded shuffle had put five of seven at A (build 7).
+    expect(choiceGates(TRIAL.blocks).filter((g) => g.options![0] === g.answer)).toHaveLength(7);
     expect(counts[0]).toBeLessThan(5);
   });
 
-  it("keeps g4 and g5 in their authored order, because their explanations name the options by place", () => {
+  it("frees every gate to move, because no explanation now names an option by its place", () => {
+    // The content pass of 25 Sep 2026 rewrote g4's explanation ("The second option is that same line…") and withdrew g5,
+    // so nothing in the note is true only in the authored order; pinning is still tested over every note below.
     const placed = deckGatePlacements(TRIAL.blocks);
-    const byId = new Map(choiceGates(TRIAL.blocks).map((g) => [g.id, g]));
-    for (const id of ["g4", "g5"]) {
-      expect(placed.get(id)).toMatchObject({ pinned: true, order: byId.get(id)!.options });
-    }
-    // g4's explanation, verbatim: true only as authored.
-    expect(positionalWording(byId.get("g4")!.explain)).toBe(
-      "The second option is that same line before any cancelling; the third strikes out the two $x^{2}$ terms, which are terms of a sum.",
-    );
-    // The other five are free to move.
-    expect([...placed.entries()].filter(([, p]) => !p.pinned).map(([id]) => id)).toEqual(["g1", "g2", "g7", "g3", "g6"]);
+    for (const g of choiceGates(TRIAL.blocks)) expect(positionalWording(g.explain), g.id).toBeNull();
+    expect([...placed.values()].every((p) => !p.pinned)).toBe(true);
   });
 });
 
@@ -220,7 +215,7 @@ describe("the gate asked once more before the recap (Slides' retry)", () => {
 describe("how an option's maths is set, in Slides and in Read (audit LD-16)", () => {
   it("sets a stacked fraction at text size, and leaves the value as authored for marking", () => {
     const g4 = choiceGates(TRIAL.blocks).find((g) => g.id === "g4")!;
-    expect(g4.options!.map(optionTex)).toEqual(["$\\dfrac{x+2}{x-2}$", "$\\dfrac{(x+5)(x+2)}{(x+5)(x-2)}$", "$\\dfrac{7x+10}{3x-10}$"]);
+    expect(g4.options!.map(optionTex)).toEqual(["$\\dfrac{x+2}{x-2}$", "$\\dfrac{(x+7)(x+2)}{(x+7)(x-2)}$", "$\\dfrac{9x+14}{5x-14}$"]);
     for (const opt of g4.options!) expect(markGate(g4, opt)).toBe(opt === g4.answer);
     expect(optionTex("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words")).toBe("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words");
   });

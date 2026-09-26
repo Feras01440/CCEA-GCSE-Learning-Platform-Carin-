@@ -259,6 +259,25 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   }, [go, index]);
 
   /* ---- the gate --------------------------------------------------------------------------------------- */
+  // After Check the verdict's last line is brought up above the foot (audit LD-14): on a phone a long explanation ends
+  // under it, and the feedback is what the check is for. The least scroll that shows it, never past the verdict's own
+  // top; only after a Check, so a card she comes back to still starts at its top.
+  const revealVerdict = useRef(false);
+  useEffect(() => {
+    if (!revealVerdict.current || !gateAnswer) return;
+    revealVerdict.current = false;
+    const body = cardRef.current;
+    const verdict = body?.querySelector<HTMLElement>("[data-verdict]");
+    if (!body || !verdict) return;
+    const b = body.getBoundingClientRect();
+    const v = verdict.getBoundingClientRect();
+    const below = v.bottom + (parseFloat(getComputedStyle(body).paddingBottom) || 0) - b.bottom;
+    const by = Math.min(below, v.top - b.top);
+    if (by <= 0) return;
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    body.scrollBy({ top: by, behavior: still ? "auto" : "smooth" });
+  }, [gateAnswer]);
+
   const checkGate = useCallback(() => {
     if (card.kind !== "gate" || gateAnswer !== null) return;
     const raw = (selected[card.key] ?? "").trim();
@@ -266,6 +285,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     const correct = markGate(card.gate, raw);
     const id = card.gate.id;
     haptic();
+    revealVerdict.current = true;
     if (card.retry) {
       setAnswers((a) => ({ ...a, [`retry:${id}`]: { answer: raw, correct, record: "retry" } }));
       return;

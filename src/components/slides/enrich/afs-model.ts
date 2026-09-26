@@ -1,15 +1,19 @@
 /**
  * The mathematics behind the trial topic's drawings (fm1/algebraic-fractions-simplify), kept pure so it can be tested
- * without a browser: what each pill of 2x(x + 5) over 4(x + 5)(x − 5) is, what a pair of taps does, what Check finds,
+ * without a browser: what each pill of 3x(x + 7) over 6(x + 7)(x − 7) is, what a pair of taps does, what Check finds,
  * and what the g2 consequence shows for the option she chose.
  *
  * The rule the drawing must never break (audit MK-05, LD-08, CT-10): a strike means "divides out of both lines". A
- * bracket that is on both lines is struck whole. 2x and 4 are not the same factor; what they share is a factor of 2, so
- * pairing them strikes the 2 out of each and leaves x on top and 2 underneath, and the answer x over 2(x − 5) is exactly
+ * bracket that is on both lines is struck whole. 3x and 6 are not the same factor; what they share is a factor of 3, so
+ * pairing them strikes the 3 out of each and leaves x on top and 2 underneath, and the answer x over 2(x − 7) is exactly
  * what is left unstruck.
+ *
+ * The fraction is the note's own figure (block 1, the hero's drawing in Read): the content pass of 25 Sep 2026 moved the
+ * note off 2x(x + 5) over 4(x + 5)(x − 5), which is worked example 1 and would have solved it before she tried it, so the
+ * drawings follow the note (cloud session, 26 Sep 2026).
  */
 
-export type PillId = "t-2x" | "t-b" | "b-4" | "b-b" | "b-m";
+export type PillId = "t-3x" | "t-b" | "b-6" | "b-b" | "b-m";
 
 export interface PillSpec {
   id: PillId;
@@ -23,22 +27,22 @@ export interface PillSpec {
 }
 
 export const TOP: readonly PillSpec[] = [
-  { id: "t-2x", line: "top", text: "2x", match: "2", split: { factor: "2", left: "x" } },
-  { id: "t-b", line: "top", text: "(x + 5)", match: "(x + 5)" },
+  { id: "t-3x", line: "top", text: "3x", match: "3", split: { factor: "3", left: "x" } },
+  { id: "t-b", line: "top", text: "(x + 7)", match: "(x + 7)" },
 ];
 export const BOTTOM: readonly PillSpec[] = [
-  { id: "b-4", line: "bottom", text: "4", match: "2", split: { factor: "2", left: "2" } },
-  { id: "b-b", line: "bottom", text: "(x + 5)", match: "(x + 5)" },
-  { id: "b-m", line: "bottom", text: "(x − 5)", match: "(x − 5)" },
+  { id: "b-6", line: "bottom", text: "6", match: "3", split: { factor: "3", left: "2" } },
+  { id: "b-b", line: "bottom", text: "(x + 7)", match: "(x + 7)" },
+  { id: "b-m", line: "bottom", text: "(x − 7)", match: "(x − 7)" },
 ];
 export const PILLS: readonly PillSpec[] = [...TOP, ...BOTTOM];
-/** Everything the two lines share: the bracket, and a factor of 2 (from 2x and from 4). */
-export const SHARED: readonly PillId[] = ["t-2x", "t-b", "b-4", "b-b"];
+/** Everything the two lines share: the bracket, and a factor of 3 (from 3x and from 6). */
+export const SHARED: readonly PillId[] = ["t-3x", "t-b", "b-6", "b-b"];
 
 export const pillOf = (id: PillId): PillSpec => PILLS.find((p) => p.id === id)!;
 
 /** The simplified fraction: what is left unstruck on each line once every shared factor is gone. */
-export const RESULT = { top: "x", bottom: "2(x − 5)" } as const;
+export const RESULT = { top: "x", bottom: "2(x − 7)" } as const;
 
 export interface TapState {
   /** Pills acted on: a bracket struck whole, or a number whose shared factor is struck out of it. */
@@ -70,8 +74,8 @@ export function tapPair(state: TapState, pending: PillId, id: PillId): { state: 
   const next: TapState = { struck, lit: state.lit.filter((l) => l !== first.id && l !== second.id) };
   const left = SHARED.filter((k) => !struck.includes(k));
   const numbersNow = first.split !== undefined;
-  const said = numbersNow ? "2x is 2 × x and 4 is 2 × 2: the 2 divides out of both, leaving x and 2." : "(x + 5) is on both lines, so it divides out.";
-  const then = left.length === 0 ? "Nothing is shared any more. Press Check." : numbersNow ? "Now the bracket both lines share." : "One more: what divides both 2x and 4?";
+  const said = numbersNow ? "3x is 3 × x and 6 is 3 × 2: the 3 divides out of both, leaving x and 2." : "(x + 7) is on both lines, so it divides out.";
+  const then = left.length === 0 ? "Nothing is shared any more. Press Check." : numbersNow ? "Now the bracket both lines share." : "One more: what divides both 3x and 6?";
   return { state: next, pending: null, note: `${said} ${then}` };
 }
 
@@ -81,15 +85,15 @@ export function checkTap(state: TapState): { correct: boolean; lit: PillId[]; di
   const extra = state.struck.filter((k) => !SHARED.includes(k));
   const correct = missing.length === 0 && extra.length === 0;
   const bracket = missing.includes("t-b") || missing.includes("b-b");
-  const number = missing.includes("t-2x") || missing.includes("b-4");
+  const number = missing.includes("t-3x") || missing.includes("b-6");
   const diagnosis = correct
     ? null
     : bracket && number
-      ? "(x + 5) and a factor of 2 still divide both lines."
+      ? "(x + 7) and a factor of 3 still divide both lines."
       : bracket
-        ? "(x + 5) still divides both lines."
+        ? "(x + 7) still divides both lines."
         : number
-          ? "A factor of 2 still divides both 2x and 4."
+          ? "A factor of 3 still divides both 3x and 6."
           : "Something struck was not on both lines.";
   return { correct, lit: missing, diagnosis };
 }

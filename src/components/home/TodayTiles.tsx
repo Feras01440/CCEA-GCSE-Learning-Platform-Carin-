@@ -164,7 +164,9 @@ export function TodayTiles() {
   const companion = held.current;
   const letterOwed = companion?.flags.firstLetterDue === true;
 
-  const loading = plan === undefined || due === undefined;
+  // Her mastery rows decide the next step, so the tile waits for them too: otherwise its Learn link reads /learn/ at
+  // first paint and turns into the topic a moment later, under her finger.
+  const loading = plan === undefined || due === undefined || mastery === undefined;
   // The tile's own words (tonight-copy.ts): the fact, then at most two lines of advice. Rowan's line under them is
   // its own and never repeats one of these sentences (tonight-copy.test.ts).
   const sublines = tonightSublines({ due: due ?? 0, gentle, firstWeek });
