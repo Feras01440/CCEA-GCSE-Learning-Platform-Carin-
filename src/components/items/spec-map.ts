@@ -14,7 +14,7 @@ import { formatNumber } from "@/lib/marking/numeric";
 
 /** Graph plots the item components mark automatically; only "best-fit" still self-marks. */
 const PLOT_AUTO = new Set(["transformation", "points-line", "curve", "histogram", "box", "region"]);
-import { formatValue } from "./format";
+import { formatValue, spellInForm, type FormSpelling, type SpellableForm } from "./format";
 
 export type NumericAnswerSpec = Extract<AnswerSpec, { kind: "numeric" }>;
 export type AlgebraicAnswerSpec = Extract<AnswerSpec, { kind: "algebraic" }>;
@@ -112,6 +112,30 @@ function instructedValue(value: number, tolerance: { type: string; places?: numb
   return formatValue(value);
 }
 
+const SPELLABLE: readonly SpellableForm[] = ["fraction", "mixed", "surd", "pi", "standardForm"];
+
+/**
+ * The expected value in the form the question demands, when the decimal would mislead: a part that does not accept a
+ * decimal is shown in its first spellable form (7/11, 3√5, 49π, 2.7 × 10³), and a part that accepts a fraction is shown
+ * as one where its decimal would run past six places (2/3, never 0.666666666667). Null keeps the decimal.
+ */
+export function demandedForm(spec: NumericAnswerSpec, shown: string): FormSpelling | null {
+  const forms = spec.acceptForms.filter((f): f is SpellableForm => (SPELLABLE as readonly string[]).includes(f));
+  if (!spec.acceptForms.includes("decimal")) {
+    for (const f of forms) {
+      const s = spellInForm(spec.value, f);
+      if (s) return s;
+    }
+    return null;
+  }
+  const places = /\.(\d+)$/.exec(shown)?.[1]?.length ?? 0;
+  if (places > 6 && (forms.includes("fraction") || forms.includes("mixed"))) {
+    const s = spellInForm(spec.value, forms.includes("fraction") ? "fraction" : "mixed");
+    if (s && !/^-?\d+$/.test(s.plain)) return s;
+  }
+  return null;
+}
+
 /** What the feedback card shows as the expected answer. May contain $…$ for maths. */
 export function expectedDisplay(spec: AnswerSpec, opts: NumericSpecOptions = {}): string {
   switch (spec.kind) {
@@ -121,7 +145,8 @@ export function expectedDisplay(spec: AnswerSpec, opts: NumericSpecOptions = {})
       if (spec.tolerance.type === "range") {
         return `${formatValue(spec.tolerance.min)} to ${formatValue(spec.tolerance.max)}${unit}`;
       }
-      return `${v}${unit}`;
+      const inForm = demandedForm(spec, v);
+      return inForm ? `$${inForm.tex}$${unit}` : `${v}${unit}`;
     }
     case "algebraic":
       // A fraction at display size: inline \frac set the expected answer at about 11.5 px beside 15 px text (MK-13).

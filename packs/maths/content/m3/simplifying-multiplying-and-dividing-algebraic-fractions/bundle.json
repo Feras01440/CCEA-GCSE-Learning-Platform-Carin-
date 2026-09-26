@@ -2002,7 +2002,7 @@
           "answer": {
             "kind": "algebraic",
             "latex": "\\frac{a+2}{b-3}",
-            "equivalence": "equivalent",
+            "equivalence": "simplifiedOnly",
             "variables": [
               "a",
               "b"
@@ -4622,6 +4622,14 @@
           "result": "pass",
           "detail": "Every $…$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the banned tokens (the W-word for an incorrect answer, the 9-1 grade label) do not occur",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "scripts/qa/marking-guard.mts (cloud session, 26 Sep 2026)",
+          "result": "pass",
+          "detail": "The question typed back, (ab + 3a + 2b + 6)/(b² − 9), was marked right with all 4 marks: the spec asked for equivalence only and the engine's fraction check cannot see a common factor of two variables. The spec now asks for the simplified answer (simplifiedOnly): (a + 2)/(b − 3) and (2 + a)/(b − 3) are right; the question, and (a + 2)(b + 3) over (b + 3)(b − 3), are not.",
+          "at": "2026-09-26T01:28:00Z",
           "by": "claude"
         }
       ],

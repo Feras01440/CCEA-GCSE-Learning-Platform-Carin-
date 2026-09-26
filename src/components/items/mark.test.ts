@@ -868,3 +868,34 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
     expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(0);
   });
 });
+
+describe("a matched common error never pays a wrong answer in full (the marking guard, 26 Sep 2026)", () => {
+  test("an error whose typical marks equal the tariff pays one mark less", () => {
+    const spec = { kind: "algebraic", latex: "x+2", equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as const;
+    const commonErrors = [
+      { misconception: "fm.algfrac.not-cancelled", pattern: { kind: "algebraic", latex: "\\frac{(x-2)(x+2)(x+1)}{(x+1)(x-2)}" }, feedback: "Nothing cancelled yet.", marksTypicallyEarned: 2 },
+    ] as const;
+    const r = markAnswer("\\frac{(x-2)(x+2)(x+1)}{(x+1)(x-2)}", spec as never, { marks: 2, commonErrors: commonErrors as never, prompt: "Simplify fully" });
+    expect(r.correct).toBe(false);
+    expect(r.marksAwarded).toBe(1);
+    expect(r.tags).toContain("fm.algfrac.not-cancelled");
+  });
+  test("a numeric error written with the full tariff pays one mark less, and a right answer still pays in full", () => {
+    const spec = { kind: "numeric", value: 132, tolerance: { type: "absolute", value: 0.5 }, unit: "m", unitRequired: false, acceptForms: ["decimal"] } as const;
+    const commonErrors = [{ misconception: "p1.speed.ecf", pattern: { kind: "numeric", value: 264 }, feedback: "From 22 m/s.", marksTypicallyEarned: 3 }] as const;
+    expect(markAnswer("264", spec as never, { marks: 3, commonErrors: commonErrors as never }).marksAwarded).toBe(2);
+    expect(markAnswer("132", spec as never, { marks: 3, commonErrors: commonErrors as never }).marksAwarded).toBe(3);
+  });
+});
+
+describe("an accepted common error is a right answer with a note (the marking guard, 26 Sep 2026)", () => {
+  test("a unit the part does not require, flagged by an accepted error, earns every mark and says why", () => {
+    const spec = { kind: "numeric", value: 2.5, tolerance: { type: "exact" }, unit: "m/s²", unitRequired: false, acceptForms: ["decimal"] } as const;
+    const commonErrors = [
+      { misconception: "sci.physics.unit-not-given", pattern: { kind: "text", regex: "(^|=)\\s*2\\.50*\\s*(m\\s*/\\s*s)\\s*$" }, feedback: "The number is right; m/s is the unit of speed.", marksTypicallyEarned: 3, accepted: true },
+    ] as const;
+    const r = markAnswer("2.5 m/s", spec as never, { marks: 3, commonErrors: commonErrors as never });
+    expect(r).toMatchObject({ correct: true, marksAwarded: 3, explanation: "The number is right; m/s is the unit of speed." });
+    expect(r.tags).toContain("sci.physics.unit-not-given");
+  });
+});

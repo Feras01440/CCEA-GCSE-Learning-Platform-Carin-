@@ -79,3 +79,107 @@ export function formatValue(value: number): string {
   if (!Number.isFinite(value)) return String(value);
   return String(Number(value.toPrecision(12)));
 }
+
+/**
+ * A value written in a form a question can demand, so the feedback card never prints "0.636363636364" for a question
+ * that asked for a fraction (cloud session, 26 Sep 2026: 95 parts and 19 twins showed a 12-digit decimal as the
+ * expected answer where the form was fraction, surd, π or standard form). `plain` is what she types on the answer line
+ * (the key strip's / √ π × ^), `tex` is how the card sets it. Null when the value has no clean spelling in that form.
+ */
+export interface FormSpelling {
+  plain: string;
+  tex: string;
+}
+
+export type SpellableForm = "fraction" | "mixed" | "surd" | "pi" | "standardForm";
+
+const close = (a: number, b: number) => Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
+
+/** The simplest p/q within 1e-9 of the value (continued fractions, denominator at most `maxDen`); null when none. */
+export function rationalOf(value: number, maxDen = 10_000): [number, number] | null {
+  if (!Number.isFinite(value)) return null;
+  const sign = value < 0 ? -1 : 1;
+  let x = Math.abs(value);
+  let [h0, h1, k0, k1] = [0, 1, 1, 0];
+  for (let i = 0; i < 40; i += 1) {
+    const a = Math.floor(x);
+    [h0, h1] = [h1, a * h1 + h0];
+    [k0, k1] = [k1, a * k1 + k0];
+    if (k1 > maxDen) return null;
+    if (close(h1 / k1, Math.abs(value))) return [sign * h1, k1];
+    const frac = x - a;
+    if (frac < 1e-12) break;
+    x = 1 / frac;
+  }
+  return close(h1 / k1, Math.abs(value)) && k1 <= maxDen ? [sign * h1, k1] : null;
+}
+
+const isSquarefree = (n: number) => {
+  for (let d = 2; d * d <= n; d += 1) if (n % (d * d) === 0) return false;
+  return true;
+};
+
+/** "p", "-p/q" and their TeX, with the sign in front. */
+function spellRational(p: number, q: number): FormSpelling {
+  const sign = p < 0 ? "-" : "";
+  const n = Math.abs(p);
+  if (q === 1) return { plain: `${sign}${n}`, tex: `${sign}${n}` };
+  return { plain: `${sign}${n}/${q}`, tex: `${sign}\\frac{${n}}{${q}}` };
+}
+
+/** A coefficient p/q in front of a symbol ("√3", "π"): "2√3", "√3/2", "3π/4"; the TeX puts the symbol on the top line. */
+function spellWithSymbol(p: number, q: number, plainSymbol: string, texSymbol: string): FormSpelling {
+  const sign = p < 0 ? "-" : "";
+  const n = Math.abs(p);
+  const top = n === 1 ? plainSymbol : `${n}${plainSymbol}`;
+  const texTop = n === 1 ? texSymbol : `${n}${texSymbol}`;
+  if (q === 1) return { plain: `${sign}${top}`, tex: `${sign}${texTop}` };
+  return { plain: `${sign}${top}/${q}`, tex: `${sign}\\frac{${texTop}}{${q}}` };
+}
+
+export function spellInForm(value: number, form: SpellableForm): FormSpelling | null {
+  if (!Number.isFinite(value)) return null;
+  switch (form) {
+    case "fraction": {
+      const r = rationalOf(value);
+      return r ? spellRational(r[0], r[1]) : null;
+    }
+    case "mixed": {
+      const r = rationalOf(value);
+      if (!r) return null;
+      const [p, q] = r;
+      if (q === 1 || Math.abs(p) < q) return spellRational(p, q);
+      const whole = Math.trunc(p / q);
+      const rest = Math.abs(p) - Math.abs(whole) * q;
+      return { plain: `${whole} ${rest}/${q}`, tex: `${whole}\\frac{${rest}}{${q}}` };
+    }
+    case "surd": {
+      const whole = rationalOf(value, 1000);
+      if (whole && whole[1] === 1) return spellRational(whole[0], 1);
+      for (let b = 2; b <= 2000; b += 1) {
+        if (!isSquarefree(b)) continue;
+        const r = rationalOf(value / Math.sqrt(b), 1000);
+        if (r) return spellWithSymbol(r[0], r[1], `√${b}`, `\\sqrt{${b}}`);
+      }
+      return null;
+    }
+    case "pi": {
+      const r = rationalOf(value / Math.PI, 1000);
+      return r ? spellWithSymbol(r[0], r[1], "π", "\\pi") : null;
+    }
+    case "standardForm": {
+      if (value === 0) return { plain: "0", tex: "0" };
+      let n = Math.floor(Math.log10(Math.abs(value)));
+      let a = Number((value / 10 ** n).toPrecision(10));
+      if (Math.abs(a) >= 10) {
+        a = Number((a / 10).toPrecision(10));
+        n += 1;
+      }
+      if (Math.abs(a) < 1) {
+        a = Number((a * 10).toPrecision(10));
+        n -= 1;
+      }
+      return { plain: `${a} × 10^${n}`, tex: `${a} \\times 10^{${n}}` };
+    }
+  }
+}

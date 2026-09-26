@@ -9,6 +9,8 @@ import {
   optionLetter,
   relativeTime,
   shortExaminerSource,
+  rationalOf,
+  spellInForm,
 } from "./format";
 
 describe("examiner sources", () => {
@@ -48,5 +50,40 @@ describe("small formatters", () => {
     expect(formatValue(0.1 + 0.2)).toBe("0.3");
     expect(formatValue(36.15)).toBe("36.15");
     expect(formatValue(25)).toBe("25");
+  });
+});
+
+describe("a value in the form the question demands (the expected answer on the feedback card)", () => {
+  test("rationals: the simplest p/q, signs in front, whole numbers bare", () => {
+    expect(rationalOf(7 / 11)).toEqual([7, 11]);
+    expect(rationalOf(-0.375)).toEqual([-3, 8]);
+    expect(rationalOf(4)).toEqual([4, 1]);
+    expect(rationalOf(Math.PI)).toBeNull();
+    expect(spellInForm(0.636363636363636, "fraction")).toEqual({ plain: "7/11", tex: "\\frac{7}{11}" });
+    expect(spellInForm(-0.375, "fraction")).toEqual({ plain: "-3/8", tex: "-\\frac{3}{8}" });
+    expect(spellInForm(Math.sqrt(2), "fraction")).toBeNull();
+  });
+  test("mixed numbers keep a proper fraction as it is", () => {
+    expect(spellInForm(32 / 3, "mixed")).toEqual({ plain: "10 2/3", tex: "10\\frac{2}{3}" });
+    expect(spellInForm(2 / 3, "mixed")).toEqual({ plain: "2/3", tex: "\\frac{2}{3}" });
+  });
+  test("surds: the coefficient in front, the smallest square-free root, a rationalised denominator", () => {
+    expect(spellInForm(3 * Math.sqrt(5), "surd")).toEqual({ plain: "3√5", tex: "3\\sqrt{5}" });
+    expect(spellInForm(Math.sqrt(72), "surd")).toEqual({ plain: "6√2", tex: "6\\sqrt{2}" });
+    expect(spellInForm(2 / Math.sqrt(3), "surd")).toEqual({ plain: "2√3/3", tex: "\\frac{2\\sqrt{3}}{3}" });
+    expect(spellInForm(Math.sqrt(2) / 4, "surd")).toEqual({ plain: "√2/4", tex: "\\frac{\\sqrt{2}}{4}" });
+    expect(spellInForm(9, "surd")).toEqual({ plain: "9", tex: "9" });
+  });
+  test("π: a rational multiple, with π on the top line", () => {
+    expect(spellInForm(49 * Math.PI, "pi")).toEqual({ plain: "49π", tex: "49\\pi" });
+    expect(spellInForm((2 * Math.PI) / 3, "pi")).toEqual({ plain: "2π/3", tex: "\\frac{2\\pi}{3}" });
+    expect(spellInForm(Math.PI, "pi")).toEqual({ plain: "π", tex: "\\pi" });
+    expect(spellInForm(Math.E, "pi")).toBeNull();
+  });
+  test("standard form: 1 ≤ a < 10, no float noise", () => {
+    expect(spellInForm(2700, "standardForm")).toEqual({ plain: "2.7 × 10^3", tex: "2.7 \\times 10^{3}" });
+    expect(spellInForm(0.0075, "standardForm")).toEqual({ plain: "7.5 × 10^-3", tex: "7.5 \\times 10^{-3}" });
+    expect(spellInForm(1.04e9, "standardForm")).toEqual({ plain: "1.04 × 10^9", tex: "1.04 \\times 10^{9}" });
+    expect(spellInForm(0.000405, "standardForm")?.plain).toBe("4.05 × 10^-4");
   });
 });

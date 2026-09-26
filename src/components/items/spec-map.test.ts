@@ -129,3 +129,22 @@ describe("expectedDisplay sets a fraction at display size (MK-13)", () => {
     expect(expectedDisplay({ kind: "algebraic", latex: "3(x+3)(x-3)", equivalence: "equivalent", variables: ["x"] })).toBe("$3(x+3)(x-3)$");
   });
 });
+
+describe("the expected answer in the form the question demands (cloud session, 26 Sep 2026)", () => {
+  const numeric = (value: number, acceptForms: string[], unit?: string) =>
+    ({ kind: "numeric", value, tolerance: { type: "absolute", value: 1e-9 }, unit, unitRequired: false, acceptForms }) as Parameters<typeof expectedDisplay>[0];
+  test("a fraction question shows the fraction, never twelve digits of a recurring decimal", () => {
+    expect(expectedDisplay(numeric(7 / 11, ["fraction"]))).toBe("$\\frac{7}{11}$");
+    expect(expectedDisplay(numeric(2 / 3, ["decimal", "fraction"]))).toBe("$\\frac{2}{3}$");
+    expect(expectedDisplay(numeric(0.25, ["decimal", "fraction"]))).toBe("0.25");
+    expect(expectedDisplay(numeric(2 / 3, ["decimal"]))).toBe("0.666666666667");
+  });
+  test("surd, π and standard-form questions show their form, with the unit after it", () => {
+    expect(expectedDisplay(numeric(3 * Math.sqrt(5), ["surd"], "cm"))).toBe("$3\\sqrt{5}$ cm");
+    expect(expectedDisplay(numeric(49 * Math.PI, ["pi"], "cm²"))).toBe("$49\\pi$ cm²");
+    expect(expectedDisplay(numeric(2700, ["standardForm"]))).toBe("$2.7 \\times 10^{3}$");
+  });
+  test("a value with no clean spelling in its form keeps the decimal", () => {
+    expect(expectedDisplay(numeric(Math.E, ["pi"]))).toBe("2.71828182846");
+  });
+});

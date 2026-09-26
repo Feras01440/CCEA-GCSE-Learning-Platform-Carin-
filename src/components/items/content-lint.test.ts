@@ -461,3 +461,17 @@ describe("figurePlain: the build warning reads the figure each mode shows", () =
     expect(figureLeakWarnings({ workedExamples: [we({ figure: plain, figurePlain: annotated })] }, "x")).toHaveLength(2);
   });
 });
+
+describe("a common error is never worth the whole part (the marking guard, 26 Sep 2026)", () => {
+  test("marksTypicallyEarned equal to the tariff is a problem; one less is not", () => {
+    const part = (typical: number) => ({
+      id: "b",
+      stem: "Calculate the distance.",
+      marks: 3,
+      answer: { kind: "numeric", value: 132, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] },
+      commonErrors: [{ misconception: "sci.speed.equations-confused", pattern: { kind: "numeric", value: 264 }, feedback: "…", marksTypicallyEarned: typical }],
+    });
+    expect(lintContent({ questions: [{ id: "q.x.0001", parts: [part(3)] }] }, "t").join("\n")).toMatch(/earns 3 of the part's 3 marks/);
+    expect(lintContent({ questions: [{ id: "q.x.0001", parts: [part(1)] }] }, "t").join("\n")).not.toMatch(/of the part's/);
+  });
+});

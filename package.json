@@ -26,7 +26,8 @@
     "sw:build": "node scripts/build-sw.mjs",
     "e2e": "playwright test",
     "e2e:serve": "serve out -l 3200",
-    "content:check": "tsx pipeline/build-content.mts --strict && node scripts/qa/lesson-v2.mjs",
+    "content:check": "tsx pipeline/build-content.mts --strict && node scripts/qa/lesson-v2.mjs && tsx scripts/qa/marking-guard.mts --quiet",
+    "marking:guard": "tsx scripts/qa/marking-guard.mts",
     "export:fix": "node scripts/fix-export.mjs"
   },
   "author": "",

@@ -311,6 +311,22 @@ export function lintContent(bundle: unknown, label: string): string[] {
     // A common error must not be the right answer.
     const answer = rec.answer && typeof rec.answer === "object" ? (rec.answer as Record<string, unknown>) : null;
     const errors = onlyObjects(rec.commonErrors);
+    // Nor worth the whole part: a wrong answer never collects every mark (the marker holds that line too; the marking
+    // guard, 26 Sep 2026, found four errors written with the full tariff). A value carried forward from an earlier
+    // part is `followThrough`, not a common error.
+    if (typeof rec.marks === "number") {
+      errors.forEach((e, i) => {
+        if (typeof e.marksTypicallyEarned !== "number") return;
+        if (e.accepted !== true && e.marksTypicallyEarned >= (rec.marks as number)) {
+          out.push(
+            `${where}: commonError ${i + 1} (${String(e.misconception)}) earns ${e.marksTypicallyEarned} of the part's ${rec.marks} marks; a wrong answer never earns every mark (set accepted: true if the scheme accepts it; a value carried forward is followThrough)`,
+          );
+        }
+        if (e.accepted === true && e.marksTypicallyEarned !== rec.marks) {
+          out.push(`${where}: commonError ${i + 1} (${String(e.misconception)}) is accepted, so it earns the part's ${rec.marks} marks; set marksTypicallyEarned to ${rec.marks}`);
+        }
+      });
+    }
     if (answer && errors.length > 0) {
       errors.forEach((e, i) => {
         const p = e.pattern && typeof e.pattern === "object" ? (e.pattern as Record<string, unknown>) : null;

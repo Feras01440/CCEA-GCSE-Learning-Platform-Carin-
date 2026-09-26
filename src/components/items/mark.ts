@@ -185,6 +185,25 @@ export function isFormTask(prompt: string | undefined, spec: AnswerSpec): boolea
   return FORM_TASK.test(prompt.replace(/\$[^$]*\$/g, " "));
 }
 
+/**
+ * The form a "simplify" stem demands of an algebraic fraction when the author set none (the marking guard, 26 Sep 2026:
+ * sixteen parts said "Simplify" or "Simplify fully" and paid the question typed back, or a fraction left uncancelled,
+ * every mark, because their specs asked for equivalence only). Read from the stem's words, as isFormTask reads them:
+ * "as a single fraction" demands one fraction; "simplify", "simplified", "simplest form" or "lowest terms" over a
+ * fraction (in the stem's maths or the answer) demands it in lowest terms. An explicit `form`, mustBeFactorised or
+ * mustBeExpanded always wins; so does `formTask: false`, which says the form is not what the part asks.
+ */
+export function inferredAlgebraForm(spec: AnswerSpec, prompt: string | undefined): "single-fraction" | "simplest-fraction" | null {
+  if (spec.kind !== "algebraic" || !prompt) return null;
+  if (spec.form || spec.mustBeFactorised || spec.mustBeExpanded || spec.formTask === false) return null;
+  if (spec.equivalence === "identical") return null;
+  const words = prompt.replace(/\$[^$]*\$/g, " ");
+  const fraction = /\\d?frac|\//.test(spec.latex) || /\$[^$]*\\d?frac/.test(prompt);
+  if (/\bas a single fraction\b/i.test(words)) return "single-fraction";
+  if (fraction && /\b(?:simplif(?:y|ied)|simplest form|lowest terms)\b/i.test(words)) return "simplest-fraction";
+  return null;
+}
+
 /** Function names that may be typed into a stem's maths without a backslash; their letters are not variables. */
 const MATHS_WORDS = new Set(["sin", "cos", "tan", "log", "ln", "exp", "lim", "max", "min", "mod", "det", "and", "or"]);
 
@@ -277,9 +296,25 @@ function withCommonError(
   // The named misconception is the diagnosis; the engine's near-miss guess would only muddy it.
   const { nearMiss: _dropped, ...rest } = base;
   void _dropped;
+  // An accepted response is right: every mark, and the author's note in place of a correction.
+  if (hit.accepted && !base.correct) {
+    return {
+      ...rest,
+      correct: true,
+      marksAwarded: base.marksAvailable,
+      explanation: hit.feedback,
+      tags: [...new Set([...(base.tags ?? []), hit.misconception])],
+      ...(hit.source ? { source: hit.source } : {}),
+    };
+  }
+  // A wrong answer never collects every mark, whatever the error "typically earns": the equation and element-by-element
+  // branches already hold that line (shareMarks, C2 D F05). An error whose typical marks equal the tariff is an authoring
+  // slip or a carried-forward value written as an error, and paid the part in full while marked wrong (the marking guard,
+  // 26 Sep 2026: FM1 multiply-divide q0001, expand-three-brackets q0001, P1 speed-equations q0003(b) twice).
+  const ceiling = base.correct ? base.marksAvailable : Math.max(0, base.marksAvailable - 1);
   return {
     ...rest,
-    marksAwarded: Math.min(base.marksAvailable, Math.max(base.marksAwarded, hit.marksTypicallyEarned)),
+    marksAwarded: Math.min(ceiling, Math.max(base.marksAwarded, hit.marksTypicallyEarned)),
     explanation: lead ? `${lead} ${hit.feedback}` : hit.feedback,
     tags: [...new Set([...(base.tags ?? []), hit.misconception])],
     ...(hit.source ? { source: hit.source } : {}),
@@ -389,7 +424,19 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
         const base: MarkResult = { correct: p.correct, marksAwarded: p.correct ? marks : 0, marksAvailable: marks, expected, explanation: p.feedback };
         return p.correct ? base : withCommonError(base, trimmed, opts, undefined, names);
       }
-      const v = checkAlgebraic(trimmed, toAlgebraSpec(spec));
+      const algebraSpec = toAlgebraSpec(spec);
+      let v = checkAlgebraic(trimmed, algebraSpec);
+      // A "simplify" stem over a fraction, with no form set: a right answer must also be in the form the stem asks for,
+      // unless the author's own answer is not (M3 q0001's scheme pays (4x − 2)/6 "or the equivalent (2x − 1)/3"). The
+      // inference only ever tightens a right verdict; it never replaces the spec's own check.
+      const inferred = v.correct ? inferredAlgebraForm(spec, opts.prompt) : null;
+      if (inferred) {
+        const formSpec = { ...algebraSpec, mode: "form" as const, form: inferred };
+        if (checkAlgebraic(spec.latex, formSpec).correct) {
+          const f = checkAlgebraic(trimmed, formSpec);
+          if (!f.correct) v = f;
+        }
+      }
       // The right expression in the wrong form (unsimplified, not yet a single log, not factorised) keeps every mark
       // but the last on a multi-mark part: the scheme's final mark is the form, the earlier ones the working.
       // Not where the form IS the task (MK-01 ruling, 25 Sep 2026: "simplify fully" with the question typed back was
@@ -461,6 +508,7 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       // diagnosis and the tag but never raises the marks to its "typically earned" figure: an answer that
       // contains only the misconception must not be paid for it.
       const diagnosed = withCommonError(base, trimmed, opts);
+      if (diagnosed.correct) return diagnosed;
       return { ...diagnosed, marksAwarded: base.marksAwarded };
     }
     case "text-long": {

@@ -732,6 +732,12 @@ export const CommonError = named(
     feedback: z.string().min(1),
     marksTypicallyEarned: z.int().nonnegative(),
     source: ExaminerSource.optional(),
+    /**
+     * The response is right: the scheme or the examiners accept it, and the feedback is a note, not a correction ("the
+     * examiners accepted a false origin on the diagram"; "m/s is the unit of speed, which (b) asks about"). It is marked
+     * right with every mark. Only such an error may set marksTypicallyEarned to the part's tariff (content-lint).
+     */
+    accepted: z.boolean().optional(),
   }),
   "CommonError",
 );
