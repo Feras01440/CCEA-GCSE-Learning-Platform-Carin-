@@ -16,7 +16,7 @@
   },
   {
     "type": "p",
-    "md": "A year group of 50 students is asked two questions. 27 play for a sports team, 18 play in the orchestra, and 7 put a hand up for both.\nAdd 27 and 18 and you get 45. But 12 of the 50 put no hand up at all, so fewer than 45 did at least one: the 7 were counted in each total."
+    "md": "A year group of 50 students is asked two questions. 27 play for a sports team, 18 play in the orchestra, and 7 put a hand up for both.\nThe 7 were counted in each total. A Venn diagram shows every student exactly once: fill it from the overlap outwards."
   },
   {
     "type": "figure",
@@ -25,8 +25,26 @@
     "caption": "The overlap holds the 7 students in both groups. Every student sits in exactly one region, so the four regions total 50."
   },
   {
-    "type": "p",
-    "md": "Fill a Venn diagram from the overlap outwards. The orchestra total is 18, and 7 of those are in the overlap, so $18 - 7 = 11$ go in the orchestra-only region."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Fill the orchestra side of the year group's Venn diagram: 18 play in the orchestra and 7 of them also play for a sports team.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Overlap: 7",
+        "decision": "The overlap first: the students who put a hand up twice."
+      },
+      {
+        "n": 2,
+        "working": "Orchestra only: $18 - 7 = 11$",
+        "decision": "The orchestra total includes the overlap, so take the overlap off to leave the rest of that circle."
+      },
+      {
+        "n": 3,
+        "working": "Check: $11 + 7 = 18$",
+        "decision": "The two regions of the circle add back to its total."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -34,7 +52,12 @@
     "kind": "number",
     "prompt": "On the year group's Venn diagram, how many of the 50 students play for a sports team but not in the orchestra? That region is left blank.",
     "answer": "20",
-    "explain": "$27 - 7 = 20$. The 27 sports players split into the 7 in the overlap and the 20 outside it, just as the orchestra side gave 11."
+    "explain": "As in step 2 of See it, take the overlap off the circle's total: $27 - 7 = 20$. The 27 sports players split into the 7 in the overlap and the 20 outside it.",
+    "twin": {
+      "prompt": "A club of 40: 22 swim, 15 cycle and 6 do both. How many swim but do not cycle?",
+      "answer": "16",
+      "explain": "The 22 swimmers include the 6 who also cycle, so $22 - 6 = 16$ swim only."
+    }
   },
   {
     "type": "h",
@@ -52,8 +75,26 @@
     "caption": "Adding the totals reaches 45, which is 7 too many. Taking the overlap off once leaves 38."
   },
   {
-    "type": "p",
-    "md": "Count the 'or' group region by region and nobody is counted twice: $20 + 7 + 11 = 38$. The two totals give $27 + 18 = 45$ instead."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Count the students in the year group who do at least one of the two, two ways.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Region by region: $20 + 7 + 11 = 38$",
+        "decision": "Each student in the 'or' group is counted once, in the one region they sit in."
+      },
+      {
+        "n": 2,
+        "working": "The two totals: $27 + 18 = 45$",
+        "decision": "Adding the circles' totals counts the overlap in each."
+      },
+      {
+        "n": 3,
+        "working": "$45 - 38 = 7$",
+        "decision": "The difference is exactly the overlap, counted a second time."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -66,7 +107,29 @@
       "The two totals should have been multiplied"
     ],
     "answer": "The 7 students in both groups are counted in each total",
-    "explain": "Each of those 7 appears once in the 27 and once again in the 18. Take them off once and 38 is left."
+    "explain": "Step 3 of See it: the gap between the two counts is the overlap. Each of those 7 appears once in the 27 and again in the 18; take them off once and 38 is left.",
+    "optionNotes": [
+      {
+        "option": "The 12 who do neither were added in by mistake",
+        "why": "The 12 are in neither total, so they cannot have pushed the sum up; the excess is the overlap.",
+        "misconception": "fm.prob.venn-total-not-used"
+      },
+      {
+        "option": "The two totals should have been multiplied",
+        "why": "Multiplying is for 'and' with independent events; an 'or' count adds the circles and takes the overlap off once.",
+        "misconception": "fm.prob.or-multiplied-instead-of-added"
+      }
+    ],
+    "twin": {
+      "prompt": "In a club, 22 swim and 15 cycle, which adds to 37, but only 31 do at least one. Why?",
+      "options": [
+        "The 6 who do both are counted in each total",
+        "The 9 who do neither were added in",
+        "The totals should have been multiplied"
+      ],
+      "answer": "The 6 who do both are counted in each total",
+      "explain": "37 is 6 more than 31: the 6 who swim and cycle are in both totals, so they were counted twice."
+    }
   },
   {
     "type": "h",
@@ -78,14 +141,33 @@
     "md": "Page 2 of the Unit 3 booklet prints $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$.\nAdd the two probabilities, then subtract the overlap, $P(A \\cap B)$, read 'A intersection B'. What is left is the probability of at least one."
   },
   {
-    "type": "p",
-    "md": "Probabilities work the same way. If $P(A) = 0.55$, $P(B) = 0.25$ and $P(A \\cap B) = 0.1$, then $P(A \\cup B)$ is $0.55 + 0.25 - 0.1 = 0.7$."
-  },
-  {
     "type": "callout",
     "kind": "why",
     "title": "Why subtract once and not twice?",
     "md": "Every student in the overlap was counted exactly twice, once in $P(A)$ and once in $P(B)$. Subtracting the overlap once brings each back to a single count; subtract twice and they vanish from the answer."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$P(A) = 0.55$, $P(B) = 0.25$ and $P(A \\cap B) = 0.1$. Find $P(A \\cup B)$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(A \\cup B) = 0.55 + 0.25 - 0.1$",
+        "decision": "The sheet's rule, with the three probabilities in place.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= 0.7$",
+        "decision": "Add the two, take the overlap off once.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -93,7 +175,12 @@
     "kind": "number",
     "prompt": "For the year group of 50, where 27 play for a sports team, 18 play in the orchestra and 7 do both, work out $P(\\text{sports team or orchestra})$. Give a fraction or a decimal.",
     "answer": "19/25 | 38/50 | 0.76",
-    "explain": "$\\dfrac{27}{50} + \\dfrac{18}{50} - \\dfrac{7}{50}$ is $\\dfrac{38}{50}$, which is 0.76. Leaving the overlap in would give 0.9."
+    "explain": "As in See it, add and take the overlap off once: $\\dfrac{27}{50} + \\dfrac{18}{50} - \\dfrac{7}{50}$ is $\\dfrac{38}{50}$, which is 0.76. Leaving the overlap in would give 0.9.",
+    "twin": {
+      "prompt": "A club of 40: 22 swim, 15 cycle and 6 do both. Work out $P(\\text{swims or cycles})$. Give a fraction or a decimal.",
+      "answer": "31/40 | 0.775",
+      "explain": "$\\dfrac{22}{40} + \\dfrac{15}{40} - \\dfrac{6}{40}$ is $\\dfrac{31}{40}$, which is 0.775."
+    }
   },
   {
     "type": "h",
@@ -102,13 +189,41 @@
   },
   {
     "type": "p",
-    "md": "Two events are **mutually exclusive** when they cannot both happen, so $P(A \\cap B) = 0$ and the rule loses its last term.\nA spinner with 8 equal sections has 3 red, 2 blue and 3 green. One spin cannot land red and blue at once, so $P(\\text{red or blue}) = \\dfrac{3}{8} + \\dfrac{2}{8}$, which is $\\dfrac{5}{8}$."
+    "md": "Two events are **mutually exclusive** when they cannot both happen, so $P(A \\cap B) = 0$ and the rule loses its last term."
   },
   {
     "type": "figure",
     "alt": "Two circles that do not touch, inside a rectangle. One holds 3, the other 2, and 3 sits outside both.",
     "svg": "<svg viewBox='0 0 360 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two circles that do not overlap: 3 red sections in one, 2 blue sections in the other and 3 green sections outside both'><title>Two circles that do not overlap: 3 red sections in one, 2 blue sections in the other and 3 green sections outside both</title><rect x='8' y='22' width='344' height='174' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='94' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='266' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='94' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Red</text><text x='266' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Blue</text><text x='94' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>3</text><text x='266' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>2</text><text x='180' y='188' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>3</text><text x='10' y='218' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>8 equal sections</text></svg>",
     "caption": "Mutually exclusive events are circles that do not overlap, so there is nothing to subtract."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A spinner with 8 equal sections has 3 red, 2 blue and 3 green. Find $P(\\text{red or blue})$ for one spin.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(\\text{red and blue}) = 0$",
+        "decision": "One spin cannot land on red and blue at once: mutually exclusive."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{red or blue}) = \\dfrac{3}{8} + \\dfrac{2}{8}$",
+        "decision": "With nothing to subtract, the rule is just the sum.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$= \\dfrac{5}{8}$",
+        "decision": "Add the numerators over the common denominator.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -121,7 +236,28 @@
       "Studies French, and studies Spanish"
     ],
     "answer": "Born in March, and born in July",
-    "explain": "Nobody has two birth months, so that overlap is empty. A student can do both of the other pairs, so each of those needs the subtraction."
+    "explain": "As in step 1 of See it, ask whether both can happen at once. Nobody has two birth months, so that overlap is empty. A student can do both of the other pairs, so each of those needs the subtraction.",
+    "optionNotes": [
+      {
+        "option": "Brings a packed lunch, and has a bus pass",
+        "why": "A student can do both, so the overlap is not empty and the rule still needs its subtraction.",
+        "misconception": "fm.prob.multiply-instead-of-add-mutually-exclusive"
+      },
+      {
+        "option": "Studies French, and studies Spanish",
+        "why": "Plenty of students take two languages: both can happen, so these are not mutually exclusive."
+      }
+    ],
+    "twin": {
+      "prompt": "For one throw of a fair dice, which pair of events is mutually exclusive?",
+      "options": [
+        "Scoring a 2, and scoring a 5",
+        "Scoring an even number, and scoring a 2",
+        "Scoring more than 3, and scoring an odd number"
+      ],
+      "answer": "Scoring a 2, and scoring a 5",
+      "explain": "One throw shows one number, so it cannot be 2 and 5 at once. A 2 is also even, and a 5 is both more than 3 and odd, so the other pairs overlap."
+    }
   },
   {
     "type": "h",
@@ -129,12 +265,29 @@
     "text": "4. See it done: a theatre group"
   },
   {
-    "type": "p",
-    "md": "A theatre group of 60 members: 31 act, 26 work backstage and 9 do both. One member is chosen at random.\n**Step 1.** Name the events, because the rule is written in letters. $A$ is acting, $K$ is backstage.\n**Step 2.** Write the three probabilities over the same total: $\\dfrac{31}{60}$, $\\dfrac{26}{60}$ and $\\dfrac{9}{60}$."
-  },
-  {
-    "type": "p",
-    "md": "**Step 3.** Put them into the rule: $\\dfrac{31}{60} + \\dfrac{26}{60} - \\dfrac{9}{60}$.\nThe denominators already match, so only the numerators combine. That last line is yours, in the check below."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A theatre group of 60 members: 31 act, 26 work backstage and 9 do both. One member is chosen at random. Set up $P(\\text{acts or works backstage})$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$A$: acts; $K$: works backstage",
+        "decision": "Name the events, because the rule is written in letters."
+      },
+      {
+        "n": 2,
+        "working": "$\\dfrac{31}{60}$, $\\dfrac{26}{60}$ and $\\dfrac{9}{60}$",
+        "decision": "Write the three probabilities over the same total.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{31}{60} + \\dfrac{26}{60} - \\dfrac{9}{60}$",
+        "decision": "Put them into the rule. The denominators already match, so only the numerators combine: that last line is yours, in the check below."
+      }
+    ]
   },
   {
     "type": "video",
@@ -149,7 +302,12 @@
     "kind": "number",
     "prompt": "In the theatre group of 60, 31 act, 26 work backstage and 9 do both. What is $P(\\text{acts or works backstage})$? Give a fraction or a decimal.",
     "answer": "4/5 | 0.8 | 48/60",
-    "explain": "$\\dfrac{31 + 26 - 9}{60}$ is $\\dfrac{48}{60}$, which is $\\dfrac{4}{5}$. The unreduced form earns the same mark."
+    "explain": "Finish step 3 of See it: $\\dfrac{31 + 26 - 9}{60}$ is $\\dfrac{48}{60}$, which is $\\dfrac{4}{5}$. The unreduced form earns the same mark.",
+    "twin": {
+      "prompt": "A club of 60 members: 25 play chess, 20 play draughts and 9 play both. What is $P(\\text{chess or draughts})$? Give a fraction or a decimal.",
+      "answer": "3/5 | 0.6 | 36/60",
+      "explain": "$\\dfrac{25 + 20 - 9}{60}$ is $\\dfrac{36}{60}$, which is 0.6."
+    }
   },
   {
     "type": "h",
@@ -158,7 +316,7 @@
   },
   {
     "type": "p",
-    "md": "**Or** means at least one, so you add and take the overlap off once.\n**And**, for two events that do not affect each other, means multiply. If the chance of fog tomorrow is $0.2$, the chance of a frost is $0.35$ and the question says the two are independent, then $P(\\text{both}) = 0.2 \\times 0.35$, which is $0.07$. Fog and frost often come together, so only that sentence lets you multiply."
+    "md": "**Or** means at least one, so you add and take the overlap off once.\n**And**, for two events that do not affect each other, means multiply. Only a sentence in the question saying they are independent lets you multiply."
   },
   {
     "type": "callout",
@@ -166,6 +324,34 @@
     "title": "The commonest way this is lost",
     "md": "The 2022 report found many candidates adding two probabilities that the question needed multiplied, on one of the easier questions of the paper. Decide 'or' or 'and' in writing before you calculate.",
     "source": "ccea-cer:further-maths:2022-summer:FM3:Q1"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The chance of fog tomorrow is $0.2$ and the chance of a frost is $0.35$, and the question says the two are independent. Find the probability of both.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Both: an 'and' question",
+        "decision": "Decide 'or' or 'and' in writing before any arithmetic."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{both}) = 0.2 \\times 0.35$",
+        "decision": "Independent, the question says, so multiply. Fog and frost often come together, so only that sentence allows it.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$= 0.07$",
+        "decision": "Smaller than either probability, as 'both' must be.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -178,7 +364,28 @@
       "One bead is taken. What is the probability that it is not red?"
     ],
     "answer": "Two beads are taken, the first put back before the second is drawn. What is the probability that both are red?",
-    "explain": "'Both' is an 'and' question about two events in turn, and putting the first bead back leaves the second draw unchanged, so the two probabilities multiply. The other two are about one bead and need adding or subtracting."
+    "explain": "As in step 1 of See it, 'both' is an 'and' question about two events in turn, and putting the first bead back leaves the second draw unchanged, so the two probabilities multiply. The other two are about one bead and need adding or subtracting.",
+    "optionNotes": [
+      {
+        "option": "One bead is taken. What is the probability that it is red or blue?",
+        "why": "'Or' about one bead adds: red and blue cannot both happen on one draw, so nothing multiplies.",
+        "misconception": "fm.prob.or-multiplied-instead-of-added"
+      },
+      {
+        "option": "One bead is taken. What is the probability that it is not red?",
+        "why": "'Not red' is 1 minus the probability of red: a subtraction, with nothing to multiply."
+      }
+    ],
+    "twin": {
+      "prompt": "Which question needs the addition rule rather than multiplying?",
+      "options": [
+        "One card is drawn. What is the probability that it is a heart or a king?",
+        "Two coins are tossed. What is the probability that both land heads?",
+        "A dice is thrown twice. What is the probability of two sixes?"
+      ],
+      "answer": "One card is drawn. What is the probability that it is a heart or a king?",
+      "explain": "Heart or king is an 'or' about one card, with an overlap, the king of hearts, to take off once. The other two ask for 'both' across two independent events, so they multiply."
+    }
   },
   {
     "type": "h",
@@ -187,7 +394,30 @@
   },
   {
     "type": "p",
-    "md": "The rule links four probabilities, so any one of them can be found from the other three. When the union is given, the overlap is $P(A) + P(B) - P(A \\cup B)$.\nWith $P(A) = 0.62$, $P(B) = 0.3$ and $P(A \\cup B) = 0.8$, that is $0.62 + 0.3 - 0.8 = 0.12$."
+    "md": "The rule links four probabilities, so any one of them can be found from the other three. When the union is given, the overlap is $P(A) + P(B) - P(A \\cup B)$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$P(A) = 0.62$, $P(B) = 0.3$ and $P(A \\cup B) = 0.8$. Find $P(A \\cap B)$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$0.8 = 0.62 + 0.3 - P(A \\cap B)$",
+        "decision": "Put the three known values into the rule.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$P(A \\cap B) = 0.62 + 0.3 - 0.8$\n$= 0.12$",
+        "decision": "The two probabilities add to more than the union by exactly the overlap.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -195,7 +425,12 @@
     "kind": "number",
     "prompt": "$P(A) = 0.35$, $P(B) = 0.5$ and $P(A \\cup B) = 0.6$. What is $P(A \\cap B)$?",
     "answer": "0.25 | 1/4",
-    "explain": "Rearrange the rule: $0.35 + 0.5 - 0.6 = 0.25$. The two probabilities add to more than the union by exactly the overlap."
+    "explain": "As in step 2 of See it, rearrange the rule: $0.35 + 0.5 - 0.6 = 0.25$. The two probabilities add to more than the union by exactly the overlap.",
+    "twin": {
+      "prompt": "$P(A) = 0.6$, $P(B) = 0.3$ and $P(A \\cup B) = 0.78$. What is $P(A \\cap B)$?",
+      "answer": "0.12 | 3/25",
+      "explain": "$0.6 + 0.3 - 0.78 = 0.12$."
+    }
   },
   {
     "type": "h",
@@ -204,11 +439,32 @@
   },
   {
     "type": "p",
-    "md": "**'During' means at least one.** Summer 2026 asked for rain during a two-day weekend: rain on the Saturday, the Sunday or both, which is an 'or'. With $P(\\text{Sat}) = 0.35$, $P(\\text{Sun}) = 0.3$ and $P(\\text{both}) = 0.1$, it is $0.35 + 0.3 - 0.1 = 0.55$."
+    "md": "**'During' means at least one.** Summer 2026 asked for rain during a two-day weekend: rain on the Saturday, the Sunday or both, which is an 'or'."
   },
   {
     "type": "p",
     "md": "**An answer above 1.** Summer 2019 examiners reported probabilities greater than 1: the overlap left in. $0.7 + 0.45 = 1.15$ can never be a probability, so a total like that means the overlap still has to come off."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The chance of rain on Saturday is $0.35$, on Sunday $0.3$, and on both days $0.1$. Find the probability of rain during the weekend.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "During the weekend: Saturday, Sunday or both",
+        "decision": "'During' is at least one of the two days: an 'or'."
+      },
+      {
+        "n": 2,
+        "working": "$0.35 + 0.3 - 0.1 = 0.55$",
+        "decision": "The addition rule, taking the both-days case off once.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -216,7 +472,12 @@
     "kind": "number",
     "prompt": "The chance of rain on Saturday is $0.45$, on Sunday $0.2$, and on both days $0.05$. What is the probability of rain during the weekend?",
     "answer": "0.6 | 3/5",
-    "explain": "'During the weekend' is at least one of the two days, an 'or': $0.45 + 0.2 - 0.05 = 0.6$."
+    "explain": "As in See it, 'during the weekend' is at least one of the two days, an 'or': $0.45 + 0.2 - 0.05 = 0.6$.",
+    "twin": {
+      "prompt": "The chance of snow on Saturday is $0.4$, on Sunday $0.3$, and on both days $0.16$. What is the probability of snow during the weekend?",
+      "answer": "0.54 | 27/50",
+      "explain": "At least one of the two days: $0.4 + 0.3 - 0.16 = 0.54$."
+    }
   },
   {
     "type": "h",
