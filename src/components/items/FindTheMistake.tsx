@@ -13,6 +13,7 @@ import { MathsLineInput } from "./AnswerField";
 import { formatExaminerSource, optionLetter } from "./format";
 import { firstSentence, markFix } from "./mistake-marking";
 import { seededShuffle } from "./shuffle";
+import { StemTex } from "./StemTex";
 import { Tex } from "./Tex";
 import { btnCheck, btnOption, btnPrimary, btnSecondary, cardCls, Eyebrow, Letter, MarkChip, MissMark, quietFocus, Rise, Tick } from "./ui";
 
@@ -131,9 +132,8 @@ export function FindTheMistake({ item, reasonOptions, onResult, onNext }: FindTh
           {stage === "reveal" && "Marked"}
         </span>
       </div>
-      <p className="mt-2 text-ui leading-relaxed text-ink-2">
-        <Tex text={item.stem} />
-      </p>
+      {/* The expression she is checking stands on its own line at the display size, as a gate's does (READ-18). */}
+      <StemTex text={item.stem} className="mt-2 text-ui leading-relaxed text-ink-2" />
 
       <p className="mt-4 text-meta font-medium text-ink-2">{stage === "find" ? "Tap the first line that goes wrong." : "Their working"}</p>
       <ol className="mt-1.5 space-y-1.5" aria-label="Student working">

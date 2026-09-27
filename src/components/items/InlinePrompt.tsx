@@ -10,6 +10,7 @@ import { clsx } from "clsx";
 import type { RetrievalPrompt } from "@/lib/content/schema";
 import { Figure } from "./Figure";
 import { keywordsPresent } from "./text-marking";
+import { StemTex } from "./StemTex";
 import { Tex } from "./Tex";
 import { btnCheck, btnSecondary, cardCls, Eyebrow, fieldCls, MissMark, Rise, Tick } from "./ui";
 
@@ -85,9 +86,8 @@ export function InlinePrompt({ prompt, mode, intervals, onGrade, index, total }:
         <Eyebrow>{eyebrow}</Eyebrow>
         {review && <span className="text-meta text-ink-2">{KIND_LABEL[prompt.kind]}</span>}
       </div>
-      <p className={clsx("mt-2 leading-snug", review ? "text-[19px] font-medium" : "text-[16px] font-medium")}>
-        <Tex text={prompt.prompt} />
-      </p>
+      {/* A fraction the prompt asks about stands on its own line at the display size, as a gate's does (READ-18). */}
+      <StemTex text={prompt.prompt} className={clsx("mt-2 leading-snug", review ? "text-[19px] font-medium" : "text-[16px] font-medium")} />
       {prompt.image && <Figure spec={prompt.image} />}
 
       {!revealed ? (
