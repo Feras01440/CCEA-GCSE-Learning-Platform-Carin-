@@ -56,8 +56,26 @@ Year 11 units: M3 17 of 17, M7 17 of 17, B1 21 of 21, C1 2 of 25, P1 2 of 22.
   - five decisions for the owner;
   - a 30-day plan.
 
+## 2a. The owner's comments of 27 September, and the case that answers them
+
+The owner asked for a critical expert judgement rather than an echo of her views. He asked whether v3 solves the gates-before-demonstration problem, and he gave a new requirement: she will use her own laptop, iPad and iPhone from November to June, with her progress carried across all three. The answer is `docs/plan/review/2026-09-27-learning-design-v4.md`, also published as tabs of the review doc:
+
+- the learning features judged, one by one;
+- what the best platforms have that Cairn lacks;
+- the verdict on v3: it solves the two measured numbers on paper, not the learning problem;
+- **lesson standard v4**: teach, show, guide, check, apply;
+- access and sync for her devices;
+- worked examples and the CCEA textbooks, which were never studied;
+- books and sources with links;
+- the decisions and their order.
+
+**This reverses one standing decision.** "No accounts, no sync" (`docs/dev/README.md`, the master plan, concept B, and the advisory of 26 September) no longer holds. She needs her own account across devices. The case proposes privacy as minimal data in her own account, exportable and deletable, and awaits the owner's approval.
+
+**A storage bug found on the way, verified in the code, and not yet fixed.** Diagnostic answers get a review card under the item's local id ("07"), not the topic's. So every topic's item 07 shares one card and its re-probes, and later topics' diagnostics are never scheduled (`CheckSection.tsx`, `record.ts` `cardIdFor`/`ensureCard`). The 1,596 diagnostic items use 52 ids. The fix: prefix the id with the topic, and migrate existing cards in a Dexie version bump. The same audit found that a backup "merge" overwrites rows with the same auto-increment id across devices, and that no review log is kept. The sync work fixes both (case section 5).
+
 ## 3. The queue, in order
 
+0. **Access across her devices** (new, 27 September; awaiting the owner's approval): the private HTTPS address, the app installed on each device, persistent storage, her account, and sync as an append-only log. It must be live before her November exams (case section 5).
 1. **Build 9 for her.** Pull this branch on the owner's machine, `npm run build`, run `npx playwright test e2e/slides.spec.ts e2e/learn.spec.ts e2e/companion.spec.ts` alone, then the rest, serve the export on :3200. The owner tries the trial topic first; then the second sit-down with her.
 2. **Engine queue** (engine agent). From the guard, each with its allow-list entry: a simplest-surd form (M8 3-D q0013 pays √216 for "the form a√b"; M8 surds q0007 pays 12 + 7√2 + √4 for "the form a + b√2"); the find-the-mistake check line that holds the corrected value (M3 pressure ftm.02); `simplifiedOnly` refuses the sign-flipped (−a − 2)/(3 − b); "2/3√3" and "2/3π" are read as 2 over 3√3 and 2 over 3π; a fraction typed where the stem instructs 2 d.p. earns 0 where the form rule elsewhere gives marks − 1. Then a text-marking guard, which is move 4 of the advisory. It measures the key-word marker's agreement on labelled answers for each text part: 1,404 parts, 32% of all marked parts. Then the programme's stream 0 items (`docs/plan/2026-09-22-programme.md`), each checked against the code: the local queue's numbering (items 3 to 13, 15 to 19) is local only.
 3. **Content repairs** (local only for detail). The build also warns that 49 worked-example figures print an answer that a problem version asks for (the `FIGURE` lines of `npm run build`); clear them in the same passes. B2 D, FM3 and C2 D were mid-repair when the 5-hour limit stopped every agent at about 06:25 on 25 September; their checkpoints are the batch `STATE.md` files in the content session's scratchpad. On that machine: relaunch each from its `STATE.md`. From the cloud: re-run the strict second reading on those three batches from the repo, with `npm run content:check`, `node scripts/qa/lesson-v2.mjs --teach`, `node scripts/qa/figure-leaks.mjs` and `node scripts/qa/shingles.mjs` as the gates.
