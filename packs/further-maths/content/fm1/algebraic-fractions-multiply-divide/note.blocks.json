@@ -30,6 +30,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{x+5}{6} \\times \\dfrac{9}{x(x+5)}$.",
     "steps": [
       {
@@ -64,6 +65,17 @@
     ],
     "answer": "$\\frac{5}{2x}$",
     "explain": "Write it as one fraction first: $\\frac{25(x-4)}{10x(x-4)}$. The bracket multiplies the whole top and the whole bottom, so it divides out; then 25 and 10 share a 5. The $x$ underneath stays, since nothing on top matches it. Stopping at 25 over $10x$ leaves the shared 5.",
+    "optionNotes": [
+      {
+        "option": "$\\frac{25}{10x}$",
+        "why": "Cancelling the bracket feels like the finish, but 25 and 10 still share a factor of 5, so the fraction is not simplified yet.",
+        "misconception": "fm.algfrac.not-fully-simplified"
+      },
+      {
+        "option": "$\\frac{5}{2}$",
+        "why": "It looks as if the $x$ cancels too, but it sits only underneath: with nothing on top to match it, it stays."
+      }
+    ],
     "twin": {
       "prompt": "Simplify fully $\\dfrac{x+7}{15} \\times \\dfrac{6}{x(x+7)}$.",
       "options": [
@@ -72,7 +84,18 @@
         "$\\frac{2}{5}$"
       ],
       "answer": "$\\frac{2}{5x}$",
-      "explain": "As one fraction it is $\\frac{6(x+7)}{15x(x+7)}$. The bracket cancels from both lines, and 6 and 15 share a 3, leaving $\\frac{2}{5x}$. The $x$ underneath has nothing on top to cancel with."
+      "explain": "As one fraction it is $\\frac{6(x+7)}{15x(x+7)}$. The bracket cancels from both lines, and 6 and 15 share a 3, leaving $\\frac{2}{5x}$. The $x$ underneath has nothing on top to cancel with.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{6}{15x}$",
+          "why": "The bracket has gone, but 6 and 15 still share a factor of 3.",
+          "misconception": "fm.algfrac.not-fully-simplified"
+        },
+        {
+          "option": "$\\frac{2}{5}$",
+          "why": "The $x$ is only underneath, so there is nothing on top for it to cancel with."
+        }
+      ]
     }
   },
   {
@@ -96,6 +119,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{x+4}{x-7} \\div \\dfrac{x+4}{3x}$.",
     "steps": [
       {
@@ -133,6 +157,18 @@
     ],
     "answer": "$\\dfrac{x-6}{x+9} \\times \\dfrac{5x}{x-1}$",
     "explain": "Dividing by a fraction is multiplying by it turned over, because a fraction times its own turned-over copy is 1. So the first fraction stays exactly as it is, $\\div$ becomes $\\times$, and only $\\dfrac{x-1}{5x}$ flips. Flipping the fraction in front instead gives the answer upside down, and flipping neither leaves a division.",
+    "optionNotes": [
+      {
+        "option": "$\\dfrac{x+9}{x-6} \\times \\dfrac{x-1}{5x}$",
+        "why": "Turning the fraction in front over feels natural because it comes first, but only the one you divide by turns, so this line gives the answer upside down.",
+        "misconception": "fm.algfrac.wrong-fraction-inverted"
+      },
+      {
+        "option": "$\\dfrac{x-6}{x+9} \\times \\dfrac{x-1}{5x}$",
+        "why": "Keeping both fractions as they are treats $\\div$ as $\\times$; the fraction you divide by has to turn over first.",
+        "misconception": "fm.algfrac.divide-not-inverted"
+      }
+    ],
     "twin": {
       "prompt": "What is the first line for $\\dfrac{x+2}{x-8} \\div \\dfrac{x+5}{4x}$?",
       "options": [
@@ -141,7 +177,19 @@
         "$\\dfrac{x+2}{x-8} \\times \\dfrac{x+5}{4x}$"
       ],
       "answer": "$\\dfrac{x+2}{x-8} \\times \\dfrac{4x}{x+5}$",
-      "explain": "Keep the first fraction as it is, change $\\div$ to $\\times$, and turn over only $\\dfrac{x+5}{4x}$, the fraction you divide by."
+      "explain": "Keep the first fraction as it is, change $\\div$ to $\\times$, and turn over only $\\dfrac{x+5}{4x}$, the fraction you divide by.",
+      "optionNotes": [
+        {
+          "option": "$\\dfrac{x-8}{x+2} \\times \\dfrac{x+5}{4x}$",
+          "why": "This turns over the fraction in front, which gives the answer upside down; only the one you divide by turns.",
+          "misconception": "fm.algfrac.wrong-fraction-inverted"
+        },
+        {
+          "option": "$\\dfrac{x+2}{x-8} \\times \\dfrac{x+5}{4x}$",
+          "why": "Nothing has turned over here, so the $\\div$ has simply been read as $\\times$.",
+          "misconception": "fm.algfrac.divide-not-inverted"
+        }
+      ]
     }
   },
   {
@@ -165,6 +213,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{x^{2}+7x+10}{x^{2}-5x} \\times \\dfrac{3x-15}{x+5}$.",
     "steps": [
       {
@@ -203,6 +252,17 @@
     ],
     "answer": "$\\frac{2(x+5)}{x}$",
     "explain": "Factorise every line first: $(x+3)(x+5)$ on top, $x(x-6)$ underneath, $2(x-6)$ and $(x+3)$. Then $(x+3)$ and $(x-6)$ each sit on a top and a bottom and cancel. The 2 taken out of $2x-12$ stays, and a line with $(x-6)$ still on both levels is not finished.",
+    "optionNotes": [
+      {
+        "option": "$\\frac{x+5}{x}$",
+        "why": "The 2 came out of $2x-12$ as a factor and then went missing; it multiplies the whole top, so it stays in the answer."
+      },
+      {
+        "option": "$\\frac{2(x-6)(x+5)}{x(x-6)}$",
+        "why": "Everything is factorised, but $(x-6)$ is still on the top and the bottom, so one more cancel is due.",
+        "misconception": "fm.algfrac.not-fully-simplified"
+      }
+    ],
     "twin": {
       "prompt": "Simplify fully $\\dfrac{x^{2}+9x+14}{x^{2}-8x} \\times \\dfrac{4x-32}{x+2}$.",
       "options": [
@@ -211,7 +271,18 @@
         "$\\frac{4(x-8)(x+7)}{x(x-8)}$"
       ],
       "answer": "$\\frac{4(x+7)}{x}$",
-      "explain": "Factorised: $(x+2)(x+7)$, $x(x-8)$, $4(x-8)$ and $(x+2)$. Cancel $(x+2)$ and $(x-8)$; the 4 from $4x-32$ stays in the answer."
+      "explain": "Factorised: $(x+2)(x+7)$, $x(x-8)$, $4(x-8)$ and $(x+2)$. Cancel $(x+2)$ and $(x-8)$; the 4 from $4x-32$ stays in the answer.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{x+7}{x}$",
+          "why": "The 4 taken out of $4x-32$ is a factor of the top, so it stays in the answer."
+        },
+        {
+          "option": "$\\frac{4(x-8)(x+7)}{x(x-8)}$",
+          "why": "$(x-8)$ is still on the top and the bottom, so it has one more cancel to go.",
+          "misconception": "fm.algfrac.not-fully-simplified"
+        }
+      ]
     }
   },
   {
@@ -235,6 +306,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{x^{2}-x-12}{5x+15} \\div \\dfrac{x^{2}-4x}{10}$.",
     "steps": [
       {
@@ -281,6 +353,18 @@
     ],
     "answer": "$\\frac{3}{x}$",
     "explain": "Turn over only the fraction you divide by, so the line is $\\dfrac{x^{2}+x-20}{3x-12} \\times \\dfrac{9}{x^{2}+5x}$. Factorised, $(x+5)$ and $(x-4)$ cancel and 9 over $3x$ leaves $\\frac{3}{x}$. Turning the first fraction over gives the answer upside down; multiplying as it stands squares a bracket.",
+    "optionNotes": [
+      {
+        "option": "$\\frac{x}{3}$",
+        "why": "Turning over the fraction in front gives the answer upside down; only the one you divide by turns.",
+        "misconception": "fm.algfrac.wrong-fraction-inverted"
+      },
+      {
+        "option": "$\\frac{x(x+5)^{2}}{27}$",
+        "why": "Multiplying the two fractions as they stand treats the division as a multiplication, which is why a bracket ends up squared.",
+        "misconception": "fm.algfrac.divide-not-inverted"
+      }
+    ],
     "twin": {
       "prompt": "Simplify fully $\\dfrac{x^{2}-2x-15}{2x+6} \\div \\dfrac{x^{2}-5x}{8}$.",
       "options": [
@@ -289,7 +373,19 @@
         "$\\frac{x(x-5)^{2}}{16}$"
       ],
       "answer": "$\\frac{4}{x}$",
-      "explain": "The line is $\\dfrac{x^{2}-2x-15}{2x+6} \\times \\dfrac{8}{x^{2}-5x}$. Factorised, $(x-5)$ and $(x+3)$ cancel, and 8 over $2x$ leaves $\\frac{4}{x}$."
+      "explain": "The line is $\\dfrac{x^{2}-2x-15}{2x+6} \\times \\dfrac{8}{x^{2}-5x}$. Factorised, $(x-5)$ and $(x+3)$ cancel, and 8 over $2x$ leaves $\\frac{4}{x}$.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{x}{4}$",
+          "why": "This is the answer upside down, from turning over the fraction in front instead of the one you divide by.",
+          "misconception": "fm.algfrac.wrong-fraction-inverted"
+        },
+        {
+          "option": "$\\frac{x(x-5)^{2}}{16}$",
+          "why": "Nothing was turned over, so the division was worked as a multiplication and a bracket came out squared.",
+          "misconception": "fm.algfrac.divide-not-inverted"
+        }
+      ]
     }
   },
   {
@@ -303,6 +399,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Express $\\dfrac{16x^{2}-9}{x-5} \\div \\dfrac{8x^{2}-2x-3}{3x-15}$ as one fraction in its simplest form.",
     "steps": [
       {
@@ -369,6 +466,17 @@
     ],
     "answer": "$\\frac{2(3x-7)}{x-1}$",
     "explain": "Turn over the fraction you divide by, then factorise: $9x^{2}-49=(3x-7)(3x+7)$, $3x^{2}+4x-7=(3x+7)(x-1)$ and $2x+2=2(x+1)$. Cancel $(3x+7)$ and $(x+1)$; the 2 stays on top. Turning the first fraction over gives the answer upside down.",
+    "optionNotes": [
+      {
+        "option": "$\\frac{x-1}{2(3x-7)}$",
+        "why": "Turning over the fraction in front gives this answer upside down; only the fraction you divide by turns.",
+        "misconception": "fm.algfrac.wrong-fraction-inverted"
+      },
+      {
+        "option": "$\\frac{3x-7}{x-1}$",
+        "why": "Once the fraction is turned over, the 2 from $2x+2=2(x+1)$ is a factor of the top, and dropping it loses a factor."
+      }
+    ],
     "twin": {
       "prompt": "Express $\\dfrac{16x^{2}-1}{x-3} \\div \\dfrac{4x^{2}+7x-2}{5x-15}$ as one fraction in its simplest form.",
       "options": [
@@ -377,7 +485,18 @@
         "$\\frac{4x+1}{x+2}$"
       ],
       "answer": "$\\frac{5(4x+1)}{x+2}$",
-      "explain": "Turn over, then factorise: $(4x-1)(4x+1)$, $(4x-1)(x+2)$ and $5(x-3)$. Cancel $(4x-1)$ and $(x-3)$; the 5 stays on top."
+      "explain": "Turn over, then factorise: $(4x-1)(4x+1)$, $(4x-1)(x+2)$ and $5(x-3)$. Cancel $(4x-1)$ and $(x-3)$; the 5 stays on top.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{x+2}{5(4x+1)}$",
+          "why": "This is the answer upside down, from turning over the fraction in front.",
+          "misconception": "fm.algfrac.wrong-fraction-inverted"
+        },
+        {
+          "option": "$\\frac{4x+1}{x+2}$",
+          "why": "The 5 from $5x-15=5(x-3)$ ends up on top after turning over, so it belongs in the answer."
+        }
+      ]
     }
   },
   {
@@ -404,6 +523,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{9x^{2}-4}{x^{2}+2x} \\times \\dfrac{x+2}{6x+4}$.",
     "steps": [
       {
@@ -444,6 +564,18 @@
     ],
     "answer": "Factorise it as $(3x-5)(3x+5)$ and look again",
     "explain": "Nine is three squared, so $9x^{2}$ is $(3x)^{2}$, and 25 is $5^{2}$: a square minus a square, $(3x-5)(3x+5)$. The number in front is square-rooted along with the $x^{2}$. Once it is in brackets, look for the same bracket on a top line and cancel it; expanding the other lines only hides their factors.",
+    "optionNotes": [
+      {
+        "option": "Expand the other lines so everything matches",
+        "why": "Making every line look alike feels tidy, but expanding hides the factors that the cancelling needs.",
+        "misconception": "fm.algfrac.expand-instead-of-factorise"
+      },
+      {
+        "option": "Leave it: a difference of two squares cannot be factorised when the first term has a coefficient",
+        "why": "The number in front seems to spoil the pattern, but $9x^{2}$ is $(3x)^{2}$, so it is still a square minus a square.",
+        "misconception": "fm.algfrac.dots-not-spotted"
+      }
+    ],
     "twin": {
       "prompt": "A numerator in your working is $4x^{2}-49$ and nothing seems to cancel. What do you do?",
       "options": [
@@ -452,7 +584,19 @@
         "Leave it: a difference of two squares cannot be factorised when the first term has a coefficient"
       ],
       "answer": "Factorise it as $(2x-7)(2x+7)$ and look again",
-      "explain": "$4x^{2}$ is $(2x)^{2}$ and 49 is $7^{2}$, so it is $(2x-7)(2x+7)$; then look for either bracket underneath."
+      "explain": "$4x^{2}$ is $(2x)^{2}$ and 49 is $7^{2}$, so it is $(2x-7)(2x+7)$; then look for either bracket underneath.",
+      "optionNotes": [
+        {
+          "option": "Expand the other lines so everything matches",
+          "why": "Expanding makes the lines look alike but hides every factor, so nothing could cancel.",
+          "misconception": "fm.algfrac.expand-instead-of-factorise"
+        },
+        {
+          "option": "Leave it: a difference of two squares cannot be factorised when the first term has a coefficient",
+          "why": "$4x^{2}$ is $(2x)^{2}$, so the number in front still gives a square minus a square.",
+          "misconception": "fm.algfrac.dots-not-spotted"
+        }
+      ]
     }
   },
   {
@@ -472,6 +616,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{3x^{2}+12x}{x^{2}-x-2} \\times \\dfrac{2x-4}{9x+36}$.",
     "steps": [
       {
@@ -510,6 +655,18 @@
     ],
     "answer": "No — it becomes $\\frac{2x}{3(x-3)}$",
     "explain": "Fully means nothing divides both lines, numbers included. The 4 on top and the 6 underneath share a factor of 2, so it becomes $\\frac{2x}{3(x-3)}$. Multiplying the bracket out changes how it looks, not what divides it.",
+    "optionNotes": [
+      {
+        "option": "Yes",
+        "why": "With the brackets gone the fraction can look finished, but 4 and 6 still share a factor of 2.",
+        "misconception": "fm.algfrac.not-fully-simplified"
+      },
+      {
+        "option": "No — it becomes $\\frac{4x}{6x-18}$",
+        "why": "Multiplying the bracket out changes how the fraction looks, not whether it simplifies: the shared 2 is still there.",
+        "misconception": "fm.algfrac.expand-instead-of-factorise"
+      }
+    ],
     "twin": {
       "prompt": "Is $\\dfrac{10x}{15(x+4)}$ fully simplified?",
       "options": [
@@ -518,7 +675,19 @@
         "No — it becomes $\\frac{10x}{15x+60}$"
       ],
       "answer": "No — it becomes $\\frac{2x}{3(x+4)}$",
-      "explain": "10 and 15 share a factor of 5, so it becomes $\\frac{2x}{3(x+4)}$."
+      "explain": "10 and 15 share a factor of 5, so it becomes $\\frac{2x}{3(x+4)}$.",
+      "optionNotes": [
+        {
+          "option": "Yes",
+          "why": "10 and 15 still share a factor of 5, so the fraction is not finished.",
+          "misconception": "fm.algfrac.not-fully-simplified"
+        },
+        {
+          "option": "No — it becomes $\\frac{10x}{15x+60}$",
+          "why": "Expanding the bracket keeps the shared 5; it only hides it.",
+          "misconception": "fm.algfrac.expand-instead-of-factorise"
+        }
+      ]
     }
   },
   {
@@ -542,10 +711,11 @@
   },
   {
     "type": "p",
-    "md": "**A reversed bracket.** (2026) With $-x^{2}$ or a number first, a bracket such as $(6-x)$ appears. In the drawing it is the gap $x-6$ measured backwards, so $6-x=-(x-6)$ and the pair cancels to $-1$."
+    "md": "**A reversed bracket.** (2026) With $-x^{2}$ or a number first, brackets such as $(6-x)$ appear, and one can meet $(x-6)$ on the other line. In the drawing $6-x$ is the gap $x-6$ measured backwards, so $6-x=-(x-6)$ and the pair cancels to $-1$."
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\dfrac{36-x^{2}}{x^{2}+6x} \\times \\dfrac{2x}{x-6}$.",
     "steps": [
       {
@@ -584,6 +754,17 @@
     ],
     "answer": "$-3$",
     "explain": "$49-x^{2}$ is $(7-x)(7+x)$, and $x^{2}+7x$ is $x(x+7)$. Cancel $(x+7)$ and the $x$ to reach $\\frac{3(7-x)}{x-7}$. Then $7-x$ is $x-7$ measured backwards, $-(x-7)$, so the pair gives $-1$ and the answer is $-3$, not 3.",
+    "optionNotes": [
+      {
+        "option": "$3$",
+        "why": "$(7-x)$ and $(x-7)$ look like the same bracket, but one is the other measured backwards, so they cancel to $-1$, not 1."
+      },
+      {
+        "option": "$\\frac{3(7-x)}{x-7}$",
+        "why": "Stopping here leaves a reversed pair of brackets that still cancels to -1.",
+        "misconception": "fm.algfrac.not-fully-simplified"
+      }
+    ],
     "twin": {
       "prompt": "Simplify fully $\\dfrac{144-x^{2}}{x^{2}+12x} \\times \\dfrac{5x}{x-12}$.",
       "options": [
@@ -592,7 +773,18 @@
         "$\\frac{5(12-x)}{x-12}$"
       ],
       "answer": "$-5$",
-      "explain": "$144-x^{2}=(12-x)(12+x)$; cancel $(x+12)$ and the $x$, then $12-x=-(x-12)$ leaves $-5$."
+      "explain": "$144-x^{2}=(12-x)(12+x)$; cancel $(x+12)$ and the $x$, then $12-x=-(x-12)$ leaves $-5$.",
+      "optionNotes": [
+        {
+          "option": "$5$",
+          "why": "$(12-x)$ over $(x-12)$ is $-1$, not 1, so the sign of the answer flips."
+        },
+        {
+          "option": "$\\frac{5(12-x)}{x-12}$",
+          "why": "A reversed pair of brackets is still left; it cancels to -1.",
+          "misconception": "fm.algfrac.not-fully-simplified"
+        }
+      ]
     }
   },
   {
@@ -612,6 +804,7 @@
   },
   {
     "type": "see",
+    "kind": "calculation",
     "stem": "Simplify fully $\\left(\\dfrac{x}{4}-\\dfrac{25}{x}\\right) \\div \\dfrac{x+10}{8x}$.",
     "steps": [
       {
@@ -660,6 +853,18 @@
     ],
     "answer": "$3(x-8)$",
     "explain": "Combine first: the bracket is $\\dfrac{x^{2}-64}{2x}$. Turn over the fraction you divide by, factorise $(x-8)(x+8)$, and cancel $(x+8)$; then the $x$ on top and the $x$ underneath cancel too, and 6 over 2 is 3. Leaving $x$ over $x$ is not fully simplified.",
+    "optionNotes": [
+      {
+        "option": "$\\dfrac{3x(x-8)}{x}$",
+        "why": "The brackets are done, but an $x$ is still on the top and the bottom, so it cancels too.",
+        "misconception": "fm.algfrac.not-fully-simplified"
+      },
+      {
+        "option": "$\\dfrac{1}{3(x-8)}$",
+        "why": "Turning the combined fraction over, instead of the one you divide by, gives the answer upside down.",
+        "misconception": "fm.algfrac.wrong-fraction-inverted"
+      }
+    ],
     "twin": {
       "prompt": "Simplify fully $\\left(\\dfrac{x}{3}-\\dfrac{27}{x}\\right) \\div \\dfrac{x+9}{6x}$.",
       "options": [
@@ -668,7 +873,19 @@
         "$\\dfrac{1}{2(x-9)}$"
       ],
       "answer": "$2(x-9)$",
-      "explain": "The bracket is $\\dfrac{x^{2}-81}{3x}$. Turn over, factorise $(x-9)(x+9)$, cancel $(x+9)$ and the $x$; 6 over 3 is 2."
+      "explain": "The bracket is $\\dfrac{x^{2}-81}{3x}$. Turn over, factorise $(x-9)(x+9)$, cancel $(x+9)$ and the $x$; 6 over 3 is 2.",
+      "optionNotes": [
+        {
+          "option": "$\\dfrac{2x(x-9)}{x}$",
+          "why": "An $x$ over an $x$ is still waiting to cancel.",
+          "misconception": "fm.algfrac.not-fully-simplified"
+        },
+        {
+          "option": "$\\dfrac{1}{2(x-9)}$",
+          "why": "This turns the combined fraction over instead of the one you divide by, so the answer comes out upside down.",
+          "misconception": "fm.algfrac.wrong-fraction-inverted"
+        }
+      ]
     }
   },
   {
@@ -682,6 +899,7 @@
   },
   {
     "type": "see",
+    "kind": "proof",
     "stem": "Show that $\\dfrac{a}{b} \\div \\dfrac{c}{d} = \\dfrac{a}{b} \\times \\dfrac{d}{c}$.",
     "steps": [
       {
@@ -713,6 +931,17 @@
     ],
     "answer": "It makes the bottom 1, because $\\frac{c}{d} \\times \\frac{d}{c} = 1$",
     "explain": "Multiplying the top and the bottom of a fraction by the same thing keeps its value. The thing chosen is $\\frac{d}{c}$ because it cancels the bottom exactly: $\\frac{c}{d} \\times \\frac{d}{c} = 1$. Then only the top is left, $\\frac{a}{b} \\times \\frac{d}{c}$, and the top fraction itself never turns over.",
+    "optionNotes": [
+      {
+        "option": "It makes the top and the bottom equal",
+        "why": "Equal lines would turn the whole fraction into 1 and change its value; the aim is only to make the bottom 1."
+      },
+      {
+        "option": "It turns the top fraction over as well",
+        "why": "The top fraction is multiplied by $\\frac{d}{c}$ but never turns over itself; only the divisor does.",
+        "misconception": "fm.algfrac.wrong-fraction-inverted"
+      }
+    ],
     "twin": {
       "prompt": "Using the same idea, which product equals $\\dfrac{2}{5} \\div \\dfrac{3}{7}$?",
       "options": [
@@ -721,7 +950,19 @@
         "$\\dfrac{2}{5} \\times \\dfrac{3}{7}$"
       ],
       "answer": "$\\dfrac{2}{5} \\times \\dfrac{7}{3}$",
-      "explain": "Multiply the top and the bottom by $\\frac{7}{3}$, which turns the bottom $\\frac{3}{7}$ into 1; the top becomes $\\frac{2}{5} \\times \\frac{7}{3}$."
+      "explain": "Multiply the top and the bottom by $\\frac{7}{3}$, which turns the bottom $\\frac{3}{7}$ into 1; the top becomes $\\frac{2}{5} \\times \\frac{7}{3}$.",
+      "optionNotes": [
+        {
+          "option": "$\\dfrac{5}{2} \\times \\dfrac{3}{7}$",
+          "why": "This turns the first fraction over, which gives the answer upside down.",
+          "misconception": "fm.algfrac.wrong-fraction-inverted"
+        },
+        {
+          "option": "$\\dfrac{2}{5} \\times \\dfrac{3}{7}$",
+          "why": "Nothing has turned over, so the division has simply been read as a multiplication.",
+          "misconception": "fm.algfrac.divide-not-inverted"
+        }
+      ]
     }
   },
   {
