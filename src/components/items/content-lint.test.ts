@@ -772,8 +772,9 @@ describe("markingWarnings", () => {
   /**
    * The lead's item 14 (27 Sep 2026, the M4 author's finding, probed through markAnswer the same evening): a stem that
    * asks for the form ("simplify fully", "simplest form", "a single fraction", "write … as") with a spec that holds no
-   * form, and any spec with equivalence "simplifiedOnly": the engine marks both after simplifying her answer, so the
-   * question typed back earns full marks ((3x²−27)/(x²+x−6) for "Simplify fully" paid 3/3).
+   * form, and any spec with equivalence "simplifiedOnly": the engine marks both after simplifying her answer, so an
+   * equal answer in another form earns full marks (re-probed after the engine's build-9 change, which gives the question
+   * typed back 0: 3(x+3)(x−3)/((x+3)(x−2)) for "Simplify fully" still 3/3, 2 × 275 for the prime factors of 550 2/2).
    */
   test("item 14: a form the stem asks for that the spec does not hold, and every simplifiedOnly spec", () => {
     const alg = (extra: Record<string, unknown>) => ({ kind: "algebraic", latex: String.raw`\frac{3(x-3)}{x-2}`, variables: ["x"], equivalence: "equivalent", ...extra });
@@ -788,10 +789,10 @@ describe("markingWarnings", () => {
       part("g", "Find $x$ when $2x = 7$.", alg({ equivalence: "simplifiedOnly", latex: "3.5" })),
     );
     expect(markingWarnings(b, label)).toEqual([
-      `${label} q.x.y.0001(a): the stem asks for the form ("Simplify fully") but the answer spec holds none (no form, mustBeFactorised or mustBeExpanded): the engine pays any equal expression in full, the question typed back included; give it the form (simplest-fraction, single-fraction …)`,
-      `${label} q.x.y.0001(b): equivalence "simplifiedOnly" marks her answer after simplifying it, so the question typed back and an uncancelled answer earn full marks; use a form (simplest-fraction …) instead`,
-      `${label} q.x.y.0001(c): the stem asks for the form ("its simplest form") but the answer spec holds none (neither mustBeSimplified nor a form-only acceptForms): the engine pays any equal expression in full, the question typed back included; give it the form (acceptForms ["fraction"], mustBeSimplified)`,
-      `${label} q.x.y.0001(g): equivalence "simplifiedOnly" marks her answer after simplifying it, so the question typed back and an uncancelled answer earn full marks; use a form (simplest-fraction …) instead`,
+      `${label} q.x.y.0001(a): the stem asks for the form ("Simplify fully") but the answer spec holds none (no form, mustBeFactorised or mustBeExpanded): the engine pays an equal answer in any other form in full (an uncollected or uncancelled fraction; 2 × 275 for the prime factors of 550); give it the form (simplest-fraction, single-fraction …)`,
+      `${label} q.x.y.0001(b): equivalence "simplifiedOnly" marks her answer after simplifying it, so an uncancelled or uncollected answer earns full marks; use a form (simplest-fraction …) instead`,
+      `${label} q.x.y.0001(c): the stem asks for the form ("its simplest form") but the answer spec holds none (neither mustBeSimplified nor a form-only acceptForms): the engine pays an equal answer in any other form in full (an uncollected or uncancelled fraction; 2 × 275 for the prime factors of 550); give it the form (acceptForms ["fraction"], mustBeSimplified)`,
+      `${label} q.x.y.0001(g): equivalence "simplifiedOnly" marks her answer after simplifying it, so an uncancelled or uncollected answer earns full marks; use a form (simplest-fraction …) instead`,
     ]);
   });
 

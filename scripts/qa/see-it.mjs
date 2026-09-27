@@ -109,7 +109,9 @@ const normalised = (s, words = false) =>
     .replace(/[.,;:!?]+$/, "");
 const NUMBER = /^[-−]?\d+(?:\.\d+)?$/;
 const RELATION = /=|≈|→|⇒|\\approx|\\to|\\rightarrow|\\implies/;
-const WORDY = /[a-z]{2,}\s+[a-z]{2,}/i;
+// Words, not maths: a phrase of two words or more, or one word of two letters or more with no maths in it (the lead's item
+// 19: a one-word blank, "digests", is found as a whole word in the See it, never inside "indigestion").
+const WORDY = /[a-z]{2,}\s+[a-z]{2,}|^\s*[a-z][a-z'-]+\s*$/i;
 function printedIn(answer, text) {
   const words = WORDY.test(String(answer ?? "").replace(/\$[^$]*\$/g, " "));
   const a = normalised(answer, words);

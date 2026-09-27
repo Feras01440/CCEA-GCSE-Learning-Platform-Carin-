@@ -876,9 +876,10 @@ const numbersIn = (s: unknown) => [...String(s ?? "").replace(/\\[,;:! ]/g, "").
  * - the lead's item 14 (the M4 author's finding): a stem that asks for the form (FORM_ASKED) with a spec that holds none
  *   (algebraic: no `form`, `mustBeFactorised` or `mustBeExpanded`; numeric: neither `mustBeSimplified` nor an
  *   `acceptForms` without "decimal"), and every algebraic spec with equivalence "simplifiedOnly". Probed through
- *   markAnswer on 27 Sep 2026: "equivalent", "identical" and "simplifiedOnly" all pay the question typed back
- *   ((3x²−27)/(x²+x−6) for "Simplify fully" 3/3; "550" for "Write 550 as a product of its prime factors" 2/2), and so
- *   does `formTask: true` on an algebraic spec; `form: "simplest-fraction"` refuses it.
+ *   markAnswer on 27 Sep 2026 after the engine's build-9 change (c613361, the question typed back now 0): "equivalent",
+ *   "identical", "simplifiedOnly", `form: "single-fraction"` and `formTask: true` all still pay an equal answer in
+ *   another form in full (3(x+3)(x−3)/((x+3)(x−2)) for "Simplify fully" 3/3; 2 × 275 for "Write 550 as a product of
+ *   its prime factors" 2/2; (8x+2+x−2)/10 for "as a single fraction" 2/2); `form: "simplest-fraction"` refuses them.
  * Only shipped items are read (the lead's item 15): a question whose log is not verified or published, or whose id a
  * log records as withdrawn, is skipped, as the build leaves it unshipped.
  */
@@ -904,15 +905,15 @@ export function markingWarnings(bundle: unknown, label: string): string[] {
       // the form the stem asks for, held by the spec (item 14): the engine marks equivalent, identical and
       // simplifiedOnly specs after simplifying her answer, so without a form the question typed back is paid in full
       if (a.kind === "algebraic" && a.equivalence === "simplifiedOnly")
-        out.push(`${at}: equivalence "simplifiedOnly" marks her answer after simplifying it, so the question typed back and an uncancelled answer earn full marks; use a form (simplest-fraction …) instead`);
+        out.push(`${at}: equivalence "simplifiedOnly" marks her answer after simplifying it, so an uncancelled or uncollected answer earns full marks; use a form (simplest-fraction …) instead`);
       else {
         const stem = stemWords(p.stem);
         const asked = FORM_ASKED.map((re) => re.exec(stem)?.[0]).find(Boolean)?.trim();
         const acceptForms = Array.isArray(a.acceptForms) ? a.acceptForms : [];
         if (asked && a.kind === "algebraic" && a.form === undefined && a.mustBeFactorised !== true && a.mustBeExpanded !== true)
-          out.push(`${at}: the stem asks for the form ("${asked}") but the answer spec holds none (no form, mustBeFactorised or mustBeExpanded): the engine pays any equal expression in full, the question typed back included; give it the form (simplest-fraction, single-fraction …)`);
+          out.push(`${at}: the stem asks for the form ("${asked}") but the answer spec holds none (no form, mustBeFactorised or mustBeExpanded): the engine pays an equal answer in any other form in full (an uncollected or uncancelled fraction; 2 × 275 for the prime factors of 550); give it the form (simplest-fraction, single-fraction …)`);
         if (asked && a.kind === "numeric" && a.mustBeSimplified !== true && (acceptForms.length === 0 || acceptForms.includes("decimal")))
-          out.push(`${at}: the stem asks for the form ("${asked}") but the answer spec holds none (neither mustBeSimplified nor a form-only acceptForms): the engine pays any equal expression in full, the question typed back included; give it the form (acceptForms ["fraction"], mustBeSimplified)`);
+          out.push(`${at}: the stem asks for the form ("${asked}") but the answer spec holds none (neither mustBeSimplified nor a form-only acceptForms): the engine pays an equal answer in any other form in full (an uncollected or uncancelled fraction; 2 × 275 for the prime factors of 550); give it the form (acceptForms ["fraction"], mustBeSimplified)`);
       }
 
       if (SHOW_THAT.test(stemWords(p.stem)) && (a.kind === "numeric" || a.kind === "algebraic"))

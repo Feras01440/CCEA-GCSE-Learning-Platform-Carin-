@@ -913,6 +913,47 @@ export const insights = [
   },
 
   {
+    // Carrying out (DA-U7-carry-1): what the Booklet A reports say about the practical done under supervision, where the
+    // marks go on how an instrument is read and how what is seen is written down (pipeline agent, 27 Sep 2026, from the
+    // 18 Booklet A blocks of 2023-2025; the reports praise the apparatus handling itself, so the findings are these).
+    id: "ins.science.u7.carrying-out",
+    topic: "science.u7.carrying-out",
+    specRefs: ["DA-U7-carry-1"],
+    findings: [
+      {
+        source: S("2024-summer", "U7AChemF", 1),
+        asked: "Weigh out a solid on a balance, within a mass range the task sets, and record the mass.",
+        wentWrong: "Most earned both marks; the marks that went were for a mass written to one decimal place and for a mass with no unit.",
+        rule: "Write a balance reading to every decimal place the balance shows, with its unit (1.12 g, not 1.1).",
+        misconceptions: ["sci.practical.decimal-places-instruction"],
+      },
+      {
+        source: S("2025-summer", "U7AChemH", 1),
+        asked: "Weigh a hydrated salt within a set range, heat it, and record every mass in a table.",
+        wentWrong: "The practical itself went well; a mark went for any mass not written to two decimal places, and for a sample weighed outside the range the task gave.",
+        rule: "Weigh inside the range asked, then write every reading to 2 d.p. (2.30 g, not 2.3 g).",
+        misconceptions: ["sci.practical.decimal-places-instruction"],
+      },
+      {
+        source: S("2023-summer", "U7APhysF", 1),
+        asked: "Take five pairs of ammeter and voltmeter readings for a wire and record them in the table.",
+        wentWrong: "Most wrote current to two decimal places and voltage to one, as the table asked; weaker candidates ignored the decimal places and lost the marks.",
+        rule: "Read each meter to the decimal places the table heading asks for, keeping the trailing zero (0.40 A).",
+        misconceptions: ["sci.practical.decimal-places-instruction"],
+      },
+      {
+        source: S("2023-summer", "U7AChemH", 1),
+        asked: "Record what is seen when magnesium reacts with hydrochloric acid.",
+        wentWrong: "Most completed the table well; the errors were a deduction written where an observation was asked (hydrogen given off) and 'clear' written for a liquid that had to be called colourless.",
+        rule: "Write what you see (bubbles, the solid disappears, a colourless solution), never what you conclude from it.",
+        misconceptions: ["sci.practical.deduction-given-as-observation", "sci.practical.clear-instead-of-colourless"],
+      },
+    ],
+    ruleToRemember: "Read every instrument to the precision it shows or the table asks for, keep the trailing zero and the unit, weigh within the range the task sets, and record what you see rather than what you conclude.",
+    aStarSignal: "A results table a moderator cannot fault: every reading to the stated decimal places with its unit, and every observation a thing seen.",
+  },
+
+  {
     id: "ins.science.u7.analysing",
     topic: "science.u7.analysing",
     specRefs: ["DA-U7-analyse-1", "DA-U7-analyse-2", "DA-U7-analyse-3", "DA-U7-analyse-4", "DA-U7-analyse-6"],
