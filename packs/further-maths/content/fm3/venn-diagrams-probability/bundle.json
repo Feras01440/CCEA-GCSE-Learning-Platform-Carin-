@@ -128,7 +128,7 @@
       "traps": [
         "Not checking the diagram against the stated population, so people are left unaccounted for: a considerable number missed this in Summer 2024 FM3 Q6, leaving 26 of 120 unplaced",
         "Misreading 'only', so the overlaps go in the wrong regions, and omitting the value that belongs outside the circles (Summer 2025 FM3 Q3)",
-        "Dropping a coefficient when the equation is formed, so an unknown region of 2x is written as x (Summer 2023 FM3 Q3)",
+        "Leaving a region out when the equation is formed, so x comes out wrong: many left out one small region, and half the candidates found the correct x (Summer 2023 FM3 Q3)",
         "Dividing by the number inside the circles instead of by the whole group, which was the difference between 54/78 and 54/80 (Summer 2023 FM3 Q3)",
         "Adding the printed pair totals as they stand, so the people in all three circles are counted in each of them",
         "Giving a bare region count, or forgetting to add every qualifying region, where a probability was asked for; answers greater than 1 were reported (Summer 2019 FM3 Q7)",
@@ -358,6 +358,235 @@
         }
       ],
       "verification": "ver.we.fm.u3.venn-diagrams-probability.02",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u3.venn-diagrams-probability.03",
+      "topic": "fm.u3.venn-diagrams-probability",
+      "specRefs": [
+        "FM3-PRB-02",
+        "FM3-PRB-03"
+      ],
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "stem": "A book club has 40 members. 23 read crime novels, 20 read fantasy and 5 read neither. $x$ members read both.\nFind $x$, and hence the probability that one member, picked at random, reads fantasy only.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-circle Venn diagram for 40 book-club members with the overlap written as x, the crime-only region as 23 minus x, the fantasy-only region as 20 minus x, and 5 outside both circles'><title>A two-circle Venn diagram for 40 book-club members with the overlap written as x, the crime-only region as 23 minus x, the fantasy-only region as 20 minus x, and 5 outside both circles</title><rect x='8' y='22' width='344' height='174' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='144' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='216' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='144' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Crime</text><text x='216.4' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Fantasy</text><text x='114' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>23 - x</text><text x='180' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>x</text><text x='246' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>20 - x</text><text x='326' y='188' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>5</text><text x='10' y='218' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>40 members</text></svg>",
+        "alt": "A two-circle Venn diagram for 40 members with the overlap written as x, the crime-only region as 23 minus x, the fantasy-only region as 20 minus x and 5 outside both circles."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "Crime only $= 23 - x$\nFantasy only $= 20 - x$\nNeither $= 5$",
+          "decision": "Write every region in terms of the unknown before anything else. The two printed totals each include the overlap, so each loses an $x$.",
+          "earns": [
+            "M1"
+          ]
+        },
+        {
+          "n": 2,
+          "working": "$(23 - x) + x + (20 - x) + 5 = 40$",
+          "decision": "The four regions do not overlap, so together they are the whole club. That sentence is the equation.",
+          "whyMenu": {
+            "options": [
+              "Include the 5 outside the circles, because they are members too",
+              "Leave the 5 out, because they are outside the circles",
+              "Add the 5 to both circle totals"
+            ],
+            "correct": 0,
+            "explain": "The rectangle is the whole club. Leaving the 5 out would set the circles equal to 40 on their own and give $x = 3$ instead of $x = 8$."
+          },
+          "earns": [
+            "MW1"
+          ]
+        },
+        {
+          "n": 3,
+          "working": "$48 - x = 40$\n$x = 8$",
+          "decision": "Collect the constants and the single $x$. One $x$ is left because the overlap was added once and subtracted twice.",
+          "earns": [
+            "W1"
+          ]
+        },
+        {
+          "n": 4,
+          "working": "Crime only $= 23 - 8 = 15$\nFantasy only $= 20 - 8 = 12$\nRegions: 15, 8, 12, 5\n$15 + 8 + 12 + 5 = 40$",
+          "decision": "Put $x$ back and check the total against the 40 the question gave. This is the one check that catches a misplaced region before it spoils every probability.",
+          "earns": [
+            "MW1"
+          ]
+        },
+        {
+          "n": 5,
+          "working": "$P(\\text{fantasy only}) = \\dfrac{12}{40}$",
+          "decision": "'Only' is the region outside the overlap, and the denominator is the whole club. A bare count would earn nothing on the answer line.",
+          "earns": [
+            "W1"
+          ]
+        }
+      ],
+      "finalAnswer": "$x = 8$ and $P(\\text{fantasy only}) = \\dfrac{3}{10}$",
+      "twin": {
+        "stem": "A choir has 36 singers. 22 sing in the chamber group, 16 in the gospel group and 5 in neither.\nFind the number who sing in both.",
+        "answer": {
+          "kind": "numeric",
+          "value": 7,
+          "tolerance": {
+            "type": "exact"
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal"
+          ]
+        },
+        "figure": {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-circle Venn diagram for 36 singers with the overlap written as x, the chamber-only region as 22 minus x, the gospel-only region as 16 minus x, and 5 outside both circles'><title>A two-circle Venn diagram for 36 singers with the overlap written as x, the chamber-only region as 22 minus x, the gospel-only region as 16 minus x, and 5 outside both circles</title><rect x='8' y='22' width='344' height='174' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='144' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='216' cy='112' r='64' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='143.6' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Chamber</text><text x='216' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Gospel</text><text x='114' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>22 - x</text><text x='180' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>x</text><text x='246' y='118' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>16 - x</text><text x='326' y='188' font-family='inherit' font-size='15.5' fill='currentColor' text-anchor='middle'>5</text><text x='10' y='218' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>36 singers</text></svg>",
+          "alt": "A two-circle Venn diagram for 36 singers with the overlap written as x, the chamber-only region as 22 minus x, the gospel-only region as 16 minus x and 5 outside both circles."
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 3,
+          "studentSupplies": [
+            4,
+            5
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u3.venn-diagrams-probability.03",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u3.venn-diagrams-probability.04",
+      "topic": "fm.u3.venn-diagrams-probability",
+      "specRefs": [
+        "FM3-PRB-02",
+        "FM3-PRB-03"
+      ],
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "stem": "80 students were asked which of three clubs, drama, science and art, they belong to. 5 belong to all three, 7 to drama and art but not science, 4 to science and art but not drama, 9 to science only, 8 to art only and 11 to none. $x$ belong to drama and science but not art, and $2x$ to drama only.\nFind $x$, and hence the probability that a student belongs to exactly two of the clubs.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 318' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A three-circle Venn diagram for 80 students and three clubs, drama, science and art, with the drama-only region written 2x and the drama-and-science-only region written x; the other regions read 5 in the centre, 7 drama and art only, 4 science and art only, 9 science only, 8 art only and 11 outside'><title>A three-circle Venn diagram for 80 students and three clubs, drama, science and art, with the drama-only region written 2x and the drama-and-science-only region written x; the other regions read 5 in the centre, 7 drama and art only, 4 science and art only, 9 science only, 8 art only and 11 outside</title><rect x='8' y='22' width='344' height='264' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='146' cy='108' r='60' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='214' cy='108' r='60' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='180' cy='166' r='60' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='112' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Drama</text><text x='248' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Science</text><text x='180' y='250' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Art</text><text x='121' y='102' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2x</text><text x='239' y='102' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>9</text><text x='180' y='199' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>8</text><text x='180' y='101' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>x</text><text x='145' y='158' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>7</text><text x='215' y='158' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='180' y='126' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='326' y='276' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>11</text><text x='10' y='308' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>80 students</text></svg>",
+        "alt": "A three-circle Venn diagram for 80 students with the drama-only region written 2x and the drama-and-science-only region written x."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "Regions: $2x$, $x$, 5, 7, 4, 9, 8, 11",
+          "decision": "List all eight regions of a three-circle diagram, the outside one included. Eight is the number to expect, and a missing one is the commonest reason an equation comes out wrong.",
+          "earns": [
+            "M1"
+          ]
+        },
+        {
+          "n": 2,
+          "working": "$2x + x + 5 + 7 + 4 + 9 + 8 + 11 = 80$",
+          "decision": "Set their total equal to the 80 students. The two unknown regions give $3x$, because one of them is twice the other.",
+          "whyMenu": {
+            "options": [
+              "$3x$, because the two unknown regions hold $2x$ and $x$",
+              "$2x$, because the larger region is the one that counts",
+              "$x$, because $x$ is the unknown"
+            ],
+            "correct": 0,
+            "explain": "Both regions are part of the 80, so both go into the total: $2x + x$ is $3x$. Writing $2x$ alone would leave the drama-and-science region out and give a different, wrong $x$."
+          },
+          "earns": [
+            "MW1"
+          ]
+        },
+        {
+          "n": 3,
+          "working": "$3x + 44 = 80$\n$3x = 36$\n$x = 12$",
+          "decision": "Collect and solve. Checking that $x$ is a whole number is worth a second: a fraction here means a region was misread.",
+          "earns": [
+            "W1"
+          ]
+        },
+        {
+          "n": 4,
+          "working": "Drama only $= 2 \\times 12 = 24$\nDrama and science only $= 12$\nAll eight regions total 80",
+          "decision": "Substitute and check the total: 24 + 12 + 5 + 7 + 4 + 9 + 8 + 11 comes to 80, which is what the survey said.",
+          "earns": [
+            "MW1"
+          ]
+        },
+        {
+          "n": 5,
+          "working": "$P(\\text{exactly two}) = \\dfrac{12 + 7 + 4}{80}$\n$= \\dfrac{23}{80}$",
+          "decision": "'Exactly two' is the three pair regions and never the centre, and the denominator is all 80 students, including the 11 in no club.",
+          "earns": [
+            "W1"
+          ]
+        }
+      ],
+      "finalAnswer": "$x = 12$ and $P(\\text{exactly two}) = \\dfrac{23}{80}$",
+      "twin": {
+        "stem": "Using the same completed diagram, calculate the probability that one student, picked at random, belongs to the drama club.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.6,
+          "tolerance": {
+            "type": "dp",
+            "places": 2
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "fraction",
+            "decimal"
+          ]
+        },
+        "figure": {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 318' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A three-circle Venn diagram for 80 students: 24 drama only, 12 drama and science only, 5 all three, 7 drama and art only, 4 science and art only, 9 science only, 8 art only and 11 in none'><title>A three-circle Venn diagram for 80 students: 24 drama only, 12 drama and science only, 5 all three, 7 drama and art only, 4 science and art only, 9 science only, 8 art only and 11 in none</title><rect x='8' y='22' width='344' height='264' stroke='currentColor' stroke-width='1.1' fill='none'/><circle cx='146' cy='108' r='60' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='214' cy='108' r='60' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><circle cx='180' cy='166' r='60' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.4'/><text x='112' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Drama</text><text x='248' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Science</text><text x='180' y='250' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Art</text><text x='121' y='102' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>24</text><text x='239' y='102' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>9</text><text x='180' y='199' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>8</text><text x='180' y='101' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>12</text><text x='145' y='158' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>7</text><text x='215' y='158' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='180' y='126' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='326' y='276' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>11</text><text x='10' y='308' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start' fill-opacity='0.85'>80 students</text></svg>",
+          "alt": "A three-circle Venn diagram for 80 students with every region filled in: 24, 9, 8, 12, 7, 4, 5 in the centre and 11 outside."
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 3,
+          "studentSupplies": [
+            4,
+            5
+          ]
+        },
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u3.venn-diagrams-probability.04",
       "version": 1
     }
   ],
@@ -2469,8 +2698,8 @@
           "type": "maths-numeric",
           "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
           "result": "pass",
-          "detail": "Every count and probability in the note and its five figures is emitted by scratchpad/fm3-batch-b/topic2.mjs from exact rationals in lib.mjs; every region is computed from the stem's own totals, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): every heading carries its role; each gate follows a worked demonstration in its own section, with fresh numbers where the gate's own answer would otherwise be printed above it (g1 drums only, g2 a pair region after the centre, g3 'and', 'A' and 'or' counted); section 1's caption no longer prints gate 1's answer; section 6 works buzzards-but-not-otters, which no question asks (it printed q0006's exactly-two answer); an \"Exam twists\" section (a region written 2x, Summer 2023 Q3; exactly two against at least two, Summer 2021 and 2024) with a new gate g9; every figure redrawn phone-native (360-unit viewBox, no label under 13.5 units); two prompts wired, not five, and prompts 01 and 06 withdrawn for the short 08 and 09; a second find-the-mistake (the denominator taken from inside the circles, Summer 2023 Q3). Fix pass of 23 Sep: section 4's diagram leaves the outside region empty and section 5 no longer states the 25 that its gate asks for, every caption sits below the box and each three-circle diagram names its third circle inside the box (the name hung below it), gate 3 names the piano-and-guitar diagram (the nearest figure above it is the three-circle filling order), gate 8 lists each accepted answer once and section 7 now works the buzzard case, so the otter probability gate 8 asks for is hers to form (the line above it printed 19/44), the examiner callout now says only what the Summer 2019 report says, and this log counts the note's five figures (it said eight).",
-          "at": "2026-09-25T04:24:00Z",
+          "detail": "Every count and probability in the note and its five figures is emitted by scratchpad/fm3-batch-b/topic2.mjs from exact rationals in lib.mjs; every region is computed from the stem's own totals, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): every heading carries its role; each gate follows a worked demonstration in its own section, with fresh numbers where the gate's own answer would otherwise be printed above it (g1 drums only, g2 a pair region after the centre, g3 'and', 'A' and 'or' counted); section 1's caption no longer prints gate 1's answer; section 6 works buzzards-but-not-otters, which no question asks (it printed q0006's exactly-two answer); an \"Exam twists\" section (a region written 2x, Summer 2023 Q3; exactly two against at least two, Summer 2021 and 2024) with a new gate g9; every figure redrawn phone-native (360-unit viewBox, no label under 13.5 units); two prompts wired, not five, and prompts 01 and 06 withdrawn for the short 08 and 09; a second find-the-mistake (the denominator taken from inside the circles, Summer 2023 Q3). Fix pass of 23 Sep: section 4's diagram leaves the outside region empty and section 5 no longer states the 25 that its gate asks for, every caption sits below the box and each three-circle diagram names its third circle inside the box (the name hung below it), gate 3 names the piano-and-guitar diagram (the nearest figure above it is the three-circle filling order), gate 8 lists each accepted answer once and section 7 now works the buzzard case, so the otter probability gate 8 asks for is hers to form (the line above it printed 19/44), the examiner callout now says only what the Summer 2019 report says, and this log counts the note's five figures (it said eight). Review pass (25 Sep 2026): the note teaches on its own numbers (a class's art and chess clubs, x = 6; a street's three streaming services), so no value a question, twin or find-the-mistake asks is worked in front of her (scratchpad/overlap-scan.mjs prints nothing for this topic); seven gates withdrawn and replaced, recorded above; section 4's figure draws only the centre and the pair its paragraph works; the Summer 2023 twist says what the report says (a region left out, not a coefficient).",
+          "at": "2026-09-27T15:14:00Z",
           "by": "claude"
         },
         {
@@ -2499,7 +2728,58 @@
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "It worked on the piano-and-guitar year group, the data of questions 0001-0003 and the find-the-mistake; g10 asks the same step of the note's own art and chess clubs.",
+          "on": "2026-09-27T15:14:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "The same year group as g1; g11 asks 'only' of the note's own clubs.",
+          "on": "2026-09-27T15:14:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "Its count came from the piano-and-guitar year group; g12 asks the note's own clubs.",
+          "on": "2026-09-27T15:14:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "It asked a wildlife-park region that the figure and caption above it printed, and the park is questions 0006-0009's; g13 asks the note's own streaming survey, with that region not yet drawn.",
+          "on": "2026-09-27T15:14:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "The wildlife park is questions 0006-0009's; g14 asks the streaming survey's outside region.",
+          "on": "2026-09-27T15:14:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "Its answer, 25/120, is question 0007's; g15 asks the streaming survey's own.",
+          "on": "2026-09-27T15:14:00Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "Its answer, 19/44, is question 0008's; g16 asks a conditional of the streaming survey.",
+          "on": "2026-09-27T15:14:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u3.venn-diagrams-probability.01",
@@ -2571,8 +2851,25 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-09-27T15:14:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the 25 Sep 2026 review pass: It worked the leisure-centre data that questions 0004 and 0005 ask, and its twin asked question 0001's x; we.03 works its own book club.",
+          "resolvedAt": "2026-09-27T15:14:00Z",
+          "resolution": "Replaced by we.fm.u3.venn-diagrams-probability.03."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "we.fm.u3.venn-diagrams-probability.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u3.venn-diagrams-probability.03",
+          "reason": "It worked the leisure-centre data that questions 0004 and 0005 ask, and its twin asked question 0001's x; we.03 works its own book club.",
+          "on": "2026-09-27T15:14:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u3.venn-diagrams-probability.02",
@@ -2641,6 +2938,169 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose and of a TeX command without its backslash.",
           "at": "2026-09-23T13:29:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-09-27T15:14:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the 25 Sep 2026 review pass: It worked the recycling data that question 0010 asks, and had no why-menu; we.04 works its own three clubs, with one.",
+          "resolvedAt": "2026-09-27T15:14:00Z",
+          "resolution": "Replaced by we.fm.u3.venn-diagrams-probability.04."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "we.fm.u3.venn-diagrams-probability.02",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u3.venn-diagrams-probability.04",
+          "reason": "It worked the recycling data that question 0010 asks, and had no why-menu; we.04 works its own three clubs, with one.",
+          "on": "2026-09-27T15:14:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.we.fm.u3.venn-diagrams-probability.03",
+      "itemId": "we.fm.u3.venn-diagrams-probability.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (WorkedExample) by pipeline/build-content.mts",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator throughout; content limited to statements FM3-PRB-02 and FM3-PRB-03. Four-circle diagrams and set algebra are outside the specification and do not appear.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Illustrate, Calculate, Find).",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Five steps carrying M1, MW1, W1, MW1, W1, the pattern the 2023 and 2025 schemes use for an illustrate-then-solve Venn question.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Every region, equation and probability in the example and its twin is emitted by scratchpad/fm3-batch-b/topic2.mjs from exact rationals in lib.mjs; every region is computed from the stem's own totals, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): added in the review pass (reviewer F12, F20, F22) to replace we.01: its own book-club situation, one relation to a line, the check lines written as she would write them.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The why-menu exercises the missing outside region reported in ccea-cer:further-maths:2023-summer:FM3:Q3 and ccea-cer:further-maths:2024-summer:FM3:Q6.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers and mark schemes read for this batch (Summer 2019 Q2 and Q7, Summer 2021 Q5, Summer 2022 Q1 and Q6, Summer 2023 Q3, Summer 2024 Q3 and Q6, Summer 2025 Q3 and Q7, Summer 2026 Q5 and Q7): every context, count and sentence is new, and scratchpad/fm3-batch-b/verify-text.mjs reports no eight-word sequence in common.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose and of a TeX command without its backslash.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u3.venn-diagrams-probability.04",
+      "itemId": "we.fm.u3.venn-diagrams-probability.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (WorkedExample) by pipeline/build-content.mts",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator throughout; content limited to statements FM3-PRB-02 and FM3-PRB-03. Four-circle diagrams and set algebra are outside the specification and do not appear.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Illustrate, Calculate, Find).",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Five steps carrying M1, MW1, W1, MW1, W1, the pattern the 2023 and 2025 schemes use for an illustrate-then-solve Venn question.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Every region, equation and probability in the example and its twin is emitted by scratchpad/fm3-batch-b/topic2.mjs from exact rationals in lib.mjs; every region is computed from the stem's own totals, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): added in the review pass (reviewer F12, F20) to replace we.02: its own three-club situation, with a why-menu at the equation.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The why-menu exercises the missing outside region reported in ccea-cer:further-maths:2023-summer:FM3:Q3 and ccea-cer:further-maths:2024-summer:FM3:Q6.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers and mark schemes read for this batch (Summer 2019 Q2 and Q7, Summer 2021 Q5, Summer 2022 Q1 and Q6, Summer 2023 Q3, Summer 2024 Q3 and Q6, Summer 2025 Q3 and Q7, Summer 2026 Q5 and Q7): every context, count and sentence is new, and scratchpad/fm3-batch-b/verify-text.mjs reports no eight-word sequence in common.",
+          "at": "2026-09-25T04:24:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose and of a TeX command without its backslash.",
+          "at": "2026-09-25T04:24:00Z",
           "by": "claude"
         }
       ],
