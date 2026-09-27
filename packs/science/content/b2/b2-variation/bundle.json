@@ -692,12 +692,25 @@
                   "no separate categories",
                   "not in separate categories",
                   "not in categories",
-                  "not in groups"
+                  "not in groups",
+                  "not split into separate groups",
+                  "not split into groups",
+                  "not split into distinct groups",
+                  "not divided into separate groups",
+                  "not divided into groups",
+                  "does not fall into separate groups",
+                  "does not fall into groups",
+                  "does not fall into distinct groups",
+                  "not separated into groups"
                 ],
                 "reject": [
                   "does not have a range",
                   "doesnt have a range",
-                  "no range"
+                  "no range",
+                  "not any value",
+                  "can not be any value",
+                  "cannot be any value",
+                  "not a range of values"
                 ],
                 "marks": 1
               }
@@ -820,7 +833,15 @@
                   "set categories",
                   "fixed groups",
                   "fixed categories",
-                  "no in between"
+                  "no in between",
+                  "either have it or",
+                  "have it or you do not",
+                  "have it or not",
+                  "you have it or you do not",
+                  "either you have it or",
+                  "can or can not",
+                  "either can or can not",
+                  "or you can not"
                 ],
                 "reject": [
                   "not in distinct",
@@ -999,7 +1020,7 @@
                 "value": 64
               },
               "feedback": "That is the percentage who can roll their tongue. The question asks about the pupils who cannot, so use the shorter bar.",
-              "marksTypicallyEarned": 1,
+              "marksTypicallyEarned": 0,
               "source": "ccea-cer:science:2025-summer:B2F:Q3"
             },
             {
@@ -1088,7 +1109,12 @@
                   "2 options",
                   "2 groups",
                   "2 categories",
-                  "yes or no"
+                  "yes or no",
+                  "can or can not",
+                  "either can or can not",
+                  "or you can not",
+                  "or they can not",
+                  "can or they can not"
                 ],
                 "marks": 1
               }
@@ -1258,7 +1284,7 @@
                 "value": 76
               },
               "feedback": "That is the percentage who are 160 cm or taller. The question asks for the pupils shorter than 160 cm.",
-              "marksTypicallyEarned": 1,
+              "marksTypicallyEarned": 0,
               "source": "ccea-cer:science:2025-summer:B2F:Q3"
             },
             {
@@ -1329,6 +1355,9 @@
                   "range of values",
                   "values in between",
                   "runs on into the next"
+                ],
+                "reject": [
+                  "not continuous"
                 ],
                 "marks": 1
               }
@@ -1461,6 +1490,9 @@
                   "range of values",
                   "measured",
                   "values in between"
+                ],
+                "reject": [
+                  "not continuous"
                 ],
                 "marks": 1
               }
@@ -2180,6 +2212,14 @@
                   "fixed groups",
                   "set categories"
                 ],
+                "reject": [
+                  "not in separate groups",
+                  "not in distinct groups",
+                  "not separate groups",
+                  "no separate groups",
+                  "no distinct groups",
+                  "not in groups"
+                ],
                 "marks": 1
               }
             ],
@@ -2213,7 +2253,7 @@
                 "value": 56.7
               },
               "feedback": "That is the percentage of the class who are not blood group O. Use the O bar on top of the fraction.",
-              "marksTypicallyEarned": 1,
+              "marksTypicallyEarned": 0,
               "source": "ccea-cer:science:2025-summer:B2F:Q3"
             },
             {
@@ -2269,9 +2309,9 @@
               "misconception": "sci.graph.type-mismatched-to-data",
               "pattern": {
                 "kind": "text",
-                "regex": "\\b(?:bar chart|bar graph|line graph|pie chart)\\b"
+                "regex": "\\b(?:bar chart|bar graph|bar charts|line graph|pie chart|pie|scatter graph|scatter)\\b"
               },
-              "feedback": "That graph suits data in separate groups, like the blood groups. Hand span can take any value, so it needs a histogram with the bars touching.",
+              "feedback": "A bar chart, with gaps between its bars, suits data in separate groups, like the blood groups; a pie chart or a scatter graph shows something else again. Hand span can take any value, so it needs a histogram with the bars touching.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:science:2023-summer:U7BChemF:Q3"
             }
@@ -2290,6 +2330,16 @@
                 "any": [
                   "histogram"
                 ],
+                "reject": [
+                  "histogram or bar chart",
+                  "histogram or a bar chart",
+                  "bar chart or histogram",
+                  "bar chart or a histogram",
+                  "histogram or bar graph",
+                  "histogram or a bar graph",
+                  "bar graph or histogram",
+                  "bar graph or a histogram"
+                ],
                 "marks": 1
               },
               {
@@ -2299,6 +2349,9 @@
                   "range of values",
                   "values in between",
                   "measured"
+                ],
+                "reject": [
+                  "not continuous"
                 ],
                 "marks": 1
               }
@@ -2409,6 +2462,30 @@
       ],
       "marksEarnedAsWritten": [],
       "feedback": "An answer of more than 100% for part of a class is the signal to look again. Summer 2025's B2 Foundation report records the same slip: candidates carried out a percentage calculation the wrong way round.",
+      "source": "ccea-cer:science:2025-summer:B2F:Q3"
+    },
+    {
+      "id": "ftm.science.b2.b2-variation.02",
+      "topic": "science.b2.b2-variation",
+      "specRefs": [
+        "DA-B2-2.5.1"
+      ],
+      "stem": "Sam reads a bar chart showing 18 pupils with free earlobes and 12 with attached earlobes. He is asked for the percentage of the class with attached earlobes. His working:",
+      "studentWorking": [
+        "Class total = 18 + 12 = 30",
+        "Percentage = 30 ÷ 12 × 100",
+        "= 250%"
+      ],
+      "mistakeLine": 2,
+      "misconception": "sci.quant.percentage-inverted",
+      "whatWentWrong": "Line 1 is right: the class is 30. Line 2 puts the whole class on top and the group underneath, so the fraction is upside down. The group goes on top and the whole class on the bottom, which gives 40%.",
+      "correction": [
+        "Class total = 18 + 12 = 30",
+        "Percentage = 12 ÷ 30 × 100",
+        "= 40%"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "A part of a class can never be more than 100% of it, so an answer above 100 is the signal to look again. Summer 2025's B2 Foundation report records the same slip: candidates carried out a percentage calculation the wrong way round.",
       "source": "ccea-cer:science:2025-summer:B2F:Q3"
     }
   ],
@@ -2525,6 +2602,22 @@
       ],
       "examUnit": "B2",
       "difficultyPrior": 6
+    },
+    {
+      "id": "rp.science.b2.b2-variation.08",
+      "topic": "science.b2.b2-variation",
+      "specRefs": [
+        "DA-B2-2.5.1"
+      ],
+      "kind": "qa",
+      "prompt": "Which graph displays continuous variation, and how do its bars look?",
+      "answer": "A histogram, with the bars touching.",
+      "keyWords": [
+        "histogram",
+        "touching"
+      ],
+      "examUnit": "B2",
+      "difficultyPrior": 5
     }
   ],
   "verification": [
@@ -2577,7 +2670,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -2607,7 +2700,23 @@
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "It asked the post-lesson diagnostic d3's question with d3's options; g7 applies the genetic causes to a case instead.",
+          "on": "2026-09-27T21:05:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g6",
+          "reason": "It asked the same percentage question, on the same numbers, as the post-lesson diagnostic d5; g6 checks the same step on a class of its own.",
+          "on": "2026-09-27T15:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.science.b2.b2-variation.01",
@@ -2658,7 +2767,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -2885,7 +2994,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -2966,7 +3075,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -3339,7 +3448,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -3420,7 +3529,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -3574,7 +3683,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -3655,7 +3764,7 @@
           "type": "maths-numeric",
           "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
           "result": "pass",
-          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7. Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
           "at": "2026-09-20T09:00:00Z",
           "by": "claude"
         },
@@ -3681,6 +3790,104 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the banned tokens (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; every figure carries alt text and uses no colour as its only signal; every figure passes the structure and geometry lints and was rendered and looked at; no question figure prints anything its own part asks for (scripts/qa/figure-leaks.mjs); no maths segment is opened without being closed in the same string.",
           "at": "2026-09-20T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "fail",
+          "detail": "Withdrawn 27 Sep 2026 (review M1): its bar chart was the worked example's own (4 left-handed of 32), so the working to be fixed was the working just shown. Reissued as ftm.science.b2.b2-variation.02 on a class of its own; the item here is unchanged so a review card that points at it still resolves.",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.science.b2.b2-variation.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.science.b2.b2-variation.02",
+          "on": "2026-09-27T15:30:00Z",
+          "reason": "It printed the worked example's own bar chart, so the working to fix had just been shown; ftm02 sets the same slip on new data."
+        }
+      ]
+    },
+    {
+      "id": "ver.ftm.science.b2.b2-variation.02",
+      "itemId": "ftm.science.b2.b2-variation.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts with zero problems.",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "B2 outcomes 2.5.1 and 2.5.2, both Foundation Tier, so every item is untiered. The examples are the specification's own (height and length; tongue rolling and hand dominance) plus blood group, which CCEA's schemes accept. Polygenic inheritance, types of mutation and their effects, and normal curves are outside this specification and are listed in notOnThisSpec rather than used.",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "waived",
+          "detail": "No formula sheet in science. Anything the learner must be able to compute is listed in the note as must-know.",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "State, Give, Name, Use, Calculate, Explain, Suggest and Complete, at the tariffs packs/science/exam-true/command-words.json gives (State/Give/Name [1], Calculate [1]-[2], Explain [1]-[2]).",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "Matches the real thing: CCEA set this material as one- and two-mark parts of Foundation questions in Summer 2019, 2021 and 2022, and one mark of a Higher question in 2023. Timings from packs/science/exam-true/tariffs.json (B2 Foundation 1.07 minutes per mark).",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "Recomputed from scratchpad/b2-batch-d/data.mjs: tongue rolling 16 and 9 of 25 gives 36% who cannot; 6 of 25 heights below 160 cm is 24%; blood group O 13 of 30 is 43.3%; 4 of 32 left-handed is 12.5% (twin 6 of 40, 15.0%); a class of 28 split 3 to 1 is 21 and 7; 12 of 30 with attached earlobes is 40% (the find-the-mistake reissue). Every numeric distractor is an executed error route (routes.mjs): the other group's percentage and the inverted fraction.",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "No Chief Examiner report from 2023 to 2025 names a failure on this topic, so no conceptual distractor carries a misconception tag. The two calculation slips tagged are the ones Summer 2025 B2 Foundation Q3 records (a percentage worked the wrong way round, and the other group's figure used), and the graph-choice slip is the one Summer 2023 Unit 7 Chemistry Q3 records (a bar graph drawn where the data needed a continuous scale).",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "No eight-word run in common with any CCEA paper, mark scheme or Chief Examiner report: checked with node scripts/qa/shingles.mjs --unit b2 against the whole corpus and with the batch shingle script against the B2 papers and schemes read for this batch (Summer 2019, 2021 and 2022 B2 Foundation, Summer 2023 B2 Higher). New classes, new counts, new contexts and new wording.",
+          "at": "2026-09-27T15:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the banned tokens (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; every figure carries alt text and uses no colour as its only signal; every figure passes the structure and geometry lints and was rendered and looked at; no question figure prints anything its own part asks for (scripts/qa/figure-leaks.mjs); no maths segment is opened without being closed in the same string.",
+          "at": "2026-09-27T15:30:00Z",
           "by": "claude"
         }
       ],
@@ -3912,7 +4119,16 @@
         }
       ],
       "status": "withdrawn",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.science.b2.b2-variation.03",
+          "kind": "prompt",
+          "replacedBy": "rp.science.b2.b2-variation.07",
+          "on": "2026-09-25T00:10:00Z",
+          "reason": "Its expected answer ran past the 25-word limit for a short recall; rp 07 asks the same fact in a short answer."
+        }
+      ]
     },
     {
       "id": "ver.rp.science.b2.b2-variation.04",
@@ -4200,6 +4416,79 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the banned tokens (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; every figure carries alt text and uses no colour as its only signal; every figure passes the structure and geometry lints and was rendered and looked at; no question figure prints anything its own part asks for (scripts/qa/figure-leaks.mjs); no maths segment is opened without being closed in the same string.",
           "at": "2026-09-25T00:10:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.science.b2.b2-variation.08",
+      "itemId": "rp.science.b2.b2-variation.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts with zero problems.",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "B2 outcomes 2.5.1 and 2.5.2, both Foundation Tier, so every item is untiered. The examples are the specification's own (height and length; tongue rolling and hand dominance) plus blood group, which CCEA's schemes accept. Polygenic inheritance, types of mutation and their effects, and normal curves are outside this specification and are listed in notOnThisSpec rather than used.",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "waived",
+          "detail": "No formula sheet in science. Anything the learner must be able to compute is listed in the note as must-know.",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "State, Give, Name, Use, Calculate, Explain, Suggest and Complete, at the tariffs packs/science/exam-true/command-words.json gives (State/Give/Name [1], Calculate [1]-[2], Explain [1]-[2]).",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "Matches the real thing: CCEA set this material as one- and two-mark parts of Foundation questions in Summer 2019, 2021 and 2022, and one mark of a Higher question in 2023. Timings from packs/science/exam-true/tariffs.json (B2 Foundation 1.07 minutes per mark).",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "No Chief Examiner report from 2023 to 2025 names a failure on this topic, so no conceptual distractor carries a misconception tag. The two calculation slips tagged are the ones Summer 2025 B2 Foundation Q3 records (a percentage worked the wrong way round, and the other group's figure used), and the graph-choice slip is the one Summer 2023 Unit 7 Chemistry Q3 records (a bar graph drawn where the data needed a continuous scale).",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "No eight-word run in common with any CCEA paper, mark scheme or Chief Examiner report: checked with node scripts/qa/shingles.mjs --unit b2 against the whole corpus and with the batch shingle script against the B2 papers and schemes read for this batch (Summer 2019, 2021 and 2022 B2 Foundation, Summer 2023 B2 Higher). New classes, new counts, new contexts and new wording.",
+          "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (author-unit-batch pass, B2 §2.5 batch D; every number generated in scratchpad/b2-batch-d)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the banned tokens (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; every figure carries alt text and uses no colour as its only signal; every figure passes the structure and geometry lints and was rendered and looked at; no question figure prints anything its own part asks for (scripts/qa/figure-leaks.mjs); no maths segment is opened without being closed in the same string.",
+          "at": "2026-09-27T21:05:00Z",
           "by": "claude"
         }
       ],
