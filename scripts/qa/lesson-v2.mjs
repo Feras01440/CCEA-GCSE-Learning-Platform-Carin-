@@ -61,8 +61,10 @@
  *               most 225 words and three blocks of explanation before a section's See it; a section ends in
  *               its Your turn (two only after two variants; a "See it done" heading opens its own stretch); a
  *               video or a sim is never a section's only See it; a choice gate's explanation never names an
- *               option by its position; a gate's re-teaching is at most 60 words; a twin never repeats its
- *               gate's prompt or answer; a See it block's reasons ≤ 40 words,
+ *               option by its place (read by src/lib/gate-order.ts positionalWording, as the app and the build
+ *               read it); a Your turn's answer is not printed in its own section's See it; a gate's
+ *               re-teaching is at most 60 words; a twin never repeats its gate's prompt or answer; a See it
+ *               block's reasons ≤ 40 words,
  *               balanced $, marks from the subject's mark language, no whyMenu (scripts/qa/see-it.mjs; the
  *               shape rules the renderer needs are refused by the build, content-lint.ts). WARNINGS (the
  *               list with --see or --depth) until --see-fatal. The depth row "see it" counts the sections
@@ -83,7 +85,8 @@
  * --withdrawn     print every topic's withdraw-and-replace records and their problems (scripts/qa/withdrawn.mjs)
  * --withdrawn-fatal count a withdrawn-record problem as a breach rather than a warning
  * --see           print every note's v3 structure findings (See it, first check, explanation length, Your turn,
- *                 video, option by position, See it block problems)
+ *                 video, option by its place, answer printed in the See it, See it block problems), then one
+ *                 readiness line per topic: "ready" or the reasons it is not (src/lib/slides/readiness.ts)
  * --see-fatal     count those as breaches rather than warnings
  * --json          print the findings as JSON for an author's generator (the depth rows under `depth`,
  *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`,
@@ -96,6 +99,18 @@ import { SEE_HEADING, describeFailure, inlineMaths, teachShowCheck } from "./tea
 import { ANSWER_TARGET, ANSWER_WORDS, QUESTION_WORDS, WIRED_MAX, promptFindings, promptTargets } from "./prompt-few.mjs";
 import { withdrawnFindings } from "./withdrawn.mjs";
 import { EXPLAIN_MAX, markCodes, seeItFindings } from "./see-it.mjs";
+
+// The app's own TypeScript rules, read as the build reads them (through tsx, so `node scripts/qa/lesson-v2.mjs` keeps
+// working): the lesson readiness rule (src/lib/slides/readiness.ts lessonReadiness, the one the build writes into the
+// manifest) and gate-order's positional reader (src/lib/gate-order.ts positionalWording, the one the app pins gates by
+// and the build's GATE warning uses). Both tsx hooks are needed: the ESM one for the dynamic imports, the CJS one for
+// the "@/…" paths inside them.
+(await import("tsx/esm/api")).register();
+(await import("tsx/cjs/api")).register();
+const { lessonReadiness } = await import("../../src/lib/slides/readiness.ts");
+const { positionalWording } = await import("../../src/lib/gate-order.ts");
+// the build's size rule (the lead's item 16), read from the build's own lint so the two never differ
+const { sizeWarnings, SIZE_LIMITS_KB } = await import("../../src/components/items/content-lint.ts");
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
@@ -737,7 +752,11 @@ function checkNote(file, orphans) {
     }
 
   // Lesson structure v3 (see-it.mjs): warnings unless --see-fatal or the unit's default
-  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle });
+  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle, positional: positionalWording });
+  // Lesson readiness, as the build decides it (the raw bundle with its note blocks; readiness reads the note's own log)
+  const readiness = bundle ? lessonReadiness({ note: bundle.note, noteBlocks: blocks, verification: bundle.verification }) : lessonReadiness(null);
+  // sizes over the build's limits (content-lint.ts sizeWarnings): a warning line each, printed under the summary
+  const sizes = sizeWarnings(bundle, blocks, `${unit}/${slug}`);
   for (const f of see.findings) say.push({ check: "see", detail: f.detail, v3: true });
 
   // the depth floor: warnings unless --depth-fatal
@@ -784,6 +803,8 @@ function checkNote(file, orphans) {
     targets,
     withdrawn,
     see,
+    readiness,
+    sizes,
     fatal,
   };
 }
@@ -847,7 +868,8 @@ const overTargetWired = notes.reduce((a, n) => a + n.targets.filter((t) => t.wir
 const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired); ${numberedAnswers} expect a numbered list; ${examinerPrompts} carry an examiner's finding; ${longQuestions} wired prompt(s) ask a question over ${QUESTION_WORDS} words${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}; report only: ${overTarget} shipped answer(s) over the ${ANSWER_TARGET}-word target (${overTargetWired} wired)${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
 
 // Lesson structure v3, over every note checked
-const seeKinds = ["see-missing", "first-check", "explain-long", "explain-blocks", "turn-last", "turns", "video", "option-position", "reteach", "twin", "block"];
+const seeKinds = ["see-missing", "first-check", "explain-long", "explain-blocks", "turn-last", "turns", "video", "option-position", "answer-shown", "reteach", "twin", "block"];
+const readyNotes = notes.filter((n) => n.readiness.ready);
 const seeCount = Object.fromEntries(seeKinds.map((k) => [k, notes.reduce((a, n) => a + n.see.findings.filter((f) => f.kind === k).length, 0)]));
 const seeNotes = notes.filter((n) => n.see.findings.length);
 const seeGates = notes.reduce((a, n) => a + n.see.gates, 0);
@@ -856,7 +878,7 @@ const seeBlocksAll = notes.reduce((a, n) => a + n.see.seeBlocks, 0);
 const notesWithSee = notes.filter((n) => n.see.seeBlocks).length;
 const firstOk = notes.filter((n) => n.see.firstCheck === true).length;
 const seeFindingsAll = seeKinds.reduce((a, k) => a + seeCount[k], 0);
-const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation and ${seeCount["explain-blocks"]} with more than three explanation blocks; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) or sim(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by position; ${seeCount.reteach} over 60 words; ${seeCount.twin} twin(s) repeating their gate; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
+const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation and ${seeCount["explain-blocks"]} with more than three explanation blocks; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) or sim(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by its place; ${seeCount["answer-shown"]} Your turn(s) whose answer its See it prints; ${seeCount.reteach} over 60 words; ${seeCount.twin} twin(s) repeating their gate; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
 
 // the per-topic lists of units migrating to v3 (lesson-v2.fatal.json "list": true), printed until their defaults are on
 const listUnits = [...new Set(notes.map((n) => n.unit))].filter((u) => unitFlag(u, "list"));
@@ -904,7 +926,9 @@ if (asJson) {
         prompts: promptNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, findings: n.prompts })),
         promptsSummary: { notes: notes.length, wiredOver, wiredMax: WIRED_MAX, longAnswers, longWired, answerWords: ANSWER_WORDS, numberedAnswers, longQuestions, questionWords: QUESTION_WORDS, overTarget, overTargetWired, answerTarget: ANSWER_TARGET },
         see: seeNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, gates: n.see.gates, gatesAfterSee: n.see.gatesAfterSee, seeBlocks: n.see.seeBlocks, firstCheck: n.see.firstCheck, findings: n.see.findings })),
-        seeSummary: { gates: seeGates, gatesAfterSee: seeAfter, seeBlocks: seeBlocksAll, notesWithSee, firstCheckOk: firstOk, notes: notes.length, ...seeCount },
+        seeSummary: { gates: seeGates, gatesAfterSee: seeAfter, seeBlocks: seeBlocksAll, notesWithSee, firstCheckOk: firstOk, notes: notes.length, ready: readyNotes.length, ...seeCount },
+        readiness: notes.map((n) => ({ unit: n.unit, slug: n.slug, ready: n.readiness.ready, via: n.readiness.via, reasons: n.readiness.reasons })),
+        sizes: notes.flatMap((n) => n.sizes),
         unitLists,
         withdrawn: wdNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, records: n.withdrawn.records, problems: n.withdrawn.problems })),
         withdrawnSummary: { records: wdRecords, topics: wdNotes.length, problems: wdProblems },
@@ -968,6 +992,11 @@ if (asJson) {
       for (const f of n.see.findings) console.log(`  ${f.kind.padEnd(15)} ${f.detail}`);
     }
   }
+  if (seeReport) {
+    // one line per topic: the build's own readiness rule (src/lib/slides/readiness.ts), ready or why not
+    console.log(`\nreadiness — Slides and Read v2 per topic (src/lib/slides/readiness.ts lessonReadiness, the rule the build writes into the manifest): ${readyNotes.length} of ${notes.length} ready`);
+    for (const n of notes) console.log(`  ${`${n.unit}/${n.slug}`.padEnd(58)} ${n.readiness.ready ? `ready (${n.readiness.via})` : `not ready: ${n.readiness.reasons.join("; ")}`}`);
+  }
   for (const u of listUnits) {
     const rows = unitLists[u];
     const on = ["teach", "prompts", "withdrawn", "see"].filter((k) => unitFlag(u, k));
@@ -1004,5 +1033,9 @@ if (asJson) {
   console.log(promptsLine);
   console.log(withdrawnLine);
   console.log(seeLine);
+  console.log(`readiness: ${readyNotes.length} of ${notes.length} topic(s) ready for Slides and Read v2 (src/lib/slides/readiness.ts)${seeReport ? "" : "; run --see for the reasons, topic by topic"}.`);
+  const sizeLines = notes.flatMap((n) => n.sizes);
+  console.log(`size: ${sizeLines.length} item(s) over the limits (a question, worked example or See it ${SIZE_LIMITS_KB.item} KB, a note ${SIZE_LIMITS_KB.note} KB, a bundle ${SIZE_LIMITS_KB.bundle} KB; warnings)${sizeLines.length ? ":" : "."}`);
+  for (const l of sizeLines) console.log(`  ${l}`);
 }
 process.exit(count ? 1 : 0);

@@ -30,8 +30,13 @@
  *   turns           more than two gates in one stretch (two only where the section showed two variants).
  *   video           a video or a sim is a section's only See it, or stands before the See it (the case §6.2 and §8.3:
  *                   "beside it, never instead of it"; the owner's answer 4: our own worked steps first).
- *   option-position a choice gate's explanation, or its twin's, names an option by its position ("the second
- *                   option", "option B", "the answer above"): the options are shuffled on screen.
+ *   option-position a choice gate's explanation, or its twin's, names an option by its place ("the second option",
+ *                   "option B", "the one above"), read by the app's own src/lib/gate-order.ts positionalWording, which
+ *                   the caller passes as `positional` (none passed, none read): such a gate is shown in its written
+ *                   order, so its answer stays where it was written.
+ *   answer-shown    a Your turn's answer is printed in a See it of its own section shown before it (a whole line, a
+ *                   side of an equation, the final answer; words as whole words), so she can copy it: it re-asks on
+ *                   new numbers, as a twin does (the lead, 27 Sep 2026).
  *   reteach         a gate's explanation, or its twin's, runs past RETEACH_WORDS words: a miss re-teaches in at most
  *                   60 (the case §6.3), a fraction or a formula counting as one word.
  *   twin            a gate's twin repeats the gate's prompt or answer: a twin is the same structure on new numbers,
@@ -78,23 +83,54 @@ const WARM_UP = /\bone tap\b|\bwarm[- ]?up\b|\btap any\b|\bjust tap\b|\bto get s
 export const warmUp = (prompt) => WARM_UP.test(String(prompt ?? ""));
 
 /**
- * The position of an option named in a gate's explanation, or null. Calibrated on the 1,723 gates of 27 Sep 2026:
- * an ordinal before "option" or "answer" ("the second option", "the first answer", "the middle option"), a letter or
- * number after "option" ("option B", "option 2") or a capital letter after "answer" ("answer C"), and "the option
- * above/below". Not "the first one" (a fraction turned over), not "one above the other", not "answer a problem", not
- * "the first choice" (counting), not "the top answers" (the best scripts).
+ * Positional wording is read by the app's own reader, src/lib/gate-order.ts `positionalWording` (the sentence that names
+ * an option by its place, or null), which the caller passes in as `positional`: lesson-v2.mjs loads it through tsx, the
+ * tests import it. The build's GATE warning (content-lint.ts noteBlockWarnings) uses the same reader and the same words,
+ * so the three never disagree on a gate (the lead, 27 Sep 2026: "do not copy the regex"; this module's own regex of the
+ * morning was retired with it).
  */
-const POSITION = [
-  /\b(?:first|second|third|fourth|fifth|last|middle|top|bottom)\s+(?:option|answer)\b(?!s)/i,
-  /\b(?:first|second|third|fourth|last)\s+(?:two\s+|three\s+)?options\b/i,
-  /\b[Oo]ption\s+\(?(?:[A-E]|[1-5])\)?(?![\w'’])/,
-  /\b[Aa]nswer\s+\(?[A-E]\)?(?![\w'’])/,
-  /\b(?:option|answer)\s+(?:above|below)\b/i,
-];
-export function optionByPosition(text) {
-  for (const re of POSITION) {
-    const m = re.exec(String(text ?? ""));
-    if (m) return m[0];
+const PINNED = "the gate is then shown in its written order, so its answer stays where it was written; name the option by what it says";
+const PINNED_TWIN = "that is true only in the order the twin was written; name the option by what it says";
+
+/**
+ * A Your turn's answer printed in its own section's See it (the lead, 27 Sep 2026: it re-asks on new numbers, as a twin
+ * does). Compared after normalising case, spaces, LaTeX delimiters ($, $$, \( \), \[ \]) and trailing punctuation. A
+ * number answer counts only as a whole result (a whole line, one side of an equation, or the final answer), so the 5 of
+ * "(x + 5)" is not the answer 5; any other answer counts wherever it stands, between non-alphanumeric neighbours.
+ */
+// Maths is compared with its spaces taken out ("(x + 3)(x - 3)" is "(x+3)(x-3)"); words keep one space between them, so a
+// phrase is found only as whole words ("difference of two squares", not inside another word).
+const normalised = (s, words = false) =>
+  String(s ?? "")
+    .toLowerCase()
+    .replace(/\$\$|\$|\\\(|\\\)|\\\[|\\\]/g, " ")
+    .replace(/\s+/g, words ? " " : "")
+    .trim()
+    .replace(/[.,;:!?]+$/, "");
+const NUMBER = /^[-−]?\d+(?:\.\d+)?$/;
+const RELATION = /=|≈|→|⇒|\\approx|\\to|\\rightarrow|\\implies/;
+const WORDY = /[a-z]{2,}\s+[a-z]{2,}/i;
+function printedIn(answer, text) {
+  const words = WORDY.test(String(answer ?? "").replace(/\$[^$]*\$/g, " "));
+  const a = normalised(answer, words);
+  const t = normalised(text, words);
+  if (!a || !t) return false;
+  if (t === a) return true;
+  if (NUMBER.test(a)) return String(text ?? "").split(RELATION).some((side) => normalised(side) === a);
+  const esc = a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // not inside a longer number or word: "4 m/s" is not in "8.4 m/s" (fm2/average-speed-and-velocity g12, 27 Sep 2026)
+  return new RegExp(`(?<![a-z0-9.])${esc}(?![a-z0-9])`).test(t);
+}
+/** Where a See it prints a gate's answer: "step 2", "the final answer", or null. */
+function answerShownIn(gate, see, bundle) {
+  const we = typeof see.workedExample === "string" ? (bundle?.workedExamples ?? []).find((w) => w.id === see.workedExample) : null;
+  const steps = we ? (we.steps ?? []) : Array.isArray(see.steps) ? see.steps : [];
+  const finalAnswer = we ? we.finalAnswer : see.finalAnswer;
+  const alternatives = gate.kind === "blank" ? String(gate.answer ?? "").split(" | ") : [String(gate.answer ?? "")];
+  for (const alt of alternatives.map((s) => s.trim()).filter(Boolean)) {
+    const k = steps.findIndex((s) => printedIn(alt, s?.working));
+    if (k >= 0) return { answer: alt, where: `step ${k + 1}` };
+    if (printedIn(alt, finalAnswer)) return { answer: alt, where: "the final answer" };
   }
   return null;
 }
@@ -141,9 +177,9 @@ function stepsOf(block, bundle) {
 /**
  * The v3 structure of one note.
  * @param {Array<object>} blocks  note.blocks.json
- * @param {{codes?: string[], bundle?: object}} ctx
+ * @param {{codes?: string[], bundle?: object, positional?: (explain: string | null) => string | null}} ctx  the step mark codes; the bundle; gate-order.ts positionalWording
  */
-export function seeItFindings(blocks, { codes = [], bundle } = {}) {
+export function seeItFindings(blocks, { codes = [], bundle, positional } = {}) {
   const recapAt = blocks.findIndex(isRecap);
   const pointerAt = blocks.findIndex(isPointer);
   const end = recapAt >= 0 ? recapAt : pointerAt >= 0 ? pointerAt : blocks.length;
@@ -179,9 +215,11 @@ export function seeItFindings(blocks, { codes = [], bundle } = {}) {
   for (const s of sections) {
     const where = `"${s.heading}"`;
     let seen = false;
+    const shown = []; // the section's See it blocks so far
     s.items.forEach((b, k) => {
       if (b.type === "see") {
         seen = true;
+        shown.push(b);
         seeBlocks += 1;
         seeSteps += stepsOf(b, bundle);
         for (const p of seeBlockProblems(b, { codes, bundle })) findings.push({ kind: "block", section: s.heading, detail: `See it in ${where}: ${p}` });
@@ -199,13 +237,19 @@ export function seeItFindings(blocks, { codes = [], bundle } = {}) {
         else if (!seen)
           findings.push({ kind: "first-check", gate: b.id, section: s.heading, detail: `the topic's first check, gate ${b.id}, does not follow a See it in its section; it must be answerable from the first See it` });
       }
-      if ((b.options ?? []).length) {
-        const named = optionByPosition(b.explain);
-        if (named) findings.push({ kind: "option-position", gate: b.id, section: s.heading, detail: `gate ${b.id}'s explanation names an option by its position ("${named}"); the options are shuffled, so name its content or point at the step` });
+      // the choice gates gate-order shuffles: kind choice, two options or more (its isChoiceGate)
+      if (positional && b.kind === "choice" && (b.options ?? []).length >= 2) {
+        const own = positional(typeof b.explain === "string" ? b.explain : null);
+        if (own) findings.push({ kind: "option-position", gate: b.id, section: s.heading, detail: `gate ${b.id}: its explanation names an option by its place ("${own}"): ${PINNED}` });
+        const theirs = b.twin ? positional(typeof b.twin.explain === "string" ? b.twin.explain : null) : null;
+        if (theirs) findings.push({ kind: "option-position", gate: b.id, section: s.heading, detail: `gate ${b.id}: its twin's explanation names an option by its place ("${theirs}"): ${PINNED_TWIN}` });
       }
-      if (b.twin && ((b.twin.options ?? []).length || (b.options ?? []).length)) {
-        const named = optionByPosition(b.twin.explain);
-        if (named) findings.push({ kind: "option-position", gate: b.id, section: s.heading, detail: `gate ${b.id}'s twin explanation names an option by its position ("${named}"); the options are shuffled, so name its content or point at the step` });
+      // its answer printed in a See it of its own section, shown before it
+      for (const v of shown) {
+        const hit = answerShownIn(b, v, bundle);
+        if (!hit) continue;
+        findings.push({ kind: "answer-shown", gate: b.id, section: s.heading, detail: `gate ${b.id}'s answer "${hit.answer}" is printed in its section's See it (${hit.where}): she can copy it rather than do it; ask it on new numbers, as a twin does` });
+        break;
       }
       // a miss re-teaches in at most 60 words (the case §6.3), the twin's too
       for (const [whose, text] of [["explanation", b.explain], ["twin explanation", b.twin?.explain]]) {

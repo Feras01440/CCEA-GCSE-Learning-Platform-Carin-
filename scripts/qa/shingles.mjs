@@ -18,9 +18,15 @@
  *   scheme-or-report  it appears in any mark scheme or Chief Examiner report. Never allowed,
  *                     whatever else it does: those are the board's confidential solutions and
  *                     commentary. A BREACH.
+ *   textbook-copy     it appears in a CCEA textbook (docs/sources/textbooks/*.txt, the lead's item 12,
+ *                     27 Sep 2026: no author's wording shares a run with a textbook sentence). A BREACH,
+ *                     reported with the book and its page (the PDF page, and the page number printed
+ *                     on it where there is one), unless the run is an allowed named statement or the
+ *                     board's stock instruction language, which a textbook quotes too.
  *
  * The corpus is private and gitignored. Nothing from it is ever printed except the shared
- * sequence itself — which is our own text as well — and the file path it was found in.
+ * sequence itself — which is our own text as well — and the file path (or the book and page) it
+ * was found in.
  *
  *   node scripts/qa/shingles.mjs                    every bundle and note under packs/<subject>/content
  *   node scripts/qa/shingles.mjs --unit fm1         one unit (repeatable)
@@ -33,12 +39,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { allowEntries, allowedBy as allowEntryFor, verdict } from "./shingles-allow.mjs";
+import { allowEntries, allowedBy as allowEntryFor, bookWords, pageOfWord, textbookPages, verdict } from "./shingles-allow.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const PACKS = path.join(ROOT, "packs");
 const PAPERS = path.join(ROOT, "docs", "sources", "papers");
 const SOURCES = path.join(ROOT, "docs", "sources");
+const TEXTBOOKS = path.join(SOURCES, "textbooks");
 
 const argv = process.argv.slice(2);
 const flag = (name) => argv.filter((a, i) => argv[i - 1] === name);
@@ -260,9 +267,11 @@ function corpusFiles() {
     }
   };
   walk(PAPERS, (name) => (isScheme(name) ? "scheme" : "paper"));
+  // the CCEA textbooks, every text file (27 Sep 2026: three books, more to come)
+  walk(TEXTBOOKS, () => "textbook");
   // Chief Examiner reports sit beside the specifications, not under papers/
   for (const entry of fs.existsSync(SOURCES) ? fs.readdirSync(SOURCES, { withFileTypes: true }) : []) {
-    if (!entry.isDirectory() || entry.name === "papers") continue;
+    if (!entry.isDirectory() || entry.name === "papers" || entry.name === "textbooks") continue;
     walk(path.join(SOURCES, entry.name), (name) => (/report/i.test(name) ? "report" : null));
   }
   return out;
@@ -275,7 +284,7 @@ if (corpus.length === 0) {
   process.exit(0);
 }
 
-const hits = new Map(); // sequence -> { papers:Set, schemes:Set, reports:Set }
+const hits = new Map(); // sequence -> { papers:Set, schemes:Set, reports:Set, textbooks:Set, pages:[] }
 let corpusSequences = 0;
 for (const { file, kind } of corpus) {
   let text;
@@ -284,19 +293,59 @@ for (const { file, kind } of corpus) {
   } catch {
     continue;
   }
-  const w = words(text);
+  // a textbook is read without its running headers and cover (bookWords), the words its pages are counted in
+  const w = kind === "textbook" ? bookWords(text) : words(text);
   const rel = path.relative(ROOT, file).split(path.sep).join("/");
+  // a textbook's pages (form feeds), so a shared run is reported with its book and page
+  const pages = kind === "textbook" ? textbookPages(text) : null;
+  const book = kind === "textbook" ? path.basename(file).replace(/\.txt$/i, "") : null;
   for (let i = 0; i + N <= w.length; i++) {
     corpusSequences++;
     const seq = w.slice(i, i + N).join(" ");
     if (!ours.has(seq)) continue;
     let h = hits.get(seq);
-    if (!h) hits.set(seq, (h = { papers: new Set(), schemes: new Set(), reports: new Set() }));
+    if (!h) hits.set(seq, (h = { papers: new Set(), schemes: new Set(), reports: new Set(), textbooks: new Set(), pages: [] }));
     if (kind === "paper") h.papers.add(rel);
     else if (kind === "scheme") h.schemes.add(rel);
-    else h.reports.add(rel);
+    else if (kind === "textbook") {
+      h.textbooks.add(rel);
+      const at = pageOfWord(pages, i);
+      if (h.pages.length < 3) h.pages.push({ book, ...at });
+    } else h.reports.add(rel);
   }
 }
+/** "Biology_ Unit 2 Higher Tier, PDF page 24 (printed page 20)" */
+const pageText = (p) => `${p.book}, PDF page ${p.pdfPage}${p.printed ? ` (printed page ${p.printed})` : ""}`;
+
+/**
+ * The specification's own words (data/spec/*.json, every string): the textbooks reprint the specification's learning
+ * outcomes ("explain the role of villi in providing these"), and a note quotes them in its spec callouts, which is the
+ * specification, public and quoted by design, never a copy of the book. A run the textbook shares that is also the
+ * specification's wording is therefore not held against us as a textbook copy (it keeps any other verdict it has).
+ */
+const SPEC_RUNS = (() => {
+  const set = new Set();
+  const dir = path.join(ROOT, "data", "spec");
+  const strings = [];
+  const collect = (o) => {
+    if (typeof o === "string") strings.push(o);
+    else if (Array.isArray(o)) o.forEach(collect);
+    else if (o && typeof o === "object") Object.values(o).forEach(collect);
+  };
+  for (const f of fs.existsSync(dir) ? fs.readdirSync(dir) : [])
+    if (f.endsWith(".json"))
+      try {
+        collect(JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")));
+      } catch {
+        /* a malformed spec file is the spec pipeline's finding */
+      }
+  for (const s of strings) {
+    const w = words(s);
+    for (let i = 0; i + N <= w.length; i++) set.add(w.slice(i, i + N).join(" "));
+  }
+  return set;
+})();
+let specQuotes = 0;
 
 // ── classify ─────────────────────────────────────────────────────────────────────────────────
 
@@ -306,7 +355,10 @@ const allowed = [];
 for (const [seq, h] of hits) {
   const at = ours.get(seq);
   const allow = allowedBy(seq);
-  const kind = verdict({ papers: h.papers.size, schemes: h.schemes.size, reports: h.reports.size }, allow, () => isCommandMaterial(at, seq), STOCK_PAPERS);
+  const quotesSpec = h.textbooks.size > 0 && SPEC_RUNS.has(seq);
+  if (quotesSpec) specQuotes += 1;
+  if (quotesSpec && h.papers.size + h.schemes.size + h.reports.size === 0) continue; // the specification's words only
+  const kind = verdict({ papers: h.papers.size, schemes: h.schemes.size, reports: h.reports.size, textbooks: quotesSpec ? 0 : h.textbooks.size }, allow, () => isCommandMaterial(at, seq), STOCK_PAPERS);
   if (kind === "allowed") {
     // a named theorem, law or definition in its standard form: common language, not the board's, even where a
     // mark scheme prints it as the reason to give (shingles-allow.mjs)
@@ -319,6 +371,8 @@ for (const [seq, h] of hits) {
       sources: [...h.schemes, ...h.reports].slice(0, 3),
       papers: h.papers.size,
     });
+  } else if (kind === "textbook-copy") {
+    breaches.push({ kind: "textbook-copy", sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, sources: h.pages.map(pageText), papers: h.papers.size });
   } else if (kind === "stock") {
     stock.push({ sequence: seq, where: at.where, subject: at.subject, unit: at.unit, slug: at.slug, papers: h.papers.size });
   } else if (kind === "stimulus-copy") {
@@ -344,10 +398,13 @@ const counts = {
   papers: corpus.filter((c) => c.kind === "paper").length,
   schemes: corpus.filter((c) => c.kind === "scheme").length,
   reports: corpus.filter((c) => c.kind === "report").length,
+  textbooks: corpus.filter((c) => c.kind === "textbook").length,
   corpusSequences,
   shared: hits.size,
   stock: stock.length,
   allowed: allowed.length,
+  specQuotes,
+  textbookCopies: breaches.filter((b) => b.kind === "textbook-copy").length,
   breaches: breaches.length,
 };
 
@@ -356,13 +413,15 @@ if (asJson) {
 } else {
   console.log(
     `shingles: ${counts.ourSequences.toLocaleString()} distinct ${N}-word sequences in ${counts.ourFiles} content files, against ` +
-      `${counts.corpusSequences.toLocaleString()} from ${counts.corpusFiles} corpus files (${counts.papers} papers, ${counts.schemes} mark schemes, ${counts.reports} reports)`,
+      `${counts.corpusSequences.toLocaleString()} from ${counts.corpusFiles} corpus files (${counts.papers} papers, ${counts.schemes} mark schemes, ${counts.reports} reports, ${counts.textbooks} textbooks)`,
   );
-  const order = { "scheme-or-report": 0, "stimulus-copy": 1, "paper-copy": 2 };
+  const order = { "scheme-or-report": 0, "textbook-copy": 1, "stimulus-copy": 2, "paper-copy": 3 };
   for (const b of breaches.sort((x, y) => order[x.kind] - order[y.kind] || x.where.localeCompare(y.where))) {
     const tail =
       b.kind === "scheme-or-report"
         ? `shared with a mark scheme or examiner report: ${b.sources.join(", ")}`
+        : b.kind === "textbook-copy"
+          ? `shared with a CCEA textbook: ${b.sources.join("; ")}`
         : b.kind === "stimulus-copy"
           ? `reused context prose: in ${b.papers} papers, but it carries no command word, instruction phrase or formula-sheet line: ${b.sources.join(", ")}`
           : `in ${b.papers} paper${b.papers === 1 ? "" : "s"} only (stock language needs ${STOCK_PAPERS}): ${b.sources.join(", ")}`;
@@ -384,6 +443,8 @@ if (asJson) {
     for (const [statement, e] of byStatement)
       console.log(`  ${e.runs} run${e.runs === 1 ? "" : "s"}  "${statement}"\n      ${[...e.where].join(", ")} — ${e.reason}`);
   }
+  if (counts.textbooks > 0)
+    console.log(`\ntextbooks: ${counts.textbookCopies} run(s) shared with a CCEA textbook (breaches above, with the book and page); ${counts.specQuotes} more the textbook shares only because both quote the specification (not held against us).`);
   if (breaches.length === 0) {
     console.log(`\n${counts.shared} shared sequence(s): ${counts.stock} stock instruction language, ${counts.allowed} a standard statement. No breach.`);
   } else {
