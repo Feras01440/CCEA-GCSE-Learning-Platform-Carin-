@@ -1,114 +1,63 @@
 [
   {
     "type": "hero",
-    "lede": "Take a sweet from a bag and eat it, and the bag you reach into next is a different bag: one fewer sweet, and one fewer of that colour. A tree diagram keeps track. You multiply along a branch for both things happening, and add branches for the different ways one description can come true.",
+    "lede": "Take a sweet from a bag and eat it, and the second sweet comes from a different bag: one fewer sweet, and one fewer of that colour. A tree diagram keeps both picks in view. Multiply along a branch, add the branches that fit, and take 'none' from 1 when a question says 'at least one'.",
     "can": [
       "Write the second-pick probabilities after one item has been taken and kept.",
-      "Multiply along a branch and add across branches.",
-      "Reach an at-least-one answer by subtracting the opposite from 1."
+      "Multiply along a branch, add every branch that fits, and use 1 minus for at least one or different colours.",
+      "Build a tree from 'if' sentences, and count the groups before choosing from them."
     ],
-    "minutes": 10
-  },
-  {
-    "type": "h",
-    "text": "Tree diagrams without replacement"
-  },
-  {
-    "type": "p",
-    "md": "Every probability you have met so far came from a bag that stayed the same. Here one counter is taken out and kept, so the second pick starts from a smaller bag: eleven counters instead of twelve, and one colour short by one. A tree diagram is the picture that holds both stages at once, and the whole method is read straight off it."
+    "minutes": 19
   },
   {
     "type": "figure",
-    "alt": "A probability tree for two picks without replacement from 7 blue and 5 yellow. The first pair of branches carry 7/12 and 5/12. From blue the second branches carry 6/11 and 5/11; from yellow they carry 7/11 and 4/11.",
-    "svg": "<svg viewBox='0 0 368 220' xmlns='http://www.w3.org/2000/svg' width='368' height='220'><circle cx='14' cy='108' r='2.4' fill='currentColor'/><path d='M18 108L100 54' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='59' y='70.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>7</text><path d='M51.74 73H66.26' stroke='currentColor' stroke-width='0.8'/><text x='59' y='82' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>12</text><text x='106' y='57.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Blue</text><path d='M144 54L248 26' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='29.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>6</text><path d='M190.74 32H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='41' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='29.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Blue</text><text x='364' y='29.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>BB</text><path d='M144 54L248 82' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='75.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>5</text><path d='M190.74 78H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='87' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='85.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Yellow</text><text x='364' y='85.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>BY</text><path d='M18 108L100 162' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='59' y='142.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>5</text><path d='M51.74 145H66.26' stroke='currentColor' stroke-width='0.8'/><text x='59' y='154' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>12</text><text x='106' y='165.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Yellow</text><path d='M144 162L248 134' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='137.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>7</text><path d='M190.74 140H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='149' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='137.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Blue</text><text x='364' y='137.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>YB</text><path d='M144 162L248 190' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='198' y='183.5' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>4</text><path d='M190.74 186H205.26' stroke='currentColor' stroke-width='0.8'/><text x='198' y='195' font-family='inherit' font-size='9' fill='currentColor' text-anchor='middle'>11</text><text x='254' y='193.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='start'>Yellow</text><text x='364' y='193.5' font-family='inherit' font-size='10' fill='currentColor' text-anchor='end'>YY</text></svg>",
-    "caption": "Two picks without replacement from $7$ blue and $5$ yellow. Every second-pick denominator is $11$; only the numerators tell the two halves apart."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "number",
-    "prompt": "A bag holds $7$ blue and $5$ yellow counters. One counter is taken and not replaced. How many counters are left?",
-    "answer": "11",
-    "explain": "There were $12$ and one has gone, so $11$ are left. Every second-pick denominator on the tree is that number."
+    "alt": "A probability tree for two counters taken without replacement from 4 red and 7 blue. The first branches carry 4/11 and 7/11. After a red the second branches carry 3/10 and 7/10; after a blue, 4/10 and 6/10.",
+    "svg": "<svg viewBox='0 0 400 298' xmlns='http://www.w3.org/2000/svg' width='400' height='298'><text x='75' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>1st pick</text><text x='257' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>2nd pick</text><circle cx='10' cy='162' r='2.6' fill='currentColor'/><path d='M13 162L136 98' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='62.96' y='102.62' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M52.28 106.82L73.64 106.82' fill='none' stroke='currentColor' stroke-width='1'/><text x='62.96' y='121.52' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>11</text><text x='146' y='103' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Red</text><path d='M214 98L300 66' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='248.28' y='53.37' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M237.6 57.57L258.96 57.57' fill='none' stroke='currentColor' stroke-width='1'/><text x='248.28' y='72.27' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><text x='306' y='71' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Red</text><text x='396' y='71' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>RR</text><path d='M214 98L300 130' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='248.28' y='132.23' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>7</text><path d='M237.6 136.43L258.96 136.43' fill='none' stroke='currentColor' stroke-width='1'/><text x='248.28' y='151.13' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><text x='306' y='135' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Blue</text><text x='396' y='135' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>RB</text><path d='M13 162L136 226' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='62.96' y='210.98' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>7</text><path d='M52.28 215.18L73.64 215.18' fill='none' stroke='currentColor' stroke-width='1'/><text x='62.96' y='229.88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>11</text><text x='146' y='231' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Blue</text><path d='M214 226L300 194' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='248.28' y='181.37' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M237.6 185.57L258.96 185.57' fill='none' stroke='currentColor' stroke-width='1'/><text x='248.28' y='200.27' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><text x='306' y='199' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Red</text><text x='396' y='199' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>BR</text><path d='M214 226L300 258' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='248.28' y='260.23' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><path d='M237.6 264.43L258.96 264.43' fill='none' stroke='currentColor' stroke-width='1'/><text x='248.28' y='279.13' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><text x='306' y='263' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Blue</text><text x='396' y='263' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>BB</text></svg>",
+    "caption": "Two picks without replacement from 4 red and 7 blue: every second pick is over 10, and only the colour taken loses one."
   },
   {
     "type": "h",
-    "text": "What changes on the second pick"
+    "text": "One fewer in the bag",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "Take the bag of $7$ blue and $5$ yellow counters. The first pick is easy: $P(\\text{blue}) = \\tfrac{7}{12}$ and $P(\\text{yellow}) = \\tfrac{5}{12}$.\n\nFor the second pick, two things can change:\n\n**The denominator always falls by one**, because one counter has left the bag whatever colour it was: $12 \\to 11$.\n**The numerator falls only if that colour was the one taken.** After a blue, there are $6$ blue left but still $5$ yellow. After a yellow, there are still $7$ blue but only $4$ yellow."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "blank",
-    "prompt": "On the tree above, what probability sits on the branch for yellow after a blue?",
-    "answer": "5/11 | 5 out of 11",
-    "explain": "A blue counter went, so all $5$ yellows are still there, out of $11$ counters: $\\tfrac{5}{11}$."
-  },
-  {
-    "type": "h",
-    "text": "Along a branch, across branches"
+    "md": "In the drawing, the first pick comes from all 11 counters. Whichever colour it is, that counter stays out, so every second-pick branch is over 10."
   },
   {
     "type": "p",
-    "md": "**Along a branch: multiply.** Both things have to happen, one after the other. $P(\\text{both blue}) = \\tfrac{7}{12} \\times \\tfrac{6}{11} = \\tfrac{42}{132} = \\tfrac{7}{22}$.\n\n**Across branches: add.** Two different branches are two different ways for the same description to be true. One of each colour happens as blue-then-yellow, $\\tfrac{35}{132}$, or yellow-then-blue, $\\tfrac{35}{132}$, so $P(\\text{one of each}) = \\tfrac{70}{132} = \\tfrac{35}{66}$.\n\nA free check: the four branch products always add to 1."
+    "md": "The top changes only for the colour that was taken. After a red, 3 of the 10 are red and all 7 blues are still there. After a blue, all 4 reds are there but only 6 blues."
   },
   {
-    "type": "gate",
-    "id": "g3",
-    "kind": "blank",
-    "prompt": "From the same bag, what is $P(\\text{both yellow})$? Give a fraction in its simplest form.",
-    "answer": "5/33 | 20/132",
-    "explain": "$\\tfrac{5}{12} \\times \\tfrac{4}{11} = \\tfrac{20}{132} = \\tfrac{5}{33}$."
-  },
-  {
-    "type": "callout",
-    "kind": "why",
-    "title": "Why both orders count",
-    "md": "*One of each* does not say which colour comes first, so two different branches fit it. Counting only one halves the answer, and a third of candidates did exactly that on a two-roll question in Summer 2024. If the question does fix the order — *the first is blue and the second is yellow* — then only one branch counts, so read the wording before you add anything."
-  },
-  {
-    "type": "h",
-    "text": "See it drawn"
-  },
-  {
-    "type": "video",
-    "videoId": "PYEvSuz1Dxo",
-    "title": "Tree Diagrams - Corbettmaths",
-    "channel": "corbettmaths",
-    "corbettmathsNumber": 252,
-    "why": "Corbettmaths video 252 builds the tree branch by branch and shows the multiplying and adding in the same picture. Watch it once, then answer the gate below."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "choice",
-    "prompt": "Two counters are taken without replacement. Which pair of operations is right?",
-    "options": [
-      "Multiply along a branch, add the branches",
-      "Add along a branch, multiply the branches",
-      "Multiply along a branch, multiply the branches"
-    ],
-    "answer": "Multiply along a branch, add the branches",
-    "explain": "Along a branch both events happen, which is a multiplication. Across branches either will do, which is an addition."
-  },
-  {
-    "type": "h",
-    "text": "At least one"
-  },
-  {
-    "type": "p",
-    "md": "*At least one yellow* covers three of the four branches, so adding them is three chances to slip. There is a shorter route: the only outcome with **no** yellow at all is blue-then-blue.\n\n$P(\\text{at least one yellow}) = 1 - P(\\text{no yellow}) = 1 - \\tfrac{7}{22} = \\tfrac{15}{22}$\n\nOne branch instead of three. Two warnings: *at least one* is not *exactly one*, and the subtraction is always from 1, never from anything else."
-  },
-  {
-    "type": "gate",
-    "id": "g5",
-    "kind": "blank",
-    "prompt": "From the same bag, what is $P(\\text{at least one blue})$? Give a fraction in its simplest form.",
-    "answer": "28/33 | 112/132",
-    "explain": "The only outcome with no blue is yellow then yellow, $\\tfrac{5}{33}$, so the answer is $1 - \\tfrac{5}{33} = \\tfrac{28}{33}$."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A bag holds $4$ red and $7$ blue counters. Two are taken at random, and the first is not put back. Complete the tree diagram.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "First pick: $P(\\text{red}) = \\dfrac{4}{11}$ and $P(\\text{blue}) = \\dfrac{7}{11}$",
+        "decision": "Count the whole bag: 11 counters, 4 of them red. The two branches from one point add to 1.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "After a red: $P(\\text{red}) = \\dfrac{3}{10}$, $P(\\text{blue}) = \\dfrac{7}{10}$",
+        "decision": "One red has gone, so 10 counters are left and only 3 are red. None of the blues has moved.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "After a blue: $P(\\text{red}) = \\dfrac{4}{10}$, $P(\\text{blue}) = \\dfrac{6}{10}$",
+        "decision": "This time a blue has gone: still 10 left, all 4 reds, and 6 blues. Each pair adds to 1.",
+        "earns": [
+          "MA1"
+        ]
+      }
+    ]
   },
   {
     "type": "sim",
@@ -117,70 +66,949 @@
     "title": "GeoGebra: Probability Tree Diagrams",
     "attribution": "GeoGebra applet by its author, hosted at https://www.geogebra.org/m/M85jmuEv",
     "licence": "GeoGebra Non-Commercial Licence (user-created resource, free for classroom and personal use)",
-    "task": "Set up two picks without replacement and change the counts. Watch what the second-pick denominators do, and check every time that the four branch products still add to 1."
+    "task": "Set up two picks without replacement and change the counts. Watch what the second-pick denominators do, and check each time that the four branch products still add to 1."
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g8",
     "kind": "choice",
-    "prompt": "Which answer to a probability question tells you straight away that something has gone wrong?",
+    "prompt": "A jar holds $5$ lemon and $9$ orange sweets. An orange one is taken and eaten. What is the probability that the next sweet taken is orange?",
     "options": [
-      "$\\tfrac{13}{11}$",
-      "$\\tfrac{1}{30}$",
-      "$\\tfrac{5}{11}$"
+      "$\\frac{8}{13}$",
+      "$\\frac{9}{13}$",
+      "$\\frac{9}{14}$",
+      "$\\frac{8}{14}$"
     ],
-    "answer": "$\\tfrac{13}{11}$",
-    "explain": "A probability cannot be greater than 1. That usually means two branch probabilities were added where they should have been multiplied."
+    "answer": "$\\frac{8}{13}$",
+    "explain": "The second pick comes from a smaller jar: 13 sweets, because one was eaten, and 8 oranges, because the eaten one was orange. That is step 2 of See it with oranges for reds. Keeping 9 on top forgets the eaten orange; keeping 14 underneath puts it back.",
+    "twin": {
+      "prompt": "A tray holds $7$ plain and $6$ seeded rolls. A seeded roll is taken. What is the probability that the next roll taken is seeded?",
+      "options": [
+        "$\\frac{5}{12}$",
+        "$\\frac{6}{12}$",
+        "$\\frac{6}{13}$",
+        "$\\frac{5}{13}$"
+      ],
+      "answer": "$\\frac{5}{12}$",
+      "explain": "One roll has gone, so 12 are left, and it was seeded, so 5 seeded rolls are left: 5/12. The top falls only for the kind that was taken.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{6}{12}$",
+          "why": "The seeded roll that was taken is not on the tray any more, so the seeded count is one fewer.",
+          "misconception": "maths.prob.numerator-not-reduced"
+        },
+        {
+          "option": "$\\frac{6}{13}$",
+          "why": "That is the first pick's chance; the roll is not put back, so the second pick is out of one fewer.",
+          "misconception": "maths.prob.with-replacement-in-non-replacement"
+        },
+        {
+          "option": "$\\frac{5}{13}$",
+          "why": "The seeded count fell but the tray total did not; one roll has gone, so the bottom falls by one too.",
+          "misconception": "maths.prob.with-replacement-in-non-replacement"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{9}{13}$",
+        "why": "Counting the oranges you started with is natural, but the one that was eaten is not there any more, so the top is one fewer.",
+        "misconception": "maths.prob.numerator-not-reduced"
+      },
+      {
+        "option": "$\\frac{9}{14}$",
+        "why": "That is the chance on the first pick; nothing goes back into the jar, so the second pick is out of one fewer sweet.",
+        "misconception": "maths.prob.with-replacement-in-non-replacement"
+      },
+      {
+        "option": "$\\frac{8}{14}$",
+        "why": "You took one off the oranges but left the jar at its old total; a sweet has gone, so the bottom falls by one as well.",
+        "misconception": "maths.prob.with-replacement-in-non-replacement"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Same colour: add two branches",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Along a branch, multiply: both picks have to happen. Across branches, add: two different branches are two different ways for one description to come true. 'The same colour' is two branches, red then red and blue then blue, so it is two products added."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why multiply along a branch",
+    "md": "$\\tfrac{4}{11}$ of all pairs start with a red. Of those, 3 in every 10 go on to a second red. So red then red happens 3/10 of 4/11 of the time, and 'of' is multiply: $\\tfrac{4}{11} \\times \\tfrac{3}{10}$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "From the bag of $4$ red and $7$ blue counters, two are taken at random without replacement. Work out the probability that both counters match in colour.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(RR) = \\dfrac{4}{11} \\times \\dfrac{3}{10} = \\dfrac{12}{110}$",
+        "decision": "Along the red, red branch: multiply. The second fraction comes off the tree after a red.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$P(BB) = \\dfrac{7}{11} \\times \\dfrac{6}{10} = \\dfrac{42}{110}$",
+        "decision": "The blue, blue branch in the same way.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{12}{110} + \\dfrac{42}{110} = \\dfrac{54}{110}$",
+        "decision": "Two branches fit 'the same colour', so add them. The denominators already match.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\dfrac{54}{110} = \\dfrac{27}{55}$",
+        "decision": "Divide top and bottom by 2. Schemes take either form; simplify when the question asks for the simplest form.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "A box holds $2$ gold and $7$ silver coins. Two are taken at random without replacement. Which calculation gives the probability that both match in colour?",
+    "options": [
+      "$\\frac{2}{9} \\times \\frac{1}{8} + \\frac{7}{9} \\times \\frac{6}{8}$",
+      "$\\frac{2}{9} \\times \\frac{1}{8}$ multiplied by $\\frac{7}{9} \\times \\frac{6}{8}$",
+      "$\\frac{2}{9} \\times \\frac{2}{9} + \\frac{7}{9} \\times \\frac{7}{9}$",
+      "$\\frac{7}{9} \\times \\frac{6}{8}$"
+    ],
+    "answer": "$\\frac{2}{9} \\times \\frac{1}{8} + \\frac{7}{9} \\times \\frac{6}{8}$",
+    "explain": "'The same colour' is two branches, gold then gold and silver then silver, as in steps 1 to 3 of See it: multiply along each branch, then add the two. Multiplying all four fractions joins the branches with the wrong operation; 9 underneath twice puts the first coin back; one product is one branch only.",
+    "twin": {
+      "prompt": "A drawer holds $2$ black and $6$ white socks. Two are taken at random without replacement. Which calculation gives the probability that both match in colour?",
+      "options": [
+        "$\\frac{2}{8} \\times \\frac{1}{7} + \\frac{6}{8} \\times \\frac{5}{7}$",
+        "$\\frac{2}{8} \\times \\frac{1}{7}$ multiplied by $\\frac{6}{8} \\times \\frac{5}{7}$",
+        "$\\frac{2}{8} \\times \\frac{2}{8} + \\frac{6}{8} \\times \\frac{6}{8}$",
+        "$\\frac{6}{8} \\times \\frac{5}{7}$"
+      ],
+      "answer": "$\\frac{2}{8} \\times \\frac{1}{7} + \\frac{6}{8} \\times \\frac{5}{7}$",
+      "explain": "Two branches fit: black then black, and white then white. Multiply along each, with the second pick over one fewer, then add the two products.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{2}{8} \\times \\frac{1}{7}$ multiplied by $\\frac{6}{8} \\times \\frac{5}{7}$",
+          "why": "The two branches are separate ways to get a matching pair, so their products are added, not multiplied together.",
+          "misconception": "maths.prob.branches-multiplied"
+        },
+        {
+          "option": "$\\frac{2}{8} \\times \\frac{2}{8} + \\frac{6}{8} \\times \\frac{6}{8}$",
+          "why": "The first sock is not put back, so the second fraction is out of one fewer.",
+          "misconception": "maths.prob.with-replacement-in-non-replacement"
+        },
+        {
+          "option": "$\\frac{6}{8} \\times \\frac{5}{7}$",
+          "why": "White then white is only one of the two matching branches; black then black counts too."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{2}{9} \\times \\frac{1}{8}$ multiplied by $\\frac{7}{9} \\times \\frac{6}{8}$",
+        "why": "A times sign looks like 'and', but the two branches are two different ways to get matching colours, so their results add.",
+        "misconception": "maths.prob.branches-multiplied"
+      },
+      {
+        "option": "$\\frac{2}{9} \\times \\frac{2}{9} + \\frac{7}{9} \\times \\frac{7}{9}$",
+        "why": "Keeping the full box underneath treats the first coin as put back; without replacement the second pick is out of one fewer.",
+        "misconception": "maths.prob.with-replacement-in-non-replacement"
+      },
+      {
+        "option": "$\\frac{7}{9} \\times \\frac{6}{8}$",
+        "why": "Silver then silver is one way to match, but gold then gold is another, and both branches count."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "One of each: count both orders",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "'One of each colour' does not say which comes first, so red then blue and blue then red both fit. Their products use the same numbers in a different order, so they are equal, but write both: the scheme gives a mark for each product and one for adding them."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "Summer 2024, M8 Paper 1 Q9",
-    "md": "Three probabilities to multiply for a repeated event. **Many added instead of multiplying**, some could not multiply three simple fractions, and some did two repetitions instead of three. Three trials means three factors.",
-    "source": "ccea-cer:maths:2024-summer:M81:Q9"
+    "title": "Summer 2024, M8 Paper 2 Q4",
+    "md": "A biased dice rolled twice, with a total of 5 wanted. The entry split into three groups of about a third: full marks, the other order of each pair forgotten, and no idea what to do with the probabilities.",
+    "source": "ccea-cer:maths:2024-summer:M82:Q4"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "From the bag of $4$ red and $7$ blue counters, two are taken at random without replacement. Work out the probability that one is red and one is blue.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(RB) = \\dfrac{4}{11} \\times \\dfrac{7}{10} = \\dfrac{28}{110}$",
+        "decision": "Red first, then blue: all 7 blues are still in the bag.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$P(BR) = \\dfrac{7}{11} \\times \\dfrac{4}{10} = \\dfrac{28}{110}$",
+        "decision": "Blue first, then red: the same numbers in the other order, so the same product.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{28}{110} + \\dfrac{28}{110} = \\dfrac{56}{110}$",
+        "decision": "Both orders fit 'one of each', so add them.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\dfrac{56}{110} = \\dfrac{28}{55}$",
+        "decision": "Simplify. Check: with the same colour, 27/55 + 28/55 = 1, because every pair is one or the other.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "PYEvSuz1Dxo",
+    "title": "Tree Diagrams - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 252,
+    "why": "Corbettmaths video 252 builds a tree branch by branch and adds the branches that fit. Watch it beside the steps above, then answer the check."
   },
   {
     "type": "gate",
-    "id": "g7",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Two cards are taken at random without replacement from $3$ red and $7$ black cards. What is the probability of one red card and one black card?",
+    "options": [
+      "$\\frac{7}{15}$",
+      "$\\frac{7}{30}$",
+      "$\\frac{21}{50}$",
+      "$\\frac{1}{15}$"
+    ],
+    "answer": "$\\frac{7}{15}$",
+    "explain": "Red then black and black then red both fit, as steps 1 to 3 of See it: 21/90 each way, so 42/90 = 7/15. Stopping at one order gives half of that; 10 under the second pick puts the first card back; red then red is a different branch.",
+    "twin": {
+      "prompt": "Two counters are taken at random without replacement from $2$ red and $9$ black. What is the probability of one of each colour?",
+      "options": [
+        "$\\frac{18}{55}$",
+        "$\\frac{9}{55}$",
+        "$\\frac{36}{121}$",
+        "$\\frac{1}{55}$"
+      ],
+      "answer": "$\\frac{18}{55}$",
+      "explain": "Both orders fit: 18/110 for red then black, the same for black then red, so 36/110 = 18/55.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{9}{55}$",
+          "why": "One order only gives half the answer; the other order is a separate branch with the same product.",
+          "misconception": "maths.prob.both-orders-not-counted"
+        },
+        {
+          "option": "$\\frac{36}{121}$",
+          "why": "Using the full bag twice puts the first counter back.",
+          "misconception": "maths.prob.with-replacement-in-non-replacement"
+        },
+        {
+          "option": "$\\frac{1}{55}$",
+          "why": "Red then red has no black counter in it, so it cannot be one of each."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{7}{30}$",
+        "why": "Red then black is right, but black then red is a second branch with the same product, and it has to be added.",
+        "misconception": "maths.prob.both-orders-not-counted"
+      },
+      {
+        "option": "$\\frac{21}{50}$",
+        "why": "Squaring off the second pick at the full pack is what happens when the first card goes back, which it does not here.",
+        "misconception": "maths.prob.with-replacement-in-non-replacement"
+      },
+      {
+        "option": "$\\frac{1}{15}$",
+        "why": "Red then red is a branch where both cards match, so it is not one red and one black."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Three colours: take the same from 1",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A three by three grid of first-pick colours against second-pick colours, red, yellow and white. The three diagonal cells are shaded and marked same; the other six are marked different.",
+    "svg": "<svg viewBox='0 0 400 218' xmlns='http://www.w3.org/2000/svg' width='400' height='218'><text x='255' y='20' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>2nd pick</text><text x='165' y='46' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Red</text><text x='255' y='46' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Yellow</text><text x='345' y='46' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>White</text><text x='10' y='46' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start' font-weight='600'>1st pick</text><text x='110' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>Red</text><rect x='120' y='58' width='90' height='50' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1.2'/><text x='165' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>same</text><rect x='210' y='58' width='90' height='50' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.2'/><text x='255' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>different</text><rect x='300' y='58' width='90' height='50' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.2'/><text x='345' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>different</text><text x='110' y='138' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>Yellow</text><rect x='120' y='108' width='90' height='50' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.2'/><text x='165' y='138' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>different</text><rect x='210' y='108' width='90' height='50' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1.2'/><text x='255' y='138' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>same</text><rect x='300' y='108' width='90' height='50' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.2'/><text x='345' y='138' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>different</text><text x='110' y='188' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>White</text><rect x='120' y='158' width='90' height='50' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.2'/><text x='165' y='188' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>different</text><rect x='210' y='158' width='90' height='50' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.2'/><text x='255' y='188' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>different</text><rect x='300' y='158' width='90' height='50' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1.2'/><text x='345' y='188' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>same</text></svg>",
+    "caption": "Nine colour pairs, three of them the same colour. Work out those three and take them from 1."
+  },
+  {
+    "type": "p",
+    "md": "With three colours, 'different colours' fits six branches but 'the same colour' fits only three. Every pair of picks is one or the other, so work out the same colour and take it from 1: three products to multiply by hand instead of six."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A box holds $4$ red, $3$ yellow and $2$ white pegs. Two are taken at random without replacement. Work out the probability that the two colours differ.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(RR) = \\dfrac{4}{9} \\times \\dfrac{3}{8} = \\dfrac{12}{72}$",
+        "decision": "The same colour first: red then red, over 9 and then 8.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$P(YY) = \\dfrac{6}{72}$ and $P(WW) = \\dfrac{2}{72}$",
+        "decision": "Yellow then yellow is 3/9 × 2/8; white then white is 2/9 × 1/8.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{12}{72} + \\dfrac{6}{72} + \\dfrac{2}{72} = \\dfrac{20}{72}$",
+        "decision": "Add the three same-colour branches."
+      },
+      {
+        "n": 4,
+        "working": "$1 - \\dfrac{20}{72} = \\dfrac{52}{72}$",
+        "decision": "Every pair is the same colour or different, so take the same colour from 1.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "$\\dfrac{52}{72} = \\dfrac{13}{18}$",
+        "decision": "Simplify: 52 and 72 share 4.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "Two counters are taken at random without replacement from $6$ green, $5$ yellow and $1$ white. What is the probability that the two colours differ?",
+    "options": [
+      "$\\frac{41}{66}$",
+      "$\\frac{25}{66}$",
+      "$\\frac{41}{132}$",
+      "$\\frac{41}{72}$"
+    ],
+    "answer": "$\\frac{41}{66}$",
+    "explain": "Only green-green and yellow-yellow can happen, because there is one white: 50/132 in all. Every other pair differs, so 1 − 50/132 = 82/132 = 41/66, as steps 3 to 5 of See it did. 25/66 is the same colour itself; 41/132 counts one order of each pair; 41/72 puts the first counter back.",
+    "twin": {
+      "prompt": "Two beads are taken at random without replacement from $3$ red, $3$ blue and $4$ green. What is the probability that the two do not match in colour?",
+      "options": [
+        "$\\frac{11}{15}$",
+        "$\\frac{4}{15}$",
+        "$\\frac{11}{30}$",
+        "$\\frac{33}{50}$"
+      ],
+      "answer": "$\\frac{11}{15}$",
+      "explain": "The same colour is 24/90: red-red, blue-blue and green-green added. Not the same colour is everything else, so 1 − 24/90 = 66/90 = 11/15.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{4}{15}$",
+          "why": "That is the same colour itself; not the same colour is 1 minus it.",
+          "misconception": "maths.prob.complement-not-from-one"
+        },
+        {
+          "option": "$\\frac{11}{30}$",
+          "why": "Every mixed pair has two orders, and one order of each is only half of them.",
+          "misconception": "maths.prob.both-orders-not-counted"
+        },
+        {
+          "option": "$\\frac{33}{50}$",
+          "why": "The full bag under the second pick puts the first bead back, which does not happen here.",
+          "misconception": "maths.prob.with-replacement-in-non-replacement"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{25}{66}$",
+        "why": "That is the chance of the same colour; different colours is what is left when it is taken from 1.",
+        "misconception": "maths.prob.complement-not-from-one"
+      },
+      {
+        "option": "$\\frac{41}{132}$",
+        "why": "Each mixed pair can happen in either order, so counting one order of each gives only half.",
+        "misconception": "maths.prob.both-orders-not-counted"
+      },
+      {
+        "option": "$\\frac{41}{72}$",
+        "why": "Keeping the full bag under the second pick puts the first counter back, which does not happen here.",
+        "misconception": "maths.prob.with-replacement-in-non-replacement"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "At least one: one minus none",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "'At least one red' fits every branch but one: the branch with no red at all, blue then blue. So work out that single branch and take it from 1. 'Neither is red' is that same branch, asked for directly."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "From the bag of $4$ red and $7$ blue counters, two are taken at random without replacement. Work out the probability that at least one is red.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$$P(\\text{no red}) = \\dfrac{7}{11} \\times \\dfrac{6}{10} = \\dfrac{42}{110}$$",
+        "decision": "The only branch with no red: blue, then blue.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$1 - \\dfrac{42}{110} = \\dfrac{68}{110}$",
+        "decision": "At least one red is every branch except that one.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{68}{110} = \\dfrac{34}{55}$",
+        "decision": "Simplify. The long way agrees: red-red, red-blue and blue-red make 12 + 28 + 28 = 68 over 110.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A bag holds $2$ green and $8$ white marbles. Two are taken at random without replacement. What is the probability that at least one is green?",
+    "options": [
+      "$\\frac{17}{45}$",
+      "$\\frac{28}{45}$",
+      "$\\frac{16}{45}$",
+      "$\\frac{1}{45}$"
+    ],
+    "answer": "$\\frac{17}{45}$",
+    "explain": "The only branch with no green is white then white, 56/90; take it from 1 to get 34/90 = 17/45, as steps 1 and 2 of See it did. 28/45 is that no-green branch itself; 16/45 is exactly one green, which leaves out green-green.",
+    "twin": {
+      "prompt": "A bag holds $3$ red and $10$ blue counters. Two are taken at random without replacement. What is the probability that at least one is red?",
+      "options": [
+        "$\\frac{11}{26}$",
+        "$\\frac{15}{26}$",
+        "$\\frac{5}{13}$",
+        "$\\frac{1}{26}$"
+      ],
+      "answer": "$\\frac{11}{26}$",
+      "explain": "No red is blue then blue, 90/156, so at least one red is 66/156 = 11/26.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{15}{26}$",
+          "why": "That is the no-red branch itself, which has to be taken from 1.",
+          "misconception": "maths.prob.complement-not-subtracted"
+        },
+        {
+          "option": "$\\frac{5}{13}$",
+          "why": "Exactly one red misses the branch where both are red.",
+          "misconception": "maths.prob.complement-not-subtracted"
+        },
+        {
+          "option": "$\\frac{1}{26}$",
+          "why": "Both red is only one of three branches with a red in them."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{28}{45}$",
+        "why": "That is the one branch with no green at all; at least one green is everything else, so it comes from 1 minus this.",
+        "misconception": "maths.prob.complement-not-subtracted"
+      },
+      {
+        "option": "$\\frac{16}{45}$",
+        "why": "Exactly one green leaves out the branch where both are green, which also has at least one.",
+        "misconception": "maths.prob.complement-not-subtracted"
+      },
+      {
+        "option": "$\\frac{1}{45}$",
+        "why": "Both green is only one of the branches that hold a green; the one-green branches count as well."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "When the second chance depends on the first",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A tree for how Ciara travels and whether she is on time. Cycles 0.8 and bus 0.2; after cycling, on time 0.95 and late 0.05; after the bus, on time 0.6 and late 0.4.",
+    "svg": "<svg viewBox='0 0 400 274' xmlns='http://www.w3.org/2000/svg' width='400' height='274'><circle cx='10' cy='138' r='2.6' fill='currentColor'/><path d='M13 138L136 74' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='65.73' y='94.15' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.8</text><text x='146' y='79' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Cycles</text><path d='M214 74L318 42' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='260.71' y='45.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.95</text><text x='324' y='47' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>On time</text><path d='M214 74L318 106' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='260.71' y='112.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.05</text><text x='324' y='111' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Late</text><path d='M13 138L136 202' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='65.73' y='191.85' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.2</text><text x='146' y='207' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Bus</text><path d='M214 202L318 170' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='261' y='174.75' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.6</text><text x='324' y='175' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>On time</text><path d='M214 202L318 234' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='261' y='239.25' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.4</text><text x='324' y='239' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Late</text></svg>",
+    "caption": "Each first branch has its own pair of second branches, from its own 'if' sentence. Each pair adds to 1."
+  },
+  {
+    "type": "p",
+    "md": "Some trees have no bag. The question says the second chance depends on the first: 'if she cycles… if she takes the bus…'. Each first branch gets its own pair of second branches, from the sentence that starts with its 'if'. Each pair still adds to 1, and multiplying and adding work as before."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The probability that Ciara cycles to school is $0.8$; otherwise she takes the bus. If she cycles, the probability that she is on time is $0.95$. If she takes the bus, it is $0.6$. Work out the probability that she is late.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Cycles $0.8$, bus $1 - 0.8 = 0.2$",
+        "decision": "The first pair of branches adds to 1.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "After cycling: on time $0.95$, late $0.05$",
+        "decision": "The 'if she cycles' sentence gives the on-time branch; late is what is left of 1.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "After the bus: on time $0.6$, late $0.4$",
+        "decision": "The bus has its own sentence, so its own pair of branches.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$0.8 \\times 0.05 + 0.2 \\times 0.4 = 0.04 + 0.08$",
+        "decision": "Late happens two ways: cycling then late, and the bus then late. Multiply along each.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "$P(\\text{late}) = 0.12$",
+        "decision": "Add the two ways.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "xhFDlmQUAZo",
+    "title": "Conditional Probability - Corbettmaths",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 247,
+    "why": "Corbettmaths video 247, on probabilities that depend on what happened first. Watch it beside the steps above, then answer the check."
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "choice",
+    "prompt": "The probability that it rains on Saturday is $0.4$. If it rains, the probability that the match is called off is $0.3$; if it does not rain, it is $0.05$. What is the probability that the match is called off?",
+    "options": [
+      "$0.15$",
+      "$0.12$",
+      "$0.35$",
+      "$0.14$"
+    ],
+    "answer": "$0.15$",
+    "explain": "Called off happens two ways, rain then off and no rain then off, as steps 4 and 5 of See it: 0.4 × 0.3 + 0.6 × 0.05 = 0.15. 0.12 is the rain branch alone; 0.35 adds the two 'if' chances without their first branches; 0.14 puts 0.4 on the no-rain branch.",
+    "twin": {
+      "prompt": "The probability that a day is windy is $0.25$. If it is windy, the probability that the ferry is cancelled is $0.4$; if not, it is $0.02$. What is the probability that the ferry is cancelled?",
+      "options": [
+        "$0.115$",
+        "$0.1$",
+        "$0.42$",
+        "$0.105$"
+      ],
+      "answer": "$0.115$",
+      "explain": "Two branches end in a cancellation: 0.25 × 0.4 + 0.75 × 0.02 = 0.115. The not-windy branch carries 0.75, not 0.25.",
+      "optionNotes": [
+        {
+          "option": "$0.1$",
+          "why": "The ferry can also be cancelled on a calm day, so that branch is added to the windy one.",
+          "misconception": "maths.prob.one-event-only"
+        },
+        {
+          "option": "$0.42$",
+          "why": "Adding the two 'if' chances skips the first branches they belong to.",
+          "misconception": "maths.prob.one-event-only"
+        },
+        {
+          "option": "$0.105$",
+          "why": "The calm branch carries 1 minus the windy chance, not the windy chance again.",
+          "misconception": "maths.prob.complement-not-from-one"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$0.12$",
+        "why": "The rain branch is one way for the match to be called off, but it can also be called off when it stays dry, so that branch is added.",
+        "misconception": "maths.prob.one-event-only"
+      },
+      {
+        "option": "$0.35$",
+        "why": "The two 'if' chances belong to different first branches, so each must be multiplied by its first branch before they are added.",
+        "misconception": "maths.prob.one-event-only"
+      },
+      {
+        "option": "$0.14$",
+        "why": "The dry branch carries 1 minus the chance of rain, not the chance of rain again.",
+        "misconception": "maths.prob.complement-not-from-one"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Counts first: groups and their chances",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A frequency tree: 150 members split into 80 adults and 70 juniors; the adults split into 20 who swim and 60 who do not, the juniors into 42 who swim and 28 who do not.",
+    "svg": "<svg viewBox='0 0 400 250' xmlns='http://www.w3.org/2000/svg' width='400' height='250'><text x='8' y='121' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>150</text><text x='8' y='139' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>members</text><path d='M76 123L128 65' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M76 127L128 185' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='134' y='70' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>80 adults</text><text x='134' y='190' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>70 juniors</text><path d='M222 65L292 25' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='298' y='30' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>20 swim</text><text x='250' y='33' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>× 1/4</text><path d='M222 65L292 105' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='298' y='110' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>60 do not</text><path d='M222 185L292 145' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='298' y='150' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>42 swim</text><text x='250' y='153' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>× 0.6</text><path d='M222 185L292 225' fill='none' stroke='currentColor' stroke-width='1.4'/><text x='298' y='230' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>28 do not</text></svg>",
+    "caption": "Counts at the ends, not probabilities: 20 + 42 = 62 swim, and a swimmer is chosen from those 62."
+  },
+  {
+    "type": "p",
+    "md": "When a question gives the size of each group and a probability for each, turn the probabilities into numbers first: a probability times a group size is the number you would expect. A question that chooses from 'those who swim' then has the swimmers on the bottom, not everyone."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A club has $150$ members: $80$ adults and $70$ juniors. The probability that an adult swims is $\\tfrac{1}{4}$, and for a junior it is $0.6$. A member who swims is chosen at random. Work out the probability that this member is a junior.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Adults who swim: $\\tfrac{1}{4} \\times 80 = 20$",
+        "decision": "The expected number: the probability times the group size.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Juniors who swim: $0.6 \\times 70 = 42$",
+        "decision": "The same for the juniors.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Swimmers: $20 + 42 = 62$",
+        "decision": "The member is chosen from the swimmers only.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$P(\\text{junior}) = \\dfrac{42}{62} = \\dfrac{21}{31}$",
+        "decision": "42 of the 62 swimmers are juniors. Dividing by 150 would answer a different question.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "choice",
+    "prompt": "Year 11 has $140$ pupils: $60$ girls and $80$ boys. The probability that a girl walks to school is $0.4$, and for a boy it is $\\tfrac{3}{8}$. One of the walkers is picked at random. How likely is it that the walker is a boy?",
+    "options": [
+      "$\\frac{5}{9}$",
+      "$\\frac{3}{14}$",
+      "$\\frac{3}{8}$",
+      "$\\frac{4}{9}$"
+    ],
+    "answer": "$\\frac{5}{9}$",
+    "explain": "Count first, as steps 1 to 3 of See it: 24 girls and 30 boys walk, 54 walkers in all, so 30 out of 54 is 5/9. 3/14 divides by every pupil; 3/8 is the boys' own chance; 4/9 is the girls' share of the walkers.",
+    "twin": {
+      "prompt": "A car park holds $200$ cars: $120$ petrol and $80$ electric. The probability that a petrol car is blue is $0.25$, and for an electric car it is $0.5$. A blue car is chosen at random. What is the probability that it is electric?",
+      "options": [
+        "$\\frac{4}{7}$",
+        "$\\frac{1}{5}$",
+        "$\\frac{1}{2}$",
+        "$\\frac{3}{7}$"
+      ],
+      "answer": "$\\frac{4}{7}$",
+      "explain": "30 petrol and 40 electric cars are blue, 70 blue cars in all, so 40 out of 70 is 4/7.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{1}{5}$",
+          "why": "The car is chosen from the blue cars, so the blue cars go on the bottom, not every car.",
+          "misconception": "maths.prob.tree-counts-not-probabilities"
+        },
+        {
+          "option": "$\\frac{1}{2}$",
+          "why": "That is the chance that an electric car is blue, not the chance that a blue car is electric.",
+          "misconception": "maths.prob.one-event-only"
+        },
+        {
+          "option": "$\\frac{3}{7}$",
+          "why": "That is the petrol cars' share of the blue cars, the other group."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{3}{14}$",
+        "why": "Dividing by every pupil answers a different question, because the pupil is chosen only from those who walk.",
+        "misconception": "maths.prob.tree-counts-not-probabilities"
+      },
+      {
+        "option": "$\\frac{3}{8}$",
+        "why": "That is the chance that a boy walks, not the chance that a walker is a boy.",
+        "misconception": "maths.prob.one-event-only"
+      },
+      {
+        "option": "$\\frac{4}{9}$",
+        "why": "That is the girls' share of the walkers, the other group."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**'Two are taken at random.'** Of the eight questions from November 2022 to Summer 2026 that take two items from a bag or a box, six never say 'without replacement'. You cannot take the same item twice, so the second pick is out of one fewer."
+  },
+  {
+    "type": "p",
+    "md": "**Three picks.** A third pick is a third factor. Summer 2024 Paper 1 Q9 repeated a pick three times and some answers used only two factors. Without replacement the bottom falls each time."
+  },
+  {
+    "type": "p",
+    "md": "**'Show that'.** When the answer is printed (Summer 2023 Paper 1 Q11), every mark is in the working: write each product and the sum before the given fraction."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A bowl holds $6$ green and $2$ red apples. Three are taken at random. Show that the probability that all three are green is $\\tfrac{5}{14}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\dfrac{6}{8} \\times \\dfrac{5}{7} \\times \\dfrac{4}{6}$",
+        "decision": "'Taken at random' means none goes back: three picks, three factors, the bottoms falling 8, 7, 6.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= \\dfrac{120}{336}$",
+        "decision": "Multiply the tops and the bottoms.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$= \\dfrac{5}{14}$",
+        "decision": "Divide top and bottom by 24 to reach the printed answer. In a show that, this line earns its mark only with the lines above it.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g15",
+    "kind": "choice",
+    "prompt": "A question says: three counters are taken at random from $4$ red and $9$ blue; work out the probability that all three are red. What is the first line?",
+    "options": [
+      "$\\frac{4}{13} \\times \\frac{3}{12} \\times \\frac{2}{11}$",
+      "$\\frac{4}{13} \\times \\frac{3}{12}$",
+      "$\\frac{4}{13} \\times \\frac{4}{13} \\times \\frac{4}{13}$",
+      "$\\frac{4}{13} + \\frac{3}{12} + \\frac{2}{11}$"
+    ],
+    "answer": "$\\frac{4}{13} \\times \\frac{3}{12} \\times \\frac{2}{11}$",
+    "explain": "At random means nothing goes back, and three picks means three factors, as in step 1 of See it: 13 counters, then 12, then 11, with one fewer red each time. Two factors stop a pick short; 4/13 three times puts each counter back; adding joins the picks with the wrong operation.",
+    "twin": {
+      "prompt": "Three crisp packets are taken at random from $10$ plain and $4$ salted. What is the first line for the probability that all three are plain?",
+      "options": [
+        "$\\frac{10}{14} \\times \\frac{9}{13} \\times \\frac{8}{12}$",
+        "$\\frac{10}{14} \\times \\frac{9}{13}$",
+        "$\\frac{10}{14} \\times \\frac{10}{14} \\times \\frac{10}{14}$",
+        "$\\frac{10}{14} + \\frac{9}{13} + \\frac{8}{12}$"
+      ],
+      "answer": "$\\frac{10}{14} \\times \\frac{9}{13} \\times \\frac{8}{12}$",
+      "explain": "Three picks, none put back: three factors, with the tops falling 10, 9, 8 and the bottoms 14, 13, 12.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{10}{14} \\times \\frac{9}{13}$",
+          "why": "Three packets are taken, so there are three factors, not two."
+        },
+        {
+          "option": "$\\frac{10}{14} \\times \\frac{10}{14} \\times \\frac{10}{14}$",
+          "why": "The same fraction three times puts each packet back, which does not happen.",
+          "misconception": "maths.prob.with-replacement-in-non-replacement"
+        },
+        {
+          "option": "$\\frac{10}{14} + \\frac{9}{13} + \\frac{8}{12}$",
+          "why": "All three picks must happen, so the fractions multiply.",
+          "misconception": "maths.prob.add-instead-of-multiply"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{4}{13} \\times \\frac{3}{12}$",
+        "why": "Two factors stop one pick short; three counters are taken, so there are three factors."
+      },
+      {
+        "option": "$\\frac{4}{13} \\times \\frac{4}{13} \\times \\frac{4}{13}$",
+        "why": "Using the full bag three times puts each counter back, but at random nothing goes back.",
+        "misconception": "maths.prob.with-replacement-in-non-replacement"
+      },
+      {
+        "option": "$\\frac{4}{13} + \\frac{3}{12} + \\frac{2}{11}$",
+        "why": "The three picks all have to happen, one after another, so the fractions multiply rather than add.",
+        "misconception": "maths.prob.add-instead-of-multiply"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Going further: a letter in the bag",
+    "role": "further"
+  },
+  {
+    "type": "p",
+    "md": "The hardest version hides a number. The bag holds $n$ counters, 3 of them red, and the probability of two reds is given. The tree works as always, with $n$ in place of a count, and the equation it gives is a quadratic."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where the specification stops",
+    "md": "Notation such as P(A | B), Bayes' theorem, trees read backwards and trees with more than three stages are beyond this specification."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A bag holds $n$ counters, $3$ of which are red. Two are taken at random without replacement. The probability that both are red is $\\tfrac{1}{15}$. Show that $n^2 - n - 90 = 0$, and find $n$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\dfrac{3}{n} \\times \\dfrac{2}{n - 1} = \\dfrac{1}{15}$",
+        "decision": "Red then red: 3 of $n$, then 2 of the $n - 1$ left.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$6 \\times 15 = n(n - 1)$",
+        "decision": "Cross-multiply: 6 over $n(n - 1)$ equals 1 over 15.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$n^2 - n - 90 = 0$",
+        "decision": "Expand the bracket and gather everything on one side: the equation asked for.",
+        "earns": [
+          "A1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$(n - 10)(n + 9) = 0$, so $n = 10$",
+        "decision": "A number of counters cannot be negative, so $n = -9$ is rejected.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g16",
     "kind": "number",
-    "prompt": "Three counters are taken from a bag of $4$ dark and $6$ milk chocolates without replacement. How many fractions are multiplied together?",
-    "answer": "3",
-    "explain": "One factor per pick. Three picks, three factors, and the denominators fall 10, 9, 8."
+    "prompt": "A box holds $x$ buttons, $2$ of them black. Two are taken at random without replacement, and the probability that both are black is $\\tfrac{1}{21}$. How many buttons are in the box?",
+    "answer": "7",
+    "explain": "Both black is 2/x × 1/(x − 1), as in step 1 of See it, so 2 over x(x − 1) is 1/21 and x(x − 1) = 42. Two whole numbers one apart multiply to 42: 7 × 6. A count cannot be negative, so x = 7.",
+    "twin": {
+      "prompt": "A bag holds $n$ counters, $2$ of them red. Two are taken at random without replacement, and the probability that both are red is $\\tfrac{1}{28}$. How many counters are in the bag?",
+      "answer": "8",
+      "explain": "2/n × 1/(n − 1) = 1/28 gives n(n − 1) = 56, and 8 × 7 = 56, so n = 8."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Write the second-pick probabilities after one counter has gone.\nMultiply along a branch, and add across branches.\nReach *at least one* by subtracting from 1.\nCheck a tree: the four branch products add to 1."
+    "md": "Write each second-pick probability over one fewer, with one fewer on top for the colour taken.\nMultiply along a branch, and add every branch that fits, both orders included.\nTake the same colour from 1 for different colours, and none from 1 for at least one.\nRead 'if' sentences into their own branches, and count groups before choosing from them."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "A tree with a written stem, three or four marks, in the second half of the paper. The first mark is the second-pick probabilities written on the branches with the smaller total underneath; the last is the sum of the branches the description allows. Stuck: draw the tree and fill in what you can, because the branch labels score on their own."
+    "md": "Expect one question most series, on either paper, worth 4 to 7 marks: a same-colour or one-of-each question as one 4-mark part, three colours for 4 or 5 more, or a tree to complete, a mark for each pair of branches, and then read. The first marks are the products along the branches, the last is the sum. Stuck: draw the tree and label every branch, because the pairs score on their own."
   },
   {
     "type": "prompt",
-    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.01"
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.09"
   },
   {
     "type": "prompt",
-    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.06"
+    "promptId": "rp.maths.m8.conditional-probability-and-tree-diagrams-without-replacement.11"
   }
 ]
