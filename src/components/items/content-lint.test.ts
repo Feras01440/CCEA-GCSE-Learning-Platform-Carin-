@@ -295,6 +295,108 @@ describe("lintNoteBlocks", () => {
   });
 });
 
+/**
+ * The See it block and the gate's twin (docs/plan/review/2026-09-27-see-it-block-shape.md; the types SeeBlockInline,
+ * SeeBlockReference and GateTwin in ./gates). The build refuses a note whose See it the renderer could not draw:
+ * two to six steps numbered 1..k, each with its line and its reason; at most one typed step, never in the topic's
+ * first See it; a reference that names a worked example the bundle ships; a twin with its prompt, answer and
+ * explanation; and, in a section that holds a See it, no gate before it.
+ */
+describe("lintNoteBlocks: the See it block and the gate twin", () => {
+  const step = (n: number, extra: Record<string, unknown> = {}) => ({ n, working: `$x = ${n}$`, decision: `Reason ${n}.`, ...extra });
+  const see = (k: number, extra: Record<string, unknown> = {}) => ({ type: "see", stem: "Simplify it.", steps: Array.from({ length: k }, (_, i) => step(i + 1)), ...extra });
+  const gate = (id: string, extra: Record<string, unknown> = {}) => ({ type: "gate", id, kind: "choice", prompt: "Which?", options: ["A one", "B two"], answer: "A one", explain: "Because.", ...extra });
+  const h = (text: string, role?: string) => ({ type: "h", text, ...(role ? { role } : {}) });
+  const p = { type: "p", md: "The idea in words." };
+  const WE = "we.fm.u1.algebraic-fractions-simplify.02";
+  const bundle = (steps = 3, status = "verified") => ({
+    workedExamples: [{ id: WE, verification: "ver.we.02", stem: "s", steps: Array.from({ length: steps }, (_, i) => step(i + 1)) }],
+    verification: [{ id: "ver.we.02", status }],
+  });
+  const label = "further-maths/fm1/algebraic-fractions-simplify";
+
+  test("a valid inline See it, then its gate with a twin, has no defect", () => {
+    const twin = { prompt: "Which, now?", options: ["C three", "D four"], answer: "C three", explain: "The same step on new numbers." };
+    const blocks = [h("1. The idea", "idea"), p, see(3, { finalAnswer: "$x = 3$" }), gate("g1", { twin })];
+    expect(lintNoteBlocks(blocks, label, bundle())).toEqual([]);
+  });
+
+  test("a valid reference to a worked example the bundle ships has no defect", () => {
+    const blocks = [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Factorise first", "variant"), p, { type: "see", workedExample: WE }, gate("g2")];
+    expect(lintNoteBlocks(blocks, label, bundle())).toEqual([]);
+  });
+
+  test("a See it with seven steps is refused (two to six)", () => {
+    const r = lintNoteBlocks([h("1. The idea", "idea"), p, see(7), gate("g1")], label, bundle());
+    expect(r).toEqual([`${label} note block 2 (See it): 7 steps (a See it has two to six)`]);
+    expect(lintNoteBlocks([h("1. The idea", "idea"), p, see(1), gate("g1")], label, bundle())).toEqual([`${label} note block 2 (See it): 1 step (a See it has two to six)`]);
+  });
+
+  test("steps numbered out of order, or missing a line or a reason, are refused", () => {
+    const bad = { type: "see", stem: "s", steps: [step(1), step(3), { n: 3, working: "", decision: "r" }, { n: 4, working: "$y$" }] };
+    expect(lintNoteBlocks([bad, gate("g1")], label, bundle())).toEqual([
+      `${label} note block 0 (See it): step 2 is numbered 3 (steps run 1, 2, 3 … in order)`,
+      `${label} note block 0 (See it): step 3 has no working line`,
+      `${label} note block 0 (See it): step 4 has no reason (decision)`,
+    ]);
+    expect(lintNoteBlocks([{ type: "see", steps: [step(1), step(2)] }, gate("g1")], label, bundle())).toEqual([`${label} note block 0 (See it): no stem`]);
+  });
+
+  test("a reference to a worked example the bundle does not hold, or does not ship, is refused", () => {
+    const missing = [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Next", "variant"), { type: "see", workedExample: "we.fm.u1.nowhere.01" }, gate("g2")];
+    expect(lintNoteBlocks(missing, label, bundle())).toEqual([`${label} note block 5 (See it): names worked example we.fm.u1.nowhere.01, which the bundle does not hold`]);
+    const draft = [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Next", "variant"), { type: "see", workedExample: WE }, gate("g2")];
+    expect(lintNoteBlocks(draft, label, bundle(3, "draft"))).toEqual([`${label} note block 5 (See it): names worked example ${WE}, which the bundle does not ship (its log is draft)`]);
+    expect(lintNoteBlocks(draft, label, bundle(7))).toEqual([`${label} note block 5 (See it): names worked example ${WE}, which has 7 steps (a See it has two to six)`]);
+    expect(lintNoteBlocks([{ type: "see", workedExample: WE, steps: [step(1), step(2)] }, gate("g1")], label, bundle())).toEqual([
+      `${label} note block 0 (See it): carries both a workedExample and its own steps (use one form)`,
+    ]);
+  });
+
+  test("the topic's first See it asks for no input; a later one may ask for one, never two", () => {
+    const input = { input: { kind: "numeric", value: 3 } };
+    const first = { type: "see", stem: "s", steps: [step(1), step(2, input)] };
+    expect(lintNoteBlocks([h("1. The idea", "idea"), p, first, gate("g1")], label, bundle())).toEqual([
+      `${label} note block 2 (See it): the topic's first See it asks her to type step 2 (the first See it is shown, never typed)`,
+    ]);
+    const later = [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Next", "variant"), p, { type: "see", stem: "s", steps: [step(1), step(2, input)] }, gate("g2")];
+    expect(lintNoteBlocks(later, label, bundle())).toEqual([]);
+    const two = [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Next", "variant"), p, { type: "see", stem: "s", steps: [step(1, input), step(2, input)] }, gate("g2")];
+    expect(lintNoteBlocks(two, label, bundle())).toEqual([`${label} note block 6 (See it): 2 typed steps (at most one)`]);
+  });
+
+  test("a gate's twin needs its prompt, answer and explanation, and a choice twin's answer is one of its options", () => {
+    const blocks = [see(2), gate("g1", { twin: { prompt: "Again?", answer: "A one" } }), see(2), gate("g2", { twin: { prompt: "Again?", options: ["C", "D"], answer: "E", explain: "Why." } })];
+    expect(lintNoteBlocks(blocks, label, bundle())).toEqual([
+      `${label} note block 1 (gate g1): its twin has no explain`,
+      `${label} note block 1 (gate g1): its twin, for a choice gate, has no options`,
+      `${label} note block 3 (gate g2): its twin's answer "E" is not one of its options`,
+    ]);
+  });
+
+  test("in a section that holds a See it, no gate comes before it; a note with no See it is not judged here", () => {
+    const early = [h("1. The idea", "idea"), p, gate("g1"), see(2), gate("g2")];
+    expect(lintNoteBlocks(early, label, bundle())).toEqual([`${label} note block 2 (gate g1): comes before its section's See it (a section's gate follows its See it)`]);
+    // a "See it done" heading continues the section above, so its See it does not excuse the gate above it
+    const continued = [h("2. Factorise first", "variant"), p, gate("g3"), h("See it done at writing speed", "see"), see(3), gate("g4")];
+    expect(lintNoteBlocks(continued, label, bundle())).toEqual([`${label} note block 2 (gate g3): comes before its section's See it (a section's gate follows its See it)`]);
+    // a section of its own with no See it is today's note, migrating: the lesson lint warns on it, the build does not refuse it
+    const legacy = [h("1. The idea", "idea"), p, gate("g1"), h("2. Next", "variant"), p, see(2), gate("g2")];
+    expect(lintNoteBlocks(legacy, label, bundle())).toEqual([]);
+  });
+
+  test("a See it's own figure gets the drawing checks", () => {
+    const figure = { kind: "svg", src: '<svg><g stroke-width="2">M1 1 L2 2</g></svg>', alt: "The curve" };
+    const r = lintNoteBlocks([see(2, { figure }), gate("g1")], label, bundle());
+    expect(r.length).toBeGreaterThan(0);
+    expect(r[0]).toMatch(/^further-maths\/fm1\/algebraic-fractions-simplify note block 0 "The curve": SVG figure: path data sits as bare text/);
+  });
+
+  test("without the bundle, a reference is not resolved (the shape rules still apply)", () => {
+    expect(lintNoteBlocks([h("1", "idea"), p, see(2), gate("g1"), h("2", "variant"), { type: "see", workedExample: "we.x.01" }, gate("g2")], label)).toEqual([]);
+  });
+});
+
 describe("mangled regex signatures", () => {
   test("a heredoc-halved pattern is named, a real one is not", () => {
     expect(mangledRegexDefect("^(?![sS]*(air space|airspace))[sS]*$")).toMatch(/halved/);

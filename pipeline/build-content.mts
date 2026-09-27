@@ -120,7 +120,7 @@ for (const file of files) {
   if (blocksText !== null && leaks(blocksText, path.relative(ROOT, blocksPath))) continue;
   const noteBlocks = blocksText !== null ? JSON.parse(blocksText) : null;
   // A note figure that draws nothing (path data as text, a path without d, an empty SVG) is a generator slip too.
-  const noteDefects = lintNoteBlocks(noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"));
+  const noteDefects = lintNoteBlocks(noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"), raw);
   if (noteDefects.length > 0) {
     for (const d of noteDefects) console.error("INVALID", d);
     manifest.problems.push(...noteDefects);

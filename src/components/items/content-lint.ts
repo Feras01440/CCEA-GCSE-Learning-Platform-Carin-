@@ -208,22 +208,107 @@ function svgDefects(text: string): string[] {
   return out;
 }
 
+/** A See it holds two to six steps (docs/plan/review/2026-09-27-see-it-block-shape.md §2). */
+export const SEE_STEPS = { min: 2, max: 6 } as const;
+const SHIPPED_LOG = new Set(["verified", "published"]);
+const filled = (v: unknown): boolean => typeof v === "string" && v.trim().length > 0;
+const stepsWord = (n: number) => `${n} step${n === 1 ? "" : "s"}`;
+
+/**
+ * The See it block and the gate's twin (see-it-block-shape.md; the types SeeBlockInline, SeeBlockReference and
+ * GateTwin in ./gates), as the renderer needs them to draw: the inline form's stem and two to six steps numbered
+ * 1..k, each with its working line and its reason; at most one typed step (`input`), and none in the topic's
+ * first See it, which is shown, never typed; the reference form naming a worked example the bundle ships (when
+ * the bundle is given), itself two to six steps, and never both forms at once; a twin with its prompt, answer and
+ * explanation, and on a choice gate its options with the answer among them; and, in a section that holds a See it,
+ * no gate before it. A section starts at each heading; a "See it done" heading (role `see`) continues the section
+ * above. A section with no See it at all is a note written before 27 Sep 2026: scripts/qa/lesson-v2.mjs warns on
+ * it while the notes migrate, and the build does not refuse it.
+ */
+function seeAndTwinDefects(blocks: readonly unknown[], label: string, bundle: unknown): string[] {
+  const out: string[] = [];
+  const recs = blocks.map((b) => (b && typeof b === "object" ? (b as Record<string, unknown>) : {}));
+  const b = bundle && typeof bundle === "object" ? (bundle as Record<string, unknown>) : null;
+  const logs = onlyObjects(b?.verification);
+  const workedExamples = b ? onlyObjects(b.workedExamples) : null;
+  let firstSee = true;
+  recs.forEach((rec, i) => {
+    if (rec.type === "see") {
+      const at = `${label} note block ${i} (See it)`;
+      const hasSteps = Array.isArray(rec.steps);
+      if (typeof rec.workedExample === "string") {
+        if (hasSteps) out.push(`${at}: carries both a workedExample and its own steps (use one form)`);
+        else if (workedExamples) {
+          const we = workedExamples.find((w) => w.id === rec.workedExample);
+          const status = we ? logs.find((l) => l.id === we.verification)?.status : undefined;
+          const k = we && Array.isArray(we.steps) ? we.steps.length : 0;
+          if (!we) out.push(`${at}: names worked example ${rec.workedExample}, which the bundle does not hold`);
+          else if (!SHIPPED_LOG.has(String(status))) out.push(`${at}: names worked example ${rec.workedExample}, which the bundle does not ship (its log is ${status ?? "missing"})`);
+          else if (k < SEE_STEPS.min || k > SEE_STEPS.max) out.push(`${at}: names worked example ${rec.workedExample}, which has ${stepsWord(k)} (a See it has two to six)`);
+        }
+      } else {
+        if (!filled(rec.stem)) out.push(`${at}: no stem`);
+        const steps = hasSteps ? onlyObjects(rec.steps) : [];
+        if (steps.length < SEE_STEPS.min || steps.length > SEE_STEPS.max) out.push(`${at}: ${stepsWord(steps.length)} (a See it has two to six)`);
+        steps.forEach((s, k) => {
+          if (s.n !== k + 1) out.push(`${at}: step ${k + 1} is numbered ${String(s.n)} (steps run 1, 2, 3 … in order)`);
+          if (!filled(s.working)) out.push(`${at}: step ${k + 1} has no working line`);
+          if (!filled(s.decision)) out.push(`${at}: step ${k + 1} has no reason (decision)`);
+        });
+        const typed = steps.map((s, k) => (s.input !== undefined && s.input !== null ? k + 1 : 0)).filter(Boolean);
+        if (firstSee && typed.length) out.push(`${at}: the topic's first See it asks her to type step ${typed.join(", ")} (the first See it is shown, never typed)`);
+        else if (typed.length > 1) out.push(`${at}: ${typed.length} typed steps (at most one)`);
+      }
+      firstSee = false;
+    }
+    if (rec.type === "gate" && rec.twin !== undefined) {
+      const at = `${label} note block ${i} (gate ${String(rec.id)})`;
+      const twin = rec.twin && typeof rec.twin === "object" ? (rec.twin as Record<string, unknown>) : {};
+      for (const field of ["prompt", "answer", "explain"]) if (!filled(twin[field])) out.push(`${at}: its twin has no ${field}`);
+      const options = Array.isArray(twin.options) ? twin.options.map((o) => String(o).trim()) : null;
+      if (rec.kind === "choice" && !options?.length) out.push(`${at}: its twin, for a choice gate, has no options`);
+      else if (options?.length && filled(twin.answer) && !options.includes(String(twin.answer).trim())) out.push(`${at}: its twin's answer "${String(twin.answer)}" is not one of its options`);
+    }
+  });
+
+  // In a section that holds a See it, every gate follows one.
+  const sections: number[][] = [[]];
+  recs.forEach((rec, i) => {
+    if (rec.type === "h" && rec.role !== "see") sections.push([]);
+    else if (rec.type !== "h") sections[sections.length - 1]!.push(i);
+  });
+  for (const s of sections) {
+    const firstSeeAt = s.find((i) => recs[i]!.type === "see");
+    if (firstSeeAt === undefined) continue;
+    for (const i of s)
+      if (i < firstSeeAt && recs[i]!.type === "gate") out.push(`${label} note block ${i} (gate ${String(recs[i]!.id)}): comes before its section's See it (a section's gate follows its See it)`);
+  }
+  return out;
+}
+
 /**
  * Note blocks (note.blocks.json) carry inline SVG on figure blocks; the same drawing checks apply to them.
- * Returns one line per defect, labelled by block index and the figure's alt text.
+ * Returns one line per defect, labelled by block index and the figure's alt text. The See it blocks and the gates'
+ * twins are checked as seeAndTwinDefects says; pass the raw bundle so a See it that names a worked example is
+ * resolved against it.
  */
-export function lintNoteBlocks(blocks: unknown, label: string): string[] {
+export function lintNoteBlocks(blocks: unknown, label: string, bundle?: unknown): string[] {
   const out: string[] = [];
   if (!Array.isArray(blocks)) return out;
   blocks.forEach((b, i) => {
     if (!b || typeof b !== "object") return;
     const rec = b as Record<string, unknown>;
-    if (typeof rec.svg !== "string") return;
-    const text = svgText(rec.svg);
+    // a See it drawn from a figure carries it as a FigureSpec ({ kind: "svg", src, alt })
+    const fig = rec.type === "see" && rec.figure && typeof rec.figure === "object" ? (rec.figure as Record<string, unknown>) : null;
+    const svg = typeof rec.svg === "string" ? rec.svg : fig?.kind === "svg" && typeof fig.src === "string" ? fig.src : null;
+    if (svg === null) return;
+    const text = svgText(svg);
     if (text === null) return;
-    const alt = typeof rec.alt === "string" ? ` "${rec.alt.slice(0, 40)}"` : "";
+    const altText = typeof rec.alt === "string" ? rec.alt : typeof fig?.alt === "string" ? fig.alt : null;
+    const alt = altText !== null ? ` "${altText.slice(0, 40)}"` : "";
     for (const d of svgDefects(text)) out.push(`${label} note block ${i}${alt}: ${d}`);
   });
+  out.push(...seeAndTwinDefects(blocks, label, bundle));
   return out;
 }
 

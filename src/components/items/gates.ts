@@ -3,7 +3,28 @@
  * visible; answering a gate (right or not) opens the next stretch.
  */
 import { checkNumeric } from "@/lib/marking/numeric";
+import type { FigureSpec, WorkedExampleStep } from "@/lib/content/schema";
 import { isFormula, nameWithFormula, normaliseText } from "./text-marking";
+
+/**
+ * A gate's retry before the recap (docs/plan/review/2026-09-27-see-it-block-shape.md §3): the same structure on new
+ * numbers, asked when the gate was answered wrongly.
+ */
+export interface GateTwin {
+  prompt: string;
+  options?: string[];
+  answer: string;
+  explain: string;
+}
+
+/**
+ * The See it block (see-it-block-shape.md §2): our own worked steps, before the section's gate. Written inline, its
+ * steps are the schema's WorkedExampleStep; or it names a bundle worked example and the renderer takes the stem,
+ * figure, steps (without whyMenu) and final answer from it.
+ */
+export type SeeBlockInline = { type: "see"; stem: string; figure?: FigureSpec; steps: WorkedExampleStep[]; finalAnswer?: string };
+export type SeeBlockReference = { type: "see"; workedExample: string };
+export type SeeBlock = SeeBlockInline | SeeBlockReference;
 
 export type NoteBlock =
   /** The first block of a v2 note: what the topic page's hero shows (lede, three "you can" lines, a minute estimate). The lesson itself skips it. */
@@ -21,7 +42,10 @@ export type NoteBlock =
       /** Accepted answer; `blank` gates may list alternatives separated by " | ". */
       answer: string;
       explain: string;
+      /** The retry before the recap, asked when the gate was answered wrongly (see-it-block-shape.md §3). */
+      twin?: GateTwin;
     }
+  | SeeBlock
   | { type: "callout"; kind: "spec" | "mustknow" | "notonspec" | "examiner" | "why"; title?: string; md: string; source?: string }
   | { type: "figure"; alt: string; svg?: string; caption?: string }
   | { type: "photo"; src: string; alt: string; credit: string; licence: string; licenceUrl?: string; sourceUrl?: string; caption?: string; prompt?: string }
