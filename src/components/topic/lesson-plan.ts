@@ -16,24 +16,34 @@
  */
 import type { PhotoRef } from "@/components/media/PhotoFigure";
 import { splitTex, type TexSegment } from "@/components/items/tex-split";
+import { slidesReadyFor } from "@/lib/slides/ready";
+
+// ---- Readiness (readiness agent, 27 Sep 2026): which topics draw Read v2. Only this block reads it. ----------------
 
 /**
- * Read v2 (TRIAL-BRIEF.md and art direction v2 §9, 23 Sep 2026): the lesson as one centred column with the app's
- * rail folded to icons, a slim sticky track with a Contents popover, Continue at the end of every section, and the
- * gate drawn exactly as Slides draws it (§8.4's rhythm, the right option lit). It is on trial on one topic until the
- * owner has used it and said yes; rolling it out is this list becoming every topic.
+ * Read v2 (art direction v2 §9, 23 Sep 2026): the lesson as one centred column with the app's rail folded to icons, a
+ * slim sticky track with a Contents popover, Continue at the end of every section, and the gate drawn exactly as Slides
+ * draws it (§8.4's rhythm, the right option lit). It is drawn wherever Slides is offered, decided by the same one
+ * function (src/lib/slides/ready.ts slidesReadyFor): the content decides, topic by topic, as each note is migrated to
+ * lesson structure v3 and reviewed (src/lib/slides/readiness.ts). There is no list of topics here.
  */
-export const READ_V2_TOPICS: ReadonlySet<string> = new Set(["further-maths/FM1/algebraic-fractions-simplify"]);
-
 export function isReadV2(subject: string, unit: string, slug: string): boolean {
-  return READ_V2_TOPICS.has(`${subject}/${unit}/${slug}`);
+  return slidesReadyFor(subject, slug, unit);
 }
 
-/** The same test for a pathname: the topic page itself (/learn/<subject>/<unit>/<topic>/), never a route under it. */
-export function isReadV2Path(pathname: string): boolean {
+/** The topic whose page a pathname is (/learn/<subject>/<unit>/<topic>/), or null for any other route, one under it included. */
+export function topicOfPath(pathname: string): { subject: string; unit: string; slug: string } | null {
   const parts = pathname.split("/").filter(Boolean);
-  return parts.length === 4 && parts[0] === "learn" && isReadV2(parts[1], parts[2], parts[3]);
+  return parts.length === 4 && parts[0] === "learn" ? { subject: parts[1], unit: parts[2], slug: parts[3] } : null;
 }
+
+/** The same test for a pathname: the topic page itself, never a route under it (Slides draws its own chrome). */
+export function isReadV2Path(pathname: string): boolean {
+  const topic = topicOfPath(pathname);
+  return topic !== null && isReadV2(topic.subject, topic.unit, topic.slug);
+}
+
+// ---- end of readiness ----------------------------------------------------------------------------------------------
 
 /**
  * A gate's question, read the way art direction v2 §8.4 lays it out: the sentence that asks, then the maths it asks

@@ -8,7 +8,7 @@ import { allTopicParams, subjectInfo, topicInfo, unitInfo, type Subject } from "
 import { contentFor } from "@/lib/content/load";
 import type { RetrievalPrompt } from "@/lib/content/schema";
 import { deckFor } from "@/lib/slides/deck";
-import { slidesReadyFor } from "@/lib/slides/ready";
+import { NO_TOPIC_READY, slidesReadyFor } from "@/lib/slides/ready";
 
 /**
  * Slides: the primary way into a topic (decisions 9 and 17), a static route beside the topic page. Built only for the
@@ -17,7 +17,11 @@ import { slidesReadyFor } from "@/lib/slides/ready";
  */
 export const dynamicParams = false;
 export function generateStaticParams() {
-  return allTopicParams().filter((p) => slidesReadyFor(p.subject, p.topic) && contentFor(p.subject, p.topic)?.hasBlocks);
+  // Readiness (27 Sep 2026): exactly the topics the content says are ready (src/lib/slides/ready.ts, the one function),
+  // each at its own unit; the service worker precaches what this exports. With none ready, the one stand-in address
+  // that is no topic's (NO_TOPIC_READY), because the static export refuses a dynamic route with nothing to prerender.
+  const ready: Array<{ subject: string; unit: string; topic: string }> = allTopicParams().filter((p) => slidesReadyFor(p.subject, p.topic, p.unit));
+  return ready.length > 0 ? ready : [{ ...NO_TOPIC_READY }];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ subject: string; unit: string; topic: string }> }): Promise<Metadata> {

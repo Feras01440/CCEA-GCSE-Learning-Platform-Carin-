@@ -52,6 +52,19 @@
  * The note must be the published one: a shipped bundle's `noteBlocks` (public/content/…, null when the note does not
  * ship), or a raw bundle.json with its note.blocks.json passed as `noteBlocks`, whose note log says verified or
  * published.
+ *
+ * THE CONTRACT (other modules import these names; change them only together with their readers):
+ *  - lessonReadiness(bundle) -> { ready, via: "reviewed" | "waived" | null, structure, review, reasons }: the one rule.
+ *    pipeline/build-content.mts writes its `ready` into the manifest; the e2e suite applies it to served content.
+ *  - sectionsOf(blocks) -> NoteSection[]: the note as sections, the parser the Slides card grammar shares. Each section
+ *    has its number `n` (0 for the opening), its `part` (opening, teaching, closing), its `heading` ({ at, text, role })
+ *    and the "See it done" headings folded into it (`continuations`), then its blocks in order (`blocks`) and the same
+ *    blocks by kind: `explanation` (paragraphs, callouts, figures and photos before its first See it), `see`, `media`
+ *    (videos and sims), `gates` (the Your turns) and `prompts`. Every entry is { at, block }, `at` being the block's
+ *    index in note.blocks.json. Hero and pause blocks belong to no section.
+ *  - noteStructure(blocks) -> { ok, problems }; reviewOf(bundle) -> the review that counts, or null; hasSeeBlock(blocks).
+ *  - The names the content session writes: REVIEW_TYPE, REVIEW_TOOL, REVIEWERS; the roles: SECTION_ROLES,
+ *    TEACHING_ROLES, CONTINUING_ROLE, CLOSING_ROLES; the limits: RECALL_MAX, TURNS_IN_A_ROW_MAX.
  */
 import type { GateBlock, NoteBlock, SeeBlock } from "@/components/items/gates";
 
@@ -217,7 +230,7 @@ export function noteStructure(blocks: readonly unknown[] | null | undefined): { 
     }
 
     if (s.part === "opening") {
-      for (const g of s.gates) problems.push(`gate ${gateId(g)} comes before the note's first heading: the first check follows the first See it, inside its section`);
+      for (const g of s.gates) problems.push(`gate ${gateId(g)} comes before the first teaching section: the first check follows the first See it, inside its section`);
       for (const p of s.prompts) problems.push(`recall prompt ${str((p.block as unknown as Json).promptId)} sits in the opening: recall comes in the close, after "In the exam"`);
       continue;
     }

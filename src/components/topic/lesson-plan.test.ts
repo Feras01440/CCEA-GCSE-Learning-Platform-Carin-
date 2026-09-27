@@ -36,7 +36,9 @@ import {
   paragraphAfterLede,
   spineTitle,
   stageEyebrow,
+  topicOfPath,
 } from "./lesson-plan";
+import { slidesReadyFor } from "@/lib/slides/ready";
 
 const hero = {
   type: "hero",
@@ -136,7 +138,10 @@ describe("inlineLede: a stacked fraction in the hero's lede takes the inline siz
     const bundle = JSON.parse(readFileSync(path.resolve(__dirname, "../../../public/content/further-maths/fm.u1.algebraic-fractions-simplify.json"), "utf8")) as { noteBlocks: unknown[] };
     const lede = heroDataFor(bundle.noteBlocks).lede;
     expect(inlineLede(lede)).not.toMatch(/\\dfrac/);
-    expect(inlineLede(lede).replace(/\\frac/g, "\\dfrac")).toBe(lede);
+    // Whichever way the lede is authored (\dfrac before 25 Sep, \frac since), only a \dfrac is ever changed.
+    const asFrac = (s: string) => s.replace(/\\dfrac\{/g, "\\frac{");
+    expect(asFrac(inlineLede(lede))).toBe(asFrac(lede));
+    expect(lede).toMatch(/\\frac\{12\}\{18\}|\\dfrac\{12\}\{18\}/);
   });
 });
 
@@ -183,11 +188,15 @@ describe("the hero's promise: each way in states its own numbers, named, from it
     // Slides: the deck's own cards and minutes, the numbers on its title card and its Start button.
     expect(slides.size).toBe(`${deck.cards} cards`);
     expect(slides.minutes).toBe(`about ${deck.minutes} minutes`);
-    // The note's video has no stated length: both ways name it, neither guesses it, and the deck agrees.
-    expect(heroData.untimedVideos).toBe(1);
+    // The note's video states its length (341 s, since 25 Sep): both ways count it in their minutes, neither names it as
+    // untimed, and the deck agrees.
+    expect(heroData.untimedVideos).toBe(0);
     expect(deck.untimedVideos).toBe(heroData.untimedVideos);
-    expect(slides.plus).toBe("plus a video");
-    expect(read.plus).toBe("plus a video");
+    expect(deck.videos).toBe(1);
+    expect(slides.plus).toBeNull();
+    expect(read.plus).toBeNull();
+    expect(lessonMinutes(blocks, heroData.lede)).toBeGreaterThanOrEqual(Math.ceil(341 / 60));
+    expect(deck.minutes).toBeGreaterThanOrEqual(Math.ceil(341 / 60));
   });
 });
 
@@ -334,16 +343,24 @@ describe("withPauses", () => {
   });
 });
 
-describe("Read v2 (the trial)", () => {
-  it("is on for the trial topic only, and only on the topic page itself", () => {
-    expect(isReadV2("further-maths", "FM1", "algebraic-fractions-simplify")).toBe(true);
-    expect(isReadV2("further-maths", "FM1", "matrix-inverse-2x2")).toBe(false);
-    expect(isReadV2Path("/learn/further-maths/FM1/algebraic-fractions-simplify/")).toBe(true);
-    expect(isReadV2Path("/learn/further-maths/FM1/algebraic-fractions-simplify")).toBe(true);
-    // Slides is a route under the topic: it has its own chrome, not the Read page's.
-    expect(isReadV2Path("/learn/further-maths/FM1/algebraic-fractions-simplify/slides/")).toBe(false);
+describe("Read v2", () => {
+  // Readiness (27 Sep 2026): Read v2 is drawn exactly where Slides is offered, from the one function the content decides
+  // (src/lib/slides/ready.ts, src/lib/slides/readiness.ts). No topic is named as ready here: the content says which.
+  it("is drawn exactly where Slides is offered, only at the topic's own unit, and only on the topic page itself", () => {
+    for (const t of manifest.topics) {
+      const at = `/learn/${t.subject}/${t.unit}/${t.slug}/`;
+      expect(isReadV2(t.subject, t.unit, t.slug), at).toBe(slidesReadyFor(t.subject, t.slug));
+      expect(isReadV2Path(at), at).toBe(slidesReadyFor(t.subject, t.slug));
+      expect(isReadV2Path(at.slice(0, -1)), at).toBe(slidesReadyFor(t.subject, t.slug));
+      // Slides is a route under the topic: it has its own chrome, not the Read page's.
+      expect(isReadV2Path(`${at}slides/`), at).toBe(false);
+      expect(isReadV2(t.subject, `${t.unit}X`, t.slug), at).toBe(false);
+    }
+    expect(topicOfPath("/learn/further-maths/FM1/algebraic-fractions-simplify/")).toEqual({ subject: "further-maths", unit: "FM1", slug: "algebraic-fractions-simplify" });
+    expect(topicOfPath("/learn/further-maths/FM1/algebraic-fractions-simplify/slides/")).toBeNull();
+    expect(topicOfPath("/learn/further-maths/FM1/")).toBeNull();
+    expect(topicOfPath("/practise/")).toBeNull();
     expect(isReadV2Path("/learn/further-maths/FM1/")).toBe(false);
-    expect(isReadV2Path("/learn/maths/M4/histograms-unequal-widths/")).toBe(false);
   });
 
   it("opens a returning visit where she stopped, and a finished lesson whole", () => {

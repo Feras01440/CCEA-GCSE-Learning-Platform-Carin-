@@ -388,3 +388,11 @@ When a pass withdraws a published gate, diagnostic item, prompt, question, worke
 - `on`: when, as an ISO date-time.
 
 Where: the **note's own log** (the entry whose `id` is `note.verification`) lists the note's withdrawn gates; a **bundle item's own log** lists the item itself and has `status: "withdrawn"`; a **diagnostic set's log** lists the withdrawn items of that set (a whole set withdrawn: its log has `status: "withdrawn"` and lists every item). A withdrawn gate leaves the note (its id never reappears there, and its replacement takes a new id); a withdrawn bundle item stays in the bundle with its log, so a card that points at it resolves. A `human-spot` check may still tell the story in words, but the record is what the app and the lint read. `node scripts/qa/lesson-v2.mjs --withdrawn` lists every topic's records and their problems (`scripts/qa/withdrawn.mjs`: the shape, a `replacedBy` that exists as the same kind or `null` with a reason, a record for every log that says withdrawn, no withdrawn gate still in the note); a warning today, `--withdrawn-fatal` to gate.
+
+## The reviewer record (readiness for Slides and the v3 lesson)
+
+A topic switches to Slides and the v3 lesson per topic, never per unit, from two things read at content build time (src/lib/slides/readiness.ts → the manifest's `ready`): the note's structure (every section with a See it followed by its Your turn, at most two prompts, the first check after the first See it) and a reviewer's record. The record is one check appended to the checks of the NOTE's own verification entry (the entry whose id equals `note.verification`):
+
+`{ "type": "human-spot", "tool": "teach-show-check", "result": "pass" | "fail" | "waived", "detail": "<what was read, Slides and Read, at which widths, and the judgement>", "at": "<ISO date-time>", "by": "claude" | "developer" | "teacher" }`
+
+Rules: only a strictest reviewer writes it, and only on a "confirmed" verdict (an author never writes its own pass); the latest by `at` counts; a re-review is one more appended check, nothing is edited; "waived" needs its reason in `detail` and stops counting once the note gains a See it block; a pass switches nothing on while the structure fails; a record by "pipeline" never counts. `lessonReadiness(bundle).reasons` names the shortfall in plain words.

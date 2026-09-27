@@ -42,13 +42,43 @@ const urls = files
 
 // The on-demand set: single topic pages (and their RSC payloads), the published content, single paper pages.
 const ON_DEMAND_RE = [/^\/learn\/[^/]+\/[^/]+\/[^/]+\//, /^\/content\//, /^\/papers\/[^/]+\//];
-// Except Slides: the export builds a /learn/<subject>/<unit>/<topic>/slides/ route only for the topics that have Slides
-// (src/lib/slides/ready.ts), and the hero's "Start the slides" is the way in, so each is precached with its RSC payloads.
-// On demand, a topic page kept from one online visit offered a way in that led to Today offline (audit CQ-07).
-const SLIDES_RE = /^\/learn\/[^/]+\/[^/]+\/[^/]+\/slides\//;
+
+// ---- Readiness (readiness agent, 27 Sep 2026): which Slides routes are precached. ------------------------------------
+// Except Slides: the export builds a /learn/<subject>/<unit>/<topic>/slides/ route only for the topics whose content says
+// they are ready (the `ready` field on the topic's row of src/generated/manifest.json, written by
+// pipeline/build-content.mts from src/lib/slides/readiness.ts and read by src/lib/slides/ready.ts), and the hero's
+// "Start the slides" is the way in, so each ready topic's route is precached with its RSC payloads. On demand, a topic
+// page kept from one online visit offered a way in that led to Today offline (audit CQ-07). The precache follows the
+// manifest and the export together: a route is precached when both say the topic is ready, and any disagreement is
+// printed. A slides route of no published topic is the export's stand-in for a build with nothing ready
+// (NO_TOPIC_READY in src/lib/slides/ready.ts) and is never cached.
+const SLIDES_RE = /^\/learn\/([^/]+)\/([^/]+)\/([^/]+)\/slides\//;
+const slidesTopic = (u) => {
+  const m = SLIDES_RE.exec(u);
+  return m ? `${m[1]}/${m[2]}/${m[3]}` : null;
+};
+const manifestTopics = (() => {
+  try {
+    const topics = JSON.parse(fs.readFileSync(path.join(ROOT, "src", "generated", "manifest.json"), "utf8")).topics;
+    return Array.isArray(topics) ? topics : [];
+  } catch {
+    return [];
+  }
+})();
+const topicKey = (t) => `${t.subject}/${t.unit}/${t.slug}`;
+const published = new Set(manifestTopics.map(topicKey));
+const ready = new Set(manifestTopics.filter((t) => t.hasBlocks === true && t.ready === true).map(topicKey));
+const exported = new Set(urls.map(slidesTopic).filter((k) => k !== null));
+const readinessWarnings = [
+  ...[...ready].filter((k) => !exported.has(k)).map((k) => `ready in the manifest, but the export has no /slides/ route for it: ${k}`),
+  ...[...exported].filter((k) => published.has(k) && !ready.has(k)).map((k) => `the export has a /slides/ route for a topic the manifest does not mark ready (not precached): ${k}`),
+];
+const precachedSlides = new Set([...exported].filter((k) => ready.has(k)));
+// ---- end of readiness -----------------------------------------------------------------------------------------------
+
 const onDemand = urls.filter((u) => ON_DEMAND_RE.some((re) => re.test(u)) && !SLIDES_RE.test(u));
 const onDemandSet = new Set(onDemand);
-const shell = urls.filter((u) => !onDemandSet.has(u));
+const shell = urls.filter((u) => !onDemandSet.has(u) && (!SLIDES_RE.test(u) || precachedSlides.has(slidesTopic(u))));
 const sizeOf = (u) => {
   let p = decodeURIComponent(u);
   if (p.endsWith("/")) p += "index.html";
@@ -144,6 +174,7 @@ self.addEventListener("fetch", (event) => {
 });
 `;
 fs.writeFileSync(path.join(OUT, "sw.js"), sw);
+for (const w of readinessWarnings) console.warn(`WARNING readiness: ${w}`);
 console.log(
-  `out/sw.js written: ${shell.length} precached URLs, ${onDemand.length} on demand (${(onDemandBytes / 1048576).toFixed(1)} MB), version ${version}`,
+  `out/sw.js written: ${shell.length} precached URLs (the Slides of ${precachedSlides.size} ready topic${precachedSlides.size === 1 ? "" : "s"} among them), ${onDemand.length} on demand (${(onDemandBytes / 1048576).toFixed(1)} MB), version ${version}`,
 );

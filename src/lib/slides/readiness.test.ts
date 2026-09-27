@@ -283,7 +283,11 @@ describe("the structure: explain, then see it, then your turn, in every teaching
 
   it("asks nothing in the opening or in the close, and teaches nothing after the close has begun", () => {
     expect(problems([hero, p("A hook."), gate("g0"), h("1. The idea", "idea"), p(), see(), gate("g1"), ...close()])).toEqual([
-      "gate g0 comes before the note's first heading: the first check follows the first See it, inside its section",
+      "gate g0 comes before the first teaching section: the first check follows the first See it, inside its section",
+    ]);
+    // A "See it done" heading before any teaching heading continues the opening; its gate is still asked too early.
+    expect(problems([hero, h("See it done", "see"), p(), see(), gate("g0"), h("1. The idea", "idea"), p(), see(), gate("g1"), ...close()])).toEqual([
+      "gate g0 comes before the first teaching section: the first check follows the first See it, inside its section",
     ]);
     expect(problems([hero, h("1. The idea", "idea"), p(), see(), gate("g1"), h("You can now", "recap"), p(), gate("g9")])).toEqual([
       'gate g9 in section 2 "You can now" comes after the close has begun: every check belongs to a teaching section',

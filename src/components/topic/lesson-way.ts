@@ -10,8 +10,10 @@
  * Read gate, a mastery row) is where she was, never a choice: the Read button still names it ("Read on from section 3",
  * "Continue at section 3" once Read is hers), but it never takes the accent from Slides.
  *
- * Slides exist for the topics in src/lib/slides/ready.ts (the trial topic first; the list grows as the owner says yes).
- * On a topic without them "read" is the only way and nothing on the screen promises otherwise.
+ * Readiness (27 Sep 2026): Slides exist where the content says so, through the one function every surface reads
+ * (src/lib/slides/ready.ts slidesReadyFor): the topic's note passes lesson structure v3 and its reviewer has passed it
+ * (src/lib/slides/readiness.ts). There is no list of topics. On a topic without Slides "read" is the only way and
+ * nothing on the screen promises otherwise.
  */
 import { useCallback, useEffect, useState } from "react";
 import { slidesReadyFor } from "@/lib/slides/ready";
