@@ -23,12 +23,19 @@
  *                   ("One tap to start"): the owner's answer 8, a real check answerable from the first See it.
  *   explain-long    more than EXPLAIN_MAX words of explanation (p and callout text) in a section before its See it
  *                   (before its gate when it has none; in all when it has neither).
- *   turn-last       a section runs on after a Your turn: the gate is followed by more blocks in its section.
- *   turns           more than two gates in one section (two only where the section showed two variants).
- *   video           a video is a section's only See it, or stands before the See it (the owner's answer 4: our
- *                   own worked steps with their marks first, the video beside them).
+ *   explain-blocks  more than EXPLAIN_BLOCKS explanation blocks (p, callout) before a teaching section's See it (or its
+ *                   gate): "one to three idea cards" (the case §6.2, §8.3).
+ *   turn-last       a section runs on after a Your turn: the gate is followed by more blocks in its stretch (a "See it
+ *                   done" heading opens a new stretch, so the See it done after a Your turn is not a run-on).
+ *   turns           more than two gates in one stretch (two only where the section showed two variants).
+ *   video           a video or a sim is a section's only See it, or stands before the See it (the case §6.2 and §8.3:
+ *                   "beside it, never instead of it"; the owner's answer 4: our own worked steps first).
  *   option-position a choice gate's explanation, or its twin's, names an option by its position ("the second
  *                   option", "option B", "the answer above"): the options are shuffled on screen.
+ *   reteach         a gate's explanation, or its twin's, runs past RETEACH_WORDS words: a miss re-teaches in at most
+ *                   60 (the case §6.3), a fraction or a formula counting as one word.
+ *   twin            a gate's twin repeats the gate's prompt or answer: a twin is the same structure on new numbers,
+ *                   with its own answer (the case §6.3).
  *
  * Sections. The body runs to the recap heading ("You can now", role recap) or, failing that, the "In the exam"
  * pointer; the hero is not in it. A section starts at each heading; a heading with role `see` continues the
@@ -40,14 +47,22 @@
 export const SEE_STEPS = { min: 2, max: 6 };
 export const REASON_WORDS = 40;
 export const EXPLAIN_MAX = 225;
+export const EXPLAIN_BLOCKS = 3;
+export const RETEACH_WORDS = 60;
 export const TURNS_MAX = 2;
 
 const isRecap = (b) => b.type === "h" && (b.role === "recap" || /^you can now$/i.test(String(b.text ?? "").trim()));
 const isPointer = (b) => b.type === "h" && (b.role === "pointer" || /^in the exam$/i.test(String(b.text ?? "").trim()));
 const words = (s) => String(s ?? "").split(/\s+/).filter(Boolean).length;
-// A maths segment in a reason is one word: "$\dfrac{x - 3}{x + 2}$" is read as one thing.
+// A fraction or a formula counts as one word (the case §7): a maths segment is one word, and a sign standing alone
+// ("a² − b²") is not a word. Used for a See it's reasons and a gate's re-teaching; the section's 225 words are counted
+// as the text runs, like the 75-word card rule.
 const MATHS = /\$\$[\s\S]+?\$\$|\$[^$]+\$/g;
-const reasonWords = (s) => words(String(s ?? "").replace(MATHS, " m "));
+const reasonWords = (s) =>
+  String(s ?? "")
+    .replace(MATHS, " m ")
+    .split(/\s+/)
+    .filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
 const unclosed = (s) => (String(s ?? "").match(/(?<!\\)\$/g) ?? []).length % 2 === 1;
 
 /** The step mark codes of a subject, from packs/<subject>/exam-true/mark-language.json; the banded QWC marks a whole answer, never a step. Longest first, so MA is tried before M. */
@@ -134,14 +149,24 @@ export function seeItFindings(blocks, { codes = [], bundle } = {}) {
   const end = recapAt >= 0 ? recapAt : pointerAt >= 0 ? pointerAt : blocks.length;
   const body = blocks.slice(0, end).filter((b) => b.type !== "hero");
 
-  const sections = [{ index: 0, heading: "(opening)", role: null, items: [] }];
+  // A "See it done" heading (role see) continues the section above, but it opens a new stretch (`segs`) inside it: the
+  // Your turn before it is not "run on" by the See it done that follows, and each stretch has its own one or two turns
+  // (the teach-first case §8.5: "Your turn g3, then g7", then "See it done at writing speed … Your turn g4").
+  const sections = [{ index: 0, heading: "(opening)", role: null, items: [], segs: [] }];
   let headingNo = 0;
   for (const b of body) {
+    const s = sections[sections.length - 1];
     if (b.type === "h") {
       headingNo += 1;
-      if (b.role === "see") continue; // "See it done" continues the section above
-      sections.push({ index: headingNo, heading: String(b.text ?? ""), role: b.role ?? null, items: [] });
-    } else sections[sections.length - 1].items.push(b);
+      if (b.role === "see") {
+        s.seg = (s.seg ?? 0) + 1;
+        continue;
+      }
+      sections.push({ index: headingNo, heading: String(b.text ?? ""), role: b.role ?? null, items: [], segs: [] });
+    } else {
+      s.items.push(b);
+      s.segs.push(s.seg ?? 0);
+    }
   }
 
   const findings = [];
@@ -182,25 +207,51 @@ export function seeItFindings(blocks, { codes = [], bundle } = {}) {
         const named = optionByPosition(b.twin.explain);
         if (named) findings.push({ kind: "option-position", gate: b.id, section: s.heading, detail: `gate ${b.id}'s twin explanation names an option by its position ("${named}"); the options are shuffled, so name its content or point at the step` });
       }
+      // a miss re-teaches in at most 60 words (the case §6.3), the twin's too
+      for (const [whose, text] of [["explanation", b.explain], ["twin explanation", b.twin?.explain]]) {
+        const n = text === undefined ? 0 : reasonWords(text);
+        if (n > RETEACH_WORDS) findings.push({ kind: "reteach", gate: b.id, section: s.heading, detail: `gate ${b.id}'s ${whose} is ${n} words (a miss re-teaches in at most ${RETEACH_WORDS})` });
+      }
+      // the twin is the same structure on new numbers, with its own answer (the case §6.3)
+      if (b.twin) {
+        const same = (x, y) => String(x ?? "").replace(/\s+/g, " ").trim() === String(y ?? "").replace(/\s+/g, " ").trim();
+        const repeats = [same(b.twin.prompt, b.prompt) ? "prompt" : "", same(b.twin.answer, b.answer) ? "answer" : ""].filter(Boolean);
+        if (repeats.length) findings.push({ kind: "twin", gate: b.id, section: s.heading, detail: `gate ${b.id}'s twin repeats its ${repeats.join(" and ")} (a twin is the same structure on new numbers, with its own answer)` });
+      }
       // a check spends its See it, unless the next block is another gate (two turns on one See it)
       if (s.items[k + 1]?.type !== "gate") seen = false;
     });
 
     const gateAt = s.items.map((b, k) => (b.type === "gate" ? k : -1)).filter((k) => k >= 0);
-    for (const k of gateAt)
-      if (k + 1 < s.items.length && s.items[k + 1].type !== "gate")
-        findings.push({ kind: "turn-last", gate: s.items[k].id, section: s.heading, detail: `the section ${where} runs on after its Your turn, gate ${s.items[k].id}: ${s.items.length - k - 1} block(s) follow it (a section ends in its Your turn; split it here)` });
-    if (gateAt.length > TURNS_MAX) findings.push({ kind: "turns", section: s.heading, detail: `${gateAt.length} gates in ${where} (one Your turn, two only where the section showed two variants)` });
+    // run-on and the count of turns are judged within a stretch: a "See it done" that follows a Your turn is not a run-on
+    for (const k of gateAt) {
+      const after = s.items.slice(k + 1).filter((_, j) => s.segs[k + 1 + j] === s.segs[k]);
+      if (after.length && after[0].type !== "gate")
+        findings.push({ kind: "turn-last", gate: s.items[k].id, section: s.heading, detail: `the section ${where} runs on after its Your turn, gate ${s.items[k].id}: ${after.length} block(s) follow it (a section ends in its Your turn; split it here)` });
+    }
+    for (const seg of new Set(gateAt.map((k) => s.segs[k]))) {
+      const n = gateAt.filter((k) => s.segs[k] === seg).length;
+      if (n > TURNS_MAX) findings.push({ kind: "turns", section: s.heading, detail: `${n} gates in ${where}${seg ? " (its See it done)" : ""} (one Your turn, two only where the section showed two variants)` });
+    }
 
+    // a video or a sim stands beside a See it, never instead of it (the case §6.2 and §8.3; the owner's answer 4)
     const seeAt = s.items.findIndex((b) => b.type === "see");
-    const videoAt = s.items.findIndex((b) => b.type === "video");
-    if (videoAt >= 0 && seeAt < 0) findings.push({ kind: "video", section: s.heading, detail: `a video is the only See it in ${where}: our own worked steps come first, the video beside them` });
-    else if (videoAt >= 0 && videoAt < seeAt) findings.push({ kind: "video", section: s.heading, detail: `a video stands before the See it in ${where}: our own worked steps come first, the video beside them` });
+    const visualAt = s.items.findIndex((b) => b.type === "video" || b.type === "sim");
+    const what = visualAt >= 0 ? `a ${s.items[visualAt].type}` : "";
+    if (visualAt >= 0 && seeAt < 0) findings.push({ kind: "video", section: s.heading, detail: `${what} is the only See it in ${where}: our own worked steps come first, the ${s.items[visualAt].type} beside them` });
+    else if (visualAt >= 0 && visualAt < seeAt) findings.push({ kind: "video", section: s.heading, detail: `${what} stands before the See it in ${where}: our own worked steps come first, the ${s.items[visualAt].type} beside them` });
 
+    // explain: one to three blocks, at most 225 words in all, before the See it (the case §6.2 and §8.3)
     const upTo = seeAt >= 0 ? seeAt : gateAt.length ? gateAt[0] : s.items.length;
-    const explain = s.items.slice(0, upTo).reduce((a, b) => a + (b.type === "p" || b.type === "callout" ? words(b.md) : 0), 0);
-    if (explain > EXPLAIN_MAX)
-      findings.push({ kind: "explain-long", section: s.heading, detail: `${explain} words of explanation in ${where} ${seeAt >= 0 ? "before its See it" : gateAt.length ? "before its Your turn" : "with no Your turn"} (at most ${EXPLAIN_MAX}: split the section)` });
+    const explainBlocks = s.items.slice(0, upTo).filter((b) => b.type === "p" || b.type === "callout");
+    const explain = explainBlocks.reduce((a, b) => a + words(b.md), 0);
+    const before = seeAt >= 0 ? "before its See it" : gateAt.length ? "before its Your turn" : "with no Your turn";
+    if (explain > EXPLAIN_MAX) findings.push({ kind: "explain-long", section: s.heading, detail: `${explain} words of explanation in ${where} ${before} (at most ${EXPLAIN_MAX}: split the section)` });
+    // Not in an "Exam twists" section: the depth standard asks one paragraph of ≤ 40 words per twist, and at least four
+    // twists for H5, so its paragraphs are the twists themselves (a conflict of the two texts, put to the coordinator on
+    // 27 Sep 2026; the 225 words still apply).
+    if (explainBlocks.length > EXPLAIN_BLOCKS && (seeAt >= 0 || gateAt.length) && s.role !== "twists")
+      findings.push({ kind: "explain-blocks", section: s.heading, detail: `${explainBlocks.length} explanation blocks in ${where} ${before} (at most ${EXPLAIN_BLOCKS}: split the section)` });
   }
 
   const gated = sections.filter((s) => s.items.some((b) => b.type === "gate"));

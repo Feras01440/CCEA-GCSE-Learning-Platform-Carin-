@@ -17,7 +17,12 @@
  * promptTargets lists, for a report line only and never as a warning, every shipped answer over the
  * ANSWER_TARGET of 12 words (the case's target; 25 is the cap).
  *
- * Words are counted as the text runs, split at spaces, the way the 25-word cap has been counted since 24 Sep.
+ *   examiner  a shipped prompt carries an examiner's finding (a series named, "examiners", "candidates"): that is
+ *             the Sheet's trap with its series, never a prompt (the case §7).
+ *
+ * Words: "a fraction or a formula counts as one word" (the case §7, 27 Sep 2026), so a maths segment ($…$, $$…$$)
+ * is one word and a sign standing alone ("a² − b²") is none. Until 27 Sep the text was split at spaces, which
+ * counted "$x^2 + 5x + 6$" as five words; the new count only ever lowers a number.
  * Only shipped prompts count, by the pipeline's rule: a verification log found by the prompt's id
  * (`itemId`) with status verified or published; anything else is a draft the app never ships.
  */
@@ -28,7 +33,16 @@ export const ANSWER_TARGET = 12;
 export const QUESTION_WORDS = 15;
 const SHIPPABLE = new Set(["verified", "published"]);
 
-const words = (s) => String(s ?? "").split(/\s+/).filter(Boolean).length;
+const MATHS = /\$\$[\s\S]+?\$\$|\$[^$]+\$/g;
+export const words = (s) =>
+  String(s ?? "")
+    .replace(MATHS, " m ")
+    .split(/\s+/)
+    .filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+
+/** An examiner's finding in a prompt: a series named ("Summer 2025"), "examiners", "candidates". Calibrated 27 Sep 2026 on the 1,662 shipped prompts: 34 hits, every one a finding. */
+const EXAMINER = /\b(?:summer|winter|november|june|january|march|autumn|spring)\s+(?:19|20)\d\d\b|\bexaminers?\b|\bcandidates\b/i;
+export const examinerFinding = (s) => EXAMINER.exec(String(s ?? ""))?.[0] ?? null;
 
 const shippedPrompts = (bundle) => {
   const logs = bundle?.verification ?? [];
@@ -51,7 +65,7 @@ export function numberedList(answer) {
 /**
  * @param {Array<object>} blocks  note.blocks.json
  * @param {object} bundle         bundle.json
- * @returns {Array<{kind:"wired", count:number, ids:string[], detail:string} | {kind:"long"|"numbered"|"question", id:string, words?:number, wired:boolean, detail:string}>}
+ * @returns {Array<{kind:"wired", count:number, ids:string[], detail:string} | {kind:"long"|"examiner"|"numbered"|"question", id:string, words?:number, wired:boolean, detail:string}>}
  */
 export function promptFindings(blocks, bundle) {
   const shipped = shippedPrompts(bundle);
@@ -64,6 +78,9 @@ export function promptFindings(blocks, bundle) {
     const isWired = wired.includes(p.id);
     if (n > ANSWER_WORDS)
       out.push({ kind: "long", id: p.id, words: n, wired: isWired, detail: `prompt ${p.id} expects a ${n}-word answer (at most ${ANSWER_WORDS}: a short recall, never an essay)` });
+    const finding = examinerFinding(`${p.prompt ?? ""} ${p.answer ?? ""}`);
+    if (finding)
+      out.push({ kind: "examiner", id: p.id, wired: isWired, detail: `prompt ${p.id} carries an examiner's finding ("${finding}"): that is the Sheet's trap with its series, never a prompt` });
     if (numberedList(p.answer))
       out.push({ kind: "numbered", id: p.id, wired: isWired, detail: `prompt ${p.id} expects a numbered list (a procedure is the recap's job; a prompt is one fact)` });
     const q = words(p.prompt);

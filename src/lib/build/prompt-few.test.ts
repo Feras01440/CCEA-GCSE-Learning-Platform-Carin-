@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ANSWER_TARGET, ANSWER_WORDS, QUESTION_WORDS, WIRED_MAX, numberedList, promptFindings, promptTargets } from "../../../scripts/qa/prompt-few.mjs";
+import { ANSWER_TARGET, ANSWER_WORDS, QUESTION_WORDS, WIRED_MAX, numberedList, promptFindings, promptTargets, words as countWords } from "../../../scripts/qa/prompt-few.mjs";
 
 /**
  * The owner's verdict of 24 Sep 2026 (23:40), after trying Slides: retrieval prompts are optional,
@@ -75,6 +75,33 @@ describe("retrieval prompts: few and short", () => {
       { id: "rp.c", words: 30, wired: false },
     ]);
     expect(promptFindings(note("rp.b"), bundle).map((f: { kind: string }) => f.kind)).toEqual(["long"]);
+  });
+
+  it("counts a fraction or a formula as one word, and a sign standing alone as none (the case §7)", () => {
+    expect(countWords("$x^2 - 9 = (x + 3)(x - 3)$ is a difference of two squares")).toBe(7);
+    expect(countWords("a² − b²")).toBe(2);
+    expect(countWords("$$\\dfrac{a}{b}$$ then divide")).toBe(3);
+    // 24 words and a long formula: 25 words, inside the cap (split at spaces it read 31)
+    const bundle = shipped(rp("rp.a", `${words(24)} $x^2 + 5x + 6 = (x + 2)(x + 3)$`));
+    expect(promptFindings(note("rp.a"), bundle)).toEqual([]);
+  });
+
+  it("warns on a prompt that carries an examiner's finding, wired or not (the Sheet's trap, never a prompt)", () => {
+    const found = promptFindings(
+      note("rp.a"),
+      shipped(
+        rp("rp.a", "Checking before that is the last-mark loss reported in Summer 2025."),
+        rp("rp.b", "Leaving Φ as the answer is the slip examiners report."),
+        { ...rp("rp.c", "d to the power 20"), prompt: "What do most candidates write, and what is right?" },
+        { ...rp("rp.d", "The first line: factorise the top"), prompt: "What does the scheme reward first?" },
+      ),
+    );
+    expect(found.map((f: { kind: string; id?: string; wired?: boolean }) => [f.kind, f.id, f.wired])).toEqual([
+      ["examiner", "rp.a", true],
+      ["examiner", "rp.b", false],
+      ["examiner", "rp.c", false],
+    ]);
+    expect(found[0].detail).toBe(`prompt rp.a carries an examiner's finding ("Summer 2025"): that is the Sheet's trap with its series, never a prompt`);
   });
 
   it("counts a prompt wired twice once, and ignores a draft prompt the pipeline never ships", () => {

@@ -156,6 +156,67 @@ describe("see-it: the section structure (explain → See it → Your turn)", () 
   });
 });
 
+describe("see-it: the case's own v3 deck (§8.5, fm1/algebraic-fractions-simplify) and the rules read again", () => {
+  const figure: Block = { type: "figure", alt: "The bracket struck", svg: "<svg/>", caption: "Only a factor divides out." };
+  const examiner: Block = { type: "callout", kind: "examiner", title: "Summer 2024", md: "Fully means fully." };
+  const why: Block = { type: "callout", kind: "why", title: "Why", md: "A factor divides; a term does not." };
+  const notonspec: Block = { type: "callout", kind: "notonspec", title: "Beyond FM1", md: "No paper sets the cubic." };
+  const deck = (section4: Block[]) =>
+    note(
+      h("1. Only a factor divides out", "idea"), p("The hook."), p("The idea."), figure, see(4), gate("g2"),
+      h("2. Factorise first", "variant"), p("Move 1."), see(3), gate("g1"),
+      h("3. A coefficient in front", "variant"), p("The root of 4x²."), notonspec, see(2), see(2), gate("g3"), gate("g7"),
+      h("4. See it done at writing speed", "see"), ...section4,
+      h("5. Fully means fully", "twists"), p("The idea."), examiner, why, see(2), gate("g5"), gate("g6"),
+    );
+
+  it("passes the deck with the owner's answer 4 applied (our own See it in section 4, the video beside it)", () => {
+    const r = seeItFindings(deck([see(3), video, figure, gate("g4")]), { codes: FM });
+    expect(r.findings).toEqual([]);
+    expect(r).toMatchObject({ gates: 7, gatesAfterSee: 7, seeBlocks: 6, firstCheck: true });
+  });
+
+  it("finds only the missing See it in section 4 as the case first drew it (the video and the figure alone)", () => {
+    const r = seeItFindings(deck([video, figure, gate("g4")]), { codes: FM });
+    expect(r.findings.map((f: { kind: string; gate?: string }) => [f.kind, f.gate])).toEqual([["see-missing", "g4"]]);
+  });
+
+  it("a sim, like a video, stands beside a See it and never instead of it", () => {
+    const sim: Block = { type: "sim", provider: "phet", url: "https://phet.colorado.edu/x", title: "Forces", attribution: "PhET", licence: "CC-BY" };
+    const only = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), sim, gate("g1")), { codes: FM });
+    expect(only.findings.filter((f: { kind: string }) => f.kind === "video").map((f: { detail: string }) => f.detail)).toEqual([
+      'a sim is the only See it in "1. Idea": our own worked steps come first, the sim beside them',
+    ]);
+    expect(seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), sim, gate("g1")), { codes: FM }).findings).toEqual([]);
+  });
+
+  it("warns on more than three explanation blocks before a teaching section's See it, never on a section that teaches nothing to check", () => {
+    const four = seeItFindings(note(h("1. Idea", "idea"), p("a"), p("b"), why, p("d"), see(), gate("g1")), { codes: FM });
+    expect(four.findings.map((f: { kind: string; detail: string }) => [f.kind, f.detail])).toEqual([["explain-blocks", '4 explanation blocks in "1. Idea" before its See it (at most 3: split the section)']]);
+    const bare = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), gate("g1"), h("2. Background", "why"), p("a"), p("b"), p("c"), p("d")), { codes: FM });
+    expect(kinds(bare)).toEqual([]);
+    // an "Exam twists" section is one short paragraph per twist, four or more for H5 (the depth standard)
+    const twists = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), gate("g1"), h("9. Exam twists", "twists"), p("t1"), p("t2"), p("t3"), p("t4"), see(), gate("g2")), { codes: FM });
+    expect(kinds(twists)).toEqual([]);
+  });
+
+  it("warns on a re-teaching explanation over 60 words, a formula counting as one word", () => {
+    const long = gate("g1", { explain: words(61) });
+    expect(seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), long), { codes: FM }).findings.map((f: { kind: string; detail: string }) => [f.kind, f.detail])).toEqual([
+      ["reteach", "gate g1's explanation is 61 words (a miss re-teaches in at most 60)"],
+    ]);
+    const formula = gate("g1", { explain: `${words(59)} $x^2 + 5x + 6 = (x + 2)(x + 3)$ − ` });
+    expect(seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), formula), { codes: FM }).findings).toEqual([]);
+  });
+
+  it("warns on a twin that repeats its gate's prompt or answer", () => {
+    const twin = gate("g1", { twin: { prompt: "Which line comes next?", options: ["A one", "C three"], answer: "A one", explain: "Again." } });
+    expect(seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), twin), { codes: FM }).findings.map((f: { kind: string; detail: string }) => [f.kind, f.detail])).toEqual([
+      ["twin", "gate g1's twin repeats its prompt and answer (a twin is the same structure on new numbers, with its own answer)"],
+    ]);
+  });
+});
+
 describe("see-it: a gate's explanation never names an option by its position (the options are shuffled)", () => {
   it("finds the positional names the corpus uses", () => {
     for (const s of [

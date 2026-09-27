@@ -49,17 +49,20 @@
  *               gate every so many cards; the longest run between gates is printed as cards, never gated.
  *   prompts-few retrieval prompts are few, optional and short (the owner's verdict of 24 Sep 2026,
  *               23:40, and his answer 3 of 27 Sep): a note wires at most two, no shipped prompt expects
- *               an answer of more than 25 words or a numbered list, and no wired prompt asks a question of
- *               more than 15 words (scripts/qa/prompt-few.mjs). A WARNING (the list with --prompts or
+ *               an answer of more than 25 words or a numbered list or carries an examiner's finding, and no
+ *               wired prompt asks a question of more than 15 words, a fraction or a formula counting as one
+ *               word (scripts/qa/prompt-few.mjs). A WARNING (the list with --prompts or
  *               --depth) until --prompts-fatal. The summary line also reports, never warns, the answers
  *               over the 12-word target. The depth row "prompts embedded in the note" reads 0–2 in every
  *               band, and "retrieval prompts" 1–8 in the bundle.
  *   see         Lesson structure v3 (the teach-first case §8.4, approved 27 Sep 2026; the shapes in
  *               docs/plan/review/2026-09-27-see-it-block-shape.md): every gate follows a See it in its
  *               section; the topic's first check follows the first See it and is no interface warm-up; at
- *               most 225 words of explanation before a section's See it; a section ends in its Your turn
- *               (two only after two variants); a video is never a section's only See it; a choice gate's
- *               explanation never names an option by its position; a See it block's reasons ≤ 40 words,
+ *               most 225 words and three blocks of explanation before a section's See it; a section ends in
+ *               its Your turn (two only after two variants; a "See it done" heading opens its own stretch); a
+ *               video or a sim is never a section's only See it; a choice gate's explanation never names an
+ *               option by its position; a gate's re-teaching is at most 60 words; a twin never repeats its
+ *               gate's prompt or answer; a See it block's reasons ≤ 40 words,
  *               balanced $, marks from the subject's mark language, no whyMenu (scripts/qa/see-it.mjs; the
  *               shape rules the renderer needs are refused by the build, content-lint.ts). WARNINGS (the
  *               list with --see or --depth) until --see-fatal. The depth row "see it" counts the sections
@@ -838,12 +841,13 @@ const longAnswers = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind ==
 const longWired = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "long" && f.wired).length, 0);
 const numberedAnswers = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "numbered").length, 0);
 const longQuestions = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "question").length, 0);
+const examinerPrompts = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "examiner").length, 0);
 const overTarget = notes.reduce((a, n) => a + n.targets.length, 0);
 const overTargetWired = notes.reduce((a, n) => a + n.targets.filter((t) => t.wired).length, 0);
-const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired); ${numberedAnswers} expect a numbered list; ${longQuestions} wired prompt(s) ask a question over ${QUESTION_WORDS} words${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}; report only: ${overTarget} shipped answer(s) over the ${ANSWER_TARGET}-word target (${overTargetWired} wired)${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
+const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired); ${numberedAnswers} expect a numbered list; ${examinerPrompts} carry an examiner's finding; ${longQuestions} wired prompt(s) ask a question over ${QUESTION_WORDS} words${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}; report only: ${overTarget} shipped answer(s) over the ${ANSWER_TARGET}-word target (${overTargetWired} wired)${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
 
 // Lesson structure v3, over every note checked
-const seeKinds = ["see-missing", "first-check", "explain-long", "turn-last", "turns", "video", "option-position", "block"];
+const seeKinds = ["see-missing", "first-check", "explain-long", "explain-blocks", "turn-last", "turns", "video", "option-position", "reteach", "twin", "block"];
 const seeCount = Object.fromEntries(seeKinds.map((k) => [k, notes.reduce((a, n) => a + n.see.findings.filter((f) => f.kind === k).length, 0)]));
 const seeNotes = notes.filter((n) => n.see.findings.length);
 const seeGates = notes.reduce((a, n) => a + n.see.gates, 0);
@@ -852,7 +856,7 @@ const seeBlocksAll = notes.reduce((a, n) => a + n.see.seeBlocks, 0);
 const notesWithSee = notes.filter((n) => n.see.seeBlocks).length;
 const firstOk = notes.filter((n) => n.see.firstCheck === true).length;
 const seeFindingsAll = seeKinds.reduce((a, k) => a + seeCount[k], 0);
-const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by position; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
+const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation and ${seeCount["explain-blocks"]} with more than three explanation blocks; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) or sim(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by position; ${seeCount.reteach} over 60 words; ${seeCount.twin} twin(s) repeating their gate; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
 
 // the per-topic lists of units migrating to v3 (lesson-v2.fatal.json "list": true), printed until their defaults are on
 const listUnits = [...new Set(notes.map((n) => n.unit))].filter((u) => unitFlag(u, "list"));
@@ -973,7 +977,7 @@ if (asJson) {
     for (const r of rows) {
       const s = r.see;
       console.log(
-        `  ${r.slug.padEnd(48)} teach ${String(r.gates - r.teachFailing).padStart(2)}/${String(r.gates).padEnd(2)} · prompts ${r.prompts} · withdrawn ${r.withdrawnProblems} · See it ${r.gatesAfterSee}/${r.gates} gates, ${r.seeBlocks} block(s) · first check ${r.firstCheck ? "ok" : "NOT after a See it"} · long ${s["explain-long"]} · run-on ${s["turn-last"]} · video ${s.video} · by-position ${s["option-position"]} · block ${s.block}`,
+        `  ${r.slug.padEnd(48)} teach ${String(r.gates - r.teachFailing).padStart(2)}/${String(r.gates).padEnd(2)} · prompts ${r.prompts} · withdrawn ${r.withdrawnProblems} · See it ${r.gatesAfterSee}/${r.gates} gates, ${r.seeBlocks} block(s) · first check ${r.firstCheck ? "ok" : "NOT after a See it"} · long ${s["explain-long"] + s["explain-blocks"]} · run-on ${s["turn-last"] + s.turns} · video/sim ${s.video} · by-position ${s["option-position"]} · re-teach > 60 ${s.reteach} · twin ${s.twin} · block ${s.block}`,
       );
     }
   }
