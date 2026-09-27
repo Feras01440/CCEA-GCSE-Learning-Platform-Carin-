@@ -275,6 +275,8 @@ const misconceptions = [
   MX("fm.kin.one-formula-whole-journey", "Stretches one constant-acceleration formula across a whole multi-stage journey whose acceleration changes, instead of working stage by stage", ["FM2-KIN-01", "FM2-KIN-02"], "method", [S("2022-summer", "FM2", 4)]),
   MX("fm.kin.deceleration-sign", "Enters a deceleration as a positive acceleration (or quotes a deceleration as a negative number where its size was asked for), so a distance or a time comes out negative", ["FM2-KIN-02"], "accuracy", [S("2024-summer", "FM2", 4), S("2022-summer", "FM2", 4)]),
   MX("fm.kin.wrong-equation-chosen", "Uses an equation of motion that does not contain the quantity wanted, or mishandles the algebra inside a correct one (a sum inside a bracket turned into a product)", ["FM2-KIN-02"], "method", [S("2019-summer", "FM2", 2), S("2025-summer", "FM2", 3)]),
+  // Added 27 Sep 2026 by the v3 migration of fm2/displacement-time-graphs (FM2 group 0): replacements q.0015, q.0017.
+  MX("fm.kin.leg-left-out", "Totals the distance of a multi-stage journey from only some of its legs, leaving a leg out", ["FM2-KIN-01"], "method", [S("2024-summer", "FM2", 1)], "Summer 2024 Q1(ii) reports that only the stronger candidates took the total distance over the total time; the report does not itemise which legs the others left out."),
   M("fm.vectors.weight-scalar", "Classifies weight as a scalar", ["FM2-VEC-01"], "concept"),
   M("fm.vectors.definition-by-example", "Defines vector or scalar with a specific example instead of a general definition", ["FM2-VEC-01"], "presentation"),
   M("fm.vectors.magnitude-when-vector-asked", "Finds magnitudes or angles when a vector was required", ["FM2-VEC-03"], "misread"),
@@ -813,13 +815,21 @@ const insights = [
       },
       {
         source: S("2025-summer", "FM1", 11),
-        asked: "Area under a quadratic between the x-intercepts.",
+        // FM1 migration group 2 (27 Sep 2026): the region was between the ordinates x = -1/2 and x = 0, not the intercepts
+        asked: "Area between a quadratic, the x-axis and the ordinates x = -1/2 and x = 0, a region below the axis.",
         wentWrong: "The wrong limits, forgetting to integrate, or leaving a negative final value lost the last mark; arithmetic errors were common.",
-        rule: "Limits are the intercepts you found; the area is the magnitude.",
-        misconceptions: ["fm.int.negative-area-left"],
+        rule: "Use the ordinates the question names; the area is the size of the integral.",
+        misconceptions: ["fm.int.negative-area-left", "fm.int.limits-not-from-the-question"],
+      },
+      {
+        source: S("2019-summer", "FM1", 13),
+        asked: "Two areas under a curve with a constant k in it, in terms of k; then k from one area stated as a fraction of the other.",
+        wentWrong: "Many integrated k as if it were the variable, giving k squared over 2, and many read the stated fraction the wrong way round.",
+        rule: "A constant integrates to itself times x; write the stated fraction exactly as it is worded.",
+        misconceptions: ["fm.int.unknown-constant-integrated"],
       },
     ],
-    ruleToRemember: "Use the intercepts (or given ordinates) as limits, integrate, and give the area as a positive magnitude - a negative result means the region is below the axis.",
+    ruleToRemember: "Use the given ordinates, or the intercepts, as limits, integrate (a constant k gives kx), and give the area as a positive size - a negative result means the region is below the axis.",
   },
 
   {
