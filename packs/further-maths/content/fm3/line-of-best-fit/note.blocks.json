@@ -7,7 +7,7 @@
       "Find the equation of the line from two points on it",
       "Use the equation to estimate, and say when an estimate cannot be trusted"
     ],
-    "minutes": 12
+    "minutes": 10
   },
   {
     "type": "h",
@@ -25,16 +25,39 @@
     "caption": "Eight weeks of sunshine and tomatoes. The ringed point is the mean point, and the line passes through it."
   },
   {
-    "type": "p",
-    "md": "Each cross is one recorded week. The one furthest left sits at $x = 18$, $y = 4.8$: 18 hours of sunshine gave 4.8 kg.\nThe ringed point was never recorded: it is worked out from all the weeks, as the next section shows."
+    "type": "see",
+    "kind": "data",
+    "stem": "Read the cross furthest to the left on the garden graph.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$x = 18$",
+        "decision": "Read straight down to the sunshine axis: the grid's small squares are 2 hours wide."
+      },
+      {
+        "n": 2,
+        "working": "$y = 4.8$",
+        "decision": "Read straight across to the tomato axis: its small squares are 0.2 kg tall."
+      },
+      {
+        "n": 3,
+        "working": "18 hours of sunshine gave 4.8 kg",
+        "decision": "Each cross is one recorded week. The ringed point is not a week: it is the mean point, worked out from all of them."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g1",
+    "id": "g13",
     "kind": "number",
-    "prompt": "On the garden scatter graph of sunshine and tomatoes, how many weeks are plotted?",
-    "answer": "8",
-    "explain": "Count the crosses: there is one for each week recorded, so 8. The ringed point is not a week: it is the mean point, worked out from the weeks, which comes next."
+    "prompt": "On the garden scatter graph, read the cross furthest to the right. How many hours of sunshine did that week have?",
+    "answer": "44",
+    "explain": "As in step 1 of See it, read straight down from that cross to the sunshine axis: it sits on the second small grid line past 40, at 44 hours. Like the cross at 18 hours, it is one recorded week.",
+    "twin": {
+      "prompt": "On the same graph, read the cross furthest to the right again. How many kilograms of tomatoes did that week give?",
+      "answer": "8.2 | 41/5",
+      "explain": "Read straight across from that cross to the tomato axis: it sits one small square above 8, at 8.2 kg."
+    }
   },
   {
     "type": "h",
@@ -43,7 +66,7 @@
   },
   {
     "type": "p",
-    "md": "Work out $\\bar{x}$, the mean of the $x$ values, and $\\bar{y}$, the mean of the $y$ values. Together they make the mean point $(\\bar{x}, \\bar{y})$.\nHere the eight sunshine totals add up to 240, so $\\bar{x} = 30$, and the eight masses add up to 51.2, so $\\bar{y} = 6.4$."
+    "md": "Work out $\\bar{x}$, the mean of the $x$ values, and $\\bar{y}$, the mean of the $y$ values. Together they make the mean point $(\\bar{x}, \\bar{y})$."
   },
   {
     "type": "figure",
@@ -58,12 +81,45 @@
     "md": "The mean point is the centre of balance of the data: a sensible line through it has the crosses above it balancing the crosses below. It is also the one point on the line you can calculate exactly, so this specification says the line must go through it, and the mark scheme checks that it does."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the mean point of the garden's eight weeks.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\bar{x} = \\dfrac{240}{8}$\n$= 30$",
+        "decision": "Add the eight sunshine totals and divide by how many weeks there are.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\bar{y} = \\dfrac{51.2}{8}$\n$= 6.4$",
+        "decision": "The same for the eight masses.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Mean point $(30, 6.4)$",
+        "decision": "The two means together: the point the line must pass through."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g2",
     "kind": "number",
     "prompt": "Five values of $x$ are 12, 15, 17, 20 and 26. What is $\\bar{x}$?",
     "answer": "18",
-    "explain": "Add the values and divide by how many there are, as the garden's eight weeks were: the five add up to 90, and $\\dfrac{90}{5}$ is 18. The mean point needs this for $x$ and again for $y$."
+    "explain": "As in step 1 of See it, add the values and divide by how many there are: the five add up to 90, and $\\dfrac{90}{5}$ is 18. The mean point needs this for $x$ and again for $y$.",
+    "twin": {
+      "prompt": "Four values of $y$ are 11, 14, 19 and 24. What is $\\bar{y}$?",
+      "answer": "17",
+      "explain": "The four add up to 68, and $\\dfrac{68}{4}$ is 17."
+    }
   },
   {
     "type": "h",
@@ -72,7 +128,41 @@
   },
   {
     "type": "p",
-    "md": "Plot the mean point, then lay your ruler through it along the trend, so that roughly as many crosses lie above the line as below it."
+    "md": "Plot the mean point, then lay your ruler through it along the trend, so that roughly as many crosses lie above the line as below it. The line does not have to start at the origin, and it usually should not: forcing it through $(0, 0)$ tips it away from the data."
+  },
+  {
+    "type": "figure",
+    "alt": "The garden scatter graph with two lines through the ringed mean point: line A follows the crosses, four above and four below; line B, dashed, starts at the origin and runs below the crosses on the left and above them on the right.",
+    "svg": "<svg viewBox='0 0 400 318' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The same scatter graph with two lines through the mean point: line A follows the crosses; line B, dashed, is forced through the origin and runs below the crosses on the left and above them on the right'><title>The same scatter graph with two lines through the mean point: line A follows the crosses; line B, dashed, is forced through the origin and runs below the crosses on the left and above them on the right</title><path d='M65.4 14 V264M78.7 14 V264M92.1 14 V264M105.4 14 V264M132.2 14 V264M145.5 14 V264M158.9 14 V264M172.2 14 V264M199.0 14 V264M212.3 14 V264M225.7 14 V264M239.0 14 V264M265.8 14 V264M279.1 14 V264M292.5 14 V264M305.8 14 V264M332.6 14 V264M345.9 14 V264M359.3 14 V264M372.6 14 V264M52 259.0 H386M52 254.0 H386M52 249.0 H386M52 244.0 H386M52 234.0 H386M52 229.0 H386M52 224.0 H386M52 219.0 H386M52 209.0 H386M52 204.0 H386M52 199.0 H386M52 194.0 H386M52 184.0 H386M52 179.0 H386M52 174.0 H386M52 169.0 H386M52 159.0 H386M52 154.0 H386M52 149.0 H386M52 144.0 H386M52 134.0 H386M52 129.0 H386M52 124.0 H386M52 119.0 H386M52 109.0 H386M52 104.0 H386M52 99.0 H386M52 94.0 H386M52 84.0 H386M52 79.0 H386M52 74.0 H386M52 69.0 H386M52 59.0 H386M52 54.0 H386M52 49.0 H386M52 44.0 H386M52 34.0 H386M52 29.0 H386M52 24.0 H386M52 19.0 H386' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.12' fill='none'/><path d='M52.0 14 V264M118.8 14 V264M185.6 14 V264M252.4 14 V264M319.2 14 V264M386.0 14 V264M52 264.0 H386M52 239.0 H386M52 214.0 H386M52 189.0 H386M52 164.0 H386M52 139.0 H386M52 114.0 H386M52 89.0 H386M52 64.0 H386M52 39.0 H386M52 14.0 H386' stroke='currentColor' stroke-width='1' stroke-opacity='0.32' fill='none'/><path d='M52.0 264.0 L386.0 264.0' stroke='currentColor' stroke-width='1.5' fill='none'/><path d='M52.0 14.0 L52.0 264.0' stroke='currentColor' stroke-width='1.5' fill='none'/><text x='52' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='118.8' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><text x='185.6' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><text x='252.4' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>30</text><text x='319.2' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>40</text><text x='386' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>50</text><text x='45' y='269' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><text x='45' y='244' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>1</text><text x='45' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><text x='45' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>3</text><text x='45' y='169' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><text x='45' y='144' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>5</text><text x='45' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><text x='45' y='94' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>7</text><text x='45' y='69' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><text x='45' y='44' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>9</text><text x='45' y='19' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><text x='219' y='308' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Hours of sunshine in the week</text><text transform='translate(14 139.0) rotate(-90)' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Tomatoes picked (kg)</text><path d='M145.5 164.0 L366.0 40.3' stroke='currentColor' stroke-width='1.7' fill='none'/><text x='138.8' y='171.5' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end' font-weight='600'>A</text><path d='M52.0 264.0 L359.3 18.7' stroke='currentColor' stroke-width='1.5' fill='none' stroke-dasharray='7 4'/><text x='78.7' y='228.9' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>B</text><path d='M167.7 139.5 L176.7 148.5 M167.7 148.5 L176.7 139.5 M194.5 137.0 L203.5 146.0 M194.5 146.0 L203.5 137.0 M207.8 114.5 L216.8 123.5 M207.8 123.5 L216.8 114.5 M234.5 112.0 L243.5 121.0 M234.5 121.0 L243.5 112.0 M261.3 87.0 L270.3 96.0 M261.3 96.0 L270.3 87.0 M274.6 89.5 L283.6 98.5 M274.6 98.5 L283.6 89.5 M301.3 62.0 L310.3 71.0 M301.3 71.0 L310.3 62.0 M341.4 54.5 L350.4 63.5 M341.4 63.5 L350.4 54.5' stroke='currentColor' stroke-width='1.5' fill='none'/><circle cx='252.4' cy='104.0' r='6.5' fill='none' stroke='currentColor' stroke-width='1.8'/></svg>",
+    "caption": "Both lines pass through the mean point. Only line A follows the crosses; line B was forced through the origin."
+  },
+  {
+    "type": "see",
+    "kind": "process",
+    "stem": "Draw the garden's line of best fit.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Plot the mean point $(30, 6.4)$ and ring it",
+        "decision": "The line must pass through it, and the scheme checks that it does.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Lay the ruler through it along the trend of the crosses",
+        "decision": "Turn the ruler about the mean point until the line follows the crosses.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Check: four crosses above the line, four below",
+        "decision": "Roughly as many above as below. Line A passes this check; line B, forced through the origin, does not."
+      }
+    ]
   },
   {
     "type": "video",
@@ -80,16 +170,6 @@
     "title": "Drawing the line of best fit",
     "channel": "TLMaths",
     "why": "A short demonstration of drawing a line of best fit by eye. On this paper, make sure yours also passes through the mean point."
-  },
-  {
-    "type": "p",
-    "md": "The line does not have to start at the origin, and it usually should not: forcing it through $(0, 0)$ tips it away from the data, even when it still passes through the mean point."
-  },
-  {
-    "type": "figure",
-    "alt": "The garden scatter graph with two lines through the ringed mean point: line A follows the crosses, four above and four below; line B, dashed, starts at the origin and runs below the crosses on the left and above them on the right.",
-    "svg": "<svg viewBox='0 0 400 318' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The same scatter graph with two lines through the mean point: line A follows the crosses; line B, dashed, is forced through the origin and runs below the crosses on the left and above them on the right'><title>The same scatter graph with two lines through the mean point: line A follows the crosses; line B, dashed, is forced through the origin and runs below the crosses on the left and above them on the right</title><path d='M65.4 14 V264M78.7 14 V264M92.1 14 V264M105.4 14 V264M132.2 14 V264M145.5 14 V264M158.9 14 V264M172.2 14 V264M199.0 14 V264M212.3 14 V264M225.7 14 V264M239.0 14 V264M265.8 14 V264M279.1 14 V264M292.5 14 V264M305.8 14 V264M332.6 14 V264M345.9 14 V264M359.3 14 V264M372.6 14 V264M52 259.0 H386M52 254.0 H386M52 249.0 H386M52 244.0 H386M52 234.0 H386M52 229.0 H386M52 224.0 H386M52 219.0 H386M52 209.0 H386M52 204.0 H386M52 199.0 H386M52 194.0 H386M52 184.0 H386M52 179.0 H386M52 174.0 H386M52 169.0 H386M52 159.0 H386M52 154.0 H386M52 149.0 H386M52 144.0 H386M52 134.0 H386M52 129.0 H386M52 124.0 H386M52 119.0 H386M52 109.0 H386M52 104.0 H386M52 99.0 H386M52 94.0 H386M52 84.0 H386M52 79.0 H386M52 74.0 H386M52 69.0 H386M52 59.0 H386M52 54.0 H386M52 49.0 H386M52 44.0 H386M52 34.0 H386M52 29.0 H386M52 24.0 H386M52 19.0 H386' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.12' fill='none'/><path d='M52.0 14 V264M118.8 14 V264M185.6 14 V264M252.4 14 V264M319.2 14 V264M386.0 14 V264M52 264.0 H386M52 239.0 H386M52 214.0 H386M52 189.0 H386M52 164.0 H386M52 139.0 H386M52 114.0 H386M52 89.0 H386M52 64.0 H386M52 39.0 H386M52 14.0 H386' stroke='currentColor' stroke-width='1' stroke-opacity='0.32' fill='none'/><path d='M52.0 264.0 L386.0 264.0' stroke='currentColor' stroke-width='1.5' fill='none'/><path d='M52.0 14.0 L52.0 264.0' stroke='currentColor' stroke-width='1.5' fill='none'/><text x='52' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='118.8' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><text x='185.6' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><text x='252.4' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>30</text><text x='319.2' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>40</text><text x='386' y='283' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>50</text><text x='45' y='269' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><text x='45' y='244' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>1</text><text x='45' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><text x='45' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>3</text><text x='45' y='169' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><text x='45' y='144' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>5</text><text x='45' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><text x='45' y='94' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>7</text><text x='45' y='69' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><text x='45' y='44' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>9</text><text x='45' y='19' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><text x='219' y='308' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Hours of sunshine in the week</text><text transform='translate(14 139.0) rotate(-90)' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Tomatoes picked (kg)</text><path d='M145.5 164.0 L366.0 40.3' stroke='currentColor' stroke-width='1.7' fill='none'/><text x='138.8' y='171.5' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end' font-weight='600'>A</text><path d='M52.0 264.0 L359.3 18.7' stroke='currentColor' stroke-width='1.5' fill='none' stroke-dasharray='7 4'/><text x='78.7' y='228.9' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>B</text><path d='M167.7 139.5 L176.7 148.5 M167.7 148.5 L176.7 139.5 M194.5 137.0 L203.5 146.0 M194.5 146.0 L203.5 137.0 M207.8 114.5 L216.8 123.5 M207.8 123.5 L216.8 114.5 M234.5 112.0 L243.5 121.0 M234.5 121.0 L243.5 112.0 M261.3 87.0 L270.3 96.0 M261.3 96.0 L270.3 87.0 M274.6 89.5 L283.6 98.5 M274.6 98.5 L283.6 89.5 M301.3 62.0 L310.3 71.0 M301.3 71.0 L310.3 62.0 M341.4 54.5 L350.4 63.5 M341.4 63.5 L350.4 54.5' stroke='currentColor' stroke-width='1.5' fill='none'/><circle cx='252.4' cy='104.0' r='6.5' fill='none' stroke='currentColor' stroke-width='1.8'/></svg>",
-    "caption": "Both lines pass through the mean point. Only line A follows the crosses; line B was forced through the origin."
   },
   {
     "type": "gate",
@@ -102,7 +182,28 @@
       "Either, because both pass through the mean point"
     ],
     "answer": "Line A",
-    "explain": "Look at where the crosses sit against each line. Line A follows them, four above and four below. Line B was forced through the origin, so it runs below the crosses on the left and above them on the right, even though it also passes through the mean point."
+    "explain": "As in step 3 of See it, look at where the crosses sit against each line. Line A follows them, four above and four below. Line B was forced through the origin, so it runs below the crosses on the left and above them on the right.",
+    "optionNotes": [
+      {
+        "option": "Line B",
+        "why": "Line B looks tidy because it starts at the origin, but that tips it away from the crosses: most sit on one side of it at each end.",
+        "misconception": "fm.biv.line-not-through-means"
+      },
+      {
+        "option": "Either, because both pass through the mean point",
+        "why": "Passing through the mean point is needed but not enough: the line must also follow the trend of the crosses."
+      }
+    ],
+    "twin": {
+      "prompt": "A line drawn through the mean point has six of the eight crosses above it and two below. Is it a good line of best fit?",
+      "options": [
+        "No: it should have about as many crosses above as below",
+        "Yes: it passes through the mean point",
+        "Yes: most of the crosses are close to it"
+      ],
+      "answer": "No: it should have about as many crosses above as below",
+      "explain": "Through the mean point is only half of the rule; the line must also follow the trend, with roughly as many crosses above it as below. Six above and two below means it needs turning about the mean point."
+    }
   },
   {
     "type": "h",
@@ -117,15 +218,48 @@
   },
   {
     "type": "p",
-    "md": "Use the mean point and a second point read off your line, well away from it. Never use two plotted crosses: they are data, not points on the line.\nHere the line also passes through $(44, 8.5)$, so $m = \\dfrac{8.5 - 6.4}{44 - 30}$, which is $\\dfrac{2.1}{14}$, so $m = 0.15$."
+    "md": "Use the mean point and a second point read off your line, well away from it. Never use two plotted crosses: they are data, not points on the line."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The garden line passes through the mean point $(30, 6.4)$ and the point $(44, 8.5)$. Find its gradient.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$m = \\dfrac{8.5 - 6.4}{44 - 30}$",
+        "decision": "The second point's values minus the mean point's, top and bottom in the same order.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= \\dfrac{2.1}{14}$",
+        "decision": "The rise over the run of the triangle."
+      },
+      {
+        "n": 3,
+        "working": "$= 0.15$",
+        "decision": "Positive, as it must be for a line that rises.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g8",
+    "id": "g11",
     "kind": "number",
-    "prompt": "A line of best fit passes through the mean point $(12, 20)$ and the point $(20, 30)$. What is its gradient?",
-    "answer": "1.25 | 5/4",
-    "explain": "As with the garden line, take the second point's values minus the mean point's, top and bottom in the same order: $\\dfrac{30 - 20}{20 - 12}$ is $\\dfrac{10}{8}$, which is 1.25. The line rises, so the gradient is positive."
+    "prompt": "A line of best fit passes through the mean point $(15, 24)$ and the point $(25, 36)$. What is its gradient?",
+    "answer": "1.2 | 6/5",
+    "explain": "As in step 1 of See it, take the second point's values minus the mean point's, top and bottom in the same order: $\\dfrac{36 - 24}{25 - 15}$ is $\\dfrac{12}{10}$, which is 1.2. The line rises, so the gradient is positive.",
+    "twin": {
+      "prompt": "A line of best fit passes through the mean point $(12, 15)$ and the point $(20, 29)$. What is its gradient?",
+      "answer": "1.75 | 7/4",
+      "explain": "$\\dfrac{29 - 15}{20 - 12}$ is $\\dfrac{14}{8}$, which is 1.75."
+    }
   },
   {
     "type": "h",
@@ -140,11 +274,35 @@
   },
   {
     "type": "p",
-    "md": "When the crosses fall from left to right, so does the line. Six used cars of one model give age in years and price in thousands of pounds; the line passes through the mean point $(3.5, 14)$ and $(7, 7.7)$.\nSubtract in the same order, top and bottom: $m = \\dfrac{7.7 - 14}{7 - 3.5}$, which is $\\dfrac{-6.3}{3.5}$, so $m = -1.8$."
+    "md": "When the crosses fall from left to right, so does the line. Counting squares, down 6.3 and across 3.5, gives the size of the gradient but not its sign. A falling line needs the minus, and subtracting in the same order supplies it."
   },
   {
-    "type": "p",
-    "md": "Counting squares, down 6.3 and across 3.5, gives the size of the gradient but not its sign. A falling line needs the minus, and the subtraction supplies it."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Six used cars: the line passes through the mean point $(3.5, 14)$ and the point $(7, 7.7)$, age in years against price in thousands of pounds. Find its gradient.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$m = \\dfrac{7.7 - 14}{7 - 3.5}$",
+        "decision": "Subtract in the same order, top and bottom, even though the line falls.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= \\dfrac{-6.3}{3.5}$",
+        "decision": "The top comes out negative: the price falls as the age rises."
+      },
+      {
+        "n": 3,
+        "working": "$= -1.8$",
+        "decision": "Negative, as a falling line's gradient must be.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -152,7 +310,12 @@
     "kind": "number",
     "prompt": "A line of best fit passes through the mean point $(20, 50)$ and the point $(30, 35)$. What is its gradient?",
     "answer": "-1.5 | -3/2",
-    "explain": "As with the cars, subtract in the same order top and bottom: $\\dfrac{35 - 50}{30 - 20}$ is $\\dfrac{-15}{10}$, which is $-1.5$. The line falls from left to right, so its gradient must be negative."
+    "explain": "As in step 1 of See it, subtract in the same order top and bottom: $\\dfrac{35 - 50}{30 - 20}$ is $\\dfrac{-15}{10}$, which is $-1.5$. The line falls from left to right, so its gradient must be negative.",
+    "twin": {
+      "prompt": "A line of best fit passes through the mean point $(8, 50)$ and the point $(20, 23)$. What is its gradient?",
+      "answer": "-2.25 | -9/4",
+      "explain": "$\\dfrac{23 - 50}{20 - 8}$ is $\\dfrac{-27}{12}$, which is -2.25: negative, for a falling line."
+    }
   },
   {
     "type": "h",
@@ -161,7 +324,7 @@
   },
   {
     "type": "p",
-    "md": "Substitute the mean point and your gradient into $y = mx + c$, then **subtract** to find $c$:\n$6.4 = 0.15 \\times 30 + c$, so $c = 6.4 - 4.5$, which is 1.9, and the line is $y = 0.15x + 1.9$.\nDo not read $c$ off the graph: exam graphs often start their axes above zero."
+    "md": "Substitute the mean point and your gradient into $y = mx + c$, then **subtract** to find $c$. Do not read $c$ off the graph: exam graphs often start their axes above zero."
   },
   {
     "type": "figure",
@@ -177,12 +340,48 @@
     "source": "ccea-cer:further-maths:2023-summer:FM3:Q1"
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The garden line has gradient $0.15$ and passes through the mean point $(30, 6.4)$. Find $c$ and the equation.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$6.4 = 0.15 \\times 30 + c$",
+        "decision": "Substitute the mean point and the gradient into $y = mx + c$.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$c = 6.4 - 4.5$\n$= 1.9$",
+        "decision": "Subtract, never divide: the product is taken away from the mean of $y$.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$y = 0.15x + 1.9$",
+        "decision": "The gradient and the intercept put into $y = mx + c$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g5",
+    "id": "g12",
     "kind": "number",
-    "prompt": "A line of best fit has gradient 2.5 and passes through the mean point $(8, 30)$. What is $c$?",
-    "answer": "10",
-    "explain": "Substitute the mean point and the gradient, then subtract, as for the garden: $30 = 2.5 \\times 8 + c$, which is $30 = 20 + c$, so $c = 30 - 20$, which is 10. Dividing 30 by 20 would give 1.5, which is not how an equation is solved."
+    "prompt": "A line of best fit has gradient 2.5 and passes through the mean point $(8, 33)$. What is $c$?",
+    "answer": "13",
+    "explain": "As in step 2 of See it, substitute the mean point and the gradient, then subtract: $33 = 2.5 \\times 8 + c$, which is $33 = 20 + c$, so $c = 33 - 20$, which is 13. Dividing 33 by 20 would give 1.65, which is not how an equation is solved.",
+    "twin": {
+      "prompt": "A line of best fit has gradient 1.5 and passes through the mean point $(6, 21)$. What is $c$?",
+      "answer": "12",
+      "explain": "$21 = 1.5 \\times 6 + c$, so $c = 21 - 9$, which is 12."
+    }
   },
   {
     "type": "h",
@@ -197,7 +396,27 @@
   },
   {
     "type": "p",
-    "md": "To estimate, substitute into the equation. For 26 hours of sunshine, $0.15 \\times 26 + 1.9 = 5.8$, so about 5.8 kg.\nThat is **interpolation**: 26 lies inside the recorded range, 18 to 44 hours, so the estimate can be trusted. For 60 hours the sum still gives $0.15 \\times 60 + 1.9 = 10.9$, but that is **extrapolating** beyond the data, where nobody knows whether the trend carries on."
+    "md": "To estimate, substitute into the equation. Inside the recorded range that is **interpolation**, and the estimate can be trusted. Beyond the data it is **extrapolating**: the arithmetic still works, but nobody knows whether the trend carries on."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Use $y = 0.15x + 1.9$ to estimate the crop for 26 hours and for 60 hours of sunshine, and say which estimate can be trusted.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$0.15 \\times 26 + 1.9 = 5.8$",
+        "decision": "About 5.8 kg. 26 hours lies inside the recorded range, 18 to 44 hours: interpolation.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$0.15 \\times 60 + 1.9 = 10.9$",
+        "decision": "60 hours is far beyond the data: extrapolation, so this estimate cannot be trusted."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -205,7 +424,12 @@
     "kind": "number",
     "prompt": "Use $y = 0.15x + 1.9$ to estimate the mass of tomatoes, in kilograms, for a week with 36 hours of sunshine.",
     "answer": "7.3 | 73/10",
-    "explain": "Put 36 in place of $x$, as for 26 hours above: $0.15 \\times 36 + 1.9$ is 7.3 kg. The estimate comes from the line, not from the nearest cross."
+    "explain": "As in step 1 of See it, put 36 in place of $x$: $0.15 \\times 36 + 1.9$ is 7.3 kg. The estimate comes from the line, not from the nearest cross.",
+    "twin": {
+      "prompt": "Use $y = 0.15x + 1.9$ to estimate the mass of tomatoes, in kilograms, for a week with 40 hours of sunshine.",
+      "answer": "7.9 | 79/10",
+      "explain": "$0.15 \\times 40 + 1.9$ is 7.9 kg, and 40 hours lies inside the data."
+    }
   },
   {
     "type": "gate",
@@ -218,7 +442,28 @@
       "The line does not pass through the origin"
     ],
     "answer": "60 hours is outside the range of the data",
-    "explain": "On the range picture, the data run from 18 to 44 hours. Beyond that, nothing shows the trend continues, so using the line there is extrapolation, and the estimate cannot be trusted."
+    "explain": "As in step 2 of See it, the data run from 18 to 44 hours. Beyond that, nothing shows the trend continues, so using the line there is extrapolation, and the estimate cannot be trusted.",
+    "optionNotes": [
+      {
+        "option": "The gradient is too small",
+        "why": "The gradient is what the data give; a small one is still reliable inside the data. The trouble is where the estimate is made."
+      },
+      {
+        "option": "The line does not pass through the origin",
+        "why": "A line of best fit need not pass through the origin; it passes through the mean point.",
+        "misconception": "fm.biv.line-not-through-means"
+      }
+    ],
+    "twin": {
+      "prompt": "The garden's line is used to estimate the crop for a week with 10 hours of sunshine. Why is that estimate unreliable?",
+      "options": [
+        "10 hours is below the range of the data",
+        "The gradient is too small",
+        "The line does not pass through the origin"
+      ],
+      "answer": "10 hours is below the range of the data",
+      "explain": "The recorded weeks start at 18 hours, so 10 hours lies below the data: extrapolation again, at the other end."
+    }
   },
   {
     "type": "h",
@@ -232,12 +477,52 @@
     "caption": "Eight pupils' revision and test marks: the line passes through the mean point and (12, 69.5)."
   },
   {
-    "type": "p",
-    "md": "Eight pupils give their hours of revision, $x$, and test marks, $y$: the paper's chain of means, line and equation.\n**Means.** $\\bar{x} = \\dfrac{56}{8}$, which is 7; $\\bar{y} = \\dfrac{416}{8}$, which is 52.\n**Line.** Through $(7, 52)$ along the crosses; it also passes through $(12, 69.5)$."
-  },
-  {
-    "type": "p",
-    "md": "**Gradient.** $m = \\dfrac{69.5 - 52}{12 - 7}$, which is 3.5.\n**Intercept.** $52 = 3.5 \\times 7 + c$, so $c = 52 - 24.5$, which is 27.5.\n**Equation.** $y = 3.5x + 27.5$."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Eight pupils give their hours of revision, $x$, and test marks, $y$. The line of best fit through the mean point also passes through $(12, 69.5)$. Find its equation.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\bar{x} = \\dfrac{56}{8}$\n$= 7$\n$\\bar{y} = \\dfrac{416}{8}$\n$= 52$",
+        "decision": "The means first: a mark each on the paper.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Line through $(7, 52)$ and $(12, 69.5)$",
+        "decision": "Plotted mean point, and the line along the crosses through it.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$m = \\dfrac{69.5 - 52}{12 - 7}$\n$= 3.5$",
+        "decision": "The mean point and a second point on the line.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$52 = 3.5 \\times 7 + c$\n$c = 27.5$",
+        "decision": "Substitute the mean point, then subtract.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "$y = 3.5x + 27.5$",
+        "decision": "The equation, the part's last mark.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -245,7 +530,12 @@
     "kind": "number",
     "prompt": "The revision line of best fit is $y = 3.5x + 27.5$. Estimate the test mark for a pupil who revised for 10 hours.",
     "answer": "62.5 | 125/2",
-    "explain": "Substitute 10 for $x$, as the garden estimate did: $3.5 \\times 10 + 27.5$ is 62.5. 10 hours lies inside the data, 2 to 11 hours, so this is interpolation."
+    "explain": "Substitute 10 for $x$ in the equation of step 5: $3.5 \\times 10 + 27.5$ is 62.5. 10 hours lies inside the data, so this is interpolation.",
+    "twin": {
+      "prompt": "The revision line of best fit is $y = 3.5x + 27.5$. Estimate the test mark for a pupil who revised for 9 hours.",
+      "answer": "59 | 59",
+      "explain": "$3.5 \\times 9 + 27.5$ is 59, inside the data."
+    }
   },
   {
     "type": "h",
@@ -254,11 +544,28 @@
   },
   {
     "type": "p",
-    "md": "**Axes that start above zero.** The 2021, 2023, 2024 and 2026 graphs began at 50, 60, 30 and 20. On the garden axes from 15, the line meets the printed axis at $0.15 \\times 15 + 1.9$, which is 4.15: that is not $c$."
+    "md": "**Axes that start above zero.** The 2021, 2023, 2024 and 2026 graphs began at 50, 60, 30 and 20. Where the line meets that printed axis is not $c$."
   },
   {
     "type": "p",
     "md": "**Points from the table.** Reports in 2019, 2022, 2023 and 2024 describe gradients worked from plotted crosses. Use the mean point and a point read off your own line."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "On garden axes that start at 15 hours, the line meets the vertical axis at 4.15. Is that $c$?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$0.15 \\times 15 + 1.9 = 4.15$",
+        "decision": "That printed axis stands at $x = 15$, so 4.15 is the value of $y$ there."
+      },
+      {
+        "n": 2,
+        "working": "$c = 1.9$, not 4.15",
+        "decision": "The intercept is where $x = 0$, far to the left of the printed axis; it comes from substituting the mean point."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -271,7 +578,29 @@
       "Use the first two points in the table"
     ],
     "answer": "Substitute the mean point and the gradient into $y = mx + c$",
-    "explain": "That vertical axis stands at $x = 30$, not at $x = 0$, so 34 is the value of $y$ at $x = 30$, just as 4.15 was on the garden axes from 15. The intercept comes from substituting the mean point and the gradient into $y = mx + c$."
+    "explain": "That vertical axis stands at $x = 30$, not at $x = 0$, so 34 is the value of $y$ at $x = 30$, just as 4.15 was on the garden axes from 15 in See it. The intercept comes from substituting the mean point and the gradient into $y = mx + c$.",
+    "optionNotes": [
+      {
+        "option": "Read it off: $c = 34$",
+        "why": "34 is where the line meets an axis standing at $x = 30$; $c$ is the value at $x = 0$, off the printed graph.",
+        "misconception": "fm.biv.points-off-line-used"
+      },
+      {
+        "option": "Use the first two points in the table",
+        "why": "Table points are data, not points on the line; the scheme wants the mean point and your line.",
+        "misconception": "fm.biv.points-off-line-used"
+      }
+    ],
+    "twin": {
+      "prompt": "A graph's axes start at 20, and your line meets the vertical axis there at 45. What is the 45?",
+      "options": [
+        "The value of $y$ when $x = 20$",
+        "The intercept $c$",
+        "The gradient of the line"
+      ],
+      "answer": "The value of $y$ when $x = 20$",
+      "explain": "The printed vertical axis stands at $x = 20$, so the line meets it at the value of $y$ for $x = 20$. The intercept $c$ is at $x = 0$, found by substituting the mean point."
+    }
   },
   {
     "type": "h",
@@ -297,6 +626,6 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.line-of-best-fit.06"
+    "promptId": "rp.fm.u3.line-of-best-fit.09"
   }
 ]
