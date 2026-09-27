@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import { TopicBundle, type VerificationLog } from "../src/lib/content/schema.ts";
 import { lintKeyWords } from "../src/components/items/keyword-lint.ts";
 import { figureLeakWarnings, lintContent, lintNoteBlocks } from "../src/components/items/content-lint.ts";
+import { lessonReadiness } from "../src/lib/slides/readiness.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKS = path.join(ROOT, "packs");
@@ -36,6 +37,8 @@ type ManifestTopic = {
   hasNote: boolean;
   hasBlocks: boolean;
   version: string;
+  /** Slides and the v3 lesson switch on per topic from the note structure plus its review (src/lib/slides/readiness.ts). */
+  ready: boolean;
 };
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -109,6 +112,9 @@ for (const file of files) {
   }
   const kw = lintKeyWords(raw, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"));
   for (const w of kw.hard) console.warn("KEYWORDS", w);
+  // A group earned only by the part's own wording (a key word the stem, scheme or solution already says, as in the C2 E
+  // "sustainable" case): named bundle, item and part like the lines above, so an author can act on it; still a warning.
+  for (const w of kw.soft) console.warn("KEYWORDS", w);
   keyWordWarnings.hard += kw.hard.length;
   keyWordWarnings.soft += kw.soft.length;
   const logs = b.verification;
@@ -168,6 +174,7 @@ for (const file of files) {
     hasNote: noteOk,
     hasBlocks: noteOk && !!noteBlocks,
     version: String(b.note?.version ?? 1),
+    ready: lessonReadiness(shipped).ready,
   });
   console.log(`ok   ${b.topic.id}  we ${counts.we} · dx ${counts.dx} · q ${counts.q} · ftm ${counts.ftm} · rp ${counts.rp}${noteOk ? " · note" : ""}`);
 }
@@ -188,7 +195,7 @@ function listFiles(dir: string, out: string[] = []): string[] {
 for (const stale of listFiles(OUT_PUBLIC).filter((p) => !written.has(path.resolve(p)))) fs.rmSync(stale, { force: true });
 console.log(
   `\n${manifest.topics.length} topic bundle(s) published, ${manifest.problems.length} problem(s), ${keyWordWarnings.hard} key-word warning(s)` +
-    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording)` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
+    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
 );
 // An invalid bundle is skipped (never shipped) and reported. `--strict` (used by `npm run content:check`
 // and by authors) turns problems into a failing exit code; the app build keeps publishing the valid bundles.

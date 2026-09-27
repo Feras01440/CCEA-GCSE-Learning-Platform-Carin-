@@ -9,13 +9,15 @@
  *   hero        first block, lede ≤ 60 words and not the hook paragraph, three "can" lines each
  *               starting with a verb, an honest minute estimate
  *   visual      a figure, photo, video or sim before word 80
- *   sections    every teaching stretch ≤ 120 words between gates, up to the recap card
+ *               (the fatal "≤ 120 words between gates" check was retired on 27 Sep 2026 with the teach-first case:
+ *               a section is now explain → See it → Your turn, and its measures are the `see` warnings below)
  *   callouts    at least one `why` in the body, at most one `examiner` in the body
  *   recap       a "You can now" card before the closing section
  *   panel       the closing "In the exam" block is a pointer: one heading, one paragraph of
  *               ≤ 80 words, then the prompts — ≤ 150 words in all, no gate, no spec callout and
  *               no examiner callout (the Sheet and the Specification card carry those)
- *   prompts     the retrieval prompts come last
+ *   prompts     the retrieval prompts, if the note wires any, come last, after the closing section (a note may
+ *               wire none: "0–2 in every band", 27 Sep 2026)
  *   gates       every gate reads on its own in the review inbox (delegated to gate-context.mjs),
  *               offers no option twice, and never answers with the line its own prompt shows
  *               ("Is $A$ finished?" → "No — it becomes $A$")
@@ -42,14 +44,30 @@
  *               you check"): every gate in the body follows, within its own section, at least one
  *               block that explains the idea and at least one that shows it worked (the definitions
  *               are in scripts/qa/teach-show-check.mjs). A gate that comes first is a WARNING (one
- *               summary line by default, the list with --teach or --depth) until --teach-fatal. The
- *               Slides rule's "a gate at most every four cards" is a ceiling, never a quota, so the
- *               report no longer asks for a gate every four cards.
+ *               summary line by default, the list with --teach or --depth) until --teach-fatal. No
+ *               card count decides where a check goes (27 Sep 2026), so the report never asks for a
+ *               gate every so many cards; the longest run between gates is printed as cards, never gated.
  *   prompts-few retrieval prompts are few, optional and short (the owner's verdict of 24 Sep 2026,
- *               23:40): a note wires at most two, and no shipped prompt expects an answer of more
- *               than 25 words (scripts/qa/prompt-few.mjs). A WARNING (the list with --prompts or
- *               --depth) until --prompts-fatal. The depth row "prompts embedded in the note" reads
- *               1–2 in every band to match.
+ *               23:40, and his answer 3 of 27 Sep): a note wires at most two, no shipped prompt expects
+ *               an answer of more than 25 words or a numbered list, and no wired prompt asks a question of
+ *               more than 15 words (scripts/qa/prompt-few.mjs). A WARNING (the list with --prompts or
+ *               --depth) until --prompts-fatal. The summary line also reports, never warns, the answers
+ *               over the 12-word target. The depth row "prompts embedded in the note" reads 0–2 in every
+ *               band, and "retrieval prompts" 1–8 in the bundle.
+ *   see         Lesson structure v3 (the teach-first case §8.4, approved 27 Sep 2026; the shapes in
+ *               docs/plan/review/2026-09-27-see-it-block-shape.md): every gate follows a See it in its
+ *               section; the topic's first check follows the first See it and is no interface warm-up; at
+ *               most 225 words of explanation before a section's See it; a section ends in its Your turn
+ *               (two only after two variants); a video is never a section's only See it; a choice gate's
+ *               explanation never names an option by its position; a See it block's reasons ≤ 40 words,
+ *               balanced $, marks from the subject's mark language, no whyMenu (scripts/qa/see-it.mjs; the
+ *               shape rules the renderer needs are refused by the build, content-lint.ts). WARNINGS (the
+ *               list with --see or --depth) until --see-fatal. The depth row "see it" counts the sections
+ *               that end in a gate and hold a See it before it, and the minute model counts 15 s a step.
+ *
+ * Per-unit defaults (scripts/qa/lesson-v2.fatal.json): a unit may make the teach, prompts, withdrawn or see
+ * warnings breaches by default, as its migration to v3 lands ({ "fm1": { "teach": true, … } }); a unit with
+ * "list": true gets its per-topic list printed on every run until then.
  *
  * --unit <id>     check one unit only (m3, fm1, b1 …); may be repeated
  * --traps-fatal   count an unanswered examiner source as a breach rather than a warning
@@ -61,15 +79,20 @@
  * --prompts-fatal count those as breaches rather than warnings
  * --withdrawn     print every topic's withdraw-and-replace records and their problems (scripts/qa/withdrawn.mjs)
  * --withdrawn-fatal count a withdrawn-record problem as a breach rather than a warning
+ * --see           print every note's v3 structure findings (See it, first check, explanation length, Your turn,
+ *                 video, option by position, See it block problems)
+ * --see-fatal     count those as breaches rather than warnings
  * --json          print the findings as JSON for an author's generator (the depth rows under `depth`,
- *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`)
+ *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`,
+ *                 the v3 structure findings under `see`, the per-unit lists under `unitLists`)
  */
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { SEE_HEADING, describeFailure, inlineMaths, teachShowCheck } from "./teach-show-check.mjs";
-import { ANSWER_WORDS, WIRED_MAX, promptFindings } from "./prompt-few.mjs";
+import { ANSWER_TARGET, ANSWER_WORDS, QUESTION_WORDS, WIRED_MAX, promptFindings, promptTargets } from "./prompt-few.mjs";
 import { withdrawnFindings } from "./withdrawn.mjs";
+import { EXPLAIN_MAX, markCodes, seeItFindings } from "./see-it.mjs";
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
@@ -82,9 +105,31 @@ const promptsReport = argv.includes("--prompts");
 const promptsFatal = argv.includes("--prompts-fatal");
 const withdrawnReport = argv.includes("--withdrawn");
 const withdrawnFatal = argv.includes("--withdrawn-fatal");
+const seeReport = argv.includes("--see");
+const seeFatal = argv.includes("--see-fatal");
 const units = argv.flatMap((a, i) => (a === "--unit" ? [String(argv[i + 1] || "").toLowerCase()] : []));
 
 const ROOT = path.resolve("packs");
+
+// ── per-unit defaults as each unit's v3 migration lands ──────────────────────────────────────
+// scripts/qa/lesson-v2.fatal.json maps a unit to { teach, prompts, withdrawn, see, list }: a true flag makes that
+// check's warnings breaches for the unit's notes without the command-line flag; "list": true prints the unit's
+// per-topic list on every run (the coordinator's order of 27 Sep 2026: FM1 first, its three fatal flags on once the
+// FM1 migration authors report, the list printed until then). Keys starting with "$" are comments. The environment
+// variable LESSON_V2_DEFAULTS names another file, to try a flip before making it.
+const FATAL_FILE = process.env.LESSON_V2_DEFAULTS || path.join("scripts", "qa", "lesson-v2.fatal.json");
+const unitDefaults = fs.existsSync(FATAL_FILE) ? JSON.parse(fs.readFileSync(FATAL_FILE, "utf8")) : {};
+const unitFlag = (unit, key) => unitDefaults[String(unit).toLowerCase()]?.[key] === true;
+
+// ── the step mark codes of each subject (a See it's `earns`), read once ──────────────────────
+const codesBySubject = new Map();
+function codesFor(subject) {
+  if (!codesBySubject.has(subject)) {
+    const f = path.join(ROOT, subject, "exam-true", "mark-language.json");
+    codesBySubject.set(subject, fs.existsSync(f) ? markCodes(JSON.parse(fs.readFileSync(f, "utf8"))) : []);
+  }
+  return codesBySubject.get(subject);
+}
 
 // ── examiner sources the Sheet is allowed to leave alone ─────────────────────────────────────
 // scripts/qa/lesson-v2.allow.json maps "<unit>/<slug>" to { "<source id>": "one-line reason" }.
@@ -119,7 +164,7 @@ function noteFiles(dir, out = []) {
 /** packs/<subject>/content/<unit>/<slug>/note.blocks.json */
 const idOf = (file) => {
   const parts = file.split(path.sep);
-  return { unit: parts[parts.length - 3], slug: parts[parts.length - 2] };
+  return { subject: parts[parts.length - 5], unit: parts[parts.length - 3], slug: parts[parts.length - 2] };
 };
 
 // ── gates standing alone: gate-context.mjs owns the rule, so ask it rather than copy it ──────
@@ -216,6 +261,8 @@ function everyString(block) {
   if (block.type === "p" || block.type === "callout") out.push(block.md, block.title);
   if (block.type === "h") out.push(block.text);
   if (block.type === "gate") out.push(block.prompt, block.explain, ...(block.options ?? []));
+  if (block.type === "gate" && block.twin) out.push(block.twin.prompt, block.twin.explain, ...(block.twin.options ?? []));
+  if (block.type === "see") out.push(block.stem, block.finalAnswer, ...(Array.isArray(block.steps) ? block.steps.flatMap((s) => [s?.working, s?.decision]) : []));
   if (block.caption) out.push(block.caption);
   if (block.alt) out.push(block.alt);
   if (block.type === "video") out.push(block.title, block.why);
@@ -229,14 +276,17 @@ function everyString(block) {
 // `synoptic` is [parts, marks] for the one chain question an H bundle must hold; `tail` is the
 // smallest mixed set and `tailOnly` the tail-only items it must hold (a practice question that is
 // not a ladder rung, carrying "mixed-tail" in its emphasis); `recap` is [min, max] lines; `d4`/`d5`
-// count practice items at those rungs; `rp` is a minimum with no maximum. `embedded` (the prompts the
-// note wires) was a floor of 3–5 until the owner's verdict of 24 Sep 2026 (few, optional, short: one or
-// two per topic); it is now 1 to WIRED_MAX in every band, the same limit prompt-few.mjs warns on.
+// count practice items at those rungs. `rp` (the bundle's shipped retrieval prompts) was a minimum per band
+// (4 / 6 / 8 / 10) until the teach-first case of 27 Sep 2026: now "as many as there are facts to carry, at most 8,
+// each ≤ 25 words" in every band, so it is [1, 8] (the 25 words are prompt-few.mjs's). `embedded` (the prompts the
+// note wires) was a floor of 3–5 until the owner's verdict of 24 Sep 2026 (few, optional, short), then 1–2, and
+// since 27 Sep 0 to WIRED_MAX in every band: a note may wire none.
+const RP = [1, 8];
 const FLOOR = {
-  L: { sections: 4, gates: 5, words: [450, 750], variants: 1, whySection: false, twists: 0, further: false, recap: [3, 5], visuals: 3, we: 1, practice: [6, 9], d4: 0, d5: 0, tail: 0, tailOnly: 0, exam: 1, multi: 0, synoptic: null, ftm: 1, rp: 4, embedded: [1, WIRED_MAX], pre: 3, post: 1 },
-  S: { sections: 6, gates: 7, words: [600, 950], variants: 2, whySection: false, twists: 2, further: false, recap: [3, 5], visuals: 4, we: 2, practice: [8, 10], d4: 1, d5: 0, tail: 3, tailOnly: 0, exam: 2, multi: 1, synoptic: null, ftm: 2, rp: 6, embedded: [1, WIRED_MAX], pre: 3, post: 3 },
-  H4: { sections: 8, gates: 10, words: [850, 1300], variants: 3, whySection: true, twists: 3, further: true, recap: [4, 5], visuals: 6, we: 3, practice: [12, 16], d4: 3, d5: 1, tail: 4, tailOnly: 1, exam: 4, multi: 2, synoptic: [3, 8], ftm: 3, rp: 8, embedded: [1, WIRED_MAX], pre: 3, post: 5 },
-  H5: { sections: 10, gates: 12, words: [1000, 1600], variants: 4, whySection: true, twists: 4, further: true, recap: [4, 5], visuals: 7, we: 4, practice: [14, 18], d4: 5, d5: 2, tail: 5, tailOnly: 1, exam: 4, multi: 3, synoptic: [4, 10], ftm: 3, rp: 10, embedded: [1, WIRED_MAX], pre: 3, post: 6 },
+  L: { sections: 4, gates: 5, words: [450, 750], variants: 1, whySection: false, twists: 0, further: false, recap: [3, 5], visuals: 3, we: 1, practice: [6, 9], d4: 0, d5: 0, tail: 0, tailOnly: 0, exam: 1, multi: 0, synoptic: null, ftm: 1, rp: RP, embedded: [0, WIRED_MAX], pre: 3, post: 1 },
+  S: { sections: 6, gates: 7, words: [600, 950], variants: 2, whySection: false, twists: 2, further: false, recap: [3, 5], visuals: 4, we: 2, practice: [8, 10], d4: 1, d5: 0, tail: 3, tailOnly: 0, exam: 2, multi: 1, synoptic: null, ftm: 2, rp: RP, embedded: [0, WIRED_MAX], pre: 3, post: 3 },
+  H4: { sections: 8, gates: 10, words: [850, 1300], variants: 3, whySection: true, twists: 3, further: true, recap: [4, 5], visuals: 6, we: 3, practice: [12, 16], d4: 3, d5: 1, tail: 4, tailOnly: 1, exam: 4, multi: 2, synoptic: [3, 8], ftm: 3, rp: RP, embedded: [0, WIRED_MAX], pre: 3, post: 5 },
+  H5: { sections: 10, gates: 12, words: [1000, 1600], variants: 4, whySection: true, twists: 4, further: true, recap: [4, 5], visuals: 7, we: 4, practice: [14, 18], d4: 5, d5: 2, tail: 5, tailOnly: 1, exam: 4, multi: 3, synoptic: [4, 10], ftm: 3, rp: RP, embedded: [0, WIRED_MAX], pre: 3, post: 6 },
 };
 // Only shipped items count, by the pipeline's rule (pipeline/build-content.mts): a log is found by the
 // item's `verification` ref (worked examples, questions) or by `itemId` (diagnostics, find-the-mistake,
@@ -261,10 +311,10 @@ const ROLE_GUESS = [
 const guessRole = (text) => ROLE_GUESS.find(([, re]) => re.test(String(text ?? "")))?.[0] ?? null;
 
 // Slides-readiness (decision 9): one idea per block, headings as card titles, captions that stand
-// alone, no two visuals back to back. "A gate at most every four cards" is a ceiling, never a quota
-// (the owner's ruling, 24 Sep 2026): the report no longer asks for a gate every four cards; where a
-// gate may stand is the teach → show → check rule (teach-show-check.mjs). The longest run of cards
-// between gates is still measured and shown in the minutes line, for information.
+// alone, no two visuals back to back. No card count decides where a check goes (the teach-first case,
+// 27 Sep 2026, replacing "a gate at most every four cards"): where a gate may stand is the teach → show →
+// check rule (teach-show-check.mjs) and the v3 structure (see-it.mjs). The longest run of cards between
+// gates (a See it is one card) is still measured and shown in the minutes line, for information.
 const CARD_WORDS = 75;
 const TITLE_WORDS = 8;
 const CAPTION_WORDS = 25;
@@ -342,8 +392,8 @@ function mathsIssues(strings) {
 
 const short = (s, n = 48) => (s.length > n ? `${s.slice(0, n)}…` : s);
 
-/** The depth measures for one note and its bundle, against the band's floor. */
-function depthOf(blocks, bundle) {
+/** The depth measures for one note and its bundle, against the band's floor; `see` is the note's seeItFindings. */
+function depthOf(blocks, bundle, see) {
   if (!bundle?.topic) return null;
   const band = bandOf(Number(bundle.topic.difficulty) || 3);
   const floor = FLOOR[band];
@@ -359,22 +409,10 @@ function depthOf(blocks, bundle) {
   const roleCount = (role) => explicit.filter((h) => h.role === role).length;
   const guessed = (role) => headings.filter((h) => !ROLES.includes(h.role) && guessRole(h.text) === role).length;
   const roles = Object.fromEntries(ROLES.map((r) => [r, roleCount(r) + (r === "variant" || r === "idea" ? 0 : guessed(r))]));
-  const videoThenGate = body.some((b, i) => (b.type === "video" || b.type === "sim") && blocks.slice(i + 1, i + 4).some((n) => n.type === "gate"));
-  const seeCount = roles.see + (roles.see === 0 && videoThenGate ? 1 : 0);
-  // A variant section shows its own method when it holds a video or a paragraph of two or more
-  // working lines, so it needs no separate "See it done" section. A working line is numbered
-  // ("1.", "Step 2."), bold-labelled ("**Differentiate**"), or a maths step: inline maths carrying
-  // an equals sign, or maths joined by "so", "becomes", "gives", "then" or "which is".
-  const WORKED_LINE = /^\s*(\*\*[^*]{1,40}\*\*|(step\s*)?\d+[.):]|\$)|\$[^$]*=[^$]*\$|\$[^$]+\$.*\b(so|becomes?|gives|then|which is|hence)\b|\b(so|becomes?|gives|then|which is|hence)\b.*\$[^$]+\$/i;
-  const sections = [];
-  for (const b of body) {
-    if (b.type === "h") sections.push({ h: b, blocks: [] });
-    else if (sections.length) sections[sections.length - 1].blocks.push(b);
-  }
-  const shownVariants = sections.filter(
-    (s) => s.h.role === "variant" && s.blocks.some((b) => b.type === "video" || b.type === "sim" || (b.type === "p" && String(b.md).split("\n").filter((l) => WORKED_LINE.test(l)).length >= 2)),
-  ).length;
-  const seeShown = seeCount + shownVariants;
+  // The See it row (27 Sep 2026, the teach-first case): "a `see` block in every section that ends in a gate; one per
+  // variant for H bands". It replaces the "See it done" row, which counted see sections, a video followed by a gate and
+  // variant sections with two worked lines; those forms still count as shown for teach → show → check while notes
+  // migrate, but only a `see` block is a See it.
   const whyCallouts = body.filter((b) => b.type === "callout" && b.kind === "why").length;
 
   const gates = body.filter((b) => b.type === "gate").length;
@@ -427,8 +465,10 @@ function depthOf(blocks, bundle) {
   const pMarks = practice.reduce((a, q) => a + q.totalMarks, 0);
   const eMarks = exam.reduce((a, q) => a + q.totalMarks, 0);
 
-  // minutes by the app's model (lesson-plan.ts): the learning pass, and the exam-style set sat apart
-  const noteMinutes = Math.max(1, Math.round(wordCount / 180 + (gates * 40) / 60));
+  // minutes by the app's model (lesson-plan.ts): the learning pass, and the exam-style set sat apart. A See it is
+  // 15 seconds a step (the teach-first case §8.3; lesson-plan.ts is owed the same term).
+  const seeSteps = see?.seeSteps ?? 0;
+  const noteMinutes = Math.max(1, Math.round(wordCount / 180 + (gates * 40) / 60 + (seeSteps * 15) / 60));
   const learnMinutes =
     noteMinutes +
     workedExamples.length * 2 +
@@ -463,15 +503,21 @@ function depthOf(blocks, bundle) {
   if (floor.multi) row("exam-style with 2+ parts", multi, multi >= floor.multi, `≥ ${floor.multi}`);
   if (floor.synoptic) row(`synoptic (≥ ${floor.synoptic[0]} parts, ≥ ${floor.synoptic[1]} marks)`, synoptic, synoptic >= 1, "≥ 1");
   row("find-the-mistake", findTheMistake.length, findTheMistake.length >= floor.ftm, `≥ ${floor.ftm}`);
-  row("retrieval prompts", prompts.length, prompts.length >= floor.rp, `≥ ${floor.rp}`);
-  // The floor is one wired prompt; the ceiling of two is the prompts-few warning's business (its own
-  // summary line), so a note over it is not counted short of the depth floor twice over.
+  row(
+    "retrieval prompts",
+    prompts.length,
+    prompts.length >= floor.rp[0] && prompts.length <= floor.rp[1],
+    `${floor.rp[0]}–${floor.rp[1]}, each ≤ ${ANSWER_WORDS} words`,
+    prompts.length > floor.rp[1] ? `${prompts.length - floor.rp[1]} over: as many as there are facts to carry, at most ${floor.rp[1]} (withdraw the rest, never delete)` : undefined,
+  );
+  // No floor (a note may wire none); the ceiling of two is the prompts-few warning's business (its own summary
+  // line), so a note over it is not counted short of the depth floor twice over.
   row(
     "prompts embedded in the note",
     embedded,
     embedded >= floor.embedded[0],
-    `≥ ${floor.embedded[0]}, at most ${floor.embedded[1]}`,
-    embedded > floor.embedded[1] ? `${embedded - floor.embedded[1]} over the ceiling: unwire the rest (prompts-few warning; few, optional and short, the owner, 24 Sep)` : undefined,
+    `${floor.embedded[0]}–${floor.embedded[1]}`,
+    embedded > floor.embedded[1] ? `${embedded - floor.embedded[1]} over the ceiling: unwire the rest (prompts-few warning; at most two recall cards, the owner, 27 Sep)` : undefined,
   );
   row("diagnostics pre", preEff, preEff >= floor.pre, `≥ ${floor.pre}`, pre === 0 && post === 0 && both ? "when=both, split by the app" : undefined);
   row("diagnostics post", postEff, postEff >= floor.post, `≥ ${floor.post}`);
@@ -485,12 +531,20 @@ function depthOf(blocks, bundle) {
   srow("variant sections", labelled ? roles.variant : "unlabelled", labelled && roles.variant >= floor.variants, `≥ ${floor.variants}`);
   if (floor.whySection) srow("why section", roles.why, roles.why >= 1, "1", roles.why === 0 && whyCallouts ? `${whyCallouts} why callout(s) only` : undefined);
   else srow("why callout or section", whyCallouts + roles.why, whyCallouts + roles.why >= 1, "≥ 1");
+  const gated = see?.gatedSections ?? 0;
+  const gatedWithSee = see?.gatedSectionsWithSee ?? 0;
+  const variantsShort = isH && (see?.variantsWithSee ?? 0) < (see?.variantSections ?? 0);
   srow(
-    "see it done",
-    seeShown,
-    seeShown >= 1 && (!isH || !labelled || seeShown >= roles.variant),
-    isH ? `one per variant (${floor.variants}+)` : "1",
-    shownVariants ? `${shownVariants} variant section(s) shown by their own worked lines or video` : undefined,
+    "see it",
+    `${gatedWithSee} of ${gated} gated sections`,
+    gated > 0 && gatedWithSee === gated && !variantsShort,
+    isH ? "a See it in every section that ends in a gate; one per variant" : "a See it in every section that ends in a gate",
+    [
+      see?.seeBlocks ? `${see.seeBlocks} See it block(s), ${see.seeSteps} steps` : "no See it blocks yet",
+      variantsShort ? `${see.variantsWithSee} of ${see.variantSections} variant sections hold one` : "",
+    ]
+      .filter(Boolean)
+      .join("; "),
   );
   if (floor.twists) srow("exam twists section", roles.twists, roles.twists >= 1, `1 (with ≥ ${floor.twists} twists)`);
   else srow("exam twists", roles.twists, true, "≥ 1 twist, may live in the pointer");
@@ -512,7 +566,7 @@ function depthOf(blocks, bundle) {
   for (let i = 0; i < body.length; i += 1) {
     const b = body[i];
     if (VISUAL.has(b.type) && VISUAL.has(body[i - 1]?.type)) consecutiveVisuals += 1;
-    if (b.type === "p" || b.type === "callout" || VISUAL.has(b.type)) {
+    if (b.type === "p" || b.type === "callout" || b.type === "see" || VISUAL.has(b.type)) {
       cardsSinceGate += 1;
       cards += 1;
     }
@@ -524,7 +578,7 @@ function depthOf(blocks, bundle) {
   }
   maxCards = Math.max(maxCards, cardsSinceGate);
   const closingCards = blocks.slice(bodyEnd).filter((b) => b.type === "p" || b.type === "h").length;
-  const slidesMinutes = Math.max(1, Math.round(((cards + closingCards) * 20 + gates * 40) / 60));
+  const slidesMinutes = Math.max(1, Math.round(((cards + closingCards) * 20 + gates * 40 + seeSteps * 15) / 60));
   const slides = [];
   if (overCard.length) slides.push(`${overCard.length} block(s) over ${CARD_WORDS} words (one idea per card): ${overCard.slice(0, 2).map((b) => `"${short(String(b.md), 40)}"`).join(", ")}`);
   if (longTitles.length) slides.push(`${longTitles.length} heading(s) over ${TITLE_WORDS} words: ${longTitles.slice(0, 2).map((b) => `"${short(String(b.text), 40)}"`).join(", ")}`);
@@ -577,13 +631,13 @@ function depthOf(blocks, bundle) {
     figures,
     maths: mathsLines,
     drafts: draftCount ? Object.entries(drafts).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(", ") : "",
-    minutes: { note: noteMinutes, learn: learnMinutes, sit: sitMinutes, topic: topicMinutes, slides: slidesMinutes, cards: cards + closingCards, longestRun: maxCards },
+    minutes: { note: noteMinutes, learn: learnMinutes, sit: sitMinutes, topic: topicMinutes, slides: slidesMinutes, cards: cards + closingCards, longestRun: maxCards, seeSteps },
   };
 }
 
 // ── the checks ───────────────────────────────────────────────────────────────────────────────
 function checkNote(file, orphans) {
-  const { unit, slug } = idOf(file);
+  const { subject, unit, slug } = idOf(file);
   const blocks = JSON.parse(fs.readFileSync(file, "utf8"));
   const bundleFile = path.join(path.dirname(file), "bundle.json");
   const bundle = fs.existsSync(bundleFile) ? JSON.parse(fs.readFileSync(bundleFile, "utf8")) : null;
@@ -625,18 +679,10 @@ function checkNote(file, orphans) {
     if (lines.length < 3 || lines.length > 5) fail("recap", `${lines.length} recap lines (needs three to five)`);
   }
 
-  // teaching stretches, up to the recap card
+  // the teaching body, up to the recap card. Its sections are measured by see-it.mjs (explain → See it → Your turn,
+  // at most 225 words of explanation before a See it), a warning below; the fatal "≤ 120 words between gates" that
+  // stood here until 27 Sep 2026 forced a gate every 120 words, which the teach-first case retired.
   const body = blocks.slice(0, recapAt >= 0 ? recapAt : panelAt >= 0 ? panelAt : blocks.length);
-  let stretch = 0;
-  let since = "the start";
-  for (const b of body) {
-    if (b.type === "gate") {
-      if (stretch > 120) fail("sections", `${stretch} words between ${since} and gate ${b.id} (max 120)`);
-      stretch = 0;
-      since = `gate ${b.id}`;
-    } else stretch += words(prose(b));
-  }
-  if (stretch > 120) fail("sections", `${stretch} words between ${since} and the recap card (max 120)`);
 
   // callouts in the body
   const whys = body.filter((b) => b.type === "callout" && b.kind === "why").length;
@@ -662,11 +708,10 @@ function checkNote(file, orphans) {
     }
   }
 
-  // the prompts close the note
+  // the prompts, if any, close the note (a note may wire none since 27 Sep 2026: "0–2 in every band")
   const promptIdx = blocks.map((b, i) => (b.type === "prompt" ? i : -1)).filter((i) => i >= 0);
-  if (promptIdx.length === 0) fail("prompts", "the note embeds no retrieval prompts");
-  else if (promptIdx[promptIdx.length - 1] !== blocks.length - 1) fail("prompts", "the retrieval prompts are not last");
-  else if (panelAt >= 0 && promptIdx[0] < panelAt) fail("prompts", "a retrieval prompt sits before the closing section");
+  if (promptIdx.length && promptIdx[promptIdx.length - 1] !== blocks.length - 1) fail("prompts", "the retrieval prompts are not last");
+  else if (promptIdx.length && panelAt >= 0 && promptIdx[0] < panelAt) fail("prompts", "a retrieval prompt sits before the closing section");
 
   // gates that read on their own
   for (const id of orphans.get(slug) ?? []) fail("gates", `gate ${id} leans on a figure with none before it`);
@@ -688,8 +733,12 @@ function checkNote(file, orphans) {
         if (new RegExp(`\\b${us}`, "i").test(cleaned)) fail("spelling", `American spelling "${us}" (use "${br}"): ${String(s).slice(0, 60)}`);
     }
 
+  // Lesson structure v3 (see-it.mjs): warnings unless --see-fatal or the unit's default
+  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle });
+  for (const f of see.findings) say.push({ check: "see", detail: f.detail, v3: true });
+
   // the depth floor: warnings unless --depth-fatal
-  const depth = bundle ? depthOf(blocks, bundle) : null;
+  const depth = bundle ? depthOf(blocks, bundle, see) : null;
   if (depth) {
     for (const r of [...depth.rows, ...depth.sectionRows]) if (!r.ok) say.push({ check: "depth", detail: `${r.name} ${r.value} (floor ${r.floor})${r.note ? ` — ${r.note}` : ""}`, depth: true });
     for (const s of [...depth.slides, ...depth.figures, ...depth.maths]) say.push({ check: "depth", detail: s, depth: true });
@@ -707,8 +756,20 @@ function checkNote(file, orphans) {
   const withdrawn = bundle ? withdrawnFindings(blocks, bundle) : { records: [], problems: [] };
   for (const p of withdrawn.problems) say.push({ check: "withdrawn", detail: `${p.id}: ${p.problem} (log ${p.log})`, wd: true });
 
-  const isWarning = (f) => (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !teachFatal) || (f.few && !promptsFatal) || (f.wd && !withdrawnFatal);
+  // the answers over the 12-word target: a report line, never a warning
+  const targets = bundle ? promptTargets(blocks, bundle) : [];
+
+  // a unit's defaults (lesson-v2.fatal.json) make its warnings breaches as its migration lands
+  const fatal = {
+    teach: teachFatal || unitFlag(unit, "teach"),
+    prompts: promptsFatal || unitFlag(unit, "prompts"),
+    withdrawn: withdrawnFatal || unitFlag(unit, "withdrawn"),
+    see: seeFatal || unitFlag(unit, "see"),
+  };
+  const isWarning = (f) =>
+    (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !fatal.teach) || (f.few && !fatal.prompts) || (f.wd && !fatal.withdrawn) || (f.v3 && !fatal.see);
   return {
+    subject,
     unit,
     slug,
     file: path.relative(process.cwd(), file),
@@ -717,7 +778,10 @@ function checkNote(file, orphans) {
     depth,
     teach,
     prompts,
+    targets,
     withdrawn,
+    see,
+    fatal,
   };
 }
 
@@ -772,7 +836,45 @@ const promptNotes = notes.filter((n) => n.prompts.length);
 const wiredOver = notes.filter((n) => n.prompts.some((f) => f.kind === "wired")).length;
 const longAnswers = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "long").length, 0);
 const longWired = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "long" && f.wired).length, 0);
-const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired)${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
+const numberedAnswers = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "numbered").length, 0);
+const longQuestions = notes.reduce((a, n) => a + n.prompts.filter((f) => f.kind === "question").length, 0);
+const overTarget = notes.reduce((a, n) => a + n.targets.length, 0);
+const overTargetWired = notes.reduce((a, n) => a + n.targets.filter((t) => t.wired).length, 0);
+const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired); ${numberedAnswers} expect a numbered list; ${longQuestions} wired prompt(s) ask a question over ${QUESTION_WORDS} words${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}; report only: ${overTarget} shipped answer(s) over the ${ANSWER_TARGET}-word target (${overTargetWired} wired)${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
+
+// Lesson structure v3, over every note checked
+const seeKinds = ["see-missing", "first-check", "explain-long", "turn-last", "turns", "video", "option-position", "block"];
+const seeCount = Object.fromEntries(seeKinds.map((k) => [k, notes.reduce((a, n) => a + n.see.findings.filter((f) => f.kind === k).length, 0)]));
+const seeNotes = notes.filter((n) => n.see.findings.length);
+const seeGates = notes.reduce((a, n) => a + n.see.gates, 0);
+const seeAfter = notes.reduce((a, n) => a + n.see.gatesAfterSee, 0);
+const seeBlocksAll = notes.reduce((a, n) => a + n.see.seeBlocks, 0);
+const notesWithSee = notes.filter((n) => n.see.seeBlocks).length;
+const firstOk = notes.filter((n) => n.see.firstCheck === true).length;
+const seeFindingsAll = seeKinds.reduce((a, k) => a + seeCount[k], 0);
+const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by position; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
+
+// the per-topic lists of units migrating to v3 (lesson-v2.fatal.json "list": true), printed until their defaults are on
+const listUnits = [...new Set(notes.map((n) => n.unit))].filter((u) => unitFlag(u, "list"));
+const unitLists = Object.fromEntries(
+  listUnits.map((u) => [
+    u,
+    notes
+      .filter((n) => n.unit === u)
+      .map((n) => ({
+        slug: n.slug,
+        gates: n.teach.gates,
+        teachFailing: n.teach.failures.length,
+        prompts: n.prompts.length,
+        withdrawnProblems: n.withdrawn.problems.length,
+        gatesAfterSee: n.see.gatesAfterSee,
+        seeBlocks: n.see.seeBlocks,
+        firstCheck: n.see.firstCheck === true,
+        see: Object.fromEntries(seeKinds.map((k) => [k, n.see.findings.filter((f) => f.kind === k).length])),
+        fatal: n.fatal,
+      })),
+  ]),
+);
 
 // withdraw-and-replace records, over every note checked
 const wdNotes = notes.filter((n) => n.withdrawn.records.length || n.withdrawn.problems.length);
@@ -796,7 +898,10 @@ if (asJson) {
         teach: teachFailing.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, gates: n.teach.gates, failures: n.teach.failures })),
         teachSummary: { gates: teachGates, failing: teachCount, notes: teachFailing.length },
         prompts: promptNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, findings: n.prompts })),
-        promptsSummary: { notes: notes.length, wiredOver, wiredMax: WIRED_MAX, longAnswers, longWired, answerWords: ANSWER_WORDS },
+        promptsSummary: { notes: notes.length, wiredOver, wiredMax: WIRED_MAX, longAnswers, longWired, answerWords: ANSWER_WORDS, numberedAnswers, longQuestions, questionWords: QUESTION_WORDS, overTarget, overTargetWired, answerTarget: ANSWER_TARGET },
+        see: seeNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, gates: n.see.gates, gatesAfterSee: n.see.gatesAfterSee, seeBlocks: n.see.seeBlocks, firstCheck: n.see.firstCheck, findings: n.see.findings })),
+        seeSummary: { gates: seeGates, gatesAfterSee: seeAfter, seeBlocks: seeBlocksAll, notesWithSee, firstCheckOk: firstOk, notes: notes.length, ...seeCount },
+        unitLists,
         withdrawn: wdNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, records: n.withdrawn.records, problems: n.withdrawn.problems })),
         withdrawnSummary: { records: wdRecords, topics: wdNotes.length, problems: wdProblems },
       },
@@ -828,9 +933,10 @@ if (asJson) {
       for (const s of d.figures) console.log(`  figures  ${s}`);
       for (const s of d.maths) console.log(`  maths    ${s}`);
       const t = n.teach;
-      console.log(`  ${t.failures.length ? "short" : "ok   "} teach → show → check: ${t.gates - t.failures.length} of ${t.gates} gates after their section explains and shows the idea (longest run between gates ${d.minutes.longestRun} cards, a ceiling, not a quota)`);
+      console.log(`  ${t.failures.length ? "short" : "ok   "} teach → show → check: ${t.gates - t.failures.length} of ${t.gates} gates after their section explains and shows the idea (longest run between gates ${d.minutes.longestRun} cards, reported, never gated; See it steps ${d.minutes.seeSteps} at 15 s)`);
       for (const f of t.failures) console.log(`  teach    ${describeFailure(f)}`);
       for (const f of n.prompts) console.log(`  prompts  ${f.detail}`);
+      for (const f of n.see.findings) console.log(`  see      ${f.detail}`);
     }
     console.log(`\nper band: ${perBand.filter((p) => p.notes).map((p) => `${p.band}: ${p.notes} notes, structure floor ${p.structure}, section floor ${p.sections}, both ${p.both}, labelled ${p.labelled}`).join(" | ")}`);
   }
@@ -841,11 +947,34 @@ if (asJson) {
       for (const f of n.teach.failures) console.log(`  ${describeFailure(f)}`);
     }
   }
-  if (promptsReport && promptNotes.length) {
-    console.log(`\nretrieval prompts — few, optional and short (the owner's verdict, 24 Sep 2026): at most ${WIRED_MAX} wired in a note, no answer over ${ANSWER_WORDS} words:`);
-    for (const n of promptNotes) {
+  if (promptsReport && (promptNotes.length || overTarget)) {
+    console.log(
+      `\nretrieval prompts — few, optional and short (the owner's verdict of 24 Sep 2026 and his answer 3 of 27 Sep): at most ${WIRED_MAX} wired in a note, no answer over ${ANSWER_WORDS} words or written as a numbered list, no wired question over ${QUESTION_WORDS} words; answers over the ${ANSWER_TARGET}-word target are listed as "target", for information:`,
+    );
+    for (const n of notes.filter((x) => x.prompts.length || x.targets.length)) {
       console.log(`\n${n.unit}/${n.slug}`);
-      for (const f of n.prompts) console.log(`  ${f.detail}${f.kind === "long" && !f.wired ? " (not wired; the review queue asks it)" : ""}`);
+      for (const f of n.prompts) console.log(`  ${f.detail}${(f.kind === "long" || f.kind === "numbered") && !f.wired ? " (not wired; the review queue asks it)" : ""}`);
+      for (const tg of n.targets) console.log(`  target: prompt ${tg.id} expects ${tg.words} words (about ${ANSWER_TARGET} is the target)${tg.wired ? ", wired" : ""}`);
+    }
+  }
+  if (seeReport && seeNotes.length) {
+    console.log(`\nsee it (v3) — explain → See it → Your turn (the teach-first case, approved 27 Sep 2026; shapes in docs/plan/review/2026-09-27-see-it-block-shape.md):`);
+    for (const n of seeNotes) {
+      console.log(`\n${n.unit}/${n.slug}  ${n.see.gatesAfterSee} of ${n.see.gates} gates after a See it; ${n.see.seeBlocks} See it block(s)`);
+      for (const f of n.see.findings) console.log(`  ${f.kind.padEnd(15)} ${f.detail}`);
+    }
+  }
+  for (const u of listUnits) {
+    const rows = unitLists[u];
+    const on = ["teach", "prompts", "withdrawn", "see"].filter((k) => unitFlag(u, k));
+    console.log(
+      `\n${u} — the v3 migration, topic by topic (${FATAL_FILE}: ${on.length ? `${on.join(", ")} fatal by default` : "teach, prompts and withdrawn become fatal by default once the migration authors report"}):`,
+    );
+    for (const r of rows) {
+      const s = r.see;
+      console.log(
+        `  ${r.slug.padEnd(48)} teach ${String(r.gates - r.teachFailing).padStart(2)}/${String(r.gates).padEnd(2)} · prompts ${r.prompts} · withdrawn ${r.withdrawnProblems} · See it ${r.gatesAfterSee}/${r.gates} gates, ${r.seeBlocks} block(s) · first check ${r.firstCheck ? "ok" : "NOT after a See it"} · long ${s["explain-long"]} · run-on ${s["turn-last"]} · video ${s.video} · by-position ${s["option-position"]} · block ${s.block}`,
+      );
     }
   }
   if (withdrawnReport && wdNotes.length) {
@@ -870,5 +999,6 @@ if (asJson) {
   console.log(teachLine);
   console.log(promptsLine);
   console.log(withdrawnLine);
+  console.log(seeLine);
 }
 process.exit(count ? 1 : 0);

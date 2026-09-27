@@ -43,7 +43,7 @@ for (const f of walk(PACKS).sort()) {
     for (const p of q.parts ?? []) {
       if (p.answer?.kind !== "text" || p.marks < 2) continue;
       parts++;
-      const sol = markAnswer(String(p.workedSolution ?? ""), p.answer, { marks: p.marks, commonErrors: p.commonErrors, prompt: p.stem });
+      const sol = markAnswer(String(p.workedSolution ?? ""), p.answer, { marks: p.marks, commonErrors: p.commonErrors, prompt: p.stem, scheme: p.scheme, workedSolution: p.workedSolution });
       if (sol.correct) continue;
       const groups = (p.answer.keyWords ?? [])
         .map((g: { any: string[] }) => `[${g.any.slice(0, 3).join(" / ")}${g.any.length > 3 ? " / …" : ""}]`)

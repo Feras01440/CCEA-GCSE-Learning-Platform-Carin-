@@ -54,9 +54,12 @@
  * and the opening (the hook and the hero figure, before or under the note's first heading) never carries. A section's index is its heading's position among the note's headings (the
  * opening is 0).
  *
- * The four-card rule (a gate at most every four cards) is a ceiling, never a quota: nothing here asks
- * for more gates, and a section may run several cards of explanation and demonstration before its one
- * check.
+ * No card count decides where a check goes (the teach-first case, approved 27 Sep 2026, which retired "a gate at
+ * most every four cards" and the fatal 120-word rule): nothing here asks for more gates, and a section may run up to
+ * three explanation cards and its See it before its one check. The v3 structure itself (every gate after a `see`
+ * block in its section, the first check, the 225-word explanation, the Your turn last, the video beside the See it)
+ * is scripts/qa/see-it.mjs; this module keeps judging explained-and-shown, with the paragraph forms of a show still
+ * accepted while the published notes migrate.
  */
 
 export const EXPLAIN_WORDS = 15;
