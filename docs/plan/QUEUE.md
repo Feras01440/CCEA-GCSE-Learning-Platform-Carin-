@@ -71,7 +71,20 @@ The owner asked for a critical expert judgement rather than an echo of her views
 
 **This reverses one standing decision.** "No accounts, no sync" (`docs/dev/README.md`, the master plan, concept B, and the advisory of 26 September) no longer holds. She needs her own account across devices. The case proposes privacy as minimal data in her own account, exportable and deletable, and awaits the owner's approval.
 
-**A storage bug found on the way, verified in the code, and not yet fixed.** Diagnostic answers get a review card under the item's local id ("07"), not the topic's. So every topic's item 07 shares one card and its re-probes, and later topics' diagnostics are never scheduled (`CheckSection.tsx`, `record.ts` `cardIdFor`/`ensureCard`). The 1,596 diagnostic items use 52 ids. The fix: prefix the id with the topic, and migrate existing cards in a Dexie version bump. The same audit found that a backup "merge" overwrites rows with the same auto-increment id across devices, and that no review log is kept. The sync work fixes both (case section 5).
+**A storage bug found on the way, verified in the code, and not yet fixed.** Diagnostic answers get a review card under the item's local id ("07"), not the topic's. So every topic's item 07 shares one card and its re-probes, and later topics' diagnostics are never scheduled (`CheckSection.tsx`, `record.ts` `cardIdFor`/`ensureCard`). The 1,596 diagnostic items use 52 ids. The fix: prefix the id with the topic, and migrate existing cards in a Dexie version bump.
+
+The audits found more, listed in case section 1a:
+
+- flashcard-only cards that the review inbox cannot show, stuck as "withdrawn";
+- a stones promise ("proved in a later mixed set") that the mastery rule does not keep;
+- the right reason listed first in 453 of 456 why-menus;
+- confident-miss re-probes that stop after two passes, while the screen says "until it sticks";
+- the inbox printing return days that ignore exam mode;
+- mixed practice that draws from unstudied topics and ignores tier.
+
+Fix them before build 10. The backup merge that overwrites across devices, and the missing review log, are fixed by the sync work (case section 5).
+
+**Her exam dates must be confirmed.** The default plan puts every paper in May and June 2027. The owner says she has exams in November, February and March too.
 
 ## 3. The queue, in order
 
