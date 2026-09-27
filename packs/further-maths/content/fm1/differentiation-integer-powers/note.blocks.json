@@ -1,187 +1,523 @@
 [
   {
     "type": "hero",
-    "lede": "A straight line has one gradient. A curve has a different gradient at every point on it. Differentiating turns the equation of a curve into a second equation, the gradient function, so you can work out the steepness anywhere without drawing a single tangent by hand.",
+    "lede": "A curve is steeper in some places than others. Differentiating gives one rule, $\\frac{dy}{dx}$, for the steepness at every point, and it comes from two moves made on each term.",
     "can": [
-      "Differentiate any sum of whole-number powers of x, one term at a time",
-      "Rewrite a term such as 3/x² as 3x⁻² and differentiate it without losing the sign",
-      "Differentiate a second time to reach d²y/dx², and say what each derivative describes"
+      "Differentiate a sum of terms axⁿ, one term at a time, whatever the sign of n",
+      "Rewrite a term such as 3/(4x²) as ¾x⁻² and differentiate it with the right signs",
+      "Differentiate twice to reach d²y/dx², and solve an equation linking y and dy/dx"
     ],
     "minutes": 12
   },
   {
-    "type": "h",
-    "text": "The slope that keeps changing"
-  },
-  {
-    "type": "p",
-    "md": "Walk up a hill and the steepness changes under your feet. A curve is the same: at one point it is falling, further along it is level, further still it is climbing.\nSo there is no single number called the gradient of a curve. There is a **rule** for the gradient, and differentiating is how you find it."
-  },
-  {
     "type": "figure",
-    "alt": "The curve y = x squared drawn on axes, with a dashed tangent line at x = -2 sloping down, a flat dashed tangent at x = 0, and a dashed tangent at x = 2 sloping up. The three slopes are labelled -4, 0 and 4.",
-    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y = x squared with the tangent drawn at three points: falling at x = -2, flat at x = 0 and rising at x = 2'><title>The curve y = x squared with the tangent drawn at three points: falling at x = -2, flat at x = 0 and rising at x = 2</title><path d='M 67.3 24 L 67.3 284 M 143.5 24 L 143.5 284 M 219.8 24 L 219.8 284 M 296 24 L 296 284 M 372.3 24 L 372.3 284 M 448.5 24 L 448.5 284 M 524.8 24 L 524.8 284 M 52 274.7 L 540 274.7 M 52 237.6 L 540 237.6 M 52 200.4 L 540 200.4 M 52 163.3 L 540 163.3 M 52 126.1 L 540 126.1 M 52 89 L 540 89 M 52 51.9 L 540 51.9' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 200.4 L 540 200.4' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 296 24 L 296 284' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 67.3 196.4 L 67.3 204.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='67.3' y='217.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-3</text><path d='M 143.5 196.4 L 143.5 204.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='143.5' y='217.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-2</text><path d='M 219.8 196.4 L 219.8 204.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='219.8' y='217.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-1</text><path d='M 372.3 196.4 L 372.3 204.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='372.3' y='217.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><path d='M 448.5 196.4 L 448.5 204.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='448.5' y='217.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 524.8 196.4 L 524.8 204.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='524.8' y='217.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><path d='M 292 274.7 L 300 274.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='278.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><path d='M 292 237.6 L 300 237.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='241.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><path d='M 292 163.3 L 300 163.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='167.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><path d='M 292 126.1 L 300 126.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='130.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><path d='M 292 89 L 300 89' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='93' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><path d='M 292 51.9 L 300 51.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='55.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='289' y='214.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 61.8 25.2 L 139.8 122.5 L 201.7 172 L 255.3 195.1 L 304.1 200.2 L 354.6 189.5 L 409.9 159 L 476.6 96.3 L 530.2 25.2' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 52 37 L 304.1 282.6' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.9'/><path d='M 189.3 200.4 L 402.7 200.4' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.9'/><path d='M 287.9 282.6 L 540 37' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.9'/><circle cx='143.5' cy='126.1' r='3.6' fill='currentColor'/><text x='135.5' y='116.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>slope -4</text><circle cx='296' cy='200.4' r='3.6' fill='currentColor'/><text x='304' y='218.4' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>slope 0</text><circle cx='448.5' cy='126.1' r='3.6' fill='currentColor'/><text x='456.5' y='116.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>slope 4</text><text x='540' y='192.4' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='303' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='320' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>one curve, three different slopes</text></svg>",
-    "caption": "The same curve, three points, three different slopes. The gradient is a function of $x$."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to start. In the picture, where is the curve steepest?",
-    "options": [
-      "At $x = -2$ and at $x = 2$",
-      "At $x = 0$",
-      "The steepness is the same all the way along"
-    ],
-    "answer": "At $x = -2$ and at $x = 2$",
-    "explain": "The two outer tangents are the tilted ones, with slopes $-4$ and $4$. At $x = 0$ the tangent is flat, so the slope there is $0$."
+    "alt": "The U-shaped curve y = x squared plus 2 on axes, with a dashed tangent at x = -2 sloping down, a flat dashed tangent at its lowest point, x = 0, and a dashed tangent at x = 2 sloping up, labelled slope -4, slope 0 and slope 4.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y = x squared plus 2 with its tangent drawn at three points: falling at x = -2, flat at x = 0, rising at x = 2'><title>The curve y = x squared plus 2 with its tangent drawn at three points: falling at x = -2, flat at x = 0, rising at x = 2</title><path d='M 62.3 24 L 62.3 258 M 113.5 24 L 113.5 258 M 164.8 24 L 164.8 258 M 216 24 L 216 258 M 267.3 24 L 267.3 258 M 318.5 24 L 318.5 258 M 369.8 24 L 369.8 258 M 52 232.9 L 380 232.9 M 52 166.1 L 380 166.1 M 52 99.2 L 380 99.2 M 52 32.4 L 380 32.4' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 232.9 L 380 232.9' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 216 24 L 216 258' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 62.3 228.9 L 62.3 236.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='62.3' y='252.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3</text><path d='M 113.5 228.9 L 113.5 236.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='113.5' y='252.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-2</text><path d='M 164.8 228.9 L 164.8 236.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='164.8' y='252.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><path d='M 267.3 228.9 L 267.3 236.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='267.3' y='252.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 318.5 228.9 L 318.5 236.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='318.5' y='252.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 369.8 228.9 L 369.8 236.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='369.8' y='252.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 212 166.1 L 220 166.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='171.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 212 99.2 L 220 99.2' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='104.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><path d='M 212 32.4 L 220 32.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='37.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>12</text><text x='209' y='249.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 28.3 L 62.9 50.4 L 72.8 69 L 83.7 88.1 L 93.5 104.1 L 103.4 118.8 L 113.2 132.3 L 124.2 145.8 L 134 156.7 L 143.8 166.4 L 154.8 175.6 L 164.6 182.7 L 174.5 188.5 L 185.4 193.5 L 195.2 196.8 L 205.1 198.7 L 216 199.5 L 225.8 198.9 L 236.8 196.8 L 246.6 193.5 L 256.5 189.1 L 267.4 182.7 L 277.2 175.6 L 288.2 166.4 L 298 156.7 L 307.8 145.8 L 317.7 133.7 L 327.5 120.4 L 338.5 104.1 L 349.4 86.3 L 359.2 69 L 369.1 50.4 L 380 28.3' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 52 52.4 L 169.9 206.2' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.9'/><path d='M 154.5 199.5 L 277.5 199.5' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.9'/><path d='M 262.1 206.2 L 380 52.4' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.9'/><circle cx='113.5' cy='132.6' r='3.6' fill='currentColor'/><text x='103.5' y='152.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>slope −4</text><circle cx='216' cy='199.5' r='3.6' fill='currentColor'/><text x='224' y='219.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>slope 0</text><circle cx='318.5' cy='132.6' r='3.6' fill='currentColor'/><text x='328.5' y='152.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>slope 4</text><text x='380' y='224.9' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='223' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
+    "caption": "One curve, three points, three slopes: the slope depends on $x$."
   },
   {
     "type": "h",
-    "text": "1. Two moves on every term"
+    "text": "1. Two moves on every term",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "The Unit 1 formula sheet gives the rule as $y = ax^{n}\\ \\Rightarrow\\ \\frac{dy}{dx} = nax^{n-1}$.\nRead it as two moves. **Multiply** the coefficient by the power. Then **step the power down** by one.\nThat is the whole of it, and it happens to each term separately, so a long expression is only a short job repeated."
-  },
-  {
-    "type": "figure",
-    "alt": "A card of four rows. x to the fifth becomes 5x to the fourth; 4x cubed becomes 12x squared; 7x becomes 7; 6x squared becomes 12x. Each row notes which move produced it.",
-    "svg": "<svg viewBox='0 0 560 208' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four examples of the power rule: the coefficient is multiplied by the power and the power steps down by one'><title>Four examples of the power rule: the coefficient is multiplied by the power and the power steps down by one</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>multiply by the power, then step the power down by one</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>x^5  goes to  5x^4</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>power 5, then 4</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>4x^3  goes to  12x^2</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>4 times 3 is 12</text><rect x='14' y='114' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='132' font-family='inherit' font-size='13' fill='currentColor'>7x  goes to  7</text><text x='532' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>power 1, then 0</text><rect x='14' y='148' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='166' font-family='inherit' font-size='13' fill='currentColor'>6x^2  goes to  12x</text><text x='532' y='166' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>6 times 2 is 12</text><text x='280' y='200' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the two moves happen to every term, one term at a time</text></svg>",
-    "caption": "Multiply, then step down. Every term, every time."
+    "md": "Along $y = x^{2} + 2$ the slope keeps changing: $-4$ at $x = -2$, $0$ at the bottom, $4$ at $x = 2$. Differentiating finds the rule for it. The formula sheet gives $y = ax^{n} \\Rightarrow \\frac{dy}{dx} = nax^{n-1}$: **multiply** the coefficient by the power, then **lower the power by one**. Do both to each term on its own."
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why the power drops",
-    "md": "The gradient measures how fast $y$ grows. Doubling $x$ multiplies $x^{3}$ by 8 but multiplies the growth by only 4, which is what $x^{2}$ does. One power of $x$ is spent measuring the change, so the derivative is always one power lower than the curve."
+    "md": "For $y = x^{3}$, doubling $x$ makes $y$ eight times as big but the slope only four times as steep, which is how $x^{2}$ grows. Measuring a rate of change uses up one power of $x$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\frac{dy}{dx}$ if $y = 3x^{5} + 2x^{3}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$3x^{5}$ gives $15x^{4}$",
+        "decision": "Multiply the coefficient by the power, $3 \\times 5 = 15$, then lower the power from $5$ to $4$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2x^{3}$ gives $6x^{2}$",
+        "decision": "The same two moves on the next term: $2 \\times 3 = 6$, and the power drops to $2$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{dy}{dx} = 15x^{4} + 6x^{2}$",
+        "decision": "Put the terms back together with their signs. Finish each term before starting the next."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g2",
-    "kind": "blank",
-    "prompt": "$y = 6x^{4}$. Multiplying by the power gives $24$, and the power steps down: $\\frac{dy}{dx} = 24x^{\\square}$. The missing power is ___",
-    "answer": "3",
-    "explain": "The power was 4, so it steps down to 3. Multiplying by 4 and leaving the power at 4 is the commonest slip on this line."
-  },
-  {
-    "type": "h",
-    "text": "2. Constants, and the plain term in x"
-  },
-  {
-    "type": "p",
-    "md": "A constant has no slope at all: the graph of $y = 4$ is flat, so its derivative is **0**, and the term simply disappears.\nThe plain term $7x$ is $7x^{1}$, so the two moves give $7x^{0}$, and $x^{0}$ is 1. Its derivative is just **7**, the gradient of that straight line."
-  },
-  {
-    "type": "figure",
-    "alt": "The horizontal line y = 4 and the straight line y = 3x drawn on the same axes. The horizontal line is labelled slope 0 everywhere, the sloping line slope 3 everywhere.",
-    "svg": "<svg viewBox='0 0 560 290' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The horizontal line y = 4 beside the straight line y = 3x, showing gradients of 0 and 3'><title>The horizontal line y = 4 beside the straight line y = 3x, showing gradients of 0 and 3</title><path d='M 67.3 24 L 67.3 244 M 143.5 24 L 143.5 244 M 219.8 24 L 219.8 244 M 296 24 L 296 244 M 372.3 24 L 372.3 244 M 448.5 24 L 448.5 244 M 524.8 24 L 524.8 244 M 52 236.7 L 540 236.7 M 52 207.3 L 540 207.3 M 52 178 L 540 178 M 52 148.7 L 540 148.7 M 52 119.3 L 540 119.3 M 52 90 L 540 90 M 52 60.7 L 540 60.7 M 52 31.3 L 540 31.3' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 148.7 L 540 148.7' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 296 24 L 296 244' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 67.3 144.7 L 67.3 152.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='67.3' y='165.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-3</text><path d='M 143.5 144.7 L 143.5 152.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='143.5' y='165.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-2</text><path d='M 219.8 144.7 L 219.8 152.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='219.8' y='165.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-1</text><path d='M 372.3 144.7 L 372.3 152.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='372.3' y='165.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><path d='M 448.5 144.7 L 448.5 152.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='448.5' y='165.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 524.8 144.7 L 524.8 152.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='524.8' y='165.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><path d='M 292 236.7 L 300 236.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='240.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-6</text><path d='M 292 207.3 L 300 207.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='211.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><path d='M 292 178 L 300 178' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='182' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><path d='M 292 119.3 L 300 119.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='123.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><path d='M 292 90 L 300 90' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='94' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><path d='M 292 60.7 L 300 60.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='64.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><path d='M 292 31.3 L 300 31.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='35.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='289' y='162.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 52 90 L 540 90' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='212.1' y='82' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>y = 4, slope 0 everywhere</text><path d='M 131.7 243.5 L 510.7 24.8' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='425.6' y='89.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>y = 3x, slope 3 everywhere</text><text x='540' y='140.7' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='303' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='280' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>a constant never climbs, so its derivative is 0</text></svg>",
-    "caption": "A constant never climbs, so it contributes nothing to $\\frac{dy}{dx}$."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
+    "id": "g6",
     "kind": "choice",
-    "prompt": "$y = 9x^{2} - 6x + 4$. What becomes of the $+ 4$?",
+    "prompt": "$y = 4x^{6} + 5x^{2}$. Which is $\\frac{dy}{dx}$?",
     "options": [
-      "It differentiates to $0$, so it is gone",
-      "It stays as $+ 4$",
-      "It becomes $4x$"
+      "$24x^{5} + 10x$",
+      "$24x^{6} + 10x^{2}$",
+      "$4x^{5} + 5x$"
     ],
-    "answer": "It differentiates to $0$, so it is gone",
-    "explain": "The derivative is $18x - 6$. Copying the constant down would give $18x - 2$, which is a different gradient at every point."
+    "answer": "$24x^{5} + 10x$",
+    "optionNotes": [
+      {
+        "option": "$24x^{6} + 10x^{2}$",
+        "why": "The coefficients were multiplied correctly, but each power has to drop by one as well, so $x^{6}$ becomes $x^{5}$.",
+        "misconception": "fm.calc.power-not-reduced"
+      },
+      {
+        "option": "$4x^{5} + 5x$",
+        "why": "The powers dropped correctly, but each coefficient must also be multiplied by the power it came from, so $4$ becomes $24$.",
+        "misconception": "fm.calc.coefficient-not-multiplied"
+      }
+    ],
+    "explain": "Two moves on each term: $4 \\times 6 = 24$ with the power dropping to $5$, then $5 \\times 2 = 10$ with the power dropping to $1$. So $\\frac{dy}{dx} = 24x^{5} + 10x$. This is steps 1 and 2 of See it.",
+    "twin": {
+      "prompt": "$y = 2x^{7} + 3x^{4}$. Which is $\\frac{dy}{dx}$?",
+      "options": [
+        "$14x^{6} + 12x^{3}$",
+        "$14x^{7} + 12x^{4}$",
+        "$2x^{6} + 3x^{3}$"
+      ],
+      "answer": "$14x^{6} + 12x^{3}$",
+      "explain": "$2 \\times 7 = 14$ and $3 \\times 4 = 12$, and each power drops by one: $14x^{6} + 12x^{3}$."
+    }
   },
   {
     "type": "h",
-    "text": "3. Negative powers, and a full example"
+    "text": "2. Constants and the term in x",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "A fraction such as $\\frac{4}{x^{2}}$ must be written as $4x^{-2}$ before you touch it, because the rule only speaks about powers.\nThen apply the same two moves. The index steps **down**, so $-2$ becomes $-3$, and multiplying $-4$ by $-2$ gives $+8$. Both signs matter and they fight each other."
+    "md": "A constant such as $+ 8$ is a flat line on its own graph, and a flat line has slope $0$, so it disappears. A term such as $-5x$ is $-5x^{1}$: the two moves give $-5x^{0}$, and $x^{0} = 1$, so it leaves $-5$, the slope of that straight line."
   },
   {
     "type": "figure",
-    "alt": "Three rows showing 5 over x squared rewritten as 5x to the minus 2 and differentiated to minus 10x to the minus 3, minus 4 over x squared rewritten and differentiated to plus 8x to the minus 3, and 9 over x differentiated to minus 9x to the minus 2.",
-    "svg": "<svg viewBox='0 0 560 174' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Three terms with negative powers rewritten with a negative index and then differentiated'><title>Three terms with negative powers rewritten with a negative index and then differentiated</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>rewrite first, differentiate second</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>5/x^2  is  5x^-2  and differentiates to  -10x^-3</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>-2 steps down to -3</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>-4/x^2  is  -4x^-2  and differentiates to  8x^-3</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>minus times minus is plus</text><rect x='14' y='114' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='132' font-family='inherit' font-size='13' fill='currentColor'>9/x  is  9x^-1  and differentiates to  -9x^-2</text><text x='532' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>-1 steps down to -2</text><text x='280' y='166' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the index always steps DOWN, so -2 becomes -3 and never -1</text></svg>",
-    "caption": "Rewrite first, differentiate second. The index steps down: $-2$ goes to $-3$."
+    "alt": "Two straight lines on axes: the horizontal line y = 8, labelled slope 0, and the line y = -5x falling through the origin, labelled slope -5.",
+    "svg": "<svg viewBox='0 0 400 280' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The flat line y = 8, whose slope is 0 everywhere, and the line y = -5x, whose slope is -5 everywhere'><title>The flat line y = 8, whose slope is 0 everywhere, and the line y = -5x, whose slope is -5 everywhere</title><path d='M 74.2 16 L 74.2 252 M 144.6 16 L 144.6 252 M 215.0 16 L 215.0 252 M 285.4 16 L 285.4 252 M 355.8 16 L 355.8 252 M 46 247.3 L 384 247.3 M 46 209.5 L 384 209.5 M 46 171.8 L 384 171.8 M 46 134.0 L 384 134.0 M 46 96.2 L 384 96.2 M 46 58.5 L 384 58.5 M 46 20.7 L 384 20.7' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 46 134.0 L 384 134.0 M 215.0 16 L 215.0 252' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 74.2 130.0 L 74.2 138.0' stroke='currentColor' stroke-width='1' fill='none'/><text x='74.2' y='154' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−2</text><path d='M 144.6 130.0 L 144.6 138.0' stroke='currentColor' stroke-width='1' fill='none'/><text x='144.6' y='154' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−1</text><path d='M 285.4 130.0 L 285.4 138.0' stroke='currentColor' stroke-width='1' fill='none'/><text x='285.4' y='154' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 355.8 130.0 L 355.8 138.0' stroke='currentColor' stroke-width='1' fill='none'/><text x='355.8' y='154' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 211.0 247.3 L 219.0 247.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='207' y='252.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>−12</text><path d='M 211.0 209.5 L 219.0 209.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='207' y='214.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>−8</text><path d='M 211.0 171.8 L 219.0 171.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='207' y='176.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>−4</text><path d='M 211.0 96.2 L 219.0 96.2' stroke='currentColor' stroke-width='1' fill='none'/><text x='207' y='101.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 211.0 58.5 L 219.0 58.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='207' y='63.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><path d='M 211.0 20.7 L 219.0 20.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='207' y='25.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>12</text><text x='384' y='126' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='223' y='28' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>y</text><path d='M 46 58.5 L 384 58.5' stroke='currentColor' stroke-width='2.2' fill='none'/><path d='M 46.0 20.7 L 384.0 247.3' stroke='currentColor' stroke-width='2.2' fill='none'/><text x='285.4' y='32.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>y = 8</text><text x='285.4' y='49.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>slope 0</text><text x='229.1' y='215.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>y = −5x</text><text x='229.1' y='232.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>slope −5</text></svg>",
+    "caption": "Each term on its own graph: $y = 8$ never climbs, and $y = -5x$ falls $5$ for every $1$ across."
   },
   {
-    "type": "p",
-    "md": "Here is the whole method on one expression, $y = 5x^{3} + 7x - 9 - \\frac{4}{x^{2}}$.\n**Step 1.** Rewrite the fraction: $-\\frac{4}{x^{2}} = -4x^{-2}$.\n**Step 2.** Differentiate term by term: $15x^{2}$, then $8x^{-3}$, then $7$, then $0$.\n**Step 3.** Write the answer, putting the negative power back over the line: $\\frac{dy}{dx} = 15x^{2} + 7 + \\frac{8}{x^{3}}$."
-  },
-  {
-    "type": "figure",
-    "alt": "A four-row table of the worked example: 5x cubed, minus 4 over x squared, 7x and minus 9, each shown rewritten and then differentiated, with the finished derivative underneath.",
-    "svg": "<svg viewBox='0 0 560 204' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The four terms of the worked example differentiated one at a time'><title>The four terms of the worked example differentiated one at a time</title><rect x='2' y='2' width='556' height='200' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.5'/><text x='12' y='30' font-family='inherit' font-size='13.5' font-weight='600' fill='currentColor'>y = 5x^3 + 7x - 9 - 4/x^2</text><path d='M 10 72 L 550 72 M 10 100 L 550 100 M 10 128 L 550 128 M 10 156 L 550 156 M 10 184 L 550 184' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.45' fill='none'/><text x='14' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>term</text><text x='164' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>rewritten</text><text x='314' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>differentiates to</text><text x='14' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>5x^3</text><text x='164' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>5x^3</text><text x='314' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>15x^2</text><text x='14' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>-4/x^2</text><text x='164' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>-4x^-2</text><text x='314' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>8x^-3</text><text x='14' y='147' font-family='inherit' font-size='12.5' fill='currentColor'>7x</text><text x='164' y='147' font-family='inherit' font-size='12.5' fill='currentColor'>7x^1</text><text x='314' y='147' font-family='inherit' font-size='12.5' fill='currentColor'>7</text><text x='14' y='175' font-family='inherit' font-size='12.5' fill='currentColor'>-9</text><text x='164' y='175' font-family='inherit' font-size='12.5' fill='currentColor'>a constant</text><text x='314' y='175' font-family='inherit' font-size='12.5' fill='currentColor'>0</text><text x='280' y='196' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>so dy/dx = 15x^2 + 7 + 8/x^3</text></svg>",
-    "caption": "Four terms, four small jobs, one answer: $\\frac{dy}{dx} = 15x^{2} + 7 + \\frac{8}{x^{3}}$."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\frac{dy}{dx}$ if $y = 2x^{3} - 5x + 8$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$2x^{3}$ gives $6x^{2}$",
+        "decision": "The usual two moves: $2 \\times 3 = 6$, and the power drops to $2$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$-5x$ gives $-5$, and $+ 8$ gives $0$",
+        "decision": "$-5x$ is $-5x^{1}$, and $x^{0} = 1$, so only the $-5$ is left. The constant has no slope at all.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{dy}{dx} = 6x^{2} - 5$",
+        "decision": "Nothing of the $8$ survives, so nothing is written for it."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g4",
-    "kind": "blank",
-    "prompt": "Differentiate $-4x^{-2}$. The coefficient becomes $8$ and the index steps down: $8x^{\\square}$. The missing index is ___",
-    "answer": "-3",
-    "explain": "Down from $-2$ is $-3$. Going up to $-1$ is the slip the examiners see most often on a negative power."
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "$y = 7x^{2} + 3x - 10$. Which is $\\frac{dy}{dx}$?",
+    "options": [
+      "$14x + 3$",
+      "$14x + 3 - 10$",
+      "$14x$"
+    ],
+    "answer": "$14x + 3$",
+    "optionNotes": [
+      {
+        "option": "$14x + 3 - 10$",
+        "why": "The $-10$ has been copied down, but a constant has no slope, so it differentiates to $0$ and leaves nothing.",
+        "misconception": "fm.calc.constant-term-kept"
+      },
+      {
+        "option": "$14x$",
+        "why": "The $3x$ was treated like a constant, but it is a straight line of slope $3$, so it leaves $3$ behind.",
+        "misconception": "fm.calc.linear-term-derivative-omitted"
+      }
+    ],
+    "explain": "$7x^{2}$ gives $14x$; $3x$ is $3x^{1}$, so it leaves $3$; the $-10$ has no slope and leaves nothing. So $\\frac{dy}{dx} = 14x + 3$. This is step 2 of See it.",
+    "twin": {
+      "prompt": "$y = 4x^{2} - 9x + 6$. Which is $\\frac{dy}{dx}$?",
+      "options": [
+        "$8x - 9$",
+        "$8x - 9 + 6$",
+        "$8x$"
+      ],
+      "answer": "$8x - 9$",
+      "explain": "$4x^{2}$ gives $8x$, $-9x$ leaves $-9$, and the $6$ leaves nothing: $8x - 9$."
+    }
   },
   {
     "type": "h",
-    "text": "4. Differentiating a second time"
+    "text": "3. Negative powers: rewrite first",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "$\\frac{d^{2}y}{dx^{2}}$ means: differentiate, then differentiate the answer you got. Nothing new is needed, and you never go back to $y$.\nThe first derivative tells you the slope of the curve. The second tells you how that slope is itself changing, which is what decides whether a turning point is a maximum or a minimum later in this unit."
+    "md": "The rule only speaks about powers of $x$, so a term with $x$ under the line must come up first: $\\frac{a}{x^{n}} = ax^{-n}$. The index changes sign as it crosses; the coefficient does not. Then make the same two moves. Lowering a negative index makes it more negative: $-3$ becomes $-4$, never $-2$."
   },
   {
     "type": "figure",
-    "alt": "A card showing y = 6x to the fourth minus 3x squared, its first derivative 24x cubed minus 6x, and its second derivative 72x squared minus 6, with a note on what each one describes.",
-    "svg": "<svg viewBox='0 0 560 140' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='One curve, its first derivative and its second derivative, showing what each one is for'><title>One curve, its first derivative and its second derivative, showing what each one is for</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>y = 6x^4 - 3x^2</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>dy/dx = 24x^3 - 6x</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the slope of the curve</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 = 72x^2 - 6</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the slope of the slope</text><text x='280' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>differentiate the answer you already have; never start again from y</text></svg>",
-    "caption": "The second derivative is the slope of the slope."
+    "alt": "A number line of indices from -5 to 3. An arrow above the line goes from 3 to 2, labelled x cubed to x squared; another goes from -3 to -4, labelled x to the -3 to x to the -4. Below the line a dashed, crossed-out arrow from -3 to -2 is labelled never up to x to the -2.",
+    "svg": "<svg viewBox='0 0 400 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A number line of indices from -5 to 3: differentiating moves an index one step left, 3 to 2 and -3 to -4, never -3 to -2'><title>A number line of indices from -5 to 3: differentiating moves an index one step left, 3 to 2 and -3 to -4, never -3 to -2</title><path d='M 24 96 L 376 96' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 34.0 91 L 34.0 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='34' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−5</text><path d='M 75.5 91 L 75.5 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='75.5' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−4</text><path d='M 117.0 91 L 117.0 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='117' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−3</text><path d='M 158.5 91 L 158.5 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='158.5' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−2</text><path d='M 200.0 91 L 200.0 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='200' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−1</text><path d='M 241.5 91 L 241.5 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='241.5' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><path d='M 283.0 91 L 283.0 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='283' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 324.5 91 L 324.5 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='324.5' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 366.0 91 L 366.0 101' stroke='currentColor' stroke-width='1' fill='none'/><text x='366' y='119' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 366.0 88 Q 345.3 54.0 324.5 88' stroke='currentColor' stroke-width='1.8' fill='none'/><polygon points='324.5,89 333.5,81 326.5,78' fill='currentColor'/><text x='345.3' y='54' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>x³ → x²</text><path d='M 117.0 88 Q 96.3 54.0 75.5 88' stroke='currentColor' stroke-width='1.8' fill='none'/><polygon points='75.5,89 84.5,81 77.5,78' fill='currentColor'/><text x='96.3' y='54' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>x⁻³ → x⁻⁴</text><path d='M 117.0 130 L 158.5 130' stroke='currentColor' stroke-width='1.6' stroke-dasharray='5 4' stroke-opacity='0.7' fill='none'/><path d='M 130.8 123 L 144.8 137 M 130.8 137 L 144.8 123' stroke='currentColor' stroke-width='2' fill='none'/><text x='170.5' y='135' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>never up to x⁻²</text><text x='200' y='22' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>differentiating moves the index one step left</text></svg>",
+    "caption": "Lowering the power by one is a step to the left, whichever side of zero it starts on."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2025, Unit 1, Question 8",
+    "md": "Most candidates differentiated the single fraction correctly. The few slips were an index moved the wrong way, $x^{-2}$ written where $x^{-4}$ belonged, and a sign lost in the multiplying, $+12$ where $-12$ belonged.",
+    "source": "ccea-cer:further-maths:2025-summer:FM1:Q8"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\frac{dy}{dx}$ if $y = \\frac{7}{x^{3}}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = 7x^{-3}$",
+        "decision": "Bring $x^{3}$ up to the top line: its index changes sign, and the $7$ stays as it is.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$7 \\times (-3) = -21$, and the index goes from $-3$ to $-4$",
+        "decision": "Multiply by the power, sign and all, then lower the index by one, which makes it more negative."
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{dy}{dx} = -21x^{-4} = -\\frac{21}{x^{4}}$",
+        "decision": "Either form earns the mark; the fraction is how the mark schemes print it.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "lXOSnC959ZU",
     "title": "Differentiation and Integration basics - CCEA GCSE Further Maths",
     "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher working through the power rule against this specification, negative powers included."
+    "why": "A Northern Ireland teacher using the power rule on this specification's kinds of term, negative powers included, beside our own steps."
   },
   {
     "type": "gate",
-    "id": "g5",
-    "kind": "blank",
-    "prompt": "$y = 6x^{4} - 3x^{2}$ has $\\frac{dy}{dx} = 24x^{3} - 6x$. Differentiate once more: $\\frac{d^{2}y}{dx^{2}} = $ ___",
-    "answer": "72x^2 - 6 | 72x^{2} - 6",
-    "explain": "$72x^{2} - 6$. The $24x^{3}$ gives $72x^{2}$, and $-6x$ gives $-6$. Stopping at the first derivative is the commonest way this mark goes."
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "$y = \\frac{2}{x^{5}}$. Which is $\\frac{dy}{dx}$?",
+    "options": [
+      "$-\\frac{10}{x^{6}}$",
+      "$\\frac{10}{x^{6}}$",
+      "$-\\frac{10}{x^{4}}$"
+    ],
+    "answer": "$-\\frac{10}{x^{6}}$",
+    "optionNotes": [
+      {
+        "option": "$\\frac{10}{x^{6}}$",
+        "why": "The index is right, but $2 \\times (-5)$ is $-10$, so multiplying by the negative power makes the coefficient negative.",
+        "misconception": "fm.calc.negative-power-differentiation"
+      },
+      {
+        "option": "$-\\frac{10}{x^{4}}$",
+        "why": "The coefficient is right, but the index moved towards zero: lowering $-5$ by one gives $-6$, so the answer is over $x^{6}$.",
+        "misconception": "fm.calc.negative-power-differentiation"
+      }
+    ],
+    "explain": "Write it as $2x^{-5}$. Multiply by the power: $2 \\times (-5) = -10$. Lower the index by one: $-5$ becomes $-6$. So $\\frac{dy}{dx} = -10x^{-6} = -\\frac{10}{x^{6}}$. This is steps 1 to 3 of See it.",
+    "twin": {
+      "prompt": "$y = \\frac{4}{x^{3}}$. Which is $\\frac{dy}{dx}$?",
+      "options": [
+        "$-\\frac{12}{x^{4}}$",
+        "$\\frac{12}{x^{4}}$",
+        "$-\\frac{12}{x^{2}}$"
+      ],
+      "answer": "$-\\frac{12}{x^{4}}$",
+      "explain": "$4x^{-3}$: $4 \\times (-3) = -12$, and $-3$ becomes $-4$, so $\\frac{dy}{dx} = -\\frac{12}{x^{4}}$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "4. A number under the line too",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Multiply by the power and step the power down, on every term separately.\nSend a constant to zero, and read the derivative of $7x$ as $7$.\nRewrite $\\frac{a}{x^{n}}$ as $ax^{-n}$ before differentiating, and step the index down.\nKeep the sign right when a negative coefficient meets a negative power.\nDifferentiate twice to reach $\\frac{d^{2}y}{dx^{2}}$."
+    "md": "Every Unit 1 paper from 2021 to 2026 put a number under the line with the $x$, as in $\\frac{2}{3x^{4}}$. Only the power of $x$ comes up; the $3$ stays underneath as part of the coefficient: $\\frac{2}{3x^{4}} = \\frac{2}{3}x^{-4}$. Keep the fraction exact and multiply it by the power as usual."
+  },
+  {
+    "type": "p",
+    "md": "**Tidy what you can.** The schemes accept an untidy coefficient, but the examiners ask for simple cancelling: $\\frac{6}{8}$ written as $\\frac{3}{4}$ (2019), $\\frac{12}{3}$ as $4$ (2023)."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\frac{dy}{dx}$ if $y = 6x^{3} + \\frac{3}{4x^{2}} - 1$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{3}{4x^{2}} = \\frac{3}{4}x^{-2}$",
+        "decision": "Only $x^{2}$ crosses the line, so its index becomes $-2$; the $4$ stays in the coefficient.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$6x^{3}$ gives $18x^{2}$",
+        "decision": "The usual two moves: $6 \\times 3 = 18$, and the power drops to $2$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{3}{4}x^{-2}$ gives $-\\frac{3}{2}x^{-3}$",
+        "decision": "$\\frac{3}{4} \\times (-2) = -\\frac{6}{4}$, tidied to $-\\frac{3}{2}$; the index drops from $-2$ to $-3$.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\frac{dy}{dx} = 18x^{2} - \\frac{3}{2}x^{-3}$, or $18x^{2} - \\frac{3}{2x^{3}}$",
+        "decision": "The $-1$ is a constant, so it leaves nothing."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "$y = \\frac{4}{3x^{2}}$. Which is $\\frac{dy}{dx}$?",
+    "options": [
+      "$-\\frac{8}{3}x^{-3}$",
+      "$-24x^{-3}$",
+      "$\\frac{8}{3}x$"
+    ],
+    "answer": "$-\\frac{8}{3}x^{-3}$",
+    "optionNotes": [
+      {
+        "option": "$-24x^{-3}$",
+        "why": "The $3$ was brought up to the top line with the $x^{2}$, but only the power of $x$ crosses, so the coefficient stays $\\frac{4}{3}$."
+      },
+      {
+        "option": "$\\frac{8}{3}x$",
+        "why": "The $x^{2}$ came up without its index changing sign, so the term was treated as $\\frac{4}{3}x^{2}$ instead of $\\frac{4}{3}x^{-2}$.",
+        "misconception": "fm.calc.index-moved-to-numerator"
+      }
+    ],
+    "explain": "Only $x^{2}$ crosses the line: $\\frac{4}{3x^{2}} = \\frac{4}{3}x^{-2}$. Then $\\frac{4}{3} \\times (-2) = -\\frac{8}{3}$, and the index drops to $-3$. This is steps 1 and 3 of See it.",
+    "twin": {
+      "prompt": "$y = \\frac{5}{3x^{3}}$. Which is $\\frac{dy}{dx}$?",
+      "options": [
+        "$-5x^{-4}$",
+        "$-45x^{-4}$",
+        "$5x^{2}$"
+      ],
+      "answer": "$-5x^{-4}$",
+      "explain": "$\\frac{5}{3x^{3}} = \\frac{5}{3}x^{-3}$; $\\frac{5}{3} \\times (-3) = -5$, and $-3$ becomes $-4$: $-5x^{-4}$."
+    }
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "5. Differentiating a second time",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Question 1 of the paper, for **2 or 3 marks**: *Find $\\frac{dy}{dx}$*, or *find an expression for $\\frac{d^{2}y}{dx^{2}}$*. The first mark is one term differentiated correctly, so write something even when a term defeats you; the last is every term right at once. Stuck on a fraction? Rewrite it as a negative index and differentiate what you can. The Sheet below holds the traps."
+    "md": "$\\frac{d^{2}y}{dx^{2}}$ means: differentiate, then differentiate your answer. The first derivative is the slope of the curve; the second is how fast that slope changes, which later in this unit tells a maximum from a minimum. Start from $\\frac{dy}{dx}$, never from $y$ again. A constant in $\\frac{dy}{dx}$ disappears at this step."
+  },
+  {
+    "type": "figure",
+    "alt": "Three boxes in a column: y, the curve; dy/dx, its slope; d2y/dx2, how the slope changes. An arrow labelled differentiate joins the first two, and one labelled differentiate again joins the second and third.",
+    "svg": "<svg viewBox='0 0 400 250' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A chain of three boxes: y, then dy/dx found by differentiating y, then d2y/dx2 found by differentiating dy/dx'><title>A chain of three boxes: y, then dy/dx found by differentiating y, then d2y/dx2 found by differentiating dy/dx</title><rect x='46' y='14' width='308' height='42' rx='7' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='1.2'/><text x='200' y='41' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>y: the curve</text><rect x='46' y='104' width='308' height='42' rx='7' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.2'/><text x='200' y='131' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>dy/dx: its slope</text><rect x='46' y='194' width='308' height='42' rx='7' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='1.2'/><text x='200' y='221' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>d²y/dx²: how the slope changes</text><path d='M 120 60 L 120 92' stroke='currentColor' stroke-width='1.8' fill='none'/><polygon points='114,90 126,90 120,100' fill='currentColor'/><text x='134' y='85' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>differentiate</text><path d='M 120 150 L 120 182' stroke='currentColor' stroke-width='1.8' fill='none'/><polygon points='114,180 126,180 120,190' fill='currentColor'/><text x='134' y='175' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>differentiate again</text></svg>",
+    "caption": "Each derivative is found from the one directly above it."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$y = 3x^{4} - \\frac{2}{x}$. Find $\\frac{d^{2}y}{dx^{2}}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = 3x^{4} - 2x^{-1}$",
+        "decision": "Rewrite the fraction first, so every term is a power of $x$."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{dy}{dx} = 12x^{3} + \\frac{2}{x^{2}}$",
+        "decision": "$3 \\times 4 = 12$; and $-2 \\times (-1) = +2$, with the index dropping to $-2$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$12x^{3}$ gives $36x^{2}$",
+        "decision": "Now differentiate $\\frac{dy}{dx}$, term by term, with the same two moves.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$2x^{-2}$ gives $-4x^{-3}$, so $\\frac{d^{2}y}{dx^{2}} = 36x^{2} - \\frac{4}{x^{3}}$",
+        "decision": "$2 \\times (-2) = -4$, and the index drops from $-2$ to $-3$.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "$y = x^{5} - x^{2}$. Which is $\\frac{d^{2}y}{dx^{2}}$?",
+    "options": [
+      "$20x^{3} - 2$",
+      "$5x^{4} - 2x$",
+      "$20x^{3}$"
+    ],
+    "answer": "$20x^{3} - 2$",
+    "optionNotes": [
+      {
+        "option": "$5x^{4} - 2x$",
+        "why": "That is $\\frac{dy}{dx}$, the first derivative; the question asks you to differentiate it once more.",
+        "misconception": "fm.calc.second-derivative-stops-at-first"
+      },
+      {
+        "option": "$20x^{3}$",
+        "why": "The $-2x$ in $\\frac{dy}{dx}$ was dropped like a constant, but it is a straight line of slope $-2$, so it leaves $-2$.",
+        "misconception": "fm.calc.linear-term-derivative-omitted"
+      }
+    ],
+    "explain": "First $\\frac{dy}{dx} = 5x^{4} - 2x$. Then differentiate that, not $y$: $5x^{4}$ gives $20x^{3}$ and $-2x$ gives $-2$. So $\\frac{d^{2}y}{dx^{2}} = 20x^{3} - 2$. This is steps 2 to 4 of See it.",
+    "twin": {
+      "prompt": "$y = 2x^{6} + 3x^{2}$. Which is $\\frac{d^{2}y}{dx^{2}}$?",
+      "options": [
+        "$60x^{4} + 6$",
+        "$12x^{5} + 6x$",
+        "$60x^{4}$"
+      ],
+      "answer": "$60x^{4} + 6$",
+      "explain": "$\\frac{dy}{dx} = 12x^{5} + 6x$; differentiating that again gives $60x^{4} + 6$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "6. How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Hence.** When a later part says *Hence find* $\\frac{d^{2}y}{dx^{2}}$, differentiate your answer to the part before: 2018 and 2026 asked it that way. In 2024 the paper printed $\\frac{dy}{dx}$ itself and asked for the second derivative."
+  },
+  {
+    "type": "p",
+    "md": "**An equation linking $y$ and $\\frac{dy}{dx}$.** In 2025 the curve was a single fraction, and the next part asked for the $x$ at which $y$ equals $-2$ times $\\frac{dy}{dx}$. Put both expressions into that equation and solve it. Setting $\\frac{dy}{dx} = 0$ answers a different question."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$y = \\frac{5}{x^{3}}$. Find the value of $x$ for which $y = -3\\frac{dy}{dx}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = 5x^{-3}$, so $\\frac{dy}{dx} = -15x^{-4}$",
+        "decision": "Differentiate first: $5 \\times (-3) = -15$, and the index drops to $-4$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$-3 \\times \\left(-\\frac{15}{x^{4}}\\right) = \\frac{45}{x^{4}}$, so $\\frac{5}{x^{3}} = \\frac{45}{x^{4}}$",
+        "decision": "Replace $y$ and $\\frac{dy}{dx}$ by their expressions. The two negatives make the right-hand side positive.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$5x = 45$",
+        "decision": "Multiply both sides by $x^{4}$: the left keeps one $x$, and the right loses its fraction."
+      },
+      {
+        "n": 4,
+        "working": "$x = 9$",
+        "decision": "Check it: at $x = 9$, $y = \\frac{5}{729}$, and $-3\\frac{dy}{dx} = \\frac{45}{6561}$, which is $\\frac{5}{729}$ too.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "number",
+    "prompt": "$y = \\frac{2}{x^{2}}$. Find the value of $x$ for which $y = -5\\frac{dy}{dx}$.",
+    "answer": "10",
+    "explain": "$\\frac{dy}{dx} = -\\frac{4}{x^{3}}$, so the equation is $\\frac{2}{x^{2}} = \\frac{20}{x^{3}}$. Multiply both sides by $x^{3}$: $2x = 20$, so $x = 10$. This is steps 2 to 4 of See it.",
+    "twin": {
+      "prompt": "$y = \\frac{4}{x}$. Find the value of $x$ for which $y = -5\\frac{dy}{dx}$.",
+      "answer": "5",
+      "explain": "$\\frac{dy}{dx} = -\\frac{4}{x^{2}}$, so $\\frac{4}{x} = \\frac{20}{x^{2}}$, giving $4x = 20$ and $x = 5$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "Multiply by the power and lower the power by one, term by term.\nSend a constant to $0$, and leave $k$ behind from $kx$.\nRewrite $\\frac{a}{bx^{n}}$ as $\\frac{a}{b}x^{-n}$ before you differentiate.\nLower a negative index too: $-3$ becomes $-4$.\nDifferentiate $\\frac{dy}{dx}$ again for $\\frac{d^{2}y}{dx^{2}}$."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "It is usually the opening question: *Find* $\\frac{dy}{dx}$ for $2$ or $3$ marks, sometimes followed by *Hence find* $\\frac{d^{2}y}{dx^{2}}$ for $2$ more. Each term right usually earns its own mark, so write every term you can. Most papers include a fraction with $x$ underneath: rewrite it before anything else. The Sheet below holds the traps."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.differentiation-integer-powers.01"
+    "promptId": "rp.fm.u1.differentiation-integer-powers.06"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.differentiation-integer-powers.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.differentiation-integer-powers.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.differentiation-integer-powers.05"
+    "promptId": "rp.fm.u1.differentiation-integer-powers.03"
   }
 ]
