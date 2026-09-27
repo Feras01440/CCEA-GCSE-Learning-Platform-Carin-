@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { EXPLAIN_MAX, REASON_WORDS, SEE_STEPS, markCodes, optionByPosition, seeBlockProblems, seeItFindings, warmUp } from "../../../scripts/qa/see-it.mjs";
+import { EXPLAIN_MAX, REASON_WORDS, SEE_STEPS, markCodes, seeBlockProblems, seeItFindings, warmUp } from "../../../scripts/qa/see-it.mjs";
+import { positionalWording } from "@/lib/gate-order";
 
 /**
  * Lesson structure v3 (the teach-first case, docs/plan/review/2026-09-24-teach-first-case.md §8.4, approved by the owner
@@ -217,42 +218,68 @@ describe("see-it: the case's own v3 deck (§8.5, fm1/algebraic-fractions-simplif
   });
 });
 
-describe("see-it: a gate's explanation never names an option by its position (the options are shuffled)", () => {
-  it("finds the positional names the corpus uses", () => {
-    for (const s of [
-      "The second option changed the sign of the first term only.",
-      "The middle option prices the soup at £52.10.",
-      "Only the first answer has both.",
-      "and the last answer makes the magnet stronger.",
-      "Option B forgets the minus sign.",
-      "The option above is the tangent.",
-      "The third option runs the change backwards.",
-    ])
-      expect(optionByPosition(s), s).not.toBeNull();
-  });
-
-  it("leaves the same words alone where they name no option", () => {
-    for (const s of [
-      "The fraction you divide by turns over; turning the first one over instead gives the reciprocal.",
-      "so find the denominator rule and write one above the other.",
-      "The four advantages each answer a problem with animal insulin.",
-      "Each way of making the first choice opens a whole fresh set of second choices.",
-      "the single step that separates the top answers from the rest.",
-      "Dividing by 90 instead would answer a different question.",
-      "the bottom limit is the left one and the top limit is the right one.",
-      "Stopping at x² keeps the method marks and loses the last one.",
-    ])
-      expect(optionByPosition(s), s).toBeNull();
-  });
-
-  it("checks choice gates and their twins, never a typed gate", () => {
+/**
+ * A gate's explanation never names an option by its place (the options are shuffled). The reader is the app's own,
+ * src/lib/gate-order.ts positionalWording, passed in by the caller (lesson-v2.mjs loads it through tsx), so the lesson
+ * lint, the build's GATE warning and the app's pinning agree on every gate (the lead, 27 Sep 2026: "do not copy the
+ * regex"). Its wording rules are gate-order.test.ts's to test; here, that it is used and how its finding reads.
+ */
+describe("see-it: a gate's explanation never names an option by its place (the options are shuffled)", () => {
+  it("reports the sentence gate-order's reader finds, for choice gates and their twins, never a typed gate", () => {
     const named = gate("g1", { explain: "Factorise first. The second option stops one line short." });
     const twin = gate("g2", { twin: { prompt: "Again?", options: ["C", "D"], answer: "C", explain: "The first option is the tangent." } });
-    const typed = { type: "gate", id: "g3", kind: "number", prompt: "How many?", answer: "2", explain: "The second answer, x = −3, is rejected." };
-    const r = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), named, h("2. Next", "variant"), p("Case."), see(), twin, h("3. Last", "variant"), p("Case."), see(), typed), { codes: FM });
+    const typed = { type: "gate", id: "g3", kind: "number", prompt: "How many?", answer: "7", explain: "The second answer, x = −3, is rejected." };
+    const blocks = note(h("1. Idea", "idea"), p("Idea."), see(), named, h("2. Next", "variant"), p("Case."), see(), twin, h("3. Last", "variant"), p("Case."), see(), typed);
+    const r = seeItFindings(blocks, { codes: FM, positional: positionalWording });
     expect(r.findings.map((f: { kind: string; detail: string }) => [f.kind, f.detail])).toEqual([
-      ["option-position", 'gate g1\'s explanation names an option by its position ("second option"); the options are shuffled, so name its content or point at the step'],
-      ["option-position", 'gate g2\'s twin explanation names an option by its position ("first option"); the options are shuffled, so name its content or point at the step'],
+      ["option-position", 'gate g1: its explanation names an option by its place ("The second option stops one line short."): the gate is then shown in its written order, so its answer stays where it was written; name the option by what it says'],
+      ["option-position", 'gate g2: its twin\'s explanation names an option by its place ("The first option is the tangent."): that is true only in the order the twin was written; name the option by what it says'],
     ]);
+  });
+
+  it("reads nothing when no reader is given (a caller that cannot load gate-order)", () => {
+    const r = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), see(), gate("g1", { explain: "The second option stops short." })), { codes: FM });
+    expect(r.findings).toEqual([]);
+  });
+});
+
+/**
+ * A Your turn whose answer is printed in its own section's See it can be answered by copying the card before it (the
+ * lead, 27 Sep 2026: the ruling is that it re-asks on new numbers, as a twin does). Warning only. Compared after
+ * normalising case, spaces, LaTeX delimiters and trailing punctuation; a number counts only as a whole result (a whole
+ * line, a side of an equation or the final answer), so the 5 of "(x + 5)" is not the answer 5.
+ */
+describe("see-it: a Your turn answer printed in its section's See it", () => {
+  const worked = (lines: string[], extra: Block = {}) => ({ type: "see", stem: "S", steps: lines.map((working, i) => ({ n: i + 1, working, decision: `R${i + 1}.` })), ...extra });
+
+  it("flags an expression the See it prints, in any spacing or delimiters, and names the step", () => {
+    const g = gate("g1", { options: ["$(x+3)(x-3)$", "$(x-3)^2$"], answer: "$(x+3)(x-3)$" });
+    const r = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), worked(["$x^2 - 9 = (x + 3)(x - 3)$", "$\\dfrac{x-3}{x+2}$"]), g), { codes: FM });
+    expect(r.findings.map((f: { kind: string; detail: string }) => [f.kind, f.detail])).toEqual([
+      ["answer-shown", 'gate g1\'s answer "$(x+3)(x-3)$" is printed in its section\'s See it (step 1): she can copy it rather than do it; ask it on new numbers, as a twin does'],
+    ]);
+  });
+
+  it("flags a number only as a whole result: a line, a side of an equation or the final answer", () => {
+    const five = { type: "gate", id: "g1", kind: "number", prompt: "x?", answer: "5", explain: "E." };
+    const side = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), worked(["$2x = 10$", "$x = 5$"]), five), { codes: FM });
+    expect(side.findings.map((f: { kind: string }) => f.kind)).toEqual(["answer-shown"]);
+    const final = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), worked(["$2x = 10$", "divide by 2"], { finalAnswer: "5." }), five), { codes: FM });
+    expect(final.findings.map((f: { kind: string; detail: string }) => f.detail)).toEqual(['gate g1\'s answer "5" is printed in its section\'s See it (the final answer): she can copy it rather than do it; ask it on new numbers, as a twin does']);
+    const inside = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), worked(["$x^2 + 5x + 6 = (x + 2)(x + 3)$", "$15 = 3 \\times 5$ is not it"]), five), { codes: FM });
+    expect(inside.findings).toEqual([]);
+    // a value with its unit is not found inside a longer number (the real case: 4 m/s against 8.4 m/s)
+    const speed = { type: "gate", id: "g12", kind: "choice", prompt: "Average speed?", options: ["$4$ m/s", "$6.25$ m/s"], answer: "$4$ m/s", explain: "E." };
+    const decimal = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), worked(["Total: $420$ m in $50$ s", "Average speed $= \\dfrac{420}{50} = 8.4$ m/s"]), speed), { codes: FM });
+    expect(decimal.findings).toEqual([]);
+  });
+
+  it("reads each alternative of a blank gate, and the steps of a named worked example; a See it in another section does not count", () => {
+    const blank = { type: "gate", id: "g2", kind: "blank", prompt: "The name?", answer: "difference of two squares | two squares", explain: "E." };
+    const bundle = { workedExamples: [{ id: "we.b", stem: "S", steps: [{ n: 1, working: "It is a Difference of Two Squares.", decision: "R." }, { n: 2, working: "$(a+b)(a-b)$", decision: "R." }] }] };
+    const r = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), { type: "see", workedExample: "we.b" }, blank), { codes: FM, bundle });
+    expect(r.findings.map((f: { kind: string; detail: string }) => f.detail)).toEqual(['gate g2\'s answer "difference of two squares" is printed in its section\'s See it (step 1): she can copy it rather than do it; ask it on new numbers, as a twin does']);
+    const elsewhere = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), worked(["$x = 5$", "$y = 2$"]), gate("g0"), h("2. Next", "variant"), p("Case."), worked(["$y = 7$", "$z = 1$"]), { type: "gate", id: "g1", kind: "number", prompt: "x?", answer: "5", explain: "E." }), { codes: FM });
+    expect(elsewhere.findings.filter((f: { kind: string }) => f.kind === "answer-shown")).toEqual([]);
   });
 });

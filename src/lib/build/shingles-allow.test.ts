@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { allowEntries, allowedBy, verdict, words } from "../../../scripts/qa/shingles-allow.mjs";
+import { allowEntries, allowedBy, bookWords, pageOfWord, textbookPages, verdict, words } from "../../../scripts/qa/shingles-allow.mjs";
 
 /**
  * scripts/qa/shingles.mjs's verdict on a run it shares with the corpus (QA fixer, 25 Sep 2026): the M4
@@ -44,5 +44,39 @@ describe("an allow-listed theorem statement", () => {
   it("matches whole words only", () => {
     // "ngles in the same segment are equal" is not a run of the statement's words
     expect(allowedBy("ngles in the same segment are equal", allow)).toBeNull();
+  });
+
+  /**
+   * The CCEA textbooks (docs/sources/textbooks/*.txt, the lead's item 12, 27 Sep 2026): no author's wording shares a run
+   * with a textbook sentence. A shared run is a textbook-copy breach, unless it is a named statement on the allow-list
+   * or the board's stock instruction language (three papers and command material), which a textbook quotes too.
+   */
+  it("a run shared with a textbook is a breach, unless it is an allowed statement or stock instruction language", () => {
+    const book = { papers: 0, schemes: 0, reports: 0, textbooks: 1 };
+    expect(verdict(book, null, () => true)).toBe("textbook-copy");
+    expect(verdict({ ...book, papers: 2 }, null, () => true)).toBe("textbook-copy");
+    expect(verdict({ ...book, papers: 3 }, null, () => false)).toBe("textbook-copy");
+    expect(verdict({ ...book, papers: 3 }, null, () => true)).toBe("stock");
+    expect(verdict(book, { statement: "s", reason: "r" }, () => false)).toBe("allowed");
+    // a mark scheme or a report outranks the book
+    expect(verdict({ ...book, schemes: 1 }, null, () => true)).toBe("scheme-or-report");
+    // no textbook count (the call of before 27 Sep) keeps every verdict it had
+    expect(verdict({ papers: 1, schemes: 0, reports: 0 }, null, () => true)).toBe("paper-copy");
+  });
+});
+
+describe("textbook pages", () => {
+  it("reads the PDF page from the form feeds and the printed page from the page's last line", () => {
+    const text = "Title\nContents  1\n\fGCSE eGuide\nMotion in a straight line\nSpeed is distance over time.\n2\n\fGCSE eGuide\nA figure\n";
+    const pages = textbookPages(text);
+    expect(pages.map((p) => [p.pdfPage, p.printed])).toEqual([
+      [1, null],
+      [2, "2"],
+      [3, null],
+    ]);
+    // the cover (page 1, under 40 words) and the running "eGuide" headers are not the book's text
+    expect(bookWords(text)).toEqual(words("Motion in a straight line Speed is distance over time. 2 A figure"));
+    expect(pageOfWord(pages, 0)).toEqual({ pdfPage: 2, printed: "2" });
+    expect(pageOfWord(pages, words("Motion in a straight line Speed is distance over time. 2").length)).toEqual({ pdfPage: 3, printed: null });
   });
 });

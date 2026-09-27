@@ -15,8 +15,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TopicBundle, type VerificationLog } from "../src/lib/content/schema.ts";
 import { lintKeyWords } from "../src/components/items/keyword-lint.ts";
-import { figureLeakWarnings, lintContent, lintNoteBlocks } from "../src/components/items/content-lint.ts";
+import { figureLeakWarnings, lintContent, lintNoteBlocks, markingWarnings, noteBlockWarnings, sizeWarnings } from "../src/components/items/content-lint.ts";
 import { lessonReadiness } from "../src/lib/slides/readiness.ts";
+import { publicVerification } from "../src/lib/build/public-verification.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKS = path.join(ROOT, "packs");
@@ -73,6 +74,9 @@ const manifest: { generatedAt: string; topics: ManifestTopic[]; problems: string
 const written = new Set<string>();
 const keyWordWarnings = { hard: 0, soft: 0 };
 let figureWarnings = 0;
+let markingWarningCount = 0;
+let gateWarningCount = 0;
+let sizeWarningCount = 0;
 
 for (const file of files) {
   const text = fs.readFileSync(file, "utf8");
@@ -117,6 +121,13 @@ for (const file of files) {
   for (const w of kw.soft) console.warn("KEYWORDS", w);
   keyWordWarnings.hard += kw.hard.length;
   keyWordWarnings.soft += kw.soft.length;
+  // Marking that the exam would not give (the Fable judge's rulings of 27 Sep 2026: a "show that" part with a value spec,
+  // unitRequired on a maths part, a dependent part with no follow-through relation, a form-task common error paying full
+  // marks): warned, never fatal (content-lint.ts markingWarnings).
+  for (const w of markingWarnings(raw, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"))) {
+    console.warn("MARKING", w);
+    markingWarningCount += 1;
+  }
   const logs = b.verification;
   const keep = <T extends { verification?: string; id: string }>(items: T[] | undefined) =>
     (items ?? []).filter((it) => SHIPPABLE.has(statusOf(logs, it.verification, it.id)));
@@ -132,20 +143,35 @@ for (const file of files) {
     manifest.problems.push(...noteDefects);
     continue;
   }
+  // A choice gate whose explanation names an option by its place is shown in its written order, answer first: warned,
+  // never fatal (content-lint.ts noteBlockWarnings, reading src/lib/gate-order.ts positionalWording).
+  for (const w of noteBlockWarnings(noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"), raw)) {
+    console.warn("GATE", w);
+    gateWarningCount += 1;
+  }
+  // Sizes a phone should not have to download (content-lint.ts sizeWarnings): warned, never fatal.
+  for (const w of sizeWarnings(raw, noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"))) {
+    console.warn("SIZE", w);
+    sizeWarningCount += 1;
+  }
   const noteOk = b.note ? SHIPPABLE.has(statusOf(logs, b.note.verification)) : false;
 
+  const questions = keep(b.questions);
   const shipped = {
     topic: b.topic,
     note: noteOk ? b.note : null,
     noteBlocks: noteOk ? noteBlocks : null,
     workedExamples: keep(b.workedExamples),
     diagnostics: keep(b.diagnostics),
-    questions: keep(b.questions),
+    questions,
     findTheMistake: keep(b.findTheMistake),
     prompts: keep(b.prompts),
     insight: b.insight ?? null,
     sets: b.sets ?? [],
-    verification: logs,
+    // The public copy of the logs (the lead's item 18, 27 Sep 2026): the note's own log and every exam-style question's
+    // log whole, every other log trimmed to its id, item, version, status and withdrawn records (the packs keep them
+    // whole). src/lib/build/public-verification.ts; its test guards readiness, the withdrawn records and the exam logs.
+    verification: publicVerification({ note: b.note, questions, verification: logs }),
   };
 
   const counts = {
@@ -195,7 +221,7 @@ function listFiles(dir: string, out: string[] = []): string[] {
 for (const stale of listFiles(OUT_PUBLIC).filter((p) => !written.has(path.resolve(p)))) fs.rmSync(stale, { force: true });
 console.log(
   `\n${manifest.topics.length} topic bundle(s) published, ${manifest.problems.length} problem(s), ${keyWordWarnings.hard} key-word warning(s)` +
-    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
+    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}${markingWarningCount ? `, ${markingWarningCount} marking warning(s) (MARKING above)` : ""}${gateWarningCount ? `, ${gateWarningCount} gate warning(s) (GATE above)` : ""}${sizeWarningCount ? `, ${sizeWarningCount} size warning(s) (SIZE above)` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
 );
 // An invalid bundle is skipped (never shipped) and reported. `--strict` (used by `npm run content:check`
 // and by authors) turns problems into a failing exit code; the app build keeps publishing the valid bundles.
