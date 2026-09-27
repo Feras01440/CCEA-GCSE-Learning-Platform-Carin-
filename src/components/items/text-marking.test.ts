@@ -374,3 +374,135 @@ describe("keywordsPresent: subscripts and degrees in TeX", () => {
     expect(keywordsPresent(String.raw`A rotation of $180^{\circ}$ about $C$`, ["180"]).all).toBe(true);
   });
 });
+
+// The B2 D sweeps, the C2 E review and the B2 D reviewer (25 Sep 2026): text marking, one describe per rule.
+const ks = (groups: Array<string[] | { any: string[]; reject?: string[] }>, listingRule = false): TextSpec => ({
+  kind: "text",
+  accepted: [],
+  keyWords: groups.map((g) => (Array.isArray(g) ? { any: g, marks: 1 } : { any: g.any, marks: 1, reject: g.reject })),
+  listingRule,
+});
+
+describe("a key word inside a negation earns nothing; a negation that is the point does", () => {
+  test.each([
+    [["human gene"], "they do not have the human gene"],
+    [["pure"], "it does not need to be pure"],
+    [["continuous"], "it is not continuous"],
+    [["extinct"], "it will not become extinct"],
+    [["increase"], "it does not increase"],
+    [["complementary"], "the antibody is not complementary to the antigen"],
+    [["resistant"], "the non-resistant bacteria"],
+    [["survive"], "they don't survive"],
+  ])("%s is not earned by %s", (keys, answer) => {
+    expect(markText(answer, ks([keys])).marksAwarded).toBe(0);
+  });
+  test("the clause the negation sits in is the scope: another clause keeps its mark", () => {
+    const r = markText("discontinuous because it is not in separate groups", ks([["discontinuous"], ["separate groups"]]));
+    expect(r.marksAwarded).toBe(1);
+    expect(markText("It is not continuous, so it is discontinuous", ks([["discontinuous"]])).marksAwarded).toBe(1);
+  });
+  test("a key word that is itself a negation is earned as written", () => {
+    expect(markText("the ray does not change direction", ks([["does not change direction"]])).marksAwarded).toBe(1);
+    expect(markText("the current no longer flows", ks([["no longer flows"]])).marksAwarded).toBe(1);
+    expect(markText("the non-resistant bacteria die", ks([["non resistant bacteria die"]])).marksAwarded).toBe(1);
+  });
+  // The QA fixer (25 Sep 2026): a negation governs its own verb phrase, up to "and", "which", a comma or a full stop,
+  // and not a prepositional phrase after its word. Right answers had lost their second idea.
+  test.each([
+    "so light isn't obstructed and can reach the chloroplasts",
+    "without being blocked and reaches the chloroplasts",
+  ])("the idea after 'and' is not negated: %s", (answer) => {
+    const s = ks([["not obstructed", "without being blocked"], ["chloroplast"]]);
+    expect(markText(answer, s).marksAwarded).toBe(2);
+  });
+  test("a prepositional phrase after the negated word is not negated", () => {
+    expect(markText("so that no light is blocked on its way to the palisade cells", ks([["no light is blocked"], ["palisade cells"]])).marksAwarded).toBe(2);
+    expect(markText("the substrate is not complementary to the active site", ks([["not complementary"], ["active site"]])).marksAwarded).toBe(2);
+    expect(markText("the antibody is not complementary to the antigen", ks([["complementary"]])).marksAwarded).toBe(0);
+  });
+  test("a reject joined to a right clause by 'and' cancels (p2 conductors q0001(c), the P2 C reversal fixture)", () => {
+    const s = ks([
+      { any: ["copper has free electrons", "has free electrons"], reject: ["rubber has free electrons"] },
+      { any: ["rubber has no free electrons"], reject: ["rubber has no electrons"] },
+    ]);
+    expect(markText("Copper has no free electrons and the rubber has free electrons", s).marksAwarded).toBe(0);
+    expect(markText("Copper has free electrons and rubber has no free electrons", s).marksAwarded).toBe(2);
+  });
+  test("a reject inside a negation does not fire (NS q0005)", () => {
+    const s = ks([{ any: ["resistant bacteria survive"], reject: ["non resistant bacteria survived"] }]);
+    expect(markText("None of the non-resistant bacteria survived; the resistant bacteria survived", s).marksAwarded).toBe(1);
+  });
+});
+
+describe("one idea earns one group", () => {
+  test("a key word inside one already paid is the same idea said again (NS q0005)", () => {
+    const s = ks([["resistant bacteria survived", "survived"], ["resistant bacteria survived", "survived"]]);
+    expect(markText("The resistant bacteria survived. They survived.", s).marksAwarded).toBe(1);
+  });
+  test("synonyms written as one entry with | are one idea (GE q0010)", () => {
+    const s = ks([["cheaper|costs less", "pure", "mass produced"], ["cheaper|costs less", "pure", "mass produced"]]);
+    expect(markText("it's cheaper and it costs less", s).marksAwarded).toBe(1);
+    expect(markText("it's cheaper and it is pure", s).marksAwarded).toBe(2);
+  });
+});
+
+describe("the listing rule: letters, slashes, and only wrong extras cost", () => {
+  const letters = ks([["B"], ["D"]], true);
+  test("space-separated letters are items (NS q0002)", () => {
+    expect(markText("B D E A C", letters).marksAwarded).toBe(0);
+    expect(markText("B D E", letters).marksAwarded).toBe(1);
+    expect(markText("B D", letters).marksAwarded).toBe(2);
+    expect(markText("B/D", letters).marksAwarded).toBe(2);
+    expect(markText("B+D", letters).marksAwarded).toBe(2);
+  });
+  test("a right alternative is not an extra answer (IM q0001)", () => {
+    expect(markText("trap and filter", ks([["trap", "filter"]], true)).marksAwarded).toBe(1);
+  });
+  test("a slash between words reads as two words (GE q0018)", () => {
+    expect(markText("Bacteria reproduce/multiply", ks([["multiply"]])).marksAwarded).toBe(1);
+  });
+});
+
+describe("a hedge: long alternatives, and a reason after it", () => {
+  test("NS q0005: a long alternative with a named wrong answer cancels", () => {
+    const s = ks([["mutation"]]);
+    expect(markText("Some bacteria had a mutation or became immune", s, { wrongAnswers: [/immune/i] }).marksAwarded).toBe(0);
+  });
+  test("VA q0010(c): the hedge before 'because' cancels its own mark, the reason keeps its own", () => {
+    const s = ks([["histogram"], ["continuous"]]);
+    expect(markText("histogram or bar chart because it is continuous", s, { wrongAnswers: [/bar chart/i] }).marksAwarded).toBe(1);
+  });
+});
+
+describe("inflections and spellings", () => {
+  test("each word of a multi-word key word takes its inflections; a double s is not a plural", () => {
+    expect(markText("they passes the gene on", ks([["pass the gene"]])).marksAwarded).toBe(1);
+    expect(markText("they passed the gene on", ks([["pass the gene"]])).marksAwarded).toBe(1);
+    expect(markText("the resistant bacteria surviving", ks([["resistant bacteria survive"]])).marksAwarded).toBe(1);
+  });
+  test("contractions and small numbers in words", () => {
+    expect(markText("it wouldn't work", ks([["would not"]])).marksAwarded).toBe(1);
+    expect(markText("the insulin isn't pure", ks([["is not pure"]])).marksAwarded).toBe(1);
+    expect(markText("the straight DNA has two ends", ks([["2 ends"]])).marksAwarded).toBe(1);
+    expect(markText("the straight DNA has 2 ends", ks([["two ends"]])).marksAwarded).toBe(1);
+  });
+});
+
+// The FM2 review (27 Sep 2026): "M = 650 or 651" was paid 3/3 on a show-that part. A value no key word or model
+// answer states, offered beside the right one, is a hedge, and cancels the point it sits with.
+describe("a second value beside the right one cancels its point", () => {
+  const s: TextSpec = {
+    kind: "text",
+    accepted: ["Taking up as positive, 7020 - 10M = 0.8M, so 7020 = 10.8M and M = 650."],
+    keyWords: [
+      { any: ["7020 - 10m"], marks: 1 },
+      { any: ["10.8m"], marks: 1 },
+      { any: ["m = 650", "650 kg"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  test("650 or 651 loses the value's point; 650 alone keeps it", () => {
+    expect(markText("7020 - 10M = 0.8M, so 10.8M = 7020 and M = 650 or 651", s).marksAwarded).toBe(2);
+    expect(markText("7020 - 10M = 0.8M, so 10.8M = 7020 and M = 650", s).marksAwarded).toBe(3);
+  });
+});

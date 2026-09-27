@@ -19,10 +19,24 @@ function superscriptDigits(run: string): string {
   return [...run].map((c) => String(SUPERSCRIPT_DIGITS.indexOf(c))).join("");
 }
 
+/** Small whole numbers in words, as digits: "two ends" and "2 ends" are one phrase (B2 D, 25 Sep 2026). */
+const TEXT_NUMBERS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+const TEXT_NUMBER_RE = new RegExp(`\\b(${TEXT_NUMBERS.join("|")})\\b`, "g");
+
 export function normaliseText(s: string): string {
   return s
+    // Capital letters joined by a plus or a slash are a list of letters ("B+D", "B/D"), not a sum or a fraction.
+    .replace(/(?<=\b[A-Z])\s*[+/]\s*(?=[A-Z]\b)/g, " ")
     .toLowerCase()
+    // A contraction is its two words: "wouldn't" is "would not", "can't" "can not" (B2 D, 25 Sep 2026).
+    .replace(/\bwon['’]t\b/g, "will not")
+    .replace(/\bcan['’]t\b/g, "can not")
+    .replace(/\bshan['’]t\b/g, "shall not")
+    .replace(/n['’]t\b/g, " not")
     .replace(/[‘’‚‛']/g, "")
+    // A slash between two words is two words ("reproduce/multiply"); "x/y" between letters stays algebra.
+    .replace(/(?<=[a-z]{2})\s*\/\s*(?=[a-z]{2})/g, " ")
+    .replace(TEXT_NUMBER_RE, (w) => String(TEXT_NUMBERS.indexOf(w)))
     .replace(/[“”„‟]/g, '"')
     .replace(/[−–—]/g, "-")
     // An ion charge written with superscripts is the plain spelling ("Cu²⁺" = "cu2+", "SO₄²⁻" = "so42-", "Na⁺" = "na+"),
@@ -83,7 +97,13 @@ const INFLECTIONS = new Set([
  * "increase" ~ "increasing"), which is how authors write key words and how learners write answers. Words of three
  * letters or fewer, and anything that is not plain letters, stay exact.
  */
-export function phraseIn(haystack: string, needle: string): boolean {
+/**
+ * The endings a reject word may carry: its verb forms only. A reject is a wrong answer named in the scheme, and a
+ * derived word is a different word ("an atom" must not cancel "share an atomic number"; c1 isotopes, 25 Sep 2026).
+ */
+const REJECT_INFLECTIONS: ReadonlySet<string> = new Set(["s", "es", "d", "ed", "ing"]);
+
+export function phraseIn(haystack: string, needle: string, inflections: ReadonlySet<string> = INFLECTIONS): boolean {
   if (!needle) return false;
   const h = ` ${haystack} `;
   if (h.includes(` ${needle} `)) return true;
@@ -91,18 +111,25 @@ export function phraseIn(haystack: string, needle: string): boolean {
   // operators ignored, so "(2x-1)(x+3) = 30" and "2x^2+5x-33 = 0" earn it however she spaces them.
   if (isAlgebraic(needle) && ` ${compactOperators(haystack)} `.includes(` ${compactOperators(needle)} `)) return true;
   // Each word of the key word may take or drop a trailing s ("rabbit number" ~ "rabbits number", "cell wall" ~ "cell walls").
+  const endings = `(?:${[...inflections].sort((a, b) => b.length - a.length).join("|")})?`;
   const loose = needle
     .split(" ")
     .map((w) => {
-      const stem = w.replace(/(es|s)$/, "");
-      return stem.length >= 3 && /^[a-z]+$/.test(w) ? `${escapeRegExp(stem)}(?:es|s)?` : escapeRegExp(w);
+      if (!/^[a-z]+$/.test(w)) return escapeRegExp(w);
+      // "pass" is not the plural of "pas": a double s stays; a longer word takes any of its endings ("pass the gene" ~
+      // "passes the gene", "survive" ~ "surviving"; B2 D, 25 Sep 2026: only a trailing s was allowed on a phrase).
+      const stem = w.endsWith("ss") ? w : w.replace(/(es|s)$/, "");
+      if (stem.length < 3) return escapeRegExp(w);
+      if (stem.length < STEM_MIN_LETTERS) return `${escapeRegExp(stem)}(?:es|s)?`;
+      const stems = stem.endsWith("e") && stem.length - 1 >= STEM_MIN_LETTERS ? [stem, stem.slice(0, -1)] : [stem];
+      return `(?:${stems.map(escapeRegExp).join("|")})${endings}`;
     })
     .join(" ");
   if (new RegExp(`(^| )${loose}( |$)`).test(h)) return true;
   if (needle.length < STEM_MIN_LETTERS || !/^[a-z]+$/.test(needle)) return false;
   // "increase" ~ "increasing", "leave" ~ "leaving": a final e is dropped before -ing / -ed / -ation.
   const stems = needle.endsWith("e") && needle.length - 1 >= STEM_MIN_LETTERS ? [needle, needle.slice(0, -1)] : [needle];
-  return haystack.split(" ").some((w) => stems.some((s) => w.startsWith(s) && INFLECTIONS.has(w.slice(s.length))));
+  return haystack.split(" ").some((w) => stems.some((s) => w.startsWith(s) && inflections.has(w.slice(s.length))));
 }
 
 export interface KeywordCheck {
@@ -175,6 +202,17 @@ const LIST_ITEM_MAX_WORDS = 4;
 const CLAUSE_OPENER = /^(?:which|that|who|whose|where|when|while|because|since|so|then|as|but|if|by|with|without|for|from|to|in|on|at|of|into|through|via|using|giving|making|meaning|causing|captured|carried|stored|passed|released|absorbed|produced|formed|made|found|taken|given|left|held|kept|not|no)\b/i;
 
 export function countListedItems(raw: string): number {
+  return listedItems(raw).length;
+}
+
+/**
+ * The listed items of a list-shaped answer (see countListedItems); an answer that is prose is one item. Single capital
+ * letters separated by spaces, commas, slashes or plus signs are each an item ("B D E"; B2 D, 25 Sep 2026: counted as
+ * one).
+ */
+export function listedItems(raw: string): string[] {
+  const t = raw.trim();
+  if (/^[A-Z](?:\s*[\s,/+&]\s*[A-Z])+$/.test(t)) return t.split(/[\s,/+&]+/).filter(Boolean);
   // A comma inside brackets is part of the item ("(4, 0) and (1, 0)" is two coordinates, not four numbers).
   const masked = raw.replace(/\([^()]*\)/g, (m) => m.replace(/,/g, "\u0000"));
   const segments = masked
@@ -183,14 +221,14 @@ export function countListedItems(raw: string): number {
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
   // A long segment anywhere makes the whole answer prose; a short clause that continues the previous one is not an item.
-  if (segments.some((s) => s.split(/\s+/).length > LIST_ITEM_MAX_WORDS)) return 1;
+  if (segments.some((s) => s.split(/\s+/).length > LIST_ITEM_MAX_WORDS)) return [t];
   const items = segments.filter((p, i) => i === 0 || !CLAUSE_OPENER.test(p));
   // A name and a formula side by side are one answer (C2 D F04, 24 Sep 2026: "ethanol, C2H5OH" was two). CCEA's general
   // marking instructions (C2 Higher MS Summer 2021, "Both name and formula provided by candidate"): where a name is
   // asked for the formula beside it is ignored, and where a formula is asked for the name beside it is ignored. Only a
   // pair is read so: in a longer list a formula may be one more answer.
-  if (items.length === 2 && items.filter(isFormula).length === 1) return 1;
-  return items.length;
+  if (items.length === 2 && items.filter(isFormula).length === 1) return [t];
+  return items;
 }
 
 /**
@@ -254,12 +292,14 @@ function hydrocarbonIn(raw: string, keyWord: string): boolean {
  */
 function hedges(raw: string): string[][] {
   const out: string[][] = [];
-  for (const clause of raw.split(/\n|;|,/)) {
+  // A long alternative is still an alternative ("had a mutation or became immune"), and a reason after "because" is a
+  // clause of its own (B2 D, 25 Sep 2026). Only a named wrong answer among them costs anything (markText).
+  for (const clause of raw.split(/\n|;|,|\b(?:because|since|so|as)\b/i)) {
     const parts = clause
       .split(/\d/.test(clause) ? /\s+or\s+/i : /\s+or\s+|\s*\/\s*/i)
       .map((p) => p.trim())
       .filter((p) => p.length > 0);
-    if (parts.length >= 2 && parts.every((p) => p.split(/\s+/).length <= LIST_ITEM_MAX_WORDS)) out.push(parts);
+    if (parts.length >= 2) out.push(parts);
   }
   return out;
 }
@@ -275,12 +315,84 @@ export interface TextMarkResult {
   feedback: string;
 }
 
+/** Words that negate what follows them in their clause. */
+const NEGATION = /^(?:not|no|never|none|nor|neither|without|non|cannot)$/;
+
+/** The clauses of an answer: a negation governs only its own clause ("it is not continuous, so it is discontinuous"). */
+function clausesOf(raw: string): string[] {
+  return raw.split(/[.;:!?,\n]|\b(?:but|because|so|although|whereas|however|while|though|since|therefore|and then)\b/i).filter((c) => c.trim().length > 0);
+}
+
+/**
+ * Words that end a negation's reach inside a clause: a coordinating word starts a new verb phrase ("light isn't
+ * obstructed and can reach the chloroplasts"; "copper has no free electrons and the rubber has free electrons").
+ */
+const NEGATION_ENDS = /^(?:and|which|who|whom|whose|where|when|then|also|yet|nor)$/;
+/**
+ * A preposition before a determiner starts a phrase the negation is not about: "not complementary to the active
+ * site" negates "complementary", not "the active site"; "no light is blocked on its way to the palisade cells".
+ * "Not need to be pure" is an infinitive, not a phrase, and stays negated.
+ */
+const PREPOSITION = /^(?:to|on|in|into|onto|at|from|with|by|for|through|towards?|across|inside|within)$/;
+const DETERMINER = /^(?:the|a|an|its|their|his|her|this|that|these|those|each|every|some|any|all|both|our|your)$/;
+
+/**
+ * Where a negation earlier in the clause still governs position `at`: the nearest negation word before it with no
+ * end of its reach between them (the QA fixer, 25 Sep 2026: a negation governs its own verb phrase, up to the next
+ * "and", "which", comma or full stop, and not a prepositional phrase after its word).
+ */
+function governedAt(words: readonly string[], at: number): boolean {
+  for (let j = at - 1; j >= 0; j--) {
+    const w = words[j]!;
+    if (NEGATION_ENDS.test(w)) return false;
+    if (PREPOSITION.test(w) && DETERMINER.test(words[j + 1] ?? "")) return false;
+    if (NEGATION.test(w)) return true;
+  }
+  return false;
+}
+
+/**
+ * Is every occurrence of the key word in the answer governed by a negation ("they do not have the human gene", "the
+ * non-resistant bacteria"; the B2 D reviewer, 25 Sep 2026: 13 of 13 such answers were paid)? A negation governs its own
+ * verb phrase only (`governedAt`). A key word that is itself a negation ("does not change direction", "no longer
+ * flows") is earned as written: the key word's own words never negate it.
+ */
+function negatedIn(raw: string, key: string): boolean {
+  const k = normaliseText(key);
+  const kWords = k.split(" ");
+  const first = kWords[0] ?? "";
+  const stem = first.length >= 5 ? first.replace(/(?:es|s|e|ed|ing)$/, "") : first;
+  // A key word that holds a verb's negation is that negation itself, and starts its own verb phrase ("cannot
+  // photosynthesise" in "without light the leaf cannot photosynthesise"): an earlier negation does not undo it. A
+  // negated noun ("non resistant bacteria survived") can still sit inside another negation ("none of the …").
+  if (kWords.some((w) => /^(?:not|cannot|never)$/.test(w))) return false;
+  const startsKey = (w: string) => (first.length >= 5 ? w.startsWith(stem) : w === first || w === `${first}s`);
+  let found = false;
+  for (const clause of clausesOf(raw)) {
+    const c = normaliseText(clause);
+    if (!phraseIn(c, k)) continue;
+    found = true;
+    const words = c.split(" ");
+    // Every place the key word starts in the clause; where none can be pinned (an algebraic key), its first word.
+    let starts = words.map((_, p) => p).filter((p) => startsKey(words[p]!) && phraseIn(words.slice(p, p + kWords.length).join(" "), k));
+    if (starts.length === 0) starts = words.map((_, p) => p).filter((p) => startsKey(words[p]!)).slice(0, 1);
+    if (starts.length === 0) starts = [words.length];
+    if (starts.some((at) => !governedAt(words, at))) return false;
+  }
+  return found;
+}
+
 export interface MarkTextOptions {
   /**
    * Named wrong answers (the part's common errors written as text patterns). One offered beside the right answer in a
    * hedge cancels the mark the right answer would earn (C2 D F12, 24 Sep 2026: "poly(ethene) or poly(ethane)" was paid).
    */
   wrongAnswers?: readonly RegExp[];
+  /**
+   * The model answer (the accepted answers and the worked solution). Where it states a key word inside a negation
+   * itself ("the shapes are not complementary"), the negation is the point, and her negated key word earns as it does.
+   */
+  model?: readonly string[];
   /**
    * For each key-word group, the groups it depends on (indices), from the mark scheme's `dependsOn` (mark.ts
    * `groupDependencies`): a group earns only when every group it depends on has earned, as CCEA's "dep" marks do.
@@ -314,34 +426,67 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   // A key word earns one group only. "Give two symptoms" is written as two groups with the same list, and a
   // single symptom must not collect both marks; two groups that merely overlap are handled the same way.
   const used = new Set<string>();
-  // A group's key word is in a piece of the answer as written or, for a hydrocarbon's condensed formula, from either end.
+  // A group's key word is in a piece of the answer as written or, for a hydrocarbon's condensed formula, from either end,
+  // and not only inside a negation. An entry written "cheaper|costs less" is one idea in several spellings.
+  const model = [...spec.accepted, ...(opts.model ?? [])];
+  const negationIsThePoint = (k: string) => model.some((m) => negatedIn(m, k));
   const hits = (text: string, g: TextSpec["keyWords"][number]) => {
     const norm = normaliseText(text);
-    return g.any.filter((k) => phraseIn(norm, normaliseText(k)) || hydrocarbonIn(text, k));
+    return g.any.filter((entry) =>
+      entry
+        .split("|")
+        .some((k) => (phraseIn(norm, normaliseText(k)) && (!negatedIn(text, k) || negationIsThePoint(k))) || hydrocarbonIn(text, k)),
+    );
   };
+  const rejectHits = (text: string, r: string) => phraseIn(normaliseText(text), normaliseText(r), REJECT_INFLECTIONS) && !negatedIn(text, r);
   // A hedge that offers a named wrong answer beside a right one: CCEA's general marking instructions (C2 Higher MS
   // Summer 2021) "Additional incorrect responses cancel out a correct response". The groups the hedge's other
   // alternatives earn are cancelled; a reject word counts as a named wrong answer here as it does everywhere.
   const cancelled = new Set<number>();
   let cancelledBy: string | null = null;
+  // A named wrong answer: a common error's pattern, or a reject word. An alternative that earns a group is not wrong,
+  // and a pattern anchored at both ends describes a whole answer ("2.91" alone, one root of two), not an alternative.
+  // A value offered beside the right one ("M = 650 or 651"; the FM2 review, 27 Sep 2026: paid 3/3 on a show-that part)
+  // is a wrong answer when no key word, accepted answer or model answer states it: two values are a hedge.
+  const modelNumbers = new Set([...model, ...groups.flatMap((g) => g.any)].flatMap((t) => t.match(/\d+(?:\.\d+)?/g) ?? []).map(Number));
+  const wrongValue = (p: string) => {
+    const numbers = (p.match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
+    return numbers.length > 0 && modelNumbers.size > 0 && numbers.every((n) => !modelNumbers.has(n));
+  };
   const isWrong = (p: string) =>
-    (opts.wrongAnswers ?? []).some((re) => re.test(p)) || groups.some((g) => (g.reject ?? []).some((r) => phraseIn(normaliseText(p), normaliseText(r))));
+    !groups.some((g) => hits(p, g).length > 0) &&
+    ((opts.wrongAnswers ?? []).some((re) => !(re.source.startsWith("^") && re.source.endsWith("$")) && re.test(p)) ||
+      groups.some((g) => (g.reject ?? []).some((r) => rejectHits(p, r))) ||
+      wrongValue(p));
   for (const alternatives of hedges(raw)) {
     const wrong = alternatives.filter(isWrong);
     if (wrong.length === 0) continue;
     for (const p of alternatives) {
       if (isWrong(p)) continue;
+      // A wrong value cancels the point it pertains to (C2 2021 MS §4): the one stated in the clause it stands beside
+      // ("… so 10.8M = 7020 and M = 650 or 651" cancels "M = 650", not the working before it).
+      const clauses = p.split(/[.;,]|\b(?:and|so|then|therefore|giving)\b/i).filter((c) => c.trim().length > 0);
+      const beside = wrong.every(wrongValue) && clauses.length > 1 ? clauses[clauses.length - 1]! : p;
       groups.forEach((g, i) => {
-        if (hits(p, g).length > 0) {
+        if (hits(beside, g).length > 0) {
           cancelled.add(i);
           cancelledBy ??= wrong[0]!;
         }
       });
     }
   }
+  // One idea earns one group: a key word already paid, or one inside a key word already paid ("survived" inside
+  // "resistant bacteria survived"), is the same idea said again (B2 D, 25 Sep 2026). A longer idea that merely
+  // contains a paid word is a new idea ("zinc corrodes" after "zinc", "resistance depends on temperature" after
+  // "temperature", "quarter turn clockwise" after "quarter turn"; the P2 D pass, 25 Sep 2026).
+  const sameIdea = (k: string) => [...used].some((u) => u === k || u.split("|").some((a) => k.split("|").some((b) => phraseIn(a, b))));
   groups.forEach((g, i) => {
-    const hit = hits(raw, g).map(normaliseText).find((k) => !used.has(k));
-    const bad = (g.reject ?? []).filter((r) => phraseIn(answer, normaliseText(r)));
+    // The longest idea first, so a short word inside it cannot be paid again by the next group.
+    const hit = hits(raw, g)
+      .map(normaliseText)
+      .sort((a, b) => b.length - a.length)
+      .find((k) => !sameIdea(k));
+    const bad = (g.reject ?? []).filter((r) => rejectHits(raw, r));
     rejected.push(...bad);
     if (hit !== undefined && bad.length === 0 && !cancelled.has(i)) {
       used.add(hit);
@@ -367,8 +512,13 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
 
   let penalty = 0;
   if (spec.listingRule && groups.length > 0) {
-    const listed = countListedItems(raw);
-    if (listed > groups.length) penalty = Math.min(marks, listed - groups.length);
+    // Only a wrong extra answer costs a mark ("trap and filter", both right, is not penalised; CCEA: "additional
+    // incorrect responses"): the penalty is the extra items that earn no group, at most the extra count.
+    const items = listedItems(raw);
+    if (items.length > groups.length) {
+      const wrong = items.filter((it) => !groups.some((g) => hits(it, g).length > 0)).length;
+      penalty = Math.min(marks, items.length - groups.length, wrong);
+    }
   }
   const marksAwarded = Math.max(0, marks - penalty);
   const correct = groups.length > 0 && marksAwarded === marksAvailable;

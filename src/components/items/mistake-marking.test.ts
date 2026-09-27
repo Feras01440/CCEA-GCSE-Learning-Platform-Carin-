@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { finalValue, firstSentence, fixMatches, lastNumber, markFix, resultValue, sameAsMistakeLine, stepLineMatches, workingLines } from "./mistake-marking";
+import { evaluateWithTrig, finalValue, firstSentence, fixMatches, lastNumber, markFix, resultValue, sameAsMistakeLine, statementsHold, stepLineMatches, workingLines } from "./mistake-marking";
 
 const correction = ["Values still needed: 30 − 22 = 8 of the 26 in the class.", "Median ≈ 30 + (8 ÷ 26) × 20 = 36.2 cm"];
 
@@ -153,7 +153,9 @@ describe("a unit exponent is not the line's value", () => {
   });
   test("the fix box accepts the right value in an ASCII unit", () => {
     expect(fixMatches("a = 4 m/s^2", ["a = 20 ÷ 5 = 4 m/s²"]).match).toBe(true);
-    expect(fixMatches("a = 4 N", ["F = 20 N, so a = 20 ÷ 5 = 4 m/s²"]).match).toBe(true);
+    expect(fixMatches("a = 4 m/s^2", ["F = 20 N, so a = 20 ÷ 5 = 4 m/s²"]).match).toBe(true);
+    // A unit of another kind is not the step's value (the FM2 review, 27 Sep 2026: "60 kg" was confirmed for a force).
+    expect(fixMatches("a = 4 N", ["F = 20 N, so a = 20 ÷ 5 = 4 m/s²"]).match).toBe(false);
     expect(fixMatches("a = 2 m/s^2", ["a = 20 ÷ 5 = 4 m/s²"]).match).toBe(false);
   });
 });
@@ -629,5 +631,71 @@ describe("a value then a unit letter and words is still a value (guard catch, 25
   test("m3 trigonometry .0015: '= 24.6265 m above her hand' states 24.6265; '= 8 i' states nothing", () => {
     expect(resultValue("h = 40 sin 38 = 24.6265 m above her hand", "typed")).toBeCloseTo(24.6265, 9);
     expect(resultValue("x = 8 i", "typed")).toBeNull();
+  });
+});
+
+// The FM2 review (27 Sep 2026): a worked-example step with no input spec was matched by its final value alone, so
+// wrong lines were confirmed and right lines in another form refused. A value match must also be a true line, point
+// the step's way and be in the step's kind of unit; a right line written another way is taken.
+describe("a worked-example step judged by value: true, the step's way, the step's unit", () => {
+  const cos = String.raw`Parallel to the ground: $42\cos 28° = 37.08$ N.`;
+  const sin = String.raw`At right angles to the ground: $42\sin 28° = 19.72$ N.`;
+  test("sine and cosine swapped is refused; the right function is taken", () => {
+    expect(stepLineMatches("42sin28 = 37.08", cos, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("42 cos 28 = 19.72", sin, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("42 cos 28 = 37.08", cos, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("37.08 N", cos, { pieces: true }).match).toBe(true);
+    const both = String.raw`Along the floor: $40\cos 30° = 34.64$ N` + "\n" + String.raw`Upwards: $40\sin 30° = 20$ N`;
+    expect(stepLineMatches("40cos30 = 20", both, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("40cos30 = 34.64, 40sin30 = 20", both, { pieces: true }).match).toBe(true);
+  });
+  test("a direction against the step's is refused; one with it is taken", () => {
+    const step3 = "$600 = 500a$, so $a = 1.2$ m/s²";
+    const before = ["Taking up as positive: $5600 - 5000 = 500a$"];
+    expect(stepLineMatches("a = 1.2 downwards", step3, { pieces: true, before }).match).toBe(false);
+    expect(stepLineMatches("a = 1.2 m/s² upwards", step3, { pieces: true, before }).match).toBe(true);
+    expect(stepLineMatches("1.2 upwards", step3, { pieces: true, before }).match).toBe(true);
+    const up = "Up the slope:\n$23 = 5a$\n$a = 4.6$ m/s²";
+    expect(stepLineMatches("a = 4.6 down the slope", up, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("a = 4.6 m/s² up the slope", up, { pieces: true }).match).toBe(true);
+  });
+  test("a unit of another kind, or the wrong reaction, is refused", () => {
+    const weight = String.raw`Weight $= 9 \times 10 = 90$ N, acting vertically downwards.`;
+    expect(stepLineMatches("W = 90 N", weight, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("90 kg", weight, { pieces: true }).match).toBe(false);
+    const tipping = "(ii) On the point of tipping about D, the plank only just touches C, so $R_C = 0$.";
+    expect(stepLineMatches("R_C = 0", tipping, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("R_D = 0", tipping, { pieces: true }).match).toBe(false);
+  });
+  test("two statements, the last the step's value and the first true of it", () => {
+    const step4 = "Resolving vertically:\n$R_A + 470 = 250 + 400$\n$R_A = 180$ N";
+    expect(stepLineMatches("R_A + 470 = 650, R_A = 180", step4, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("R_A + 470 = 750, R_A = 180", step4, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("2T_D = 206, T_D = 103", "$2T_D + 20 = 226$\n$T_D = 103$ N", { pieces: true }).match).toBe(true);
+  });
+  test("the step's equation rearranged or worked, with a lead-in, is taken; another equation is not", () => {
+    const step2 = "Taking up as positive: $5600 - 5000 = 500a$";
+    expect(stepLineMatches("600 = 500a", step2, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("T - W = ma: 5600 - 5000 = 500a", step2, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("5600 = 500a", step2, { pieces: true }).match).toBe(false);
+    expect(stepLineMatches("5600 + 5000 = 500a", step2, { pieces: true }).match).toBe(false);
+    const step3 = "Along the floor, direction of motion positive:\n$34.64 - 12 = 5a$";
+    expect(stepLineMatches("40cos30 - 12 = 5a", step3, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("40sin30 - 12 = 5a", step3, { pieces: true }).match).toBe(false);
+  });
+});
+
+describe("evaluateWithTrig and statementsHold", () => {
+  test("degrees, inverses, roots and powers", () => {
+    expect(evaluateWithTrig("42 sin 28")).toBeCloseTo(19.7178, 3);
+    expect(evaluateWithTrig("tan-1(5/8)")).toBeCloseTo(32.0054, 3);
+    expect(evaluateWithTrig(String.raw`\tan^{-1}(5/12)`)).toBeCloseTo(22.62, 2);
+    expect(evaluateWithTrig("√(37.08^2 + 19.72^2)")).toBeCloseTo(42, 1);
+    expect(evaluateWithTrig("5a + 2")).toBeNull();
+  });
+  test("a line's numeric statements hold to the precision written", () => {
+    expect(statementsHold("√(37.08² + 19.72²) = 42")).toBe(true);
+    expect(statementsHold("30 + 24 sin 50 - 10 = 35.43")).toBe(false);
+    expect(statementsHold("30 + 24 cos 50 - 10 = 35.43")).toBe(true);
   });
 });

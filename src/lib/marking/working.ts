@@ -358,7 +358,9 @@ function evidencesWhole(typed: string, evidence: string): boolean {
     if (m.how !== "value") return true;
     // The comparer's own value reading decides whether each line arrives at a value ("the mean is 48 press-ups"
     // does; "x + 1" and "y + 8 = 5x" do not), the same reading the fix box and the worked steps use.
-    return resultValue(workingLines(typed).join(" "), "typed") !== null && resultValue(workingLines(evidence).join(" "), "authored") !== null;
+    if (resultValue(workingLines(typed).join(" "), "typed") !== null && resultValue(workingLines(evidence).join(" "), "authored") !== null) return true;
+    // A value match that is not one still leaves the maths to compare ("\log(x³y²) = \log x³ + \log y²" for the point
+    // "\log x³ + \log y²", once its lead-in comes off).
   }
   return equivalentMaths(typed, evidence);
 }

@@ -172,7 +172,15 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
       from && earlierRaw !== undefined
         ? { earlierRaw, earlierSpec: from.answer, relation: part.followThrough?.relation, workedSolution: part.workedSolution }
         : undefined;
-    const marked = markAnswer(raw, part.answer, { marks: part.marks, commonErrors: part.commonErrors, prompt: part.stem, scheme: part.scheme, followThrough });
+    const marked = markAnswer(raw, part.answer, {
+      marks: part.marks,
+      commonErrors: part.commonErrors,
+      prompt: part.stem,
+      scheme: part.scheme,
+      workedSolution: part.workedSolution,
+      followThrough,
+      subject: item.subject,
+    });
     answersRef.current = { ...answersRef.current, [part.id]: raw };
     setLastRaw(raw);
     // A banded answer is not marked yet: nothing is recorded until she has placed it on the descriptors.

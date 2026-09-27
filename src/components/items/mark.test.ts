@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { AnswerSpec, CommonError } from "@/lib/content/schema";
-import { instructsAccuracy, isFormTask, markAnswer, matchesCommonError, variableLetters } from "./mark";
+import { checkNumeric } from "@/lib/marking/numeric";
+import { instructsAccuracy, instructsUnit, isFormTask, markAnswer, matchesCommonError, variableLetters } from "./mark";
 
 const median: AnswerSpec = {
   kind: "numeric",
@@ -168,25 +169,61 @@ describe("markAnswer other kinds", () => {
     expect(r.explanation).toMatch(/built from tissues/);
     expect(markAnswer("0,1,2", spec, { marks: 3, commonErrors: [reversed] })).toMatchObject({ correct: true, marksAwarded: 3 });
   });
+  // CCEA's general guidance, as the FM2 MS 2021 prints it: "Accept 1.5 instead of 1.50 for an answer required to 2 dp"
+  // and "Unless specifically stated in the mark scheme, accept one or more dp, or 3 significant figures"; the 2019 MS
+  // prints "2.458 2.46" (the lead's reversal of 27 Sep 2026, replacing the ruling of 25 Sep). A dropped final zero and
+  // more places than asked earn every mark, with the write-150.00 reminder as words only; fewer places than asked lose
+  // the accuracy mark.
   test("numeric to 2 d.p. when the stem instructs it: an exact value with the zeros dropped is right, with a write-150.00 reminder", () => {
     const pct: AnswerSpec = { kind: "numeric", value: 150, tolerance: { type: "dp", places: 2 }, unitRequired: false, acceptForms: ["decimal", "percent"] };
     const prompt = "Calculate the percentage increase. Give your answer to two decimal places.";
     const dropped = markAnswer("150", pct, { marks: 3, prompt });
     expect(dropped).toMatchObject({ correct: true, marksAwarded: 3 });
-    expect(dropped.explanation).toMatch(/write 150\.00/);
+    expect(dropped.explanation).toMatch(/write 150\.00 on the paper, to show the accuracy asked for/);
+    expect(dropped.explanation).not.toMatch(/examiner|mark lost|lose|lost/i);
+    expect(markAnswer("150.00", pct, { marks: 3, prompt })).toMatchObject({ correct: true, marksAwarded: 3 });
     expect(markAnswer("150.00", pct, { marks: 3, prompt }).explanation).not.toMatch(/write 150\.00/);
-    expect(markAnswer("150.000", pct, { marks: 3, prompt }).correct).toBe(false);
+    expect(markAnswer("150.000", pct, { marks: 3, prompt })).toMatchObject({ correct: true, marksAwarded: 3 });
     expect(markAnswer("149.9", pct, { marks: 3, prompt }).correct).toBe(false);
   });
-  test("the write-150.00 reminder never says a mark is lost, because CCEA does not take one (engine item 14)", () => {
-    // CCEA GCSE Further Mathematics, Unit 2 mark scheme, Summer 2021, general instructions: "Accept 1.5 instead of
-    // 1.50 for an answer required to 2 dp." The reminder is about showing the accuracy, not about a lost mark.
-    const pct: AnswerSpec = { kind: "numeric", value: 150, tolerance: { type: "dp", places: 2 }, unitRequired: false, acceptForms: ["decimal", "percent"] };
-    const prompt = "Calculate the percentage increase. Give your answer to two decimal places.";
-    const dropped = markAnswer("150", pct, { marks: 3, prompt });
-    expect(dropped).toMatchObject({ correct: true, marksAwarded: 3 });
-    expect(dropped.explanation).toMatch(/write 150\.00/);
-    expect(dropped.explanation).not.toMatch(/examiner|mark lost|lose|lost/i);
+  test("the FM2 reviewer's cases: 38.3 for 38.30, 3.438 for 3.44 and 55 for 55.00 earn every mark; 3.4 for 3.44 loses the accuracy mark", () => {
+    const prompt = "Calculate the tension in the rope. Round to 2 decimal places.";
+    const t: AnswerSpec = { kind: "numeric", value: 38.3, tolerance: { type: "dp", places: 2 }, unit: "N", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    for (const typed of ["38.3", "38.30", "38.302", "38.3 N"]) expect(markAnswer(typed, t, { marks: 3, prompt }), typed).toMatchObject({ correct: true, marksAwarded: 3 });
+    const a: AnswerSpec = { kind: "numeric", value: 3.44, tolerance: { type: "dp", places: 2 }, unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    for (const typed of ["3.438", "3.44"]) expect(markAnswer(typed, a, { marks: 3, prompt }), typed).toMatchObject({ correct: true, marksAwarded: 3 });
+    expect(markAnswer("3.4", a, { marks: 3, prompt })).toMatchObject({ correct: false, marksAwarded: 2 });
+    expect(markAnswer("3.45", a, { marks: 3, prompt }).correct).toBe(false);
+    const r: AnswerSpec = { kind: "numeric", value: 55, tolerance: { type: "dp", places: 2 }, unit: "N", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    expect(markAnswer("55", r, { marks: 3, prompt })).toMatchObject({ correct: true, marksAwarded: 3 });
+    expect(markAnswer("R = 80 - 25 = 55 N", r, { marks: 3, prompt })).toMatchObject({ correct: true, marksAwarded: 3 });
+  });
+  test("13 for 13.0 to 1 d.p. is right, instructed or not; 12.5 for 12.54 to 2 d.p. loses the accuracy mark", () => {
+    const v: AnswerSpec = { kind: "numeric", value: 13, tolerance: { type: "dp", places: 1 }, unit: "V", unitRequired: false, acceptForms: ["decimal"] };
+    const instructed = "Calculate the voltage. Give your answer to 1 decimal place.";
+    for (const marks of [1, 2]) for (const typed of ["13", "13 V", "13.0", "13.02"]) expect(markAnswer(typed, v, { marks, prompt: instructed }), typed).toMatchObject({ correct: true, marksAwarded: marks });
+    expect(markAnswer("13", v, { marks: 2, prompt: "Calculate the voltage." })).toMatchObject({ correct: true, marksAwarded: 2 });
+    const w: AnswerSpec = { kind: "numeric", value: 12.54, tolerance: { type: "dp", places: 2 }, unitRequired: false, acceptForms: ["decimal"] };
+    expect(markAnswer("12.5", w, { marks: 2, prompt: "Give your answer to 2 decimal places." })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("12.5", w, { marks: 1, prompt: "Give your answer to 2 decimal places." })).toMatchObject({ correct: false, marksAwarded: 0 });
+  });
+  // The numeric-form ruling is symmetric (FM2 D, 25 Sep 2026; connected-particles-and-pulleys .0005): an exact form
+  // where decimal places are instructed, or a decimal where an exact form is instructed, is the right value in the
+  // wrong form: marks − 1 (the accuracy mark), never full marks.
+  test("instructed form is symmetric: 12√2 for 'to 2 decimal places' and 16.97 for 'exact' both earn marks − 1", () => {
+    const force: AnswerSpec = { kind: "numeric", value: 16.97, tolerance: { type: "dp", places: 2 }, unit: "N", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    const dp2 = "Calculate the magnitude of the force the string exerts on the pulley.\n\nTake $g = 10$ m/s². Round to 2 decimal places.\n\nAnswer ________ N";
+    expect(markAnswer("12√2", force, { marks: 4, prompt: dp2 })).toMatchObject({ correct: false, marksAwarded: 3 });
+    expect(markAnswer("16.97", force, { marks: 4, prompt: dp2 })).toMatchObject({ correct: true, marksAwarded: 4 });
+    // Where no form is listed, the exact form is still not the instructed decimal.
+    const open: AnswerSpec = { kind: "numeric", value: 12 * Math.SQRT2, tolerance: { type: "dp", places: 2 }, unitRequired: false, acceptForms: [] };
+    expect(markAnswer("12√2", open, { marks: 4, prompt: dp2 })).toMatchObject({ correct: false, marksAwarded: 3 });
+    const exact: AnswerSpec = { kind: "numeric", value: 12 * Math.SQRT2, tolerance: { type: "absolute", value: 0.005 }, unitRequired: false, acceptForms: ["surd"] };
+    const surd = "Find the exact magnitude of the force. Give your answer in surd form.";
+    expect(markAnswer("16.97", exact, { marks: 4, prompt: surd })).toMatchObject({ correct: false, marksAwarded: 3 });
+    expect(markAnswer("12√2", exact, { marks: 4, prompt: surd })).toMatchObject({ correct: true, marksAwarded: 4 });
+    // Not instructed either way: a right value in either form earns every mark.
+    expect(markAnswer("12√2", force, { marks: 4, prompt: "Calculate the magnitude of the force." })).toMatchObject({ correct: true, marksAwarded: 4 });
   });
   test("a table cell with its final zero dropped is right, with the same reminder, when the stem asks for 2 d.p. (engine item 5)", () => {
     // c2-measuring-rates .0006: "Give each value in grams to two decimal places."; the cells are 2.90, 3.50, 3.60.
@@ -205,8 +242,9 @@ describe("markAnswer other kinds", () => {
     expect(dropped.explanation).toMatch(/write 2\.90 and 3\.60/);
     expect(dropped.explanation).not.toMatch(/examiner|lost/i);
     expect(markAnswer(typed(["2.90", "3.50", "3.60"]), spec, { marks: 3, prompt }).explanation).toBe("Every cell is right.");
-    // The instruction is a demand, as for a numeric part: three places is not two.
-    expect(markAnswer(typed(["2.900", "3.50", "3.60"]), spec, { marks: 3, prompt }).correct).toBe(false);
+    // As for a numeric part: more places that round to the value are right (the reversal of 27 Sep 2026); fewer are not.
+    expect(markAnswer(typed(["2.900", "3.50", "3.60"]), spec, { marks: 3, prompt }).correct).toBe(true);
+    expect(markAnswer(typed(["3", "3.50", "3.60"]), spec, { marks: 3, prompt }).correct).toBe(false);
     // Without the instruction, the tolerance is only a closeness test and nothing is said.
     expect(markAnswer(typed(["2.9", "3.5", "3.6"]), spec, { marks: 3, prompt: "Complete the table." }).explanation).toBe("Every cell is right.");
   });
@@ -858,7 +896,7 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
     const surd: AnswerSpec = { kind: "numeric", value: Math.SQRT2 / 4, tolerance: { type: "absolute", value: 0.001 }, unitRequired: false, acceptForms: ["surd"] };
     expect(markAnswer("0.3536", surd, { marks: 3, prompt: "Express $\\dfrac{1}{\\sqrt{8}}$ as $\\dfrac{\\sqrt{a}}{b}$, where $a$ and $b$ are integers." }).marksAwarded).toBe(0);
     const radius: AnswerSpec = { kind: "numeric", value: 3 * Math.SQRT2, tolerance: { type: "absolute", value: 0.01 }, unit: "cm", unitRequired: false, acceptForms: ["surd"] };
-    expect(markAnswer("4.24 cm", radius, { marks: 2, prompt: "A circle has area $18\\pi$ cm². Show that the radius of the circle is $3\\sqrt{2}$ cm." }).marksAwarded).toBe(1);
+    expect(markAnswer("4.24 cm", radius, { marks: 2, prompt: "A circle has area $18\\pi$ cm². Show that the radius of the circle is $3\\sqrt{2}$ cm." }).marksAwarded).toBe(0);
     // A letter of the question after the number is a wrong answer, not a form: still 0.
     expect(markAnswer("4m", { kind: "numeric", value: 4, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] }, { marks: 2, prompt: "(d) $3m^{0} + m^{0}$" }).marksAwarded).toBe(0);
   });
@@ -866,5 +904,189 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
     const spec: AnswerSpec = { kind: "algebraic", latex: "\\log 8x^3", equivalence: "equivalent", variables: ["x"], form: "single-log-expanded" };
     expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Use the laws of logarithms on your answer to part (a)." }).marksAwarded).toBe(2);
     expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(0);
+  });
+});
+
+// The verifier (25 Sep 2026): "carbon monoxide (CO2)" was paid 1/1 where carbon dioxide is the answer. CCEA C2 2021:
+// where a name is asked for, the formula beside it is ignored, so a wrong name "must be marked wrong"; where a formula
+// is asked for, the name is ignored. The stem's word decides ("name" / "formula"); without either, the key words do
+// (all formulae: a formula is asked for; otherwise a name).
+describe("a name with a formula: the part judges the one it asks for", () => {
+  const gas: AnswerSpec = { kind: "text", accepted: [], keyWords: [{ any: ["carbon dioxide", "CO2"], marks: 1 }], listingRule: true };
+  test("a name is asked for: the name is judged, the formula ignored", () => {
+    const prompt = "Name the gas that turns limewater milky.";
+    expect(markAnswer("carbon monoxide (CO2)", gas, { marks: 1, prompt }).correct).toBe(false);
+    expect(markAnswer("carbon dioxide (CO)", gas, { marks: 1, prompt }).correct).toBe(true);
+    expect(markAnswer("carbon dioxide, CO2", gas, { marks: 1, prompt }).correct).toBe(true);
+  });
+  test("a formula is asked for: the formula is judged, the name ignored", () => {
+    const prompt = "Write the formula of the gas that turns limewater milky.";
+    expect(markAnswer("carbon monoxide (CO2)", gas, { marks: 1, prompt }).correct).toBe(true);
+    expect(markAnswer("carbon dioxide (CO)", gas, { marks: 1, prompt }).correct).toBe(false);
+  });
+  test("neither word: formula-only key words ask for the formula", () => {
+    const monomer: AnswerSpec = { kind: "text", accepted: [], keyWords: [{ any: ["C3H6", "CH2=CHCH3"], marks: 1 }], listingRule: false };
+    expect(markAnswer("propene (C3H6)", monomer, { marks: 1, prompt: "Give the monomer." }).correct).toBe(true);
+    expect(markAnswer("carbon monoxide (CO2)", gas, { marks: 1, prompt: "Which gas turns limewater milky?" }).correct).toBe(false);
+  });
+});
+
+// The verifier's second round (25 Sep 2026). (1) Converting to a fraction (or a surd, a mixed number, standard form) is
+// the whole task when the stem says to write, convert, change or express the number that way: the decimal typed back
+// scores 0 or its common error's marks. (2) A "show that" part prints its answer: a decimal or the target typed back
+// shows nothing and scores 0; only an exact-form answer or the ladder pays. (3) "You must show your working": a bare
+// right value in another form scores 0.
+describe("form tasks, show-that and show-your-working (verifier, round 2)", () => {
+  const ninth: AnswerSpec = { kind: "numeric", value: 4 / 9, tolerance: { type: "absolute", value: 0.001 }, unitRequired: false, acceptForms: ["fraction"] };
+  test.each([
+    String.raw`Convert $0.\dot{4}$ to a fraction.`,
+    String.raw`Write $0.\dot{4}$ as a fraction in its simplest form.`,
+    String.raw`Change $0.\dot{4}$ into a fraction.`,
+    String.raw`Express $0.\dot{4}$ as a fraction.`,
+  ])("%s: the decimal typed back scores 0", (prompt) => {
+    expect(markAnswer("0.444", ninth, { marks: 2, prompt }).marksAwarded).toBe(0);
+    expect(markAnswer("4/9", ninth, { marks: 2, prompt })).toMatchObject({ correct: true, marksAwarded: 2 });
+  });
+  test("a finishing instruction on a calculation is still only the final mark", () => {
+    expect(markAnswer("0.444", ninth, { marks: 2, prompt: "Work out the probability. Give your answer as a fraction." }).marksAwarded).toBe(1);
+  });
+  test("show that: the target or a decimal typed back scores 0; the exact form is right", () => {
+    const radius: AnswerSpec = { kind: "numeric", value: 3 * Math.SQRT2, tolerance: { type: "absolute", value: 0.01 }, unit: "cm", unitRequired: false, acceptForms: ["surd"] };
+    const prompt = String.raw`A circle has area $18\pi$ cm². Show that the radius of the circle is $3\sqrt{2}$ cm.`;
+    expect(markAnswer("4.242640687", radius, { marks: 2, prompt }).marksAwarded).toBe(0);
+    expect(markAnswer("4.24 cm", radius, { marks: 2, prompt }).marksAwarded).toBe(0);
+  });
+  test("you must show your working: a bare right value in another form scores 0", () => {
+    const surd: AnswerSpec = { kind: "numeric", value: 5 * Math.SQRT2, tolerance: { type: "absolute", value: 0.01 }, unitRequired: false, acceptForms: ["surd"] };
+    expect(markAnswer("7.07", surd, { marks: 3, prompt: "Simplify $\\sqrt{50}$. You must show your working." }).marksAwarded).toBe(0);
+    expect(markAnswer("7.07", surd, { marks: 3, prompt: "Work out the length. Show your working. Give your answer in surd form." }).marksAwarded).toBe(0);
+  });
+});
+
+// (4) The rounded-value guard's 10 % closeness: "0.3" for 0.26 (15 % off) is a wrong value, not a rounding.
+describe("the rounded-value advice needs the value close", () => {
+  test("0.3 for 0.26 is not called the rounded value; 0.3 for 0.29 is", () => {
+    expect(checkNumeric("0.3", { value: 0.26, tolerance: { type: "absolute", value: 0.001 } }).feedback).not.toMatch(/only the rounded value/);
+    expect(checkNumeric("0.3", { value: 0.29, tolerance: { type: "absolute", value: 0.001 } }).feedback).toMatch(/only the rounded value/);
+  });
+});
+
+describe("instructsAccuracy reads an instruction, not a description of the given", () => {
+  test("'does not round … at 1 decimal place' is not an instruction; 'round to', 'rounded to' are", () => {
+    expect(instructsAccuracy("A stopwatch does not round: it **cuts the display off** at $1$ decimal place. It shows $9.4$ s.\n\nWrite down the upper bound of the true time.")).toBe(false);
+    expect(instructsAccuracy("Work out the length and round it to 2 decimal places.")).toBe(true);
+    expect(instructsAccuracy("The answer should be rounded to 1 decimal place.")).toBe(true);
+    expect(instructsAccuracy("Round to 2 decimal places.")).toBe(true);
+  });
+  test("m4 bounds .0005: 9.5 for the upper bound is right, with no accuracy mark taken", () => {
+    const spec: AnswerSpec = { kind: "numeric", value: 9.5, tolerance: { type: "dp", places: 2 }, unit: "s", unitRequired: false, acceptForms: ["decimal"] };
+    const prompt = "A stopwatch does not round: it **cuts the display off** at $1$ decimal place. It shows $9.4$ s.\n\nWrite down the upper bound of the true time.";
+    expect(markAnswer("9.5", spec, { marks: 1, prompt })).toMatchObject({ correct: true, marksAwarded: 1 });
+  });
+  test("the accuracy mark's explanation says what was short, never 'Correct.'", () => {
+    const v: AnswerSpec = { kind: "numeric", value: 13.04, tolerance: { type: "dp", places: 2 }, unit: "V", unitRequired: false, acceptForms: ["decimal"] };
+    const r = markAnswer("13.0", v, { marks: 2, prompt: "Calculate the voltage. Give your answer to 2 decimal places." });
+    expect(r).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(r.explanation).toMatch(/^13\.0 is rounded to fewer places than the question asks\. Give the answer to 2 decimal places: 13\.04 V\. 1 of 2: only the accuracy mark is lost\./);
+  });
+});
+
+// The P2 C review (25 Sep 2026): a unit the stem instructs is a conversion asked for. The right value left in another
+// unit ("0.36 A" for "in milliamps") loses the unit's mark; not instructed, a converted value is simply right.
+describe("an instructed unit is a conversion asked for", () => {
+  const mA: AnswerSpec = { kind: "numeric", value: 360, tolerance: { type: "absolute", value: 0.5 }, unit: "mA", unitRequired: false, acceptForms: ["decimal"] };
+  test("in milliamps: 0.36 A earns every mark but the unit's", () => {
+    const prompt = "Calculate the current through resistor S, in milliamps.";
+    expect(markAnswer("0.36 A", mA, { marks: 2, prompt })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("360mA", mA, { marks: 2, prompt })).toMatchObject({ correct: true, marksAwarded: 2 });
+    expect(markAnswer("0.36 A", mA, { marks: 1, prompt: "State the current, in milliamps." })).toMatchObject({ correct: false, marksAwarded: 0 });
+  });
+  test("give your answer in mA; how many hours", () => {
+    expect(markAnswer("0.36 A", mA, { marks: 3, prompt: "Calculate the current. Give your answer in mA." }).marksAwarded).toBe(2);
+    const h: AnswerSpec = { kind: "numeric", value: 3, tolerance: { type: "absolute", value: 0.05 }, unit: "h", unitRequired: false, acceptForms: ["decimal"] };
+    expect(markAnswer("180 minutes", h, { marks: 2, prompt: "Calculate for how many hours it was switched on." }).marksAwarded).toBe(1);
+  });
+  test("not instructed, a converted value is right", () => {
+    expect(markAnswer("0.36 A", mA, { marks: 2, prompt: "Calculate the current through resistor S." })).toMatchObject({ correct: true, marksAwarded: 2 });
+    expect(instructsUnit("Put the lamp in a circuit and find the current.", "A")).toBe(false);
+  });
+});
+
+// The lead's scope of ruling 12 (27 Sep 2026, the Fable judge's report): science papers mark instructed places as
+// written (DAS 2025 chemistry report, C1 Q(b): "many lost a mark for not giving their answer to one decimal place as
+// instructed"); Further Maths and Maths accept the dropped zero ("Accept 1.5 instead of 1.50 for an answer required to
+// 2 dp", FM GMI) and extra places.
+describe("instructed places: science marks them as written; maths and further maths do not", () => {
+  const v: AnswerSpec = { kind: "numeric", value: 13, tolerance: { type: "dp", places: 1 }, unit: "%", unitRequired: false, acceptForms: ["decimal"] };
+  const prompt = "Calculate the percentage change in mass. Give your answer to one decimal place.";
+  test("science: 13 or 13.00 for 13.0 loses the accuracy mark; 13.0 earns every mark", () => {
+    expect(markAnswer("13", v, { marks: 2, prompt, subject: "science" })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("13", v, { marks: 2, prompt, subject: "science" }).explanation).toMatch(/write 13\.0 on the paper/);
+    expect(markAnswer("13.00", v, { marks: 2, prompt, subject: "science" })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("13.0", v, { marks: 2, prompt, subject: "science" })).toMatchObject({ correct: true, marksAwarded: 2 });
+    expect(markAnswer("13", v, { marks: 1, prompt, subject: "science" })).toMatchObject({ correct: false, marksAwarded: 0 });
+    // Not instructed, the tolerance is a closeness test in science too.
+    expect(markAnswer("13", v, { marks: 2, prompt: "Calculate the percentage change in mass.", subject: "science" })).toMatchObject({ correct: true, marksAwarded: 2 });
+  });
+  test("further maths and maths: the dropped zero and extra places are right, with the reminder", () => {
+    for (const subject of ["further-maths", "maths", undefined]) {
+      expect(markAnswer("13", v, { marks: 2, prompt, subject }), String(subject)).toMatchObject({ correct: true, marksAwarded: 2 });
+      expect(markAnswer("13.02", v, { marks: 2, prompt, subject }), String(subject)).toMatchObject({ correct: true, marksAwarded: 2 });
+    }
+  });
+});
+
+// Ruling 1 as the judge changed it (27 Sep 2026): on a form task the right value in another form is working. The
+// ladder pays the scheme points it shows, a later line of one chain implies the earlier, the total is capped at
+// marks − 1, and only the question typed back (no step) earns 0.
+describe("a form task pays the steps its answer line shows", () => {
+  const spec: AnswerSpec = { kind: "algebraic", latex: "n^2 - 2n - 8", variables: ["n"], equivalence: "simplifiedOnly", mustBeExpanded: true } as AnswerSpec;
+  const scheme = [
+    { id: "p1", code: "MA", marks: 1, for: "n(n - 4) + 2(n - 4)" },
+    { id: "p2", code: "MA", marks: 1, for: "n^2 - 4n + 2n - 8" },
+    { id: "p3", code: "MA", marks: 1, for: "n^2 - 2n - 8" },
+  ];
+  const prompt = "Expand and simplify $(n + 2)(n - 4)$.";
+  const workedSolution = "n(n - 4) + 2(n - 4) = n^2 - 4n + 2n - 8 = n^2 - 2n - 8";
+  test("M4 2025 Q5: n² − 4n + 2n − 8 is MA1 MA1 = 2 of 3; the first step alone 1 of 3; the question typed back 0", () => {
+    expect(markAnswer("n² − 4n + 2n − 8", spec, { marks: 3, prompt, scheme, workedSolution })).toMatchObject({ correct: false, marksAwarded: 2 });
+    expect(markAnswer("n(n - 4) + 2(n - 4)", spec, { marks: 3, prompt, scheme, workedSolution })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("(n + 2)(n - 4)", spec, { marks: 3, prompt, scheme, workedSolution })).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(markAnswer("n^2 - 2n - 8", spec, { marks: 3, prompt, scheme, workedSolution })).toMatchObject({ correct: true, marksAwarded: 3 });
+  });
+  test("FM1 simplify: both lines factorised and not cancelled pays both factorising marks, never the last", () => {
+    const frac: AnswerSpec = { kind: "algebraic", latex: String.raw`\frac{2(x-2)}{x+2}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
+    const s = [
+      { id: "a", code: "MW", marks: 1, for: "numerator factorised: 2(x - 2)(x + 2)" },
+      { id: "b", code: "MW", marks: 1, for: "denominator factorised: (x + 2)²" },
+      { id: "c", code: "MW", marks: 1, for: "(x + 2) cancelled and the answer fully simplified to 2(x - 2) over (x + 2)" },
+    ];
+    const p = String.raw`Simplify fully $\dfrac{2x^{2}-8}{x^{2}+4x+4}$`;
+    expect(markAnswer("2(x-2)(x+2)/(x+2)^2", frac, { marks: 3, prompt: p, scheme: s })).toMatchObject({ correct: false, marksAwarded: 2 });
+    expect(markAnswer("(2x^2-8)/(x+2)^2", frac, { marks: 3, prompt: p, scheme: s })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("2(x-2)/(x+2)", frac, { marks: 3, prompt: p, scheme: s })).toMatchObject({ correct: true, marksAwarded: 3 });
+  });
+});
+
+// The pipeline agent's G2 check (27 Sep 2026): on a form task the question typed back takes no step, whatever the
+// spec's equivalence or formTask flag says; m3 hcf .0011(a) "550" and algebraic fractions .0002(a) were paid in full.
+describe("the question typed back on a form task earns 0", () => {
+  const prompt = String.raw`Simplify fully $\dfrac{3x^{2}-27}{x^{2}+x-6}$`;
+  test.each(["equivalent", "identical", "simplifiedOnly"])("equivalence %s", (equivalence) => {
+    for (const formTask of [undefined, true]) {
+      const spec = { kind: "algebraic", latex: String.raw`\frac{3(x-3)}{x-2}`, equivalence, variables: ["x"], ...(formTask ? { formTask } : {}) } as AnswerSpec;
+      expect(markAnswer("(3x^2-27)/(x^2+x-6)", spec, { marks: 3, prompt }).marksAwarded).toBe(0);
+      expect(markAnswer("3(x-3)/(x-2)", spec, { marks: 3, prompt })).toMatchObject({ correct: true, marksAwarded: 3 });
+    }
+  });
+  test("a product of prime factors, and a single fraction", () => {
+    const primes = { kind: "algebraic", latex: String.raw`2 \times 5^2 \times 11`, equivalence: "equivalent", variables: [] } as AnswerSpec;
+    const p = "Write 550 as a product of its prime factors.";
+    expect(markAnswer("550", primes, { marks: 2, prompt: p }).marksAwarded).toBe(0);
+    for (const typed of ["2 × 5² × 11", "2 × 5 × 5 × 11", "2 x 5^2 x 11"]) expect(markAnswer(typed, primes, { marks: 2, prompt: p }), typed).toMatchObject({ correct: true, marksAwarded: 2 });
+    const single = { kind: "algebraic", latex: String.raw`\frac{9x}{10}`, equivalence: "equivalent", variables: ["x"] } as AnswerSpec;
+    const q = String.raw`Write $\dfrac{4x + 1}{5} + \dfrac{x - 2}{10}$ as a single fraction.`;
+    expect(markAnswer("(4x + 1)/5 + (x - 2)/10", single, { marks: 2, prompt: q }).marksAwarded).toBe(0);
+    expect(markAnswer("9x/10", single, { marks: 2, prompt: q })).toMatchObject({ correct: true, marksAwarded: 2 });
   });
 });

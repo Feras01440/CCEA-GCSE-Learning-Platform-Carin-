@@ -83,11 +83,66 @@ export interface NormaliseEquationOptions {
   implicitMultiply?: boolean;
 }
 
+/**
+ * An equation written as a sentence ends at its last formula: a full stop, or a colon, semicolon or comma after the
+ * arrow, starts prose ("C2H4 + H2 → C2H6.", "C2H5OH + 3O2 → 2CO2 + 3H2O: 2 C, 6 H and 7 O on each side", "… → glucose
+ * + oxygen, with light energy above the arrow"; the guard with the parts' own worked solutions, 27 Sep 2026). A
+ * decimal point or a hydrate's dot has no space after it and stays.
+ */
+export function trimEquationProse(line: string): string {
+  const arrow = /⇌|→|⟶|<=>|<->|-->|->|=>|\\(?:rightleftharpoons|longrightarrow|rightarrow|to)(?![A-Za-z])|=/g;
+  let last = -1;
+  let len = 0;
+  for (const m of line.matchAll(arrow)) {
+    last = m.index ?? -1;
+    len = m[0].length;
+  }
+  if (last < 0) return line.replace(/[.;]\s*$/, "").trim();
+  // Prose before it ends at the last colon, semicolon or full stop before the equation ("… which is 3O₂: 2CH₄ + 3O₂ →
+  // 2CO + 4H₂O"), looked for before the first arrow so a reversible pair of arrows is one equation.
+  const firstArrow = line.search(arrow);
+  const lead = line.slice(0, firstArrow);
+  const starts = [...lead.matchAll(/[:;]\s|\.\s/g)].map((m) => (m.index ?? 0) + m[0].length);
+  const from = starts.length > 0 ? starts[starts.length - 1]! : 0;
+  const head = line.slice(from, last + len);
+  const tail = line.slice(last + len);
+  const cut = tail.search(/[:;]|\.(?=\s|$)|,\s/);
+  return (cut < 0 ? head + tail : head + tail.slice(0, cut)).trim();
+}
+
+/**
+ * Electrons as CCEA accepts them (C2 Higher MS 2021 7(b), "e is acceptable for e−"; the C2 E pass, 25 Sep 2026): a
+ * lone "e" is an electron, and electrons subtracted on one side are added on the other ("Zn²⁺ → Zn − 2e⁻" is "Zn²⁺ +
+ * 2e⁻ → Zn"; "2O²⁻ − 4e⁻ → O₂" is "2O²⁻ → O₂ + 4e⁻"). An "e" inside a formula ("Fe", "Ne") is left alone.
+ */
+export function electronsWritten(line: string): string {
+  const ARROW = /⇌|<=>|<->|→|⟶|-->|->|=>|\\(?:rightleftharpoons|longrightarrow|rightarrow|to)(?![A-Za-z])/;
+  let s = line.replace(/(^|[\s+])(\d*)e(?=\s*(?:$|\+|→|⟶|⇌|->|<->|=>|\\))/g, "$1$2e⁻");
+  const m = ARROW.exec(s);
+  if (!m) return s;
+  let left = s.slice(0, m.index);
+  let right = s.slice(m.index + m[0].length);
+  const SUBTRACTED = /\s*[-−–]\s*(\d*)\s*e(?:⁻|\^\{-\}|\^-|-(?!>)|−)(?=\s*(?:$|\+|[-−–]\s))/;
+  const fromLeft = SUBTRACTED.exec(left);
+  if (fromLeft) {
+    left = left.slice(0, fromLeft.index) + left.slice(fromLeft.index + fromLeft[0].length);
+    right = `${right.trimEnd()} + ${fromLeft[1]}e⁻`;
+  }
+  const fromRight = SUBTRACTED.exec(right);
+  if (fromRight) {
+    right = right.slice(0, fromRight.index) + right.slice(fromRight.index + fromRight[0].length);
+    left = `${left.trimEnd()} + ${fromRight[1]}e⁻ `;
+  }
+  s = `${left}${m[0]}${right}`;
+  return s;
+}
+
 /** Canonical spelling of an equation line so two honest spellings compare equal. */
 export function normaliseEquation(input: string, opts: NormaliseEquationOptions = {}): string {
   let s = input.replace(/\r/g, "").split("\n")[0] ?? "";
   // The notes print equations as $\ce{…}$, so a learner who copies that form is not marked down for the dollars.
   s = s.trim().replace(/^\$+|\$+$/g, "").replace(/^\\\(|\\\)$/g, "").replace(/^\\\[|\\\]$/g, "");
+  s = electronsWritten(trimEquationProse(s));
   s = unwrapBraces(s, "ce");
   s = unwrapBraces(s, "text");
   s = unwrapBraces(s, "mathrm");
@@ -266,6 +321,19 @@ export function keyboardChargeReadings(line: string): string[] {
   return changed ? readings.map((r) => r.join("")) : [];
 }
 
+/**
+ * A reversible reaction typed back to front, with the reversible sign, and otherwise right: "CuSO4 + 5H2O ⇌
+ * CuSO4.5H2O" for "CuSO4.5H2O ⇌ CuSO4 + 5H2O".
+ */
+export function reversedReversible(raw: string, spec: EquationSpec): boolean {
+  const line = (raw.replace(/\r/g, "").split("\n")[0] ?? "").trim();
+  const a = normaliseEquation(line, { stripStates: true });
+  const b = normaliseEquation(spec.balancedLatex, { stripStates: true });
+  if (!a.includes("<->") || !b.includes("<->")) return false;
+  const [l = "", r = ""] = a.split("<->");
+  return equationsMatch(`${r}<->${l}`, b, { acceptMultiples: spec.acceptMultiples, species: true });
+}
+
 export function markEquation(raw: string, spec: EquationSpec): EquationMarkResult {
   const lines = raw.replace(/\r/g, "").split("\n");
   const equationLine = (lines[0] ?? "").trim();
@@ -276,8 +344,10 @@ export function markEquation(raw: string, spec: EquationSpec): EquationMarkResul
   const first = markEquationLine(equationLine, working, spec);
   if (first.correct || spec.kindOf === "physics") return first;
   // Charges typed on a keyboard: the first reading the key accepts, else the first that says more than "not the
-  // expected equation" (unbalanced, or the state symbols), else the line as typed.
-  const read = keyboardChargeReadings(equationLine).map((r) => ({ ...markEquationLine(r, working, spec), equationLine }));
+  // expected equation" (unbalanced, or the state symbols), else the line as typed. The readings are of the equation
+  // itself, without the prose around it, and with its electrons written as the key writes them.
+  const bare = electronsWritten(trimEquationProse(equationLine));
+  const read = keyboardChargeReadings(bare).map((r) => ({ ...markEquationLine(r, working, spec), equationLine }));
   return read.find((r) => r.correct) ?? read.find((r) => r.feedback !== first.feedback && !/not the expected equation/.test(r.feedback)) ?? first;
 }
 
@@ -309,6 +379,18 @@ function markEquationLine(equationLine: string, working: string, spec: EquationS
     const b = normaliseEquation(spec.balancedLatex, { stripStates: true });
     const speciesOf = (eq: string) => sides(eq).map((s) => terms(s).map((t) => t.species).join("+")).join("->");
     if (speciesOf(a) === speciesOf(b)) {
+      // The arrow is the only difference: say so (the verifier, round 2: a single arrow was called "not balanced").
+      const arrowFree = (e: string) => e.replace("<->", "->");
+      if (equationsMatch(arrowFree(a), arrowFree(b), { acceptMultiples: spec.acceptMultiples, species: true })) {
+        return {
+          correct: false,
+          feedback: b.includes("<->")
+            ? "The substances and the balancing are right, but this reaction is reversible: use the reversible sign ⇌."
+            : "The substances and the balancing are right, but this reaction goes one way: use a single arrow →.",
+          equationLine,
+          working,
+        };
+      }
       return { correct: false, feedback: "The right substances, but the equation is not balanced yet. Count each element on both sides.", equationLine, working };
     }
   }

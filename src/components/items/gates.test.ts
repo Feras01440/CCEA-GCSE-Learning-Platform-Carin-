@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { gateAlternatives, gateOptions, markGate, visibleBlocks, wordsBetweenGates, type GateBlock, type NoteBlock } from "./gates";
+import { gateAlternatives, gateOptions, gateUnit, markGate, visibleBlocks, wordsBetweenGates, type GateBlock, type NoteBlock } from "./gates";
 
 const blocks: NoteBlock[] = [
   { type: "h", text: "Frequency density" },
@@ -135,5 +135,27 @@ describe("markGate: a name with its formula, and a number as the stem invites it
   test("a different number is not the answer", () => {
     expect(markGate(count, "2O2")).toBe(false);
     expect(markGate(count, "two")).toBe(false);
+  });
+});
+
+// The P2 C review, F05 (25 Sep 2026): a number gate read no unit, so "0.15 mA" passed where amps were asked and
+// "0.025 A" failed where milliamps were. The unit is the one the prompt asks for.
+describe("a number gate reads the unit its prompt asks for", () => {
+  const gate = (prompt: string, answer: string) => ({ type: "gate", id: "u", kind: "number", prompt, answer, explain: "" }) as const;
+  const mA = gate("A 3 V supply is connected across a 120 Ω resistor. What current flows, in milliamps?", "25");
+  const amps = gate("A 12 V supply is connected across a 48 Ω resistor. What current flows, in amps?", "0.25");
+  const joules = gate("A 60 W lamp is left on for 20 minutes. How much energy does it transfer, in joules?", "72000");
+  const pence = gate("An appliance uses 4 units of electricity. Each unit costs 30p. What is the cost, in pence?", "120");
+  test.each([
+    [mA, "25", true], [mA, "25mA", true], [mA, "0.025 A", true], [mA, "25 A", false],
+    [amps, "0.25", true], [amps, "250 mA", true], [amps, "0.25 mA", false], [amps, "0.25 V", false],
+    [joules, "72 kJ", true], [joules, "72 000", true], [joules, "72000 W", false],
+    [pence, "£1.20", true], [pence, "120p", true], [pence, "1.20", false],
+  ])("%#: %s", (g, typed, right) => {
+    expect(markGate(g as never, typed as string)).toBe(right);
+  });
+  test("a prompt that names no unit the marker knows constrains nothing", () => {
+    expect(gateUnit("How many tiles are there in total?")).toBeNull();
+    expect(markGate(gate("How many tiles are there in total?", "12") as never, "12")).toBe(true);
   });
 });

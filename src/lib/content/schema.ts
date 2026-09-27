@@ -1649,6 +1649,270 @@ export const NoteFrontmatter = named(
 export type NoteFrontmatter = z.infer<typeof NoteFrontmatter>;
 
 // ---------------------------------------------------------------------------
+// Note blocks (note.blocks.json): the lesson Slides and Read render
+// ---------------------------------------------------------------------------
+//
+// The shape of note.blocks.json, block by block, as the renderers read it: the `NoteBlock` union in
+// src/components/items/gates.ts, with the See it block (both forms) and the gate's twin of
+// docs/plan/review/2026-09-27-see-it-block-shape.md. The rules for the See it and the twin are the build's own
+// (content-lint.ts seeAndTwinDefects, 27 Sep 2026): this schema accepts what that lint accepts. What the lint alone
+// can check stays there: that a See it's named worked example is shipped by the bundle, with two to six steps. The
+// soft rules (a reason of 40 words or fewer, mark codes in the subject's language) are lesson-v2 warnings, not shape.
+
+/** Text that says something: the lint's "filled" (not empty, not only spaces). */
+const Filled = z.string().regex(/\S/, { error: "must not be empty" });
+
+/** The depth standard's heading roles (scripts/qa/lesson-v2.mjs ROLES). */
+export const HeadingRole = named(
+  z.enum(["idea", "why", "variant", "see", "twists", "further", "derivation", "recap", "pointer"]),
+  "HeadingRole",
+  "What a section does in the lesson; a heading with role `see` continues the section above it",
+);
+
+/** A See it holds two to six steps (content-lint.ts SEE_STEPS). */
+export const SEE_STEPS = { min: 2, max: 6 } as const;
+
+/**
+ * What a See it shows (V3.1, 27 Sep 2026; gates.ts SeeKind): worked arithmetic or algebra, a chain of reasons, the
+ * stages of a process, a practical's method, reading data, an extended answer point by point, or a proof. Every kind
+ * renders the same steps today; the kind lets a renderer lay one out differently later.
+ */
+export const SEE_KINDS = ["calculation", "explanation", "process", "practical", "data", "extended", "proof"] as const;
+export const SeeKind = named(z.enum(SEE_KINDS), "SeeKind", "What a See it shows: calculation, explanation, process, practical, data, extended or proof");
+export type SeeKind = z.infer<typeof SeeKind>;
+
+/** The words of a gate option's note: at most 40 (content-lint.ts seeAndTwinDefects). */
+export const OPTION_NOTE_WORDS = 40;
+
+/**
+ * Why a wrong option of a choice gate is wrong, shown when she picks it: the option as written, the reason (40 words
+ * or fewer), and the misconception it names when there is one, as the registry names it ("maths.prob.numerator-not-
+ * reduced": the renderers record it as the attempt's misconception tag).
+ */
+export const GateOptionNote = named(
+  z.object({
+    option: Filled,
+    why: Filled,
+    misconception: MisconceptionId.optional(),
+  }),
+  "GateOptionNote",
+  "A choice gate's note on one wrong option: why it is wrong, shown when she picks it",
+);
+export type GateOptionNote = z.infer<typeof GateOptionNote>;
+
+/**
+ * The option notes of a gate or of its twin, against that gate's own options and answer: each names one of the
+ * options, never the answer, one note per option, and says why in 40 words or fewer (the lint's rule for a gate,
+ * content-lint.ts seeAndTwinDefects; the same rule for a twin's own notes, 27 Sep 2026, V3.1).
+ */
+function optionNoteIssues(
+  notes: readonly GateOptionNote[],
+  on: { choice: boolean; options: readonly string[] | undefined; answer: string },
+  path: PropertyKey[],
+  ctx: z.RefinementCtx,
+): void {
+  const options = (on.options ?? []).map((o) => o.trim());
+  const seen = new Set<string>();
+  notes.forEach((n, k) => {
+    const option = n.option.trim();
+    const at = [...path, k];
+    if (!on.choice) ctx.addIssue({ code: "custom", message: "option notes belong to a choice gate", path: at });
+    else if (!options.includes(option)) ctx.addIssue({ code: "custom", message: `the note's option "${n.option}" is not one of the options`, path: [...at, "option"] });
+    else if (option === on.answer.trim()) ctx.addIssue({ code: "custom", message: `the note's option "${n.option}" is the answer (notes are for wrong options)`, path: [...at, "option"] });
+    if (seen.has(option)) ctx.addIssue({ code: "custom", message: `two notes on the option "${n.option}" (one note per option)`, path: [...at, "option"] });
+    seen.add(option);
+    const words = n.why.trim().split(/\s+/).filter(Boolean).length;
+    if (words > OPTION_NOTE_WORDS) ctx.addIssue({ code: "custom", message: `the note on "${n.option}" has ${words} words (at most ${OPTION_NOTE_WORDS})`, path: [...at, "why"] });
+  });
+}
+
+/**
+ * A gate's retry before the recap (see-it-block-shape.md §3; the owner's answer 2: asked once, before the recap, on new
+ * numbers). On a choice gate it carries its own options, the answer among them, and may carry its own option notes.
+ */
+export const GateTwin = named(
+  z.object({
+    prompt: Filled,
+    options: z.array(z.string()).optional(),
+    answer: Filled,
+    explain: Filled,
+    optionNotes: z.array(GateOptionNote).optional(),
+  }),
+  "GateTwin",
+  "The same question on new numbers, asked once before the recap when the gate was missed; never recorded",
+);
+export type GateTwin = z.infer<typeof GateTwin>;
+
+const GateBlockSchema = z
+  .object({
+    type: z.literal("gate"),
+    id: z.string().min(1),
+    kind: z.enum(["blank", "choice", "number"]),
+    prompt: z.string(),
+    options: z.array(z.string()).optional(),
+    /** Accepted answer; a blank gate may list alternatives separated by " | ". */
+    answer: z.string(),
+    explain: z.string(),
+    twin: GateTwin.optional(),
+    optionNotes: z.array(GateOptionNote).optional(),
+  })
+  .superRefine((g, ctx) => {
+    // Notes on wrong options, the gate's own and its twin's (optionNoteIssues).
+    if (g.optionNotes) optionNoteIssues(g.optionNotes, { choice: g.kind === "choice", options: g.options, answer: g.answer }, ["optionNotes"], ctx);
+    if (g.twin?.optionNotes) optionNoteIssues(g.twin.optionNotes, { choice: g.kind === "choice", options: g.twin.options, answer: g.twin.answer }, ["twin", "optionNotes"], ctx);
+    if (!g.twin) return;
+    const options = (g.twin.options ?? []).map((o) => o.trim());
+    if (g.kind === "choice" && options.length === 0) {
+      ctx.addIssue({ code: "custom", message: "the twin of a choice gate needs its options", path: ["twin", "options"] });
+    } else if (options.length > 0 && !options.includes(g.twin.answer.trim())) {
+      ctx.addIssue({ code: "custom", message: `the twin's answer "${g.twin.answer}" is not one of its options`, path: ["twin", "answer"] });
+    }
+  });
+
+/**
+ * The See it written in the note: the example's stem and our own worked steps (a step IS a WorkedExampleStep), each a
+ * working line with the reason under it and the mark it earns; at most one step she types (`input`), marked and never
+ * recorded. The topic's first See it types none (NoteBlocks checks that, since it needs the whole note).
+ */
+export const SeeBlockInline = named(
+  z
+    .object({
+      type: z.literal("see"),
+      stem: Filled,
+      figure: FigureSpec.optional(),
+      steps: z.array(WorkedExampleStep).min(SEE_STEPS.min).max(SEE_STEPS.max),
+      finalAnswer: z.string().min(1).optional(),
+      /** What the See it shows (optional; gates.ts SeeKind): the renderer may lay a calculation out differently from an explanation. */
+      kind: SeeKind.optional(),
+      /** One form or the other: a See it that names a worked example carries no steps of its own. */
+      workedExample: z.never().optional(),
+    })
+    .superRefine((see, ctx) => {
+      see.steps.forEach((s, k) => {
+        if (s.n !== k + 1) ctx.addIssue({ code: "custom", message: `step ${k + 1} is numbered ${s.n} (steps run 1, 2, 3 … in order)`, path: ["steps", k, "n"] });
+        if (!/\S/.test(s.working)) ctx.addIssue({ code: "custom", message: `step ${k + 1} has no working line`, path: ["steps", k, "working"] });
+        if (!/\S/.test(s.decision)) ctx.addIssue({ code: "custom", message: `step ${k + 1} has no reason (decision)`, path: ["steps", k, "decision"] });
+      });
+      const typed = see.steps.filter((s) => s.input !== undefined).length;
+      if (typed > 1) ctx.addIssue({ code: "custom", message: `${typed} typed steps (at most one)`, path: ["steps"] });
+    }),
+  "SeeBlockInline",
+  "A See it: the example's stem and two to six worked steps, each with its reason and the mark it earns",
+);
+export type SeeBlockInline = z.infer<typeof SeeBlockInline>;
+
+/** The See it drawn from a bundle worked example, shown as it stands: its steps without the why-menu and without input. */
+export const SeeBlockReference = named(
+  z.object({
+    type: z.literal("see"),
+    workedExample: z.string().regex(/^we\.[a-z0-9][a-z0-9.-]*$/, { error: 'a worked example id ("we.…")' }),
+    /** One form or the other: the steps are the worked example's. */
+    steps: z.never().optional(),
+  }),
+  "SeeBlockReference",
+  "A See it that names a worked example the bundle ships (two to six steps); the renderer takes its stem, figure, steps and answer",
+);
+export type SeeBlockReference = z.infer<typeof SeeBlockReference>;
+
+export const SeeBlock = z.union([SeeBlockInline, SeeBlockReference]);
+export type SeeBlock = z.infer<typeof SeeBlock>;
+
+/** Every block but the See it, by its type. */
+const OtherNoteBlock = z.discriminatedUnion("type", [
+  /** The first block of a v2 note: what the topic hero shows (lede, three "you can" lines, a minute estimate). */
+  z.object({ type: z.literal("hero"), lede: z.string(), can: z.array(z.string()), minutes: z.number(), short: z.string().optional(), generated: z.boolean().optional() }),
+  /** A stopping point the app inserts between sections; never authored. */
+  z.object({ type: z.literal("pause") }),
+  z.object({ type: z.literal("p"), md: z.string() }),
+  z.object({ type: z.literal("h"), text: z.string(), role: HeadingRole.optional() }),
+  GateBlockSchema,
+  z.object({
+    type: z.literal("callout"),
+    kind: z.enum(["spec", "mustknow", "notonspec", "examiner", "why"]),
+    title: z.string().optional(),
+    md: z.string(),
+    source: z.string().optional(),
+  }),
+  z.object({ type: z.literal("figure"), alt: z.string(), svg: z.string().optional(), caption: z.string().optional() }),
+  z.object({
+    type: z.literal("photo"),
+    src: z.string(),
+    alt: z.string(),
+    credit: z.string(),
+    licence: z.string(),
+    licenceUrl: z.string().optional(),
+    sourceUrl: z.string().optional(),
+    caption: z.string().optional(),
+    prompt: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal("video"),
+    videoId: z.string(),
+    title: z.string(),
+    channel: z.string(),
+    start: z.number().optional(),
+    end: z.number().optional(),
+    why: z.string().optional(),
+    corbettmathsNumber: z.number().optional(),
+  }),
+  z.object({
+    type: z.literal("sim"),
+    provider: z.enum(["phet", "geogebra"]),
+    url: z.string(),
+    title: z.string(),
+    attribution: z.string(),
+    licence: z.string(),
+    task: z.string().optional(),
+    height: z.number().optional(),
+  }),
+  z.object({ type: z.literal("prompt"), promptId: z.string() }),
+]);
+
+export const NoteBlock = named(z.union([OtherNoteBlock, SeeBlock]), "NoteBlock", "One block of note.blocks.json");
+export type NoteBlock = z.infer<typeof NoteBlock>;
+
+/**
+ * The note's sections as the See it rule reads them, the lint's reading exactly (content-lint.ts seeAndTwinDefects):
+ * each heading opens one, except a heading with role `see` ("See it done at writing speed"), which continues the
+ * section above; blocks before the first heading are a section too. Private: the renderers' one section parser is the
+ * readiness module's (src/lib/slides/readiness.ts); this is only the schema's own copy of the build's rule.
+ */
+function seeSections(blocks: ReadonlyArray<{ type: string; role?: string }>): number[][] {
+  const sections: number[][] = [[]];
+  blocks.forEach((b, i) => {
+    if (b.type === "h" && b.role !== "see") sections.push([]);
+    else if (b.type !== "h") sections[sections.length - 1]!.push(i);
+  });
+  return sections;
+}
+
+/**
+ * A whole note.blocks.json. Beyond each block's own shape: the topic's first See it is shown, never typed; and in a
+ * section that holds a See it, no gate comes before it (nothing is asked before it has been shown).
+ */
+export const NoteBlocks = named(
+  z.array(NoteBlock).superRefine((blocks, ctx) => {
+    const firstSee = blocks.findIndex((b) => b.type === "see");
+    const first = firstSee >= 0 ? blocks[firstSee] : undefined;
+    if (first && "steps" in first && first.steps) {
+      const typed = first.steps.flatMap((s, k) => (s.input !== undefined ? [k + 1] : []));
+      if (typed.length) ctx.addIssue({ code: "custom", message: `the topic's first See it asks her to type step ${typed.join(", ")} (the first See it is shown, never typed)`, path: [firstSee, "steps"] });
+    }
+    for (const section of seeSections(blocks)) {
+      const seeAt = section.find((i) => blocks[i]!.type === "see");
+      if (seeAt === undefined) continue;
+      for (const i of section) {
+        const b = blocks[i]!;
+        if (i < seeAt && b.type === "gate") ctx.addIssue({ code: "custom", message: `gate ${b.id} comes before its section's See it (a section's gate follows its See it)`, path: [i] });
+      }
+    }
+  }),
+  "NoteBlocks",
+  "note.blocks.json: the lesson in blocks (headings, prose, callouts, figures, See it, gates, prompts)",
+);
+export type NoteBlocks = z.infer<typeof NoteBlocks>;
+
+// ---------------------------------------------------------------------------
 // Sets and mocks (D11) — §3.9 reserves the set./mock. prefixes without a type; minimal shapes here
 // ---------------------------------------------------------------------------
 

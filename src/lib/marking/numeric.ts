@@ -136,6 +136,14 @@ export interface NumericVerdict {
    * in its lowest terms, a number not in standard form). mark.ts pays marks − 1 unless the form is the task (MK-01).
    */
   formOnly?: boolean;
+  /**
+   * True when the value is right and only the accuracy the stem instructs is not met: rounded to fewer places or
+   * figures than asked, or an exact form where a decimal is asked (the numeric-form ruling, 25 Sep 2026, is symmetric).
+   * mark.ts pays marks − 1. More places than asked, and a dropped final zero, are right (the reversal of 27 Sep 2026).
+   */
+  accuracyOnly?: boolean;
+  /** True when a right value was given in another unit of the same kind and converted ("0.08 A" for 80 mA). */
+  converted?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -430,11 +438,16 @@ const UNIT_TABLE: Record<string, UnitInfo> = {
   ml: { dim: "volume", factor: [1, 1000] },
   cl: { dim: "volume", factor: [1, 100] },
   l: { dim: "volume", factor: [1, 1] },
+  // CCEA's chemistry volume unit: 1 dm³ = 1 litre (C2 E, 27 Sep 2026: "0.35 litres" was the wrong unit for dm³).
+  "dm³": { dim: "volume", factor: [1, 1] },
   // mass
   mg: { dim: "mass", factor: [1, 1000000] },
   g: { dim: "mass", factor: [1, 1000] },
   kg: { dim: "mass", factor: [1, 1] },
   t: { dim: "mass", factor: [1000, 1] },
+  // amount of substance (CCEA C2): "5 × 10⁻³ mol" and "5 mmol" are the same amount.
+  mol: { dim: "amount", factor: [1, 1] },
+  mmol: { dim: "amount", factor: [1, 1000] },
   // time
   ms: { dim: "time", factor: [1, 1000] },
   s: { dim: "time", factor: [1, 1] },
@@ -453,6 +466,8 @@ const UNIT_TABLE: Record<string, UnitInfo> = {
   J: { dim: "energy", factor: [1, 1] },
   kJ: { dim: "energy", factor: [1000, 1] },
   MJ: { dim: "energy", factor: [1000000, 1] },
+  // The giga prefix (C2 E, al q0012: "5.7 GJ" was not 5700 MJ).
+  GJ: { dim: "energy", factor: [1000000000, 1] },
   kWh: { dim: "energy", factor: [3600000, 1] },
   W: { dim: "power", factor: [1, 1] },
   kW: { dim: "power", factor: [1000, 1] },
@@ -462,6 +477,9 @@ const UNIT_TABLE: Record<string, UnitInfo> = {
   mA: { dim: "current", factor: [1, 1000] },
   // Charge, in coulombs (CCEA P2: Q = I × t). Before this entry "36 C" could not be read at all (P2D-R1, 24 Sep 2026).
   C: { dim: "charge", factor: [1, 1] },
+  // Kilocoulombs and millicoulombs (P2 D, E6, 27 Sep 2026: "1.32 kC" was read as a thousandth of 1320 C).
+  kC: { dim: "charge", factor: [1000, 1] },
+  mC: { dim: "charge", factor: [1, 1000] },
   "Ω": { dim: "resistance", factor: [1, 1] },
   // The gradient of a resistance–length graph (CCEA Unit 7 Booklet B: "ohm/metre or Ω/m"; P2D-R2, 24 Sep 2026).
   "Ω/m": { dim: "resistance per length", factor: [1, 1] },
@@ -483,7 +501,7 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   [/^(?:mm\^?3|mm³|cu\.? ?mm|cubic millimet(?:re|er)s?)$/i, "mm³"],
   [/^(?:cm\^?3|cm³|cu\.? ?cm|cm ?cubed|cubic centimet(?:re|er)s?)$/i, "cm³"],
   [/^(?:m\^?3|m³|cu\.? ?m|m ?cubed|cubic met(?:re|er)s?)$/i, "m³"],
-  [/^(?:m\/s\^?2|m\/s²|ms\^?-2|ms⁻²|m s\^?-2|m s⁻²|metres? per second squared)$/i, "m/s²"],
+  [/^(?:m\/s\^?2|m\/s²|m\/s\/s|ms\^?-2|ms⁻²|m s\^?-2|m s⁻²|metres? per second squared|metres? per second per second)$/i, "m/s²"],
   [/^(?:m\/s|ms\^?-1|ms⁻¹|m s\^?-1|m s⁻¹|mps|metres? per second)$/i, "m/s"],
   [/^(?:km\/h|kmh|kph|km ?per ?h(?:ou)?r|kmh\^?-1|kilomet(?:re|er)s? per hour)$/i, "km/h"],
   [/^(?:mph|miles? per hour)$/i, "mph"],
@@ -494,6 +512,9 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   [/^(?:ml|millilit(?:re|er)s?)$/i, "ml"],
   [/^(?:cl|centilit(?:re|er)s?)$/i, "cl"],
   [/^(?:l|lit(?:re|er)s?)$/i, "l"],
+  [/^(?:dm\^?3|dm³|cubic decimet(?:re|er)s?)$/i, "dm³"],
+  [/^(?:mol|moles?)$/i, "mol"],
+  [/^(?:mmol|millimoles?)$/i, "mmol"],
   [/^(?:mg|milligrams?)$/i, "mg"],
   [/^(?:kg|kilos?|kilograms?)$/i, "kg"],
   [/^(?:g|grams?)$/i, "g"],
@@ -510,6 +531,7 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   [/^(?:j|joules?)$/i, "J"],
   [/^(?:kj|kilojoules?)$/i, "kJ"],
   [/^(?:mj|megajoules?)$/i, "MJ"],
+  [/^(?:gj|gigajoules?)$/i, "GJ"],
   [/^(?:kwh|kilowatt[- ]?hours?)$/i, "kWh"],
   [/^(?:w|watts?)$/i, "W"],
   [/^(?:kw|kilowatts?)$/i, "kW"],
@@ -529,6 +551,9 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   [/^(?:[°º] ?c|oc|degrees? ?c(?:elsius)?|deg ?c|degrees? centigrade|celsius|centigrade)$/i, "°C"],
   // After the Celsius spellings, so "°C" and "degrees C" stay temperatures (P2D-R1).
   [/^(?:c|coulombs?)$/i, "C"],
+  // Case-sensitive: "mc" is not a unit anyone types for a millicoulomb, and "KC" is not a kilocoulomb.
+  [/^(?:kC|kilocoulombs?)$/, "kC"],
+  [/^(?:mC|millicoulombs?)$/, "mC"],
   [/^(?:[°º]|deg|degrees?)$/i, "°"],
   [/^(?:%|percent|per cent|pc)$/i, "%"],
   [/^(?:£|pounds?|gbp|quid)$/i, "£"],
@@ -547,6 +572,21 @@ export function normaliseUnit(unit: string | null | undefined): string | null {
     if (re.test(u) || re.test(unit.trim())) return canon;
   }
   return unit.trim();
+}
+
+/** The kind of quantity a unit measures ("force" for N and kN, "mass" for kg); null for a unit the marker does not know. */
+export function unitDimension(unit: string | null | undefined): string | null {
+  const u = knownUnit(unit);
+  return u ? (UNIT_TABLE[u]?.dim ?? null) : null;
+}
+
+/** A unit the marker knows, as it writes it; null for anything else ("in total" names no unit). */
+export function knownUnit(unit: string | null | undefined): string | null {
+  if (unit === null || unit === undefined) return null;
+  const u = superscriptToAscii(unit).trim().replace(/\s+/g, " ").replace(/\.$/, "");
+  if (u === "") return null;
+  for (const [re, canon] of UNIT_ALIASES) if (re.test(u) || re.test(unit.trim())) return canon;
+  return null;
 }
 
 /**
@@ -896,9 +936,14 @@ function stripPrefixes(s: string): string {
   let t = s;
   // "answer:", "ans =", "approx", "≈", "~"
   t = t.replace(/^(?:answer|ans|approx(?:imately)?|about|roughly)\s*[:=]?\s*/i, "");
+  // "The answer is 7", "it is 5 m", "so it's 12": the sentence around the number.
+  t = t.replace(/^(?:(?:so|therefore|hence|thus)\s+)?(?:the (?:answer|result|total|value)|it|it's|this)\s+(?:is\s+)?(?=[-+£$€]?\d)/i, "");
   t = t.replace(/^[≈~]\s*/, "");
-  // "x = ", "y=", "n = ", "= "
-  t = t.replace(/^[a-zA-Z]\s*[=≈]\s*/, "");
+  // "x = ", "y=", "n = ", "= ", and a Greek letter ("θ = 31.89", "λ = 0.03 m"; the FM2 and P2 reviews, 27 Sep 2026).
+  t = t.replace(/^[a-zA-Zα-ωΑ-Ω]\s*[=≈]\s*/, "");
+  // A multiple of a symbol, the scheme's own line ("3R = 112.5" for the reaction 3R): the value it states.
+  // Not the first statement of a chain ("5R = 1050, R = 210"), which the chain rules read.
+  t = t.replace(/^\d+(?:\.\d+)?\s*[A-Za-zα-ω](?:_\{?[A-Za-z0-9]+\}?)?\s*[=≈]\s*(?=[-+−]?\d[^,;=]*$)/, "");
   // A quantity's name: "Mr = 62.5", "M_r = 62.5", "relative formula mass = 62.5", "Mr of C2H3Cl = 62.5",
   // "O2 molecules needed = 3" (C2 D F06, 24 Sep 2026: only a one-letter name came off, so an answer written as the
   // worked solutions write it could not be read). A function of a letter ("cos x = 0.5") is working, not a name.
@@ -940,6 +985,8 @@ function normaliseInput(raw: string): string {
   // The ohm sign (U+2126) that symbol pickers offer is the Greek capital omega (U+03A9) the unit table uses.
   s = s.replace(/Ω/g, "Ω");
   s = s.replace(/√\s+/g, "√");
+  // A unit or a word in TeX text ("91 \text{ m}^2", "\mathrm{cm}^3") is the text itself; TeX spaces are spaces.
+  s = s.replace(/\\(?:text|mathrm|textrm|mbox|operatorname)\s*\{([^{}]*)\}/g, "$1").replace(/\\[,;: ]/g, " ");
   s = s.replace(/\s+/g, " ").trim();
   // Trailing sentence punctuation — but a recurring-decimal ellipsis (0.333...) is meaningful.
   if (!RECURRING_ELLIPSIS_RE.test(s)) s = s.replace(/[.,;:]+$/, "").trim();
@@ -1049,7 +1096,7 @@ const MAX_INPUT_LENGTH = 256;
 // A power typed with a plain hyphen is a power too: no keyboard has ⁻¹, so "0.031 s-1" and "9.8 m s-2" are how the
 // unit gets typed (engine item 5, 23 Sep 2026: both were "could not be read").
 // The ohm sign counts as a unit letter, so a composite such as "Ω/cm" or "Ω per km" reads as a unit (P2D-R2).
-const UNKNOWN_UNIT_RE = /^(.*?[\d)π½¼¾⅓⅔⅛])\s+((?:\/[a-zA-Z°µΩ]{1,4}|[a-zA-Z°µΩ]{2,}|[a-zA-Z°µΩ](?=[²³\d/^⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]|-\d| per\b|\s[a-zA-Z]+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^]|-\d)))(?:[a-zA-Z°µΩ⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^\d/.·-]|\s(?=\S))*)$/;
+const UNKNOWN_UNIT_RE = /^(.*?[\d)π½¼¾⅓⅔⅛⁰¹²³⁴⁵⁶⁷⁸⁹])\s+((?:\/[a-zA-Z°µΩ]{1,4}|[a-zA-Z°µΩ]{2,}|[a-zA-Z°µΩ](?=[²³\d/^⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]|-\d| per\b|\s[a-zA-Z]+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^]|-\d)))(?:[a-zA-Z°µΩ⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺^\d/.·-]|\s(?=\S))*)$/;
 const MAX_UNIT_LENGTH = 48;
 
 /**
@@ -1081,6 +1128,9 @@ function looseUnitKey(unit: string): string {
     .replace(/\b(?:millimetres?|millimeters?)\b/g, "mm")
     .replace(/\b(?:kilometres?|kilometers?)\b/g, "km")
     .replace(/\b(?:litres?|liters?)\b/g, "l")
+    // A litre is a cubic decimetre: "mmol/L" is "mmol/dm³" (P2 C, 25 Sep 2026: "9 mmol/L" was the wrong unit).
+    .replace(/(^|\/|\s)l\b/g, "$1dm³")
+    .replace(/\bdm(?:3|\^3)(?![\d])/g, "dm³")
     .replace(/\b(?:moles?)\b/g, "mol")
     .replace(/\b(?:joules?)\b/g, "j")
     .replace(/\b(?:kilojoules?)\b/g, "kj")
@@ -1114,6 +1164,122 @@ function parseNumericInner(input: string): ParsedNumber | null {
     const word = NUMBER_WORDS.get(s.toLowerCase());
     if (word !== undefined) s = String(word);
   }
+  // What a typed answer carries around its number (the P2 C and P2 D reviews, 25–27 Sep 2026):
+  //  - a reason after it: "5 A because the current is the same", "R = 24 Ω, because 1/R = …": the part before;
+  //  - its unit in brackets, "36 (C)", or a restatement in brackets, "4800 seconds (80 minutes)": the unit is read,
+  //    the restatement dropped;
+  //  - an article before it: "a 13 A fuse";
+  //  - a time in two units: "1 hour 20 minutes" is 80 min, "2 minutes 30 seconds" is 150 s;
+  //  - a composite unit with no space: "9mmol/dm3".
+  {
+    // A reason or a check after the value, in the same sentence: "5 A because …", "160 cm², which agrees with …". A
+    // sentence that starts with "Since" is working before the answer, not a reason after it.
+    const dropReason = (t: string): string => {
+      const reason = /^([^.;]*?\d[^;]*?)\s*,?\s*\b(?:because|since|as this|so that|which (?:is because|agrees|checks|matches|is the same))\b.*$/i.exec(t);
+      return reason && !/\.(?:\s|$)/.test(reason[1]!.trim()) ? reason[1]!.trim() : t;
+    };
+    s = dropReason(s);
+    // The answer in the last clause of a line of working: "…, so 13.6 litres", "…, so the average speed is \dfrac{1500}{300}
+    // = 5 m/s", "R = 80 − 25 = 55 N." (the parts' own worked solutions typed into the box; 27 Sep 2026). The clause's
+    // words before "is" ("the average speed is") are the answer's name; a quantity's name before "=" comes off as it
+    // does for the whole answer.
+    {
+      // A check after the answer ("x = 4. Check: 2(4) + 1 = 9") is not the answer: it comes off first.
+      let clauses = s.split(/\s*[.;:]\s+(?=\S)|\s*,?\s+\b(?:so|therefore|hence|thus|giving)\b\s+/i);
+      const check = clauses.findIndex((c, i) => i > 0 && /^(?:check(?:ing)?|to check|as a check|this (?:agrees|checks))\b/i.test(c));
+      if (check > 0) {
+        clauses = clauses.slice(0, check);
+        if (clauses.length === 1) s = clauses[0]!;
+      }
+      let last = (clauses[clauses.length - 1] ?? "").replace(/\.\s*$/, "").trim();
+      if (clauses.length >= 2 && /\d/.test(last)) {
+        last = dropReason(last.replace(/^(?:so|therefore|hence|thus)\s+/i, ""));
+        last = last.replace(/^(?:[A-Za-z' ]{1,60}?\s)?(?:is|are|was|equals)\s+(?=[-+−£$€(\\]?[\d\\(-])/i, "");
+        s = stripPrefixes(last);
+      }
+    }
+    // An accuracy remark after the value: "254469 cm³ to the nearest cubic centimetre", "13.6 (1 d.p.)", "4.24 to 3 s.f.".
+    s = s.replace(/\s*,?\s*\(?\s*(?:to the nearest [a-z ]+|(?:correct )?to (?:\d+|one|two|three|four) (?:d\.?\s?p\.?|s\.?\s?f\.?|decimal places?|significant figures?)|\d+ ?(?:d\.?\s?p|s\.?\s?f)\.?)\s*\)?\s*$/i, "");
+    const bracket = /^(.*?\S)\s*\(([^()]*)\)\s*$/.exec(s);
+    if (bracket && /\d/.test(bracket[1]!)) {
+      const inner = bracket[2]!.trim();
+      if (!/\d/.test(inner) && knownUnit(inner)) s = `${bracket[1]} ${inner}`;
+      // A restatement ("(80 minutes)") after a value with its unit, or a remark ("(to the nearest cm)") comes off.
+      else if (/\d/.test(inner) ? /\d\s*[A-Za-zµΩ°%£]/.test(bracket[1]!) : /\s[a-z]+\s/i.test(` ${inner} `) && inner.split(/\s+/).length >= 2) s = bracket[1]!;
+    }
+    s = s.replace(/^(?:a|an|the)\s+(?=[-+£$€]?\d)/i, "");
+    const hm = /^(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h)\s*(?:and\s+)?(\d+(?:\.\d+)?)\s*(?:minutes?|mins?|min)$/i.exec(s);
+    if (hm) s = `${Number(hm[1]) * 60 + Number(hm[2])} min`;
+    const ms = /^(\d+(?:\.\d+)?)\s*(?:minutes?|mins?|min)\s*(?:and\s+)?(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)$/i.exec(s);
+    if (ms) s = `${Number(ms[1]) * 60 + Number(ms[2])} s`;
+    s = s.replace(/^([-+]?\d+(?:\.\d+)?)(?=[A-Za-zµ]{2,}[A-Za-z]*\s*(?:\/|per\b))/, "$1 ");
+  }
+  let preUnit: string | null = null;
+  // A number word with its noun ("three sections"): the number, the noun kept as the unit (B2 D, 25 Sep 2026).
+  {
+    const m = /^([a-z]+)(\s+[A-Za-z][A-Za-z ]*)$/i.exec(s);
+    const word = m ? NUMBER_WORDS.get(m[1]!.toLowerCase()) : undefined;
+    // A fraction's name after it ("one half", "three quarters") is a fraction, not a count of things.
+    if (m && word !== undefined && !/^\s*(?:halfs?|halves|thirds?|quarters?|fourths?|fifths?|sixths?|sevenths?|eighths?|ninths?|tenths?|fold)\b/i.test(m[2]!)) s = `${word}${m[2]}`;
+  }
+  // The stem's noun before the number ("gap 8", "in gap 8", "day 28", "on day 0"): the number is the answer. A
+  // function ("log 5", "sin 30") is working, not a noun, and one letter is a variable ("x 5").
+  {
+    const m = /^(?:(?:in|on|at|by)\s+)?([A-Za-z]{2,12})\s+(?=[-+]?\d)/i.exec(s);
+    if (m && !NOT_A_NAME.has(m[1]!.toLowerCase()) && !/^(?:root|sqrt|exp|approx|about)$/i.test(m[1]!)) s = s.slice(m[0].length);
+  }
+  // A magnification or a multiplier: "x6", "×6", "6x", "6×", "6-fold", "6 times". The number, with "×" as its unit, so
+  // a unit-free key reads it and a letter the question uses as a variable ("6x" where x is one) is still refused.
+  {
+    const pre = /^[x×]\s*(\d+(?:\.\d+)?)$/i.exec(s);
+    const post = /^(\d+(?:\.\d+)?)(?:[x×]|\s*-?\s*fold|\s+times)$/i.exec(s);
+    const n = pre?.[1] ?? post?.[1];
+    if (n !== undefined) {
+      preUnit = /[xX]$/.test(s) ? s[s.length - 1]! : "×";
+      s = n;
+    }
+  }
+  // Statements joined by commas, each with its working ("20 + 20 = 40, 100 − 40 = 60, 60 / 2 = 30%"): the last one's
+  // value. A pair of letters' values ("x = 5, y = 3") is not this: every statement must do arithmetic before its "=".
+  {
+    const parts = s.split(/\s*[,;]\s*/);
+    if (parts.length >= 2 && parts.every((part) => /=/.test(part) && /\d\s*[+\-−×x*÷/^]\s*\d|\d\s*\(/.test(part.split("=")[0] ?? ""))) s = parts[parts.length - 1]!;
+    // A chain of statements, each a quantity's value, with the working somewhere in it ("300 mA = 0.3 A, V = 0.3 × 45
+    // = 13.5 V"; "1/R = 1/40 + 1/60, R = 24 Ω"): the last statement's value. Letters' values alone ("x = 5, y = 3")
+    // do no working, and stay a pair.
+    else if (
+      parts.length >= 2 &&
+      parts.every((part) => /=/.test(part)) &&
+      parts.some((part) => /[\d)]\s*[+\-−×x*÷/^]\s*[\d(]|\\(?:times|div|d?frac)\b/.test(part))
+    ) {
+      s = stripPrefixes(parts[parts.length - 1]!);
+    }
+    // An equation and its solution ("20 = 5a, a = 4", "5R = 1050, R = 210", "25 + F = 40, F = 15"; the FM2 review):
+    // the last statement solves for a symbol every earlier statement contains, so its value is the answer. Two letters'
+    // values ("x = 5, y = 3") share no symbol and stay a pair.
+    else if (parts.length >= 2) {
+      const last = /^\s*([A-Za-zα-ω](?:_\{?[A-Za-z0-9]+\}?)?)\s*=\s*[-+−]?\d/.exec(parts[parts.length - 1]!);
+      const symbol = last?.[1];
+      const holds = (part: string) => new RegExp(`(?<![A-Za-z_])${symbol?.replace(/[{}]/g, "\\$&")}(?![A-Za-z])`).test(part);
+      if (symbol && parts.slice(0, -1).every((part) => /=/.test(part) && holds(part))) s = stripPrefixes(parts[parts.length - 1]!);
+    }
+  }
+  // A direction as an angle after a value with its unit ("67.88 N at 45°", "20 m/s at 30° to the horizontal"): the
+  // magnitude is the answer; the direction is its own part.
+  s = s.replace(/(\d\s*[A-Za-zΩµ/²]+)\s+at\s+[-−]?\d+(?:\.\d+)?\s*(?:°|degrees?)(?:\s+(?:to|above|below|from|with)\b.*)?$/i, "$1");
+  // A unit then prose ("2 days after", "2 days after the injection", "0.9 m beyond D"): the prose comes off when what is
+  // left ends on a unit the engine knows. "5 m per s" keeps its "per s", which is part of the unit.
+  {
+    const m = /^(.*?\d\s*[A-Za-z°%µΩ][A-Za-z°%µΩ/²³⁻¹]*)((?:\s+(?:[a-z]+|[A-Z]))+)$/.exec(s);
+    if (m) {
+      const rest = m[2]!.trim().split(/\s+/);
+      const unitWord = (w: string) => w === "per" || UNIT_ALIASES.some(([re]) => re.test(w)) || /^(?:squared|cubed|minutes?|hours?|seconds?|days?|weeks?|years?)$/i.test(w);
+      const endsOnUnit = TRAILING_UNIT_RE.test(m[1]!) || /\d\s*(?:days?|weeks?|months?|years?|hours?|minutes?|mins?|seconds?|secs?)$/i.test(m[1]!);
+      // A capital letter after "of", "from", "beyond" … is a point's name ("1.2 m to the left of A"), not the ampere.
+      const pointName = (w: string, i: number) => /^[A-Z]$/.test(w) && /^(?:of|from|beyond|past|at|to|towards|below|above|behind)$/i.test(rest[i - 1] ?? "");
+      if (!rest.some((w, i) => unitWord(w) && !pointName(w, i)) && endsOnUnit) s = m[1]!;
+    }
+  }
   // Working typed into the box ("3 × 10 = 30", "F = ma = 3 × 10 = 30 N"): the answer is what follows the last
   // "=", but only when what precedes it is arithmetic and the line is not a pair ("x = 5, y = 3").
   {
@@ -1121,7 +1287,11 @@ function parseNumericInner(input: string): ParsedNumber | null {
     // TeX operators count as working too ("800 \times \dfrac{21}{40} = 420"): before quantity names came off (F06)
     // such a line read only because the name in front happened to hold an x or a bracket.
     const before = s.slice(0, eq);
-    if (eq > 0 && !/[,;]|\b(?:or|and)\b/i.test(s) && /[×x*÷/+\-^()√]|\\(?:times|cdot|div|d?frac|tfrac|sqrt)\b/.test(before) && /\d/.test(before)) {
+    // A formula in letters before it is working too ("P = I × V = 36 W"; the P2 C review, 25 Sep 2026).
+    const formula = /[A-Za-zΩ)]\s*[×*÷/+\-]\s*[A-Za-z(]|[A-Za-zΩ]\s+x\s+[A-Za-z]/.test(before);
+    // A trigonometric or logarithmic function of a number is working ("150\sin 32° = 79.49", "150 sin 32 = 79.49").
+    const fn = /\\?(?:sin|cos|tan|log|ln)\b/.test(before) && /\d/.test(before);
+    if (eq > 0 && !/[,;]|\b(?:or|and)\b/i.test(s) && (fn || (/[×x*÷/+\-^()√]|\\(?:times|cdot|div|d?frac|tfrac|sqrt)\b/.test(before) && (/\d/.test(before) || formula)))) {
       s = s.slice(eq + 1).trim();
       if (s === "") return null;
     }
@@ -1130,7 +1300,7 @@ function parseNumericInner(input: string): ParsedNumber | null {
   s = s.replace(DIRECTION_TAIL_RE, "").trim();
   if (s === "") return null;
 
-  let unit: string | null = null;
+  let unit: string | null = preUnit;
 
   // Currency prefix: £4.41, -£3, £ 4.41, $2
   let m: RegExpExecArray | null;
@@ -1435,6 +1605,14 @@ function reconcileUnits(p: ParsedNumber, targetUnit: string | null): Reconciled 
   }
   // Units outside the table (rates such as "breaths per minute") match by spelling, loosely.
   if (!a && !t && looseUnitKey(aUnit) === looseUnitKey(targetUnit)) return { value: p.value, term, status: "ok" };
+  // A counted noun with words after it describes the same count: "58 loaves an hour" for loaves, "10 containers can
+  // be filled completely" for containers (the worked solutions typed into the box, 27 Sep 2026). A rate ("per", "/")
+  // after the noun is a different unit and does not count.
+  if (!a && !t) {
+    const [ka, kt] = [looseUnitKey(aUnit), looseUnitKey(targetUnit)];
+    const [short, long] = ka.length <= kt.length ? [ka, kt] : [kt, ka];
+    if (/^[a-z]+$/.test(short) && long.startsWith(`${short} `) && !/\//.test(long)) return { value: p.value, term, status: "ok" };
+  }
   return { value: p.value, term, status: "wrong" };
 }
 
@@ -1588,7 +1766,7 @@ function verdict(
   parsed: ParsedNumber | null,
   reason: VerdictReason,
   feedback: string,
-  extra: { correct?: boolean; nearMiss?: string; missingUnit?: boolean; valueRight?: boolean; formOnly?: boolean } = {},
+  extra: { correct?: boolean; nearMiss?: string; missingUnit?: boolean; valueRight?: boolean; formOnly?: boolean; accuracyOnly?: boolean } = {},
 ): NumericVerdict {
   const v: NumericVerdict = {
     correct: extra.correct ?? (reason === "exact" || reason === "within-tolerance"),
@@ -1599,6 +1777,7 @@ function verdict(
   if (extra.nearMiss) v.nearMiss = extra.nearMiss;
   if (extra.valueRight) v.valueRight = true;
   if (extra.formOnly) v.formOnly = true;
+  if (extra.accuracyOnly) v.accuracyOnly = true;
   if (extra.missingUnit) v.missingUnit = true;
   return v;
 }
@@ -1713,7 +1892,9 @@ function checkNumericInner(answer: string, spec: NumericSpec): NumericVerdict {
       );
     }
     if (rec.status === "converted") {
-      return verdict(parsed, match, `Correct. ${parsed.raw.trim()} is equivalent to the expected answer in ${targetUnit}.`);
+      // A unit of the same size ("litres" for dm³) converts nothing: only a changed number is a conversion.
+      const converted = !nearlyEqual(parsed.value, aVal, 1e-9);
+      return { ...verdict(parsed, match, `Correct. ${parsed.raw.trim()} is equivalent to the expected answer in ${targetUnit}.`), ...(converted ? { converted: true } : {}) };
     }
     if (rec.status === "degrees") {
       return withNote(verdict(parsed, match, `${match === "exact" ? "Correct." : "Correct, within the accepted accuracy."} On the paper write the unit as °C: degrees alone could be an angle.`));
@@ -1802,8 +1983,11 @@ function checkRequiredForm(parsed: ParsedNumber, rf: RequiredForm, spec: Numeric
 function droppedZerosNote(parsed: ParsedNumber, requiredDp: number | undefined, target: Target): string | null {
   if (requiredDp === undefined || !Number.isFinite(requiredDp) || requiredDp <= 0) return null;
   const given = parsed.decimalPlaces;
-  if (given === null || given >= requiredDp) return null;
-  if (!nearlyEqual(parsed.value, target.value, 1e-12)) return null;
+  if (given === null || given === requiredDp) return null;
+  // Too few places with the zeros dropped, or more places than asked: the value is right, and the reminder shows the
+  // places the question asks for.
+  if (!nearlyEqual(roundDp(parsed.value, requiredDp), roundDp(target.value, requiredDp), 1e-9)) return null;
+  if (given < requiredDp && !nearlyEqual(parsed.value, roundDp(target.value, requiredDp), 1e-9)) return null;
   // No claim that a mark is lost: CCEA's general marking instructions accept the dropped zero ("Accept 1.5 instead of
   // 1.50 for an answer required to 2 dp", Further Mathematics Unit 2, Summer 2021). The zeros show the accuracy asked
   // for, and that is all the reminder says (engine item 14, 23 Sep 2026).
@@ -1821,25 +2005,32 @@ function checkAccuracy(parsed: ParsedNumber, spec: NumericSpec, requiredDp: numb
   const isExactForm = parsed.form === "fraction" || parsed.form === "mixed" || parsed.form === "surd" || parsed.form === "pi" || parsed.form === "recurring";
   if (isExactForm) {
     if (requiredDp !== undefined && Number.isFinite(requiredDp)) {
-      return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for a decimal to ${plural(requiredDp, "decimal place")}: ${formatNumber(target.value, { dp: requiredDp })}.`, { correct: false });
+      return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for a decimal to ${plural(requiredDp, "decimal place")}: ${formatNumber(target.value, { dp: requiredDp })}.`, { correct: false, accuracyOnly: true });
     }
     if (requiredSf !== undefined && Number.isFinite(requiredSf)) {
-      return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for ${plural(requiredSf, "significant figure")}: ${formatNumber(roundSf(target.value, requiredSf), { sigfigs: requiredSf })}.`, { correct: false });
+      return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for ${plural(requiredSf, "significant figure")}: ${formatNumber(roundSf(target.value, requiredSf), { sigfigs: requiredSf })}.`, { correct: false, accuracyOnly: true });
     }
     return null;
   }
   // "12%" for a percent target is the written number 12, not the parsed 0.12: the unit is the form.
   const writtenValue = spec.unit === "%" && parsed.form === "percent" ? parsed.value * 100 : parsed.value;
+  // CCEA's general marking guidance (FM2 MS 2021: "Accept 1.5 instead of 1.50 for an answer required to 2 dp";
+  // "Unless specifically stated in the mark scheme, accept one or more dp, or 3 significant figures"; the 2019 MS
+  // prints "2.458 2.46"; the lead's reversal of 27 Sep 2026): a dropped final zero and more places than asked are
+  // right when they round to the answer; only fewer places than asked lose the accuracy mark.
   if (requiredDp !== undefined && Number.isFinite(requiredDp)) {
     const given = parsed.decimalPlaces;
     if (given !== null && given !== requiredDp) {
       const expected = formatNumber(target.value, { dp: requiredDp });
+      const rounded = roundDp(target.value, requiredDp);
       if (given > requiredDp) {
-        return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for ${plural(requiredDp, "decimal place")}, so write ${expected}.`, { correct: false });
+        if (nearlyEqual(roundDp(writtenValue, requiredDp), rounded, 1e-9)) return null;
+        return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for ${plural(requiredDp, "decimal place")}, so write ${expected}.`, { correct: false, accuracyOnly: true });
       }
-      // Fewer d.p. than asked, yet it still rounded to the target: e.g. 4.20 vs 4.2 (trailing zero dropped)
-      if (!nearlyEqual(writtenValue, target.value, 1e-12)) {
-        return verdict(parsed, "wrong-accuracy", `Give the answer to ${plural(requiredDp, "decimal place")}: ${expected}.`, { correct: false });
+      // Fewer places: the answer with its final zeros dropped (4.2 for 4.20) is right; a value rounded to fewer places
+      // than asked (3.4 for 3.44) keeps every mark but the accuracy mark.
+      if (!nearlyEqual(writtenValue, rounded, 1e-9)) {
+        return verdict(parsed, "wrong-accuracy", `${parsed.raw.trim()} is rounded to fewer places than the question asks. Give the answer to ${plural(requiredDp, "decimal place")}: ${expected}.`, { correct: false, accuracyOnly: true });
       }
     }
     return null;
@@ -1850,10 +2041,14 @@ function checkAccuracy(parsed: ParsedNumber, spec: NumericSpec, requiredDp: numb
     if (given !== null && given !== requiredSf) {
       // Trailing zeros in an integer are ambiguous: 4500 is a fine 3 s.f. answer for 4498.
       if ((parsed.form === "integer" || parsed.form === "percent") && nearlyEqual(writtenValue, expected, 1e-12)) return null;
+      // More figures than asked that round to the answer, or the answer with a final zero dropped (4.5 for 4.50), are
+      // right (CCEA's guidance, as for decimal places above).
+      if (given > requiredSf && nearlyEqual(roundSf(writtenValue, requiredSf), expected, 1e-9)) return null;
+      if (given < requiredSf && parsed.form !== "standard-form" && nearlyEqual(writtenValue, expected, 1e-12)) return null;
       if (parsed.form === "standard-form" && nearlyEqual(parsed.value, expected, 1e-12) && given < requiredSf) {
-        return verdict(parsed, "wrong-accuracy", `Write the answer to ${plural(requiredSf, "significant figure")}, keeping any trailing zeros.`, { correct: false });
+        return verdict(parsed, "wrong-accuracy", `Write the answer to ${plural(requiredSf, "significant figure")}, keeping any trailing zeros.`, { correct: false, accuracyOnly: true });
       }
-      return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for ${plural(requiredSf, "significant figure")}: ${formatNumber(expected, { sigfigs: requiredSf })}.`, { correct: false });
+      return verdict(parsed, "wrong-accuracy", `The value is right, but the question asks for ${plural(requiredSf, "significant figure")}: ${formatNumber(expected, { sigfigs: requiredSf })}.`, { correct: false, accuracyOnly: true });
     }
   }
   return null;
@@ -1897,10 +2092,10 @@ function diagnoseWrongValue(
         (sfForm && sfGiven !== null && sfGiven >= 2 && nearlyEqual(roundSf(T, sfGiven), aVal, 1e-9) && !nearlyEqual(T, aVal, 1e-9)));
     if (roundsToTarget) {
       if (requiredDp !== undefined) {
-        return verdict(parsed, "wrong-accuracy", `${parsed.raw.trim()} is rounded too far. Give the answer to ${plural(requiredDp, "decimal place")}: ${formatNumber(T, { dp: requiredDp })}${unitLabel}.`, { correct: false });
+        return verdict(parsed, "wrong-accuracy", `${parsed.raw.trim()} is rounded to fewer places than the question asks. Give the answer to ${plural(requiredDp, "decimal place")}: ${formatNumber(T, { dp: requiredDp })}${unitLabel}.`, { correct: false, accuracyOnly: true });
       }
       if (requiredSf !== undefined) {
-        return verdict(parsed, "wrong-accuracy", `${parsed.raw.trim()} is rounded too far. Give the answer to ${plural(requiredSf, "significant figure")}: ${formatNumber(T, { sigfigs: requiredSf })}${unitLabel}.`, { correct: false });
+        return verdict(parsed, "wrong-accuracy", `${parsed.raw.trim()} is rounded to fewer figures than the question asks. Give the answer to ${plural(requiredSf, "significant figure")}: ${formatNumber(T, { sigfigs: requiredSf })}${unitLabel}.`, { correct: false, accuracyOnly: true });
       }
       const exactHint = target.parsed && target.parsed.form !== "decimal" && target.parsed.form !== "integer" ? ` The exact answer is ${target.display}.` : "";
       return verdict(parsed, "premature-rounding-suspected", `${parsed.raw.trim()} is only the rounded value. Keep the exact value, or more figures, until the final step.${exactHint}`, {

@@ -59,3 +59,22 @@ describe("follow-through through an authored relation (fm1 form-three-simultaneo
     expect(followThroughValue({ earlierRaw: "19", earlierSpec: aoife, workedSolution: "From $(2)$, $17 - y = 5$, so $y = 12$." }, brona)).toBeNull();
   });
 });
+
+// The verifier, round 2 (25 Sep 2026). Her own earlier value carries even when it is within the earlier part's
+// tolerance but not the key's value: 3.24 Ω/m (accepted for 3.2) leads to 12.96 Ω for 4.0 m, which the key's 12.8 ± 0.05
+// alone would refuse. And a chain of angles with degree signs ("90° − 62° = 28°") carries her value too.
+describe("follow-through: her own value, and angles", () => {
+  const perMetre: AnswerSpec = { kind: "numeric", value: 3.2, tolerance: { type: "absolute", value: 0.05 }, unitRequired: false, acceptForms: ["decimal"] };
+  const fourMetres: AnswerSpec = { kind: "numeric", value: 12.8, tolerance: { type: "absolute", value: 0.05 }, unitRequired: false, acceptForms: ["decimal"] };
+  test("3.24 carried: 12.96 is right for it", () => {
+    const ft = { earlierRaw: "3.24", earlierSpec: perMetre, workedSolution: "Each metre has 3.2 Ω, so 4.0 m has 3.2 × 4.0 = 12.8 Ω." };
+    expect(markAnswer("12.96", fourMetres, { marks: 2, followThrough: ft }).correct).toBe(true);
+  });
+  test("p2 reflection .0007(b): 90° − 62° with her 60° gives 30°", () => {
+    const first: AnswerSpec = { kind: "numeric", value: 62, tolerance: { type: "exact" }, unit: "°", unitRequired: false, acceptForms: ["decimal"] };
+    const second: AnswerSpec = { kind: "numeric", value: 28, tolerance: { type: "exact" }, unit: "°", unitRequired: false, acceptForms: ["decimal"] };
+    const ws = "The ray makes 62° with the first normal, so it makes 90° − 62° = 28° with the second.";
+    expect(followThroughValue({ earlierRaw: "60", earlierSpec: first, workedSolution: ws }, second)).toBe(30);
+    expect(markAnswer("30°", second, { marks: 1, followThrough: { earlierRaw: "60", earlierSpec: first, workedSolution: ws } }).correct).toBe(true);
+  });
+});

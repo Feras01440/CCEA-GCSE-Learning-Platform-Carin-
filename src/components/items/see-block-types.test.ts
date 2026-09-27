@@ -47,3 +47,29 @@ describe("the See it block and the gate twin type-check as NoteBlocks", () => {
     expect(bad.type).toBe("see");
   });
 });
+
+describe("option notes and the See it's kind type-check", () => {
+  test("a choice gate with notes on its wrong options, and a See it of kind explanation", () => {
+    const gate: GateBlock = {
+      type: "gate",
+      id: "g3",
+      kind: "choice",
+      prompt: "Which is the next step?",
+      options: ["Factorise the top", "Cancel the x"],
+      answer: "Factorise the top",
+      explain: "Factorise before cancelling.",
+      optionNotes: [{ option: "Cancel the x", why: "Only a factor of the whole top and bottom cancels.", misconception: "fm.algfrac.cancel-terms" }],
+    };
+    const inline: SeeBlockInline = {
+      type: "see",
+      kind: "explanation",
+      stem: "Why does the reaction slow down?",
+      steps: [
+        { n: 1, working: "Fewer particles", decision: "Concentration falls." },
+        { n: 2, working: "Fewer collisions per second", decision: "So the rate falls." },
+      ],
+    };
+    const blocks: NoteBlock[] = [gate, inline];
+    expect(blocks).toHaveLength(2);
+  });
+});

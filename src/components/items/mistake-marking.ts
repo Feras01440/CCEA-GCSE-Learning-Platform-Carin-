@@ -17,7 +17,7 @@
  *   - takes a value only when it is a result the corrected working states — the flagged line's own corrected value
  *     or the final answer — and never a value her working had already reached.
  */
-import { checkNumeric, normaliseUnit, parseNumeric } from "@/lib/marking/numeric";
+import { checkNumeric, normaliseUnit, parseNumeric, unitDimension } from "@/lib/marking/numeric";
 import { checkAlgebraic } from "@/lib/marking/algebra";
 import { parseMatrix } from "@/lib/marking/matrix";
 import { equationsMatch, normaliseEquation } from "./equation-marking";
@@ -85,7 +85,9 @@ function prepare(line: string): string {
  */
 const FORMULA_WORD = String.raw`(?:[A-Z][a-z]?\d*)*[A-Z][a-z]?\d+(?:[A-Z][a-z]?\d*)*`;
 /** A label's words: letters, or a formula (C2 D F01, 24 Sep 2026: "O2 molecules needed" was not a label). */
-const LABEL_RE = new RegExp(String.raw`^((?:${FORMULA_WORD}|[A-Za-z]+)(?: +(?:${FORMULA_WORD}|[A-Za-z]+))* *(?:\([^()]*\))?)\s*=\s*`);
+// A symbol's subscript is part of its name: "R_D" is not "R_C" (the FM2 review, 27 Sep 2026: the wrong reaction set to
+// zero was confirmed, as "R" alone named nothing).
+const LABEL_RE = new RegExp(String.raw`^((?:${FORMULA_WORD}|[A-Za-z]+(?:_\{?[A-Za-z0-9]+\}?)?)(?: +(?:${FORMULA_WORD}|[A-Za-z]+))* *(?:\([^()]*\))?)\s*=\s*`);
 
 /**
  * The label a line is written under, and what it says: "Median = 30 + …" → "Median" and "30 + …";
@@ -845,6 +847,8 @@ export interface FixOptions {
   pieces?: boolean;
   /** Lines stated before this one (a worked example's earlier steps): their pieces are not this line's. */
   exclude?: readonly string[];
+  /** Her line as she typed it, before tidying took its commas: the statements a value match checks (valueLineSound). */
+  rawTyped?: string;
 }
 
 /**
@@ -1098,9 +1102,159 @@ export function fixMatches(typed: string, correction: readonly string[], opts: F
       labelsAgree(typedLabel, x.label) &&
       (typedWhat === null || x.what === null || typedWhat === x.what) &&
       near(typedResult.value, x.value, typedResult.text, x.text),
-  )
+  ) && valueLineSound(opts.rawTyped ?? typed, correction, opts.exclude ?? [])
     ? { match: true, how: "value" }
     : NONE;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// A line judged by its value must also be true, point the step's way and be in its unit (the FM2 review, 27 Sep 2026:
+// "42 sin 28 = 37.08" was confirmed against 42 cos 28 = 37.08 — the sine and cosine swapped, the error the examiners'
+// reports name most in FM2; "a = 1.2 downwards" against up as positive; "60 kg" for a force).
+// ---------------------------------------------------------------------------------------------------------------------
+
+/** Sine, cosine and tangent of degrees, and their inverses, replaced by their values; null when an argument is unread. */
+function trigFree(expr: string): string | null {
+  let s = expr
+    .replace(/\\left|\\right/g, "")
+    .replace(/\\(arcsin|arccos|arctan|sin|cos|tan)(?![A-Za-z])/g, "$1")
+    .replace(/\^\{?\\circ\}?|°/g, "")
+    .replace(/\\sqrt\{([^{}]*)\}/g, "√($1)")
+    .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "(($1)/($2))")
+    .replace(/²/g, "^2")
+    .replace(/³/g, "^3");
+  for (let n = 0; n < 12; n += 1) {
+    const m = /(arcsin|arccos|arctan|sin|cos|tan)\s*(\^\{?-1\}?|⁻¹|\^-1|-1(?=\s*\())?\s*/i.exec(s);
+    if (!m) return s;
+    const fn = m[1]!.toLowerCase();
+    const inverse = m[2] !== undefined || fn.startsWith("arc");
+    const at = m.index + m[0].length;
+    let arg: string;
+    let end: number;
+    if (s[at] === "(") {
+      let depth = 0;
+      let close = -1;
+      for (let i = at; i < s.length; i += 1) {
+        if (s[i] === "(") depth += 1;
+        else if (s[i] === ")" && --depth === 0) {
+          close = i;
+          break;
+        }
+      }
+      if (close < 0) return null;
+      arg = s.slice(at + 1, close);
+      end = close + 1;
+    } else {
+      const lit = /^[-−]?\d+(?:\.\d+)?/.exec(s.slice(at));
+      if (!lit) return null;
+      arg = lit[0];
+      end = at + lit[0].length;
+    }
+    const inner = evaluateWithTrig(arg);
+    if (inner === null) return null;
+    const deg = Math.PI / 180;
+    const base = fn.replace(/^arc/, "");
+    const v = inverse
+      ? (base === "sin" ? Math.asin(inner) : base === "cos" ? Math.acos(inner) : Math.atan(inner)) / deg
+      : base === "sin"
+        ? Math.sin(inner * deg)
+        : base === "cos"
+          ? Math.cos(inner * deg)
+          : Math.tan(inner * deg);
+    if (!Number.isFinite(v)) return null;
+    s = `${s.slice(0, m.index)}(${v.toFixed(12)})${s.slice(end)}`;
+  }
+  return null;
+}
+
+/** Arithmetic with trigonometry in degrees: "42 sin 28", "\tan^{-1}(5/12)", "√(37.08² + 19.72²)". Null for algebra. */
+export function evaluateWithTrig(expr: string): number | null {
+  const s = trigFree(expr.trim());
+  if (s === null) return null;
+  // A number before a bracket multiplies it ("42(0.4695)", as "42 sin 28" becomes).
+  const t = s.replace(/\s+/g, "").replace(/−/g, "-").replace(/(\d|\))\(/g, "$1*(");
+  if (/^\(?-?\d+(?:\.\d+)?\)?$/.test(t)) return Number(t.replace(/[()]/g, ""));
+  return evaluateArithmetic(t);
+}
+
+/** Two sides of a typed statement agree to the precision she wrote them (a rounded "= 34.64", "≈ 42"). */
+function sidesAgree(a: number, b: number, textA: string, textB: string): boolean {
+  const places = (t: string) => {
+    const m = /^\s*[-−]?\d+\.(\d+)\s*$/.exec(dropUnit(t));
+    return m ? m[1]!.length : null;
+  };
+  const p = [places(textA), places(textB)].filter((x): x is number => x !== null);
+  const written = p.length > 0 ? 0.5 * 10 ** -Math.min(...p) : 0;
+  return Math.abs(a - b) <= Math.max(written, 0.005 * Math.max(Math.abs(a), Math.abs(b)), 1e-9) + 1e-9;
+}
+
+/** Every statement in her line whose sides are all numbers is true: "40 cos 30 = 20" is not (it is 34.64). */
+export function statementsHold(typed: string): boolean {
+  // Split into statements before tidying, which drops the commas between them.
+  for (const raw of plainText(typed).split(/\s*[,;]\s*|\s+(?:so|and|therefore|hence|thus|giving|then)\s+/i)) {
+    const sides = asTyped(raw)
+      .split(/[=≈]/)
+      .map((x) => x.trim())
+      .filter((x) => x.length > 0);
+    const values = sides.map((side) => {
+      const letters = side.replace(/(?:arcsin|arccos|arctan|sin|cos|tan)|\\[A-Za-z]+/g, "");
+      // A division next to an implied product ("90π ÷ 4/3π") has two readings; such a side is not judged.
+      const ambiguous = /÷|\/|\\div/.test(side) && /(?:\d|\))\s*(?:π|\\pi|\()|π\s*\d/.test(side);
+      return ambiguous || /[A-Za-z]/.test(dropUnit(letters)) ? null : evaluateWithTrig(dropUnit(side));
+    });
+    for (let i = 0; i + 1 < values.length; i += 1) {
+      const [a, b] = [values[i], values[i + 1]];
+      if (a === null || a === undefined || b === null || b === undefined) continue;
+      if (!sidesAgree(a, b, sides[i]!, sides[i + 1]!)) return false;
+    }
+  }
+  return true;
+}
+
+const OPPOSITE: Record<string, string> = { up: "down", down: "up", left: "right", right: "left", acw: "cw", cw: "acw", forward: "backward", backward: "forward" };
+
+/** The directions a line states, as up/down/left/right/cw/acw ("Taking up as positive", "down the slope"). */
+function directionsIn(text: string): Set<string> {
+  const t = asTyped(plainText(text)).toLowerCase();
+  const out = new Set<string>();
+  if (/\bup(?:wards?)?\b/.test(t)) out.add("up");
+  if (/\bdown(?:wards?)?\b/.test(t)) out.add("down");
+  if (/\bleft(?:wards?)?\b/.test(t)) out.add("left");
+  if (/\bright(?:wards?)?\b/.test(t) && !/\bright[- ]angle/.test(t)) out.add("right");
+  if (/\banti-?clockwise\b/.test(t)) out.add("acw");
+  if (/(?<!anti-?)\bclockwise\b/.test(t)) out.add("cw");
+  if (/\bforwards?\b/.test(t)) out.add("forward");
+  if (/\bbackwards?\b/.test(t)) out.add("backward");
+  return out;
+}
+
+/**
+ * Her direction contradicts the step's: the step (or, where it names none, the working before it) states the opposite
+ * direction and never hers ("a = 1.2 downwards" where the working takes up as positive).
+ */
+function directionContradicts(typed: string, lines: readonly string[], before: readonly string[]): boolean {
+  const hers = directionsIn(typed);
+  if (hers.size === 0) return false;
+  const own = new Set(lines.flatMap((l) => [...directionsIn(l)]));
+  const context = own.size > 0 ? own : new Set(before.flatMap((l) => [...directionsIn(l)]));
+  return [...hers].some((d) => context.has(OPPOSITE[d]!) && !context.has(d));
+}
+
+/** The kind of quantity a line's final value is in ("force" for N, "mass" for kg), when the unit is one the marker knows. */
+function resultDimension(line: string): string | null {
+  const plain = asTyped(plainText(line)).replace(/[.,;:]+$/, "");
+  const last = plain.split(/[=≈]/).pop() ?? "";
+  const m = /[-−]?\d+(?:\.\d+)?\s*([A-Za-zΩ°µ][A-Za-z²³⁻¹/^0-9]*)\s*$/.exec(last.trim());
+  return m ? unitDimension(m[1]!) : null;
+}
+
+/** Her value is true, points the step's way and is in the step's kind of unit. */
+function valueLineSound(typed: string, lines: readonly string[], before: readonly string[]): boolean {
+  if (!statementsHold(typed)) return false;
+  if (directionContradicts(typed, lines, before)) return false;
+  const hers = resultDimension(typed);
+  const theirs = lines.map(resultDimension).filter((d): d is string => d !== null);
+  return hers === null || theirs.length === 0 || theirs.includes(hers);
 }
 
 /**
@@ -1245,6 +1399,120 @@ function statesResult(line: string): boolean {
  * `pieces` (her own line in a worked-example step): a clause or a `$…$` piece of the step also counts.
  */
 export function stepLineMatches(typed: string, working: string, opts: { pieces?: boolean; before?: readonly string[] } = {}): FixMatch {
+  const once = (line: string) => stepLineMatchesOnce(line, working, opts);
+  const direct = once(typed);
+  if (direct.match) return direct;
+  const before = opts.before ?? [];
+  // The FM2 review (27 Sep 2026): right lines refused for how they were written.
+  // A direction she adds that agrees with the step ("a = 1.2 m/s² upwards" where up is positive): judged without it.
+  const withoutDirection = typed.replace(STEP_DIRECTION_TAIL, "").trim();
+  if (withoutDirection !== typed.trim() && withoutDirection.length > 0 && !directionContradicts(typed, [working], before)) {
+    const r = once(withoutDirection);
+    if (r.match) return r;
+  }
+  // The routes below read a piece of her line as the whole, which is right for her own line in a worked-example step
+  // (`pieces`) and wrong for the ladder and the re-teach pairing, where one piece of a long line must not stand for a
+  // point (a later line's equivalent expression paired with an earlier point: laws-of-logarithms .0007, 27 Sep 2026).
+  if (opts.pieces !== true) return NONE;
+  // A lead-in before a colon ("T − W = ma: 5600 − 5000 = 500a").
+  const lead = /^[^:]{1,60}:\s*(\S.*)$/.exec(typed.trim());
+  if (lead && /\d/.test(lead[1]!)) {
+    const r = once(lead[1]!);
+    if (r.match) return r;
+  }
+  // Two statements, the last the step's line and each earlier one true of its value ("R_A + 470 = 650, R_A = 180",
+  // "2T_D = 206, T_D = 103").
+  const parts = plainText(typed)
+    .split(/\s*[,;]\s*|\s+(?:so|therefore|hence|thus|giving|then)\s+/i)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+  if (parts.length >= 2) {
+    const last = parts[parts.length - 1]!;
+    const r = once(last);
+    if (r.match && parts.slice(0, -1).every((p) => holdsFor(p, last))) return r;
+  }
+  // The step's equation rearranged or worked ("600 = 500a" for "5600 − 5000 = 500a"; "40 cos 30 − 12 = 5a" for
+  // "34.64 − 12 = 5a"): one unknown, the same root, and not yet solved (the solved value is the next step's).
+  if (sameRootEquation(typed, working)) return LINE;
+  return NONE;
+}
+
+/** A direction after her value: "upwards", "up the slope", "(downwards)", "to the left". */
+const STEP_DIRECTION_TAIL = /\s*,?\s*\(?\s*(?:(?:vertically|horizontally|acting)\s+)?(?:up(?:wards?)?|down(?:wards?)?|to the (?:left|right)|left(?:wards?)?|right(?:wards?)?|anti-?clockwise|clockwise)(?:\s+(?:the\s+)?(?:slope|plane|incline))?\s*\)?\s*\.?\s*$/i;
+
+/** A symbol her statement solves for, as she wrote it ("R_A", "T_{D}", "a"), and the value. */
+function solvedFor(statement: string): { symbol: string; value: number } | null {
+  const m = /^\s*([A-Za-zθα-ω](?:_\{?[A-Za-z0-9]+\}?)?)\s*=\s*([-−]?\d+(?:\.\d+)?)\s*(?:[A-Za-zΩ°µ/²³^-]*\s*)?$/.exec(asTyped(statement));
+  return m ? { symbol: m[1]!, value: Number(m[2]!.replace("−", "-")) } : null;
+}
+
+/** Her symbol's value put into the statement, both sides a number: does it hold? */
+function substituted(statement: string, symbol: string, value: number): { left: number; right: number; texts: [string, string] } | null {
+  const sides = asTyped(statement).split(/[=≈]/);
+  if (sides.length !== 2) return null;
+  const variants = [symbol, symbol.replace(/_\{?([A-Za-z0-9]+)\}?/, "_$1"), symbol.replace(/_\{?([A-Za-z0-9]+)\}?/, "_{$1}"), symbol.replace(/_\{?([A-Za-z0-9]+)\}?/, "$1")];
+  const put = (side: string) => {
+    let s = side;
+    for (const v of [...new Set(variants)].sort((a, b) => b.length - a.length)) {
+      s = s.replace(new RegExp(`(?<![A-Za-z_])${v.replace(/[{}^$.*+?()[\]\\|]/g, "\\$&")}(?![A-Za-z_0-9])`, "g"), `(${value})`);
+    }
+    return evaluateWithTrig(dropUnit(s));
+  };
+  const [l, r] = [put(sides[0]!), put(sides[1]!)];
+  return l === null || r === null ? null : { left: l, right: r, texts: [sides[0]!, sides[1]!] };
+}
+
+/** An earlier statement of hers is true of the value her last statement solves for (or is true arithmetic). */
+function holdsFor(statement: string, last: string): boolean {
+  const solved = solvedFor(last);
+  if (!solved) return false;
+  const s = substituted(statement, solved.symbol, solved.value);
+  if (s) return sidesAgree(s.left, s.right, s.texts[0], s.texts[1]) || Math.abs(s.left - s.right) <= 0.005 * Math.max(Math.abs(s.left), Math.abs(s.right), 1);
+  return statementsHold(statement) && /\d/.test(statement) && !/[A-Za-z]/.test(asTyped(statement).replace(/(?:sin|cos|tan)/g, ""));
+}
+
+/** The one unknown of an equation ("a", "R_C"), when it has exactly one besides the trigonometric functions. */
+function onlyUnknown(equation: string): string | null {
+  const t = asTyped(plainText(equation)).replace(/\\[A-Za-z]+/g, " ").replace(/(?:arcsin|arccos|arctan|sin|cos|tan)/g, " ");
+  const symbols = [...new Set(t.match(/[A-Za-zθα-ω](?:_\{?[A-Za-z0-9]+\}?)?/g) ?? [])];
+  return symbols.length === 1 ? symbols[0]! : null;
+}
+
+/** The root of a linear equation in its one unknown, or null (not linear, no root, or unreadable). */
+function linearRoot(equation: string, symbol: string): number | null {
+  const at = (x: number) => {
+    const s = substituted(equation, symbol, x);
+    return s ? s.left - s.right : null;
+  };
+  const [f0, f1, f2] = [at(0), at(1), at(2)];
+  if (f0 === null || f1 === null || f2 === null) return null;
+  const slope = f1 - f0;
+  if (Math.abs(slope) < 1e-12 || Math.abs(f2 - (f0 + 2 * slope)) > 1e-6 * Math.max(1, Math.abs(f0), Math.abs(slope))) return null;
+  return -f0 / slope;
+}
+
+/** Her equation and one of the step's have the same one unknown and the same root, and hers is not yet solved. */
+function sameRootEquation(typed: string, working: string): boolean {
+  const mine = asTyped(plainText(typed)).trim();
+  if ((mine.match(/[=≈]/g) ?? []).length !== 1 || solvedFor(mine) !== null) return false;
+  const symbol = onlyUnknown(mine);
+  if (symbol === null) return false;
+  // The unknown alone on a side ("Q = 19 + 8√3") is a result, judged as one (and never a restated earlier result).
+  if (mine.split(/[=≈]/).some((side) => side.trim() === symbol)) return false;
+  const root = linearRoot(mine, symbol);
+  if (root === null) return false;
+  const refs = [...working.split("\n"), ...[...working.matchAll(/\$([^$]+)\$/g)].map((m) => m[1]!)]
+    .map((l) => asTyped(plainText(l)).replace(/^[^=:]{1,60}:\s*/, "").trim())
+    .filter((l) => (l.match(/[=≈]/g) ?? []).length === 1 && solvedFor(l) === null);
+  return refs.some((ref) => {
+    const theirs = onlyUnknown(ref);
+    if (theirs === null || theirs.replace(/[_{}]/g, "") !== symbol.replace(/[_{}]/g, "")) return false;
+    const r = linearRoot(ref, theirs);
+    return r !== null && Math.abs(r - root) <= 0.005 * Math.max(1, Math.abs(r));
+  });
+}
+
+function stepLineMatchesOnce(typed: string, working: string, opts: { pieces?: boolean; before?: readonly string[] } = {}): FixMatch {
   const lines = workingLines(working);
   // The authored lines go in as written, `$…$` and all, so a piece of maths she types on its own can be found; the
   // plain lines follow them (a markdown table's rows read as she sees them), the last of them the step's result.
@@ -1255,8 +1523,12 @@ export function stepLineMatches(typed: string, working: string, opts: { pieces?:
   // `before`: the earlier steps' working. A piece this step only restates from them ("$Q = 19 + 8\sqrt{3}$ is
   // irrational" restating step 5's Q) is not this step's line.
   const exclude = (opts.before ?? []).flatMap((w) => w.split("\n").map((l) => l.trim()).filter((l) => l.length > 0 && !l.startsWith("|")));
-  const result = fixMatches(asTyped(typed), [...authored, ...lines], { pieces: opts.pieces === true, exclude });
+  // A line that ends in prose after its value ("Weight = 9 × 10 = 90 N, acting vertically downwards.") states that value.
+  // (A comma reads as a wide gap once the line is tidied.)
+  const PROSE_TAIL = /(?:,\s*|\s{2,})[A-Za-z][^=\d]*$/;
+  const trimmed = lines.map((l) => l.replace(PROSE_TAIL, "").trim()).filter((l, i) => l !== lines[i] && /=/.test(l));
+  const result = fixMatches(asTyped(typed), [...authored, ...lines, ...trimmed], { pieces: opts.pieces === true, exclude, rawTyped: typed });
   if (result.how !== "value") return result;
   const last = lines[lines.length - 1] ?? "";
-  return statesResult(last) ? result : NONE;
+  return statesResult(last) || statesResult(last.replace(PROSE_TAIL, "").trim()) ? result : NONE;
 }

@@ -9,7 +9,7 @@
  * band descriptors. Pure; never throws on learner input.
  */
 import type { AnswerSpec, CommonError, MarkPoint } from "@/lib/content/schema";
-import { checkNumeric, normaliseUnit, parseNumeric } from "@/lib/marking/numeric";
+import { checkNumeric, knownUnit, normaliseUnit, parseNumeric } from "@/lib/marking/numeric";
 import { checkAlgebraic } from "@/lib/marking/algebra";
 import { checkPoints, looksLikePointList } from "@/lib/marking/points";
 import { checkTransformation, graphTestMatches } from "@/lib/marking/transformation";
@@ -19,11 +19,12 @@ import { checkTable, tableResponseText } from "@/lib/marking/table";
 import { checkMatrix, matrixResponseText, parseMatrix, sameMatrixEntries } from "@/lib/marking/matrix";
 import { checkLabel, labelResponseText } from "@/lib/marking/label";
 import { qwcEvidence, qwcSummary } from "@/lib/marking/qwc";
-import { equationSchemeMarks, markEquation, normaliseEquation } from "./equation-marking";
+import { equationSchemeMarks, markEquation, normaliseEquation, reversedReversible } from "./equation-marking";
 import { evaluateArithmetic } from "./mistake-marking";
 import { expectedDisplay, isAutoMarkable, toAlgebraSpec, toNumericSpec, toNumericTolerance } from "./spec-map";
-import { markMcq, markText } from "./text-marking";
+import { isFormula, markMcq, markText, nameWithFormula } from "./text-marking";
 import { markOrder, orderMarks, stepsAsOrder } from "./order-marking";
+import { markWorking, methodSteps } from "@/lib/marking/working";
 
 export interface MarkResult {
   correct: boolean;
@@ -68,8 +69,116 @@ export interface MarkOptions {
   prompt?: string;
   /** The part's mark scheme. A text part's key-word groups follow its points' `dependsOn` when they stand one for one. */
   scheme?: readonly MarkPoint[];
+  /** The part's worked solution: a text part reads its negations as the model's (text-marking MarkTextOptions.model). */
+  workedSolution?: string;
   /** Follow-through from an earlier part (the part's `followThrough`, "use-candidate-value"): see `followThroughValue`. */
   followThrough?: FollowThrough;
+  /**
+   * The part's subject ("science", "maths", "further-maths"). Science papers mark instructed decimal places as written
+   * (a dropped final zero loses the accuracy mark); maths and further maths accept it. Omitted: the maths reading.
+   */
+  subject?: string;
+}
+
+/** The maths of a line, spelt one way: no dollars, spaces, \left/\right; TeX fractions and products as typed. */
+function mathsSpelling(s: string): string {
+  return s
+    .replace(/\$/g, "")
+    .replace(/\\left|\\right/g, "")
+    .replace(/\^\{([^{}]*)\}/g, "^$1")
+    .replace(/_\{([^{}]*)\}/g, "_$1")
+    .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
+    .replace(/\\(?:times|cdot)/g, "*")
+    .replace(/[×·]/g, "*")
+    .replace(/[−–]/g, "-")
+    .replace(/²/g, "^2")
+    .replace(/³/g, "^3")
+    .replace(/[{}\s]/g, "");
+}
+
+/** A scheme point's expression and hers are the same expression (maths only: prose is never sampled). */
+function sameExpression(point: string, raw: string): boolean {
+  const bare = point.replace(/\b(?:sin|cos|tan|log|ln|sqrt)\b/g, " ");
+  if (!/[+\-*/^×÷()]/.test(bare) || /[A-Za-z]{3,}/.test(bare)) return false;
+  try {
+    return checkAlgebraic(raw, { answer: point, mode: "equivalent" }).correct;
+  } catch {
+    return false;
+  }
+}
+
+/** Her answer is an expression the stem itself prints: the question typed back, no step taken. */
+function copiesTheQuestion(raw: string, prompt: string | undefined): boolean {
+  if (!prompt) return false;
+  const hers = mathsSpelling(raw);
+  if (hers.length === 0) return false;
+  // A number the stem gives, typed back ("550" for "Write 550 as a product of its prime factors").
+  if (/^\d+(?:\.\d+)?$/.test(hers) && new RegExp(`(?<![\\d.])${hers.replace(".", "\\.")}(?![\\d.])`).test(prompt.replace(/\$[^$]*\$/g, " "))) return true;
+  return [...prompt.matchAll(/\$([^$]+)\$/g)].some((m) => {
+    const theirs = mathsSpelling(m[1]!);
+    return theirs === hers || theirs.replace(/[()]/g, "") === hers.replace(/[()]/g, "");
+  });
+}
+
+/**
+ * A form task answered with the right value in another form (ruling 1 as the judge changed it, 27 Sep 2026): the
+ * answer is working. The ladder pays the scheme's method points it shows ("Expand and simplify (n + 2)(n − 4)"
+ * answered "n² − 4n + 2n − 8" is MA1 MA1, 2 of 3; M4 2025 Q5), a matched common error may raise the award, and the
+ * whole is capped at marks − 1: the last mark is the form. The question typed back takes no step and earns only what
+ * a common error naming it says.
+ */
+function formTaskAward(raw: string, feedback: string, marks: number, expected: string, opts: MarkOptions, spec: AnswerSpec): MarkResult {
+  const copied = copiesTheQuestion(raw, opts.prompt);
+  let ladder = 0;
+  if (!copied && opts.scheme && opts.scheme.length > 0) {
+    const ws = opts.workedSolution ?? "";
+    // Her one line may show several points at once (both lines of a fraction factorised): each point reads its own copy.
+    const w = markWorking(opts.scheme.map(() => raw), opts.scheme, ws);
+    ladder = w.marks;
+    // A later line of one chain implies the earlier ones: "n² − 4n + 2n − 8" is past "n(n − 4) + 2(n − 4)", which is
+    // the same expression one step back (M4 2025 Q5: MA1 MA1). A parallel point ("numerator factorised") is not
+    // implied by another ("denominator factorised"): only an earlier point whose expression equals hers counts.
+    const steps = methodSteps(opts.scheme, ws);
+    const earned = new Set(w.earned.map((e) => e.id));
+    const lastEarned = steps.reduce((at, s, i) => (earned.has(s.id) ? i : at), -1);
+    for (let i = 0; i < lastEarned; i += 1) {
+      const s = steps[i]!;
+      if (!earned.has(s.id) && s.evidence.some((e) => sameExpression(e, raw))) ladder += s.marks;
+    }
+  }
+  const award = Math.max(0, Math.min(marks - 1, ladder));
+  const base: MarkResult = {
+    correct: false,
+    marksAwarded: award,
+    marksAvailable: marks,
+    expected,
+    explanation: copied
+      ? "That is the expression the question gives: no step has been taken yet."
+      : award > 0
+        ? `${feedback} The steps shown earn ${award} of ${marks}; the last mark is for the form the question asks for.`
+        : `${feedback} The value is right, but the question asks for that form, and the form is what the marks are for.`,
+  };
+  const r = withCommonError(base, raw, opts, undefined, undefined, spec.kind === "algebraic" ? spec.variables : undefined, spec.kind === "algebraic" ? spec.latex : undefined);
+  return { ...r, marksAwarded: Math.min(r.marksAwarded, Math.max(0, marks - 1)) };
+}
+
+/** A science part (the subject on the part; Double Award Science). */
+function isScience(subject: string | undefined): boolean {
+  return subject !== undefined && /science/i.test(subject);
+}
+
+function plural(n: number, word: string): string {
+  return `${n} ${word}${n === 1 ? "" : "s"}`;
+}
+
+/** Her right value is written to other places (or figures) than the stem instructs: "13" or "13.00" for 13.0 to 1 d.p. */
+function sciencePlacesDiffer(v: { parsed: { decimalPlaces: number | null; sigFigs: number | null; form: string } | null }, spec: AnswerSpec): boolean {
+  if (spec.kind !== "numeric" || !v.parsed) return false;
+  if (!["decimal", "integer", "percent"].includes(v.parsed.form)) return false;
+  if (spec.tolerance.type === "dp" && spec.tolerance.places !== undefined) return (v.parsed.decimalPlaces ?? 0) !== spec.tolerance.places;
+  // Figures: an integer's trailing zeros are ambiguous (4500 is 2, 3 or 4 s.f.), so only a decimal is judged.
+  if (spec.tolerance.type === "sf" && spec.tolerance.figures !== undefined && v.parsed.form === "decimal") return v.parsed.sigFigs !== spec.tolerance.figures;
+  return false;
 }
 
 /** What follow-through needs: her answer to the earlier part, that part's answer spec, and how the value carries. */
@@ -93,14 +202,16 @@ export function followThroughValue(ft: FollowThrough, spec: AnswerSpec): number 
   if (ft.earlierSpec.kind !== "numeric") return null;
   const x = parseNumeric(ft.earlierRaw.trim())?.value;
   if (x === undefined || !Number.isFinite(x)) return null;
-  if (markAnswer(ft.earlierRaw, ft.earlierSpec, { marks: 1 }).correct) return null;
+  // Her own value carries even when it is within the earlier part's tolerance (3.24 for 3.2 leads to 12.96, not 12.8).
   const v0 = ft.earlierSpec.value;
   if (ft.relation) return evaluateArithmetic(ft.relation.replace(/\bx\b/g, `(${x})`));
   if (spec.kind !== "numeric" || !ft.workedSolution) return null;
   const target = spec.value;
-  for (const line of ft.workedSolution.split(/\n|(?<=[.;])\s+(?=[A-Z])/)) {
+  // Degree signs come off, so a chain of angles ("90° − 62° = 28°") is arithmetic like any other.
+  for (const line of ft.workedSolution.replace(/°/g, "").split(/\n|(?<=[.;])\s+(?=[A-Z])/)) {
     const sides = normaliseEquation(line.replace(/\$/g, " ")).replace(/\*/g, "×").split("=");
-    const lastValue = parseNumeric(sides[sides.length - 1] ?? "")?.value;
+    // The value the chain arrives at, with any words after it ("= 28 with the second normal") left off.
+    const lastValue = parseNumeric(/^[-+]?\d+(?:\.\d+)?/.exec(sides[sides.length - 1] ?? "")?.[0] ?? "")?.value;
     if (lastValue === undefined || Math.abs(lastValue - target) > 1e-9 * Math.max(1, Math.abs(target))) continue;
     for (const side of sides.slice(0, -1).reverse()) {
       // The side must be arithmetic that comes to the answer and holds the earlier value as a number of its own.
@@ -145,20 +256,52 @@ export function groupDependencies(spec: Extract<AnswerSpec, { kind: "text" }>, s
  * correct to 3 significant figures", "Round to the nearest penny"), not a given ("6.4 cm, correct to 1 decimal
  * place"), which describes a measurement rather than the answer.
  */
+/**
+ * Does the stem ask for the answer in this unit ("Give your answer in mA", "What current flows, in milliamps?", "in
+ * hours")? Only a unit the marker knows counts, and never the article "a" ("in a circuit").
+ */
+export function instructsUnit(prompt: string | undefined, unit: string): boolean {
+  if (!prompt) return false;
+  const want = knownUnit(unit) ?? unit;
+  for (const m of prompt.matchAll(/\b(?:in (?:the unit )?|how many )([A-Za-zµΩ£%°²³/]+(?: per [A-Za-z]+)?)/gi)) {
+    const words = m[1]!;
+    if (/^(?:a|an|i|the|it|its|this|that|each|every|one|order|total|terms|full|form|words)$/i.test(words)) continue;
+    if (knownUnit(words) === want) return true;
+  }
+  return false;
+}
+
 export function instructsAccuracy(prompt: string | undefined): boolean {
   if (!prompt) return false;
   const text = prompt.replace(/\bd\.p\./gi, "dp").replace(/\bs\.f\./gi, "sf");
   // An instruction sentence starts with a command word, or attaches the accuracy to "your answer" ("Show your
   // working and give your answer to one decimal place"); a given such as "6.4 cm, correct to 1 decimal place" does neither.
+  // "A stopwatch does not round: it cuts the display off at 1 decimal place" describes the given, not the answer (m4
+  // bounds .0005, 27 Sep 2026): "round" alone is not an instruction; "round to", "rounded to" are.
   return text.split(/[.!?\n]+/).some(
     (s) =>
       /\b(decimal places?|significant figures?|dp|sf|nearest)\b/i.test(s) &&
-      (/^\s*(give|write|work out|calculate|find|round|state|express|estimate)\b/i.test(s) || /\byour answers?\b|\bgiving\b|\brounding\b|\bround\b/i.test(s)),
+      (/^\s*(give|write|work out|calculate|find|round|state|express|estimate)\b/i.test(s) ||
+        /\byour answers?\b|\bgiving\b|\brounding\b|\bround(?:ed)?\s+(?:it\s+|this\s+|them\s+)?(?:correct\s+)?to\b/i.test(s)),
   );
 }
 
 /** The instructions that make the form the task: an equivalent answer in another form has not done it. */
-const FORM_TASK = /\b(?:simplif(?:y|ied)|factori[sz]e|factori[sz]ed|expand|multiply out|rationali[sz]e|as a single (?:fraction|logarithm|log))\b|\bexpress\b(?![^.?!]*\bin terms of\b)[^.?!]*\bas\b/i;
+const FORM_TASK = new RegExp(
+  [
+    String.raw`\b(?:simplif(?:y|ied)|factori[sz]e|factori[sz]ed|expand|multiply out|rationali[sz]e|as a single (?:fraction|logarithm|log))\b`,
+    String.raw`\bexpress\b(?![^.?!]*\bin terms of\b)[^.?!]*\bas\b`,
+    // "Write 550 as a product of its prime factors" (m3 hcf .0011(a), 27 Sep 2026: "550" typed back was paid 2/2).
+    String.raw`\bas (?:a |the )?product of (?:its )?prime factors\b`,
+    // Converting a number is the whole task (the verifier, round 2): "convert 0.4̇ to a fraction", "write … as a surd",
+    // "change … into a mixed number", "write … in standard form".
+    String.raw`\b(?:convert|change|write)\b[^.?!]*\b(?:(?:to|as|into) an? (?:fraction|mixed number|surd|decimal|percentage)|in (?:standard|surd) form)\b`,
+    // A "show that" part prints its answer, and "show your working" asks for the working: a value alone shows nothing.
+    String.raw`\bshow that\b`,
+    String.raw`\bshow (?:all )?(?:your|clear) working\b`,
+  ].join("|"),
+  "i",
+);
 
 /**
  * Does the stem instruct the form the value is given in ("leave your answer in terms of π", "in surd form", "as a
@@ -166,7 +309,7 @@ const FORM_TASK = /\b(?:simplif(?:y|ied)|factori[sz]e|factori[sz]ed|expand|multi
  * mark but the final one, as the accuracy mark is withheld; without such an instruction a value equal within the
  * tolerance earns every mark (the verifier's ruling, 25 Sep 2026).
  */
-const FORM_INSTRUCTION = /\b(?:in terms of|in the form|show that|surd form|exact(?:ly)?|as an? (?:exact |single |mixed |improper )?(?:fraction|mixed number|decimal|percentage|whole number|integer)|lowest terms|simplest form|standard form)\b/i;
+const FORM_INSTRUCTION = /\b(?:in terms of|in the form|surd form|exact(?:ly)?|as an? (?:exact |single |mixed |improper )?(?:fraction|mixed number|decimal|percentage|whole number|integer)|lowest terms|simplest form|standard form)\b/i;
 export function instructsForm(prompt: string | undefined): boolean {
   return prompt !== undefined && FORM_INSTRUCTION.test(prompt);
 }
@@ -354,10 +497,46 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       const formTask = !v.correct && v.formOnly === true && isFormTask(opts.prompt, spec);
       // A right value in another form: every mark where the stem does not instruct the form, the marks less the final
       // one where it does, and nothing where the form is the whole task.
-      if (!v.correct && v.formOnly === true && !formTask && !instructsForm(opts.prompt)) {
+      // Decimal places or significant figures instructed are an instructed form too: an exact value there ("12√2" for
+      // "to 2 decimal places") is the right value in the wrong form (the ruling is symmetric; FM2 D, 25 Sep 2026).
+      if (!v.correct && v.formOnly === true && !formTask && !instructsForm(opts.prompt) && !instructsAccuracy(opts.prompt)) {
         return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Correct." };
       }
       const formOnly = !v.correct && v.formOnly === true && !formTask && marks > 1;
+      // The right value short of the instructed accuracy (rounded to fewer places or figures than asked, or an exact form
+      // where a decimal is asked): every mark but the accuracy mark. A dropped final zero and more places than asked are
+      // right (CCEA's guidance; the lead's reversal of 27 Sep 2026), with the write-it-this-way reminder as words only.
+      if (!v.correct && v.accuracyOnly === true && !formTask) {
+        const award = Math.max(0, marks - 1);
+        const lost = award === 0 ? `0 of ${marks}: the accuracy mark is lost.` : `${award} of ${marks}: only the accuracy mark is lost.`;
+        const r: MarkResult = { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${v.feedback} ${lost}` };
+        return withCommonError(r, trimmed, opts);
+      }
+      // Science marks the places as instructed: a dropped final zero or extra places lose the accuracy mark there (DAS
+      // 2025 chemistry report, C1 Q(b): "many lost a mark for not giving their answer to one decimal place as
+      // instructed"; the lead's scope of ruling 12, 27 Sep 2026). Further Maths and Maths parts keep them right with the
+      // reminder (FM GMI "Accept 1.5 instead of 1.50 for an answer required to 2 dp"; M4 2025 GMA (viii)).
+      if (v.correct && !v.converted && isScience(opts.subject) && instructsAccuracy(opts.prompt) && sciencePlacesDiffer(v, spec)) {
+        const award = Math.max(0, marks - 1);
+        const said = v.feedback.replace(/^Correct(?:, within the accepted accuracy)?\.\s*/, "The value is right. ");
+        const places = spec.tolerance.type === "dp" ? plural(spec.tolerance.places ?? 0, "decimal place") : plural(spec.tolerance.type === "sf" ? (spec.tolerance.figures ?? 0) : 0, "significant figure");
+        const reminder = /on the paper/.test(said) ? "" : ` The question asks for ${places}: ${expected}.`;
+        const lost = award === 0 ? `0 of ${marks}: the accuracy mark is lost.` : `${award} of ${marks}: only the accuracy mark is lost.`;
+        return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${said}${reminder} ${lost}`.replace(/\s{2,}/g, " ").trim() };
+      }
+      // A unit the stem instructs ("Give your answer in mA", "… in hours?"): the right value left in another unit has
+      // not made the conversion asked for, and loses the unit's mark (the P2 C review, 25 Sep 2026: "0.08 A" for "in mA").
+      if (v.correct && v.converted === true && spec.unit && instructsUnit(opts.prompt, spec.unit)) {
+        const award = Math.max(0, marks - 1);
+        const r: MarkResult = {
+          correct: false,
+          marksAwarded: award,
+          marksAvailable: marks,
+          expected,
+          explanation: `${trimmed} is the right value, but the question asks for the answer in ${spec.unit}: ${expected}. ${award} of ${marks}: the unit's mark is lost.`,
+        };
+        return withCommonError(r, trimmed, opts);
+      }
       const base: MarkResult = {
         correct: v.correct,
         marksAwarded: v.correct ? marks : unitOnly || formOnly ? marks - 1 : 0,
@@ -389,13 +568,21 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
         const base: MarkResult = { correct: p.correct, marksAwarded: p.correct ? marks : 0, marksAvailable: marks, expected, explanation: p.feedback };
         return p.correct ? base : withCommonError(base, trimmed, opts, undefined, names);
       }
-      const v = checkAlgebraic(trimmed, toAlgebraSpec(spec));
+      // The question typed back on a form task takes no step, however the spec's equivalence reads it (the pipeline
+      // agent's check, 27 Sep 2026: "Simplify fully" with the fraction typed back was paid 3/3 under "equivalent").
+      if (isFormTask(opts.prompt, spec) && copiesTheQuestion(trimmed, opts.prompt)) {
+        return formTaskAward(trimmed, "That is the expression the question gives.", marks, expected, opts, spec);
+      }
+      // Where x is not one of the answer's letters, an x between numbers is the times sign ("2 x 5^2 x 11").
+      const read = spec.variables.includes("x") ? trimmed : trimmed.replace(/(?<=[\d)²³])\s*x\s*(?=[\d(])/g, " × ");
+      const v = checkAlgebraic(read, toAlgebraSpec(spec));
       // The right expression in the wrong form (unsimplified, not yet a single log, not factorised) keeps every mark
       // but the last on a multi-mark part: the scheme's final mark is the form, the earlier ones the working.
       // Not where the form IS the task (MK-01 ruling, 25 Sep 2026: "simplify fully" with the question typed back was
       // paid marks − 1): there the right value in another form earns nothing, or a matched common error's own marks.
       const wrongForm = !v.correct && (v.reason === "equivalent-wrong-form" || v.reason === "not-simplified");
       const formTask = wrongForm && isFormTask(opts.prompt, spec);
+      if (formTask) return formTaskAward(trimmed, v.feedback, marks, expected, opts, spec);
       const rightValueWrongForm = wrongForm && !formTask && marks > 1;
       const base: MarkResult = {
         correct: v.correct,
@@ -420,8 +607,7 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       // Follow-through: the option her own earlier value leads to (the fuse just above her current).
       if (!v.correct && opts.followThrough && opts.followThrough.earlierSpec.kind === "numeric" && ids.length === 1) {
         const x = parseNumeric(opts.followThrough.earlierRaw.trim())?.value;
-        const earlierRight = markAnswer(opts.followThrough.earlierRaw, opts.followThrough.earlierSpec, { marks: 1 }).correct;
-        if (x !== undefined && !earlierRight && nextOptionAbove(spec, x) === ids[0]) {
+        if (x !== undefined && nextOptionAbove(spec, x) === ids[0]) {
           return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Right for your answer to the earlier part: the marks follow through." };
         }
       }
@@ -437,7 +623,18 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
           return [];
         }
       });
-      const v = markText(trimmed, spec, { wrongAnswers, dependsOn: groupDependencies(spec, opts.scheme) });
+      // A name with its formula: the part judges the one it asks for, the other is ignored even if wrong (CCEA C2 2021;
+      // the verifier, 25 Sep 2026: "carbon monoxide (CO2)" was paid for carbon dioxide). The stem's "name" or
+      // "formula" decides; without either, formula-only key words ask for the formula, anything else for the name.
+      const pair = nameWithFormula(trimmed);
+      let judged = trimmed;
+      if (pair) {
+        const asksFormula = /\bformulae?\b/i.test(opts.prompt ?? "");
+        const asksName = /\bname\b/i.test(opts.prompt ?? "");
+        const formulaKeys = spec.keyWords.length > 0 && spec.keyWords.every((g) => g.any.every((k) => isFormula(k)));
+        judged = asksFormula && !asksName ? pair.formula : asksName && !asksFormula ? pair.name : formulaKeys ? pair.formula : pair.name;
+      }
+      const v = markText(judged, spec, { wrongAnswers, dependsOn: groupDependencies(spec, opts.scheme), model: opts.workedSolution ? [opts.workedSolution] : [] });
       const groups = spec.keyWords.length > 0;
       // Key-word groups need not sum to the part's tariff: a 1-mark "state, with a reason" part is written as
       // two groups (the verdict and the reason). The part's marks are shared out by the fraction of group
@@ -545,6 +742,11 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
     }
     case "equation": {
       const v = markEquation(raw, spec);
+      // A reversible reaction written back to front with the reversible sign, otherwise right: every mark but one (the
+      // verifier, round 2; CCEA C2 H 2022 "award [3]" of 4).
+      if (!v.correct && spec.kindOf !== "physics" && marks > 1 && reversedReversible(raw, spec)) {
+        return { correct: false, marksAwarded: marks - 1, marksAvailable: marks, expected, explanation: `The reaction is right, but written back to front: ${marks - 1} of ${marks}. Put the reactants on the left.` };
+      }
       // A physics equation part is the equation and then the value: the equation line alone earns its own mark and
       // not the rest (engine item 10.1, 23 Sep 2026: every mark was paid for the equation line).
       if (spec.kindOf === "physics" && v.correct && marks > 1) {

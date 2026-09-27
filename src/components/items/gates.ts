@@ -2,7 +2,7 @@
  * Step-reveal note blocks and gate marking (pure). Nothing after an unanswered gate is
  * visible; answering a gate (right or not) opens the next stretch.
  */
-import { checkNumeric } from "@/lib/marking/numeric";
+import { checkNumeric, knownUnit } from "@/lib/marking/numeric";
 import type { FigureSpec, WorkedExampleStep } from "@/lib/content/schema";
 import { isFormula, nameWithFormula, normaliseText } from "./text-marking";
 
@@ -22,7 +22,20 @@ export interface GateTwin {
  * steps are the schema's WorkedExampleStep; or it names a bundle worked example and the renderer takes the stem,
  * figure, steps (without whyMenu) and final answer from it.
  */
-export type SeeBlockInline = { type: "see"; stem: string; figure?: FigureSpec; steps: WorkedExampleStep[]; finalAnswer?: string };
+/** What a See it shows: a calculation, an explanation, a process, a practical, data, an extended answer or a proof. */
+export type SeeKind = "calculation" | "explanation" | "process" | "practical" | "data" | "extended" | "proof";
+export type SeeBlockInline = { type: "see"; stem: string; figure?: FigureSpec; steps: WorkedExampleStep[]; finalAnswer?: string; kind?: SeeKind };
+
+/**
+ * Why a wrong option of a choice gate is wrong, shown when she picks it (the independent review of 27 Sep 2026): one
+ * note per wrong option at most, never on the answer, the reason in 40 words or fewer, and the misconception it
+ * names when there is one.
+ */
+export interface GateOptionNote {
+  option: string;
+  why: string;
+  misconception?: string;
+}
 export type SeeBlockReference = { type: "see"; workedExample: string };
 export type SeeBlock = SeeBlockInline | SeeBlockReference;
 
@@ -44,6 +57,8 @@ export type NoteBlock =
       explain: string;
       /** The retry before the recap, asked when the gate was answered wrongly (see-it-block-shape.md §3). */
       twin?: GateTwin;
+      /** A choice gate's notes on its wrong options, shown when one is picked (GateOptionNote). */
+      optionNotes?: GateOptionNote[];
     }
   | SeeBlock
   | { type: "callout"; kind: "spec" | "mustknow" | "notonspec" | "examiner" | "why"; title?: string; md: string; source?: string }
@@ -89,6 +104,17 @@ export function gateAlternatives(answer: string): string[] {
     .filter((s) => s.length > 0);
 }
 
+/**
+ * The unit a number gate's prompt asks for, from its closing "in <unit>" ("… in milliamps?", "… in joules?", "(in A)"),
+ * as the numeric marker writes it; null when the prompt names none the marker knows.
+ */
+export function gateUnit(prompt: string): string | null {
+  const m = /\bin ([A-Za-zµΩ£%°²³/ ]{1,24}?)\)?\s*[?.:]?\s*$/.exec(prompt.trim());
+  if (!m) return null;
+  const words = m[1]!.trim();
+  return knownUnit(words) ?? knownUnit(words.replace(/^(?:the )?(?:unit )?/i, ""));
+}
+
 export function markGate(gate: GateBlock, raw: string): boolean {
   const typed = raw.trim();
   if (typed.length === 0) return false;
@@ -102,8 +128,13 @@ export function markGate(gate: GateBlock, raw: string): boolean {
       const picked = options.includes(typed) ? typed : /^\d+$/.test(typed) ? (options[Number(typed)] ?? null) : null;
       return (picked ?? typed) === gate.answer.trim();
     }
-    case "number":
-      return gateAlternatives(gate.answer).some((alt) => checkNumeric(typed, { value: alt }).correct);
+    case "number": {
+      // The unit the prompt asks for ("What current flows, in milliamps?"): an answer in another unit of the same kind
+      // is converted ("0.025 A" for 25 mA, "72 kJ" for 72 000 J, "£1.20" for 120p), and one of another kind is wrong
+      // ("0.15 mA" where amps are asked; the P2 C review, F05, 25 Sep 2026). A bare number is read in the asked unit.
+      const unit = gateUnit(gate.prompt);
+      return gateAlternatives(gate.answer).some((alt) => checkNumeric(typed, unit ? { value: alt, unit, requireUnit: false } : { value: alt }).correct);
+    }
     case "blank": {
       const t = normaliseText(typed);
       // A name given with its formula (C2 D F04, 24 Sep 2026): where the gate asks for the name the formula beside it

@@ -234,3 +234,50 @@ describe("a key written with \\rightarrow keeps its arrow", () => {
     expect(normaliseEquation(String.raw`\left(x\right)`)).toBe("(x)");
   });
 });
+
+// The guard with the parts' own worked solutions (27 Sep 2026): an equation written as a sentence was refused for its
+// full stop or the prose after it ("C2H4 + H2 → C2H6." earned 0).
+describe("an equation written as a sentence ends at its last formula", () => {
+  const ethane: EquationSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "C2H4 + H2 -> C2H6", stateSymbolsRequired: false, acceptMultiples: false };
+  const ethanol: EquationSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "C2H5OH + 3O2 -> 2CO2 + 3H2O", stateSymbolsRequired: false, acceptMultiples: true };
+  const photo: EquationSpec = { kind: "equation", kindOf: "word", balancedLatex: "carbon dioxide + water -> glucose + oxygen", stateSymbolsRequired: false, acceptMultiples: false };
+  test.each([
+    [ethane, "C2H4 + H2 → C2H6."],
+    [ethane, "C2H4 + H2 → C2H6. The specification does not ask for the product's name."],
+    [ethanol, "C2H5OH + 3O2 → 2CO2 + 3H2O: 2 C, 6 H and 7 O on each side."],
+    [ethanol, "C2H5OH + 3O2 → 2CO2 + 3H2O; balanced."],
+    [photo, "carbon dioxide + water → glucose + oxygen, with light energy above the arrow and chlorophyll below it."],
+  ])("%#: %s", (spec, raw) => {
+    expect(markEquation(raw, spec).correct).toBe(true);
+  });
+  test("a hydrate's dot and a decimal point stay; a wrong product is still wrong", () => {
+    const hydrate: EquationSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "CuSO4.5H2O -> CuSO4 + 5H2O", stateSymbolsRequired: false, acceptMultiples: false };
+    expect(markEquation("CuSO4.5H2O → CuSO4 + 5H2O.", hydrate).correct).toBe(true);
+    expect(markEquation("C2H4 + H2 → C2H4.", ethane).correct).toBe(false);
+  });
+});
+
+// CCEA C2 Higher MS 2021 7(b): "e is acceptable for e−"; electrons subtracted on the other side are the scheme's own
+// accepted form (the C2 E pass, 27 Sep 2026: "Zn2+ + 2e → Zn" earned 2/3).
+describe("electrons as CCEA accepts them", () => {
+  const zn: EquationSpec = { kind: "equation", kindOf: "half", balancedLatex: "Zn^{2+} + 2e^- -> Zn", stateSymbolsRequired: false, acceptMultiples: false };
+  const o2: EquationSpec = { kind: "equation", kindOf: "half", balancedLatex: "2O^{2-} -> O_2 + 4e^-", stateSymbolsRequired: false, acceptMultiples: false };
+  test.each([
+    [zn, "Zn2+ + 2e → Zn"],
+    [zn, "Zn²⁺ + 2e → Zn"],
+    [zn, "Zn²⁺ → Zn − 2e⁻"],
+    [zn, "Zn2+ → Zn - 2e-"],
+    [o2, "2O²⁻ − 4e⁻ → O₂"],
+    [o2, "2O2- - 4e- → O2"],
+    [o2, "2O2- → O2 + 4e"],
+    [o2, "2O2- → O2 + 4e-."],
+  ])("%#: %s", (spec, raw) => {
+    expect(markEquation(raw, spec).correct).toBe(true);
+  });
+  test("the electron count still has to balance, and an e inside a formula is not an electron", () => {
+    expect(markEquation("Zn2+ + e → Zn", zn).correct).toBe(false);
+    expect(markEquation("Zn2+ → Zn + 2e", zn).correct).toBe(false);
+    const ne: EquationSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "Fe + S -> FeS", stateSymbolsRequired: false, acceptMultiples: false };
+    expect(markEquation("Fe + S → FeS", ne).correct).toBe(true);
+  });
+});

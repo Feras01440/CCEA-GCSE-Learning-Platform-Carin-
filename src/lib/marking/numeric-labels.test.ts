@@ -81,3 +81,38 @@ describe("a coefficient against its formula, and a number in words", () => {
     expect(checkNumeric("2A", { value: 2, unit: "A", requireUnit: true }).correct).toBe(true);
   });
 });
+
+// The B2 D author's sweeps (25 Sep 2026). A number with a word attached: "gap 8", "day 28", "Day 0" (the stem's own
+// noun before the number), "three sections" (a number word with its noun), "x6", "6x", "×6", "6-fold" (a
+// magnification or a multiplier), "2 days after" (the unit then prose), and working written as statements joined by
+// commas ("20 + 20 = 40, 100 − 40 = 60, 60 / 2 = 30%").
+describe("a number with a word attached", () => {
+  test.each([
+    ["gap 8", 8],
+    ["in gap 8", 8],
+    ["Gap 8.", 8],
+    ["day 28", 28],
+    ["Day 0", 0],
+    ["on day 0", 0],
+    ["three sections", 3],
+    ["x6", 6],
+    ["×6", 6],
+    ["6x", 6],
+    ["6×", 6],
+    ["6-fold", 6],
+  ])("%s reads as %d", (typed, value) => {
+    expect(parseNumeric(typed)?.value).toBe(value);
+  });
+  test("a variable's letter after a number is still not a multiplier", () => {
+    expect(checkNumeric("6x", { value: 6, variables: ["x"] }).correct).toBe(false);
+  });
+  test("a unit then prose: '2 days after' is 2 days", () => {
+    expect(checkNumeric("2 days after", { value: 2, unit: "days" }).correct).toBe(true);
+    expect(checkNumeric("2 days after the injection", { value: 2, unit: "days" }).correct).toBe(true);
+  });
+  test("statements joined by commas: the last one's value", () => {
+    expect(checkNumeric("20 + 20 = 40, 100 - 40 = 60, 60 / 2 = 30%", { value: 30, unit: "%" }).correct).toBe(true);
+    expect(parseNumeric("x = 5, y = 3")).toBeNull();
+    expect(parseNumeric("4, 5")).toBeNull();
+  });
+});

@@ -1403,7 +1403,7 @@ function checkSingle(answer: string, student: Parsed, specText: string, spec: Al
     return verdict(false, 'unparseable', `There is a problem with the expected answer for this question (${sp.error}) – please report it.`);
   }
   const specParsed = sp.value;
-  const ctx = buildCtx(spec, [student.expr, specParsed.expr], `${specText} ${answer}`);
+  const ctx = buildCtx(spec, [student.expr, specParsed.expr], `${specText}\u0000${answer}`);
 
   if (SET_HEADS.has(student.expr.operator) && !SET_HEADS.has(specParsed.expr.operator)) {
     return verdict(false, 'not-equivalent', 'A single answer was expected here, but you have given more than one.');
@@ -1541,7 +1541,7 @@ function checkSolutionSet(answer: string, specPieces: string[], spec: AlgebraSpe
   const ctx = buildCtx(
     spec,
     [...specSolutions, ...studentSolutions].map((s) => s.value.expr),
-    `${specPieces.join('|')} ${answer}`,
+    `${specPieces.join('|')}\u0000${answer}`,
   );
 
   // Deduplicate the student's list.

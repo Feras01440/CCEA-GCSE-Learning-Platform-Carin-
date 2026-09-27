@@ -126,3 +126,19 @@ describe("the reversible sign and dependent points in an equation", () => {
     expect(markAnswer("Zn2+ + e- → Zn", zinc, { marks: 3, scheme: pts }).marksAwarded).toBe(2);
   });
 });
+
+// The verifier, round 2 (25 Sep 2026): (5) a reversible reaction written back to front with the reversible sign,
+// otherwise right, earns every mark but one (CCEA C2 H 2022: "award [3]" of 4); (6) a single arrow where the reversible
+// sign belongs is diagnosed as the arrow, not as balancing.
+describe("a reversible reaction back to front, and the arrow named", () => {
+  const hydrate = { kind: "equation" as const, kindOf: "symbol" as const, balancedLatex: "CuSO4.5H2O <=> CuSO4 + 5H2O", stateSymbolsRequired: false, acceptMultiples: true };
+  test("back to front with ⇌: marks − 1", () => {
+    expect(markAnswer("CuSO4 + 5H2O ⇌ CuSO4.5H2O", hydrate, { marks: 4 })).toMatchObject({ correct: false, marksAwarded: 3 });
+    expect(markAnswer("CuSO4 + 5H2O → CuSO4.5H2O", hydrate, { marks: 4 }).marksAwarded).toBe(0);
+  });
+  test("the single arrow is named", () => {
+    const r = markEquation("CuSO4.5H2O → CuSO4 + 5H2O", hydrate);
+    expect(r.feedback).toMatch(/reversible sign/);
+    expect(r.feedback).not.toMatch(/not balanced/);
+  });
+});

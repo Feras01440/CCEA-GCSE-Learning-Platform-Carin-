@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { figureLeakWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, svgDrawDefects, weFigureFor } from "./content-lint";
+import { figureLeakWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, markingWarnings, noteBlockWarnings, sizeWarnings, svgDrawDefects, weFigureFor } from "./content-lint";
 import { figureForMode } from "./WorkedExampleAsQuestion";
 
 describe("lintContent", () => {
@@ -354,7 +354,8 @@ describe("lintNoteBlocks: the See it block and the gate twin", () => {
   });
 
   test("the topic's first See it asks for no input; a later one may ask for one, never two", () => {
-    const input = { input: { kind: "numeric", value: 3 } };
+    // a well-formed typed answer (the schema's AnswerSpec), so only the rule under test speaks
+    const input = { input: { kind: "numeric", value: 3, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] } };
     const first = { type: "see", stem: "s", steps: [step(1), step(2, input)] };
     expect(lintNoteBlocks([h("1. The idea", "idea"), p, first, gate("g1")], label, bundle())).toEqual([
       `${label} note block 2 (See it): the topic's first See it asks her to type step 2 (the first See it is shown, never typed)`,
@@ -369,9 +370,51 @@ describe("lintNoteBlocks: the See it block and the gate twin", () => {
     const blocks = [see(2), gate("g1", { twin: { prompt: "Again?", answer: "A one" } }), see(2), gate("g2", { twin: { prompt: "Again?", options: ["C", "D"], answer: "E", explain: "Why." } })];
     expect(lintNoteBlocks(blocks, label, bundle())).toEqual([
       `${label} note block 1 (gate g1): its twin has no explain`,
-      `${label} note block 1 (gate g1): its twin, for a choice gate, has no options`,
-      `${label} note block 3 (gate g2): its twin's answer "E" is not one of its options`,
+      `${label} note block 1 (gate g1): the twin of a choice gate needs its options`,
+      `${label} note block 3 (gate g2): the twin's answer "E" is not one of its options`,
     ]);
+  });
+
+  /**
+   * A See it step IS a worked example's step, so its mark codes, its typed answer and its why-menu have the schema's
+   * shape; a figure or a final answer that is there must be one. The schema (src/lib/content/schema.ts) refuses these;
+   * the lint refuses them too, in the schema's own words (it asks the schema), so an author reads one message.
+   */
+  test("the five shapes the schema refuses are refused in the schema's own words", () => {
+    const later = (s: Record<string, unknown>) => [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Next", "variant"), p, see(2, { steps: [step(1), step(2, s)] }), gate("g2")];
+    expect(lintNoteBlocks(later({ earns: ["M1 A1"] }), label, bundle())).toEqual([`${label} note block 6 (See it): step 2 earns.0: a mark code such as "M1", "A1" or "MA1"`]);
+    expect(lintNoteBlocks(later({ input: { kind: "numeric", value: "two" } }), label, bundle())).toEqual([
+      `${label} note block 6 (See it): step 2 input.value: Invalid input: expected number, received string`,
+      `${label} note block 6 (See it): step 2 input.tolerance: Invalid input: expected object, received undefined`,
+      `${label} note block 6 (See it): step 2 input.unitRequired: Invalid input: expected boolean, received undefined`,
+      `${label} note block 6 (See it): step 2 input.acceptForms: Invalid input: expected array, received undefined`,
+    ]);
+    expect(lintNoteBlocks(later({ whyMenu: { options: ["only one"], correct: 0, explain: "E" } }), label, bundle())).toEqual([
+      `${label} note block 6 (See it): step 2 whyMenu.options: Too small: expected array to have >=2 items`,
+    ]);
+    expect(lintNoteBlocks([see(2, { figure: { kind: "svg", src: "", alt: "" } }), gate("g1")], label, bundle())).toEqual([
+      `${label} note block 0 (See it): figure.src: Too small: expected string to have >=1 characters`,
+      `${label} note block 0 (See it): figure.alt: Too small: expected string to have >=1 characters`,
+    ]);
+    expect(lintNoteBlocks([see(2, { finalAnswer: "" }), gate("g1")], label, bundle())).toEqual([
+      `${label} note block 0 (See it): finalAnswer: Too small: expected string to have >=1 characters`,
+    ]);
+    // a well-formed step, figure and final answer pass
+    expect(lintNoteBlocks(later({ earns: ["MW1", "W2"], whyMenu: { options: ["a", "b"], correct: 1, explain: "E" } }), label, bundle())).toEqual([]);
+    expect(lintNoteBlocks([see(2, { figure: { kind: "svg", src: "<svg><path d='M1 1'/></svg>", alt: "A curve" }, finalAnswer: "$x = 2$" }), gate("g1")], label, bundle())).toEqual([]);
+  });
+
+  test("a See it's kind is one of the schema's seven, in the schema's words", () => {
+    expect(lintNoteBlocks([see(2, { kind: "calculation" }), gate("g1")], label, bundle())).toEqual([]);
+    const r = lintNoteBlocks([see(2, { kind: "anecdote" }), gate("g1")], label, bundle());
+    expect(r).toHaveLength(1);
+    expect(r[0]).toMatch(/^further-maths\/fm1\/algebraic-fractions-simplify note block 0 \(See it\): kind: Invalid option: expected one of "calculation"\|"explanation"\|"process"\|"practical"\|"data"\|"extended"\|"proof"$/);
+  });
+
+  test("a reference that is not a worked example id is refused in the schema's words, before the bundle is looked in", () => {
+    const blocks = [h("1. The idea", "idea"), p, see(2), gate("g1"), h("2. Next", "variant"), { type: "see", workedExample: "the second example" }, gate("g2")];
+    expect(lintNoteBlocks(blocks, label, bundle())).toEqual([`${label} note block 5 (See it): workedExample: a worked example id ("we.…")`]);
+    expect(lintNoteBlocks(blocks, label)).toEqual([`${label} note block 5 (See it): workedExample: a worked example id ("we.…")`]);
   });
 
   test("in a section that holds a See it, no gate comes before it; a note with no See it is not judged here", () => {
@@ -561,5 +604,227 @@ describe("figurePlain: the build warning reads the figure each mode shows", () =
     expect(figureLeakWarnings({ workedExamples: [we({ figure: annotated, figurePlain: plain })] }, "x")).toEqual([]);
     expect(figureLeakWarnings({ workedExamples: [we({ figure: annotated })] }, "x")).toHaveLength(2);
     expect(figureLeakWarnings({ workedExamples: [we({ figure: plain, figurePlain: annotated })] }, "x")).toHaveLength(2);
+  });
+});
+
+/**
+ * Gate explanations that name an option by its place (the lead, 27 Sep 2026). src/lib/gate-order.ts pins such a gate to
+ * its authored order so the words stay true, and the authored order puts the right answer first (A), which the owner
+ * noticed in the trial. The build warns with the topic, the gate and the sentence, using gate-order's own reader.
+ */
+describe("noteBlockWarnings: positional wording", () => {
+  const choice = (id: string, explain: string, extra: Record<string, unknown> = {}) => ({ type: "gate", id, kind: "choice", prompt: "Which?", options: ["A one", "B two", "C three"], answer: "A one", explain, ...extra });
+  const label = "further-maths/content/fm1/algebraic-fractions-add-subtract";
+
+  test("names the gate and the sentence, for the explanation and for the twin's", () => {
+    const blocks = [
+      choice("g3", "The whole product is taken away. The second option changed the sign of the first term only."),
+      choice("g4", "Multiply up first.", { twin: { prompt: "Again?", options: ["D", "E"], answer: "D", explain: "Only the first answer has both." } }),
+      choice("g5", "Factorise, then cancel the bracket."),
+    ];
+    expect(noteBlockWarnings(blocks, label)).toEqual([
+      `${label} gate g3: its explanation names an option by its place ("The second option changed the sign of the first term only."): the gate is then shown in its written order, so its answer stays where it was written; name the option by what it says`,
+      `${label} gate g4: its twin's explanation names an option by its place ("Only the first answer has both."): that is true only in the order the twin was written; name the option by what it says`,
+    ]);
+  });
+
+  test("skips a gate the note's log withdrew (item 15)", () => {
+    const bundle = { note: { verification: "ver.note" }, verification: [{ id: "ver.note", status: "verified", withdrawn: [{ id: "g3", kind: "gate", replacedBy: "g9", reason: "r", on: "2026-09-27T20:00:00Z" }] }] };
+    const blocks = [choice("g3", "The second option changed the sign."), choice("g4", "The second option forgot to multiply up.")];
+    expect(noteBlockWarnings(blocks, label, bundle).map((w: string) => w.split(":")[0])).toEqual([`${label} gate g4`]);
+  });
+
+  test("reads choice gates only: a typed gate's 'second answer' is a second root, not an option", () => {
+    const typed = { type: "gate", id: "g1", kind: "number", prompt: "The positive root?", answer: "4", explain: "The second answer, x = −3, is rejected." };
+    expect(noteBlockWarnings([typed], label)).toEqual([]);
+    expect(noteBlockWarnings(null, label)).toEqual([]);
+  });
+});
+
+/**
+ * The lead's item 13 (27 Sep 2026, 21:50): in a v3 note (one that holds a See it), every wrong option of a choice gate
+ * carries its note (why it tempts, what is wrong with it), and every inline See it names its kind. Warnings only; a note
+ * written before the See it block is not judged, since its migration adds both.
+ */
+describe("noteBlockWarnings: option notes and the See it kind in a v3 note", () => {
+  const label = "further-maths/content/fm1/algebraic-fractions-simplify";
+  const step = (n: number) => ({ n, working: `$x = ${n}$`, decision: `Reason ${n}.` });
+  const see = (extra: Record<string, unknown> = {}) => ({ type: "see", stem: "S", steps: [step(1), step(2)], ...extra });
+  const choice = (id: string, extra: Record<string, unknown> = {}) => ({ type: "gate", id, kind: "choice", prompt: "Which?", options: ["a", "b", "c"], answer: "a", explain: "Because.", ...extra });
+  const note = (option: string) => ({ option, why: "It tempts because …; it is wrong because …" });
+
+  test("names each wrong option without a note, and each inline See it without a kind", () => {
+    const blocks = [see(), choice("g1", { optionNotes: [note("b")] }), see({ kind: "calculation" }), choice("g2", { optionNotes: [note("b"), note("c")] }), { type: "see", workedExample: "we.x.01" }, { type: "gate", id: "g3", kind: "number", prompt: "n?", answer: "2", explain: "E." }];
+    expect(noteBlockWarnings(blocks, label)).toEqual([
+      `${label} note block 0 (See it): no kind (one of calculation, explanation, process, practical, data, extended, proof)`,
+      `${label} gate g1: no option note on "c" (one sentence on why that option tempts and what is wrong with it)`,
+    ]);
+  });
+
+  test("a note written before the See it block is not judged", () => {
+    expect(noteBlockWarnings([choice("g1")], label)).toEqual([]);
+  });
+});
+
+/**
+ * Sizes (the lead's item 16, 27 Sep 2026): b2-natural-selection-selective-breeding reached 3.37 MB with four questions of
+ * 350–650 KB of inline figure markup. The build warns on a question, a worked example or a See it over 40 KB serialised,
+ * a note over 150 KB and a bundle over 600 KB, naming the item and its size.
+ */
+describe("sizeWarnings", () => {
+  const label = "science/content/b2/b2-natural-selection-selective-breeding";
+  const pad = (kb: number) => "x".repeat(Math.round(kb * 1024));
+  test("names each item over its limit with its size, and passes items under it", () => {
+    const bundle = {
+      topic: { id: "science.b2.x" },
+      questions: [{ id: "q.big", figures: [{ kind: "svg", src: pad(41), alt: "a" }] }, { id: "q.small", figures: [] }],
+      workedExamples: [{ id: "we.big", stem: pad(45) }, { id: "we.small", stem: "s" }],
+    };
+    const blocks = [{ type: "see", stem: pad(42), steps: [] }, { type: "p", md: "short" }];
+    expect(sizeWarnings(bundle, blocks, label)).toEqual([
+      `${label} q.big: 41 KB serialised (a question is at most 40 KB; inline figure markup is the usual cause)`,
+      `${label} we.big: 45 KB serialised (a worked example is at most 40 KB; inline figure markup is the usual cause)`,
+      `${label} note block 0 (See it): 42 KB serialised (a See it is at most 40 KB; inline figure markup is the usual cause)`,
+    ]);
+  });
+
+  test("a note over 150 KB and a bundle over 600 KB", () => {
+    const bundle = { topic: { id: "science.b2.x" }, questions: Array.from({ length: 16 }, (_, i) => ({ id: `q.${i}`, stem: pad(39) })) };
+    const blocks = Array.from({ length: 4 }, () => ({ type: "p", md: pad(39) }));
+    const r = sizeWarnings(bundle, blocks, label);
+    expect(r).toEqual([
+      `${label} bundle.json: 624 KB serialised (a bundle is at most 600 KB)`,
+      `${label} note.blocks.json: 156 KB serialised (a note is at most 150 KB)`,
+    ]);
+    expect(sizeWarnings(null, null, label)).toEqual([]);
+  });
+});
+
+/**
+ * Marking lints from the Fable judge's rulings of 27 Sep 2026 (fork scratchpad reports/fable-marking-rulings-judgement.md):
+ * warnings, never refusals, each naming the topic, the item and the part.
+ */
+describe("markingWarnings", () => {
+  const NUM = (value: number, extra: Record<string, unknown> = {}) => ({ kind: "numeric", value, tolerance: { type: "absolute", value: 0.01 }, unitRequired: false, acceptForms: ["decimal"], ...extra });
+  const part = (id: string, stem: string, answer: Record<string, unknown>, extra: Record<string, unknown> = {}) => ({
+    id, stem, marks: 2, answer, scheme: [], hints: [], workedSolution: "Worked.", commonErrors: [], requiresWorking: false, ...extra,
+  });
+  const bundle = (subject: string, ...parts: Record<string, unknown>[]) => ({ topic: { id: `${subject}.x.y`, subject }, questions: [{ id: "q.x.y.0001", parts }] });
+  const label = "maths/content/m8/surds";
+
+  test("ruling 3: a 'show that' part with a value spec (numeric or algebraic) is flagged; a text or a plain part is not", () => {
+    const b = bundle(
+      "maths",
+      part("a", String.raw`Show that the radius is $3\sqrt{2}$ cm.`, { kind: "algebraic", latex: String.raw`3\sqrt{2}`, variables: [], equivalence: "value" }),
+      part("b", "Show that $x = 2.5$ is a root.", NUM(2.5)),
+      part("c", "Show that the triangle is right-angled.", { kind: "text", accepted: ["a"], keyWords: [] }),
+      part("d", "Work out $x$.", NUM(4)),
+    );
+    expect(markingWarnings(b, label)).toEqual([
+      `${label} q.x.y.0001(a): a "show that" part with an algebraic answer spec: typing the printed result back is paid, and the exam pays only the working (ruling 3); give it a working or steps spec`,
+      `${label} q.x.y.0001(b): a "show that" part with a numeric answer spec: typing the printed result back is paid, and the exam pays only the working (ruling 3); give it a working or steps spec`,
+    ]);
+  });
+
+  test("ruling 5: unitRequired on a maths or further-maths part; science keeps it", () => {
+    const withUnit = NUM(12, { unit: "cm", unitRequired: true });
+    expect(markingWarnings(bundle("maths", part("a", "Find the length.", withUnit)), label)).toEqual([
+      `${label} q.x.y.0001(a): unitRequired on a maths part: maths schemes carry no unit mark (ruling 5), so a right value without its unit loses a mark the exam gives`,
+    ]);
+    expect(markingWarnings(bundle("further-maths", part("a", "Find the speed.", withUnit)), label)).toHaveLength(1);
+    expect(markingWarnings(bundle("science", part("a", "Calculate the current.", withUnit)), label)).toEqual([]);
+  });
+
+  test("ruling 14: a numeric part that uses an earlier numeric answer needs followThrough.relation", () => {
+    const ft = { fromPart: "a", rule: "use-candidate-value" };
+    const b = bundle(
+      "further-maths",
+      part("a", "Find $x$.", NUM(7.2)),
+      part("b", "Hence find $y$.", NUM(2.2), { workedSolution: "$y = 7.2 - 5 = 2.2$" }),
+      part("c", "Using your answer to (a), find $z$.", NUM(28.8), { followThrough: ft, workedSolution: String.raw`$z = 7.2 \times 4 = 28.8$` }),
+      part("d", "Find $w$.", NUM(36.2), { workedSolution: String.raw`$w = 7.2 \times 5 + 0.2 = 36.2$` }),
+      part("e", "Hence find $v$.", NUM(3), { followThrough: { ...ft, relation: "x - 4.2" } }),
+    );
+    expect(markingWarnings(b, label)).toEqual([
+      `${label} q.x.y.0001(b): uses part (a) ("Hence") but has no followThrough: a right answer from her own earlier value is refused (ruling 14); add followThrough with its relation, or noFollowThrough quoting the scheme line`,
+      `${label} q.x.y.0001(c): uses part (a) ("Using your answer") but its followThrough has no relation (the worked solution's chain carries it today) (ruling 14); add the relation, or noFollowThrough quoting the scheme line`,
+      `${label} q.x.y.0001(d): uses part (a) (its worked solution computes the answer from 7.2) but has no followThrough: a right answer from her own earlier value is refused (ruling 14); add followThrough with its relation, or noFollowThrough quoting the scheme line`,
+    ]);
+  });
+
+  test("ruling 14: noFollowThrough with the scheme line quoted is the one exemption; a small whole number reused is no evidence", () => {
+    const b = bundle(
+      "further-maths",
+      part("a", "Find $x$.", NUM(7.2)),
+      part("b", "Hence find $y$.", NUM(2.2), { noFollowThrough: "Allow no FT from an incorrect quadratic expression" }),
+      part("c", "Find $n$.", NUM(3)),
+      part("d", "Find $m$.", NUM(9), { workedSolution: String.raw`$m = 3 \times 3 = 9$` }),
+      part("e", "Hence find $p$.", NUM(1), { noFollowThrough: "  " }),
+      part("f", "Using your answer to (a), find $q$.", NUM(14.4)),
+    );
+    expect(markingWarnings(b, label)).toEqual([
+      `${label} q.x.y.0001(e): uses part (d) ("Hence") but has no followThrough: a right answer from her own earlier value is refused (ruling 14); add followThrough with its relation, or noFollowThrough quoting the scheme line`,
+      // the part its stem names, not the nearest one
+      `${label} q.x.y.0001(f): uses part (a) ("Using your answer") but has no followThrough: a right answer from her own earlier value is refused (ruling 14); add followThrough with its relation, or noFollowThrough quoting the scheme line`,
+    ]);
+  });
+
+  /**
+   * The lead's item 14 (27 Sep 2026, the M4 author's finding, probed through markAnswer the same evening): a stem that
+   * asks for the form ("simplify fully", "simplest form", "a single fraction", "write … as") with a spec that holds no
+   * form, and any spec with equivalence "simplifiedOnly": the engine marks both after simplifying her answer, so the
+   * question typed back earns full marks ((3x²−27)/(x²+x−6) for "Simplify fully" paid 3/3).
+   */
+  test("item 14: a form the stem asks for that the spec does not hold, and every simplifiedOnly spec", () => {
+    const alg = (extra: Record<string, unknown>) => ({ kind: "algebraic", latex: String.raw`\frac{3(x-3)}{x-2}`, variables: ["x"], equivalence: "equivalent", ...extra });
+    const b = bundle(
+      "maths",
+      part("a", String.raw`Simplify fully $\dfrac{3x^2-27}{x^2+x-6}$.`, alg({})),
+      part("b", String.raw`Simplify fully $\dfrac{3x^2-27}{x^2+x-6}$.`, alg({ equivalence: "simplifiedOnly" })),
+      part("c", "Write $0.375$ as a fraction in its simplest form.", NUM(0.375)),
+      part("d", String.raw`Simplify fully $\dfrac{3x^2-27}{x^2+x-6}$.`, alg({ form: "simplest-fraction" })),
+      part("e", "Write $0.375$ as a fraction in its simplest form.", NUM(0.375, { acceptForms: ["fraction"], mustBeSimplified: true })),
+      part("f", String.raw`Write $\dfrac{1}{x} + \dfrac{1}{2x}$ as a single fraction.`, alg({ form: "single-fraction" })),
+      part("g", "Find $x$ when $2x = 7$.", alg({ equivalence: "simplifiedOnly", latex: "3.5" })),
+    );
+    expect(markingWarnings(b, label)).toEqual([
+      `${label} q.x.y.0001(a): the stem asks for the form ("Simplify fully") but the answer spec holds none (no form, mustBeFactorised or mustBeExpanded): the engine pays any equal expression in full, the question typed back included; give it the form (simplest-fraction, single-fraction …)`,
+      `${label} q.x.y.0001(b): equivalence "simplifiedOnly" marks her answer after simplifying it, so the question typed back and an uncancelled answer earn full marks; use a form (simplest-fraction …) instead`,
+      `${label} q.x.y.0001(c): the stem asks for the form ("its simplest form") but the answer spec holds none (neither mustBeSimplified nor a form-only acceptForms): the engine pays any equal expression in full, the question typed back included; give it the form (acceptForms ["fraction"], mustBeSimplified)`,
+      `${label} q.x.y.0001(g): equivalence "simplifiedOnly" marks her answer after simplifying it, so the question typed back and an uncancelled answer earn full marks; use a form (simplest-fraction …) instead`,
+    ]);
+  });
+
+  /** The lead's item 15: a withdrawn item is not shipped, so it is not warned on (m8 inverse-proportion, p2 echoes). */
+  test("item 15: an item that is withdrawn or not shipped is skipped", () => {
+    const withUnit = NUM(12, { unit: "cm", unitRequired: true });
+    const q = (id: string, verification: string) => ({ id, verification, parts: [part("a", "Find the length.", withUnit)] });
+    const b = {
+      topic: { id: "maths.x.y", subject: "maths" },
+      questions: [q("q.x.y.0001", "ver.1"), q("q.x.y.0002", "ver.2"), q("q.x.y.0003", "ver.3"), q("q.x.y.0004", "ver.4")],
+      verification: [
+        { id: "ver.1", status: "verified" },
+        { id: "ver.2", status: "withdrawn" },
+        { id: "ver.3", status: "verified", withdrawn: [{ id: "q.x.y.0003", kind: "question", replacedBy: "q.x.y.0004", reason: "r", on: "2026-09-27T20:00:00Z" }] },
+        { id: "ver.4", status: "draft" },
+      ],
+    };
+    expect(markingWarnings(b, label).map((w: string) => w.split(":")[0])).toEqual([`${label} q.x.y.0001(a)`]);
+    // a bundle without logs (a test fixture, a generator's draft) is read in full
+    expect(markingWarnings(bundle("maths", part("a", "Find the length.", withUnit)), label)).toHaveLength(1);
+  });
+
+  test("ruling 15: a common error on a form task earns at most marks − 1", () => {
+    const ce = (m: number) => ({ misconception: "alg.uncancelled", pattern: { kind: "algebraic", latex: "x" }, feedback: "F", marksTypicallyEarned: m });
+    // the form held (simplest-fraction), so only the rule under test speaks
+    const alg = { kind: "algebraic", latex: String.raw`\frac{x}{2}`, variables: ["x"], equivalence: "equivalent", form: "simplest-fraction" };
+    const b = bundle(
+      "further-maths",
+      part("a", String.raw`Simplify fully $\frac{2x}{4}$.`, alg, { marks: 3, commonErrors: [ce(2), ce(3)] }),
+      part("b", "Find the value of $x$.", NUM(2), { marks: 2, commonErrors: [ce(2)] }),
+    );
+    expect(markingWarnings(b, label)).toEqual([
+      `${label} q.x.y.0001(a): common error alg.uncancelled earns 3 of 3 on a form task (at most 2: the form is a mark; ruling 15)`,
+    ]);
   });
 });
