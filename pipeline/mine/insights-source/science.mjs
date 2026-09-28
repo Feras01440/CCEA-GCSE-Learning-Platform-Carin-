@@ -896,14 +896,14 @@ export const insights = [
       {
         source: S("2025-summer", "U7BBioH", 1),
         asked: "Six-mark QWC on estimating plant abundance in a habitat.",
-        wentWrong: "Most earned four or more, but few said they would use a key to identify the species and a few could not name the quadrat.",
+        wentWrong: "Most answers reached four marks or more, yet few mentioned a key for naming the species, and some could not name the quadrat.",
         rule: "Quadrat, random placement, key to identify, count, repeat and average, scale up.",
         misconceptions: ["sci.practical.quadrat-and-key-not-named"],
       },
       {
         source: S("2025-summer", "C1H", 1),
         asked: "Safety precautions when reacting sodium with water.",
-        wentWrong: "Well known, but a 'glass screen' is not accepted for a safety screen.",
+        wentWrong: "Generally known; a 'glass screen' was not credited in place of a safety screen.",
         rule: "Safety = the specific hazard and the specific named control.",
         misconceptions: ["sci.practical.safety-vague"],
       },
