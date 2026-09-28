@@ -501,6 +501,9 @@ body {
 .prose-note { max-width: var(--measure); font-size: var(--fs-prose); line-height: var(--lh-prose); font-family: var(--serif-lesson); }
 .prose-note p { margin-block: var(--gap-para); }
 .prose-note strong { font-weight: 600; }
+/* A formula in running prose is one word: it never breaks inside a bracket at a line end (measured 25 Sep on the
+   trial: 6 of 59 formulas broke at 390, 3 inside a bracket). Display maths keeps KaTeX's own block layout. */
+.prose-note :not(.katex-display) > .katex { display: inline-block; max-width: 100%; }
 /* Inter carries everything she operates or counts, inside the note as everywhere else. */
 .prose-note :where(button, input, select, textarea, label, .tnum) {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -547,7 +550,16 @@ body {
 html[data-input="pointer"] :is([data-focus-quiet], [tabindex="-1"]):focus-visible { outline: none; }
 [data-focus-quiet="always"]:focus-visible { outline: none; }
 
-/* Motion: transform/opacity only, 120-300 ms, honours reduced motion */
+/* Motion: transform/opacity only, 120-300 ms, honours reduced motion.
+   The law, not a habit (01 §6, art direction v2 §5, 04-critique §7.14):
+   whatever a component asks to transition, only transform (and its
+   translate, scale and rotate) and opacity move; a colour, an edge or a
+   shadow changes at once. Read's gate options faded their fill and four
+   border colours over 150 ms on hover, choice and Check (the trial
+   audit's READ-24), as did the option and grade buttons elsewhere. */
+@media (prefers-reduced-motion: no-preference) {
+  *, *::before, *::after { transition-property: transform, translate, scale, rotate, opacity !important; }
+}
 .rise-in { animation: rise-in var(--dur) var(--ease-out) both; }
 @keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
@@ -565,9 +577,27 @@ html[data-input="pointer"] :is([data-focus-quiet], [tabindex="-1"]):focus-visibl
 @media (prefers-reduced-motion: reduce) { .stone-settle, .skeleton { animation: none; } }
 
 /* Answer targets: 44 px is the floor, 52 px for anything she taps
-   hundreds of times (grading buttons, options, the Check button). */
-.tap { min-height: 44px; min-width: 44px; }
-.tap-lg { min-height: 52px; min-width: 52px; }
+   hundreds of times (grading buttons, options, the Check button).
+   A floor, so it lives in the components layer: a control's own size
+   utility raises it (or, as `min-w-0` on a flexible field, sets its
+   width) where it says so. Unlayered, it beat every utility, and the
+   grading buttons' own min-h-[52px] rendered at 44 px (the trial
+   audit's READ-22, measured on build 8). .tap-lg after .tap, so
+   "tap tap-lg" is 52. */
+@layer components {
+  .tap { min-height: 44px; min-width: 44px; }
+  .tap-lg { min-height: 52px; min-width: 52px; }
+}
+
+/* The phone's tab bar (56 px, a 1 px rule, the safe area) is reserved
+   whenever the page scrolls something into view: a control the keyboard
+   moves to, the verdict after Check, a heading. Without it the browser
+   stopped at the screen's edge, behind the bar, and after Check the
+   section's Continue sat 45 px under it (the trial audit's READ-10;
+   WCAG 2.2 SC 2.4.11). 8 px of air above the bar. */
+@media (max-width: 47.99rem) {
+  html:has([data-tab-bar]) { scroll-padding-bottom: calc(65px + env(safe-area-inset-bottom)); }
+}
 
 /* Wide content scrolls inside its own box; the page never scrolls sideways (flex/grid min-width reset) */
 main :where(div, section, article, li, h1, h2, h3, p, figure) { min-width: 0; }
@@ -673,6 +703,21 @@ main .katex-display { max-width: 100%; }
 [data-theme="dark"][data-subject="further-maths"], [data-theme="dark"] [data-subject="further-maths"] { --tint-wash: lch(24% 10 330); --tint-mid: lch(40% 24 330); }
 [data-theme="dark"][data-subject="science"], [data-theme="dark"] [data-subject="science"] { --tint-wash: lch(24% 10 195); --tint-mid: lch(40% 22 195); }
 
+/* On the wash, the third grey is the second. --ink-3 was set against the
+   paper (4.87:1) and the recess (4.57:1); the wash is darker than both in
+   light and lighter than the ground in dark, and ink-3 on it measured
+   4.44:1 (light), 4.33:1 (evening) and 3.90:1 (dark): the Contents row's
+   minutes and the Slides title card's locator (the trial audit's READ-17,
+   WCAG 1.4.3). A surface painted with the wash, by its own class, gives
+   ink-3 text the second ink (6.5:1 light, 5.7:1 dark), so the two-grey
+   rule holds there too. Where the wash is only a desktop paint (lg:) the
+   rule follows it; where it gives way to the paper at lg, ink-3 returns. */
+[class~="bg-[var(--tint-wash)]"] { --ink-3: var(--ink-2); }
+@media (min-width: 64rem) {
+  [class~="lg:bg-[var(--tint-wash)]"] { --ink-3: var(--ink-2); }
+  [class~="lg:bg-transparent"] { --ink-3: inherit; }
+}
+
 /* High contrast: the washes stay light and clearly tinted; the outcome washes stay readable under black ink. */
 [data-theme="hc"] { --ok-wash: lch(90% 18 148); --miss-wash: lch(94% 0 0); --tint-wash: lch(92% 8 var(--accent-h)); --tint-mid: lch(70% 24 var(--accent-h)); }
 [data-theme="hc"][data-subject="maths"], [data-theme="hc"] [data-subject="maths"] { --tint-wash: lch(92% 12 255); --tint-mid: lch(70% 30 255); }
@@ -725,4 +770,21 @@ main .katex-display { max-width: 100%; }
      document.getAnimations() lists (measured 23 Sep on the focused card title). Inside Slides nothing transitions
      or animates under reduced motion, so the acceptance count is the page's own. */
   [data-slides], [data-slides] *, [data-slides] *::before, [data-slides] *::after { transition-property: none !important; animation-name: none !important; }
+}
+
+/* Lesson structure v3 (27 Sep 2026), the See it's steps (the teach-first case §8.1 and §8.4), in Slides and in Read:
+   a working line at 21 px (24 from md), its reason 12 px under it, 20 px under the pair; the mark chip at 13 px, the
+   floor (the case wrote 12; nothing exists below 13, 01 §3). */
+:root {
+  --fs-step: 21px;
+  --fs-step-reason: 17px;
+  --gap-step-reason: 12px;
+  --gap-step-pair: 20px;
+  --fs-step-chip: 13px;
+}
+@media (min-width: 48rem) {
+  :root {
+    --fs-step: 24px;
+    --fs-step-reason: 18px;
+  }
 }

@@ -23,6 +23,7 @@ import {
   buildCompanionContext,
   figureExpressionFor,
   figureStateFor,
+  tonightFigureState,
   type FigureExpression,
   type Moment,
 } from "@/lib/companion";
@@ -98,13 +99,35 @@ describe("the hare", () => {
   });
 
   it("tells the five states apart by the drawing: the wave, the tilt, the stone, the moon, the Letter", () => {
-    expect(hare("arrival")).toContain('transform="rotate(-38 104 104)"'); // the near arm raised
+    expect(hare("arrival")).toContain('data-pose="wave"'); // the near arm raised
     expect(hare("listening")).toContain('transform="rotate(-8 70 70)"'); // the head tilted
-    expect(hare("stone-placed")).toContain('fill="#BD71B3"'); // the heather stone
+    expect(hare("stone-placed")).toContain('data-pose="stone"'); // the heather stone held up
     expect(hare("evening")).toContain('fill="#EDDCA3"'); // the moon
     expect(hare("letter")).toContain('fill="#FFFDF7"'); // the Letter's paper
     const drawn = new Set(FIGURE_STATES.map((s) => hare(s)));
     expect(drawn.size).toBe(FIGURE_STATES.length);
+  });
+
+  it("paints the two gestures where she can see them (COMPANION-5): after the scarf, the wave in the near side's lit fur", () => {
+    // Build 8 painted the waving arm in the far side's shade before the scarf and the head, which covered it (1.5% of the
+    // figure's pixels), and held the stone under the scarf, where it read as a purple bib (2.6%). Measured on the redrawn
+    // canvas (scratchpad/platform/companion-today/draw/render-poses.mjs): the wave 7.5%, the held stone and paws 10.0%,
+    // against 13.6% for the Letter held in the letter state.
+    const scarf = 'fill="#E1C42F"';
+    const arrival = hare("arrival");
+    const wave = arrival.match(/<g data-pose="wave"[^>]*>([\s\S]*?)<\/g>/);
+    expect(wave).not.toBeNull();
+    expect(arrival.indexOf('data-pose="wave"')).toBeGreaterThan(arrival.indexOf(scarf));
+    expect(wave![1]).toContain('fill="#B98559"'); // the lit fur of the near side
+    const placed = hare("stone-placed", "pleased");
+    const stone = placed.match(/<g data-pose="stone">([\s\S]*?)<\/g>/);
+    expect(stone).not.toBeNull();
+    expect(placed.indexOf('data-pose="stone"')).toBeGreaterThan(placed.indexOf(scarf));
+    expect(stone![1]).toContain('fill="#BD71B3"'); // the heather stone
+    expect(stone![1]).toContain('fill="#B98559"'); // the near paw
+    expect(stone![1]).toContain('fill="#9C6B45"'); // the far paw
+    // One heather stone in any picture: none left under the scarf.
+    expect(placed.match(/fill="#BD71B3"/g)).toHaveLength(1);
   });
 
   it("keeps its clip paths apart when two hares share a page", () => {
@@ -180,5 +203,23 @@ describe("the identity test: the same hare at 7 am and 11 pm, on day one and day
       const states = times.map((t) => figureStateFor(moment, buildCompanionContext({ ...base, now: new Date(t) })));
       expect(new Set(states).size, moment).toBe(1);
     }
+  });
+
+  it("the Tonight tile's hare takes the state the day calls for: the evening pose once it is late, and nothing else moves it", () => {
+    // The one clock-driven state is the contract's isLate carve-out, the same one that picks the evening lines: never a
+    // record of her absence, so day one and day thirty draw alike.
+    const at = (iso: string) => tonightFigureState(buildCompanionContext({ ...FIXTURES["normal-evening"], now: new Date(iso) }));
+    expect(at("2026-09-24T07:00:00")).toBe("arrival");
+    expect(at("2026-09-24T21:29:00")).toBe("arrival");
+    expect(at("2026-09-24T21:30:00")).toBe("evening");
+    expect(at("2026-09-24T23:00:00")).toBe("evening");
+    expect(at("2026-09-25T03:59:00")).toBe("evening");
+    expect(at("2026-10-24T07:00:00")).toBe("arrival");
+    expect(at("2026-10-24T23:00:00")).toBe("evening");
+    for (const name of ["empty-install", "after-three-days", "fresh-install-day-one"] as const) {
+      const c = buildCompanionContext({ ...FIXTURES[name], now: new Date("2026-09-24T19:00:00") });
+      expect(tonightFigureState(c), name).toBe("arrival");
+    }
+    expect(FIGURE_SLOTS.arrival.states).toContain(at("2026-09-24T23:00:00"));
   });
 });

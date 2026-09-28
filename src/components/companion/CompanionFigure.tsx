@@ -10,6 +10,8 @@
  * - `topic`: the topic hero, beside the topic-open line: 72 px, 80 px from the tablet breakpoint.
  * - `close`: the hare alone at the close's sizes (156, 250 px). The close card itself draws the whole scene, the hare
  *   on the hill by the cairn, through CompanionScene.
+ * - `welcome`: first run, above her name card, waving hello beside the sentence that introduces it (RowanIntroduction):
+ *   100 px, 110 px from the desktop breakpoint.
  * The sizes are FIGURE_SLOTS in src/lib/companion/figure.ts, which the integration contract's table states and
  * contract.test.ts compares; rowan-figure.test.ts checks these classes carry the same numbers.
  *
@@ -43,6 +45,7 @@ export const FIGURE_BOX: Record<FigureSlot, string> = {
   letter: "size-[100px] lg:size-[110px]",
   topic: "size-[72px] md:size-[80px]",
   close: "size-[156px] lg:size-[250px]",
+  welcome: "size-[100px] lg:size-[110px]",
 };
 
 export interface CompanionFigureProps {

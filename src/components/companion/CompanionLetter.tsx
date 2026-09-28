@@ -22,12 +22,14 @@
  * sealed line stands without the mark.
  */
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useReducer, useState, type FormEvent, type ReactNode } from "react";
 import { clsx } from "clsx";
 import {
   letterEyebrow,
   markLetterOffered,
   markLetterSeen,
+  renameNotSaved,
+  renamedReply,
   sealedLetterPreview,
   selectLetter,
   setRowanName,
@@ -36,6 +38,7 @@ import {
 } from "@/lib/companion";
 import { COMPANION_FONT } from "./CompanionLine";
 import { CompanionFigure } from "./CompanionFigure";
+import { NO_RENAME, renameStep, shownName } from "./rename-flow";
 
 export interface CompanionLetterProps {
   /** "first-letter" for the first Letter, "weekly-letter" for Sunday. */
@@ -52,8 +55,11 @@ export interface CompanionLetterProps {
   preview?: string;
   /** Offers the rename field. Defaults to true on the first Letter. */
   rename?: boolean;
-  /** Defaults to writing the name to companionState. */
-  onRename?: (name: string) => void;
+  /**
+   * Defaults to writing the name to companionState. A host that saves it itself returns the save, so the Letter can say
+   * whether the device kept the name; a rejected save leaves the old name in place and says so.
+   */
+  onRename?: (name: string) => void | Promise<unknown>;
   /** Called when she has read it: on Close, or on opening it from sealed. Defaults to marking the first Letter read. */
   onRead?: () => void;
   /** Anything the slot adds below the lines: the paper chips, the week's plan. */
@@ -74,7 +80,7 @@ export function CompanionLetter({
   className,
 }: CompanionLetterProps) {
   const [opened, setOpened] = useState(false);
-  const [name, setName] = useState("");
+  const [renaming, dispatch] = useReducer(renameStep, NO_RENAME);
   const [closed, setClosed] = useState(false);
 
   const lines = context ? selectLetter(moment, context) : [];
@@ -117,20 +123,23 @@ export function CompanionLetter({
     await markRead();
   }
 
-  async function saveName() {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    if (onRename) onRename(trimmed);
-    else {
-      try {
-        await setRowanName(trimmed);
-      } catch {
-        // Keeping the default name is not a failure worth a message.
-      }
+  // Enter in the field or Save: the name shows at once once the device has kept it, with Rowan's one-line reply; a save
+  // the device refuses keeps her text and the old name, and says so (COMPANION-9).
+  async function saveName(event: FormEvent) {
+    event.preventDefault();
+    const trimmed = renaming.draft.trim();
+    if (!trimmed || renaming.saving) return;
+    dispatch({ type: "submit" });
+    try {
+      await (onRename ? onRename(trimmed) : setRowanName(trimmed));
+      dispatch({ type: "saved" });
+    } catch {
+      dispatch({ type: "not-saved" });
     }
   }
 
-  const signature = context.rowanName;
+  const signature = shownName(renaming, context.rowanName);
+  const reply = renaming.status === "saved" ? renamedReply(signature) : renaming.status === "not-saved" ? renameNotSaved(signature) : null;
 
   // One top edge: the object's own border is the specification's hairline rule (02-surfaces.md §8).
   return (
@@ -166,6 +175,12 @@ export function CompanionLetter({
               </div>
             )}
             <div className="flex max-w-[42ch] flex-col gap-2" style={{ fontFamily: COMPANION_FONT }}>
+              {/* A letter begins with the name of the one it is for: hers, as she gave it at first run (COMPANION-8). */}
+              {context.learnerName && (
+                <p data-salutation="" className="text-[17px] leading-[1.55] text-ink">
+                  {context.learnerName},
+                </p>
+              )}
               {lines.map((l) => (
                 <p key={l.line.id} className="text-[17px] leading-[1.55] text-ink">
                   {l.text}
@@ -177,7 +192,9 @@ export function CompanionLetter({
           {children}
 
           {showRename && (
-            <div className="mt-4 rounded-[var(--radius-sm)] bg-surface-2 p-3">
+            // A form, so Enter in the field saves as Save does (the containment rule reads the field as the Letter's own
+            // control, never an answer field: data-companion-control).
+            <form onSubmit={(e) => void saveName(e)} className="mt-4 rounded-[var(--radius-sm)] bg-surface-2 p-3">
               <label className="block text-meta text-ink-2" htmlFor="companion-name">
                 It answers to {signature}. Call it something else if you would rather.
               </label>
@@ -185,17 +202,23 @@ export function CompanionLetter({
                 <input
                   id="companion-name"
                   data-companion-control="rename"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={renaming.draft}
+                  onChange={(e) => dispatch({ type: "typed", value: e.target.value })}
                   placeholder={signature}
                   maxLength={24}
+                  enterKeyHint="done"
+                  autoComplete="off"
                   className="tap min-w-0 flex-1 rounded-[var(--radius-sm)] border border-line-3 bg-surface px-3 text-[16px] text-ink"
                 />
-                <button type="button" onClick={saveName} className="tap rounded-[var(--radius-sm)] border border-line-2 px-4 text-meta font-medium hover:bg-surface-2">
+                <button type="submit" className="tap rounded-[var(--radius-sm)] border border-line-2 px-4 text-meta font-medium hover:bg-surface-2">
                   Save
                 </button>
               </div>
-            </div>
+              {/* Always in the page, so a screen reader hears the reply when it arrives; empty, it takes no room. */}
+              <p role="status" className="text-meta text-ink-2 [&:not(:empty)]:mt-2" style={{ fontFamily: renaming.status === "saved" ? COMPANION_FONT : undefined }}>
+                {reply}
+              </p>
+            </form>
           )}
 
           <div className="mt-4 flex items-center justify-between gap-3">

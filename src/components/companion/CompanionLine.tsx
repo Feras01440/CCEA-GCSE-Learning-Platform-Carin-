@@ -26,13 +26,14 @@
  * No `aria-live`: an arrival line is part of the page, not an announcement over it.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { clsx } from "clsx";
 import {
   figureExpressionFor,
   figureStateFor,
   rememberLineShown,
   selectAt,
+  tonightFigureState,
   type CompanionContext,
   type Moment,
   type Selection,
@@ -61,9 +62,28 @@ export interface CompanionLineProps {
   /** Defaults to recording the line so it is not repeated inside the cooldown. */
   onShown?: (lineId: string) => void;
   className?: string;
+  /**
+   * The Tonight tile's composition (the owner's presence ruling of 23 September; the trial audit's TODAY-1, 27 September):
+   * the hare stands on the tile on every open, in the state the day calls for (tonightFigureState), whether or not Rowan
+   * has a line to say this visit. Without it the arrival slot draws the hare only beside a line, as every other slot does.
+   */
+  standing?: boolean;
+  /**
+   * The tile's own sentence, in the product's voice. It stands beside the hare while Rowan is silent and gives way to
+   * Rowan's line when there is one: one screen, one sentence, once (src/components/home/tonight-copy.ts).
+   */
+  fallback?: ReactNode;
 }
 
-export function CompanionLine({ moment, context, onShown, className }: CompanionLineProps) {
+/**
+ * Whether Today's hare may stand on the tile at all this open: her choice (Full), first run behind her, no question up
+ * and her brother's note not on the screen (Rowan yields to it entirely, figure and all).
+ */
+function standsOnTile(context: CompanionContext): boolean {
+  return context.figure && context.firstRunDone && !context.questionVisible && !context.giftNoteOnScreen;
+}
+
+export function CompanionLine({ moment, context, onShown, className, standing = false, fallback }: CompanionLineProps) {
   // A line is chosen once per mount, from the first loaded context. Recording it writes companionState,
   // which re-runs the live query behind `context`; if the line were re-selected from that fresh context
   // the cooldown would exclude the line just shown, the slot would swap to a second line, record that
@@ -82,7 +102,14 @@ export function CompanionLine({ moment, context, onShown, className }: Companion
     else void rememberLineShown(lineId);
   }, [lineId, onShown]);
 
-  if (!selection || !context) return null;
+  if (!context) return null;
+
+  // Today's arrival slot: the Tonight tile's row, which carries the hare on every open when the host asks it to stand.
+  if (LINE_FIGURE[moment] === "arrival" && (standing || (selection && !selection.unsigned))) {
+    return <TonightRow context={context} selection={selection} standing={standing} fallback={fallback} className={className} />;
+  }
+
+  if (!selection) return null;
 
   // Inside the work: the note's own register, unsigned and unattributed.
   if (selection.unsigned) {
@@ -105,24 +132,6 @@ export function CompanionLine({ moment, context, onShown, className }: Companion
     </>
   );
 
-  // Today (the canvas's Today boards): the line on the left, the posed hare on the right standing on the tile's floor,
-  // 140 px, or 200 px once this block is wide enough to keep the line beside it readable. The hare's box hangs 12 px
-  // below the row, onto the space above the tile's one button.
-  if (figure === "arrival") {
-    return (
-      <div data-companion={selection.moment} className={clsx("@container", className)}>
-        <div className="grid grid-cols-[minmax(0,1fr)_140px] items-end gap-3 @min-[32rem]:grid-cols-[minmax(0,1fr)_200px] @min-[32rem]:gap-7">
-          <p className="mb-1.5 min-w-0 max-w-[34ch] text-[17px] leading-[1.55] text-ink-2" style={{ fontFamily: COMPANION_FONT }}>
-            {words}
-          </p>
-          <div className="-mb-3">
-            <CompanionFigure slot="arrival" state={state} expression={expression} context={context} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // A topic's hero (the canvas's Read boards): the hare listening, 72 or 80 px, then the line, centred on each other.
   if (figure === "topic") {
     return (
@@ -141,6 +150,57 @@ export function CompanionLine({ moment, context, onShown, className }: Companion
       <p className="min-w-0 max-w-[42ch] text-[17px] leading-[1.55] text-ink-2" style={{ fontFamily: COMPANION_FONT }}>
         {words}
       </p>
+    </div>
+  );
+}
+
+interface TonightRowProps {
+  context: CompanionContext;
+  selection: Selection | null;
+  standing: boolean;
+  fallback?: ReactNode;
+  className?: string;
+}
+
+/**
+ * The Tonight tile's row (the canvas's Today boards): one sentence on the left, and the posed hare on the right standing on
+ * the tile's floor, 140 px, or 200 px once the row is wide enough to keep the sentence beside it readable; the hare's box
+ * hangs 12 px below the row, onto the space above the tile's one button, which the row's own -mb-2 keeps at the canvas's
+ * 12 px. The sentence is Rowan's line, signed, when it speaks this open, and otherwise the tile's own sentence in the
+ * product's voice; they are never both on the tile. With `standing` the hare is there either way, in the state the day
+ * calls for, and the layout is the same whether or not a line is said, so the button never moves under her. The hare is
+ * the tile's, not the line's: it is the line's sibling, and the line alone carries `data-companion`.
+ */
+function TonightRow({ context, selection, standing, fallback, className }: TonightRowProps) {
+  const signed = selection && !selection.unsigned ? selection : null;
+  const drawn = standing ? standsOnTile(context) : context.figure && signed !== null;
+  const state = tonightFigureState(context);
+  const expression = signed ? figureExpressionFor(signed.line.id, state) : "attentive";
+  const words = signed ? (
+    <p data-companion={signed.moment} className={clsx("text-[17px] leading-[1.55] text-ink-2", !drawn && "min-w-0 max-w-[42ch]")} style={{ fontFamily: COMPANION_FONT }}>
+      <span className="sr-only">{context.rowanName}: </span>
+      {signed.text}
+    </p>
+  ) : (
+    (fallback ?? null)
+  );
+
+  // Words only, Quiet, or a screen Rowan yields: the sentence alone, with the room the hare had.
+  if (!drawn) {
+    return words ? (
+      <div data-tonight-row="" className={className}>
+        {words}
+      </div>
+    ) : null;
+  }
+  return (
+    <div data-tonight-row="" className={clsx("@container -mb-2", className)}>
+      <div className="grid grid-cols-[minmax(0,1fr)_140px] items-end gap-3 @min-[32rem]:grid-cols-[minmax(0,1fr)_200px] @min-[32rem]:gap-7">
+        <div className="mb-1.5 min-w-0 max-w-[34ch]">{words}</div>
+        <div className="-mb-3">
+          <CompanionFigure slot="arrival" state={state} expression={expression} context={context} />
+        </div>
+      </div>
     </div>
   );
 }

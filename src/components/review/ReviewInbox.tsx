@@ -14,32 +14,35 @@ import {
 } from "@/components/items";
 import { QuestionRunner } from "@/components/topic/QuestionRunner";
 import { getDB, type Attempt } from "@/lib/db/db";
+import { answerDiagnosticCard, type DiagnosticReviewAnswer } from "@/lib/review/diagnostic";
 import { useInboxQueue, type ResolvedCard } from "@/lib/review/resolve";
+import { inboxReturns, returnLabel } from "@/lib/review/returns";
 import { advanceCard, gradeFromMarks, recordAttempt, reviewInboxCard, touchSession } from "@/lib/session/record";
-import { makeScheduler, retrievability, review, type ReviewGrade } from "@/lib/srs/scheduler";
+import { isHypercorrectionCard } from "@/lib/srs/hypercorrection";
+import { makeScheduler, retrievability, type ReviewGrade } from "@/lib/srs/scheduler";
 import { useExamPlan } from "@/lib/plan/store";
 import { formatPaperDate, nextPaper, todayISO } from "@/lib/plan/exam-plan";
 import { ProgressLine } from "@/components/ux/ProgressLine";
 import { CloseCard, exitPrimary, exitSecondary } from "@/components/ux/CloseCard";
-import { reviewHeadline } from "@/components/review/review-copy";
+import { NOT_OPENED, TWIN_NOTE, reviewHeadline, unopenedLine, unopenedOnly } from "@/components/review/review-copy";
+import { FlashcardReview } from "@/components/review/FlashcardReview";
 import { CardSkeleton } from "@/components/ux/Skeleton";
 import { tap } from "@/lib/ux/haptics";
 
-function intervalLabel(from: Date, to: Date): string {
-  const days = (to.getTime() - from.getTime()) / 86_400_000;
-  if (days < 1) return "today";
-  if (days < 30) return `${Math.round(days)} d`;
-  return `${Math.round(days / 30)} mo`;
-}
-
 export function ReviewInbox() {
-  const { queue, dueCount } = useInboxQueue();
+  const { queue, dueCount, unopened } = useInboxQueue();
+  const plan = useExamPlan();
   const [index, setIndex] = useState(0);
   const [done, setDone] = useState(0);
   /** The grade an item that marks itself has earned, once it has been answered: the Next button's. */
   const [answered, setAnswered] = useState<ReviewGrade | null>(null);
   const started = useRef<number | null>(null);
   const initial = useRef<ResolvedCard[] | null>(null);
+  /**
+   * The moment each card is shown. Its returns are printed from this moment and its grade is recorded at it, so the day
+   * a button promises is the day stored (ts-fsrs seeds its fuzz from the review time; src/lib/review/returns.ts).
+   */
+  const shownAt = useRef<{ id: string; at: Date } | null>(null);
 
   // Freeze the queue for this session so grading a card does not reshuffle what is next.
   useEffect(() => {
@@ -51,12 +54,14 @@ export function ReviewInbox() {
 
   const cards = initial.current ?? queue;
   if (!cards) return <CardSkeleton lines={3} />;
-  if (cards.length === 0) return <EmptyInbox />;
+  if (cards.length === 0) return <EmptyInbox unopened={unopened} />;
   if (index >= cards.length) return <ReviewComplete count={done} minutes={started.current ? Math.max(1, Math.round((Date.now() - started.current) / 60_000)) : 1} startedAt={started.current ?? Date.now()} />;
 
   const current = cards[index];
   const content = current.content;
   const ref = { subject: current.subject, unit: current.unit, topicSlug: current.topicSlug };
+  if (shownAt.current?.id !== current.card.id) shownAt.current = { id: current.card.id, at: new Date() };
+  const now = shownAt.current.at;
 
   const onward = () => {
     setAnswered(null);
@@ -64,12 +69,26 @@ export function ReviewInbox() {
     setIndex((i) => i + 1);
   };
 
-  /** A prompt or a diagnostic: the inbox is the only place it is marked, so the inbox records it. */
+  /**
+   * A prompt or a flashcard: the inbox is the only place it is marked, so the inbox records it, at the moment the card was
+   * shown, which is the moment its printed returns were computed from.
+   */
   const grade = async (g: ReviewGrade, itemKind: Attempt["itemKind"] = "prompt") => {
     tap();
-    await reviewInboxCard(current.card.id, g, ref, itemKind);
+    await reviewInboxCard(current.card.id, g, ref, itemKind, now);
     await touchSession(current.subject);
     onward();
+  };
+
+  /**
+   * A diagnostic, at Reveal: recorded as the topic page records it (her confidence, her option's misconception, the two
+   * re-probes a certain miss earns) and moved by what she was sure of (src/lib/review/diagnostic.ts). Nothing moves on:
+   * the reveal stays on screen, with its reasons and what it says comes next, until she presses Next.
+   */
+  const answerDiagnostic = async (a: DiagnosticReviewAnswer) => {
+    tap();
+    await answerDiagnosticCard(current.card.id, { ...ref, id: current.itemId }, a, now);
+    await touchSession(current.subject);
   };
 
   /** A question part, a gate, a mistake or a twin: it has recorded its own attempt, so only the card moves. */
@@ -89,13 +108,12 @@ export function ReviewInbox() {
     await touchSession(current.subject);
   };
 
-  const scheduler = makeScheduler();
-  const now = new Date();
-  const intervals = {
-    again: intervalLabel(now, review(current.card.card, "again", now, scheduler).card.due),
-    good: intervalLabel(now, review(current.card.card, "good", now, scheduler).card.due),
-    easy: intervalLabel(now, review(current.card.card, "easy", now, scheduler).card.due),
-  };
+  // The return under each grade, from the card's own state in its unit's exam mode (the near-exam schedule the tap stores
+  // with). A sure-and-not-right re-probe is spent by its one pass, so it promises no return of its own.
+  const returns = plan && !isHypercorrectionCard(current.card.id) ? inboxReturns(current.card, plan, current.subject, current.unit, now) : null;
+  const intervals = returns ? { again: returnLabel(returns.again, now), good: returnLabel(returns.good, now), easy: returnLabel(returns.easy, now) } : undefined;
+  const waiting = dueCount !== undefined ? dueCount - cards.length - unopened : 0;
+  const notOpened = unopenedLine(unopened);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -104,19 +122,22 @@ export function ReviewInbox() {
         <span className="tnum">
           {index + 1} of {cards.length}
         </span>
-        {dueCount && dueCount > cards.length ? ` · ${dueCount - cards.length} more waiting for tomorrow` : ""}
+        {waiting > 0 ? ` · ${waiting} more waiting for tomorrow` : ""}
         {" · "}
         <span className="text-ink-2">{current.topicTitle}</span>
       </p>
+      {notOpened && index === 0 && <p className="-mt-1 mb-3 text-meta text-ink-2">{notOpened}</p>}
 
       {content?.kind === "prompt" && (
         <InlinePrompt key={current.card.id} prompt={content.prompt} mode="review" intervals={intervals} onGrade={(g: PromptGrade) => grade(g)} />
       )}
+      {content?.kind === "flashcard" && <FlashcardReview key={current.card.id} card={content.card} intervals={intervals} onGrade={(g) => grade(g, "recall")} />}
       {content?.kind === "diagnostic" && (
         <DiagnosticWithConfidence
           key={current.card.id}
           item={content.item}
-          onAnswer={(a) => grade(a.correct ? (a.confidence === 3 ? "easy" : "good") : "again", "diagnostic")}
+          onAnswer={(a) => void answerDiagnostic(a)}
+          onNext={onward}
         />
       )}
       {content?.kind === "question" && (
@@ -157,11 +178,14 @@ export function ReviewInbox() {
       )}
       {content?.kind === "gate" && (
         <div className="prose-note rounded-[var(--radius)] border border-line bg-surface p-5 shadow-[var(--shadow-1)]">
+          {/* Asked as its twin on alternate returns (gateForReview): said once, so a check that looks new is not a puzzle. */}
+          {content.variant === "twin" && <p className="mb-2 font-sans text-meta text-ink-2">{TWIN_NOTE}</p>}
           <StepRevealNote
-            key={current.card.id}
+            key={`${current.card.id}:${content.variant ?? "original"}`}
             blocks={[...content.context, content.gate]}
             single
-            // The card id is the gate's recorded item id (`<topicId>#gate:<gateId>`), so it records as it does in the lesson.
+            // The card id is the gate's recorded item id (`<topicId>#gate:<gateId>`), so it records as it does in the lesson,
+            // whichever version was asked: one card, one schedule, one record.
             onGate={(_id, _typed, correct) => void answer({ id: current.itemId, itemKind: "practice", correct })}
           />
           {answered !== null && (
@@ -174,10 +198,12 @@ export function ReviewInbox() {
         </div>
       )}
       {!content && (
+        // The last resort: tonight's list holds only cards the inbox can open (servableQueue), so this is a card whose item
+        // went missing between the list and the card. It stays due; nothing about it is recorded.
         <div className="rounded-[var(--radius)] border border-line bg-surface p-5">
-          <p className="text-meta text-ink-2">This item has been withdrawn from the content while it is checked.</p>
+          <p className="text-meta text-ink-2">{NOT_OPENED}</p>
           <button type="button" className="tap mt-2 rounded-[var(--radius-sm)] border border-line-2 px-4 text-meta" onClick={() => setIndex((i) => i + 1)}>
-            Skip
+            Next
           </button>
         </div>
       )}
@@ -185,7 +211,19 @@ export function ReviewInbox() {
   );
 }
 
-function EmptyInbox() {
+function EmptyInbox({ unopened }: { unopened: number }) {
+  if (unopened > 0) {
+    const copy = unopenedOnly(unopened);
+    return (
+      <div className="mx-auto max-w-xl rounded-[var(--radius)] border border-line bg-surface p-6 shadow-[var(--shadow-1)]">
+        <p className="text-[20px] font-semibold tracking-tight">{copy.title}</p>
+        <p className="mt-1 text-meta text-ink-2">{copy.line}</p>
+        <Link href="/" className="tap mt-4 inline-flex items-center rounded-[var(--radius-sm)] border border-line-2 px-5 font-medium">
+          Back to Today
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="mx-auto max-w-xl rounded-[var(--radius)] border border-line bg-surface p-6 shadow-[var(--shadow-1)]">
       <p className="text-[20px] font-semibold tracking-tight">Nothing due</p>

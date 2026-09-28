@@ -9,9 +9,11 @@
  * and the rounded triangle; no outlines; one light from the top-left with one shadow tone per colour; eyes with
  * whites, a pupil and a catchlight; the gorse scarf as the only warm accent.
  *
- * States (decision 8, all exam events): resting; arrival waves with the near arm and looks up; listening tilts the
- * head, ears forward, paws together; a stone placed holds the heather stone up in both paws, eyes closed pleased;
- * evening sits low with the ears back, the lids half down, under the moon; the Letter is held in both paws.
+ * States (decision 8, all exam events): resting; arrival waves with the near arm raised beside the face and looks up;
+ * listening tilts the head, ears forward, paws together; a stone placed holds the heather stone out in front in both
+ * paws, eyes closed pleased; evening sits low with the ears back, the lids half down, under the moon; the Letter is held
+ * in both paws. The wave and the stone were redrawn on 27 September 2026 so they can be seen (COMPANION-5): the canvas
+ * generator first, then this port.
  * Expressions: attentive (the default, lids a touch lowered), dry (lids lower, pupils aside, the brow), pleased.
  *
  * Decorative wherever it is used: the words beside it carry the meaning, so it is aria-hidden with no text of its own.
@@ -166,6 +168,34 @@ function HareDrawing({ k, state, expression, mono }: { k: string; state: FigureS
 
   // The paws and arms per state: the near arm waves on arrival; the paws come together when listening; the heather
   // stone is held up when a stone is placed; they tuck in the evening; the Letter is held in both.
+  // The wave and the held stone are painted after the scarf (`front`), where she can see them: the first drawing put the
+  // waving arm in the far side's shade under the scarf and the head, and the stone under the scarf, where it read as a
+  // purple bib (the trial audit's COMPANION-5; redrawn on the canvas first, 27 September 2026, then ported here). The wave
+  // is the near arm in the lit fur, raised beside the face with one shade tone on its far edge; the stone is held out in
+  // front at chest height, a paw at each end and the near forearm under it, clear of the body so it breaks the silhouette.
+  const heather = mono ? "currentColor" : C.heather;
+  const heatherLight = mono ? "currentColor" : C.heatherLight;
+  let front: ReactNode = null;
+  if (placed) {
+    front = (
+      <g data-pose="stone">
+        <rect x="36" y="101" width="26" height="11" rx="5.5" fill={fur} transform="rotate(14 49 106.5)" />
+        <rect x="38" y="107" width="24" height="5" rx="2.5" fill={shade} opacity="0.45" transform="rotate(14 49 106.5)" />
+        <path d="M26 95 C27 87 37 84 46 85 C54 86 58 91 56 97 C54 103 45 105 36 104 C29 103 25 100 26 95 Z" fill={heather} />
+        <path d="M31 90 C35 87 42 86 47 87" fill="none" stroke={heatherLight} strokeWidth="2" strokeLinecap="round" opacity="0.8" />
+        <ellipse cx="31" cy="101" rx="6.5" ry="5.4" fill={fur} />
+        <ellipse cx="55" cy="89" rx="6" ry="5" fill={shade} />
+      </g>
+    );
+  } else if (arrival) {
+    front = (
+      <g data-pose="wave" transform="rotate(-36 59 96)">
+        <rect x="53" y="58" width="12" height="40" rx="6" fill={fur} />
+        <rect x="59" y="62" width="6" height="34" rx="3" fill={shade} opacity="0.45" />
+        <ellipse cx="59" cy="58" rx="7.5" ry="6.5" fill={fur} />
+      </g>
+    );
+  }
   let paws: ReactNode;
   if (letter) {
     paws = (
@@ -176,26 +206,9 @@ function HareDrawing({ k, state, expression, mono }: { k: string; state: FigureS
       </>
     );
   } else if (placed) {
-    paws = (
-      <>
-        <rect x="58" y="98" width="11" height="26" rx="5.5" fill={fur} transform="rotate(28 63 111)" />
-        <rect x="92" y="100" width="11" height="26" rx="5.5" fill={shade} transform="rotate(-28 97 113)" />
-        <path d="M70 92 C72 84 84 82 92 86 C98 89 98 96 92 98 C86 101 76 101 72 99 C69 97 69 95 70 92 Z" fill={mono ? "currentColor" : C.heather} />
-        <path d="M75 88 C80 85 88 85 92 87" fill="none" stroke={mono ? "currentColor" : C.heatherLight} strokeWidth="2" strokeLinecap="round" opacity="0.8" />
-        <ellipse cx="70" cy="100" rx="6.5" ry="4.8" fill={fur} />
-        <ellipse cx="92" cy="101" rx="6.5" ry="4.8" fill={shade} />
-      </>
-    );
+    paws = null;
   } else if (arrival) {
-    paws = (
-      <>
-        <ellipse cx="60" cy="121" rx="6.5" ry="4.5" fill={fur} />
-        <g transform="rotate(-38 104 104)">
-          <rect x="98" y="76" width="12" height="34" rx="6" fill={shade} />
-          <ellipse cx="104" cy="74" rx="7.5" ry="6" fill={fur} />
-        </g>
-      </>
-    );
+    paws = <ellipse cx="72" cy="126" rx="6.5" ry="4.5" fill={shade} />;
   } else if (listening) {
     paws = (
       <>
@@ -248,6 +261,7 @@ function HareDrawing({ k, state, expression, mono }: { k: string; state: FigureS
           <rect x="55" y="84" width="42" height="6" rx="3" fill={gorseDeep} opacity="0.6" />
           <rect x="88" y="84" width="10" height="24" rx="5" fill={gorseDeep} transform="rotate(-8 93 84)" />
         </g>
+        {front}
       </g>
       <g transform={`rotate(${headTilt} 70 70)`}>
         <Ear x={76} rot={earR} far fur={fur} shade={shade} rose={rose} />

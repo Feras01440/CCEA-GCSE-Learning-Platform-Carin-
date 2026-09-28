@@ -3,7 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import manifest from "@/generated/manifest.json";
 import type { RetrievalPrompt } from "@/lib/content/schema";
-import { cardSeconds, type Card } from "@/lib/slides/cards";
+import { cardSeconds, SEE_STEP_SECONDS, type Card } from "@/lib/slides/cards";
 import { deckFor } from "@/lib/slides/deck";
 import {
   countWords,
@@ -12,7 +12,6 @@ import {
   gateStem,
   headingText,
   heroPromise,
-  initialOpen,
   inlineLede,
   isReadV2,
   isReadV2Path,
@@ -27,6 +26,9 @@ import {
   sameTitle,
   SECONDS_PER_GATE,
   SECONDS_PER_PROMPT,
+  SECONDS_PER_SEE_STEP,
+  seeSeconds,
+  seeStepsOf,
   videoSeconds,
   withPauses,
   withoutAsides,
@@ -118,6 +120,56 @@ describe("minutes: a prompt and a video, priced as Slides prices them (audit LD-
   it("says one minute, not one minutes", () => {
     expect(minutesHeading(1)).toBe("About 1 minute");
     expect(minutesHeading(9)).toBe("About 9 minutes");
+  });
+});
+
+describe("minutes: a See it at 15 seconds a step, as the Slides deck prices it (the teach-first case §8.2)", () => {
+  const p = (words: number) => ({ type: "p", md: "word ".repeat(words).trim() });
+  const steps = (count: number) => Array.from({ length: count }, (_, i) => ({ n: i + 1, working: `$x + ${i + 1}$`, decision: "Because the line above says so." }));
+  const gate = (id: string) => ({ type: "gate", id, kind: "choice", prompt: "Which line comes next?", options: ["$x$", "$2x$"], answer: "$x$", explain: "As step 2 of See it did." });
+  // One teaching section: 183 words (the heading's three and 180) are a minute of reading, the check 40 seconds, and the
+  // See it's four steps one minute more: 2.68 minutes, so 3 (2 without the See it).
+  const inline = { type: "see", stem: "Simplify $\\frac{x^{2}-9}{x^{2}+5x+6}$.", steps: steps(4) };
+  const note = [{ type: "h", text: "1. Factorise first", role: "idea" }, p(180), inline, gate("g1")];
+
+  it("adds 15 seconds a step to the section that shows it, on top of its reading and its check", () => {
+    expect(SECONDS_PER_SEE_STEP).toBe(15);
+    const [section] = lessonSections(note);
+    expect(section.minutes).toBe(3);
+    expect(lessonSections([note[0], note[1], note[3]])[0].minutes).toBe(2);
+    expect(seeSeconds(note).get(inline)).toBe(60);
+    expect(lessonMinutes(note)).toBe(3);
+  });
+
+  it("prices a See it that names a worked example by that example's steps, and one it cannot find at nothing", () => {
+    const named = { type: "see", workedExample: "we.t.01" };
+    const withName = [note[0], note[1], named, note[3]];
+    const found = seeStepsOf([{ id: "we.t.01", steps: steps(4) }, { id: "we.t.02", steps: steps(2) }]);
+    expect(found).toEqual({ "we.t.01": 4, "we.t.02": 2 });
+    expect(lessonSections(withName, undefined, found)[0].minutes).toBe(3);
+    expect(lessonSections(withName)[0].minutes).toBe(2);
+    expect(seeSeconds(withName, { "we.t.02": 2 }).get(named)).toBe(0);
+  });
+
+  it("counts a See it in the section whose heading it follows, a 'See it done' heading included", () => {
+    const later = { type: "see", stem: "Simplify $\\frac{4x^{2}-1}{2x+1}$.", steps: steps(4) };
+    const twoHeadings = [...note, { type: "h", text: "2. See it done", role: "see" }, p(90), later, gate("g2")];
+    const sections = lessonSections(twoHeadings);
+    expect(sections.map((s) => s.minutes)).toEqual([3, 2]); // 93 words, a check and a minute of steps: 2.18
+    expect(seeSeconds(twoHeadings).get(later)).toBe(60);
+  });
+
+  it("reaches the hero: its minutes are the sections' own, the See it's steps in them", () => {
+    const withHero = [{ type: "hero", lede: "A short lede.", can: [], minutes: 1 }, ...note];
+    expect(heroDataFor(withHero).minutes).toBe(3);
+    const named = [{ type: "hero", lede: "A short lede.", can: [], minutes: 1 }, note[0], note[1], { type: "see", workedExample: "we.t.01" }, note[3]];
+    expect(heroDataFor(named, { "we.t.01": 4 }).minutes).toBe(3);
+  });
+
+  it("one price for the same work in both ways in: the deck's See it card costs what the note's See it does", () => {
+    expect(SECONDS_PER_SEE_STEP).toBe(SEE_STEP_SECONDS);
+    const card = { kind: "see", key: "see:1", see: { stem: inline.stem, figure: null, steps: inline.steps, finalAnswer: null, workedExample: null } } as unknown as Card;
+    expect(cardSeconds(card)).toBe(seeSeconds(note).get(inline));
   });
 });
 
@@ -362,20 +414,8 @@ describe("Read v2", () => {
     expect(topicOfPath("/practise/")).toBeNull();
     expect(isReadV2Path("/learn/further-maths/FM1/")).toBe(false);
   });
-
-  it("opens a returning visit where she stopped, and a finished lesson whole", () => {
-    // The trial topic's shape: seven sections, gates g1 | g2 | g7 g3 | g4 | g5 g6 | none | none.
-    const s = (n: number, gateIds: string[]) => ({ n, title: `S${n}`, heading: `S${n}`, words: 50, gateIds, minutes: 1, untimedVideos: 0 });
-    const sections = [s(1, ["g1"]), s(2, ["g2"]), s(3, ["g7", "g3"]), s(4, ["g4"]), s(5, ["g5", "g6"]), s(6, []), s(7, [])];
-    expect(initialOpen(sections, [])).toBe(1);
-    expect(initialOpen(sections, ["g1"])).toBe(2);
-    // Half way through section 3: section 3 stays the one in progress.
-    expect(initialOpen(sections, ["g1", "g2", "g7"])).toBe(3);
-    expect(initialOpen(sections, ["g1", "g2", "g7", "g3", "g4", "g5"])).toBe(5);
-    expect(initialOpen(sections, ["g1", "g2", "g7", "g3", "g4", "g5", "g6"])).toBe(7);
-    expect(initialOpen([s(1, []), s(2, [])], [])).toBe(1);
-    expect(initialOpen([], [])).toBe(0);
-  });
+  // Where a returning visit opens is read-place.ts resumeState (27 Sep: her kept place, then her answers), tested in
+  // read-place.test.ts; initialOpen, which read the answers alone, is gone with it.
 });
 
 describe("gateStem: a gate's question laid out as §8.4 draws it, without rewording it", () => {

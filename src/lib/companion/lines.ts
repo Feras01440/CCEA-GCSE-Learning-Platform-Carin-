@@ -107,6 +107,15 @@ export type SlotName =
   | "sectionNumber"
   | "unit"
   | "stonePhrase"
+  /** The sections of a paused lesson she has done, as the page numbers them ("3"). */
+  | "pausedDone"
+  // the stones placed in this sitting, on whatever page it closes
+  /** The topics proved in the sitting, joined in English. */
+  | "placedTopics"
+  /** Their unit, when they are all on one. */
+  | "placedUnit"
+  /** Their units, joined, when they are on more than one. */
+  | "placedUnits"
   // what the week held
   | "sessionCount"
   | "returnCount"
@@ -117,6 +126,8 @@ export type SlotName =
   | "herNoteTopic"
   | "taughtLine"
   | "intendedDay"
+  /** The first name she gave at first run or in Settings, as she typed it. Never quoted: it is her name, not her words. */
+  | "learnerName"
   // the item in front of her
   | "answerText"
   | "methodLine"
@@ -132,9 +143,10 @@ export type SlotName =
 export const SLOT_NAMES: SlotName[] = [
   "papersLine", "nextPaperUnit", "nextPaperDate", "nextPaperStart", "nextPaperDays", "satPaperUnit", "resumeDay", "trapsMinutes",
   "dueCount", "confidentWrongCount", "returnWhen", "returnDay", "returningTopics", "recheckWhen", "firstItemTitle", "nextTopicTitle",
-  "topicTitle", "sectionNumber", "unit", "stonePhrase",
+  "topicTitle", "sectionNumber", "unit", "stonePhrase", "pausedDone",
+  "placedTopics", "placedUnit", "placedUnits",
   "sessionCount", "returnCount", "itemCount", "provedCount",
-  "herNote", "herNoteTopic", "taughtLine", "intendedDay",
+  "herNote", "herNoteTopic", "taughtLine", "intendedDay", "learnerName",
   "answerText", "methodLine", "whyHard", "recapAsk", "evidenceSeries", "evidenceFinding",
   "mockUnit", "mockReturnsCount", "mockReturnsWhen",
 ];
@@ -173,13 +185,17 @@ export type Flag =
   | "topicTitleShort"
   | "firstLetterDue"
   /** The Letter is owed and today is its first day: it goes first, and the other signed lines wait. */
-  | "letterGoesFirst";
+  | "letterGoesFirst"
+  /** A Read lesson she paused and has not finished (read-place.ts): Today offers the way back, not something new. */
+  | "lessonPaused"
+  /** She paused it today, and it was the last thing she did in it: the evening's "Section 3 done." */
+  | "pausedToday";
 
 export const FLAGS: Flag[] = [
   "hasDue", "noDue", "confidentWrongPending", "hasHerNote", "hasTaughtLine", "hasIntention",
   "firstVisitToTopic", "resumable", "reviserPath", "stonePlaced", "isLate", "paperEve", "afterPaper",
   "mockEntered", "mockNothingSoon", "askedAboutNerves", "hasEvidence", "hasMethodMark", "unitsInAnswer", "scienceDue",
-  "topicIsSly", "topicTitleShort", "firstLetterDue", "letterGoesFirst",
+  "topicIsSly", "topicTitleShort", "firstLetterDue", "letterGoesFirst", "lessonPaused", "pausedToday",
 ];
 
 export interface CompanionLineSpec {
@@ -197,6 +213,11 @@ export interface CompanionLineSpec {
    * never heard twice in a fortnight.
    */
   cooldownDays?: number;
+  /**
+   * Lines that state the same fact in two wordings (with her name and without). Once one of them is said, the others
+   * wait until the next calendar day, whatever their own cooldowns, so one evening never hears the fact twice.
+   */
+  family?: string;
   principle: Principle;
   /** Slots the template needs. The line is silent unless the context can fill all of them. */
   requires: SlotName[];
@@ -204,8 +225,9 @@ export interface CompanionLineSpec {
   flags?: Flag[];
   /**
    * How the line ranks against the others at its moment, when its flags do not say it: 3 quotes her, 2 is
-   * specific to the moment, 1 is general. Set only where a flag merely keeps the line true (close.done
-   * needs nothing to be due) rather than making it the thing to say, so a placed stone still comes first.
+   * specific to the moment, 1 is general. Set where a flag merely keeps the line true (close.done needs
+   * nothing to be due) rather than making it the thing to say, so a placed stone still comes first; and at 3
+   * for a line that greets her by the name she gave, which is hers as a quotation is.
    */
   rank?: 1 | 2 | 3;
   /** Context conditions that must all be false. */
@@ -281,11 +303,13 @@ export const LINES: CompanionLineSpec[] = [
     principle: "P1",
     requires: ["dueCount", "confidentWrongCount"],
     flags: ["hasDue", "confidentWrongPending"],
+    notFlags: ["isLate"],
     cooldownDays: 1,
     note:
       "Tonight's facts, different each night, so it waits a day rather than a fortnight: with the fourteen-day " +
       "cooldown on every arrival line Today went quiet from the second evening (the audit's must-fix 2, 23 Sep). " +
-      "It could never be said before 23 Sep: the capitalised count failed the rendered lint.",
+      "It could never be said before 23 Sep: the capitalised count failed the rendered lint. Never once it is late: after " +
+      "'Whatever is due can be tomorrow's' it read as a push to start (the trial audit's TODAY-2, 25 Sep).",
   },
   {
     id: "today.first-up",
@@ -294,11 +318,30 @@ export const LINES: CompanionLineSpec[] = [
     principle: "P1",
     requires: ["firstItemTitle"],
     flags: ["hasDue"],
+    notFlags: ["isLate"],
     cooldownDays: 1,
+    family: "first-up",
     note:
       "Says what the tile does not: which topic the review inbox puts first (live.ts orders tonight's cards with " +
       "the inbox's own pickQueue). The count is on the tile already, so it is not said twice. Tonight's fact, so it " +
-      "waits a day.",
+      "waits a day. Never once it is late (TODAY-2: two opens after 'It will keep' it named what to start with).",
+  },
+  {
+    id: "today.named-first-up",
+    moment: "today-open",
+    template: "{learnerName}, first up tonight: {firstItemTitle}.",
+    principle: "P1",
+    requires: ["learnerName", "firstItemTitle"],
+    flags: ["hasDue"],
+    notFlags: ["isLate"],
+    rank: 3,
+    family: "first-up",
+    note:
+      "She is greeted by name with one fact about her own work (the specification §10, 'what she notices on day 3'). The " +
+      "name is hers from first run's 'What should it call you?', which used to lead nowhere (the trial audit's " +
+      "COMPANION-8). Ranked with the lines that quote her, so it comes on the first evening it can, and then waits the " +
+      "fortnight's cooldown: her name now and then, never every night. The same fact as today.first-up, so the two share " +
+      "a family and one evening hears it once.",
   },
   {
     id: "today.you-said",
@@ -307,6 +350,7 @@ export const LINES: CompanionLineSpec[] = [
     principle: "P1",
     requires: ["intendedDay", "firstItemTitle"],
     flags: ["hasIntention", "hasDue"],
+    notFlags: ["isLate"],
     quotes: ["intendedDay"],
   },
   {
@@ -317,12 +361,47 @@ export const LINES: CompanionLineSpec[] = [
     principle: "P3",
     requires: ["nextTopicTitle"],
     flags: ["noDue"],
+    notFlags: ["isLate", "lessonPaused"],
     place: true,
     cooldownDays: 1,
+    family: "open-offer",
     note:
       "Tonight's fact, so it waits a day, not a fortnight: the audit asked for it every night nothing is due. It used to " +
       "open with 'Nothing back tonight.', the very sentence the Tonight tile's headline prints above it (seen 24 Sep): " +
-      "the tile states the fact, Rowan says what is open (tonight-copy.test.ts holds every Today line to that).",
+      "the tile states the fact, Rowan says what is open (tonight-copy.test.ts holds every Today line to that). No new " +
+      "work once it is late (the specification's acceptance; TODAY-2 found it offered after midnight).",
+  },
+  {
+    id: "today.named-open",
+    moment: "today-open",
+    template: "{learnerName}, {nextTopicTitle} is open if you want new ground.",
+    plainTemplate: "{learnerName}, {nextTopicTitle} is open if you want something new.",
+    principle: "P3",
+    requires: ["learnerName", "nextTopicTitle"],
+    flags: ["noDue"],
+    notFlags: ["isLate", "lessonPaused"],
+    place: true,
+    rank: 3,
+    family: "open-offer",
+    note:
+      "today.nothing-back with her name (COMPANION-8): on the first evening it can, then on the fortnight's cooldown, and " +
+      "never on the same evening as its plain twin (the family rule).",
+  },
+  {
+    id: "today.paused-done",
+    moment: "today-open",
+    template: "Section {pausedDone} done. The rest will keep.",
+    principle: "P8",
+    requires: ["pausedDone"],
+    flags: ["pausedToday"],
+    rank: 3,
+    cooldownDays: 1,
+    note:
+      "The evening she pressed 'Pause here' (01 §13: Pause here 'returns her to Today with the close card's one line'; the " +
+      "trial audit's READ-12 found Today silent about the lesson). Her own act, so it ranks with the lines that quote her. " +
+      "The tile says where the lesson opens and offers the way back in the product's voice; Rowan says the section is done " +
+      "and the rest keeps, so the two never say the same thing, and nothing asks her to go on. Said the evening she paused " +
+      "only (pausedToday), never as a reminder on a later night.",
   },
   {
     id: "today.days-then-note",
@@ -331,6 +410,7 @@ export const LINES: CompanionLineSpec[] = [
     principle: "P1",
     requires: ["nextPaperUnit", "nextPaperDays"],
     flags: ["hasDue", "hasHerNote"],
+    notFlags: ["isLate"],
   },
   {
     id: "today.quote-note",
@@ -576,12 +656,27 @@ export const LINES: CompanionLineSpec[] = [
   {
     id: "close.stone",
     moment: "session-close",
-    template: "{topicTitle}: proved, and {stonePhrase} on the {unit} cairn.",
-    plainTemplate: "{topicTitle}: proved, and {stonePhrase} on {unit}.",
+    template: "{placedTopics}: proved, and {stonePhrase} on the {placedUnit} cairn.",
+    plainTemplate: "{placedTopics}: proved, and {stonePhrase} on {placedUnit}.",
     principle: "P1",
-    requires: ["topicTitle", "stonePhrase", "unit"],
+    requires: ["placedTopics", "stonePhrase", "placedUnit"],
     flags: ["stonePlaced"],
     place: true,
+    cooldownDays: 0,
+    note:
+      "Names what was proved in the sitting, from the mastery rows, on any close: it used to need the page's own topic, " +
+      "so on the review inbox's close, where stones are placed, it could never be said and a dry line stood in beside " +
+      "'1 stone placed' (the trial audit's COMPANION-6). What just happened, so no cooldown: every stone gets its line.",
+  },
+  {
+    id: "close.stones",
+    moment: "session-close",
+    template: "{placedTopics}: proved, and {stonePhrase} placed, on {placedUnits}.",
+    principle: "P1",
+    requires: ["placedTopics", "stonePhrase", "placedUnits"],
+    flags: ["stonePlaced"],
+    cooldownDays: 0,
+    note: "The same when the stones go on more than one unit's cairn: each unit named, and no one cairn claimed.",
   },
   {
     id: "close.returns",
@@ -628,13 +723,14 @@ export const LINES: CompanionLineSpec[] = [
     plainTemplate: "It is late. One short one to finish on is plenty.",
     principle: "P6",
     requires: [],
-    flags: ["isLate"],
+    flags: ["isLate", "hasDue"],
     fixedCounts: ["one"],
     dialect: true,
     note:
       "Lateness is only ever said while she is here. It is never inferred from absence and no hour is named. " +
       "Said on arrival (the Today slot tries `evening` first), so the plain wording keeps the meaning of 'one wee " +
-      "one to finish on'; it used to say 'Finish the one you are on', which is wrong before she has started.",
+      "one to finish on'; it used to say 'Finish the one you are on', which is wrong before she has started. Only when " +
+      "something is due: with nothing back, 'one to finish on' could only mean something new (TODAY-2, 25 Sep).",
   },
   {
     id: "evening.will-keep",
@@ -648,10 +744,14 @@ export const LINES: CompanionLineSpec[] = [
   {
     id: "evening.nothing-new",
     moment: "evening",
-    template: "It is late and nothing is due. Anything new will keep for tomorrow.",
+    template: "It is late. Anything new will keep for tomorrow.",
     principle: "P8",
     requires: [],
     flags: ["isLate", "noDue"],
+    note:
+      "It used to open 'It is late and nothing is due.', under the tile's own headline 'Nothing back tonight.': the fact " +
+      "twice on one tile (the trial audit's TODAY-2 and TODAY-3). The tile states the fact; Rowan says only what the hour " +
+      "changes. Id kept, so the cooldown record still knows it.",
   },
 
   // ---------------------------------------------------------------- paper eve (spec 35-37)

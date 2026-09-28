@@ -109,12 +109,22 @@ export interface CompanionInput {
   sessionStartedAt?: number;
   /** topicSlug to title, so "what returns" can be said in words. */
   topicTitles?: Record<string, string>;
+  /**
+   * `${subject}:${topicSlug}` to its unit code, for every topic she has proved (live.ts fills it from the taxonomy), so a
+   * stone placed in the sitting can be said with the unit it goes on, on a close that has no topic of its own.
+   */
+  topicUnits?: Record<string, string>;
   /** The step Today would send her to next. */
   nextTopic?: { slug: string; title: string } | null;
   /** A paper sat today, if the caller knows it. Otherwise derived from the timetable. */
   satPaperUnit?: string | null;
   /** Minutes on the traps sheet the evening before a paper. */
   trapsMinutes?: number;
+  /**
+   * The Read lesson she paused and has not finished, as Today reads it (src/components/topic/read-place.ts,
+   * lastReadLesson): the sections done, and whether she paused it today with nothing done in it since.
+   */
+  pausedLesson?: { title: string; done: number; open: number; total: number; pausedToday: boolean } | null;
 }
 
 export interface CompanionContext {
@@ -344,10 +354,18 @@ export function buildCompanionContext(input: CompanionInput): CompanionContext {
   const last = [...sessions].sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime())[0] ?? null;
   const lastSession = last ? { at: last.startedAt, items: last.itemsDone, minutes: last.minutes } : null;
 
-  // Stones.
+  // Stones. Those placed in this sitting are named with their units, whatever page the close is on: the review inbox's
+  // close has no topic of its own, and it is where most stones are placed (the trial audit's COMPANION-6).
   const proved = mastery.filter((m) => m.level === "proficient" || m.level === "mastered");
   const startedAt = input.sessionStartedAt ?? now.getTime();
-  const placedThisSession = proved.filter((m) => m.updatedAt.getTime() >= startedAt).length;
+  const placed = proved.filter((m) => m.updatedAt.getTime() >= startedAt);
+  const placedThisSession = placed.length;
+  const units = input.topicUnits ?? {};
+  const placedUnitOf = (m: TopicMastery): string | null =>
+    units[`${m.subject}:${m.topicSlug}`] ?? (topic && topic.slug === m.topicSlug && topic.subject === m.subject ? topic.unit : null);
+  const placedNames = [...new Set(placed.map((m) => titleFor(m.topicSlug, titles)))];
+  const placedUnitList = placed.map(placedUnitOf);
+  const placedUnits = placedUnitList.every((u): u is string => u !== null) ? [...new Set(placedUnitList)] : null;
 
   // The week, in exam currency.
   const weekAttempts = attempts.filter((a) => a.at.getTime() >= weekStart);
@@ -414,6 +432,8 @@ export function buildCompanionContext(input: CompanionInput): CompanionContext {
     topicTitleShort: topicName != null && wordCount(spokenTitle(topicName)) <= SPOKEN_TITLE_WORDS,
     firstLetterDue: letterOwed,
     letterGoesFirst,
+    lessonPaused: input.pausedLesson != null,
+    pausedToday: input.pausedLesson?.pausedToday === true && input.pausedLesson.done > 0,
   };
 
   const slots: Partial<Record<SlotName, string>> = {};
@@ -437,6 +457,10 @@ export function buildCompanionContext(input: CompanionInput): CompanionContext {
   put("satPaperUnit", satToday);
   put("resumeDay", WEEKDAYS[new Date(now.getTime() + 2 * DAY).getDay()]);
   put("trapsMinutes", numberWord(input.trapsMinutes ?? 20));
+  // Her name, as she typed it at first run or in Settings (the plan keeps it), for the lines that greet her by it.
+  put("learnerName", input.plan.learnerName);
+  // A lesson she paused: the sections done, numbered as the page numbers them.
+  if (input.pausedLesson && input.pausedLesson.done > 0) put("pausedDone", String(input.pausedLesson.done));
 
   // Tonight.
   if (dueCards.length) put("dueCount", numberWord(dueCards.length));
@@ -467,7 +491,14 @@ export function buildCompanionContext(input: CompanionInput): CompanionContext {
     put("unit", topic.unit);
     if (typeof topic.sectionNumber === "number" && topic.sectionNumber > 1) put("sectionNumber", String(topic.sectionNumber));
   }
-  if (placedThisSession > 0) put("stonePhrase", stonesPhrase(placedThisSession));
+  if (placedThisSession > 0) {
+    put("stonePhrase", stonesPhrase(placedThisSession));
+    put("placedTopics", placedNames.length <= 3 ? joinWords(placedNames) : joinWords([placedNames[0], placedNames[1], `${numberWord(placedNames.length - 2)} more topics`]));
+    // One unit: "on the M4 cairn". Several: each named ("on M4 and B1"). A unit the catalogue cannot give: neither, and
+    // the lines that need one stay silent rather than guess.
+    if (placedUnits && placedUnits.length === 1) put("placedUnit", placedUnits[0]);
+    if (placedUnits && placedUnits.length > 1) put("placedUnits", joinWords(placedUnits));
+  }
 
   // The week. A count of zero is left absent rather than said: the line that needed it stays silent,
   // which is how a quiet week is reported without ever being named as a shortfall.
@@ -518,7 +549,7 @@ export function buildCompanionContext(input: CompanionInput): CompanionContext {
     now,
     today,
     rowanName: rowanName(state),
-    learnerName: input.plan.learnerName ?? null,
+    learnerName: input.plan.learnerName?.trim() || null,
     plainMode: isPlainMode(state, now),
     silenced: state.silenced,
     figure: state.figure !== false && !state.silenced,

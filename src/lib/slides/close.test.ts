@@ -10,14 +10,23 @@ const card = (id: string, due: Date, topicSlug = "algebraic-fractions-simplify")
 
 describe("what comes back, said from the cards themselves", () => {
   it("counts every card, not the first three (audit CT-07), and names what they are", () => {
+    // The trial's run: its eight checks (g2, g12, g9, g13, g4, g10, g11, g8) and its two recall cards (rp.02, rp.08).
     const tonight = [
-      ...["g1", "g2", "g7", "g3", "g4", "g5", "g6"].map((g) => card(`fm.u1.algebraic-fractions-simplify#gate:${g}`, at(10 * MIN))),
-      card("rp.fm.u1.algebraic-fractions-simplify.04", at(MIN)),
-      card("rp.fm.u1.algebraic-fractions-simplify.06", at(10 * MIN)),
+      ...["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"].map((g) => card(`fm.u1.algebraic-fractions-simplify#gate:${g}`, at(10 * MIN))),
+      card("rp.fm.u1.algebraic-fractions-simplify.02", at(MIN)),
+      card("rp.fm.u1.algebraic-fractions-simplify.08", at(10 * MIN)),
     ];
     const { rows, more } = returnRows(tonight, now, title);
-    expect(rows).toEqual([{ key: expect.any(String), when: "Later today", what: "7 checks and 2 recall cards from Simplifying algebraic fractions", reason: null, count: 9 }]);
+    expect(rows).toEqual([{ key: expect.any(String), when: "Tonight", what: "8 your turns and 2 recall cards from Simplifying algebraic fractions", reason: null, count: 10 }]);
     expect(more).toBe(0);
+  });
+
+  it("counts what came due during the run as tonight's too: a new card's first step is a minute or ten", () => {
+    const cards = [card("fm.u1.algebraic-fractions-simplify#gate:g2", at(-4 * MIN)), card("fm.u1.algebraic-fractions-simplify#gate:g12", at(6 * MIN))];
+    expect(returnRows(cards, now, title).rows.map((r) => [r.when, r.what])).toEqual([["Tonight", "2 your turns from Simplifying algebraic fractions"]]);
+    // Tonight runs to four in the morning; after that it is tomorrow.
+    expect(returnRows([card("rp.x", at(6.5 * 60 * MIN))], now, title).rows[0].when).toBe("Tonight");
+    expect(returnRows([card("rp.x", at(8 * 60 * MIN))], now, title).rows[0].when).toBe("Tomorrow");
   });
 
   it("gives a reason only when there is one: a confident miss comes back sooner (audit LD-05)", () => {
@@ -40,8 +49,8 @@ describe("what comes back, said from the cards themselves", () => {
     expect(more).toBe(4);
   });
 
-  it("leaves out what is due already and what is more than six days away", () => {
-    expect(returnRows([card("rp.a", at(-MIN)), card("rp.b", at(8 * DAY))], now, title)).toEqual({ rows: [], more: 0 });
+  it("leaves out what is more than six days away", () => {
+    expect(returnRows([card("rp.b", at(8 * DAY))], now, title)).toEqual({ rows: [], more: 0 });
   });
 
   it("never names a weekday that could mean today next week", () => {

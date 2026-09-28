@@ -27,12 +27,12 @@ Nothing outside `src/components/companion` imports a file inside `src/lib/compan
 
 | Slot | Component | Props | Reads | Silent when | Acceptance test |
 |---|---|---|---|---|---|
-| `today-open` | `CompanionLine` | `{ moment, context, onShown? }` | tonight's due cards in the review inbox's own order, hypercorrection cards, her cairn note and her "when next" note, the next paper from `exam-plan`, the next step, the clock only for `isLate` (the slot tries `evening` first) | silenced; first run is not done; her brother's note is on the screen; any answer field is up; the first Letter is owed and today is the day it was first offered; every line for the moment is inside its cooldown (one calendar day for tonight's facts, a fortnight for everything with a voice) | `select.test.ts` "fresh install: on the Letter's first day it goes first", "the same facts speak the same after a week and a half as after one day", and "tries the evening lines before the arrival lines" |
+| `today-open` | `CompanionLine` | `{ moment, context, onShown?, standing?, fallback? }` | tonight's due cards in the review inbox's own order, hypercorrection cards, her cairn note and her "when next" note, the next paper from `exam-plan`, the next step, the clock only for `isLate` (the slot tries `evening` first; once it is late no line that adds or starts work is said) | the line: silenced; first run is not done; her brother's note is on the screen; any answer field is up; the first Letter is owed and today is the day it was first offered; every line for the moment is inside its cooldown (one calendar day for tonight's facts, a fortnight for everything with a voice). With `standing` (the Tonight tile) the hare stands whether or not the line speaks, and `fallback`, the tile's own sentence, takes the line's place while it is silent | `select.test.ts` "fresh install: on the Letter's first day it goes first on Today", "the same facts speak the same after a week and a half as after one day", "tries the evening lines before the arrival lines" and "late at night Today never pushes work"; `components.test.ts` "the Tonight tile: the hare stands there on every open" |
 | `first-letter` | `CompanionLetter` | `{ moment, context, onRename?, onRead?, sealed?, preview?, children? }` | `companionState.letterSeen` and `letterOfferedOn`, `settings.firstRunDone`, `upcomingPapers`, Today's next step | `letterSeen` is true; first run is not done (it is offered on the first Today after it, never inside it); silenced; her brother's note is on the screen; an answer field is up. From the day after it was first offered it is sealed to one line until she opens it | `select.test.ts` "fresh install: the first Today offers the Letter, in plain words" and "existing install: the upgrade Letter reads the paper dates from the plan" |
-| `topic-open` | `CompanionLine` | `{ moment, context, onShown? }` | the topic's first-visit flag, the section she stopped at, the reviser path, the examiners' flag on the topic, and optionally `shortTitle` (the spine's short form of the title; without it the catalogue title is shortened by `spokenTitle`, and a line that says the title mid-sentence is withheld when even the short form runs past six words) | no topic passed; the topic is neither new, resumable nor flagged; silenced; first run is not done; the Letter's first day while it is unread; every line for the moment is inside its cooldown (never on a first visit: its fallback has none). Rendered only in the topic hero, above the lesson and before the first answer field in document order; a signed line is never a descendant of a section, card or form that contains an answer field (the Playwright rule is containment, not page-wide presence, because the teach-first page holds every question in the DOM at once) | `select.test.ts` "fresh install: once she has read the Letter, every wired slot speaks that same evening" |
-| `session-close` | `CompanionLine` | `{ moment, context, onShown? }` | stones placed since `sessionStartedAt`, whether anything is still due, the topics returning on the next return day, the topic's own sessions and returns | silenced; first run is not done; the Letter's first day while it is unread; every line for the moment is inside the fourteen-day cooldown (one of "Done for tonight" and "You can stop here" is true at every close) | `select.test.ts` "places a stone on the close card only when one was placed", and "names only the topics that come back on the day it names" |
+| `topic-open` | `CompanionLine` | `{ moment, context, onShown? }` | the topic's first-visit flag, the section she stopped at, the reviser path, the examiners' flag on the topic, and optionally `shortTitle` (the spine's short form of the title; without it the catalogue title is shortened by `spokenTitle`, and a line that says the title mid-sentence is withheld when even the short form runs past six words) | no topic passed; the topic is neither new, resumable nor flagged; silenced; first run is not done; every line for the moment is inside its cooldown (never on a first visit: its fallback has none). Rendered only in the topic hero, above the lesson and before the first answer field in document order; a signed line is never a descendant of a section, card or form that contains an answer field (the Playwright rule is containment, not page-wide presence, because the teach-first page holds every question in the DOM at once) | `select.test.ts` "fresh install: once she has read the Letter, every wired slot speaks that same evening" |
+| `session-close` | `CompanionLine` | `{ moment, context, onShown? }` | stones placed since `sessionStartedAt`, whether anything is still due, the topics returning on the next return day, the topic's own sessions and returns | silenced; first run is not done; every line for the moment is inside its cooldown (one of "Done for tonight" and "You can stop here" is true at every close) | `select.test.ts` "places a stone on the close card only when one was placed", and "names only the topics that come back on the day it names" |
 | `support` | `CompanionLine` | `{ moment, context, onShown? }` | whether the answer carries a unit, whether the part's scheme has a method mark, the examiners' evidence on the item; nothing about her | silenced; first run is not done; her brother's note is on the screen. Never held back for the Letter: it is unsigned prose inside the work | `select.test.ts` "renders the second-miss support unsigned: no mark, no signature, no attribute" |
-| `mock-entered` | `CompanionLine` | `{ moment, context, onShown? }` | the mock's unit and subject, that unit's topics from the taxonomy, and that unit's cards due now or inside the coming week. Never the mark, the UMS or the grade | no mock passed; a question is up; silenced; first run is not done; the Letter's first day while it is unread | `select.test.ts` "names what a mock sends back, and never the mark", and "says a filed paper leaves tonight as it was" |
+| `mock-entered` | `CompanionLine` | `{ moment, context, onShown? }` | the mock's unit and subject, that unit's topics from the taxonomy, and that unit's cards due now or inside the coming week. Never the mark, the UMS or the grade | no mock passed; a question is up; silenced; first run is not done | `select.test.ts` "names what a mock sends back, and never the mark", and "says a filed paper leaves tonight as it was" |
 | `settings-memory` | `CompanionMemory` | `{ notes?, onDelete?, onForget?, className? }` | `companionNotes`, and the `companionNotesInExport` setting | never: the list is always reachable, and says so when it is empty | `memory.test.ts` "forgets everything she gave it, and keeps her settings" |
 | `map-place` | `RowanMark` | `{ size?, className? }` | only what she sees of Rowan (`useCompanionPresence`, the state row's `silenced` and `figure`): it is the hare's head and ears in the ink of its line, and reads no other table (since 23 September; the three-stone mark's `stones` and `settle` went with it) | always, in words: the place Rowan keeps on the Map is a mark, never a line; and not drawn at all in Words only or Quiet (since 24 September) | `contract.test.ts` "the Map place carries no line" and "draws nothing during a question or against her choice" |
 
@@ -49,13 +49,16 @@ Nothing outside `src/components/companion` imports a file inside `src/lib/compan
   (`SilenceReason` `"first-run"`): Today renders for a moment on a new device before it sends her to
   `/welcome/`, and a line said there was being spent on a screen she never read (found on the dev server,
   22 September).
-- **It introduces itself first, for one day.** While the first Letter is owed and today is the day it was
-  first offered (`companionState.letterOfferedOn`, written the first time the Letter renders), every signed
-  moment except `first-letter` is silent (`"letter-first"`, `flags.letterGoesFirst`), so the Tonight tile
-  carries the Letter and nothing competes with it. From the next day the signed lines speak whether or not
-  she has opened it, and the Letter waits under Start, sealed to one line, until she reads it (opening it
-  counts). Unsigned prose inside the work is never held back. Until 23 September this rule had no end: on
-  an install past first run, every surface stayed silent until she tapped Close.
+- **It introduces itself first on Today, for one day.** While the first Letter is owed and today is the day it
+  was first offered (`companionState.letterOfferedOn`, written the first time the Letter renders), Today's own
+  moments (`TODAY_MOMENTS`: `evening` and `today-open`) are silent (`"letter-first"`, `flags.letterGoesFirst`),
+  so the Tonight tile carries the Letter and nothing competes with it there. The topic hero, the close card and
+  the mock line speak that same evening (since 27 September: before, every signed moment except `first-letter`
+  waited, so on her first evening Rowan spoke only inside the Letter, the trial audit's COMPANION-1). From the
+  next day the signed lines speak whether or not she has opened it, and the Letter waits under Start, sealed to
+  one line, until she reads it (opening it counts). Unsigned prose inside the work is never held back. Until 23
+  September this rule had no end: on an install past first run, every surface stayed silent until she tapped
+  Close.
 - **Today's slot says it is late first.** `CompanionLine` selects with `selectAt`, which expands
   `today-open` into the slot's moments (`evening`, then `today-open`); the attribute names the moment that
   spoke.
@@ -345,6 +348,7 @@ sizes with the canvas's and draws the hare into them. The sizes below are `FIGUR
 | `letter` | the Letter (first and Sunday), the hare holding it beside the note; the signature row is the name alone. Sealed, the one line carries `RowanMark` at 24 px instead | 100 px / 110 px | `letter` | `CompanionLetter` | while an answer field is up; the Letter is never placed inside the work |
 | `topic` | the topic hero, left of the `topic-open` line: after the two ways in, before the hero's own figure, above every answer field | 72 px / 80 px | `listening` | `CompanionLine` | inside any section, card or form that holds an answer field |
 | `close` | the close card's scene at the top of the card, above its title: the hare on the hill by the cairn, under the evening sky (`session-close`) | 156 px / 250 px | `arrival` (the wave), `stone-placed` | `CompanionScene` | on a close card that sits under a live question (`companion={false}`) |
+| `welcome` | first run, above the name card: the hare waving hello beside the one sentence that introduces it, so "What should it call you?" asks about someone she has met (27 September 2026) | 100 px / 110 px | `arrival` | `RowanIntroduction` | inside the card that holds her name field; in Words only or Quiet |
 
 **The steps between the sizes.** `arrival` grows to 200 px by a container query on the line's own block
 (`@min-[32rem]`, 512 px), not by the viewport, so the line always keeps room beside the hare: from 512 px the line
@@ -387,8 +391,10 @@ motion, no blink, no breathing. The evening state is a drawing, never a dimming 
 no text of its own; `data-companion-figure="<slot>"` and `data-figure-state="<state>"` on the slot's root; nothing
 while `context.questionVisible`; nothing while `context.figure` is false (Words only or Quiet in Settings; see the
 next section); silence whenever the line it stands beside is silent (`CompanionScene` selects the same line as
-`CompanionLine` from the same held context); never inside a section, card or form that holds an answer field, and
-never after the first answer field in document order.
+`CompanionLine` from the same held context), except on the Tonight tile, where the hare stands on every open beside
+Rowan's line or, while the line is silent, the tile's own sentence (`standing`, 27 September; see "Every open, every
+evening" below); never inside a section, card or form that holds an answer field, and never after the first answer
+field in document order.
 
 Proved by: `components.test.ts` (each slot's sizes, state and attributes; none on the unsigned line; nothing while a
 question is up; the close scene silent when the line is; the Letter open and sealed), `rowan-figure.test.ts` (the
@@ -438,3 +444,84 @@ step and write in another). Proved by `presence-pick.test.ts` (every order the s
 rendered radio state), `memory.test.ts` "two writes at once never lose one another", and the widened
 `e2e/companion.spec.ts` test, whose scope is Today's line and the Letter waiting under Start, the trial topic's hero and
 the Map, through the Settings control itself.
+## Every open, every evening (27 September 2026)
+
+The trial audit of 25 September (build 8) found Rowan on the first open or two of an evening and then gone, giving the
+opposite advice to the tile late at night, speaking only inside the Letter on her first evening, asking what "it"
+should call her before any "it" had been met, never using the name she gave, taking a rename in silence, and saying
+nothing about the stone on the review's close. Each was reproduced on build 8 before it was changed. The rules now:
+
+**The hare stands on the Tonight tile on every open (TODAY-1).** Today's lines are said once a day by their
+cooldowns, and until now the figure went with its line, so after the first open or two the tile was bare and Start
+moved up by the height of the row. `CompanionLine` takes `standing` (the Tonight tile alone passes it): whenever the
+hare may stand (`figure` on, first run done, no question up, her brother's note not on screen) it draws the row, with
+Rowan's line on the left when one is said and otherwise `fallback`, the tile's own sentence, in the product's voice and
+unsigned. The row keeps its size either way, so Start stays where it was. Everywhere else the figure is still silent
+with its line (see "What every host keeps" above).
+
+**Late at night, one piece of advice (TODAY-2).** The hare takes the `evening` pose whenever `flags.isLate`
+(`tonightFigureState` in `figure.ts`), said or silent. Every Today line that adds or starts work carries `notFlags:
+["isLate"]` (`today.back-tonight`, `today.first-up`, `today.named-first-up`, `today.you-said`, `today.nothing-back`,
+`today.named-open`, `today.days-then-note`); `evening.one-to-finish` needs `hasDue`; `evening.nothing-new` says "It is
+late. Anything new will keep for tomorrow." The tile prints one sentence, chosen from the same facts
+(`tonightSentence` in `src/components/home/tonight-copy.ts`): late with something back, "Ten minutes is enough
+tonight."; late with nothing back, "Anything new can wait for tomorrow."
+
+**Her first evening (COMPANION-1).** `"letter-first"` holds Today's own moments only (see "Reading the table"), so the
+topic hero, the close card and the mock line speak on the evening the Letter is offered.
+
+**Who "it" is, and her name (COMPANION-8).** First run meets Rowan before it asks what Rowan should call her: one
+sentence, "This is Rowan, a hare. It keeps your papers’ dates and what comes back when." (`introduction()` in
+`voice.ts`), and the `welcome` figure waving, above the card that holds her name field and outside it
+(`RowanIntroduction`; the sentence without the figure in Words only or Quiet). The name she gives is used: the Letter
+opens with it as a letter does ("Niamh,"), and two Today lines say it (`today.named-first-up`, `today.named-open`, a
+fortnight's cooldown each, never late). Each has a twin without the name in the same `family`, and only one line of a
+family is said on a day (`familySaidToday` in `select.ts`), so tonight's fact is said once. "How Rowan speaks" in
+Settings says where her name is kept (`learnerNameNote`).
+
+**The rename answers (COMPANION-9).** The rename in the Letter is a form, so Enter in the field saves as Save does;
+the reply sits in a status line that is always in the page: "Rua it is." (`renamedReply`) when the device kept it, or
+"That did not save on this device, so it still answers to Rowan." (`renameNotSaved`), with her text kept. The Letter's
+signature takes the new name at once (`rename-flow.ts`, a pure reducer).
+
+**The wave and the held stone (COMPANION-5).** Both gestures are painted after the scarf, in a `front` group, so
+neither is hidden behind the body: the wave is the near forearm raised clear of the head in the lit fur, and the stone
+is heather with a light edge, held in both paws in front of the chest. The canvas and `RowanFigure.tsx` draw the same
+paths.
+
+**The stone on the close (COMPANION-6).** The review's close has no topic of its own, so the stone line could never be
+filled there, where most stones are placed. `context.ts` names the stones placed since `sessionStartedAt` from the
+mastery rows, whatever page the close is on: `placedTopics` (up to three names, then "and N more topics"),
+`placedUnit` when they are on one unit, `placedUnits` when they are on several, the unit read from the catalogue
+(`namesForProved` in `live.ts`). `close.stone` says "{placedTopics}: proved, and {stonePhrase} on the {placedUnit}
+cairn." and `close.stones` "{placedTopics}: proved, and {stonePhrase} placed, on {placedUnits}."; both have no
+cooldown, since each is a fact of its own sitting. A stone whose unit cannot be named is not guessed at: the line
+stays silent.
+
+**A lesson she paused.** The read-flow agent's record (`lastReadLesson()` in `src/components/topic/read-place.ts`: the
+place, the sections done, whether it was paused last, and its `#resume` link) is read by Today and passed as
+`pausedLesson` (`{ title, done, open, total, pausedToday }`), giving `flags.lessonPaused` and, the evening she paused
+with a section done, `flags.pausedToday` and the slot `pausedDone`. With nothing back, the tile's one accented action
+is "Carry on" to her section, with the row "<title> · section N of M next", and its sentence is "Your place in the
+lesson is kept."; Rowan says `today.paused-done` ("Section {pausedDone} done. The rest will keep.") the evening she
+paused; `today.nothing-back` and `today.named-open` carry `notFlags: ["lessonPaused"]`, so the tile and Rowan never
+point two ways. With reviews back, Start keeps the accent and "Carry on" is a quiet row under it.
+
+**The count and Rowan wait for the review cards to settle.** Before it counts, Today settles tonight's cards (a
+withdrawn item's card moved to its replacement or retired, a bare diagnostic id renamed to its set's; at most 1.5 s,
+`useSettledReviews` in `src/lib/review/resolve.ts`). `useCompanionContext(overrides, enabled)` returns `undefined`
+while `enabled` is false, so the tile's count and Rowan's "back tonight" are the same number.
+
+Proved by: `select.test.ts` "fresh install: on the Letter's first day it goes first on Today, and every other surface
+speaks (COMPANION-1)" and "existing install: the Letter goes first on Today only on its first day; the day after,
+Rowan speaks everywhere"; `components.test.ts` "the Tonight tile: the hare stands there on every open (TODAY-1,
+COMPANION-1)"; `tonight-copy.test.ts` "late at night never advises new work, whatever else is true" and "one screen,
+one sentence, once"; `rowan-figure.test.ts` "paints the two gestures where she can see them (COMPANION-5)" and "the
+Tonight tile's hare takes the state the day calls for"; `introduction.test.ts` (the sentence, the waving hare above
+the name card, the salutation, the named lines and their families); `rename-flow.test.ts` (every step of the rename,
+and "the Letter's rename is a form"); `stone.test.ts` (the stone lines on a close with no topic of its own);
+`paused.test.ts` (the tile's way back and Rowan's line the evening she paused); `contract.test.ts` (the `welcome`
+row of the figure table). In `e2e/companion.spec.ts`: the hare and Start measured over five opens of one evening, the
+late tile over four opens, the first run's introduction before the name field, Enter and Save in the Letter's
+rename, and the stone named with its unit on the review's close; in `e2e/today.spec.ts`, the way back after Pause
+here; in `e2e/first-run.spec.ts`, the introduction before the field.

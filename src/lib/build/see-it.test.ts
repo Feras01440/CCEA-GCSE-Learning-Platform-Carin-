@@ -274,6 +274,21 @@ describe("see-it: a Your turn answer printed in its section's See it", () => {
     expect(decimal.findings).toEqual([]);
   });
 
+  // the lead's item 19 (27 Sep 2026): a one-word blank answered by a word she has just read is recognition, not recall
+  // (b2-defence-mechanisms-immunity g3: "… engulfs the clump and then ______ it", step 4 "The phagocyte digests the bacteria")
+  it("flags a one-word blank whose word the See it prints, as a whole word only", () => {
+    const blank = { type: "gate", id: "g3", kind: "blank", prompt: "A phagocyte engulfs the clump and then ______ it.", answer: "digests | digest | breaks down", explain: "E." };
+    const steps = worked(["The antibodies clump the bacteria together.", "The phagocyte digests the bacteria inside it."]);
+    const r = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), steps, blank), { codes: FM });
+    expect(r.findings.map((f: { kind: string; detail: string }) => [f.kind, f.detail])).toEqual([
+      ["answer-shown", 'gate g3\'s answer "digests" is printed in its section\'s See it (step 2): she can copy it rather than do it; ask it on new numbers, as a twin does'],
+    ]);
+    // inside a longer word it is not the word: "digest" is not in "indigestion"
+    const inside = worked(["Antacids ease indigestion.", "The pain eases."]);
+    const none = seeItFindings(note(h("1. Idea", "idea"), p("Idea."), inside, { ...blank, answer: "digest" }), { codes: FM });
+    expect(none.findings).toEqual([]);
+  });
+
   it("reads each alternative of a blank gate, and the steps of a named worked example; a See it in another section does not count", () => {
     const blank = { type: "gate", id: "g2", kind: "blank", prompt: "The name?", answer: "difference of two squares | two squares", explain: "E." };
     const bundle = { workedExamples: [{ id: "we.b", stem: "S", steps: [{ n: 1, working: "It is a Difference of Two Squares.", decision: "R." }, { n: 2, working: "$(a+b)(a-b)$", decision: "R." }] }] };

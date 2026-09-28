@@ -19,9 +19,9 @@ export interface ReturnCard {
 
 export interface ReturnRow {
   key: string;
-  /** "Later today", "Tomorrow", "Thursday". */
+  /** "Tonight", "Tomorrow", "Thursday". */
   when: string;
-  /** "7 checks and 2 recall cards from Simplifying algebraic fractions". */
+  /** "8 your turns and 2 recall cards from Simplifying algebraic fractions" (the check is named "Your turn"). */
   what: string;
   /** Only a real one: "because you were sure and not right, so it comes back sooner". */
   reason: string | null;
@@ -59,12 +59,12 @@ const sourceOf = (id: string) => (isConfidentMiss(id) ? id.replace(/^hc:/, "").r
 const kindOf = (id: string): "check" | "recall" | "item" => (id.includes("#gate:") ? "check" : id.startsWith("rp.") ? "recall" : "item");
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-/** "7 checks and 2 recall cards", "1 item": the kinds in a group, counted. */
+/** "8 your turns and 2 recall cards", "1 item": the kinds in a group, counted. */
 function describe(ids: readonly string[]): string {
   const counts = { check: 0, recall: 0, item: 0 };
   for (const id of ids) counts[kindOf(id)] += 1;
   const parts = [
-    counts.check ? plural(counts.check, "check", "checks") : null,
+    counts.check ? plural(counts.check, "your turn", "your turns") : null,
     counts.recall ? plural(counts.recall, "recall card", "recall cards") : null,
     counts.item ? plural(counts.item, counts.check || counts.recall ? "other item" : "item", counts.check || counts.recall ? "other items" : "items") : null,
   ].filter((p): p is string => p !== null);
@@ -72,13 +72,16 @@ function describe(ids: readonly string[]): string {
 }
 
 /**
- * The next returns within the coming week, grouped by day and topic (a confident miss in a row of its own, with its
- * reason), soonest first, at most `limit` rows; `more` counts the cards in the rows not shown.
+ * What comes back within the coming week, grouped by day and topic (a confident miss in a row of its own, with its
+ * reason), soonest first, at most `limit` rows; `more` counts the cards in the rows not shown. Everything due before
+ * the evening ends is "Tonight", whether it came due a minute ago or comes due in ten: a new card's first steps are
+ * minutes long, so what she answered early in a run is often due by its close, and it is still tonight's.
  */
 export function returnRows(cards: readonly ReturnCard[], now: Date, titleOf: (card: ReturnCard) => string, limit = 3): { rows: ReturnRow[]; more: number } {
   const groups = new Map<string, { when: string; first: number; card: ReturnCard; ids: string[]; confident: boolean }>();
-  for (const c of [...cards].filter((x) => x.due.getTime() > now.getTime()).sort((a, b) => a.due.getTime() - b.due.getTime())) {
-    const when = returnDay(c.due, now);
+  const tonight = eveningEnd(now).getTime();
+  for (const c of [...cards].sort((a, b) => a.due.getTime() - b.due.getTime())) {
+    const when = c.due.getTime() <= tonight ? "Tonight" : returnDay(c.due, now);
     if (!when) continue;
     const confident = isConfidentMiss(c.id);
     const key = `${when}|${c.subject}|${c.topicSlug}|${confident ? "hc" : "all"}`;

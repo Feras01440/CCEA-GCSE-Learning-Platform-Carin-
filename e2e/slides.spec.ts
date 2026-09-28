@@ -2,19 +2,29 @@ import { expect, test, type Page } from "@playwright/test";
 
 /**
  * Slides on the trial topic (TRIAL-BRIEF.md, slides row; docs/design/2026-09-23-art-direction-v2.md §11; benchmarks
- * page 4). Everything asserted here is a promise the screen makes:
+ * page 4; lesson structure v3, the teach-first case §11 with the owner's answers of 27 Sep 2026). Everything asserted
+ * here is a promise the screen makes:
  *  - the title card is one screen with one accent-filled control and the honest count, on both sizes, with no app chrome;
- *  - a gate blocks the way on until it is answered, records the Read gate's id once, and a miss carries its meaning in
- *    colour (the right option lit in fern, hers edged in ink, "Not quite.", nothing red) and comes back before the recap;
+ *  - a See it shows its steps one per Continue and its last control is "Your turn"; "Skip to your turn" only on a return
+ *    visit;
+ *  - a Your turn blocks the way on until it is answered, records the Read gate's id once (the first answer), and a miss
+ *    is re-taught before its answer ("Not quite.", her choice, the explanation again, the figure's consequence, then
+ *    "Show me the answer"); then the right option is lit in fern, hers edged in ink, nothing red; it comes back before
+ *    the recap, the gate's twin on new numbers where the note carries one, unrecorded;
  *  - arrow keys, the Next button, a tap on Continue and a swipe all move on; Enter checks; the digits choose;
  *  - every drawn label renders at 13 px or more at 390 wide; nothing animates under reduced motion;
  *  - the figure she acts on strikes the shared factors and shows the simplified fraction;
- *  - the close carries the character and Rowan's line and holds no answer field; no gate card carries either;
+ *  - at most two recall cards, optional, each with Skip;
+ *  - the close carries the character and Rowan's line and holds no answer field, and its first way out is "Now the
+ *    questions" (the Practice stage), its second "Done for tonight"; no Your turn carries the character;
  *  - the topic hero offers Slides on the accent on a first visit on both sizes, remembers Read when she chooses it, and
  *    says where the slides stopped when she leaves mid-run;
  *  - in dark mode the accent control keeps 4.5:1 with its text and the character keeps its own colours.
  *
- * The suite's config runs with reducedMotion "reduce", which is what the getAnimations checks rely on.
+ * The See it, the twin and the Skip tests read the trial note's own blocks and wait for its conversion to the See it
+ * shape (docs/plan/review/2026-09-27-see-it-block-shape.md): until the note carries a `see` block (a twin), they are
+ * skipped with that reason. The suite's config runs with reducedMotion "reduce", which is what the getAnimations checks
+ * rely on; the steps of a See it still come one per Continue under it (src/lib/slides/run.ts).
  */
 
 const TOPIC = "/learn/further-maths/FM1/algebraic-fractions-simplify/";
@@ -24,20 +34,82 @@ const CONTENT = "/content/further-maths/fm.u1.algebraic-fractions-simplify.json"
 const DB_NAME = "ccea-study";
 const PHONE = { width: 390, height: 844 };
 const DESKTOP = { width: 1280, height: 800 };
-/** The trial deck's length: 23 cards (the note's 22 with the figure she acts on; two light recall cards, 24 Sep). */
-const DECK = 23;
+/**
+ * The trial deck as the content session rewrote it to teach, then show, then check (25 Sep 2026): 36 cards (the note's
+ * 35 with the figure she acts on), 8 checks, two light recall cards, the video timed. Its first check, g2, is card 5,
+ * after three cards that explain and work the idea. These are the trial's design; a content edit that changes them
+ * must change them here too.
+ */
+const DECK = 36;
+const CHECKS = 8;
+/** Card 5: the first check, after the section's explanation and its worked lines. */
+const FIRST_GATE = { id: "g2", at: 5 };
+/** The figure she acts on, 3x(x + 7) over 6(x + 7)(x − 7): the shared factors as pairs of pills, top then bottom. */
+const PAIRS: Array<[string, string]> = [
+  ["t-b", "b-b"],
+  ["t-n", "b-n"],
+];
 
 interface Gate {
   id: string;
   answer: string;
   options?: string[];
+  prompt?: string;
+  twin?: { prompt: string; options?: string[]; answer: string; explain: string };
 }
 
 async function gates(page: Page): Promise<Gate[]> {
   return page.evaluate(async (url) => {
-    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; id?: string; answer?: string; options?: string[] }> };
-    return b.noteBlocks.filter((x) => x.type === "gate").map((g) => ({ id: g.id!, answer: g.answer!, options: g.options }));
+    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; id?: string; answer?: string; options?: string[]; prompt?: string; twin?: Gate["twin"] }> };
+    return b.noteBlocks.filter((x) => x.type === "gate").map((g) => ({ id: g.id!, answer: g.answer!, options: g.options, prompt: g.prompt, twin: g.twin }));
   }, CONTENT);
+}
+
+/** The note's See it blocks, in order, with how many steps each shows (a named worked example's from the bundle). */
+async function seeIts(page: Page): Promise<Array<{ steps: number }>> {
+  return page.evaluate(async (url) => {
+    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; steps?: unknown[]; workedExample?: string }>; workedExamples: Array<{ id: string; steps: unknown[] }> };
+    return b.noteBlocks
+      .filter((x) => x.type === "see")
+      .map((s) => ({ steps: s.steps?.length ?? b.workedExamples.find((w) => w.id === s.workedExample)?.steps.length ?? 0 }));
+  }, CONTENT);
+}
+
+/** The caption of the note's hoisted figure, which the registered drawing on card 2 stands in for. */
+async function heroCaption(page: Page): Promise<string> {
+  return page.evaluate(async (url) => {
+    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; caption?: string }> };
+    return b.noteBlocks.find((x) => x.type === "figure")?.caption ?? "";
+  }, CONTENT);
+}
+
+/** Strikes every factor both lines share on the figure she acts on, pair by pair. */
+async function strikeAll(page: Page): Promise<void> {
+  for (const [top, bottom] of PAIRS) {
+    await page.locator(`[data-pill='${top}']`).click();
+    await page.locator(`[data-pill='${bottom}']`).click();
+  }
+}
+
+/**
+ * From the title card, Continue until the first Your turn is on screen (the cards before it explain and show the idea
+ * first). On a See it a Continue shows the next step and the card stays; everywhere else it moves on one card.
+ */
+async function toFirstGate(page: Page, press: () => Promise<void> = () => control(page).click(), from = 1): Promise<void> {
+  let n = from;
+  for (let guard = 0; guard < 40 && (await page.locator(`[data-gate='${FIRST_GATE.id}']`).count()) === 0; guard += 1) {
+    if ((await page.locator("[data-ghost]").count()) > 0) {
+      const shown = await page.locator("[data-step]").count();
+      await press();
+      await expect(page.locator("[data-step]")).toHaveCount(shown + 1);
+      continue;
+    }
+    await press();
+    n += 1;
+    await expect(count(page)).toHaveText(`${n} of ${DECK}`);
+  }
+  await expect(page.locator(`[data-gate='${FIRST_GATE.id}']`)).toBeVisible();
+  expect(n, "the first Your turn's card").toBe(FIRST_GATE.at);
 }
 
 async function openSlides(page: Page): Promise<void> {
@@ -206,25 +278,62 @@ async function answerChoice(page: Page, option: string): Promise<void> {
   await radios.nth(at).click();
   await expect(radios.nth(at)).toHaveAttribute("aria-checked", "true");
   await control(page).click();
-  await expect(page.locator("[data-verdict]")).toBeVisible();
+  // A hit or a retry shows its verdict; a first asking's miss is re-taught first.
+  await expect(page.locator("[data-verdict], [data-reteach]").first()).toBeVisible();
+}
+
+/** After the re-teach, "Show me the answer": the answer state with its verdict. */
+async function showAnswer(page: Page): Promise<void> {
+  await expect(page.locator("[data-card='reteach']")).toBeVisible();
+  await expect(control(page)).toHaveText("Show me the answer");
+  await control(page).click();
+  await expect(page.locator("[data-verdict='miss']")).toBeVisible();
+}
+
+/** What a retry card asks: the gate's twin (data-retry="twin"), whose own answer is right, or the gate again. */
+async function retryAnswer(page: Page, g: Gate): Promise<string> {
+  return (await page.locator("[data-gate]").getAttribute("data-retry")) === "twin" ? g.twin!.answer : g.answer;
+}
+
+/** On a See it, Continue until every step is shown (a step she types is shown rather than typed, on a walk through). */
+async function stepThrough(page: Page): Promise<void> {
+  for (let i = 0; i < 12; i += 1) {
+    if (await page.locator("[data-show-step]").count()) {
+      await page.locator("[data-show-step]").click();
+      await expect(page.locator("[data-typed-result]")).toBeVisible();
+      continue;
+    }
+    if ((await page.locator("[data-ghost]").count()) === 0) return;
+    const shown = await page.locator("[data-step]").count();
+    await control(page).click();
+    await expect(page.locator("[data-step]")).toHaveCount(shown + 1);
+  }
 }
 
 /** Walks from the current card to the close, answering every gate right except `missIds`, which are answered wrong once. */
 async function walkToClose(page: Page, missIds: string[] = []): Promise<void> {
   const all = await gates(page);
   const byId = new Map(all.map((g) => [g.id, g]));
-  for (let step = 0; step < 60; step += 1) {
+  for (let step = 0; step < 90; step += 1) {
     const kind = await card(page).getAttribute("data-card");
     if (kind === "close") return;
-    if (kind === "gate") {
+    if (kind === "see") {
+      await stepThrough(page);
+      await control(page).click();
+    } else if (kind === "reteach") {
+      await control(page).click();
+      await expect(page.locator("[data-verdict]")).toBeVisible();
+      await control(page).click();
+    } else if (kind === "gate") {
       const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
-      const retry = (await page.locator("[data-gate]").getAttribute("data-retry")) === "true";
+      const retry = (await page.locator("[data-gate]").getAttribute("data-retry")) !== null;
       const g = byId.get(id)!;
       const wrong = g.options?.find((o) => o !== g.answer) ?? "";
-      await answerChoice(page, !retry && missIds.includes(id) ? wrong : g.answer);
+      await answerChoice(page, retry ? await retryAnswer(page, g) : missIds.includes(id) ? wrong : g.answer);
+      if (!retry && missIds.includes(id)) await showAnswer(page);
       await control(page).click();
     } else if (kind === "interaction") {
-      for (const pill of ["t-b", "b-b", "t-2x", "b-4"]) await page.locator(`[data-pill='${pill}']`).click();
+      await strikeAll(page);
       await control(page).click();
       await expect(page.locator("[data-result]")).toBeVisible();
       await control(page).click();
@@ -236,7 +345,7 @@ async function walkToClose(page: Page, missIds: string[] = []): Promise<void> {
     }
     await page.waitForTimeout(80);
   }
-  throw new Error("the deck did not reach its close in 60 steps");
+  throw new Error("the deck did not reach its close in 90 steps");
 }
 
 test.describe("Slides: the title card", () => {
@@ -246,9 +355,11 @@ test.describe("Slides: the title card", () => {
       await openSlides(page);
       await expect(page.locator("nav[aria-label='Primary']")).toHaveCount(0);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText("Simplifying algebraic fractions");
-      await expect(page.locator("[data-card='title']")).toContainText(`${DECK} cards · 7 checks`);
-      // The video has no stated length: it is named beside the minutes, not guessed into them (audit LD-03).
-      await expect(page.locator("[data-promise]")).toHaveText(new RegExp(`^About \\d+ minutes plus a video · ${DECK} cards · 7 checks$`));
+      await expect(page.locator("[data-card='title']")).toContainText(`${DECK} cards · ${CHECKS} your turns`);
+      // The video states its length (341 s), so it is counted in the minutes and listed with the counts (audit LD-03); the
+      // check is named "Your turn" (the owner's answer 6), and a note with See its counts them too ("4 see its").
+      const sees = (await seeIts(page)).length;
+      await expect(page.locator("[data-promise]")).toHaveText(new RegExp(`^About \\d+ minutes · ${DECK} cards · ${CHECKS} your turns${sees ? ` · ${sees} see its?` : ""} · 1 video$`));
       expect(await accentControls(page)).toEqual(["Start the slides"]);
       const scroll = await page.evaluate(() => {
         const body = document.querySelector("[data-body]")!;
@@ -276,61 +387,73 @@ test.describe("Slides: the gate", () => {
   test("blocks the way on, records the Read gate id once, and a miss carries its meaning in colour and comes back", async ({ page }) => {
     await page.setViewportSize(PHONE);
     await openSlides(page);
-    await control(page).click(); // Start
-    await expect(count(page)).toHaveText(`2 of ${DECK}`);
-    await control(page).click(); // Continue past the first idea
-    await expect(count(page)).toHaveText(`3 of ${DECK}`);
-    await expect(page.locator("[data-gate='g1']")).toBeVisible();
+    // Start, then the three cards of section 1 that explain and work the idea, then its check (the owner's rule, 24 Sep).
+    await toFirstGate(page);
+    const at = FIRST_GATE.at;
 
     // Locked: the arrow key and a swipe do nothing, the control says Check and is disabled until an option is chosen.
     await page.keyboard.press("ArrowRight");
-    await expect(count(page)).toHaveText(`3 of ${DECK}`);
+    await expect(count(page)).toHaveText(`${at} of ${DECK}`);
     await expect(control(page)).toHaveText("Check");
     await expect(control(page)).toBeDisabled();
     expect(await page.locator("[data-companion], [data-companion-figure]").count(), "nothing signed on a gate card").toBe(0);
     expect(await animations(page)).toBe(0);
 
-    // Her answer, wrong: the right option is lit (a tick), hers is edged (the circle-dash), the word is "Not quite.", nothing is red.
-    const g1 = (await gates(page)).find((g) => g.id === "g1")!;
-    const wrong = g1.options!.find((o) => o !== g1.answer)!;
+    // Her answer, wrong: first the re-teach (the teach-first case §6.3), on the same card, before anything is lit.
+    const first = (await gates(page)).find((g) => g.id === FIRST_GATE.id)!;
+    const wrong = first.options!.find((o) => o !== first.answer)!;
     await answerChoice(page, wrong);
+    const reteach = page.locator("[data-card='reteach']");
+    await expect(reteach).toBeVisible();
+    await expect(reteach).toContainText("Not quite.");
+    await expect(page.locator("[data-her-choice]")).toBeVisible();
+    await expect(page.locator("[data-outcome]")).toHaveCount(0);
+    // The re-teach is part of its Your turn: the count does not move, and "Show me the answer" is the one control.
+    await expect(count(page)).toHaveText(`${at} of ${DECK + 1}`);
+    await expect(control(page)).toHaveText("Show me the answer");
+    expect(await accentControls(page)).toEqual(["Show me the answer"]);
+    expect(await reddish(page), "a colour near red on the re-teach").toEqual([]);
+    await expect(page.locator("[data-reteach]")).toBeFocused();
+
+    // Then the answer: the right option is lit (a tick), hers is edged (the circle-dash), nothing is red.
+    await showAnswer(page);
     await expect(page.locator("[data-outcome='ok']")).toHaveCount(1);
     await expect(page.locator("[data-outcome='miss']")).toHaveCount(1);
     await expect(page.locator("[data-outcome='ok'] svg")).toBeVisible();
-    await expect(page.locator("[data-verdict='miss']")).toContainText("Not quite.");
-    await expect(page.locator("[data-verdict='miss']")).toContainText("comes back once more before the recap");
+    await expect(page.locator("[data-verdict='miss'] [data-answer-line]")).toBeVisible();
+    await expect(page.locator("[data-verdict='miss'] [data-diagnosis]")).toHaveAttribute("data-hers", wrong);
+    await expect(page.locator("[data-verdict='miss']")).toContainText(first.twin ? "comes back before the recap on new numbers" : "comes back before the recap");
+    await expect(page.locator("[data-verdict='miss']")).toBeFocused();
     expect(await reddish(page), "a colour near red on the card").toEqual([]);
     const okEdge = await page.locator("[data-outcome='ok']").evaluate((el) => getComputedStyle(el).borderTopColor);
     const missEdge = await page.locator("[data-outcome='miss']").evaluate((el) => getComputedStyle(el).borderTopColor);
     expect(okEdge).not.toBe(missEdge);
     expect(await animations(page)).toBe(0);
     // The deck grew by the retry.
-    await expect(count(page)).toHaveText(`3 of ${DECK + 1}`);
-    // One attempt, with the id Read uses, and a review card for it.
+    await expect(count(page)).toHaveText(`${at} of ${DECK + 1}`);
+    // One attempt, the first answer, with the id Read uses; nothing for the re-teach.
     const rows = await attempts(page);
-    expect(rows).toEqual([{ itemId: `${TOPIC_ID}#gate:g1`, itemKind: "practice", correct: false }]);
+    expect(rows).toEqual([{ itemId: `${TOPIC_ID}#gate:${FIRST_GATE.id}`, itemKind: "practice", correct: false }]);
 
-    // Back re-reads, forward returns to the marked gate, Continue moves on.
+    // Back re-reads, forward returns to the answered Your turn, Continue moves on.
     await page.keyboard.press("ArrowLeft");
-    await expect(count(page)).toHaveText(`2 of ${DECK + 1}`);
+    await expect(count(page)).toHaveText(`${at - 1} of ${DECK + 1}`);
     await page.keyboard.press("ArrowRight");
     await expect(page.locator("[data-verdict='miss']")).toBeVisible();
     await expect(control(page)).toHaveText("Continue");
     await control(page).click();
-    await expect(count(page)).toHaveText(`4 of ${DECK + 1}`);
+    await expect(count(page)).toHaveText(`${at + 1} of ${DECK + 1}`);
     expect((await attempts(page)).length, "no second record").toBe(1);
   });
 
   test("Enter checks and the digits choose, on the desktop", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await openSlides(page);
-    await page.keyboard.press("Enter");
-    await page.keyboard.press("Enter");
-    await expect(page.locator("[data-gate='g1']")).toBeVisible();
+    await toFirstGate(page, () => page.keyboard.press("Enter"));
     await expect(page.locator("[data-hints]")).toContainText("choose");
     // The digit chooses by the shown position; the right answer's position is the seeded order's, read from the badge.
-    const g1 = (await gates(page)).find((g) => g.id === "g1")!;
-    const shownAt = await page.locator("[data-gate] [role='radio']").evaluateAll((els, answer) => els.findIndex((el) => el.getAttribute("data-value") === answer), g1.answer);
+    const first = (await gates(page)).find((g) => g.id === FIRST_GATE.id)!;
+    const shownAt = await page.locator("[data-gate] [role='radio']").evaluateAll((els, answer) => els.findIndex((el) => el.getAttribute("data-value") === answer), first.answer);
     expect(shownAt).toBeGreaterThanOrEqual(0);
     await page.keyboard.press(String(shownAt + 1));
     await expect(page.locator("[role='radio'][aria-checked='true']")).toHaveCount(1);
@@ -342,7 +465,7 @@ test.describe("Slides: the gate", () => {
     const maths = page.locator("[data-stem-maths] .katex-display");
     await expect(maths).toBeVisible();
     expect(await maths.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(32);
-    await expect(page.locator("[data-stem] > div").first()).toHaveText("Simplify");
+    await expect(page.locator("[data-stem] p").first()).toHaveText("Simplify");
   });
 });
 
@@ -350,18 +473,27 @@ test.describe("Slides: the gate", () => {
 async function walkTo(page: Page, kind: string, gateId?: string): Promise<void> {
   const all = await gates(page);
   const byId = new Map(all.map((g) => [g.id, g]));
-  for (let step = 0; step < 60; step += 1) {
+  for (let step = 0; step < 90; step += 1) {
     const k = await card(page).getAttribute("data-card");
     if (k === kind && (!gateId || (await page.locator("[data-gate]").getAttribute("data-gate")) === gateId)) return;
-    if (k === "gate") {
+    if (k === "see") {
+      await stepThrough(page);
+      await control(page).click();
+    } else if (k === "reteach") {
+      await control(page).click();
+      await expect(page.locator("[data-verdict]")).toBeVisible();
+      await control(page).click();
+    } else if (k === "gate") {
       const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
       if (await page.locator("[data-verdict]").count()) await control(page).click();
       else {
-        await answerChoice(page, byId.get(id)!.answer);
+        const g = byId.get(id)!;
+        const retry = (await page.locator("[data-gate]").getAttribute("data-retry")) !== null;
+        await answerChoice(page, retry ? await retryAnswer(page, g) : g.answer);
         await control(page).click();
       }
     } else if (k === "interaction") {
-      for (const pill of ["t-b", "b-b", "t-2x", "b-4"]) await page.locator(`[data-pill='${pill}']`).click();
+      await strikeAll(page);
       await control(page).click();
       await control(page).click();
     } else if (k === "recall") {
@@ -425,22 +557,25 @@ test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to 
     await openSlides(page);
     await control(page).click();
     await walkTo(page, "recall");
-    await expect(page.locator("[data-header]")).toContainText("Recall · 1 of 2");
-    await expect(page.locator("[data-recall]")).toContainText("What is the last thing to check");
+    // The two the note wires, both short: a² − b² as its brackets (rp.02), then the last check (rp.08); optional, with Skip.
+    await expect(page.locator("[data-header]")).toContainText("Recall · optional · 1 of 2");
+    await expect(page.locator("[data-recall='rp.fm.u1.algebraic-fractions-simplify.02']")).toBeVisible();
 
     // Skip moves on and records nothing: no attempt, no review card, never a miss.
     const promptRows = async () => (await attempts(page)).filter((r) => r.itemKind === "prompt").length;
     expect(await promptRows()).toBe(0);
     await page.locator("[data-skip]").click();
-    await expect(page.locator("[data-header]")).toContainText("Recall · 2 of 2");
+    await expect(page.locator("[data-header]")).toContainText("Recall · optional · 2 of 2");
+    await expect(page.locator("[data-recall='rp.fm.u1.algebraic-fractions-simplify.08']")).toContainText("last check before the answer line");
     expect(await promptRows()).toBe(0);
-    expect(await cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.04")).toBeNull();
+    expect(await cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.02")).toBeNull();
 
-    // She types, then shows the answer: her words stand above the model answer (audit LD-06).
-    await page.locator("[data-recall] textarea").fill("take the x out first");
+    // She types, then shows the answer: her words stand above the model answer, with the key word she used (audit LD-06).
+    await page.locator("[data-recall] textarea").fill("the numbers");
     await control(page).click();
-    await expect(page.locator("[data-typed]")).toContainText("take the x out first");
-    await expect(page.locator("[data-model-answer]")).toContainText("Take the common factor");
+    await expect(page.locator("[data-typed]")).toContainText("the numbers");
+    await expect(page.locator("[data-model-answer]")).toContainText("The numbers");
+    await expect(page.locator("[data-recall]")).toContainText("Every key word the scheme rewards is in yours.");
 
     // Three grades, three different returns: a new card's Again is a minute away, Good ten minutes, Easy days (LD-07).
     const whens = page.locator("[data-grades] [data-when]");
@@ -453,8 +588,8 @@ test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to 
     await expect(page.locator("[data-card='close']")).toBeVisible();
 
     // Easy is stored as Easy: days away, not the ten minutes a Good gets (audit CQ-02). One attempt row, a prompt.
-    await expect.poll(() => cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.06")).not.toBeNull();
-    const due = (await cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.06"))!;
+    await expect.poll(() => cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.08")).not.toBeNull();
+    const due = (await cardDue(page, "rp.fm.u1.algebraic-fractions-simplify.08"))!;
     expect(due - shownAt).toBeGreaterThan(86_400_000);
     expect(await promptRows()).toBe(1);
     // The close counts what was graded, and says nothing of the one she skipped.
@@ -463,22 +598,25 @@ test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to 
 });
 
 test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: 'most of the correct answers are option A')", () => {
-  test("the seven right answers are spread over A, B and C, the gates that name options by place keep their order, and Read shows the same order", async ({ page }) => {
+  test("the eight right answers are spread over A, B and C as evenly as eight allow, and Read shows the same order", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await openSlides(page);
     await control(page).click();
     const all = await gates(page);
     const byId = new Map(all.map((g) => [g.id, g]));
     const shown = new Map<string, string[]>();
-    for (let step = 0; step < 60 && shown.size < all.length; step += 1) {
+    for (let step = 0; step < 90 && shown.size < all.length; step += 1) {
       const k = await card(page).getAttribute("data-card");
-      if (k === "gate") {
+      if (k === "see") {
+        await stepThrough(page);
+        await control(page).click();
+      } else if (k === "gate") {
         const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
         shown.set(id, await page.locator("[data-gate] [role='radio']").evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? "")));
         await answerChoice(page, byId.get(id)!.answer);
         await control(page).click();
       } else if (k === "interaction") {
-        for (const pill of ["t-b", "b-b", "t-2x", "b-4"]) await page.locator(`[data-pill='${pill}']`).click();
+        await strikeAll(page);
         await control(page).click();
         await control(page).click();
       } else {
@@ -486,52 +624,59 @@ test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: '
       }
       await page.waitForTimeout(60);
     }
-    expect([...shown.keys()]).toEqual(["g1", "g2", "g7", "g3", "g4", "g5", "g6"]);
+    // The note's own checks in the note's order (since the teach-first rewrite of 25 Sep: g1, g3, g5, g6, g7 withdrawn).
+    expect([...shown.keys()]).toEqual(all.map((g) => g.id));
+    expect([...shown.keys()]).toEqual(["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"]);
+    // Each shows its own options, each once.
+    for (const [id, order] of shown) expect([...order].sort(), id).toEqual([...byId.get(id)!.options!].sort());
     const at = [...shown.entries()].map(([id, order]) => order.indexOf(byId.get(id)!.answer));
     const counts = [0, 1, 2].map((p) => at.filter((a) => a === p).length);
-    // Build 7 showed A, A, A, A, B, A, B (five at A, none at C). Seven in three places: never more than three in one.
-    expect(new Set(at).size, `answers at ${at.map((a) => "ABC"[a]).join("")}`).toBeGreaterThan(1);
-    expect(Math.max(...counts), `answers at ${at.map((a) => "ABC"[a]).join("")}`).toBeLessThanOrEqual(3);
-    // g4 and g5 explain themselves by place ("the second option … the third"), so they keep the order they were written in.
-    for (const id of ["g4", "g5"]) expect(shown.get(id), id).toEqual(byId.get(id)!.options);
+    // Build 7 showed A, A, A, A, B, A, B (five at A, none at C). No explanation names an option by place now, so every
+    // gate takes part: eight in three places is 3, 3, 2, and no place three gates running.
+    const said = `answers at ${at.map((a) => "ABC"[a]).join("")}`;
+    expect(Math.max(...counts) - Math.min(...counts), said).toBeLessThanOrEqual(1);
+    for (let i = 2; i < at.length; i += 1) expect(at[i] === at[i - 1] && at[i] === at[i - 2], said).toBe(false);
 
-    // Read shows g1, the first gate, in the same order (the lesson's order is one function of the note).
+    // Read shows the first gate in the same order (the lesson's order is one function of the note).
     await page.goto(TOPIC);
-    const readG1 = page.locator("#note [data-gate='g1'] [role='radio']");
-    await expect(readG1.first()).toBeVisible();
-    expect(await readG1.evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? ""))).toEqual(shown.get("g1"));
+    const readFirst = page.locator(`#note [data-gate='${FIRST_GATE.id}'] [role='radio']`);
+    await expect(readFirst.first()).toBeVisible();
+    expect(await readFirst.evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? ""))).toEqual(shown.get(FIRST_GATE.id));
   });
 });
 
 test.describe("Slides: the figure she acts on, and the drawn labels", () => {
-  test("the shared factors strike in pairs, a mismatch is named, Check draws the simplified fraction", async ({ page }) => {
+  test("the shared factors strike in pairs, (x − 7) never, a mismatch is named, Check draws the simplified fraction", async ({ page }) => {
     await page.setViewportSize(PHONE);
     await openSlides(page);
     await walkTo(page, "interaction");
-    await expect(page.getByRole("heading", { level: 2 })).toHaveText("Cancel every factor on both lines");
+    // It follows the card that works the three moves in front of her (the owner's rule: shown, then hers to do).
+    await expect(page.getByRole("heading", { level: 2 })).toHaveText("Strike every factor both lines share");
     expect(await smallestDrawnLabel(page)).toBeNull(); // pills are real buttons, 44 px, not drawn text
     await page.locator("[data-pill='t-b']").click();
     await page.locator("[data-pill='b-b']").click();
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(2);
-    await page.locator("[data-pill='t-2x']").click();
+    await page.locator("[data-pill='t-n']").click();
     await page.locator("[data-pill='b-m']").click();
-    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("not the same factor");
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("3x and (x − 7) are not the same factor");
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(2);
-    await page.locator("[data-pill='t-2x']").click();
-    await page.locator("[data-pill='b-4']").click();
+    await page.locator("[data-pill='t-n']").click();
+    await page.locator("[data-pill='b-n']").click();
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(4);
+    // (x − 7) is on one line only: it is never struck (the trial review, 25 Sep).
     await expect(page.locator("[data-pill='b-m'][data-struck]")).toHaveCount(0);
-    // 2x and 4 share a factor of 2, not themselves: the 2 is struck out of each and x and 2 are left (audit MK-05).
-    await expect(page.locator("[data-pill='t-2x']")).toHaveAttribute("data-struck", "2");
-    await expect(page.locator("[data-pill='t-2x']")).toHaveAttribute("data-left", "x");
-    await expect(page.locator("[data-pill='b-4']")).toHaveAttribute("data-struck", "2");
-    await expect(page.locator("[data-pill='b-4']")).toHaveAttribute("data-left", "2");
+    // 3x and 6 share a 3, not themselves: the 3 is struck out of each and x and 2 are left (audit MK-05).
+    await expect(page.locator("[data-pill='t-n']")).toHaveAttribute("data-struck", "3");
+    await expect(page.locator("[data-pill='t-n']")).toHaveAttribute("data-left", "x");
+    await expect(page.locator("[data-pill='b-n']")).toHaveAttribute("data-struck", "3");
+    await expect(page.locator("[data-pill='b-n']")).toHaveAttribute("data-left", "2");
     await expect(page.locator("[data-pill='t-b']")).toHaveAttribute("data-struck", "all");
-    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("the 2 divides out of both, leaving x and 2");
+    await expect(page.locator("[data-pill='b-b']")).toHaveAttribute("data-struck", "all");
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("the 3 divides out of both, leaving x and 2");
     await control(page).click();
     await expect(page.locator("[data-result='done']")).toBeVisible();
-    await expect(page.locator("[data-result] [role='img']")).toHaveAttribute("aria-label", "x over 2(x − 5)");
-    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("x and 2(x − 5) share nothing");
+    await expect(page.locator("[data-result] [role='img']")).toHaveAttribute("aria-label", "x over 2(x − 7)");
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("x and 2(x − 7) share nothing");
     await expect(control(page)).toHaveText("Continue");
     expect(await animations(page)).toBe(0);
   });
@@ -547,8 +692,8 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     await expect(page.locator("[data-card='idea']")).toBeVisible();
     await page.keyboard.press("ArrowRight");
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(2);
-    await page.locator("[data-pill='t-2x']").click();
-    await page.locator("[data-pill='b-4']").click();
+    await page.locator("[data-pill='t-n']").click();
+    await page.locator("[data-pill='b-n']").click();
     await control(page).click();
     await expect(page.locator("[data-result='done']")).toBeVisible();
     // After Check: a reload keeps the strikes, what is left, and the result.
@@ -556,9 +701,28 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
     await expect(page.locator("[data-card='interaction']")).toBeVisible();
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(4);
-    await expect(page.locator("[data-pill='b-4']")).toHaveAttribute("data-left", "2");
+    await expect(page.locator("[data-pill='b-n']")).toHaveAttribute("data-left", "2");
     await expect(page.locator("[data-result='done']")).toBeVisible();
     await expect(control(page)).toHaveText("Continue");
+  });
+
+  test("a run kept from the old drawing (build 8's pills) opens the figure afresh, never 'done' over unstruck pills", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    await walkTo(page, "interaction");
+    // What build 8 stored for this card: 2x(x + 5) over 4(x + 5)(x − 5), struck and checked.
+    await page.evaluate((key) => {
+      const raw = JSON.parse(localStorage.getItem(key) ?? "{}");
+      raw.figures = { "interaction:afs.tap-to-cancel": { struck: ["t-b", "b-b", "t-2x", "b-4"], lit: [] } };
+      raw.checked = { "interaction:afs.tap-to-cancel": { correct: true } };
+      localStorage.setItem(key, JSON.stringify(raw));
+    }, `cairn.slides.${TOPIC_ID}`);
+    await page.reload();
+    await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
+    await expect(page.locator("[data-card='interaction']")).toBeVisible();
+    await expect(page.locator("[data-pill][data-struck]")).toHaveCount(0);
+    await expect(page.locator("[data-result]")).toHaveCount(0);
+    await expect(control(page)).toHaveText("Check");
   });
 
   test("a Check with a factor still shared lights it, shows the answer, and lets her finish it now (audit LD-11)", async ({ page }) => {
@@ -570,13 +734,13 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     await control(page).click();
     // What is still shared is lit in fern and named; the simplified fraction is shown; nothing is red.
     await expect(page.locator("[data-pill][data-lit]")).toHaveCount(2);
-    await expect(page.locator("[data-pill='t-2x'][data-lit]")).toBeEnabled();
-    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("A factor of 2 still divides both 2x and 4.");
+    await expect(page.locator("[data-pill='t-n'][data-lit]")).toBeEnabled();
+    await expect(page.locator("[data-interaction] p[aria-live]")).toContainText("A factor of 3 still divides both 3x and 6.");
     await expect(page.locator("[data-result='shown']")).toContainText("It simplifies to");
     expect(await reddish(page)).toEqual([]);
     // She finishes it: the pair strikes, the lit set clears, and the line says so.
-    await page.locator("[data-pill='t-2x']").click();
-    await page.locator("[data-pill='b-4']").click();
+    await page.locator("[data-pill='t-n']").click();
+    await page.locator("[data-pill='b-n']").click();
     await expect(page.locator("[data-pill][data-lit]")).toHaveCount(0);
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(4);
     await expect(page.locator("[data-result='done']")).toBeVisible();
@@ -622,29 +786,63 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     });
   }
 
-  test("the idea's illustration and the miss's consequence keep every label at 13 px or more at 390", async ({ page }) => {
+  test("the idea's drawing, the note's own figures and the miss's consequence keep every label at 13 px or more at 390", async ({ page }) => {
     await page.setViewportSize(PHONE);
     await openSlides(page);
-    await walkTo(page, "idea");
     await control(page).click();
-    await walkTo(page, "gate", "g2");
-    // Card 4 (the idea with the drawing) was passed on the way; go back to it and measure.
-    await page.keyboard.press("ArrowLeft");
-    await page.keyboard.press("ArrowLeft");
-    await expect(page.locator("[data-stage] svg").first()).toBeVisible();
+    // Card 2 reads the drawing ("In the drawing…"): the registered drawing stands on it with the note figure's own caption.
+    const drawing = page.locator("[data-card-figure='afs.cancel']");
+    await expect(drawing.locator("svg[data-figure='afs.cancel']")).toBeVisible();
+    await expect(drawing).toContainText(await heroCaption(page));
     expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
-    await page.keyboard.press("ArrowRight");
-    await page.keyboard.press("ArrowRight");
-    await expect(page.locator("[data-gate='g2']")).toBeVisible();
-    const g2 = (await gates(page)).find((g) => g.id === "g2")!;
-    await answerChoice(page, g2.options!.find((o) => o !== g2.answer)!);
-    await expect(page.locator("[data-reaction]")).toBeVisible();
+    // It strikes exactly the 3 out of 3x and 6 and the bracket (x + 7), and leaves (x − 7) standing.
+    const struck = await drawing.locator("[data-piece]").evaluateAll((els) => els.map((e) => `${e.getAttribute("data-piece")}:${e.getAttribute("data-struck") ?? "-"}`));
+    expect(struck).toEqual(["t-n:3", "t-b:all", "b-n:3", "b-b:all", "b-m:-"]);
+
+    await walkTo(page, "gate", FIRST_GATE.id);
+    const first = (await gates(page)).find((g) => g.id === FIRST_GATE.id)!;
+    await answerChoice(page, first.options!.find((o) => o !== first.answer)!);
+    // The consequence is drawn on the re-teach, before the answer is shown.
+    await expect(page.locator("[data-card='reteach'] [data-reaction]")).toBeVisible();
     expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
     expect(await reddish(page)).toEqual([]);
+
+    // The next card reads the note's own L-shape figure: on its stage, as wide as its labels were sized for (a 356 px
+    // drawing; on the 316 px stage the 15-unit labels were 11.9 px), and nothing scrolls sideways.
+    await showAnswer(page);
+    await control(page).click();
+    const figure = page.locator("[data-card-figure='note'] svg");
+    await expect(figure).toBeVisible();
+    expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+    expect(await page.locator("[data-card]").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
   });
 
-  // g2, "In (x + 4)/x, what cancels?": each wrong option draws its own consequence at x = 1 (audit CT-19, CQ-03), and the
-  // two labels under the tiles never meet, on the phone or at the verdict's full 356 px (audit CT-11, CD-02, LD-10).
+  test("a worked line stands whole: no inline formula breaks across lines on the three moves' worked card, at 390 and 1280", async ({ page }) => {
+    for (const [i, size] of [PHONE, DESKTOP].entries()) {
+      await page.setViewportSize(size);
+      if (i > 0) await page.evaluate(() => localStorage.clear());
+      await openSlides(page);
+      await walkTo(page, "interaction");
+      await page.keyboard.press("ArrowLeft");
+      await expect(page.locator("[data-card='idea']")).toContainText("Strike");
+      const found = await page.evaluate(() => {
+        const inline = Array.from(document.querySelectorAll<HTMLElement>("[data-card] .katex")).filter((k) => !k.closest(".katex-display"));
+        const bases = (k: HTMLElement) => Array.from(k.querySelectorAll<HTMLElement>(".katex-html > .katex-base")).map((b) => b.getBoundingClientRect());
+        return {
+          // KaTeX may break a formula only between these pieces; one with several is one that could have broken.
+          breakable: inline.filter((k) => bases(k).length > 1).length,
+          broken: inline.filter((k) => bases(k).some((r, j, all) => j > 0 && r.left < all[j - 1].right - 1)).map((k) => k.querySelector("annotation")?.textContent ?? "?"),
+        };
+      });
+      expect(found.breakable, `formulas that could break at ${size.width}`).toBeGreaterThan(0);
+      expect(found.broken, `formulas broken across lines at ${size.width}`).toEqual([]);
+    }
+  });
+
+  // g2, "What cancels in this fraction? (x + 4)/x": each wrong option draws its own consequence at x = 1, the test its
+  // explanation makes (audit CT-19, CQ-03), and the two labels under the tiles never meet, on the phone or at the
+  // verdict's full 356 px (audit CT-11, CD-02, LD-10).
   for (const [option, value] of [
     ["The $x$, leaving $4$", "4"],
     ["The $x$ and the $4$", "1"],
@@ -764,9 +962,7 @@ test.describe("Slides: moving on", () => {
   test("on a gate the arrows move the choice and Enter checks it (audit CQ-12)", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await openSlides(page);
-    await control(page).click();
-    await control(page).click();
-    await expect(page.locator("[data-gate='g1']")).toBeVisible();
+    await toFirstGate(page);
     const radios = page.locator("[data-gate] [role='radio']");
     await radios.nth(0).click();
     await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
@@ -775,7 +971,7 @@ test.describe("Slides: moving on", () => {
     await expect(radios.nth(1)).toBeFocused();
     await page.keyboard.press("ArrowUp");
     await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
-    await expect(count(page)).toHaveText(`3 of ${DECK}`);
+    await expect(count(page)).toHaveText(`${FIRST_GATE.at} of ${DECK}`);
     await page.keyboard.press("Enter");
     await expect(page.locator("[data-verdict]")).toBeVisible();
     await expect(control(page)).toHaveText("Continue");
@@ -787,11 +983,12 @@ test.describe("Slides: moving on", () => {
     await openSlides(page);
     await page.keyboard.press("Enter");
     await expect(count(page)).toHaveText(`2 of ${DECK}`);
-    await page.locator("[data-next]").click();
-    await expect(count(page)).toHaveText(`3 of ${DECK}`);
+    // The cards that explain and work the idea move on freely (on a See it the next button shows the next step first);
+    // the Your turn after them is locked until answered.
+    await toFirstGate(page, () => page.locator("[data-next]").click(), 2);
     await expect(page.locator("[data-next]")).toBeDisabled(); // a gate: locked
     await page.locator("[data-prev]").click();
-    await expect(count(page)).toHaveText(`2 of ${DECK}`);
+    await expect(count(page)).toHaveText(`${FIRST_GATE.at - 1} of ${DECK}`);
   });
 });
 
@@ -801,30 +998,37 @@ test.describe("Slides: the whole deck and the close", () => {
     await installPastFirstRun(page);
     await openSlides(page);
     await control(page).click();
-    await walkToClose(page, ["g2"]);
+    await walkToClose(page, [FIRST_GATE.id]);
 
     await expect(page.locator("[data-card='close']")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Done for tonight.");
-    await expect(page.locator("[data-card='close']")).toContainText("7 checks answered · the one that came back held · 2 recall cards graded");
+    await expect(page.locator("[data-card='close']")).toContainText(`${CHECKS} your turns answered · the one that came back held · 2 recall cards graded`);
     await expect(page.locator("[data-companion-figure='close']")).toHaveCount(1);
     await expect(page.locator("[data-companion='session-close']")).toBeVisible();
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("!");
     expect(await page.locator("[data-card='close'] :is(input, textarea, [role='radio'])").count()).toBe(0);
     await expect(page.locator("[data-card='close']")).toContainText("What returns");
-    // Every card counted, with no reason that is not one (audit CT-07, LD-05): the run's nine cards come back tonight.
-    await expect(page.locator("[data-returns] li").first()).toHaveText("Tonight · 7 checks and 2 recall cards from Simplifying algebraic fractions.");
+    // Every card counted, with no reason that is not one (audit CT-07, LD-05): the run's ten cards come back tonight.
+    await expect(page.locator("[data-returns] li").first()).toHaveText(`Tonight · ${CHECKS} your turns and 2 recall cards from Simplifying algebraic fractions.`);
     // And so Rowan does not say there is nothing else to do (the library's own line for a night with nothing due).
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("nothing else to do");
-    expect(await accentControls(page)).toEqual(["Done for tonight"]);
+    // The questions proper come after the teaching (the owner's answer 1: the Practice stage): the first way out, on the
+    // accent; "Done for tonight" is the second, outlined.
+    expect(await accentControls(page)).toEqual(["Now the questions"]);
+    const exits = page.locator("[data-close] a[data-exit]");
+    await expect(exits).toHaveCount(2);
+    await expect(exits.nth(0)).toHaveText("Now the questions");
+    await expect(exits.nth(0)).toHaveAttribute("href", `${TOPIC}#practice`);
+    await expect(exits.nth(1)).toHaveText("Done for tonight");
+    await expect(exits.nth(1)).toHaveAttribute("href", "/");
     expect(await animations(page)).toBe(0);
-    // Practise this topic goes to the topic page's Practice stage (the anchor the topic page scrolls to once it renders).
-    await expect(page.locator("[data-exit='practise']")).toHaveAttribute("href", `${TOPIC}#practice`);
 
-    // The records: seven gates once each with Read's ids, the miss on g2 kept as the record, two prompts.
+    // The records: the eight gates once each with Read's ids, the miss on the first kept as the record, two prompts.
     const rows = await attempts(page);
     const gateRows = rows.filter((r) => r.itemId.includes("#gate:"));
-    expect(gateRows.map((r) => r.itemId.split("#gate:")[1]).sort()).toEqual(["g1", "g2", "g3", "g4", "g5", "g6", "g7"]);
-    expect(gateRows.find((r) => r.itemId.endsWith("g2"))?.correct).toBe(false);
+    expect(gateRows.map((r) => r.itemId.split("#gate:")[1]).sort()).toEqual((await gates(page)).map((g) => g.id).sort());
+    expect(gateRows).toHaveLength(CHECKS);
+    expect(gateRows.find((r) => r.itemId.endsWith(`#gate:${FIRST_GATE.id}`))?.correct).toBe(false);
     expect(rows.filter((r) => r.itemKind === "prompt")).toHaveLength(2);
 
     // Done for tonight goes home; the run is finished, so the slides start afresh next time.
@@ -832,7 +1036,7 @@ test.describe("Slides: the whole deck and the close", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
   });
 
-  test("a close where Rowan is silent draws no empty scene, and Practise this topic lands on Practice", async ({ page }) => {
+  test("a close where Rowan is silent draws no empty scene, and Now the questions lands on Practice", async ({ page }) => {
     // A device that has not been through first run: the companion says nothing, so there is no hare and no hill, and
     // no evening-coloured block where they would have stood (audit CQ-09).
     await page.setViewportSize(DESKTOP);
@@ -854,13 +1058,22 @@ test.describe("Slides: the whole deck and the close", () => {
       .toBeLessThan(200);
   });
 
-  test("on a phone the verdict's last line is brought into view after Check, not left under the foot (audit LD-14)", async ({ page }) => {
+  test("on a phone the re-teach, then the answer, are brought into view, not left under the foot (audit LD-14)", async ({ page }) => {
     await page.setViewportSize(PHONE);
     await openSlides(page);
     await control(page).click();
     await walkTo(page, "gate", "g4");
-    await answerChoice(page, "$\\frac{7x+10}{3x-10}$");
-    await expect(page.locator("[data-verdict='miss']")).toContainText("comes back once more before the recap");
+    // The option that strikes the two x² terms, which are terms of a sum (the longest explanation in the deck).
+    await answerChoice(page, "$\\frac{9x+14}{5x-14}$");
+    const inView = (selector: string) =>
+      page.evaluate((sel) => {
+        const el = document.querySelector(sel)!.getBoundingClientRect();
+        const body = document.querySelector("[data-card]")!.getBoundingClientRect();
+        return Math.round(body.bottom - Math.min(el.bottom, el.top + 120));
+      }, selector);
+    await expect.poll(() => inView("[data-reteach]")).toBeGreaterThanOrEqual(0);
+    await showAnswer(page);
+    await expect(page.locator("[data-verdict='miss']")).toContainText("comes back before the recap");
     await expect
       .poll(() =>
         page.evaluate(() => {
@@ -872,26 +1085,195 @@ test.describe("Slides: the whole deck and the close", () => {
       .toBeGreaterThanOrEqual(0);
   });
 
-  test("the retry card sits just before the recap and is asked once more, unrecorded", async ({ page }) => {
+  test("the retry card sits just before the recap and is asked once more, unrecorded; the recap draws a glyph a line", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await openSlides(page);
     await control(page).click();
-    await walkTo(page, "gate", "g2");
-    const g2 = (await gates(page)).find((g) => g.id === "g2")!;
-    await answerChoice(page, g2.options!.find((o) => o !== g2.answer)!);
+    const all = await gates(page);
+    const first = all.find((g) => g.id === FIRST_GATE.id)!;
+    const last = all[all.length - 1];
+    await walkTo(page, "gate", first.id);
+    await answerChoice(page, first.options!.find((o) => o !== first.answer)!);
+    await showAnswer(page);
     await control(page).click();
-    await walkTo(page, "gate", "g6");
-    await answerChoice(page, (await gates(page)).find((g) => g.id === "g6")!.answer);
+    // The last check of the lesson (g8, "How the paper asks it"), then the retry.
+    await walkTo(page, "gate", last.id);
+    await answerChoice(page, last.answer);
     await control(page).click();
-    // The next card is the retry, before the recap.
-    await expect(page.locator("[data-gate='g2'][data-retry='true']")).toBeVisible();
-    await expect(page.locator("[data-header]")).toContainText("Once more");
-    await answerChoice(page, g2.answer);
-    await expect(page.locator("[data-verdict='ok']")).toContainText("Asked again, and held. The first answer is the one on record.");
-    expect((await attempts(page)).filter((r) => r.itemId.endsWith("#gate:g2"))).toHaveLength(1);
+    // The next card is the retry, before the recap: the twin on new numbers where the note has one, else the gate again.
+    const retry = page.locator(`[data-gate='${first.id}'][data-retry]`);
+    await expect(retry).toBeVisible();
+    await expect(retry).toHaveAttribute("data-retry", first.twin ? "twin" : "same");
+    await expect(page.locator("[data-header]")).toContainText(first.twin ? "Once more · on new numbers" : "Once more");
+    await answerChoice(page, first.twin ? first.twin.answer : first.answer);
+    await expect(page.locator("[data-verdict='ok']")).toContainText("Asked once more, and held. Your first answer is the one on record.");
+    expect((await attempts(page)).filter((r) => r.itemId.endsWith(`#gate:${first.id}`))).toHaveLength(1);
     await control(page).click();
     await expect(page.getByRole("heading", { level: 2 })).toHaveText("You can now");
-    await expect(page.locator("[data-card='recap']")).toContainText("The check you missed came back before this card, and held.");
+    await expect(page.locator("[data-card='recap']")).toContainText("The one you missed came back before this card, and held.");
+    // Four lines, four drawn glyphs, in the note's order; every glyph's numeral at the 13 px floor.
+    await expect(page.locator("[data-card='recap'] li")).toHaveCount(4);
+    expect(await page.locator("[data-card='recap'] [data-glyph]").evaluateAll((els) => els.map((e) => e.getAttribute("data-glyph")))).toEqual(["factorise", "cancel", "numbers", "divide"]);
+    expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
+  });
+});
+
+/**
+ * Lesson structure v3 (the teach-first case §11 items 1, 2, 6; the owner's answers 2 and 5). These read the trial note's
+ * own blocks: a note not yet converted to the See it shape has no See it card and no twin, and the tests say so.
+ */
+test.describe("Slides: See it, and the twin before the recap", () => {
+  test("a See it shows one step per Continue, each with its reason, and its last control is Your turn", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    const sees = await seeIts(page);
+    test.skip(sees.length === 0, "the trial note has no See it block yet (its conversion to the See it shape is the content session's)");
+    await control(page).click();
+    await walkTo(page, "see");
+    const n = sees[0]!.steps;
+    const at = await count(page).textContent();
+    // The topic's first See it is shown, never typed: every step comes by Continue (or →, which is the same press).
+    await expect(page.locator("[data-typed-step]")).toHaveCount(0);
+    await expect(page.locator("[data-header]")).toContainText("See it");
+    for (let shown = 1; shown <= n; shown += 1) {
+      await expect(page.locator("[data-step]")).toHaveCount(shown);
+      await expect(page.locator("[data-ghost]")).toHaveCount(n - shown);
+      await expect(page.locator(`[data-step='${shown}'][data-current]`)).toBeVisible();
+      // No Skip on a first visit (the owner's answer 5: the first pass is the lesson).
+      await expect(page.locator("[data-skip-see]")).toHaveCount(0);
+      // The card stays while its steps come: the count does not move.
+      await expect(count(page)).toHaveText(at!);
+      if (shown === n) break;
+      await expect(control(page)).toHaveText("Continue");
+      if (shown % 2 === 1) await control(page).click();
+      else await page.keyboard.press("ArrowRight");
+    }
+    // Back a card and forward again: the steps she has seen are still there.
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator("[data-step]")).toHaveCount(n);
+    await expect(page.locator("[data-ghost]")).toHaveCount(0);
+    // The last step's control names where it goes: the Your turn, or the video that stands beside the See it.
+    await expect(control(page)).toHaveText(/^(Your turn|Continue)$/);
+    expect(await animations(page)).toBe(0);
+  });
+
+  test("the first Your turn follows the first See it, and asks what it showed (the owner's answer 8)", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    test.skip((await seeIts(page)).length === 0, "the trial note has no See it block yet");
+    await control(page).click();
+    const kinds: string[] = [];
+    for (let guard = 0; guard < 40; guard += 1) {
+      const k = (await card(page).getAttribute("data-card"))!;
+      kinds.push(k);
+      if (k === "gate") break;
+      if (k === "see") await stepThrough(page);
+      await control(page).click();
+    }
+    expect(kinds.indexOf("see"), kinds.join(" ")).toBeGreaterThanOrEqual(0);
+    expect(kinds.indexOf("see"), kinds.join(" ")).toBeLessThan(kinds.indexOf("gate"));
+    await expect(page.locator("[data-header]")).toContainText("Your turn");
+    await expect(page.locator("[data-gate]")).not.toContainText(/one tap to start|warm-up/i);
+  });
+
+  test("Skip to your turn appears only on a return visit, and shows every step on the way on", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    test.skip((await seeIts(page)).length === 0, "the trial note has no See it block yet");
+    await control(page).click();
+    await walkToClose(page);
+    // A return visit: the finished run starts afresh, and the See its she saw to their end offer the skip.
+    await openSlides(page);
+    await control(page).click();
+    await walkTo(page, "see");
+    const skip = page.locator("[data-skip-see]");
+    await expect(skip).toBeVisible();
+    await expect(skip).toHaveText(/Skip to your turn/);
+    const at = await count(page).textContent();
+    await skip.click();
+    await expect(count(page)).not.toHaveText(at!);
+    // Going back finds the See it shown whole; nothing was recorded for the skip.
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.locator("[data-ghost]")).toHaveCount(0);
+    await expect(page.locator("[data-skip-see]")).toHaveCount(0);
+  });
+
+  test("a step she types is marked through the engine and never recorded", async ({ page }) => {
+    await page.setViewportSize(PHONE);
+    await openSlides(page);
+    test.skip((await seeIts(page)).length < 2, "the trial note has no second See it yet (a first See it is never typed)");
+    await control(page).click();
+    // Walk the See its until one asks her to type a step (never the first).
+    let found = false;
+    for (let guard = 0; guard < 40 && !found; guard += 1) {
+      if ((await card(page).getAttribute("data-card")) !== "see") {
+        await walkTo(page, "see").catch(() => undefined);
+        if ((await card(page).getAttribute("data-card")) !== "see") break;
+        continue;
+      }
+      for (let i = 0; i < 8; i += 1) {
+        if (await page.locator("[data-typed-step]").count()) {
+          found = true;
+          break;
+        }
+        if ((await page.locator("[data-ghost]").count()) === 0) break;
+        await control(page).click();
+      }
+      if (!found) await control(page).click();
+    }
+    test.skip(!found, "no See it in the trial note asks her to type a step");
+    const before = (await attempts(page)).length;
+    // Her line, wrong: the step is shown with what she wrote; nothing is recorded.
+    await page.locator("[data-typed-step] input, [data-typed-step] textarea").first().fill("0");
+    await page.locator("[data-typed-step] button[type='submit']").click();
+    await expect(page.locator("[data-typed-result]")).toBeVisible();
+    expect((await attempts(page)).length).toBe(before);
+  });
+
+  test("a missed Your turn with a twin comes back before the recap on new numbers, once, unrecorded", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await openSlides(page);
+    const all = await gates(page);
+    const withTwin = all.find((g) => g.twin && g.options);
+    test.skip(!withTwin, "no gate in the trial note carries a twin yet");
+    const g = withTwin!;
+    await control(page).click();
+    await walkTo(page, "gate", g.id);
+    await answerChoice(page, g.options!.find((o) => o !== g.answer)!);
+    await showAnswer(page);
+    await expect(page.locator("[data-verdict='miss']")).toContainText("comes back before the recap on new numbers");
+    await control(page).click();
+    // On to the retry, answering everything between right: it comes before the recap, and asks the twin.
+    for (let guard = 0; guard < 90 && (await page.locator(`[data-gate='${g.id}'][data-retry]`).count()) === 0; guard += 1) {
+      const k = await card(page).getAttribute("data-card");
+      if (k === "recap" || k === "close") throw new Error(`the ${k} came before the twin`);
+      if (k === "see") {
+        await stepThrough(page);
+        await control(page).click();
+      } else if (k === "gate") {
+        const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
+        const other = all.find((x) => x.id === id)!;
+        if ((await page.locator("[data-verdict]").count()) === 0) await answerChoice(page, (await page.locator("[data-gate]").getAttribute("data-retry")) !== null ? await retryAnswer(page, other) : other.answer);
+        await control(page).click();
+      } else if (k === "interaction") {
+        await strikeAll(page);
+        await control(page).click();
+        await control(page).click();
+      } else await control(page).click();
+      await page.waitForTimeout(60);
+    }
+    const retry = page.locator(`[data-gate='${g.id}'][data-retry='twin']`);
+    await expect(retry).toBeVisible();
+    await expect(retry).toHaveAttribute("data-asked", `${g.id}~twin`);
+    const options = await retry.locator("[role='radio']").evaluateAll((els) => els.map((e) => e.getAttribute("data-value")));
+    expect([...options].sort()).toEqual([...g.twin!.options!].sort());
+    await answerChoice(page, g.twin!.answer);
+    await expect(page.locator("[data-verdict='ok']")).toContainText("Asked once more, and held.");
+    // One record, the first answer.
+    expect((await attempts(page)).filter((r) => r.itemId.endsWith(`#gate:${g.id}`))).toEqual([{ itemId: `${TOPIC_ID}#gate:${g.id}`, itemKind: "practice", correct: false }]);
+    await control(page).click();
+    await expect(page.locator("[data-card='recap']")).toBeVisible();
   });
 });
 
@@ -963,9 +1345,7 @@ test.describe("Slides: dark mode", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     expect(await contrast()).toBeGreaterThanOrEqual(4.5);
     expect(await fur()).toBe(lightFur);
-    await control(page).click();
-    await control(page).click();
-    await expect(page.locator("[data-gate='g1']")).toBeVisible();
+    await toFirstGate(page);
     await page.locator("[data-gate] [role='radio']").first().click();
     expect(await contrast()).toBeGreaterThanOrEqual(4.5);
   });

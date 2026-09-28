@@ -15,7 +15,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { buildCompanionContext, selectAt, type CompanionContext } from "@/lib/companion";
+import { LINES, buildCompanionContext, selectAt, type CompanionContext } from "@/lib/companion";
 import { FIXTURES, type FixtureName } from "@/lib/companion/fixtures";
 import { CompanionFigure, FIGURE_SLOTS } from "./CompanionFigure";
 import { CompanionLetter } from "./CompanionLetter";
@@ -26,27 +26,40 @@ import { PLACED_STONE } from "./CairnArt";
 const ctx = (name: FixtureName, patch: Partial<CompanionContext> = {}): CompanionContext => ({ ...buildCompanionContext(FIXTURES[name]), ...patch });
 const line = (moment: Parameters<typeof CompanionLine>[0]["moment"], context: CompanionContext) =>
   renderToStaticMarkup(createElement(CompanionLine, { moment, context, onShown: () => {} }));
+/** The Tonight tile's row as TodayTiles renders it: the hare standing, and the tile's own sentence when Rowan is silent. */
+const TILE_SENTENCE = "Ten minutes on a new topic is enough.";
+const tonight = (context: CompanionContext) =>
+  renderToStaticMarkup(
+    createElement(CompanionLine, { moment: "today-open", context, onShown: () => {}, standing: true, fallback: createElement("p", { "data-tile-sentence": "" }, TILE_SENTENCE) }),
+  );
+/** Every line the Today slot could say, in the cooldown, so the slot has nothing left to say this open. */
+const allSaid = (c: CompanionContext): CompanionContext => ({
+  ...c,
+  recentLines: LINES.filter((l) => l.moment === "today-open" || l.moment === "evening").map((l) => ({ id: l.id, at: c.now.toISOString() })),
+});
 const letter = (context: CompanionContext) => renderToStaticMarkup(createElement(CompanionLetter, { moment: "first-letter", context }));
 const scene = (context: CompanionContext, variant: "wide" | "tall" = "wide") => renderToStaticMarkup(createElement(CompanionScene, { context, variant }));
 
-/** The hare's own viewBox, and the heather stone held up in its paws (rowan.mjs, the stone-placed pose). */
+/** The hare's own viewBox, and the heather stone held out in its paws (rowan.mjs, the stone-placed pose, redrawn 27 Sep). */
 const HARE = 'viewBox="0 0 160 160"';
-const HELD_STONE = "M70 92 C72 84 84 82 92 86";
+const HELD_STONE = "M26 95 C27 87 37 84 46 85";
 /** The dry face's brow (rowan.mjs: drawn only for the dry expression). */
 const BROW = 'd="M73 40 q7 -3.5 14 0"';
 
 describe("a signed line carries the hare where the canvas puts it", () => {
-  it("Today's arrival line: the posed hare at 140 px, 200 px once the line has room, with the attribute and the name", () => {
+  it("Today's arrival line: the posed hare at 140 px, 200 px once the row has room, beside the line, with the attribute and the name", () => {
     const html = line("today-open", ctx("existing-install-next-day"));
     expect(html).toContain('data-companion="today-open"');
     expect(html).toContain('data-companion-figure="arrival"');
     expect(html).toContain('data-figure-state="arrival"');
     expect(html).toContain(`size-[${FIGURE_SLOTS.arrival.phone}px]`);
     expect(html).toContain(`@min-[32rem]:size-[${FIGURE_SLOTS.arrival.desktop}px]`);
-    // The query that grows it is the line's own block, so the words are never squeezed to make room.
-    expect(html).toMatch(/data-companion="today-open" class="@container/);
+    // The query that grows it is the row's own block, so the words are never squeezed to make room; the hare belongs to
+    // the tile's row, beside the line, not inside it (it stands there whether or not a line is said).
+    expect(html).toMatch(/^<div data-tonight-row="" class="@container/);
+    expect(html.indexOf('data-companion="today-open"')).toBeLessThan(html.indexOf('data-companion-figure="arrival"'));
+    expect(html).toMatch(/<p data-companion="today-open"[^>]*><span class="sr-only">Rowan: <\/span>/);
     expect(html).toContain(HARE);
-    expect(html).toContain('<span class="sr-only">Rowan: </span>');
     expect(html).not.toContain("aria-live");
   });
 
@@ -83,6 +96,74 @@ describe("a signed line carries the hare where the canvas puts it", () => {
   });
 });
 
+describe("the Tonight tile: the hare stands there on every open (TODAY-1, COMPANION-1)", () => {
+  it("with a line to say: the line beside the hare, and the tile's own sentence gives way to it", () => {
+    const html = tonight(ctx("existing-install-next-day"));
+    expect(html).toContain('data-companion="today-open"');
+    expect(html).toContain('data-companion-figure="arrival"');
+    expect(html).not.toContain(TILE_SENTENCE);
+  });
+
+  it("with every line in its cooldown: the hare still stands, beside the tile's own sentence, and nothing is signed", () => {
+    const quiet = allSaid(ctx("existing-install-next-day"));
+    expect(selectAt("today-open", quiet)).toBeNull();
+    const html = tonight(quiet);
+    expect(html).toContain('data-companion-figure="arrival"');
+    expect(html).toContain('data-figure-state="arrival"');
+    expect(html).toContain(`size-[${FIGURE_SLOTS.arrival.phone}px]`);
+    expect(html).toContain(TILE_SENTENCE);
+    expect(html).not.toContain("data-companion=");
+    expect(html).not.toContain("sr-only");
+  });
+
+  it("late at night, said or silent, it sits in the evening pose under the moon", () => {
+    const late = buildCompanionContext({ ...FIXTURES["normal-evening"], now: new Date("2026-10-01T23:40:00") });
+    for (const c of [late, allSaid(late)]) {
+      const html = tonight(c);
+      expect(html).toContain('data-figure-state="evening"');
+      expect(html).toContain('d="M130 15 a11 11 0 1 0 9 17');
+    }
+  });
+
+  it("on the Letter's first day the hare stands on the tile and the line waits for the Letter", () => {
+    const c = ctx("fresh-install-day-one");
+    expect(c.flags.letterGoesFirst).toBe(true);
+    const html = tonight(c);
+    expect(html).toContain('data-companion-figure="arrival"');
+    expect(html).toContain('data-figure-state="arrival"');
+    expect(html).not.toContain("data-companion=");
+    expect(html).toContain(TILE_SENTENCE);
+  });
+
+  it("draws nothing in Words only or Quiet, before first run, or beside her brother's note: the tile's sentence alone", () => {
+    for (const c of [
+      allSaid(ctx("existing-install-next-day", { figure: false })),
+      ctx("silenced"),
+      ctx("before-first-run"),
+      ctx("brother-note-on-screen"),
+    ]) {
+      const html = tonight(c);
+      expect(html).not.toContain("data-companion-figure");
+      expect(html).not.toContain("<svg");
+      expect(html).not.toContain("140px");
+      expect(html).toContain(TILE_SENTENCE);
+    }
+    // Words only with a line to say: the words alone, signed, and the tile's sentence gives way to them.
+    const words = tonight(ctx("existing-install-next-day", { figure: false }));
+    expect(words).toContain('data-companion="today-open"');
+    expect(words).not.toContain("<svg");
+    expect(words).not.toContain(TILE_SENTENCE);
+  });
+
+  it("keeps one layout whether or not the line speaks, so the tile's one button never moves", () => {
+    const said = tonight(ctx("existing-install-next-day"));
+    const silent = tonight(allSaid(ctx("existing-install-next-day")));
+    const grid = (html: string) => html.match(/class="(grid [^"]+)"/)?.[1];
+    expect(grid(said)).toBeTruthy();
+    expect(grid(silent)).toBe(grid(said));
+  });
+});
+
 describe("the close scene: Rowan on the hill by the cairn", () => {
   it("draws when the close line speaks, as the close slot, holding the heather stone up when a stone was placed", () => {
     const c = ctx("close-with-stone");
@@ -108,7 +189,7 @@ describe("the close scene: Rowan on the hill by the cairn", () => {
     expect(selectAt("session-close", c)?.line.id).toBe("dry.not-me");
     const html = scene(c);
     expect(html).toContain('data-figure-state="arrival"');
-    expect(html).toContain('transform="rotate(-38 104 104)"'); // the near arm raised: the wave
+    expect(html).toContain('data-pose="wave"'); // the near arm raised: the wave
     expect(html).toContain(BROW);
     expect(html).not.toContain(HELD_STONE);
   });

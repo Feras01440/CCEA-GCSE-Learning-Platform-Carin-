@@ -1,11 +1,18 @@
 /**
- * The Tonight tile's own words, as data: the headline that states tonight's fact and the sub-line of advice under
- * it, both in the product's voice. Rowan's arrival line stands under them on the same tile, so the two must never say
- * the same sentence; tonight-copy.test.ts holds every line the Today slot can select to that rule. Pure, so the test
- * reads the strings the tile prints rather than a copy of them.
+ * The Tonight tile's own words, as data: the headline that states tonight's fact, and the one sentence the tile says in
+ * the product's voice when Rowan has nothing to say this open.
  *
- * Nothing here counts what was not done: the sub-line after a gap is the one line the emotional-design rules allow
- * ("Ten minutes is enough tonight."), never the gap itself.
+ * One screen, one sentence, once (02-surfaces.md §1 and 04-critique R5, amendment 2: "the sub-line under the count is
+ * Rowan's today-open line"). Under the headline stands exactly one sentence, beside the hare: Rowan's line when it speaks,
+ * otherwise this one. The two are never on the tile together, so they cannot repeat or contradict each other, and no line
+ * Rowan can say repeats the headline (tonight-copy.test.ts holds every line the Today slot can select to that). Until 27
+ * September the tile printed its sub-lines above Rowan's line: "Ten minutes on a new topic is enough." over "… is open
+ * if you want something new." (the same advice twice), and after midnight the same advice over "Anything new will keep
+ * for tomorrow" (the trial audit's TODAY-2 and TODAY-3).
+ *
+ * Pure, so the test reads the strings the tile prints rather than a copy of them. Nothing here counts what was not done:
+ * after a gap the sentence is the one line the emotional-design rules allow ("Ten minutes is enough tonight."), never
+ * the gap itself, and late at night it never advises new work (the companion specification's "no new work when late").
  */
 
 /** The headline when nothing is due back. Rowan's `today.nothing-back` line says what is open instead. */
@@ -26,23 +33,41 @@ export interface TonightState {
   due: number;
   /** Three days or more since her last sitting: one line, and nothing about the gap. */
   gentle: boolean;
-  /** Her first week, when "Chosen for you" still earns its line. */
-  firstWeek: boolean;
+  /** Late enough to be told so (the companion's `isLate`: 21:30 to 04:00, and only because she is here). */
+  late: boolean;
+  /** A lesson she paused and has not finished (read-place.ts lastReadLesson): the tile offers the way back to it. */
+  paused?: boolean;
 }
 
-/** The lines under the headline, in order, at most two. */
-export function tonightSublines({ due, gentle, firstWeek }: TonightState): string[] {
-  if (due > 0) {
-    const lines: string[] = [];
-    if (firstWeek) lines.push("Chosen for you: questions to try again, and ones you answered without being sure.");
-    if (gentle) lines.push("Ten minutes is enough tonight.");
-    return lines;
-  }
-  return [gentle ? "Ten minutes is enough tonight." : "Ten minutes on a new topic is enough."];
+/**
+ * The tile's own sentence for tonight, said beside the hare while Rowan is silent (its lines spent for the evening, Quiet,
+ * or the Letter's first day). One sentence, true of the state:
+ * - with something back: late or after a gap, that ten minutes is enough; otherwise why these came back now;
+ * - with nothing back: late, that anything new can wait; with a lesson paused, that her place in it is kept (the way
+ *   back is the tile's one button); after a gap, that ten minutes is enough; otherwise the offer.
+ */
+export function tonightSentence({ due, gentle, late, paused = false }: TonightState): string {
+  if (due > 0) return late || gentle ? "Ten minutes is enough tonight." : "Each one is back just before you would forget it.";
+  if (late) return "Anything new can wait for tomorrow.";
+  if (paused) return "Your place in the lesson is kept.";
+  return gentle ? "Ten minutes is enough tonight." : "Ten minutes on a new topic is enough.";
 }
 
-/** Every sentence the tile prints for this state, for the rule that Rowan never repeats one. */
-export function tonightSentences(state: TonightState): string[] {
-  const headline = state.due > 0 ? `${tonightHeadline(state.due)} · ${aboutMinutes(state.due)}` : tonightHeadline(state.due);
-  return [headline, ...tonightSublines(state)];
+/** A paused lesson as the tile shows it: the lesson and the section it opens at, and the word on the way back. */
+export interface PausedLesson {
+  title: string;
+  /** Sections done. */
+  done: number;
+  /** The section it opens at. */
+  open: number;
+  total: number;
+}
+
+/**
+ * The tile's row for a lesson she paused (the trial audit's READ-12: "Pause here" used to land on a Today that said
+ * nothing of the lesson). Facts and the way back only, in the product's voice: Rowan says, in its own, that the section
+ * is done (lines.ts today.paused-done), so the two never say the same thing.
+ */
+export function pausedRow(p: PausedLesson): { label: string; action: string } {
+  return { label: `${p.title} · section ${p.open} of ${p.total} next`, action: "Carry on" };
 }

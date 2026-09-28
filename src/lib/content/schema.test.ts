@@ -700,10 +700,11 @@ describe("TopicBundle", () => {
 // ---------------------------------------------------------------------------
 
 describe("JSON Schema export", () => {
-  test("builds the twelve named schemas with $defs for shared types", () => {
+  test("builds the thirteen named schemas with $defs for shared types", () => {
     const built = buildJsonSchemas();
     expect(built.map((b) => b.name)).toEqual(JSON_SCHEMA_NAMES);
-    expect(built).toHaveLength(12);
+    // Twelve, and since 27 Sep note.blocks.json's own (NoteBlocks: the See it block and the gate's twin).
+    expect(built).toHaveLength(13);
     for (const { name, fileName, schema } of built) {
       expect(schema.$schema).toBe("https://json-schema.org/draft/2020-12/schema");
       expect(schema.$id).toBe(fileName);
@@ -719,7 +720,8 @@ describe("JSON Schema export", () => {
     const dir = mkdtempSync(join(tmpdir(), "ccea-schema-"));
     try {
       const written = await writeJsonSchemas(dir);
-      expect(written).toHaveLength(12);
+      expect(written).toHaveLength(13);
+      expect(existsSync(join(dir, "note-blocks.schema.json"))).toBe(true);
       for (const file of written) {
         expect(existsSync(file)).toBe(true);
         const parsed = JSON.parse(readFileSync(file, "utf8")) as { title: string };

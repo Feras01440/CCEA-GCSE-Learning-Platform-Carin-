@@ -25,9 +25,13 @@ test.describe("first run", () => {
 
     await page.getByRole("button", { name: /^Continue$/ }).click();
 
+    // The question is Rowan's, so Rowan is met first: one sentence, just above the card (COMPANION-8, 25 Sep).
+    const intro = page.getByText("This is Rowan, a hare. It keeps your papers’ dates and what comes back when.");
+    await expect(intro).toBeVisible();
     const name = page.getByLabel(/what should it call you/i);
     await expect(name).toBeVisible();
     await expect(name).toHaveValue("");
+    expect(await intro.evaluate((el) => !!(el.compareDocumentPosition(document.querySelector("input")!) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
     await name.fill("Test");
     await expect(name).toHaveValue("Test");
 

@@ -43,30 +43,29 @@ const choiceGates = (blocks: readonly unknown[]): GateBlock[] =>
 const TRIAL = NOTES.find((n) => n.topicId === "fm.u1.algebraic-fractions-simplify")!;
 
 describe("the trial topic: the owner's finding that the right answer was nearly always A", () => {
-  it("spreads the seven right answers over A, B and C, never more than three in one place", () => {
+  it("spreads its right answers over A, B and C as evenly as its gates allow, with no place three gates running", () => {
     const placed = deckGatePlacements(TRIAL.blocks);
-    expect([...placed.keys()]).toEqual(["g1", "g2", "g7", "g3", "g4", "g5", "g6"]);
+    // Every choice gate of the note, in the note's order (eight since the teach-first rewrite of 25 Sep).
+    expect([...placed.keys()]).toEqual(choiceGates(TRIAL.blocks).map((g) => g.id));
+    expect([...placed.keys()]).toEqual(["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"]);
     const at = [...placed.values()].map((p) => p.answerAt);
     const counts = [0, 1, 2].map((p) => at.filter((a) => a === p).length);
-    // Seven gates in three places: 3, 2, 2 is the best there is, and two of the seven are held at A (below).
-    expect(Math.max(...counts)).toBeLessThanOrEqual(3);
-    expect(Math.min(...counts)).toBeGreaterThanOrEqual(2);
+    // Nothing is held in place (below), so the places differ by one at most: 3, 3, 2 for eight gates.
+    expect(Math.max(...counts) - Math.min(...counts), `answers at ${at.map((a) => "ABC"[a]).join("")}`).toBeLessThanOrEqual(1);
     // The seeded shuffle alone had put five of the seven at A and none at C (build 7, measured 24 Sep 23:59).
     expect(counts[0]).toBeLessThan(5);
+    for (let i = 2; i < at.length; i += 1) expect(at[i] === at[i - 1] && at[i] === at[i - 2], `three at ${"ABC"[at[i]]} ending at gate ${i + 1}`).toBe(false);
   });
 
-  it("keeps g4 and g5 in their authored order, because their explanations name the options by place", () => {
+  it("holds a gate in its authored order exactly when its explanation names an option by place (none does since 25 Sep)", () => {
     const placed = deckGatePlacements(TRIAL.blocks);
-    const byId = new Map(choiceGates(TRIAL.blocks).map((g) => [g.id, g]));
-    for (const id of ["g4", "g5"]) {
-      expect(placed.get(id)).toMatchObject({ pinned: true, order: byId.get(id)!.options });
+    for (const g of choiceGates(TRIAL.blocks)) {
+      const named = positionalWording(g.explain) !== null;
+      expect(placed.get(g.id)?.pinned, g.id).toBe(named);
+      if (named) expect(placed.get(g.id)?.order, g.id).toEqual(g.options);
     }
-    // g4's explanation, verbatim: true only as authored.
-    expect(positionalWording(byId.get("g4")!.explain)).toBe(
-      "The second option is that same line before any cancelling; the third strikes out the two $x^{2}$ terms, which are terms of a sum.",
-    );
-    // The other five are free to move.
-    expect([...placed.entries()].filter(([, p]) => !p.pinned).map(([id]) => id)).toEqual(["g1", "g2", "g7", "g3", "g6"]);
+    // The content session reworded g4's and g5's "the second option … the third …" (audit LD-01): all eight take part.
+    expect([...placed.values()].filter((p) => p.pinned)).toEqual([]);
   });
 });
 
@@ -219,10 +218,17 @@ describe("the gate asked once more before the recap (Slides' retry)", () => {
 
 describe("how an option's maths is set, in Slides and in Read (audit LD-16)", () => {
   it("sets a stacked fraction at text size, and leaves the value as authored for marking", () => {
-    const g4 = choiceGates(TRIAL.blocks).find((g) => g.id === "g4")!;
-    expect(g4.options!.map(optionTex)).toEqual(["$\\dfrac{x+2}{x-2}$", "$\\dfrac{(x+5)(x+2)}{(x+5)(x-2)}$", "$\\dfrac{7x+10}{3x-10}$"]);
-    for (const opt of g4.options!) expect(markGate(g4, opt)).toBe(opt === g4.answer);
+    expect(optionTex("$\\frac{x+2}{x-2}$")).toBe("$\\dfrac{x+2}{x-2}$");
+    expect(optionTex("$\\frac{(x+7)(x+2)}{(x+7)(x-2)}$")).toBe("$\\dfrac{(x+7)(x+2)}{(x+7)(x-2)}$");
     expect(optionTex("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words")).toBe("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words");
+    // Every fraction option of the trial (g4's three, g10's two): set at text size, nothing else changed, marked as authored.
+    const fractions = choiceGates(TRIAL.blocks).flatMap((g) => g.options!.filter((o) => o.includes("\\frac{")).map((o) => [g, o] as const));
+    expect(fractions.length).toBeGreaterThanOrEqual(3);
+    for (const [g, opt] of fractions) {
+      expect(optionTex(opt), opt).not.toMatch(/\\frac\{/);
+      expect(optionTex(opt).replace(/\\dfrac\{/g, "\\frac{"), opt).toBe(opt);
+      expect(markGate(g, opt), `${g.id}: ${opt}`).toBe(opt.trim() === g.answer.trim());
+    }
   });
 });
 

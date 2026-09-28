@@ -3,11 +3,14 @@
 /**
  * The drawings for fm1/algebraic-fractions-simplify, in the v2 illustration grammar (§3): three primitives, no
  * outlines, one accent element, labels on the figure, and every figure an object to act on where the card asks for
- * one. Ported from the approved canvas (scratchpad/mockups-v2/art.mjs: figCancel, figTap, figSubstitute, recapGlyph),
- * with one correction the canvas needed too (audit MK-05, LD-08, CT-10): a strike means "divides out of both lines",
- * so 2x and 4, which share a factor of 2 and are not the same factor, each lose their 2 and keep the rest (x on top, 2
- * underneath). What is left unstruck is exactly the answer, x over 2(x − 5), in the idea's drawing and on the card she
- * acts on alike. The mathematics is in ./afs-model.ts, tested on its own.
+ * one. Ported from the approved canvas (scratchpad/mockups-v2/art.mjs: figCancel, figTap, figSubstitute, recapGlyph)
+ * and brought to the note's own example when the note was rewritten to teach, show, then check (25 Sep 2026):
+ * 3x(x + 7) over 6(x + 7)(x − 7). A strike means "divides out of both lines" (audit MK-05, LD-08, CT-10): the bracket
+ * (x + 7) is struck whole on each line; 3x and 6, which share a 3 and are not the same factor, each lose their 3 and keep
+ * the rest (x on top, 2 underneath); (x − 7), on one line only, is never struck. What is left unstruck is exactly the
+ * answer, x over 2(x − 7), in the idea's drawing and on the card she acts on alike. Both are drawn from the pills of
+ * ./afs-model.ts, so neither can show a different fraction from the other; the model is tested on its own and against
+ * the note's own figure.
  *
  * Colours are the tokens: the subject accent for the thing the sentence is about, ink for the rest, fern for what is
  * right, the warm neutral for not yet. Text inside a figure is Literata for the maths and Inter for a label, sized
@@ -16,8 +19,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { clsx } from "clsx";
-import { Caption } from "../ui";
-import { BOTTOM, EMPTY_TAP, RESULT, SHARED, TOP, checkTap, pillOf, pillReading, substituteFor, tapPair, type PillId, type PillSpec, type TapState } from "./afs-model";
+import { BOTTOM, EMPTY_TAP, RESULT, SHARED, TOP, checkTap, pillReading, productForm, rightLine, substituteFor, tapGroupLabel, tapPair, type PillId, type PillSpec, type TapState } from "./afs-model";
 
 const MATHS = "var(--serif-lesson)";
 const UI = "var(--font-inter), ui-sans-serif, system-ui, sans-serif";
@@ -25,13 +27,13 @@ const UI = "var(--font-inter), ui-sans-serif, system-ui, sans-serif";
 /**
  * A factor drawn as a pill: a rounded rectangle with the expression inside. `struck`: the whole factor divides out (a
  * diagonal in the accent across it). `split`: a number whose common factor divides out: the factor is struck, "×"
- * and what is left stay, so 2x reads 2̶ × x.
+ * and what is left stay, so 3x reads 3̶ × x and 6 reads 3̶ × 2.
  */
-function Pill({ x, y, w, text, state = "", split, h = 34, fs = 18 }: { x: number; y: number; w: number; text: string; state?: "" | "struck" | "split"; split?: { factor: string; left: string }; h?: number; fs?: number }) {
+function Pill({ id, x, y, w, text, state = "", split, h = 34, fs = 18 }: { id: PillId; x: number; y: number; w: number; text: string; state?: "" | "struck" | "split"; split?: { factor: string; left: string }; h?: number; fs?: number }) {
   const stroke = state === "" ? "var(--line-2)" : "var(--accent)";
   const base = y + h / 2 + fs * 0.35;
   return (
-    <g>
+    <g data-piece={id} data-struck={state === "struck" ? "all" : state === "split" ? split?.factor : undefined} data-left={state === "split" ? split?.left : undefined}>
       <rect x={x} y={y} width={w} height={h} rx={h / 2} fill="var(--surface)" stroke={stroke} strokeWidth={state ? 2 : 1} />
       {state === "split" && split ? (
         <>
@@ -60,40 +62,64 @@ function Pill({ x, y, w, text, state = "", split, h = 34, fs = 18 }: { x: number
 
 const Vinculum = ({ x1, x2, y }: { x1: number; x2: number; y: number }) => <path d={`M${x1} ${y} L${x2} ${y}`} stroke="var(--ink)" strokeWidth={2} strokeLinecap="round" />;
 
+/** A pill's width in the drawing: a split number (3̶ × x) or a bracket, the two shapes the example has. */
+const pillWidth = (p: PillSpec) => (p.split ? 58 : 78);
+
+/** The pills of one line laid out from the left, 6 units apart. */
+function row(line: readonly PillSpec[]): Array<{ p: PillSpec; x: number; w: number }> {
+  let x = 12;
+  return line.map((p) => {
+    const at = { p, x, w: pillWidth(p) };
+    x += at.w + 6;
+    return at;
+  });
+}
+
+/** What the drawing says, for a screen reader: the note's own figure in words, from the same pills. */
+function cancelLabel(): string {
+  const shared = [...new Set([...TOP, ...BOTTOM].filter((p) => SHARED.includes(p.id)).map((p) => (p.split ? `the ${p.split.factor}` : `the bracket ${p.text}`)))].join(" and ");
+  const said = shared.charAt(0).toUpperCase() + shared.slice(1);
+  return `${productForm(TOP)} over ${productForm(BOTTOM)}. ${said} ${shared.includes(" and ") ? "are" : "is"} struck out of both lines, leaving ${RESULT.top} on top and ${RESULT.bottom} underneath: ${RESULT.top} over ${RESULT.bottom}. Only a factor divides out.`;
+}
+
 /**
- * The idea figure: 2x(x + 5) over 4(x + 5)(x − 5), with every factor the two lines share divided out, the bracket whole
- * and a 2 out of 2x and out of 4, equals x over 2(x − 5), which is what is left. On the title card (`variant="title"`) it
- * carries no label inside the drawing: the lede says it, and at the title's 248 px width a 15-unit label would render
- * under the 13 px floor.
+ * The idea figure, the note's hero figure drawn in the grammar: 3x(x + 7) over 6(x + 7)(x − 7) with every factor the two
+ * lines share divided out, (x + 7) whole and a 3 out of 3x and out of 6, equals x over 2(x − 7), which is what is left;
+ * (x − 7) stands unstruck. It is the tap card's finished state, drawn from the same pills. On the title card
+ * (`variant="title"`) it carries no label inside the drawing: the lede says it, and at the title's 248 px width a
+ * 15-unit label would render under the 13 px floor.
  */
 export function FigCancel({ result = true, variant = "idea", className }: { result?: boolean; variant?: "title" | "idea"; className?: string }) {
-  const two = pillOf("t-2x").split!;
-  const four = pillOf("b-4").split!;
+  const drawn = (p: PillSpec): "" | "struck" | "split" => (!SHARED.includes(p.id) ? "" : p.split ? "split" : "struck");
+  const top = row(TOP);
+  const bottom = row(BOTTOM);
+  const right = Math.max(...[...top, ...bottom].map((c) => c.x + c.w));
   return (
     <svg
       viewBox={variant === "title" ? "0 0 340 140" : "0 0 340 170"}
       role="img"
-      aria-label="2x(x + 5) over 4(x + 5)(x − 5). The (x + 5) on each line is struck through, and a 2 is struck out of 2x and out of 4, leaving x on top and 2(x − 5) underneath: x over 2(x − 5). Only a factor divides out."
+      aria-label={cancelLabel()}
       // Up to the canvas's 560 px, so it fills the Read hero's wide stage (audit CD-09); a Slides host caps it smaller.
       className={clsx("block h-auto w-full max-w-[560px]", className)}
       data-figure="afs.cancel"
     >
-      <Pill x={12} y={24} w={58} text="2x" state="split" split={two} />
-      <Pill x={76} y={24} w={78} text="(x + 5)" state="struck" />
-      <Vinculum x1={8} x2={242} y={78} />
-      <Pill x={12} y={96} w={58} text="4" state="split" split={four} />
-      <Pill x={76} y={96} w={78} text="(x + 5)" state="struck" />
-      <Pill x={160} y={96} w={78} text="(x − 5)" />
+      {top.map(({ p, x, w }) => (
+        <Pill key={p.id} id={p.id} x={x} y={24} w={w} text={p.text} state={drawn(p)} split={p.split} />
+      ))}
+      <Vinculum x1={8} x2={right + 4} y={78} />
+      {bottom.map(({ p, x, w }) => (
+        <Pill key={p.id} id={p.id} x={x} y={96} w={w} text={p.text} state={drawn(p)} split={p.split} />
+      ))}
       {result && (
-        <g>
-          <text x={250} y={86} fontSize={22} fill="var(--ink)" fontFamily={MATHS}>
+        <g data-result>
+          <text x={right + 12} y={86} fontSize={22} fill="var(--ink)" fontFamily={MATHS}>
             =
           </text>
-          <text x={302} y={62} fontSize={20} textAnchor="middle" fill="var(--ink)" fontFamily={MATHS}>
+          <text x={right + 64} y={62} fontSize={20} textAnchor="middle" fill="var(--ink)" fontFamily={MATHS}>
             {RESULT.top}
           </text>
-          <Vinculum x1={272} x2={332} y={78} />
-          <text x={302} y={106} fontSize={18} textAnchor="middle" fill="var(--ink)" fontFamily={MATHS}>
+          <Vinculum x1={right + 32} x2={right + 96} y={78} />
+          <text x={right + 64} y={106} fontSize={18} textAnchor="middle" fill="var(--ink)" fontFamily={MATHS}>
             {RESULT.bottom}
           </text>
         </g>
@@ -134,9 +160,9 @@ function StrikeMark({ animate }: { animate: boolean }) {
 
 /**
  * The tap-to-cancel card's body. Pairing is the teaching: a factor must have a match on the other line. She taps one
- * pill (pending, an accent ring), then a pill on the other line: a bracket on both lines strikes whole; 2x with 4 strikes
- * the 2 out of each and leaves x and 2 (the `react` motion, 250 ms); a mismatch clears the pending pill and says why in
- * one line. Check marks: every shared factor divided out and nothing else, and the simplified fraction rises in; or
+ * pill (pending, an accent ring), then a pill on the other line: a bracket on both lines strikes whole; 3x with 6 strikes
+ * the 3 out of each and leaves x and 2 (the `react` motion, 250 ms), which is the note's own figure; a mismatch clears
+ * the pending pill and says why in one line; (x − 7) has no match and is never struck. Check marks: every shared factor divided out and nothing else, and the simplified fraction rises in; or
  * what still divides both lines is lit in fern and named, the answer is shown, and the lit pills stay live so she can
  * finish it now (emotional-design rule 4). What she struck is the run's (`state`, kept across a card change and a
  * reload), never this component's.
@@ -253,7 +279,7 @@ export function TapToCancel({
     checked === null
       ? note ?? "Tap a factor on top, then its match underneath."
       : checked.correct
-        ? "Both lines shared (x + 5) and a factor of 2. With both gone, x and 2(x − 5) share nothing: that is the answer."
+        ? rightLine()
         : allGone
           ? "Finished: nothing is shared by both lines any more."
           : note ?? `${checkTap(state).diagnosis ?? "Something is still shared."} Tap the lit ${state.lit.length > 2 ? "pairs" : "pair"} to finish it.`;
@@ -263,7 +289,7 @@ export function TapToCancel({
       <div className="rounded-[12px] border border-line bg-surface p-4 lg:border-0 lg:bg-[var(--tint-wash)]" data-stage>
         <div role="group" aria-labelledby={groupId} className="flex flex-col items-start gap-2">
           <span id={groupId} className="sr-only">
-            The fraction 2x(x + 5) over 4(x + 5)(x − 5), each factor a button
+            {tapGroupLabel()}
           </span>
           <div className="flex flex-wrap items-center gap-2">{TOP.map(pill)}</div>
           <div className="h-[2px] w-[min(100%,300px)] rounded bg-ink" aria-hidden />
@@ -345,10 +371,15 @@ export function Substitute({ hers, correct }: { hers: string; correct: boolean }
 }
 
 /* ------------------------------------------------------------------------------------------------------------ */
-/* Recap glyphs: factorise, cancel, check the numbers.                                                             */
+/* Recap glyphs, one a line of "You can now": factorise, cancel, finish on the numbers and any lone x, and turn a     */
+/* division into a multiplication.                                                                                  */
 
-export function RecapGlyph({ kind, size = 44 }: { kind: string; size?: number }) {
-  const box = { width: size, height: size, viewBox: "0 0 44 44", "aria-hidden": true as const, className: "shrink-0" };
+export const RECAP_GLYPHS = ["factorise", "cancel", "numbers", "divide"] as const;
+export type RecapGlyphKind = (typeof RECAP_GLYPHS)[number];
+export const isRecapGlyph = (kind: string): kind is RecapGlyphKind => (RECAP_GLYPHS as readonly string[]).includes(kind);
+
+export function RecapGlyph({ kind, size = 44 }: { kind: RecapGlyphKind; size?: number }) {
+  const box = { width: size, height: size, viewBox: "0 0 44 44", "aria-hidden": true as const, className: "shrink-0", "data-glyph": kind };
   if (kind === "factorise")
     return (
       <svg {...box}>
@@ -368,32 +399,41 @@ export function RecapGlyph({ kind, size = 44 }: { kind: string; size?: number })
         <path d="M12 36 L32 8" stroke="var(--accent)" strokeWidth={2.8} strokeLinecap="round" />
       </svg>
     );
-  // "Check the numbers": 2 over 4 is still 1 over 2. No tick: fern means right, and 2 over 4 is not finished (audit CT-09).
+  if (kind === "divide")
+    // "Turn a division into a multiplication first": ÷ becomes ×, drawn (a bar and two dots; two crossed strokes), the
+    // × in the accent because it is what she writes.
+    return (
+      <svg {...box}>
+        <rect x={1} y={1} width={42} height={42} rx={10} fill="var(--tint-wash)" />
+        <path d="M6 22 L16 22" stroke="var(--ink)" strokeWidth={2} strokeLinecap="round" />
+        <circle cx={11} cy={16.5} r={1.8} fill="var(--ink)" />
+        <circle cx={11} cy={27.5} r={1.8} fill="var(--ink)" />
+        <path d="M19.5 22 L26.5 22 M23.5 18.8 L26.8 22 L23.5 25.2" fill="none" stroke="var(--ink-2)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M31 17 L39 27 M39 17 L31 27" stroke="var(--accent)" strokeWidth={2.2} strokeLinecap="round" />
+      </svg>
+    );
+  // "Finish on the numbers and any lone x": 2x over 4x is only 1 over 2 (the note's "a 2 over a 4, or an x over an x").
+  // No tick: fern means right, and 2x over 4x is not finished (audit CT-09).
   return (
-    <svg {...box} data-glyph="numbers">
+    <svg {...box}>
       <rect x={1} y={1} width={42} height={42} rx={10} fill="var(--tint-wash)" />
-      <text x={11} y={19} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
-        2
+      <text x={12} y={19} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
+        2x
       </text>
-      <path d="M5 22 L17 22" stroke="var(--ink)" strokeWidth={1.4} />
-      <text x={11} y={36} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
-        4
+      <path d="M4 22 L20 22" stroke="var(--ink)" strokeWidth={1.4} />
+      <text x={12} y={36} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
+        4x
       </text>
-      <text x={22} y={27} textAnchor="middle" fontSize={13} fill="var(--ink-2)" fontFamily={MATHS}>
+      <text x={25} y={27} textAnchor="middle" fontSize={13} fill="var(--ink-2)" fontFamily={MATHS}>
         =
       </text>
-      <text x={33} y={19} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--accent)" fontFamily={MATHS}>
+      <text x={35} y={19} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--accent)" fontFamily={MATHS}>
         1
       </text>
-      <path d="M27 22 L39 22" stroke="var(--accent)" strokeWidth={1.4} />
-      <text x={33} y={36} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--accent)" fontFamily={MATHS}>
+      <path d="M30 22 L40 22" stroke="var(--accent)" strokeWidth={1.4} />
+      <text x={35} y={36} textAnchor="middle" fontSize={13} fontWeight={600} fill="var(--accent)" fontFamily={MATHS}>
         2
       </text>
     </svg>
   );
-}
-
-/** The caption under the idea figure, from the note's own words. */
-export function CancelCaption() {
-  return <Caption>A matching pair of brackets divides out. A matching pair of terms does not.</Caption>;
 }

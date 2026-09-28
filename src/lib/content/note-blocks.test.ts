@@ -13,7 +13,7 @@ import type { z } from "zod";
 import { lintNoteBlocks } from "@/components/items/content-lint";
 import type { NoteBlock as GatesNoteBlock } from "@/components/items/gates";
 import { SEE_FIXTURE_BLOCKS, SEE_FIXTURE_PROMPTS, SEE_FIXTURE_VERIFICATION, SEE_FIXTURE_WE_ID, SEE_FIXTURE_WORKED_EXAMPLE } from "@/lib/slides/see-fixture";
-import { NoteBlock, NoteBlocks, RetrievalPrompt, SEE_STEPS, WorkedExample } from "./schema";
+import { NoteBlock, NoteBlocks, RetrievalPrompt, SEE_KINDS, SEE_STEPS, WorkedExample } from "./schema";
 
 const ROOT = path.resolve(__dirname, "../../..");
 
@@ -141,6 +141,23 @@ describe("where the two cannot agree, pinned (and reported to the lead, 27 Sep)"
     expect(schemaOk([see([step(1), step(2)], { finalAnswer: "" })])).toBe(false);
     expect(lintOk([see([step(1), step(2)], { finalAnswer: "" })])).toBe(false);
   });
+
+  it("V3.1: the schema reads a misconception's registry shape and a twin's own option notes, which the lint does not; a See it's kind both read", () => {
+    const optionNote = (option: string, extra: Record<string, unknown> = {}) => ({ option, why: "Why that option tempts, and what it gets wrong.", ...extra });
+    const withKind = (kind: string) => [h("One"), p("Words."), see([step(1), step(2)], { kind }), choice("g1")];
+    expect(schemaOk(withKind("worked"))).toBe(false);
+    expect(lintOk(withKind("worked"))).toBe(false);
+    // The registry's shape ("<area>.<name>" in kebab-case), as every one of the 123 published notes' ids has it.
+    const misconception = [choice("g1", { optionNotes: [optionNote("b", { misconception: "Numerator not reduced" })] })];
+    expect(schemaOk(misconception)).toBe(false);
+    expect(lintOk(misconception)).toBe(true);
+    const twinNotes = (notes: unknown[]) => [choice("g1", { twin: { prompt: "Which, again?", options: ["d", "e", "f"], answer: "d", explain: "Again.", optionNotes: notes } })];
+    expect(schemaOk(twinNotes([optionNote("e"), optionNote("f", { misconception: "maths.prob.numerator-not-reduced" })]))).toBe(true);
+    for (const bad of [[optionNote("d")], [optionNote("x")], [optionNote("e"), optionNote("e")], [optionNote("e", { why: Array.from({ length: 41 }, () => "w").join(" ") })]]) {
+      expect(schemaOk(twinNotes(bad)), JSON.stringify(bad)).toBe(false);
+      expect(lintOk(twinNotes(bad)), JSON.stringify(bad)).toBe(true);
+    }
+  });
 });
 
 // The independent review of 27 Sep 2026: a choice gate may carry notes on its wrong options, and an inline See it a
@@ -164,11 +181,12 @@ describe("a choice gate's option notes and a See it's kind", () => {
     { name: "notes on a number gate", blocks: withNotes([note("b")], numberGate), ok: false },
     { name: "an inline See it of kind calculation", blocks: [...opening, h("Two"), see([step(1), step(2)], { kind: "calculation" }), choice("g1")], ok: true },
     { name: "an inline See it of an unknown kind", blocks: [...opening, h("Two"), see([step(1), step(2)], { kind: "anecdote" }), choice("g1")], ok: false },
+    { name: "a See it of every kind the enum names", blocks: SEE_KINDS.flatMap((kind, i) => [h(`S${i}`), p("Words."), see([step(1), step(2)], { kind }), choice(`k${i}`)]), ok: true },
   ];
   for (const c of cases) {
     it(`${c.ok ? "accepts" : "rejects"} ${c.name}`, () => {
       expect(schemaOk(c.blocks), "the schema").toBe(c.ok);
-      if (c.name.includes("unknown kind")) return; // the kind's values are the schema's shape; the lint does not read them
+      // The lint reads a See it's kind against the schema's own enum since 27 Sep (22:0x), so every case is judged alike.
       expect(lintOk(c.blocks), `the lint: ${lintNoteBlocks(c.blocks, "case", BUNDLE).join("; ")}`).toBe(c.ok);
     });
   }

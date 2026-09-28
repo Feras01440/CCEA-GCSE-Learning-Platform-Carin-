@@ -294,14 +294,18 @@ describe("per-line cooldown", () => {
     const resume = LINES.find((l) => l.id === "topic.resume");
     expect(resume?.cooldownDays).toBe(1);
     // Only information has its own cooldown: where she stopped, the paper she has just filed, tonight's facts on
-    // Today, and the first visit's fallback. Everything with a voice waits the fortnight.
+    // Today, the section she has just paused after, the first visit's fallback, and the stones placed in the sitting.
+    // Everything with a voice waits the fortnight, the lines that greet her by name included.
     const own = LINES.filter((l) => l.cooldownDays !== undefined).map((l) => l.id).sort();
     expect(own).toEqual([
+      "close.stone",
+      "close.stones",
       "mock.entered",
       "mock.quiet-week",
       "today.back-tonight",
       "today.first-up",
       "today.nothing-back",
+      "today.paused-done",
       "topic.first-kept",
       "topic.resume",
     ]);
@@ -325,6 +329,15 @@ describe("per-line cooldown", () => {
 /** The rendered words of a selection with the supplied values taken out: what Rowan itself said. */
 function ownWords(s: { text: string; values: Record<string, string> }): string {
   return withoutValues(s.text, s.values);
+}
+
+/**
+ * Every line in `pool` but `id` recorded as said just now, so the selector has only `id` left to say. Its own family (the
+ * same fact in another wording) is left out: a twin said tonight would hold it back until tomorrow, which is the rule.
+ */
+function othersSaid(c: CompanionContext, id: string, pool: Array<{ id: string; family?: string }>): Array<{ id: string; at: string }> {
+  const family = LINES.find((l) => l.id === id)?.family;
+  return pool.filter((l) => l.id !== id && !(family && l.family === family)).map((l) => ({ id: l.id, at: c.now.toISOString() }));
 }
 
 describe("day one (decision 3): Rowan is there from the first session", () => {
@@ -357,12 +370,21 @@ describe("day one (decision 3): Rowan is there from the first session", () => {
     }
   });
 
-  it("fresh install: on the Letter's first day it goes first, and the lesson's own prose is not held back", () => {
+  it("fresh install: on the Letter's first day it goes first on Today, and every other surface speaks (COMPANION-1)", () => {
     const c = ctx("fresh-install-day-one");
-    for (const moment of ["today-open", "evening", "topic-open", "session-close", "mock-entered"] as Moment[]) {
+    // Today's own slot waits for the Letter that day: the Letter carries Rowan's words on the tile's screen.
+    for (const moment of ["today-open", "evening"] as Moment[]) {
       expect(selectDetailed(moment, c).reason, moment).toBe("letter-first");
     }
     expect(selectAt("today-open", c)).toBeNull();
+    // Elsewhere nothing waits for a Close she may never tap: the hero, the close card and the paper line speak on night
+    // one (the audit found the first lesson silent with no hare when she went on without closing the Letter).
+    for (const moment of ["topic-open", "session-close"] as Moment[]) {
+      const r = selectDetailed(moment, c);
+      expect(r.reason, moment).not.toBe("letter-first");
+      expect(r.selection, moment).not.toBeNull();
+    }
+    expect(selectDetailed("mock-entered", c).reason).not.toBe("letter-first");
     // The second-miss support is the note's register, unsigned: it never waits for the Letter.
     const support = select("support", c);
     expect(support).not.toBeNull();
@@ -402,10 +424,11 @@ describe("day one (decision 3): Rowan is there from the first session", () => {
     expect(letter[2].text).toBe("Nothing to set up. Bounds is open, and the note teaches before it asks.");
   });
 
-  it("existing install: the Letter goes first only on its first day; the day after, Rowan speaks everywhere", () => {
+  it("existing install: the Letter goes first on Today only on its first day; the day after, Rowan speaks everywhere", () => {
     const first = ctx("existing-install-first-letter");
-    for (const moment of ["today-open", "topic-open", "session-close"] as Moment[]) {
-      expect(selectDetailed(moment, first).reason, moment).toBe("letter-first");
+    expect(selectDetailed("today-open", first).reason).toBe("letter-first");
+    for (const moment of ["topic-open", "session-close"] as Moment[]) {
+      expect(selectDetailed(moment, first).reason, moment).not.toBe("letter-first");
     }
     const next = ctx("existing-install-next-day");
     expect(next.flags.firstLetterDue).toBe(true);
@@ -455,10 +478,10 @@ describe("day one (decision 3): Rowan is there from the first session", () => {
 describe("two lines that could never be said, or said something untrue (found 23 Sep)", () => {
   it("says a line that opens with a count: the capital no longer hides the value from the lint", () => {
     const c = ctx("existing-install-next-day");
-    const back = select("today-open", { ...c, recentLines: candidatesFor("today-open").filter((l) => l.id !== "today.back-tonight").map((l) => ({ id: l.id, at: c.now.toISOString() })) });
+    const back = select("today-open", { ...c, recentLines: othersSaid(c, "today.back-tonight", candidatesFor("today-open")) });
     expect(back?.line.id).toBe("today.back-tonight");
     expect(back!.text).toBe("Nine back tonight. Two are the ones you were sure about.");
-    const first = select("today-open", { ...c, recentLines: candidatesFor("today-open").filter((l) => l.id !== "today.first-up").map((l) => ({ id: l.id, at: c.now.toISOString() })) });
+    const first = select("today-open", { ...c, recentLines: othersSaid(c, "today.first-up", candidatesFor("today-open")) });
     expect(first?.text).toBe("First up tonight: frustums.");
   });
 
@@ -537,10 +560,56 @@ describe("the Today slot says it is late first", () => {
       }
     }
     expect([...seen].sort()).toEqual([
-      "It is late and nothing is due. Anything new will keep for tomorrow.",
+      "It is late. Anything new will keep for tomorrow.",
       "It is late. One short one to finish on is plenty.",
       "It is late. One wee one to finish on is plenty.",
       "Whatever is due can be tomorrow’s. It will keep.",
     ]);
+  });
+});
+
+describe("late at night Today never pushes work (TODAY-2)", () => {
+  /** Every line the Today slot could say in this context: each candidate forced in turn by cooling all the others. */
+  function everyTodayLine(c: CompanionContext): Array<{ id: string; text: string }> {
+    const out: Array<{ id: string; text: string }> = [];
+    const pool = [...candidatesFor("evening"), ...candidatesFor("today-open")];
+    for (const line of pool) {
+      const s = selectAt("today-open", { ...c, recentLines: othersSaid(c, line.id, pool) });
+      if (s && s.line.id === line.id) out.push({ id: s.line.id, text: s.text });
+    }
+    return out;
+  }
+  const at = (name: FixtureName, iso: string) => buildCompanionContext({ ...FIXTURES[name], now: new Date(iso) });
+
+  it("with nothing due: only 'it will keep', never an invitation to something new and never 'one to finish on'", () => {
+    const late = at("topic-first-visit", "2026-10-01T00:24:00");
+    expect(late.flags.isLate && late.flags.noDue).toBe(true);
+    const said = everyTodayLine({ ...late, slots: { ...late.slots, nextTopicTitle: "Bounds" } });
+    const ids = said.map((s) => s.id);
+    expect(ids).toContain("evening.nothing-new");
+    for (const id of ["today.nothing-back", "evening.one-to-finish", "today.first-up", "today.back-tonight", "today.you-said", "today.days-then-note"]) {
+      expect(ids, id).not.toContain(id);
+    }
+    for (const s of said) expect(s.text, s.id).not.toMatch(/something new|new ground|is open|one to finish|first up/i);
+    // The tile already says nothing is back; the late line does not say it again.
+    expect(said.find((s) => s.id === "evening.nothing-new")!.text).toBe("It is late. Anything new will keep for tomorrow.");
+  });
+
+  it("with reviews due: it may say one short one is plenty, or that they will keep, and never names what to start with", () => {
+    const late = at("normal-evening", "2026-10-01T23:40:00");
+    expect(late.flags.isLate && late.flags.hasDue).toBe(true);
+    const ids = everyTodayLine(late).map((s) => s.id);
+    expect(ids).toEqual(expect.arrayContaining(["evening.will-keep", "evening.one-to-finish"]));
+    for (const id of ["today.first-up", "today.back-tonight", "today.you-said", "today.days-then-note", "today.nothing-back"]) {
+      expect(ids, id).not.toContain(id);
+    }
+  });
+
+  it("the same lines speak before 21:30 exactly as they did", () => {
+    const evening = at("normal-evening", "2026-10-01T19:20:00");
+    expect(evening.flags.isLate).toBe(false);
+    const ids = everyTodayLine(evening).map((s) => s.id);
+    expect(ids).toEqual(expect.arrayContaining(["today.first-up", "today.back-tonight", "today.quote-note"]));
+    expect(ids.some((id) => id.startsWith("evening."))).toBe(false);
   });
 });

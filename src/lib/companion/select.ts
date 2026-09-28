@@ -9,12 +9,14 @@
  *   3. the brother       his note is on this screen, so Rowan yields
  *   4. the work          an answer field or grading buttons are up, so nothing signed renders
  *   5. the Letter        on the day the first Letter is first offered, and until she reads it, it goes
- *                        first: the other signed lines wait. From the next day they speak regardless.
+ *                        first on Today: Today's own line waits. Every other surface speaks; from the
+ *                        next day Today's line speaks too.
  *   6. plain mode        the place language is off, so a line without a plain wording is skipped, and a
  *                        rendered line that would still carry the hills or the dialect is dropped
  *   7. the facts         a line whose slots the context cannot fill is skipped
  *   8. her words         a line that quotes her is skipped unless the quote came from a note she wrote
- *   9. the cooldown      a line used inside fourteen days is skipped, and silence is the fallback
+ *   9. the cooldown      a line used inside fourteen days is skipped (or its own shorter window), a line whose
+ *                        twin in the same family was said today is skipped, and silence is the fallback
  *  10. the constitution  the rendered line is linted, and a failure is silence, never a substitute
  *
  * Ranking, once a line is eligible: one that quotes her beats one tied to the moment, which beats a
@@ -79,7 +81,7 @@ export const SLOTS: Record<SlotId, SlotSpec> = {
     file: "src/components/companion/CompanionLine.tsx",
     moments: ["evening", "today-open"],
     unsigned: false,
-    props: "{ moment, context, onShown? }",
+    props: "{ moment, context, onShown?, standing?, fallback? }",
   },
   "first-letter": {
     slot: "first-letter",
@@ -141,6 +143,9 @@ export const SLOTS: Record<SlotId, SlotSpec> = {
 
 export const SLOT_IDS = Object.keys(SLOTS) as SlotId[];
 
+/** The moments Today's arrival slot says: the only ones that wait for the first Letter on its first day. */
+export const TODAY_MOMENTS: ReadonlySet<Moment> = new Set<Moment>(SLOTS["today-open"].moments);
+
 /**
  * Fills `{slot}` placeholders. A value that opens a sentence of the template ("{dueCount} back tonight.
  * {confidentWrongCount} are the ones…") gets a capital; anywhere else it is set exactly as supplied, so a
@@ -179,6 +184,12 @@ function conditionsHold(line: CompanionLineSpec, ctx: CompanionContext): boolean
   for (const f of line.notFlags ?? []) if (ctx.flags[f]) return false;
   for (const q of line.quotes ?? []) if (!ctx.quotedSlots.includes(q)) return false;
   return true;
+}
+
+/** Another wording of the same fact (the line's family) was said earlier today, so this one waits until tomorrow. */
+function familySaidToday(line: CompanionLineSpec, ctx: CompanionContext): boolean {
+  if (!line.family) return false;
+  return LINES.some((other) => other.family === line.family && other.id !== line.id && usedRecently(ctx.recentLines, other.id, ctx.now, 1));
 }
 
 function rank(line: CompanionLineSpec): number {
@@ -241,17 +252,21 @@ export function selectDetailed(moment: Moment, ctx: CompanionContext): SelectRes
   if (ctx.giftNoteOnScreen) return { selection: null, reason: "gift-note", rejected };
   if (ctx.questionVisible && !isUnsigned(moment)) return { selection: null, reason: "during-a-question", rejected };
   if (moment === "first-letter" && !ctx.flags.firstLetterDue) return { selection: null, reason: "no-eligible-line", rejected };
-  // It introduces itself before it says anything else, but only for the day the Letter is first offered:
-  // from the next day the signed lines speak whether or not she has opened it, and the Letter waits
-  // under Start. Unsigned prose inside the work is the note's register, not an introduction, so it is
-  // never held back for the Letter.
-  if (moment !== "first-letter" && !isUnsigned(moment) && ctx.flags.letterGoesFirst) {
+  // On Today it introduces itself before it says anything else, but only for the day the Letter is first
+  // offered: that day the Tonight tile's own line waits and the Letter below it carries Rowan's words. From
+  // the next day the arrival line speaks whether or not she has opened it, and the Letter waits under Start.
+  // Nothing anywhere else waits for the Letter (27 September 2026, the trial audit's COMPANION-1): on night
+  // one she may go straight from Today to her first lesson without the Close that sits below the phone's
+  // first screen, and the hero, the close card and the paper line spoke nothing all evening. Unsigned prose
+  // inside the work is the note's register, not an introduction, so it is never held back either.
+  if (TODAY_MOMENTS.has(moment) && ctx.flags.letterGoesFirst) {
     return { selection: null, reason: "letter-first", rejected };
   }
 
   const candidates = linesFor(moment)
     .filter((l) => conditionsHold(l, ctx))
     .filter((l) => !usedRecently(ctx.recentLines, l.id, ctx.now, l.cooldownDays ?? REPEAT_COOLDOWN_DAYS))
+    .filter((l) => !familySaidToday(l, ctx))
     .sort((a, b) => rank(b) - rank(a) || hash(a.id + ctx.today) - hash(b.id + ctx.today));
 
   for (const line of candidates) {

@@ -6,7 +6,7 @@ import { SlidesRun } from "@/components/slides/SlidesRun";
 import { displayTitle } from "@/components/topic/lesson-plan";
 import { allTopicParams, subjectInfo, topicInfo, unitInfo, type Subject } from "@/lib/content/taxonomy";
 import { contentFor } from "@/lib/content/load";
-import type { RetrievalPrompt } from "@/lib/content/schema";
+import type { RetrievalPrompt, WorkedExample } from "@/lib/content/schema";
 import { deckFor } from "@/lib/slides/deck";
 import { NO_TOPIC_READY, slidesReadyFor } from "@/lib/slides/ready";
 
@@ -30,11 +30,12 @@ export async function generateMetadata({ params }: { params: Promise<{ subject: 
   return { title: t ? `Slides · ${displayTitle(t.title)}` : "Slides" };
 }
 
-function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; prompts: RetrievalPrompt[] } | null {
+/** The shipped bundle's note, prompts and worked examples: a See it may name one of the worked examples. */
+function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; prompts: RetrievalPrompt[]; workedExamples: WorkedExample[] } | null {
   try {
     const file = path.join(process.cwd(), "public", "content", subject, `${topicId}.json`);
-    const b = JSON.parse(fs.readFileSync(file, "utf8")) as { noteBlocks?: unknown[] | null; prompts?: RetrievalPrompt[] };
-    return { noteBlocks: b.noteBlocks ?? [], prompts: b.prompts ?? [] };
+    const b = JSON.parse(fs.readFileSync(file, "utf8")) as { noteBlocks?: unknown[] | null; prompts?: RetrievalPrompt[]; workedExamples?: WorkedExample[] };
+    return { noteBlocks: b.noteBlocks ?? [], prompts: b.prompts ?? [], workedExamples: b.workedExamples ?? [] };
   } catch {
     return null;
   }
@@ -50,7 +51,11 @@ export default async function SlidesPage({ params }: { params: Promise<{ subject
   const file = shippedFor(subject, shipped.id);
   if (!file || file.noteBlocks.length === 0) notFound();
 
-  const deck = deckFor(shipped.id, file.noteBlocks, file.prompts);
+  const deck = deckFor(shipped.id, file.noteBlocks, file.prompts, file.workedExamples);
+  // A See it naming a worked example the bundle does not ship would be an empty card: the build's lint refuses such a
+  // note, and the export refuses to be built past one.
+  const missing = deck.cards.filter((c) => c.kind === "see" && c.see === null).map((c) => c.key);
+  if (missing.length > 0) throw new Error(`Slides for ${shipped.id}: a See it names a worked example the bundle does not ship (${missing.join(", ")})`);
   const firstHeading = (file.noteBlocks.find((b) => (b as { type?: string }).type === "h") as { text?: string } | undefined)?.text ?? null;
   const shown = displayTitle(t.title, firstHeading);
 

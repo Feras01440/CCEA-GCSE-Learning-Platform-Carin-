@@ -38,6 +38,14 @@ async function openTopic(page: Page, path: string): Promise<void> {
  * Slides first on a first visit, so it has no "Start the lesson" to wait for.
  */
 const TRIAL = { path: "/learn/further-maths/FM1/algebraic-fractions-simplify/", bundle: "/content/further-maths/fm.u1.algebraic-fractions-simplify.json" } as const;
+/**
+ * The trial note as the content session rewrote it to teach, then show, then check (25 Sep 2026): nine sections (seven
+ * that teach, the recap and "In the exam"), and its first check g2, in section 1; section 2's check is g12, and section
+ * 6 asks g10 then g11. The trial's design: a content edit that changes these changes them here too.
+ */
+const TRIAL_SECTIONS = 9;
+const TRIAL_FIRST_GATE = "g2";
+const TRIAL_SECOND_GATE = "g12";
 
 async function openTrial(page: Page): Promise<void> {
   await page.goto(TRIAL.path);
@@ -391,9 +399,9 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await page.setViewportSize({ width: 1280, height: 800 });
     await openTrial(page);
     const track = page.locator("[data-read-track]");
-    await expect(track.locator("p")).toContainText("1 of 7");
+    await expect(track.locator("p")).toContainText(`1 of ${TRIAL_SECTIONS}`);
     await expect(track.locator("p")).toContainText("Simplifying algebraic fractions");
-    await expect(track.locator("[data-segment]")).toHaveCount(7);
+    await expect(track.locator("[data-segment]")).toHaveCount(TRIAL_SECTIONS);
 
     const contents = track.getByRole("button", { name: /^Contents$/ });
     await expect(contents).toHaveAttribute("aria-expanded", "false");
@@ -401,7 +409,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await contents.click();
     await expect(contents).toHaveAttribute("aria-expanded", "true");
     const rows = track.locator("ol > li > button");
-    await expect(rows).toHaveCount(7);
+    await expect(rows).toHaveCount(TRIAL_SECTIONS);
     await expect(rows.first()).toHaveAttribute("aria-current", "location");
     await expect(track.getByRole("button", { name: /^Worked examples/ })).toBeVisible();
 
@@ -418,7 +426,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
       const a = document.activeElement as HTMLElement;
       return { gate: a.getAttribute("data-gate"), top: Math.round(a.getBoundingClientRect().top), bar: Math.round(document.querySelector("[data-read-track]")!.getBoundingClientRect().bottom) };
     });
-    expect(landed.gate).toBe("g1");
+    expect(landed.gate).toBe(TRIAL_FIRST_GATE);
     expect(landed.top, `the check at ${landed.top} px, the bar ends at ${landed.bar} px`).toBeGreaterThanOrEqual(landed.bar);
 
     // Never remembered open.
@@ -437,7 +445,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
 
     await answerGate(page, gates[0]);
     // The verdict takes the keyboard (the Check that had it is gone), and the section ends in its two ways on.
-    await expect(page.locator('#note [data-gate="g1"] [data-verdict-block]')).toBeFocused();
+    await expect(page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"] [data-verdict-block]`)).toBeFocused();
     const end = page.locator('#note [data-section-end="1"]');
     await expect(end.getByRole("button", { name: /^Continue/ })).toBeVisible();
     await expect(end.getByRole("link", { name: /^Pause here/ })).toHaveAttribute("href", "/");
@@ -451,7 +459,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     });
     expect(next.section, "the keyboard is on section 2's heading").toBe("1");
     expect(next.top, `the heading at ${next.top} px, the bar ends at ${next.bar} px`).toBeGreaterThan(next.bar);
-    await expect(page.locator("[data-read-track] p")).toContainText("2 of 7");
+    await expect(page.locator("[data-read-track] p")).toContainText(`2 of ${TRIAL_SECTIONS}`);
     await expect(page.locator("[data-read-track] [data-segment]").first()).toHaveAttribute("data-segment", "done");
 
     // Her place is kept: after a reload the lesson opens as far as she had come, and no further, and the hero's Read way
@@ -471,7 +479,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
   test("the gate answers to the keyboard: arrows choose, Enter checks, and Continue is the next stop", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await openTrial(page);
-    const gate = page.locator('#note [data-gate="g1"]');
+    const gate = page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"]`);
     const options = gate.getByRole("radio");
     // One stop for the group: the first option until one is chosen.
     await expect(options.nth(0)).toHaveAttribute("tabindex", "0");
@@ -484,8 +492,8 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await expect(options.nth(0)).toHaveAttribute("aria-checked", "true");
     // Nothing is marked until she checks. Down to the right answer, wherever the gate's order put it.
     await expect(gate.locator("[data-verdict]")).toHaveCount(0);
-    const g1 = (await trialGates(page)).find((g) => g.id === "g1")!;
-    const right = await optionAt(page, "g1", (v) => v === g1.answer);
+    const first = (await trialGates(page)).find((g) => g.id === TRIAL_FIRST_GATE)!;
+    const right = await optionAt(page, TRIAL_FIRST_GATE, (v) => v === first.answer);
     for (let i = 0; i < right; i += 1) await page.keyboard.press("ArrowDown");
     await expect(options.nth(right)).toHaveAttribute("aria-checked", "true");
     await page.keyboard.press("Enter");
@@ -526,20 +534,28 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
         });
       const near = (a: number | null, b: number) => expect(Math.abs((a ?? -99) - b), `${a} against ${b}`).toBeLessThanOrEqual(1);
 
-      // g1: a stem with no maths of its own line.
-      const g1 = await rhythm("g1");
-      expect(g1.stem).toBe(size.stem);
-      near(g1.toAnswer, size.toAnswer);
-      for (const h of g1.heights) expect(h).toBeGreaterThanOrEqual(52);
-      for (const gap of g1.gaps) near(gap, 10);
+      // g2, the first check: its fraction ends the question and stands on its own line.
+      const g2 = await rhythm("g2");
+      expect(g2.stem).toBe(size.stem);
+      expect(g2.maths).toBe(size.maths);
+      near(g2.stemToMaths, size.stemToMaths);
+      near(g2.toAnswer, size.toAnswer);
 
-      // On to g4, whose fraction ends its instruction and stands on its own line.
-      await answerGate(page, byId.g1);
-      await page.locator("#note [data-continue]").click();
+      // g12, section 2's check: a stem with no maths of its own line.
       await answerGate(page, byId.g2);
       await page.locator("#note [data-continue]").click();
-      await answerGate(page, byId.g7);
-      await answerGate(page, byId.g3);
+      const g12 = await rhythm("g12");
+      expect(g12.stem).toBe(size.stem);
+      near(g12.toAnswer, size.toAnswer);
+      for (const h of g12.heights) expect(h).toBeGreaterThanOrEqual(52);
+      for (const gap of g12.gaps) near(gap, 10);
+
+      // On to g4 (section 5), whose fraction ends its instruction and stands on its own line.
+      await answerGate(page, byId.g12);
+      await page.locator("#note [data-continue]").click();
+      await answerGate(page, byId.g9);
+      await page.locator("#note [data-continue]").click();
+      await answerGate(page, byId.g13);
       await page.locator("#note [data-continue]").click();
       const g4 = await rhythm("g4");
       expect(g4.stem).toBe(size.stem);
@@ -547,15 +563,15 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
       near(g4.stemToMaths, size.stemToMaths);
       near(g4.toAnswer, size.toAnswer);
 
-      // g6: the words after the maths come back at the same gap, then the answer.
+      // g11 (section 6, after g10): the words after the maths come back at the same gap, then the answer.
       await answerGate(page, byId.g4);
       await page.locator("#note [data-continue]").click();
-      await answerGate(page, byId.g5);
-      const g6 = await rhythm("g6");
-      expect(g6.maths).toBe(size.maths);
-      near(g6.stemToMaths, size.stemToMaths);
-      near(g6.mathsToTail, size.stemToMaths);
-      near(g6.toAnswer, size.toAnswer);
+      await answerGate(page, byId.g10);
+      const g11 = await rhythm("g11");
+      expect(g11.maths).toBe(size.maths);
+      near(g11.stemToMaths, size.stemToMaths);
+      near(g11.mathsToTail, size.stemToMaths);
+      near(g11.toAnswer, size.toAnswer);
     });
   }
 
@@ -563,11 +579,10 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await page.setViewportSize({ width: 390, height: 844 });
     await openTrial(page);
     const gates = await trialGates(page);
-    await answerGate(page, gates[0]);
-    await page.locator("#note [data-continue]").click();
-    await answerGate(page, gates[1], false);
+    // g2, the first check, carries the drawn consequence (x = 1 into both): miss it.
+    await answerGate(page, gates.find((g) => g.id === TRIAL_FIRST_GATE)!, false);
 
-    const box = page.locator('#note [data-gate="g2"]');
+    const box = page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"]`);
     await expect(box.locator('[data-option="ok"]')).toHaveCount(1);
     await expect(box.locator('[data-option="ok"]')).toHaveAttribute("aria-checked", "false");
     await expect(box.locator('[data-option="miss"]')).toHaveCount(1);
@@ -712,10 +727,11 @@ test.describe("Focus: the ring follows the keyboard, not the page", () => {
       expect(await ringOf(heading), `after ${JSON.stringify(key)}`).toMatchObject({ style: "none", shadow: "none" });
     }
 
-    // Tab moves the keyboard on: the next control, g2's first option, wears the accent ring.
+    // Tab moves the keyboard on: the next control, section 2's check's first option (past its figure, which is not a
+    // control), wears the accent ring.
     await page.keyboard.press("Tab");
     await expect(html).toHaveAttribute("data-input", "keyboard");
-    const option = page.locator('#note [data-gate="g2"] [role=radio][tabindex="0"]');
+    const option = page.locator(`#note [data-gate="${TRIAL_SECOND_GATE}"] [role=radio][tabindex="0"]`);
     await expect(option).toBeFocused();
     expect(await ringOf(option)).toMatchObject({ style: "solid", width: "2px", accent: true });
   });
@@ -809,13 +825,16 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
     expect(ways.map((w) => [w.way, w.accent])).toEqual([["slides", true], ["read", false]]);
     expect(await painted(), "a first visit never shows Read on the accent").toEqual(["slides:accent read:outline"]);
 
-    // Evidence, and no choice: g1 answered in Read under the hero, and a mastery row from an earlier week.
+    // Evidence, and no choice: the first check answered in Read under the hero and Continue pressed (so section 2 is
+    // where she is: a check answered alone keeps her in its section, audit READ-9), and a mastery row from an earlier week.
     const gates = await trialGates(page);
     await answerGate(page, gates[0]);
+    await page.locator('#note [data-section-end="1"] [data-continue]').click();
+    await expect(page.locator("#note [data-lesson-section]")).toHaveCount(2);
     await expect
       .poll(() =>
         page.evaluate(
-          () =>
+          (first) =>
             new Promise<number>((resolve) => {
               const open = indexedDB.open("ccea-study");
               open.onerror = () => resolve(-1);
@@ -824,11 +843,12 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
                 const all = db.transaction("attempts").objectStore("attempts").getAll();
                 all.onsuccess = () => {
                   db.close();
-                  resolve((all.result as Array<{ itemId: string }>).filter((r) => r.itemId.endsWith("#gate:g1")).length);
+                  resolve((all.result as Array<{ itemId: string }>).filter((r) => r.itemId.endsWith(`#gate:${first}`)).length);
                 };
                 all.onerror = () => resolve(-1);
               };
             }),
+          gates[0].id,
         ),
       )
       .toBe(1);
@@ -894,18 +914,21 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
     const num = (text: string, re: RegExp) => Number(re.exec(text)?.[1] ?? Number.NaN);
     const slidesLine = (await page.locator(`${MAIN} header [data-way-length="slides"]`).textContent()) ?? "";
     const readLine = (await page.locator(`${MAIN} header [data-way-length="read"]`).textContent()) ?? "";
-    // Each way is one short line ("Slides · 23 cards · about 10 min"; the sr-only ": " and ", " sit between), and a
+    // Each way is one short line ("Slides · 36 cards · about 21 min"; the sr-only ": " and ", " sit between), and a
     // video with no stated length is named once beside the facts, not on each way (audit LD-21: the hero's figure
     // must stay on the first screen at 390).
     expect(slidesLine).toMatch(/^Slides\s*·\s*:?\s*\d+ cards\s*·\s*,?\s*about \d+ min$/);
     expect(readLine).toMatch(/^Read\s*·\s*:?\s*\d+ sections\s*·\s*,?\s*about \d+ min$/);
-    const videoFact = (await page.locator(`${MAIN} header [data-hero-promise] [data-video-fact]`).textContent().catch(() => "")) ?? "";
+    // Since 25 Sep the trial's video states its length, so the hero names no untimed video: read the fact only if it is
+    // there (a locator's textContent waits for its element, and this one is absent).
+    const videoFactEl = page.locator(`${MAIN} header [data-hero-promise] [data-video-fact]`);
+    const videoFact = (await videoFactEl.count()) > 0 ? ((await videoFactEl.first().textContent()) ?? "") : "";
     const plus = / ?plus [a-z ]*videos?/.exec(videoFact)?.[0].replace(/^ ?/, " ") ?? "";
     if (videoFact) expect(videoFact, "the untimed video is named as not timed").toMatch(/^plus [a-z ]*videos?, not timed$/);
     const slides = { minutes: num(slidesLine, /about (\d+) min/), cards: num(slidesLine, /(\d+) cards/) };
     const read = { minutes: num(readLine, /about (\d+) min/), sections: num(readLine, /(\d+) sections/) };
 
-    // Read's numbers are the track's: "1 of 7", and the Contents heading's minutes with the same video named.
+    // Read's numbers are the track's: "1 of 9", and the Contents heading's minutes (with the same video named, were one untimed).
     const track = page.locator("[data-read-track]");
     await expect(track.locator("p").first()).toContainText(`1 of ${read.sections}`);
     await track.getByRole("button", { name: /^Contents$/ }).click();
@@ -1036,10 +1059,10 @@ test.describe("The lesson's end: one accent-filled control on the screen", () =>
     const segments = page.locator("[data-read-track] [data-segment]");
     await page.locator("#note [data-finish]").click();
     await expect(page.locator("#examples")).toBeFocused();
-    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(7).fill("done"));
+    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(TRIAL_SECTIONS).fill("done"));
     await page.reload();
     await expect(page.locator("#note article")).toBeVisible();
-    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(7).fill("done"));
+    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(TRIAL_SECTIONS).fill("done"));
   });
 });
 
@@ -1187,5 +1210,401 @@ test.describe("The cairn: the redrawn one everywhere", () => {
       await expect(page.locator("nav[aria-label='Primary']:visible svg").first()).toBeVisible();
       expect(await oldCairns(page), path).toBe(0);
     }
+  });
+});
+
+/* ----------------------------------------------------------------------------------------------------------------------
+ * The trial audit's Read flow (measured on build 8, 25 Sep; fixed 27 Sep by the read-flow agent). Each describe names
+ * its row. Structure is read from the served bundle (which sections hold two checks or a video), never hard-coded.
+ * -------------------------------------------------------------------------------------------------------------------- */
+
+const TRIAL_ID = "fm.u1.algebraic-fractions-simplify";
+
+/** The Read v2 sections open, by number. */
+async function openSections(page: Page): Promise<number[]> {
+  return page.locator("#note [data-lesson-section]").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-lesson-section"))));
+}
+
+/** The track's segments, a letter each: d(one), h(ere), r(est). */
+async function segmentsOf(page: Page): Promise<string> {
+  return page.locator("[data-read-track] [data-segment]").evaluateAll((els) => els.map((e) => (e.getAttribute("data-segment") ?? "?")[0]).join(""));
+}
+
+/** Her kept place and the lesson she last worked in, as the page wrote them for Today (read-place.ts). */
+async function keptPlace(page: Page) {
+  return page.evaluate((id) => {
+    const parse = (raw: string | null) => (raw ? JSON.parse(raw) : null);
+    return { place: parse(localStorage.getItem(`cairn.read.place.${id}`)), last: parse(localStorage.getItem("cairn.read.last")) };
+  }, TRIAL_ID);
+}
+
+/** The trial note's sections as Read numbers them (one per heading): their checks, and whether they hold a video. */
+async function trialSections(page: Page): Promise<Array<{ n: number; gates: string[]; video: boolean }>> {
+  return page.evaluate(async (url) => {
+    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; id?: string }> };
+    const out: Array<{ n: number; gates: string[]; video: boolean }> = [];
+    for (const block of b.noteBlocks) {
+      if (block.type === "h") out.push({ n: out.length + 1, gates: [], video: false });
+      else if (out.length > 0 && block.type === "gate") out[out.length - 1].gates.push(block.id ?? "");
+      else if (out.length > 0 && block.type === "video") out[out.length - 1].video = true;
+    }
+    return out;
+  }, TRIAL.bundle);
+}
+
+/** Answers every check on the page and presses Continue until section `n` is open (the section she is in). */
+async function readOnTo(page: Page, n: number): Promise<void> {
+  const gates = await trialGates(page);
+  for (let step = 0; step < 40; step += 1) {
+    const open = Math.max(...(await openSections(page)));
+    if (open >= n) return;
+    const pending = await page.evaluate(() => Array.from(document.querySelectorAll("#note [data-gate]")).find((el) => !el.querySelector("[data-verdict]"))?.getAttribute("data-gate") ?? null);
+    if (pending) {
+      await answerGate(page, gates.find((g) => g.id === pending)!);
+      continue;
+    }
+    await page.locator(`#note [data-section-end="${open}"] [data-continue]`).click();
+    await expect.poll(async () => Math.max(...(await openSections(page)))).toBe(open + 1);
+  }
+  throw new Error(`could not read on to section ${n}`);
+}
+
+/** An element's top edge on the screen, in whole px. */
+const topOf = (locator: ReturnType<Page["locator"]>) => locator.evaluate((el) => Math.round(el.getBoundingClientRect().top));
+
+/** Where the Read track ends on the screen. */
+const trackBottom = (page: Page) => page.evaluate(() => Math.round(document.querySelector("[data-read-track]")!.getBoundingClientRect().bottom));
+
+test.describe("Read v2: her place is kept by her own Continue and Pause here (audit READ-9, READ-12)", () => {
+  test("a check answered is not a Continue; Continue and Pause here move her on; the page, the track, the hero and Today's record agree", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await openTrial(page);
+    const gates = await trialGates(page);
+    const byId = Object.fromEntries(gates.map((g) => [g.id, g]));
+
+    // Build 8: the first check answered and a reload opened section 2 and placed section 1's segment.
+    await answerGate(page, byId[TRIAL_FIRST_GATE]);
+    await page.reload();
+    await expect(page.locator("#note article")).toBeVisible();
+    await expect.poll(() => openSections(page)).toEqual([1]);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(() => segmentsOf(page)).toMatch(/^h/);
+    expect((await keptPlace(page)).place).toMatchObject({ v: 1, topicId: TRIAL_ID, total: TRIAL_SECTIONS, open: 1, finished: false, pausedAt: null });
+
+    // Her Continue moves her on, and a reload keeps it.
+    await page.locator('#note [data-section-end="1"] [data-continue]').click();
+    await expect.poll(() => openSections(page)).toEqual([1, 2]);
+    await page.reload();
+    await expect(page.locator("#note article")).toBeVisible();
+    await expect.poll(() => openSections(page)).toEqual([1, 2]);
+
+    // Pause here at the end of section 2: "the lesson opens at the next section", and Today can say so.
+    await answerGate(page, byId[TRIAL_SECOND_GATE]);
+    await page.locator('#note [data-section-end="2"]').getByRole("link", { name: /^Pause here/ }).click();
+    await expect(page).not.toHaveURL(/algebraic-fractions-simplify/);
+    const kept = await keptPlace(page);
+    expect(kept.place).toMatchObject({ open: 3, finished: false });
+    expect(kept.place.pausedAt, "Pause here was the last thing she did").toBe(kept.place.updatedAt);
+    expect(kept.last).toEqual({ topicId: TRIAL_ID, at: kept.place.updatedAt });
+
+    // Next time: section 3 open and nothing after it; two segments placed; the hero names section 3.
+    await openTrial(page);
+    await expect.poll(() => openSections(page)).toEqual([1, 2, 3]);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(() => segmentsOf(page)).toMatch(/^dd[^d]/);
+    await expect(page.locator(`${MAIN} header button[data-way="read"]`)).toHaveText("Read on from section 3");
+    await expect(page.locator("#note [data-finish]")).toHaveCount(0);
+
+    // Today's way back is the page with #resume: it lands on section 3's heading, under the track, keyboard there.
+    await page.goto("/learn/");
+    await page.goto(`${TRIAL.path}#resume`);
+    const heading = page.locator('#note [data-lesson-section="3"] [data-section]');
+    await expect(heading).toBeFocused();
+    await expect.poll(async () => (await topOf(heading)) - (await trackBottom(page))).toBeGreaterThan(0);
+  });
+});
+
+test.describe("Read v2: a reload or a Back brings her back to where she was reading (audit READ-11)", () => {
+  for (const size of [
+    { width: 390, height: 844 },
+    { width: 1280, height: 800 },
+  ]) {
+    test(`at ${size.width} x ${size.height}: the same block, where it stood on the screen`, async ({ page }) => {
+      await page.setViewportSize(size);
+      await openTrial(page);
+      await readOnTo(page, 3);
+      // She reads on into section 3; the page keeps the block at the reading line a moment after she stops scrolling.
+      const block = page.locator('#note [data-lesson-section="3"] > :nth-child(2)');
+      await block.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 140));
+      await page.waitForTimeout(600);
+      const before = await topOf(block);
+      // Build 8: y 3332 -> 11164 at 1280 (the page's end), 3660 -> 1008 at 390 (the hero's objectives).
+      await page.reload();
+      await expect(page.locator("#note article")).toBeVisible();
+      await expect.poll(async () => Math.abs((await topOf(block)) - before), { message: `the block back at ${before} px` }).toBeLessThanOrEqual(2);
+      expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(size.height);
+
+      // Pause here, Today, then the browser's Back (build 8 at 390: 2937 -> 5361, inside "See it").
+      const end = page.locator('#note [data-section-end="2"]');
+      await end.getByRole("link", { name: /^Pause here/ }).scrollIntoViewIfNeeded();
+      await page.waitForTimeout(600);
+      const atPause = await topOf(end);
+      await end.getByRole("link", { name: /^Pause here/ }).click();
+      await expect(page).not.toHaveURL(/algebraic-fractions-simplify/);
+      await page.goBack();
+      await expect(page.locator("#note article")).toBeVisible();
+      await expect.poll(async () => Math.abs((await topOf(end)) - atPause), { message: `section 2's end back at ${atPause} px` }).toBeLessThanOrEqual(2);
+    });
+  }
+});
+
+test.describe("The hero names the section she is in, and its Read button lands there (audit HERO-1)", () => {
+  test("stopped between the two checks of a section, the hero names that section, not the next, and lands on its heading", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    const sections = await trialSections(page);
+    const two = sections.find((s) => s.gates.length >= 2);
+    expect(two, "the trial note has a section with two checks").toBeTruthy();
+    await readOnTo(page, two!.n);
+    await answerGate(page, (await trialGates(page)).find((g) => g.id === two!.gates[0])!);
+
+    // A new visit (build 8: "Read on from section 4" and Rowan's "Section 4 is where you stopped", with section 3's
+    // second check waiting; the button then landed on the lesson's top, 2,560 to 3,013 px above that check).
+    await openTrial(page);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const read = page.locator(`${MAIN} header button[data-way="read"]`);
+    await expect(read).toHaveText(`Read on from section ${two!.n}`);
+    const rowan = (await page.locator(`${MAIN} header [data-companion="topic-open"]`).count()) > 0 ? await page.locator(`${MAIN} header [data-companion="topic-open"]`).textContent() : "";
+    const named = /section (\d+)/i.exec(rowan ?? "")?.[1];
+    if (named) expect(Number(named), `Rowan: ${rowan}`).toBe(two!.n);
+
+    await read.click();
+    const heading = page.locator(`#note [data-lesson-section="${two!.n}"] [data-section]`);
+    await expect(heading).toBeFocused();
+    await expect.poll(async () => (await topOf(heading)) - (await trackBottom(page))).toBeGreaterThan(0);
+    await expect(page.locator(`#note [data-lesson-section="${two!.n}"] [data-gate="${two!.gates[1]}"]`)).toBeVisible();
+    await expect(page.locator(`#note [data-lesson-section="${two!.n + 1}"]`)).toHaveCount(0);
+  });
+});
+
+test.describe("On a phone the tab bar never covers what she needs next (audit READ-10)", () => {
+  test("after Check the section's Continue stands above the tab bar, and Tab from the verdict reaches it uncovered", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    const first = (await trialGates(page)).find((g) => g.id === TRIAL_FIRST_GATE)!;
+    await answerGate(page, first);
+    const cont = page.locator('#note [data-section-end="1"] [data-continue]');
+    await expect(cont).toBeVisible();
+    // Build 8: Continue at 780-832 under a bar that starts at 787; 7 px of it showed.
+    await expect
+      .poll(() =>
+        cont.evaluate((el) => {
+          const bar = document.querySelector("[data-tab-bar]")!.getBoundingClientRect();
+          return Math.round(el.getBoundingClientRect().bottom - bar.top);
+        }),
+      )
+      .toBeLessThanOrEqual(0);
+    await expect(page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"] [data-verdict-block]`)).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(cont).toBeFocused();
+    const covered = await cont.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return hit !== null && !el.contains(hit) ? (hit.closest("nav")?.getAttribute("aria-label") ?? hit.tagName) : null;
+    });
+    expect(covered, "what covers the focused Continue").toBeNull();
+  });
+});
+
+test.describe("Offline, a section's video says so and opens no blank player (audit READ-14)", () => {
+  test("the row names the connection, is not a button, and plays again once she is back online", async ({ page, context }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    const withVideo = (await trialSections(page)).find((s) => s.video);
+    expect(withVideo, "the trial note has a section with a video").toBeTruthy();
+    await readOnTo(page, withVideo!.n);
+    const row = page.locator(`#note [data-lesson-section="${withVideo!.n}"] [data-video]`).first();
+    await expect(row).toHaveAttribute("data-video-state", "ready");
+
+    await context.setOffline(true);
+    await expect(row).toHaveAttribute("data-video-state", "offline");
+    await expect(row.locator("[data-video-offline]")).toContainText("No connection, so this video cannot play here.");
+    await expect(row.getByRole("button", { name: /^Play video/ })).toHaveCount(0);
+    await expect(row.locator("iframe")).toHaveCount(0);
+
+    await context.setOffline(false);
+    await expect(row.getByRole("button", { name: /^Play video/ })).toBeVisible();
+    await expect(row.locator("[data-video-offline]")).toHaveCount(0);
+  });
+});
+
+test.describe("The exam-style close is not signed below live answer fields (audit READ-15)", () => {
+  test("after the exam-style run, nothing of Rowan's stands after the page's first answer field", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(`${TRIAL.path}#exam`);
+    await expect(page.locator("#exam")).toBeFocused();
+    const answers = ["2(x-2)/(x+3)", "3(x+3)(x-3)", "3(x+3)/(x+5)"];
+    const exam = page.locator("#exam");
+    for (let step = 0, k = 0; step < 24; step += 1) {
+      if (/Exam-style complete/.test((await exam.textContent()) ?? "")) break;
+      const field = exam.locator("input[type=text], input:not([type]), input[inputmode]").first();
+      const next = exam.getByRole("button", { name: /^(Next part|Next question|Finish|Done)/ }).first();
+      if (k < answers.length && (await field.count()) > 0 && (await field.isVisible()) && (await field.isEditable())) {
+        await field.fill(answers[k]);
+        k += 1;
+        const check = exam.getByRole("button", { name: /^Check/ }).first();
+        if ((await check.count()) > 0) await check.click();
+        else await field.press("Enter");
+      } else if ((await next.count()) > 0) await next.click();
+      else break;
+    }
+    await expect(exam).toContainText("Exam-style complete");
+    const misplaced = await page.evaluate(() => {
+      const first = document.querySelector("main :is(input, textarea, select, [role=radio], [role=textbox])");
+      return Array.from(document.querySelectorAll("main :is([data-companion], [data-companion-figure])"))
+        .filter((c) => first !== null && Boolean(first.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING))
+        .map((c) => c.getAttribute("data-companion") ?? `figure:${c.getAttribute("data-companion-figure")}`);
+    });
+    expect(misplaced, "companion slots after the first answer field").toEqual([]);
+  });
+});
+
+/** WCAG contrast of an element's text against the surface under it (lch() and friends resolved on a canvas). */
+async function contrastOf(locator: ReturnType<Page["locator"]>): Promise<number> {
+  return locator.evaluate((el) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+    const rgba = (c: string) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = "rgba(0,0,0,0)";
+      ctx.fillStyle = c;
+      ctx.fillRect(0, 0, 1, 1);
+      const d = ctx.getImageData(0, 0, 1, 1).data;
+      return [d[0], d[1], d[2], d[3] / 255];
+    };
+    const over = (top: number[], under: number[]) => [0, 1, 2].map((i) => top[i] * top[3] + under[i] * (1 - top[3])).concat(1);
+    let bg = [255, 255, 255, 1];
+    const layers: number[][] = [];
+    for (let e: Element | null = el; e; e = e.parentElement) {
+      const c = rgba(getComputedStyle(e).backgroundColor);
+      if (c[3] > 0) layers.push(c);
+      if (c[3] >= 1) break;
+    }
+    for (let i = layers.length - 1; i >= 0; i -= 1) bg = over(layers[i], bg);
+    const fg = over(rgba(getComputedStyle(el).color), bg);
+    const lin = (v: number) => (v / 255 <= 0.04045 ? v / 255 / 12.92 : Math.pow((v / 255 + 0.055) / 1.055, 2.4));
+    const lum = (c: number[]) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2]);
+    const [a, b] = [lum(fg), lum(bg)];
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  });
+}
+
+test.describe("Text on the subject's wash keeps 4.5:1 in every theme (audit READ-17)", () => {
+  for (const theme of ["light", "dark", "evening"] as const) {
+    test(`${theme}: the Contents row she is on, and the Slides title card's locator`, async ({ page }) => {
+      await page.addInitScript((t) => localStorage.setItem("cairn.theme", t), theme);
+      await page.setViewportSize({ width: 390, height: 844 });
+      await openTrial(page);
+      await page.locator("[data-read-track]").getByRole("button", { name: /^Contents$/ }).click();
+      // Build 8: "1 min" in ink-3 on the row's wash, 4.44:1 light, 4.33:1 evening, 3.90:1 dark.
+      const minutes = page.locator('[data-read-track] ol button[aria-current="location"] > span').last();
+      await expect(minutes).toHaveText(/\d+ min/);
+      expect(await contrastOf(minutes), "the current row's minutes").toBeGreaterThanOrEqual(4.5);
+
+      await page.goto(`${TRIAL.path}slides/`);
+      const locator = page.locator('[data-card="title"] p.uppercase:visible').first();
+      await expect(locator).toBeVisible();
+      expect(await contrastOf(locator), "the title card's locator on the wash").toBeGreaterThanOrEqual(4.5);
+    });
+  }
+});
+
+test.describe("Grading buttons are tapped hundreds of times: 52 px (audit READ-22)", () => {
+  for (const width of [390, 1280]) {
+    test(`at ${width}: Again, Good and Easy after Show answer`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await openTrial(page);
+      const prompt = page.locator("#prompts section[aria-label$='prompt']").first();
+      await prompt.getByRole("button", { name: /^Show answer$/ }).click();
+      const grades = prompt.getByRole("group", { name: "How did it go?" }).getByRole("button");
+      await expect(grades).toHaveCount(3);
+      // Build 8: 44 px, the unlayered .tap floor beating the buttons' own min-h-[52px].
+      for (const h of await grades.evaluateAll((els) => els.map((b) => b.getBoundingClientRect().height))) expect(h).toBeGreaterThanOrEqual(52);
+    });
+  }
+});
+
+test.describe("With motion allowed, only transform and opacity ever animate (audit READ-24)", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("hovering, choosing and checking a Read gate's option changes its colours at once", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await openTrial(page);
+    const first = (await trialGates(page)).find((g) => g.id === TRIAL_FIRST_GATE)!;
+    const box = page.locator(`#note [data-gate="${first.id}"]`);
+    const wrong = await optionAt(page, first.id, (v) => v !== first.answer);
+    const transitions = () =>
+      page.evaluate(() =>
+        document
+          .getAnimations()
+          .filter((a) => a instanceof CSSTransition)
+          .map((a) => (a as CSSTransition).transitionProperty)
+          .filter((p) => !["transform", "translate", "scale", "rotate", "opacity"].includes(p)),
+      );
+    // Build 8: a 150 ms background-color on hover, four border colours on choosing, both again on Check.
+    await box.getByRole("radio").nth(wrong).hover();
+    expect(await transitions(), "on hover").toEqual([]);
+    await box.getByRole("radio").nth(wrong).click();
+    expect(await transitions(), "on choosing").toEqual([]);
+    await box.getByRole("button", { name: /^Check$/ }).click();
+    expect(await transitions(), "on Check").toEqual([]);
+  });
+});
+
+/**
+ * The smallest character, in px, of a stacked fraction (the element itself, or every one inside it): KaTeX's atoms
+ * that draw a character (struts and zero-width spacers left out). `scripts: false` leaves out powers and indices.
+ */
+const smallestFractionGlyph = (locator: ReturnType<Page["locator"]>, { scripts = true }: { scripts?: boolean } = {}) =>
+  locator.evaluate(
+    (el, withScripts) => {
+      const fractions = el.matches(".mfrac") ? [el] : Array.from(el.querySelectorAll(".katex-html .mfrac"));
+      const sizes = fractions
+        .flatMap((f) => Array.from(f.querySelectorAll(":is(.mord, .mbin, .mrel, .mopen, .mclose, .mpunct, .mop)")))
+        .filter((s) => s.children.length === 0 && Array.from(s.textContent ?? "").some((ch) => ch.trim() !== "" && ch.charCodeAt(0) !== 0x200b))
+        .filter((s) => withScripts || !s.closest(".msupsub"))
+        .map((s) => parseFloat(getComputedStyle(s).fontSize));
+      return sizes.length ? Math.min(...sizes) : 0;
+    },
+    scripts,
+  );
+
+test.describe("The expression a question is about is legible (audit READ-18, READ-19)", () => {
+  test("a find-the-mistake stem and a retrieval prompt set their fraction at 13 px or more", async ({ page }) => {
+    // Needs the item components' patch (the read-flow agent's report): build 8 set these at 11.55 and 12.32 px. The
+    // fraction each is about is its first one, before the working she marks or the field she types in.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page);
+    const stem = page.locator("#mistakes section[aria-label='Find the mistake']").first().locator(".katex-html .mfrac").first();
+    await expect(stem).toBeVisible();
+    expect(await smallestFractionGlyph(stem), "the find-the-mistake stem").toBeGreaterThanOrEqual(13);
+    const prompt = page.locator("#prompts section[aria-label$='prompt']").filter({ has: page.locator(".mfrac") }).first().locator(".katex-html .mfrac").first();
+    await expect(prompt).toBeVisible();
+    expect(await smallestFractionGlyph(prompt), "the retrieval prompt").toBeGreaterThanOrEqual(13);
+  });
+
+  test("a miss card's expected answer is never the smallest text on the card", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${TRIAL.path}#exam`);
+    const exam = page.locator("#exam");
+    const field = exam.locator("input[type=text], input:not([type]), input[inputmode]").first();
+    await field.fill("2");
+    await exam.getByRole("button", { name: /^Check/ }).first().click();
+    const expected = exam.locator("dt", { hasText: /^Expected$/ }).locator("xpath=following-sibling::dd[1]");
+    await expect(expected).toBeVisible();
+    const text = await expected.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    // Build 8: 11.55 px glyphs beside 15 px words (inline \frac); the engine now sets it as \dfrac (spec-map.ts).
+    expect(await smallestFractionGlyph(expected, { scripts: false })).toBeGreaterThanOrEqual(Math.max(13, text - 0.5));
   });
 });

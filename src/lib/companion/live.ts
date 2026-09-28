@@ -22,7 +22,7 @@
 
 import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { getDB, type ReviewCard } from "@/lib/db/db";
+import { getDB, type ReviewCard, type TopicMastery } from "@/lib/db/db";
 import { topicsFor, unitsFor, type Subject } from "@/lib/content/taxonomy";
 import { DEFAULT_PLAN, upcomingPapers, type ExamPlan } from "@/lib/plan/exam-plan";
 import { loadPlan } from "@/lib/plan/store";
@@ -87,6 +87,23 @@ export function titlesForCards(cards: ReviewCard[]): Record<string, string> {
   return out;
 }
 
+/**
+ * Catalogue titles and units for every topic she has proved, so a stone placed in the sitting can be said with what was
+ * proved and the unit it goes on, on a close with no topic of its own (the trial audit's COMPANION-6).
+ */
+export function namesForProved(mastery: TopicMastery[]): { titles: Record<string, string>; units: Record<string, string> } {
+  const titles: Record<string, string> = {};
+  const units: Record<string, string> = {};
+  for (const m of mastery) {
+    if (m.level !== "proficient" && m.level !== "mastered") continue;
+    const entry = topicEntry(m.subject, m.topicSlug);
+    if (!entry) continue;
+    titles[m.topicSlug] = entry.title;
+    units[`${m.subject}:${m.topicSlug}`] = entry.unit;
+  }
+  return { titles, units };
+}
+
 /** A filed mock with its unit's topic slugs, so what comes back can be counted for that unit alone. */
 export function withUnitTopics(mock: MockContextInput): MockContextInput {
   if (mock.topicSlugs) return mock;
@@ -110,6 +127,7 @@ export async function readCompanionRows(now: Date) {
     db.settings.get("firstRunDone"),
   ]);
   const due = cards.filter((c) => c.due.getTime() <= now.getTime());
+  const proved = namesForProved(mastery);
   return {
     plan: plan as ExamPlan,
     state: stateRead.state,
@@ -118,7 +136,8 @@ export async function readCompanionRows(now: Date) {
     attempts,
     dueCards: inInboxOrder(due, plan as ExamPlan, now),
     futureCards: cards.filter((c) => c.due.getTime() > now.getTime()),
-    topicTitles: titlesForCards(cards),
+    topicTitles: { ...titlesForCards(cards), ...proved.titles },
+    topicUnits: proved.units,
     sessions,
     notes,
     firstRunDone: firstRun?.value === true,
@@ -128,17 +147,23 @@ export async function readCompanionRows(now: Date) {
 /**
  * The live context, or `undefined` while it loads. Every component treats `undefined` as silence,
  * so nothing ever flashes in and out on first paint.
+ *
+ * `enabled` false holds the read back (the context stays `undefined`) until the caller is ready: Today waits for its
+ * review cards to be settled (src/lib/review/withdrawn.ts) so that Rowan's facts are the settled ones, never the cards a
+ * moment before a withdrawn item's card was moved or retired.
  */
-export function useCompanionContext(overrides: Partial<CompanionInput> = {}): CompanionContext | undefined {
+export function useCompanionContext(overrides: Partial<CompanionInput> = {}, enabled = true): CompanionContext | undefined {
   const now = overrides.now ?? new Date();
-  const rows = useLiveQuery(async (): Promise<CompanionRows | null> => {
+  const rows = useLiveQuery(async (): Promise<CompanionRows | null | undefined> => {
+    if (!enabled) return undefined;
     try {
       return await readCompanionRows(now);
     } catch {
       return null;
     }
     // The clock is deliberately not a dependency: a re-render refreshes it, a tick does not requery.
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   // Seed the state row once, outside the query, so plain mode's fortnight starts on the first real open.
   const needsSeed = rows !== undefined && rows !== null && !rows.stateStored;
@@ -162,6 +187,7 @@ export function useCompanionContext(overrides: Partial<CompanionInput> = {}): Co
         dueCards: rows.dueCards,
         futureCards: rows.futureCards,
         topicTitles: rows.topicTitles,
+        topicUnits: rows.topicUnits,
         sessions: rows.sessions,
         notes: rows.notes,
         firstRunDone: rows.firstRunDone,
@@ -169,6 +195,7 @@ export function useCompanionContext(overrides: Partial<CompanionInput> = {}): Co
     : { now, plan: DEFAULT_PLAN, state: { ...freshState(now), silenced: true } };
   const input: CompanionInput = { ...base, ...overrides, now };
   if (overrides.topicTitles) input.topicTitles = { ...(base.topicTitles ?? {}), ...overrides.topicTitles };
+  if (overrides.topicUnits) input.topicUnits = { ...(base.topicUnits ?? {}), ...overrides.topicUnits };
   if (input.mock) input.mock = withUnitTopics(input.mock);
   return buildCompanionContext(input);
 }

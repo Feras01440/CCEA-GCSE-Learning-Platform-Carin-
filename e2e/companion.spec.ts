@@ -103,6 +103,7 @@ interface StoredState {
   recent?: Array<{ id: string; at: string }>;
   silenced?: boolean;
   figure?: boolean;
+  name?: string | null;
 }
 
 /** The companion's state row, read back from the database rather than inferred from the page. */
@@ -282,19 +283,28 @@ async function expectStill(page: Page, where: string): Promise<void> {
 }
 
 /**
- * One review card due now whose item the content no longer ships: the inbox offers "Skip", and skipping it is the
- * shortest honest way to the review's close card. The FSRS state is a new card's, as ts-fsrs creates it.
+ * One flashcard due now, from the FM1 deck the build ships (public/decks/further-maths/FM1.json): turning it and grading
+ * it Good is the shortest honest way to the review's close card. Build 8 reached the close by skipping a card the content
+ * no longer ships; since build 9 such a card is never served (it stays due and is named in one line), so there is no Skip.
+ * Its topic is not the one the stone test proves, so grading it cannot rewrite that topic's mastery. The FSRS state is a
+ * new card's, as ts-fsrs creates it.
  */
-async function seedWithdrawnCard(page: Page): Promise<void> {
+async function seedFlashcardDue(page: Page): Promise<void> {
   const due = await page.evaluate(() => new Date(Date.now() - 60_000).toISOString());
   await seedRow(page, "cards", {
-    id: "further-maths:algebraic-fractions-simplify:e2e-withdrawn",
+    id: "fc.further-maths.fm1.algebraic-fractions-add-subtract.01",
     subject: "further-maths",
-    topicSlug: "algebraic-fractions-simplify",
+    topicSlug: "algebraic-fractions-add-subtract",
     card: { due: new Date(due), stability: 0, difficulty: 0, elapsed_days: 0, scheduled_days: 0, learning_steps: 0, reps: 0, lapses: 0, state: 0 },
     due: new Date(due),
     createdAt: new Date(Date.parse(due) - 86_400_000),
   });
+}
+
+/** Turns tonight's one flashcard and grades it Good; the review's close card follows. */
+async function finishFlashcard(page: Page): Promise<void> {
+  await page.getByRole("button", { name: /^Show the answer$/ }).click();
+  await page.getByRole("button", { name: /^Good\b/ }).click();
 }
 
 test.describe("Rowan", () => {
@@ -307,8 +317,17 @@ test.describe("Rowan", () => {
     await page.getByRole("button", { name: /^Continue$/ }).click();
     const name = page.getByLabel(/what should it call you/i);
     await expect(name).toBeVisible();
-    // One name field on this screen: hers. Rowan's Letter is not part of first run.
-    await expect(page.locator("[data-companion], [data-companion-figure]")).toHaveCount(0);
+    // One name field on this screen: hers. Rowan's Letter is not part of first run and nothing of Rowan's is said here;
+    // Rowan itself is met in one sentence and one wave just above the card, so "it" in the question means someone
+    // (COMPANION-8). The hare is outside the card that holds the field and comes before it on the page.
+    await expect(page.locator("[data-companion]")).toHaveCount(0);
+    await expect(page.getByText("This is Rowan, a hare. It keeps your papers’ dates and what comes back when.")).toBeVisible();
+    const welcome = page.locator('[data-companion-figure="welcome"]');
+    await expect(welcome).toHaveCount(1);
+    await expect(welcome).toHaveAttribute("data-figure-state", "arrival");
+    expect(await misplacedCompanions(page)).toEqual([]);
+    expect(await welcome.evaluate((el, field) => !!(el.compareDocumentPosition(document.querySelector(field)!) & Node.DOCUMENT_POSITION_FOLLOWING), "input")).toBe(true);
+    await expectStill(page, "first run's name card");
     await name.fill("Test");
     await page.getByRole("button", { name: /^Begin$/ }).click();
     await page.getByRole("button", { name: /^Skip to Today$/ }).click();
@@ -320,9 +339,59 @@ test.describe("Rowan", () => {
     await expect(letter).toContainText("You do the maths.");
     await expect(letter).not.toContainText(/cairn|path/i);
     await expect(letter.locator('[data-companion-figure="letter"]')).toHaveCount(1);
-    // On its first day it is the whole of Rowan on Today.
+    // The Letter begins with the name she gave it at first run.
+    await expect(letter.locator("[data-salutation]")).toHaveText("Test,");
+    // On its first day the Letter carries Rowan's words on Today: the tile's own line waits for it. The hare stands on the
+    // Tonight tile all the same (the owner's presence ruling; the trial audit's COMPANION-1 found the tile bare on night one).
+    await expect(page.locator(ARRIVAL)).toHaveCount(0);
+    await expect(tile(page, "Tonight").locator('[data-companion-figure="arrival"]')).toHaveCount(1);
+    expect(await letterSeen(page)).toBe(false);
+  });
+
+  test("night one: the tile's hare stands, and the first lesson speaks whether or not she taps the Letter's Close", async ({ page }) => {
+    // COMPANION-1 (25 Sep, build 8): on the phone the Letter's Close sits below the first screen, under the accent button.
+    // Going on without it used to leave the hero, the close card and the paper line silent all evening.
+    await completeFirstRun(page);
+    await expect(page.locator('[data-companion="first-letter"]')).toBeVisible();
+    await expect(tile(page, "Tonight").locator('[data-companion-figure="arrival"]')).toHaveCount(1);
+    await page.goto(NEW_TOPIC);
+    const hero = page.locator('header [data-companion="topic-open"]');
+    await expect(hero).toBeVisible();
+    await expect(hero).not.toBeEmpty();
+    await expect(hero.locator('[data-companion-figure="topic"]')).toHaveCount(1);
+    expect(await misplacedCompanions(page)).toEqual([]);
+    // Back on Today the Letter still waits, unread, and Today's own line still waits for it that day.
+    await page.goto("/");
+    await expect(page.locator('[data-companion="first-letter"]')).toBeVisible();
     await expect(page.locator(ARRIVAL)).toHaveCount(0);
     expect(await letterSeen(page)).toBe(false);
+  });
+
+  test("the Tonight tile keeps its hare on every open of the evening, and its one button never moves", async ({ page }) => {
+    // TODAY-1 (the trial audit's blocker, 25 Sep): the hare stood only on the first open or two of an evening; from then on
+    // the tile shrank, lost its only colour and Start jumped up by up to 198 px.
+    await installPastFirstRun(page);
+    await seedLetterRead(page);
+    const opens: Array<{ figures: number; start: number; height: number; lines: number }> = [];
+    for (let i = 0; i < 5; i += 1) {
+      await page.goto("/");
+      const tonight = tile(page, "Tonight");
+      await expect(tonight.locator('[data-companion-figure="arrival"]')).toHaveCount(1);
+      await page.waitForTimeout(400);
+      opens.push({
+        figures: await tonight.locator('[data-companion-figure="arrival"]').count(),
+        start: (await box(tonight.getByRole("link", { name: /^(Start|Learn)/ }))).y,
+        height: (await box(tonight)).height,
+        lines: await tonight.locator(ARRIVAL).count(),
+      });
+    }
+    for (const o of opens) expect(o.figures).toBe(1);
+    // One sentence beside the hare on every open: Rowan's while it has something to say, the tile's own after that.
+    for (const o of opens) expect(o.lines).toBeLessThanOrEqual(1);
+    expect(opens.some((o) => o.lines === 0), "the evening runs out of new things to say").toBe(true);
+    const starts = opens.map((o) => Math.round(o.start));
+    expect(Math.max(...starts) - Math.min(...starts), `Start at ${starts.join(", ")}`).toBeLessThanOrEqual(24);
+    await expectStill(page, "Today on a later open");
   });
 
   test("offers the Letter on Today once, and never after it is read", async ({ page }) => {
@@ -349,6 +418,33 @@ test.describe("Rowan", () => {
     await expect(page.locator('[data-companion="first-letter"]')).toHaveCount(0);
   });
 
+  test("renaming it in the Letter answers at once: Enter saves, and the new name is the one on the screen", async ({ page }) => {
+    // COMPANION-9 (25 Sep, build 8): Enter did nothing, and Save stored the name while the label, the signature and the
+    // screen kept the old one, so it looked as if Save had failed (emotional-design rule 3).
+    await completeFirstRun(page);
+    const letter = page.locator('[data-companion="first-letter"]');
+    await expect(letter).toBeVisible();
+    await expect(letter.getByLabel(/It answers to Rowan/)).toBeVisible();
+    // By its id: its label changes with the name, which is the point.
+    const field = letter.locator("#companion-name");
+    await field.fill("Rua");
+    await field.press("Enter");
+    await expect(letter.getByRole("status")).toHaveText("Rua it is.");
+    await expect(letter.locator("label")).toContainText("It answers to Rua.");
+    await expect(letter.getByText(/^Rua$/)).toBeVisible();
+    await expect(field).toHaveValue("");
+    await expect.poll(async () => (await readState(page))?.name ?? null).toBe("Rua");
+    // Save does the same, and the reply goes away as soon as she types again.
+    await field.fill("Fern");
+    await expect(letter.getByRole("status")).toHaveText("");
+    await letter.getByRole("button", { name: /^Save$/ }).click();
+    await expect(letter.getByRole("status")).toHaveText("Fern it is.");
+    await expect.poll(async () => (await readState(page))?.name ?? null).toBe("Fern");
+    // Settings says what it calls her, from the name she gave at first run.
+    await page.goto("/settings/");
+    await expect(tile(page, "How Fern speaks").locator("[data-learner-name]")).toHaveText("Fern calls you Test. Your first name is kept under Exam plan.");
+  });
+
   test("the Letter goes first for one day: the day after, it waits sealed and Rowan speaks on Today and in the hero", async ({ page }) => {
     await installPastFirstRun(page);
     await page.goto("/");
@@ -359,10 +455,10 @@ test.describe("Rowan", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
 
-    // Rowan's arrival line is back in the Tonight tile, with its figure slot.
+    // Rowan's arrival line is back in the Tonight tile, beside the hare that stands there.
     const arrival = tile(page, "Tonight").locator(ARRIVAL);
     await expect(arrival).toHaveCount(1);
-    await expect(arrival.locator('[data-companion-figure="arrival"]')).toHaveCount(1);
+    await expect(tile(page, "Tonight").locator('[data-companion-figure="arrival"]')).toHaveCount(1);
     await expect(arrival).not.toContainText("!");
 
     // The Letter waits in one line, a real button, until she opens it; opening it is reading it.
@@ -451,19 +547,20 @@ test.describe("Rowan", () => {
     await expect.poll(async () => (await readState(page))?.letterOfferedOn ?? null).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 
     // The next day, unread: the posed hare on the Tonight tile beside the arrival line, standing on the tile's floor,
-    // 140 px, or 200 once the line's own block is 512 px wide; the sealed Letter keeps Rowan's 24 px mark.
+    // 140 px, or 200 once the tile's row is 512 px wide; the sealed Letter keeps Rowan's 24 px mark.
     await moveToNextDay(page);
     await page.goto("/");
     const tonight = tile(page, "Tonight");
     const arrival = tonight.locator(ARRIVAL);
-    const posed = arrival.locator('[data-companion-figure="arrival"]');
+    await expect(arrival).toHaveCount(1);
+    const posed = tonight.locator('[data-companion-figure="arrival"]');
     await expect(posed).toHaveCount(1);
     await expect(posed).toHaveAttribute("data-figure-state", /^(arrival|evening)$/);
-    const lineBlock = await box(arrival);
+    const row = await box(tonight.locator("[data-tonight-row]"));
     const hare = await box(posed);
-    expect(hare.width).toBe(lineBlock.width >= 512 ? 200 : 140);
+    expect(hare.width).toBe(row.width >= 512 ? 200 : 140);
     expect(hare.height).toBe(hare.width);
-    const words = await box(arrival.locator("p"));
+    const words = await box(arrival);
     expect(words.x + words.width, "the words stay beside the hare").toBeLessThanOrEqual(hare.x + 0.5);
     const start = await box(tonight.getByRole("link", { name: /^(Start|Learn)/ }));
     expect(hare.y + hare.height, "the hare stands above the tile's one button").toBeLessThanOrEqual(start.y + 0.5);
@@ -481,9 +578,9 @@ test.describe("Rowan", () => {
 
     // The close: the review's close card opens on the scene, the hare on the hill by the cairn, above the card's
     // title and Rowan's words. The phone's scene is 342 by 200 units in a 342:230 box, the hare 156 units of it.
-    await seedWithdrawnCard(page);
+    await seedFlashcardDue(page);
     await page.goto("/review/");
-    await page.getByRole("button", { name: /^Skip$/ }).click();
+    await finishFlashcard(page);
     const scene = page.locator('[data-companion-figure="close"]');
     await expect(scene).toHaveCount(1);
     await expect(scene).toHaveAttribute("data-figure-state", /^(arrival|stone-placed)$/);
@@ -502,17 +599,25 @@ test.describe("Rowan", () => {
     await expectStill(page, "the close card");
   });
 
-  test("late at night the Tonight tile's hare takes the evening pose, under its own moon", async ({ page }) => {
-    // The clock only decides which sentence is true (binding condition 2): the evening line, and the pose drawn for it.
+  test("late at night the Tonight tile's hare takes the evening pose, under its own moon, and nothing on the tile pushes work", async ({ page }) => {
+    // The clock only decides which sentence is true (binding condition 2): the evening line, and the pose drawn for it. The
+    // trial audit's TODAY-2 (25 Sep): after midnight the tile advised "Ten minutes on a new topic" beside Rowan's "Anything
+    // new will keep", then two opens later Rowan itself offered something new in the bright arrival pose.
     await page.clock.setFixedTime(new Date("2026-09-24T23:10:00"));
     await installPastFirstRun(page);
     await seedLetterRead(page);
-    await page.goto("/");
-    const evening = tile(page, "Tonight").locator('[data-companion="evening"]');
-    await expect(evening).toHaveCount(1);
-    const hare = evening.locator('[data-companion-figure="arrival"]');
-    await expect(hare).toHaveAttribute("data-figure-state", "evening");
-    await expect(hare.locator('path[d^="M130 15 a11 11"]')).toHaveCount(1);
+    for (let open = 1; open <= 4; open += 1) {
+      await page.goto("/");
+      const tonight = tile(page, "Tonight");
+      const hare = tonight.locator('[data-companion-figure="arrival"]');
+      await expect(hare).toHaveCount(1);
+      await expect(hare).toHaveAttribute("data-figure-state", "evening");
+      await expect(hare.locator('path[d^="M130 15 a11 11"]')).toHaveCount(1);
+      if (open === 1) await expect(tonight.locator('[data-companion="evening"]')).toHaveCount(1);
+      await page.waitForTimeout(400);
+      await expect(tonight).not.toContainText(/new topic|something new|new ground|first up/i);
+      await expect(tonight).not.toContainText(/nothing is due/i);
+    }
     await expectStill(page, "Today late at night");
   });
 
@@ -579,9 +684,33 @@ test.describe("Rowan", () => {
       return s ? `${s.silenced}/${s.figure}` : "no state row";
     }).toBe("false/true");
     await page.goto("/");
-    // Chained for the same reason: in the string form the today-open line itself satisfied this count before 21:30.
-    await expect(tile(page, "Tonight").locator(ARRIVAL).locator('[data-companion-figure="arrival"]')).toHaveCount(1);
+    // The hare stands on the tile again, beside whichever sentence it holds tonight.
+    await expect(tile(page, "Tonight").locator('[data-companion-figure="arrival"]')).toHaveCount(1);
     await expect(page.locator('[data-companion="first-letter"] [data-companion-figure="letter"]')).toHaveCount(1);
+  });
+
+  test("a stone placed in a review sitting is named on the close, with its unit", async ({ page }) => {
+    // COMPANION-6 (25 Sep, build 8): the review close has no topic of its own, so the stone line could never be filled
+    // and Rowan said "I was never the one doing the maths. That was you." beside "1 stone placed".
+    await installPastFirstRun(page);
+    await seedLetterRead(page);
+    await seedFlashcardDue(page);
+    await page.goto("/review/");
+    await expect(page.getByRole("button", { name: /^Show the answer$/ })).toBeVisible();
+    const now = await page.evaluate(() => new Date().toISOString());
+    await seedRow(page, "mastery", {
+      key: "further-maths:algebraic-fractions-simplify",
+      subject: "further-maths",
+      topicSlug: "algebraic-fractions-simplify",
+      level: "proficient",
+      score: 0.9,
+      lastEvidenceAt: new Date(now),
+      updatedAt: new Date(now),
+    });
+    await finishFlashcard(page);
+    const line = page.locator('[data-companion="session-close"]');
+    await expect(line).toContainText("Simplifying algebraic fractions: proved, and one stone on the FM1 cairn.");
+    await expect(page.locator('[data-companion-figure="close"]')).toHaveAttribute("data-figure-state", "stone-placed");
   });
 
   test("shows what it remembers in Settings, forgets it on request, and explains plain words", async ({ page }) => {

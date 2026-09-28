@@ -33,6 +33,30 @@ export function sealedLetterPreview(name: string): string {
 }
 
 /**
+ * First run's one sentence about Rowan, said just above "What should it call you?" so that "it" means someone she has
+ * met (the trial audit's COMPANION-8). The product's voice, plain words, and the hare waving beside it in Full.
+ */
+export function introduction(): string {
+  return "This is Rowan, a hare. It keeps your papers’ dates and what comes back when.";
+}
+
+/** What Settings says about her own name, in the section about Rowan: whether it uses one, and where it is kept. */
+export function learnerNameNote(learnerName: string | null, name = "Rowan"): string {
+  const hers = learnerName?.trim();
+  return hers ? `${name} calls you ${hers}. Your first name is kept under Exam plan.` : `Add your first name under Exam plan and ${name} will use it.`;
+}
+
+/** Its reply in the Letter when she gives it a new name: the name taken at once, dry and short (COMPANION-9). */
+export function renamedReply(name: string): string {
+  return `${name} it is.`;
+}
+
+/** Said in the Letter when the device could not keep the new name, so she knows which name is in use. */
+export function renameNotSaved(name: string): string {
+  return `That did not save on this device, so it still answers to ${name}.`;
+}
+
+/**
  * The Settings control for what she sees of it: Full, Words only or Quiet (rule 2, rewritten 23 September: Rowan
  * "can be reduced to its voice or silenced at no cost"). Each state says what it shows, in the product's words; the
  * note says what none of them costs her, because the plan, the dates and what comes back are the product's own.

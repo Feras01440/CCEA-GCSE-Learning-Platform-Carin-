@@ -144,6 +144,32 @@ test.describe("Today", () => {
     expect(problems, problems.join("\n")).toEqual([]);
   });
 
+  test("after Pause here, the tile offers the way back to the lesson, and Rowan says the section is done", async ({ page }) => {
+    // The trial audit's READ-12 (25 Sep): Pause here landed on a Today that said nothing of the lesson, whose one button and
+    // Next step both went to another topic. The place is the read-flow agent's record (src/components/topic/read-place.ts).
+    const letter = page.locator('[data-companion="first-letter"]');
+    await letter.getByRole("button", { name: /^Close$/ }).click();
+    await expect.poll(() => letterSeen(page)).toBe(true);
+    await page.evaluate(() => {
+      const now = new Date().toISOString();
+      const place = { v: 1, topicId: "fm.u1.algebraic-fractions-simplify", subject: "further-maths", unit: "FM1", slug: "algebraic-fractions-simplify", title: "Simplifying algebraic fractions", total: 9, open: 4, openTitle: "Fully means fully", finished: false, updatedAt: now, pausedAt: now };
+      localStorage.setItem("cairn.read.place.fm.u1.algebraic-fractions-simplify", JSON.stringify(place));
+      localStorage.setItem("cairn.read.last", JSON.stringify({ topicId: place.topicId, at: now }));
+    });
+    await page.reload();
+    const tonight = tile(page, "Tonight");
+    await expect(tonight.locator("[data-paused-lesson]")).toHaveText(/Simplifying algebraic fractions · section 4 of 9 next/);
+    // Nothing is back on a new device, so the way back is the one accented action, and it lands on her section.
+    const back = tonight.getByRole("link", { name: /^Carry on/ });
+    await expect(back).toHaveAttribute("href", "/learn/further-maths/FM1/algebraic-fractions-simplify/#resume");
+    expect(await accentFilled(page)).toEqual([expect.stringMatching(/^Carry on/)]);
+    // Rowan's line, the evening she paused, says the section is done; nothing on the tile offers something new instead.
+    const line = tonight.locator('[data-companion="today-open"], [data-companion="evening"]');
+    const hour = await page.evaluate(() => new Date().getHours() + new Date().getMinutes() / 60);
+    if (hour >= 4 && hour < 21.5) await expect(line).toContainText("Section 3 done. The rest will keep.");
+    await expect(tonight).not.toContainText(/is open if you want|new topic/);
+  });
+
   test("when nothing is back, the tile and Rowan never say the same sentence", async ({ page }) => {
     // The first Today after first run carries the Letter, and Rowan's arrival line waits for it; once the Letter is
     // read, the next open has the tile's fact and Rowan's own line under it (found 24 Sep 2026: both said "Nothing

@@ -11,7 +11,7 @@
  *
  * A returning visit keeps the same screen and changes the button: "Continue at section 3", where she stopped.
  */
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { clsx } from "clsx";
 import { MasteryChip, MdInlines, parseInline } from "@/components/items";
@@ -28,6 +28,8 @@ import { StagedFigure } from "@/components/items/StepRevealNote";
 import { ILLUSTRATIONS } from "@/components/slides/enrich";
 import { enrichmentFor } from "@/lib/slides/enrichment";
 import { heroPromise, inlineLede, isReadV2, type TopicHeroData } from "./lesson-plan";
+import { legacyFinished, readPlace, READ_PLACE_EVENT, READ_PLACE_KEY, resumeState, type PlaceSection, type ReadPlace } from "./read-place";
+import { landOnSection, sectionWrapper } from "./landing";
 import { StartButtons } from "@/components/slides/StartButtons";
 import { useCompanionContext } from "@/lib/companion";
 import { CompanionLine } from "@/components/companion/CompanionLine";
@@ -55,8 +57,11 @@ export interface TopicHeroProps {
   practicals?: string[];
   /** The shipped bundle's id, which is how the note records its gates. */
   topicId: string;
-  /** Each gate with the 1-based lesson section it closes, in note order: where she stopped is read from it. */
-  gateSections?: Array<[string, number]>;
+  /**
+   * The lesson's sections in order, each with its title and its checks: where she stopped is read from them, her answers
+   * and her kept place (read-place.ts resumeState), exactly as the lesson below reads it.
+   */
+  outline?: PlaceSection[];
   /**
    * The Slides deck's own numbers on a topic that has Slides (src/lib/slides deck stats, the numbers its title card
    * prints): the promise line names them beside Read's, and the Start button says the cards ("Start the slides · 23 cards").
@@ -83,6 +88,49 @@ function jumpTo(selectors: string[]): void {
     focusLanding(el);
   };
   attempt();
+}
+
+/**
+ * Read v2: takes her to section `n`, where she stopped (HERO-1): its top under the track and the keyboard on its heading.
+ * The lesson loads just after the hero, so a tap in the first moment waits (up to three seconds) for the section; if it
+ * never comes, the top of the lesson.
+ */
+function jumpToSection(n: number): void {
+  const started = performance.now();
+  const attempt = () => {
+    if (sectionWrapper(n)) {
+      landOnSection(n);
+      return;
+    }
+    if (performance.now() - started < 3000) window.requestAnimationFrame(attempt);
+    else jumpTo(["#note"]);
+  };
+  attempt();
+}
+
+/**
+ * Her kept place in this topic's lesson: undefined until this device has been read, then the record or null. It follows
+ * the lesson below as she answers, continues or pauses (READ_PLACE_EVENT), and another tab's writes (storage).
+ */
+function useKeptPlace(topicId: string): { place: ReadPlace | null; legacy: boolean } | undefined {
+  const [kept, setKept] = useState<{ place: ReadPlace | null; legacy: boolean } | undefined>(undefined);
+  useEffect(() => {
+    const read = () => setKept({ place: readPlace(topicId), legacy: legacyFinished(topicId) });
+    read();
+    const onPlace = (e: Event) => {
+      if ((e as CustomEvent<string>).detail === topicId) read();
+    };
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === READ_PLACE_KEY(topicId)) read();
+    };
+    window.addEventListener(READ_PLACE_EVENT, onPlace);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener(READ_PLACE_EVENT, onPlace);
+      window.removeEventListener("storage", onStorage);
+    };
+  }, [topicId]);
+  return kept;
 }
 
 /**
@@ -148,7 +196,7 @@ function HeroFigure({ hero, staged = false, topicId }: { hero: TopicHeroData; st
 /** "About 10 minutes" as the compact hero prints it beside a second way: "about 10 min". */
 const shortMinutes = (heading: string): string => heading.replace(/^About /, "about ").replace(/ minutes?$/, " min");
 
-export function TopicHero({ subject, unit, slug, locator, title, displayTitle, hero, sections, checks, workedExamples, findings = 0, practicals = [], topicId, gateSections = [], slides }: TopicHeroProps) {
+export function TopicHero({ subject, unit, slug, locator, title, displayTitle, hero, sections, checks, workedExamples, findings = 0, practicals = [], topicId, outline = [], slides }: TopicHeroProps) {
   const canId = useId();
   const paper = usePaperPhrase(subject, unit);
   // `null` once read and absent: `undefined` is still loading, and the companion waits for the difference.
@@ -167,19 +215,29 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
     }
   }, [subject, slug, topicId]);
 
-  // The `topic-open` slot (docs/plan/companion/integration-contract.md): signed, in the hero, before any
-  // question. Where she stopped is the section after the last one whose gate she answered.
-  const ready = mastery !== undefined && answered !== undefined;
+  const kept = useKeptPlace(topicId);
+  const v2 = isReadV2(subject, unit, slug);
+
+  // The `topic-open` slot (docs/plan/companion/integration-contract.md): signed, in the hero, before any question. Where
+  // she stopped is the section she is in, read as the lesson below reads it (read-place.ts resumeState): her kept place,
+  // never past a check still to answer; with no place kept, the section of the first check still to answer. It was one
+  // past the last section with any check answered, which named section 4 while section 3's second check waited (HERO-1).
+  const ready = mastery !== undefined && answered !== undefined && kept !== undefined;
   const done = new Set(answered ?? []);
-  const lastAnswered = gateSections.reduce((m, [id, n]) => (done.has(id) ? Math.max(m, n) : m), 0);
-  const sectionNumber = lastAnswered > 0 && gateSections.some(([, n]) => n > lastAnswered) ? lastAnswered + 1 : null;
+  const sectionNumber = ready ? resumeState({ sections: outline, answered: done, place: v2 ? kept.place : null, legacyFinished: kept.legacy }).sectionNumber : null;
   const firstVisit = ready && mastery === null && done.size === 0;
   const companion = useCompanionContext({
     // Rowan names the topic exactly as the h1 does (the companion agent's change, 23 Sep).
     topic: { slug, unit, subject, title, shortTitle: displayTitle, firstVisit, sectionNumber, examinerFlagged: findings > 0 },
     questionVisible: false,
   });
-  const start = () => (sectionNumber ? jumpTo([`#note h3[data-section="${sectionNumber - 1}"]`, "#note"]) : jumpTo(["#note"]));
+  // The Read button lands where it says: the section she is in (Read v2 opens the lesson one section at a time, so that
+  // section is the last one open), or the section's heading on the classic page, or the lesson's top.
+  const start = () => {
+    if (sectionNumber && v2) jumpToSection(sectionNumber);
+    else if (sectionNumber) jumpTo([`#note h3[data-section="${sectionNumber - 1}"]`, "#note"]);
+    else jumpTo(["#note"]);
+  };
   // Each way in with its own numbers, named, from its own source (lesson-plan.ts heroPromise; audit LD-04).
   const promise = heroPromise({
     read: { minutes: hero.minutes, sections },
@@ -283,7 +341,7 @@ export function TopicHero({ subject, unit, slug, locator, title, displayTitle, h
 
       {hero.figure && (
         <div className="mt-7">
-          <HeroFigure hero={hero} staged={isReadV2(subject, unit, slug)} topicId={topicId} />
+          <HeroFigure hero={hero} staged={v2} topicId={topicId} />
         </div>
       )}
 

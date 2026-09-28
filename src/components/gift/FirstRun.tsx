@@ -8,20 +8,26 @@ import { PRODUCT } from "@/lib/product";
 import { DEFAULT_PLAN, formatPaperDate, nextPaper, planSummary, todayISO, type ExamPlan } from "@/lib/plan/exam-plan";
 import { getSetting, loadPlan, savePlan, setSetting } from "@/lib/plan/store";
 import { GIVER_NAME, NOTES } from "@/lib/gift/unlocks";
+import { useCompanionPresence } from "@/lib/companion";
+import { RowanIntroduction } from "@/components/companion/RowanIntroduction";
 import { SeededLesson } from "./SeededLesson";
 
 /**
  * First run: her brother's note, her name and the plan, then the seeded lesson.
  *
- * Rowan is not here. Its first Letter is offered on the first Today after first run (decision 3 of the
- * platform programme, 22 September 2026): on this screen it stood above "Two things before you start" with
- * a second name field beside hers, lengthened the part the learner review asked to keep short, and was
- * marked read by "Begin" whether or not she had read it. Today carries it instead, under Start, in plain
- * words, with the rename there; and nothing Rowan says is spent before first run is done (select.ts,
- * "first-run").
+ * Rowan's Letter is not here. It is offered on the first Today after first run (decision 3 of the platform
+ * programme, 22 September 2026): on this screen it stood above "Two things before you start" with a second
+ * name field beside hers, lengthened the part the learner review asked to keep short, and was marked read by
+ * "Begin" whether or not she had read it. Today carries it instead, in plain words, with the rename there; and
+ * nothing Rowan says is spent before first run is done (select.ts, "first-run").
+ *
+ * What is here (27 September 2026, the trial audit's COMPANION-8): the name card asks "What should it call
+ * you?", and until then no "it" had been met. So the hare introduces itself just above the card, in one
+ * sentence and one wave, and the name she types is the one its Letter opens with that evening.
  */
 export function FirstRun() {
   const router = useRouter();
+  const presence = useCompanionPresence();
   const [plan, setPlan] = useState<ExamPlan>(DEFAULT_PLAN);
   const [name, setName] = useState("");
   const [step, setStep] = useState<0 | 1 | 2>(0);
@@ -102,6 +108,10 @@ export function FirstRun() {
       )}
 
       {step === 1 && (
+        <>
+        {/* Rowan is met before its question is asked (COMPANION-8): one sentence and the hare waving hello, above the
+            card and outside it, so the figure is never inside the container that holds her name field. */}
+        <RowanIntroduction presence={presence} className="rise-in mb-4" />
         <section className="rise-in rounded-[var(--radius)] border border-line bg-surface p-6 shadow-[var(--shadow-2)]">
           <h1 className="text-[24px] font-semibold tracking-tight">Two things before you start</h1>
           <label className="mt-5 block text-meta text-ink-2">
@@ -134,6 +144,7 @@ export function FirstRun() {
             Begin <ArrowRight size={18} aria-hidden />
           </button>
         </section>
+        </>
       )}
 
       {/* First run ends inside the lesson, not on Today: one section, one check, one marked question. */}

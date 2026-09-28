@@ -13,9 +13,14 @@
  * region is on screen. The note opens one section at a time, each ended by Continue and "Pause here"; the lesson's last
  * Continue goes on to the first stage after it. The stages after the lesson are the same in both.
  *
+ * Her place (read-place.ts; the trial audit's READ-9, READ-11, READ-12): Read v2 keeps the section she is in on this
+ * device, written by her own acts (a check answered, Continue, Pause here, the last Continue), and opens there; the hero
+ * and Today read the same record. Both pages keep, for this tab, the block she is reading, so a reload or a Back brings
+ * her back to it (landing.ts), and a link to a stage or to #resume lands where it says.
+ *
  * Three surfaces (01-art-direction.md §4.2): prose on the page, reference in recesses, objects only where she acts.
  */
-import { useCallback, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { loadBundle, type ShippedBundle } from "@/lib/content/load";
 import type { RetrievalPrompt, WorkedExample } from "@/lib/content/schema";
@@ -32,7 +37,6 @@ import {
   countWords,
   headingText,
   heroDataFor,
-  initialOpen,
   isReadV2,
   lessonBlocks,
   lessonSections,
@@ -42,15 +46,19 @@ import {
   minutesForMistakes,
   minutesForReading,
   sameTitle,
+  seeStepsOf,
   stageEyebrow,
   type LessonSection,
 } from "./lesson-plan";
+import { arrivalFor, continued, finishedLesson, legacyFinished, newPlace, paused, readPlace, resumeState, touched, writePlace, type PlaceMeta, type ReadPlace } from "./read-place";
+import { anchorElement, anchorNow, arrivalFacts, holdAt, keepAnchor, keptAnchor, landOnSection, landOnStage } from "./landing";
 import { CardSkeleton } from "@/components/ux/Skeleton";
 import { focusLanding } from "@/components/shell/input-modality";
 import type { Subject } from "@/lib/content/taxonomy";
 import { REACTIONS } from "@/components/slides/enrich";
 import { enrichmentFor } from "@/lib/slides/enrichment";
 import { recordRecallGrade } from "@/lib/slides/returns";
+import { gateOutcomes, type GateOutcome } from "@/lib/slides/outcomes";
 
 interface Props {
   subject: Subject;
@@ -136,15 +144,19 @@ function useLesson(subject: Subject, slug: string, topicId: string) {
     loadBundle(subject, topicId).then(setBundle).catch((e) => setError(String(e)));
   }, [subject, topicId]);
 
-  // Gates she has already answered here, so a reload does not close the note behind them again.
+  // Gates she has already answered here, so a reload does not close the note behind them again, and what each first
+  // answer was, so a check she missed is drawn missed after a reload, not passed (audit READ-7; src/lib/slides/outcomes.ts).
   // undefined while loading: the note must mount with the ids, because StepRevealNote reads them once.
-  const gateIds = useLiveQuery(async () => {
+  const answers = useLiveQuery(async () => {
     try {
-      return await answeredGateIds(subject, slug, topicId);
+      const [ids, outcomes] = await Promise.all([answeredGateIds(subject, slug, topicId), gateOutcomes(subject, slug, topicId)]);
+      return { ids, outcomes };
     } catch {
-      return [] as string[];
+      return { ids: [] as string[], outcomes: {} as Record<string, GateOutcome> };
     }
   }, [subject, slug, topicId]);
+  const gateIds = answers?.ids;
+  const outcomes = answers?.outcomes;
 
   // The spine's own copy of the answered gates: the note knows them too, but the count has to
   // tick up the moment she answers, before the write comes back through the live query.
@@ -155,99 +167,102 @@ function useLesson(subject: Subject, slug: string, topicId: string) {
   }, [gateIds]);
   const markAnswered = useCallback((id: string) => setAnswered((prev) => (prev.has(id) ? prev : new Set([...prev, id]))), []);
 
-  return { bundle, error, gateIds, answered, markAnswered };
-}
-
-/** Read v2: she pressed the lesson's last Continue on this device. Storage can be missing: then it lasts the visit. */
-const FINISHED_KEY = (topicId: string) => `cairn.read.finished.${topicId}`;
-
-function readFinished(topicId: string): boolean {
-  try {
-    return window.localStorage.getItem(FINISHED_KEY(topicId)) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function rememberFinished(topicId: string): void {
-  try {
-    window.localStorage.setItem(FINISHED_KEY(topicId), "1");
-  } catch {
-    // The press holds for this visit.
-  }
-}
-
-/** How long a landing keeps its stage at the top while the page above it settles, and how still it must be to stop. */
-const LANDING_MAX_MS = 4000;
-const LANDING_STILL_FRAMES = 20;
-
-/** What tells the page she has taken over: a scroll of the wheel, a touch, a press, a key. */
-const HER_OWN = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
-
-/**
- * Keeps a stage at the top of the screen (under its scroll margin) while the lesson above it settles: the note opens to
- * where she stopped, the maths and the fonts arrive, and each of them pushes the stage down. It lets go as soon as she
- * scrolls, taps or presses a key herself (the page never fights her), once the stage has been still for a moment, after
- * four seconds, or when the stage leaves the page. Returns the way to let go early.
- */
-function holdAtTop(el: HTMLElement): () => void {
-  let stopped = false;
-  let frame = 0;
-  const stop = () => {
-    stopped = true;
-    window.cancelAnimationFrame(frame);
-    for (const type of HER_OWN) window.removeEventListener(type, stop, true);
-  };
-  for (const type of HER_OWN) window.addEventListener(type, stop, { capture: true, passive: true });
-  const started = performance.now();
-  let lastTop = Number.NaN;
-  let still = 0;
-  const align = () => {
-    if (stopped) return;
-    if (!el.isConnected) return stop();
-    const top = el.getBoundingClientRect().top;
-    still = top === lastTop ? still + 1 : 0;
-    lastTop = top;
-    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
-    if (Math.abs(top - margin) > 1) window.scrollTo({ top: window.scrollY + top - margin, behavior: "auto" });
-    if (still < LANDING_STILL_FRAMES && performance.now() - started < LANDING_MAX_MS) frame = window.requestAnimationFrame(align);
-    else stop();
-  };
-  align();
-  return stop;
+  return { bundle, error, gateIds, outcomes, answered, markAnswered };
 }
 
 /**
- * A link that names a stage of this page lands on it: the Slides close's "Practise this topic" is /…/#practice (audit
- * LD-02, CQ-06). The stages are drawn only once the lesson has loaded, after the browser (a fresh load) or the router
- * (an in-app link) has looked for the id and found nothing, so the page takes her there itself when they appear, and
- * puts the keyboard on the stage as a landing place (the ring only for the keyboard). A later change of hash does the
- * same. `ready` is true once the stages are on the page.
+ * Where the page opens, and her place kept for this tab (the trial audit's READ-11; landing.ts, read-place.ts arrivalFor).
+ * Once the lesson is drawn (`ready`, the note opened to `open` sections):
+ * - after a reload, a Back or Forward into a fresh load, a tab the phone discarded, or a Back inside the app, she comes
+ *   back to the block she was reading, where it stood on the screen, held there while the page settles;
+ * - a link to #resume (Today's way back) lands on the section she is in; a link to a stage lands on that stage; a later
+ *   change of hash does the same;
+ * - otherwise she starts at the top, where the hero names her section.
+ * From then on the block at the reading line is kept in sessionStorage as she scrolls and when the page is hidden. The
+ * browser's own restoration is off on this page: it put the old pixel offset into the short first paint, and scroll
+ * anchoring then carried her to the page's end at 1280, or left her on the hero's objectives at 390, as the lesson loaded
+ * above (measured on build 8). The entry the app pushes next gets "auto" back.
+ *
+ * The stage landing (the Slides close's "Practise this topic" is /…/#practice; audit LD-02, CQ-06): the stages are
+ * drawn only once the lesson has loaded, after the browser (a fresh load) or the router (an in-app link) has looked for
+ * the id and found nothing, so the page takes her there itself when they appear, and puts the keyboard on the stage as a
+ * landing place (the ring only for the keyboard).
  */
-function useStageLanding(ready: boolean): void {
+function useArrival(topicId: string, ready: boolean, open: number | null): void {
+  const openRef = useRef(open);
+  openRef.current = open;
+  const keeping = useRef(false);
+  const arrived = useRef(false);
+  const letGo = useRef<(() => void) | null>(null);
+
   useEffect(() => {
-    if (!ready) return;
-    let letGo: (() => void) | null = null;
-    const land = () => {
+    if (!("scrollRestoration" in window.history)) return;
+    window.history.scrollRestoration = "manual";
+    return () => {
+      window.history.scrollRestoration = "auto";
+    };
+  }, []);
+
+  useEffect(() => {
+    let timer = 0;
+    const keep = () => {
+      if (keeping.current) keepAnchor(topicId, anchorNow());
+    };
+    const onScroll = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(keep, 200);
+    };
+    const onHidden = () => {
+      if (document.visibilityState === "hidden") keep();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pagehide", keep);
+    document.addEventListener("visibilitychange", onHidden);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pagehide", keep);
+      document.removeEventListener("visibilitychange", onHidden);
+      letGo.current?.();
+    };
+  }, [topicId]);
+
+  useEffect(() => {
+    if (!ready || open === null || arrived.current) return;
+    arrived.current = true;
+    const facts = arrivalFacts();
+    const anchor = keptAnchor(topicId);
+    const way = arrivalFor({ ...facts, anchor: anchor !== null });
+    const begin = () => {
+      keeping.current = true;
+    };
+    const toSection = () => landOnSection(open, { hold: true, onDone: begin }) || landOnStage("note", begin);
+    let held: (() => void) | false = false;
+    if (way === "restore" && anchor) {
+      const el = anchor.key === "top" ? null : anchorElement(anchor.key);
+      if (anchor.key === "top") window.scrollTo({ top: 0, behavior: "auto" });
+      else held = el ? holdAt(el, () => anchor.dy, begin) : toSection();
+    } else if (way === "resume") held = toSection();
+    else if (way === "hash") held = landOnStage(facts.hash, begin);
+    if (held) letGo.current = held;
+    else begin();
+  }, [ready, open, topicId]);
+
+  useEffect(() => {
+    const onHash = () => {
       let id = "";
       try {
         id = decodeURIComponent(window.location.hash.slice(1));
       } catch {
         return;
       }
-      const el = id ? document.getElementById(id) : null;
-      if (!el || !el.hasAttribute("data-stage")) return;
-      letGo?.();
-      focusLanding(el);
-      letGo = holdAtTop(el);
+      letGo.current?.();
+      const held = id === "resume" ? landOnSection(openRef.current ?? 1, { hold: true }) || landOnStage("note") : landOnStage(id);
+      letGo.current = held || null;
     };
-    land();
-    window.addEventListener("hashchange", land);
-    return () => {
-      window.removeEventListener("hashchange", land);
-      letGo?.();
-    };
-  }, [ready]);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
 }
 
 /**
@@ -265,10 +280,12 @@ function planFor(bundle: ShippedBundle, displayTitle: string | undefined, refere
   const promptById = new Map<string, RetrievalPrompt>(bundle.prompts.map((p) => [p.id, p]));
 
   const blocks = (bundle.noteBlocks ?? []) as NoteBlock[];
-  const hero = heroDataFor(blocks);
+  // A See it that names a worked example is priced by that example's steps (lesson-plan.ts seeSeconds).
+  const steps = seeStepsOf(bundle.workedExamples);
+  const hero = heroDataFor(blocks, steps);
   // The note's first figure moves into the hero (in Read v2, the drawing Slides registers for it takes its place there).
   const noteBlocks = lessonBlocks(blocks, hero.lede);
-  const noteSections = lessonSections(blocks, hero.lede);
+  const noteSections = lessonSections(blocks, hero.lede, steps);
   const lessonMinutes = noteSections.reduce((n, s) => n + s.minutes, 0);
   const firstHeading = noteBlocks.find((b) => b.type === "h") as { text: string } | undefined;
   const hideFirstHeading = Boolean(displayTitle && firstHeading && sameTitle(displayTitle, headingText(firstHeading.text)));
@@ -373,7 +390,11 @@ function LaterStages({
 
       {exam.length > 0 && (
         <Stage id="exam" label={stageEyebrow("Sit it as a paper", minutes.exam)} title="Exam-style" first={isFirst()}>
-          <PracticeFlow bundle={bundle} kind="exam" item={item} companion />
+          {/* No Rowan on this close card: the containment rule (docs/plan/companion/integration-contract.md, "What every
+              host keeps": never after the first answer field in document order). The page above still holds live answer
+              fields, the gates, the prompts, the checks and practice (the trial audit's READ-15). Rowan closes a Read
+              sitting on Today, after Pause here, and a Slides run on its own close. */}
+          <PracticeFlow bundle={bundle} kind="exam" item={item} />
         </Stage>
       )}
 
@@ -524,8 +545,9 @@ export function TopicContent(props: Props) {
 /** Every topic but the trial: decision 1's page, exactly as it shipped on 23 Sep. */
 function ClassicContent({ subject, unit, slug, topicId, displayTitle, seeIt, reference }: Props) {
   const item: Omit<ItemRef, "id"> = useMemo(() => ({ subject, unit, topicSlug: slug }), [subject, unit, slug]);
-  const { bundle, error, gateIds, answered, markAnswered } = useLesson(subject, slug, topicId);
-  useStageLanding(Boolean(bundle && gateIds));
+  const { bundle, error, gateIds, outcomes, answered, markAnswered } = useLesson(subject, slug, topicId);
+  // The whole note up to the first check still to answer is on the page; a link to #resume lands on the lesson.
+  useArrival(topicId, Boolean(bundle && gateIds), 1);
 
   if (error) return lessonError;
   if (!bundle || !gateIds)
@@ -550,11 +572,13 @@ function ClassicContent({ subject, unit, slug, topicId, displayTitle, seeIt, ref
             <StepRevealNote
               blocks={plan.noteBlocks}
               initiallyAnswered={gateIds}
+              initialOutcomes={outcomes}
+              workedExamples={bundle.workedExamples}
               sections={plan.noteSections.map((s) => ({ n: s.n, minutes: s.minutes }))}
               hideFirstHeading={plan.hideFirstHeading}
-              onGate={async (id, _answer, correct) => {
+              onGate={async (id, answer, correct, misconceptionTags) => {
                 markAnswered(id);
-                await recordAttempt({ item: { ...item, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct });
+                await recordAttempt({ item: { ...item, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct, answerRaw: answer, misconceptionTags });
               }}
               renderPrompt={(id) => {
                 const p = plan.promptById.get(id);
@@ -579,23 +603,42 @@ function ClassicContent({ subject, unit, slug, topicId, displayTitle, seeIt, ref
  */
 function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, reference, hero, sections: serverSections }: Props) {
   const item: Omit<ItemRef, "id"> = useMemo(() => ({ subject, unit, topicSlug: slug }), [subject, unit, slug]);
-  const { bundle, error, gateIds, answered, markAnswered } = useLesson(subject, slug, topicId);
+  const { bundle, error, gateIds, outcomes, answered, markAnswered } = useLesson(subject, slug, topicId);
   const plan = useMemo(() => (bundle ? planFor(bundle, displayTitle, reference) : null), [bundle, displayTitle, reference]);
   const sections = plan?.noteSections ?? serverSections ?? [];
-  useStageLanding(Boolean(bundle && plan));
 
-  // How far she has come: the sections open, and whether she has pressed the lesson's last Continue. The last press is
-  // kept on this device, so a reload still shows the last section placed (audit CQ-15); it counts only while every
-  // check is still answered, so a check added to the note later reopens the lesson honestly.
+  // Her place (read-place.ts): read once the lesson and her answers are here, then kept by her own acts. `open` is the
+  // sections open, the last of them the one she is in; `finishedMark` is the lesson's last Continue, which counts only
+  // while every check is still answered, so a check added to the note later reopens the lesson honestly.
   const [open, setOpen] = useState<number | null>(null);
-  const [pressedFinish, setPressedFinish] = useState(false);
+  const [finishedMark, setFinishedMark] = useState(false);
+  const place = useRef<ReadPlace | null>(null);
   useEffect(() => {
-    if (readFinished(topicId)) setPressedFinish(true);
-  }, [topicId]);
-  useEffect(() => {
-    if (gateIds && plan && open === null) setOpen(Math.max(1, initialOpen(plan.noteSections, gateIds)));
-  }, [gateIds, plan, open]);
-  const finished = pressedFinish && sections.length > 0 && sections.every((s) => s.gateIds.every((id) => answered.has(id)));
+    if (!gateIds || !plan || open !== null) return;
+    place.current = readPlace(topicId);
+    const at = resumeState({ sections: plan.noteSections, answered: gateIds, place: place.current, legacyFinished: legacyFinished(topicId) });
+    setOpen(Math.max(1, at.open));
+    setFinishedMark(at.finished);
+  }, [gateIds, plan, open, topicId]);
+  const finished = finishedMark && sections.length > 0 && sections.every((s) => s.gateIds.every((id) => answered.has(id)));
+  useArrival(topicId, Boolean(bundle && plan && gateIds), open);
+
+  const meta = useMemo<PlaceMeta>(() => ({ topicId, subject, unit, slug, title: displayTitle ?? "" }), [topicId, subject, unit, slug, displayTitle]);
+  /** Keeps her place after one of her acts, on this device, where the hero and Today read it. */
+  const keepPlace = (act: (p: ReadPlace, s: readonly LessonSection[], now: Date) => ReadPlace) => {
+    if (!plan) return;
+    const now = new Date();
+    place.current = act(place.current ?? newPlace(meta, plan.noteSections, now), plan.noteSections, now);
+    writePlace(place.current);
+  };
+  /**
+   * "Pause here" at a section's end keeps her place ("the lesson opens at the next section") before its link takes her
+   * to Today: the note's own callback (PacedNote `onPause`, 27 Sep 2026).
+   */
+  const onPause = (n: number) => {
+    keepAnchor(topicId, anchorNow());
+    keepPlace((p, s, now) => paused(p, n, s, now));
+  };
 
   const onPrompt = onPromptFor(item, subject);
   // The lesson's last Continue goes on to the first stage after it; the bar has left with the lesson by then.
@@ -604,8 +647,8 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
     ? {
         label: `Continue to ${ONWARD[firstStage.id] ?? firstStage.label.toLowerCase()}`,
         onFinish: () => {
-          setPressedFinish(true);
-          rememberFinished(topicId);
+          setFinishedMark(true);
+          keepPlace((p, s, now) => finishedLesson(p, s, now));
           const el = document.getElementById(firstStage.id);
           if (!el) return;
           const reduce = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -647,11 +690,14 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
             <StepRevealNote
               blocks={plan.noteBlocks}
               initiallyAnswered={gateIds}
+              initialOutcomes={outcomes}
+              workedExamples={bundle.workedExamples}
               sections={plan.noteSections.map((s) => ({ n: s.n, minutes: s.minutes }))}
               hideFirstHeading={plan.hideFirstHeading}
-              onGate={async (id, _answer, correct) => {
+              onGate={async (id, answer, correct, misconceptionTags) => {
                 markAnswered(id);
-                await recordAttempt({ item: { ...item, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct });
+                keepPlace((p, s, now) => touched(p, s, now));
+                await recordAttempt({ item: { ...item, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct, answerRaw: answer, misconceptionTags });
               }}
               renderPrompt={(id) => {
                 const p = plan.promptById.get(id);
@@ -659,10 +705,14 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
               }}
               paced={{
                 open,
-                onContinue: (n) => setOpen((o) => Math.max(o ?? 1, n + 1)),
+                onContinue: (n) => {
+                  setOpen((o) => Math.max(o ?? 1, n + 1));
+                  keepPlace((p, s, now) => continued(p, n, s, now));
+                },
                 finish,
                 titles: plan.noteSections.map((s) => s.title),
                 reaction,
+                onPause,
               }}
             />
           </section>

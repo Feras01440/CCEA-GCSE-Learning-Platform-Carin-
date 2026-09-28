@@ -33,6 +33,9 @@ export type FigureExpression = "attentive" | "dry" | "pleased";
  * - `topic`: the topic hero, beside the topic-open line (72 on the phone, 80 on the desktop);
  * - `close`: the close card, standing on the hill by the cairn. On the hill scene these are the scene's own units
  *   (156 on the phone's 342-wide scene, 250 on the desktop's 400 by 640 panel), so the hare scales with the hills.
+ * - `welcome`: first run, above her name card, waving hello beside the one sentence that introduces it, so that "What
+ *   should it call you?" asks about someone she has met (the trial audit's COMPANION-8). The Letter's size, 100 on the
+ *   phone and 110 on the desktop: the scale at which she meets it again in the Letter that evening.
  *
  * The 24 px mark (RowanMark) is not a slot of its own: it stands in wherever a line has no room for the figure,
  * such as the sealed Letter's one line (MARK_SIZE).
@@ -42,6 +45,7 @@ export const FIGURE_SLOTS = {
   letter: { phone: 100, desktop: 110, states: ["letter"] },
   topic: { phone: 72, desktop: 80, states: ["listening"] },
   close: { phone: 156, desktop: 250, states: ["arrival", "stone-placed"] },
+  welcome: { phone: 100, desktop: 110, states: ["arrival"] },
 } as const satisfies Record<string, { phone: number; desktop: number; states: readonly FigureState[] }>;
 export type FigureSlot = keyof typeof FIGURE_SLOTS;
 export const FIGURE_SLOT_NAMES = Object.keys(FIGURE_SLOTS) as FigureSlot[];
@@ -80,6 +84,18 @@ export function figureStateFor(moment: Moment, context: Pick<CompanionContext, "
     default:
       return "resting";
   }
+}
+
+/**
+ * The state of the hare that stands on the Tonight tile (the owner's presence ruling, art direction v2 §7 and §9: "a posed
+ * hare composed into the Tonight tile … in the state the day calls for"). It stands there on every open, whether or not
+ * Rowan has a line to say, so its pose cannot come from the line: it is the evening pose once it is late, the same
+ * `isLate` carve-out that picks the evening lines (never a record of her absence, so day one and day thirty draw alike),
+ * and the arrival pose otherwise. Late at night a line of the `today-open` moment (a dry line, her own note) is drawn in
+ * the evening pose too, so the tile never pairs a bright wave with midnight (the trial audit's TODAY-2, 25 Sep 2026).
+ */
+export function tonightFigureState(context: Pick<CompanionContext, "flags">): FigureState {
+  return context.flags.isLate ? "evening" : "arrival";
 }
 
 /**

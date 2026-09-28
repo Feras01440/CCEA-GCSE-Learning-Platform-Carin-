@@ -74,6 +74,7 @@ export {
 export {
   SLOTS,
   SLOT_IDS,
+  TODAY_MOMENTS,
   candidatesFor,
   momentsFor,
   renderTemplate,
@@ -129,7 +130,18 @@ export {
   type ShownLine,
 } from "./memory";
 
-export { describePresence, describeVoice, letterEyebrow, sealedLetterPreview, type PresenceCopy, type VoiceCopy } from "./voice";
+export {
+  describePresence,
+  describeVoice,
+  introduction,
+  learnerNameNote,
+  letterEyebrow,
+  renameNotSaved,
+  renamedReply,
+  sealedLetterPreview,
+  type PresenceCopy,
+  type VoiceCopy,
+} from "./voice";
 
 export {
   FIGURE_SLOTS,
@@ -139,6 +151,7 @@ export {
   MOMENT_FIGURE,
   figureExpressionFor,
   figureStateFor,
+  tonightFigureState,
   type FigureExpression,
   type FigureSlot,
   type FigureState,

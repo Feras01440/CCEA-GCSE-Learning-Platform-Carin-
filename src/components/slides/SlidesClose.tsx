@@ -65,9 +65,10 @@ function useDesktop(): boolean {
   return desktop;
 }
 
-function factsLine({ checks, answered, missed, held, recalled }: SlidesCloseProps["facts"]): string {
+/** "8 your turns answered · the one that came back held · 2 recall cards graded": the check is named "Your turn". */
+export function factsLine({ checks, answered, missed, held, recalled }: SlidesCloseProps["facts"]): string {
   const parts: string[] = [];
-  parts.push(answered === checks ? `${checks} ${checks === 1 ? "check" : "checks"} answered` : `${answered} of ${checks} checks answered`);
+  parts.push(answered === checks ? `${checks} ${checks === 1 ? "your turn" : "your turns"} answered` : `${answered} of ${checks} your turns answered`);
   if (missed > 0) parts.push(held === missed ? (missed === 1 ? "the one that came back held" : `the ${missed} that came back held`) : `${held} of the ${missed} that came back held`);
   if (recalled > 0) parts.push(`${recalled} recall ${recalled === 1 ? "card" : "cards"} graded`);
   return parts.join(" · ");
@@ -132,14 +133,16 @@ export function SlidesClose({ subject, unit, slug, title, displayTitle, count, s
       <CompanionLine moment="session-close" context={ctx} className="mt-3" />
     </>
   );
+  // The questions proper come after the teaching, as in a classroom (the teach-first case §6.5; the owner's answer 1:
+  // on the Practice stage for now). They are the first way out; "Done for tonight" is the second.
   const exits = (
     <>
-      <Link href="/" className={clsx(controlPrimary, "lg:w-[240px]")} data-exit="done">
-        Done for tonight
-      </Link>
       {/* Lands on the topic page's Practice stage: the topic page scrolls to #practice once the stage has rendered. */}
-      <Link href={`/learn/${subject}/${unit}/${slug}/#${PRACTICE_ANCHOR}`} className={clsx(controlSecondary, "lg:w-[240px]")} data-exit="practise">
-        Practise this topic
+      <Link href={`/learn/${subject}/${unit}/${slug}/#${PRACTICE_ANCHOR}`} className={clsx(controlPrimary, "lg:w-[240px]")} data-exit="practise">
+        Now the questions
+      </Link>
+      <Link href="/" className={clsx(controlSecondary, "lg:w-[240px]")} data-exit="done">
+        Done for tonight
       </Link>
     </>
   );

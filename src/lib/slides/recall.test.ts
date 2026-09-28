@@ -20,19 +20,26 @@ const prompt = (over: Partial<RetrievalPrompt>): RetrievalPrompt =>
   ({ id: "rp.x.01", topic: "x", specRefs: [], kind: "qa", prompt: "What is it?", answer: "It.", keyWords: [], examUnit: "FM1", difficultyPrior: 3, ...over }) as RetrievalPrompt;
 
 describe("the trial topic's recall cards (the owner: 'it doesn't have to be always four … like writing an essay')", () => {
-  it("keeps two of the note's four: the last thing to check, and what to do first with a cubic", () => {
-    const four = placed(TRIAL);
-    expect(four.map((p) => p.id.split(".").pop())).toEqual(["01", "03", "04", "06"]);
-    expect(chooseRecall(four).map((p) => p.id.split(".").pop())).toEqual(["04", "06"]);
+  it("keeps every prompt the note places when it places at most two, each light, in the note's order", () => {
+    const wired = placed(TRIAL);
+    expect(wired.length).toBeLessThanOrEqual(RECALL_MAX);
+    for (const p of wired) expect(recallFit(p), p.id).toMatchObject({ ok: true, reasons: [] });
+    expect(chooseRecall(wired)).toEqual(wired);
+    // The trial's design since the teach-first rewrite of 25 Sep: the content session wires two short prompts only.
+    expect(wired.map((p) => p.id.split(".").pop())).toEqual(["02", "08"]);
   });
 
-  it("drops the three moves (a list) and the factor-and-term question (an explanation, asked two ways)", () => {
-    const [moves, factorTerm, numbers, cubic] = placed(TRIAL);
-    expect(recallFit(moves)).toMatchObject({ ok: false, reasons: ["asks for a list"] });
-    expect(recallFit(factorTerm).ok).toBe(false);
-    expect(recallFit(factorTerm).reasons).toEqual(expect.arrayContaining(["asks for an explanation", "asks two things at once"]));
+  it("expects a breath of an answer from each: a² − b² as its brackets, and 'the numbers'", () => {
+    const [squares, numbers] = placed(TRIAL);
+    expect(recallFit(squares)).toMatchObject({ ok: true, expected: "$(a+b)(a-b)$", words: 1 });
     expect(recallFit(numbers)).toMatchObject({ ok: true, expected: "The numbers", words: 2 });
-    expect(recallFit(cubic)).toMatchObject({ ok: true, expected: "Take the common factor $x$ out", words: 6 });
+  });
+
+  it("would still drop the two the old note placed and the owner found an essay: the three moves (a list), and factor against term (an explanation, two questions)", () => {
+    const moves = prompt({ kind: "procedure", prompt: "The three moves for simplifying an algebraic fraction.", answer: "1 Factorise the numerator fully. 2 Factorise the denominator fully. 3 Cancel every factor that appears on both lines." });
+    const factorTerm = prompt({ kind: "trap", prompt: "What is the difference between a factor and a term, and which of them can be cancelled?", answer: "A factor is multiplied by the rest of the line; a term is added to it." });
+    expect(recallFit(moves)).toMatchObject({ ok: false, reasons: ["asks for a list"] });
+    expect(recallFit(factorTerm).reasons).toEqual(expect.arrayContaining(["asks for an explanation", "asks two things at once"]));
   });
 });
 

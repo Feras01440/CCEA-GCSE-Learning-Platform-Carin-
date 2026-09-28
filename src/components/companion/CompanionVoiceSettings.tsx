@@ -21,10 +21,12 @@
 import { useEffect, useId, useReducer, useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { clsx } from "clsx";
+import { useExamPlan } from "@/lib/plan/store";
 import {
   DEFAULT_ROWAN_NAME,
   describePresence,
   describeVoice,
+  learnerNameNote,
   presenceOf,
   readCompanionState,
   rowanName,
@@ -115,6 +117,7 @@ export function CompanionVoiceSettings({ className }: CompanionVoiceSettingsProp
   }
 
   const name = rowanName(state);
+  const plan = useExamPlan();
   const voice = state ? describeVoice(state) : null;
   const presence = state ? describePresence(state) : null;
   const stored = state ? presenceOf(state) : null;
@@ -170,6 +173,8 @@ export function CompanionVoiceSettings({ className }: CompanionVoiceSettingsProp
             Empty goes back to {DEFAULT_ROWAN_NAME}.
             {nameSaved && <span role="status"> Saved.</span>}
           </p>
+          {/* What it calls her, and where that is kept (COMPANION-8: the name she gives at first run is used). */}
+          {plan && <p className="mt-1 text-meta text-ink-2" data-learner-name="">{learnerNameNote(plan.learnerName, name)}</p>}
         </div>
 
         {presence && stored && (

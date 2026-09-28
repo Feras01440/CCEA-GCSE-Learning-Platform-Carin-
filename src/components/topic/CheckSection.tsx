@@ -62,7 +62,7 @@ export function CheckSection({ phase, items, item }: CheckSectionProps) {
         total={items.length}
         onAnswer={async (a) => {
           await recordAttempt({
-            item: { ...item, id: current.item.id },
+            item: { ...item, id: `${current.setId}#${current.item.id}` },
             itemKind: "diagnostic",
             correct: a.correct,
             confidence: a.confidence,

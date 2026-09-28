@@ -21,7 +21,7 @@ import { MdInlines, parseInline, Tex } from "@/components/items";
 import { PhotoFigure } from "@/components/media/PhotoFigure";
 import { sanitizeInlineSvg } from "@/lib/ux/svg";
 import { QuestionRunner } from "@/components/topic/QuestionRunner";
-import { heroDataFor, lessonBlocks, lessonSections, spineTitle, type TopicHeroData, inlineLede } from "@/components/topic/lesson-plan";
+import { heroDataFor, lessonBlocks, lessonSections, seeStepsOf, spineTitle, type TopicHeroData, inlineLede } from "@/components/topic/lesson-plan";
 import { CairnStack } from "@/components/ux/CairnStack";
 import { CardSkeleton } from "@/components/ux/Skeleton";
 import { loadBundle, type ShippedBundle } from "@/lib/content/load";
@@ -99,13 +99,15 @@ export function SeededLesson({ plan, today, onDone }: { plan: ExamPlan; today: s
   const view = useMemo(() => {
     if (!resolved) return null;
     const blocks = (resolved.bundle.noteBlocks ?? []) as NoteBlock[];
-    const hero = heroDataFor(blocks);
+    // A See it that names a worked example is priced by its steps, as on the topic page (lesson-plan.ts seeSeconds).
+    const steps = seeStepsOf(resolved.bundle.workedExamples);
+    const hero = heroDataFor(blocks, steps);
     const lesson = lessonBlocks(blocks, hero.lede) as NoteBlock[];
     const cut = firstSectionThroughGate(lesson);
     // The card above already carries the topic's name; a note whose first heading repeats it would
     // say it twice on one screen, which the full topic page avoids by putting them a scroll apart.
     const slice = cut[0]?.type === "h" && spineTitle(cut[0].text) === spineTitle(resolved.seed.title) ? cut.slice(1) : cut;
-    const sections = lessonSections(blocks, hero.lede);
+    const sections = lessonSections(blocks, hero.lede, steps);
     const practice = resolved.bundle.questions.find((q) => q.style === "practice") ?? null;
     const firstPart: Question | null = practice
       ? { ...practice, parts: [practice.parts[0]], totalMarks: practice.parts[0].marks }

@@ -8,13 +8,13 @@ import { DifficultyDots } from "@/components/topic/DifficultyDots";
 import { TopicContent } from "@/components/topic/TopicContent";
 import { TopicHero } from "@/components/topic/TopicHero";
 import type { TopicReferenceData } from "@/components/topic/TopicReference";
-import { displayTitle, heroDataFor, isReadV2, lessonSections, noteGateIds } from "@/components/topic/lesson-plan";
+import { displayTitle, heroDataFor, isReadV2, lessonSections, noteGateIds, seeStepsOf } from "@/components/topic/lesson-plan";
 import { SeeIt } from "@/components/topic/SeeIt";
 import { allTopicParams, difficultyLabel, subjectInfo, topicInfo, unitInfo, type Subject } from "@/lib/content/taxonomy";
 import { contentFor } from "@/lib/content/load";
 import { deckFor } from "@/lib/content/decks";
 import { mediaFor } from "@/lib/content/media";
-import type { RetrievalPrompt } from "@/lib/content/schema";
+import type { RetrievalPrompt, WorkedExample } from "@/lib/content/schema";
 import { deckFor as slidesDeckFor } from "@/lib/slides/deck";
 import { slidesReadyFor } from "@/lib/slides/ready";
 
@@ -40,13 +40,18 @@ export function generateStaticParams() {
  * thing she reads, so it is prerendered with the page instead of waiting for the client fetch
  * that fills in the lesson below it.
  */
-function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; prompts: RetrievalPrompt[]; findings: number } {
+function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; prompts: RetrievalPrompt[]; findings: number; workedExamples: WorkedExample[] } {
   try {
     const file = path.join(process.cwd(), "public", "content", subject, `${topicId}.json`);
-    const b = JSON.parse(fs.readFileSync(file, "utf8")) as { noteBlocks?: unknown[] | null; prompts?: RetrievalPrompt[] | null; insight?: { findings?: unknown[] } | null };
-    return { noteBlocks: b.noteBlocks ?? [], prompts: b.prompts ?? [], findings: b.insight?.findings?.length ?? 0 };
+    const b = JSON.parse(fs.readFileSync(file, "utf8")) as {
+      noteBlocks?: unknown[] | null;
+      prompts?: RetrievalPrompt[] | null;
+      insight?: { findings?: unknown[] } | null;
+      workedExamples?: WorkedExample[] | null;
+    };
+    return { noteBlocks: b.noteBlocks ?? [], prompts: b.prompts ?? [], findings: b.insight?.findings?.length ?? 0, workedExamples: b.workedExamples ?? [] };
   } catch {
-    return { noteBlocks: [], prompts: [], findings: 0 };
+    return { noteBlocks: [], prompts: [], findings: 0, workedExamples: [] };
   }
 }
 
@@ -107,12 +112,14 @@ export default async function TopicPage({ params }: { params: Promise<{ subject:
     // A shipped topic opens on its own hero: what it is, how long it takes, one way in. The lesson is the page below it.
     const shippedFile = shippedFor(subject, shipped.id);
     const blocks = shippedFile.noteBlocks;
-    const hero = heroDataFor(blocks);
-    const sections = lessonSections(blocks, hero.lede);
+    // A See it that names a worked example is priced by its steps, in Read (here) as in the deck (below).
+    const steps = seeStepsOf(shippedFile.workedExamples);
+    const hero = heroDataFor(blocks, steps);
+    const sections = lessonSections(blocks, hero.lede, steps);
     const firstHeading = (blocks.find((b) => (b as { type?: string }).type === "h") as { text?: string } | undefined)?.text ?? null;
     const shownTitle = displayTitle(t.title, firstHeading, hero.short);
     // A topic with Slides: the deck's own numbers, the ones its title card and its Start button print (src/lib/slides).
-    const deck = slidesReadyFor(subject, topic) ? slidesDeckFor(shipped.id, blocks, shippedFile.prompts).stats : null;
+    const deck = slidesReadyFor(subject, topic) ? slidesDeckFor(shipped.id, blocks, shippedFile.prompts, shippedFile.workedExamples).stats : null;
     const heroElement = (
       <TopicHero
         subject={subject as Subject}
@@ -124,7 +131,7 @@ export default async function TopicPage({ params }: { params: Promise<{ subject:
         hero={hero}
         sections={sections.length}
         topicId={shipped.id}
-        gateSections={sections.flatMap((sec) => sec.gateIds.map((id) => [id, sec.n] as [string, number]))}
+        outline={sections.map((sec) => ({ title: sec.title, gateIds: sec.gateIds }))}
         findings={shippedFile.findings}
         checks={noteGateIds(blocks).length}
         workedExamples={shipped.counts.we}

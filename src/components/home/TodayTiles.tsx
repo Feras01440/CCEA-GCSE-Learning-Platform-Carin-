@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ArrowRight } from "lucide-react";
@@ -14,13 +14,15 @@ import { daysAwayWord } from "@/lib/papers/plan-view";
 import { tierWord } from "@/lib/papers/meta";
 import { contentIndex } from "@/lib/content/load";
 import type { Subject } from "@/lib/content/taxonomy";
-import { markLetterSeen, setRowanName, useCompanionContext, type CompanionContext } from "@/lib/companion";
+import { lateNow, markLetterSeen, setRowanName, useCompanionContext, type CompanionContext } from "@/lib/companion";
 import { CompanionLetter } from "@/components/companion/CompanionLetter";
 import { CompanionLine } from "@/components/companion/CompanionLine";
 import { CairnStack } from "@/components/ux/CairnStack";
 import { CardSkeleton, Loading } from "@/components/ux/Skeleton";
 import { btnPrimary } from "@/components/items/ui";
-import { aboutMinutes, tonightHeadline, tonightSublines } from "./tonight-copy";
+import { useSettledReviews } from "@/lib/review/resolve";
+import { READ_LAST_KEY, lastReadLesson, type ReadResume } from "@/components/topic/read-place";
+import { aboutMinutes, pausedRow, tonightHeadline, tonightSentence } from "./tonight-copy";
 
 /**
  * Today (02-surfaces.md §1, the fifth evening, and the platform audit's Today): one object, the Letter, four page rows
@@ -70,6 +72,12 @@ export function TodayTiles() {
   const plan = useExamPlan();
   const today = todayISO();
   const router = useRouter();
+  /**
+   * The device's review cards settled before tonight is counted (src/lib/review/withdrawn.ts): a card for an item a later
+   * pass withdrew is moved to its replacement or retired, and a diagnostic card becomes its own topic's, so "9 back" is
+   * the list the inbox serves. At most a moment's wait (useSettledReviews gives up waiting after 1.5 s).
+   */
+  const settled = useSettledReviews();
 
   const firstRunDone = useLiveQuery(async () => {
     try {
@@ -84,28 +92,21 @@ export function TodayTiles() {
     if (firstRunDone === false) router.replace("/welcome/");
   }, [firstRunDone, router]);
 
+  // Counted only once the cards are settled, so the first count she sees is the list the inbox will serve.
   const due = useLiveQuery(async () => {
+    if (!settled) return undefined;
     try {
       return await getDB().cards.where("due").belowOrEqual(new Date()).count();
     } catch {
       return 0;
     }
-  }, []);
+  }, [settled]);
 
   const sessionsThisWeek = useLiveQuery(async () => {
     try {
       return await getDB().sessions.where("startedAt").aboveOrEqual(startOfWeek(new Date())).count();
     } catch {
       return 0;
-    }
-  }, []);
-
-  /** Her first sitting, which decides whether the "Chosen for you" explanation still earns its line (first week only). */
-  const firstSession = useLiveQuery(async () => {
-    try {
-      return (await getDB().sessions.orderBy("startedAt").first())?.startedAt ?? null;
-    } catch {
-      return null;
     }
   }, []);
 
@@ -131,7 +132,6 @@ export function TodayTiles() {
   const stones = (mastery ?? []).filter((m) => m.level === "proficient" || m.level === "mastered").length;
   const daysSince = lastSession ? Math.floor((Date.now() - lastSession.getTime()) / 86_400_000) : null;
   const gentle = daysSince !== null && daysSince >= 3;
-  const firstWeek = firstSession === null || (firstSession !== undefined && Date.now() - firstSession.getTime() < 7 * 86_400_000);
 
   /**
    * Her brother's notes are rendered by first run (src/components/gift/FirstRun.tsx); Today carries
@@ -141,12 +141,43 @@ export function TodayTiles() {
    */
   const giftNoteOnScreen = false;
 
+  /**
+   * The Read lesson she paused and has not finished, from the read-flow agent's record on this device
+   * (src/components/topic/read-place.ts, lastReadLesson): the tile offers the way back to it, and Rowan, the evening she
+   * paused, says the section is done (the trial audit's READ-12: Today used to say nothing of the lesson). Read on the
+   * device once, after mount (the record is in localStorage), and again if another tab changes it.
+   */
+  const [paused, setPaused] = useState<{ resume: ReadResume | null; read: boolean }>({ resume: null, read: false });
+  useEffect(() => {
+    const read = () => setPaused({ resume: lastReadLesson(), read: true });
+    read();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === null || e.key === READ_LAST_KEY || e.key.startsWith("cairn.read.place.")) read();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+  const pausedLesson = paused.resume
+    ? {
+        title: paused.resume.place.title,
+        done: paused.resume.done,
+        open: paused.resume.place.open,
+        total: paused.resume.place.total,
+        pausedToday: paused.resume.pausedLast && !!paused.resume.place.pausedAt && todayISO(new Date(paused.resume.place.pausedAt)) === today,
+      }
+    : null;
+
   // The Tonight tile's slots, `today-open` and `first-letter`. The hook is called on every render,
   // before the skeleton returns, and hands back `undefined` while it loads, which renders nothing.
-  const live = useCompanionContext({
-    giftNoteOnScreen,
-    nextTopic: nextStep ? { slug: nextStep.topic.slug, title: nextStep.topic.title } : null,
-  });
+  const live = useCompanionContext(
+    {
+      giftNoteOnScreen,
+      nextTopic: nextStep ? { slug: nextStep.topic.slug, title: nextStep.topic.title } : null,
+      pausedLesson,
+    },
+    // Read once the cards are settled, so Rowan's facts are the settled ones.
+    settled,
+  );
 
   /**
    * One arrival line per visit. Recording the line that was said writes to `companionState`, which
@@ -160,15 +191,31 @@ export function TodayTiles() {
    * platform audit's must-fix 2, 23 September 2026).
    */
   const held = useRef<CompanionContext | undefined>(undefined);
-  if (live && plan !== undefined && mastery !== undefined && !held.current) held.current = live;
+  if (live && paused.read && plan !== undefined && mastery !== undefined && !held.current) held.current = live;
   const companion = held.current;
   const letterOwed = companion?.flags.firstLetterDue === true;
 
-  const loading = plan === undefined || due === undefined;
-  // The tile's own words (tonight-copy.ts): the fact, then at most two lines of advice. Rowan's line under them is
-  // its own and never repeats one of these sentences (tonight-copy.test.ts).
-  const sublines = tonightSublines({ due: due ?? 0, gentle, firstWeek });
+  /**
+   * She renamed it in the Letter: saved, then the name this visit's context carries changes too, so the arrival line's
+   * name for a screen reader follows the Letter's signature at once rather than at the next open (COMPANION-9). The save
+   * is returned, so the Letter can say whether the device kept it.
+   */
+  const [, renamed] = useReducer((n: number) => n + 1, 0);
+  const renameRowan = async (name: string) => {
+    await setRowanName(name);
+    if (held.current) held.current = { ...held.current, rowanName: name };
+    renamed();
+  };
+
+  // The tile waits for the held context as well as the count, so the one sentence beside the hare is chosen once and
+  // never swaps from the tile's own words to Rowan's after the first paint.
+  const loading = !settled || plan === undefined || due === undefined || companion === undefined;
+  // The tile's own sentence (tonight-copy.ts), said only while Rowan is silent: one screen, one sentence, once. The hour
+  // is the companion's own `isLate`, so the tile and Rowan agree on what the hour allows.
+  const sentence = tonightSentence({ due: due ?? 0, gentle, late: companion ? companion.flags.isLate : lateNow(new Date()), paused: pausedLesson !== null });
   const learnHref = nextStep?.href ?? "/learn/";
+  // The way back to a paused lesson: the tile's one button when nothing is due, a quiet link under Start otherwise.
+  const pausedWay = paused.resume && pausedLesson ? { ...pausedRow(pausedLesson), href: paused.resume.href } : null;
   const week = sessionsThisWeek ?? 0;
   const soon = papers.slice(0, 3);
 
@@ -195,18 +242,44 @@ export function TodayTiles() {
               {tonightHeadline(due ?? 0)}
               {due ? <span className="font-normal text-ink-2"> · {aboutMinutes(due)}</span> : null}
             </p>
-            {sublines.map((s) => (
-              <p key={s} className="mt-1 text-ui text-ink-2">
-                {s}
-              </p>
-            ))}
-            {/* Rowan's arrival line with the posed hare beside it (the companion block): -mb-2 brings the Start button to
-                the 12 px under the line that the canvas draws, so the hare stands on the tile's floor. In Words only
-                there is no hare to stand, so the words keep the button's full 20 px. */}
-            <CompanionLine moment="today-open" context={companion} className={clsx("mt-3", companion?.figure && "-mb-2")} />
-            <Link href={due ? "/review/" : learnHref} className={clsx(btnPrimary, "tap-lg mt-5")}>
-              {due ? "Start" : "Learn"} <ArrowRight size={18} strokeWidth={1.5} aria-hidden />
-            </Link>
+            {/* The row under the headline (the companion block): one sentence beside the posed hare, which stands on the
+                tile on every open in Full, in the state the day calls for (the owner's presence ruling; TODAY-1). The
+                sentence is Rowan's line when it has one this open, otherwise the tile's own. The row pulls the Start
+                button up to the 12 px the canvas draws under it, so the hare stands on the tile's floor; in Words only
+                and Quiet there is no hare, and the sentence keeps the button's full 20 px. */}
+            <CompanionLine
+              moment="today-open"
+              context={companion}
+              standing
+              fallback={<p className="text-ui text-ink-2">{sentence}</p>}
+              className="mt-3"
+            />
+            {/* One accent: the reviews when something is back; otherwise the way back into a lesson she paused, or the
+                next step. A paused lesson under Start keeps its way back as a quiet link beside what it is. */}
+            {pausedWay && !due ? (
+              <>
+                <Link href={pausedWay.href} aria-describedby="paused-lesson" className={clsx(btnPrimary, "tap-lg mt-5")}>
+                  {pausedWay.action} <ArrowRight size={18} strokeWidth={1.5} aria-hidden />
+                </Link>
+                <p id="paused-lesson" data-paused-lesson="" className="mt-2 text-meta text-ink-2">
+                  {pausedWay.label}
+                </p>
+              </>
+            ) : (
+              <>
+                <Link href={due ? "/review/" : learnHref} className={clsx(btnPrimary, "tap-lg mt-5")}>
+                  {due ? "Start" : "Learn"} <ArrowRight size={18} strokeWidth={1.5} aria-hidden />
+                </Link>
+                {pausedWay && (
+                  <p data-paused-lesson="" className="mt-2 text-meta text-ink-2">
+                    {pausedWay.label} ·{" "}
+                    <Link href={pausedWay.href} className="font-medium text-ink underline decoration-line-3 underline-offset-4">
+                      {pausedWay.action}
+                    </Link>
+                  </p>
+                )}
+              </>
+            )}
           </section>
         </Loading>
 
@@ -219,7 +292,7 @@ export function TodayTiles() {
             moment="first-letter"
             context={companion}
             onRead={() => void markLetterSeen().catch(() => {})}
-            onRename={(name) => void setRowanName(name).catch(() => {})}
+            onRename={renameRowan}
           />
         )}
       </div>

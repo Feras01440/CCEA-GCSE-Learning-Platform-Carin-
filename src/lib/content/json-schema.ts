@@ -21,6 +21,8 @@ export const JSON_SCHEMA_EXPORTS = {
   PhysicsEquation: S.PhysicsEquation,
   QwcItem: S.QwcItem,
   SubjectPack: S.SubjectPack,
+  /** note.blocks.json (27 Sep 2026): the lesson's blocks, with the See it block and the gate's twin. */
+  NoteBlocks: S.NoteBlocks,
 } as const;
 
 export type JsonSchemaName = keyof typeof JSON_SCHEMA_EXPORTS;

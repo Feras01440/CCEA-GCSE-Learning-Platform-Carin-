@@ -160,6 +160,8 @@ export function BottomTabs() {
     <nav
       ref={navRef}
       aria-label="Primary"
+      // app/globals.css reserves this bar's height whenever the page scrolls something into view (READ-10).
+      data-tab-bar=""
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >

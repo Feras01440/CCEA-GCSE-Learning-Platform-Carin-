@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { clsx } from "clsx";
 import { MdInlines, MissMark, Tex, Tick, parseMd } from "@/components/items";
 import { Letter } from "@/components/items/ui";
+import { optionName } from "@/lib/slides/text";
 
 /** The segmented 3 px track: done segments in the accent, the current one outlined, the rest the subject's mid tint. */
 export function Track({ n, N, className }: { n: number; N: number; className?: string }) {
@@ -35,22 +36,40 @@ export function Track({ n, N, className }: { n: number; N: number; className?: s
 /**
  * A drawing sits on a rounded stage, never floating on the paper. The phone's header already carries the wash, so its
  * stage is white with a hairline; from lg the stage is the wash. `wash` forces the wash at every size; one element
- * either way, so a figure is drawn once.
+ * either way, so a figure is drawn once. `bleed`: on the phone the stage runs 16 px into the card's 24 px gutter on each
+ * side with 8 px inside it, so a figure in a card's figure column is drawn 356 px wide at 390, the width its labels are
+ * sized for (art direction v2 §3.1 rule 6, §11.2), instead of 316; from lg it is the figure column's stage as before.
  */
-export function Stage({ children, wash = false, className }: { children: ReactNode; wash?: boolean; className?: string }) {
+export function Stage({ children, wash = false, bleed = false, className }: { children: ReactNode; wash?: boolean; bleed?: boolean; className?: string }) {
   return (
-    <div className={clsx("flex items-center justify-center rounded-[12px] p-3", wash ? "bg-[var(--tint-wash)]" : "border border-line bg-surface lg:border-0 lg:bg-[var(--tint-wash)]", className)} data-stage>
+    <div
+      className={clsx(
+        "flex items-center justify-center rounded-[12px]",
+        bleed ? "-mx-4 p-2 lg:mx-0 lg:p-3" : "p-3",
+        wash ? "bg-[var(--tint-wash)]" : "border border-line bg-surface lg:border-0 lg:bg-[var(--tint-wash)]",
+        className,
+      )}
+      data-stage
+    >
       {children}
     </div>
   );
 }
+
+/**
+ * Inline maths kept whole: a formula moves to the next line as one piece, so a worked line never breaks inside a bracket
+ * ("(x +" / "a)"), and only a formula wider than the line breaks, at KaTeX's own points (max-width 100%). Measured on the
+ * trial deck (25 Sep): 6 of its 59 inline formulas broke across lines at 390 and 8 at 1280, 3 of them inside a bracket;
+ * kept whole, none breaks and none overflows. Display maths is untouched (KaTeX's unlayered rule keeps it a block).
+ */
+export const wholeMaths = "[&_.katex]:inline-block [&_.katex]:max-w-full";
 
 /** Learning prose at the card size: Literata, the token size, 1.5 leading; an authored line break is a line break. */
 export function Prose({ md, size = "card", className }: { md: string; size?: "card" | "lede" | "explain"; className?: string }) {
   const blocks = parseMd(md);
   const sizeCls = size === "card" ? "text-[length:var(--fs-card-prose)] leading-[1.5]" : size === "lede" ? "text-[18px] leading-[1.5] md:text-[19px] md:leading-[1.52]" : "text-[17px] leading-[1.45]";
   return (
-    <div className={clsx("font-serif-lesson text-ink", sizeCls, className)}>
+    <div className={clsx("font-serif-lesson text-ink", wholeMaths, sizeCls, className)}>
       {blocks.map((b, i) =>
         b.type === "p" ? (
           <p key={i} className={clsx(i > 0 && "mt-3")}>
@@ -128,9 +147,30 @@ export type OptionState = "" | "chosen" | "ok" | "miss";
 /**
  * One option of a gate: 52 px, 18 px Literata; at rest a --line-3 edge, chosen an ink edge; after Check the right
  * option is lit in fern with a filled tick and her miss takes the ink edge with the circle-dash. The edge is drawn
- * as an inset ring over a 1 px border so nothing moves when it changes.
+ * as an inset ring over a 1 px border so nothing moves when it changes. It is checked when it is hers: chosen before
+ * Check, and after Check her answer, right or not (audit SLIDES-25: a right answer left no option checked).
  */
-export function Option({ letter, text, value, state, disabled, onSelect, index }: { letter: string; text: string; /** The authored option, the value marked and recorded. */ value: string; state: OptionState; disabled: boolean; onSelect: () => void; index: number }) {
+export function Option({
+  letter,
+  text,
+  value,
+  state,
+  hers = false,
+  disabled,
+  onSelect,
+  index,
+}: {
+  letter: string;
+  text: string;
+  /** The authored option, the value marked and recorded. */
+  value: string;
+  state: OptionState;
+  /** After Check: this is the option she chose. */
+  hers?: boolean;
+  disabled: boolean;
+  onSelect: () => void;
+  index: number;
+}) {
   const badge =
     state === "ok" ? (
       <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full bg-ok text-surface" aria-hidden>
@@ -147,7 +187,8 @@ export function Option({ letter, text, value, state, disabled, onSelect, index }
     <button
       type="button"
       role="radio"
-      aria-checked={state === "chosen" || state === "miss" || (state === "ok" && false)}
+      aria-checked={state === "chosen" || hers}
+      aria-label={optionName(value, state, hers)}
       data-outcome={state === "ok" || state === "miss" ? state : undefined}
       data-option={index}
       data-value={value}
@@ -171,24 +212,52 @@ export function Option({ letter, text, value, state, disabled, onSelect, index }
 
 /**
  * The verdict after Check: a 2 px outcome edge with a 4 px rule, the word at 21 px ("Yes." in fern, "Not quite." in
- * ink), the consequence drawn before the words, the explanation, and one line of what happens next.
+ * ink), the consequence drawn before the words, the explanation, and one line of what happens next. After a miss has
+ * been re-taught the word gives way to the answer line ("The answer: …", `answer`) and her choice's line (`diagnosis`).
+ * A landing place: the keyboard is put here when it appears, so a screen reader reads it (audit SLIDES-37).
  */
-export function Verdict({ kind, explain, meta, reaction, className }: { kind: "ok" | "miss"; explain: string; meta?: ReactNode; reaction?: ReactNode; className?: string }) {
+export function Verdict({
+  kind,
+  explain,
+  meta,
+  reaction,
+  answer,
+  diagnosis,
+  className,
+}: {
+  kind: "ok" | "miss";
+  explain?: string | null;
+  meta?: ReactNode;
+  reaction?: ReactNode;
+  /** The right answer, printed as the 21 px line in place of the word. */
+  answer?: string | null;
+  /** A line about her choice, under the answer. */
+  diagnosis?: ReactNode;
+  className?: string;
+}) {
   return (
     <div
       role="status"
+      tabIndex={-1}
+      data-focus-quiet=""
       data-verdict={kind}
-      className={clsx(
-        "motion-reveal flex flex-col gap-1.5 rounded-[12px] border-2 border-l-4 bg-surface px-4 py-3",
-        kind === "ok" ? "border-ok" : "border-miss",
-        className,
-      )}
+      className={clsx("motion-reveal flex flex-col gap-1.5 rounded-[12px] border-2 border-l-4 bg-surface px-4 py-3", kind === "ok" ? "border-ok" : "border-miss", className)}
     >
-      <p className={clsx("font-serif-lesson text-[length:var(--fs-verdict)] font-semibold leading-[1.2]", kind === "ok" ? "text-ok" : "text-ink")}>{kind === "ok" ? "Yes." : "Not quite."}</p>
+      {answer ? (
+        <p className={clsx("font-serif-lesson text-[length:var(--fs-verdict)] font-semibold leading-[1.3] text-ink", wholeMaths)} data-answer-line>
+          <span className="font-sans text-[15px] font-medium text-ink-2">The answer </span>
+          <Tex text={answer} />
+        </p>
+      ) : (
+        <p className={clsx("font-serif-lesson text-[length:var(--fs-verdict)] font-semibold leading-[1.2]", kind === "ok" ? "text-ok" : "text-ink")}>{kind === "ok" ? "Yes." : "Not quite."}</p>
+      )}
+      {diagnosis}
       {reaction}
-      <div className="font-serif-lesson text-[17px] leading-[1.45] text-ink">
-        <Tex text={explain} />
-      </div>
+      {explain && (
+        <div className={clsx("font-serif-lesson text-[17px] leading-[1.45] text-ink", wholeMaths)}>
+          <Tex text={explain} />
+        </div>
+      )}
       {meta && <p className="font-sans text-[13px] leading-[1.4] text-ink-2">{meta}</p>}
     </div>
   );

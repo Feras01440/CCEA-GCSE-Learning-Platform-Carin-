@@ -17,6 +17,7 @@
 import type { PhotoRef } from "@/components/media/PhotoFigure";
 import { splitTex, type TexSegment } from "@/components/items/tex-split";
 import { slidesReadyFor } from "@/lib/slides/ready";
+import { sectionsOf } from "@/lib/slides/readiness";
 
 // ---- Readiness (readiness agent, 27 Sep 2026): which topics draw Read v2. Only this block reads it. ----------------
 
@@ -119,6 +120,42 @@ export const WORDS_PER_MINUTE = 180;
 export const SECONDS_PER_GATE = 40;
 /** A retrieval prompt inside the note: the Slides deck's recall card costs the same (src/lib/slides/cards.ts). */
 export const SECONDS_PER_PROMPT = 30;
+
+// ---- See it pricing (read-flow agent, 27 Sep 2026; the teach-first case §8.2) ---------------------------------------
+
+/**
+ * A See it (the note's own worked steps, docs/plan/review/2026-09-27-see-it-block-shape.md) costs 15 seconds a step, on
+ * top of the reading of its section's explanation: what the Slides deck charges the same See it (src/lib/slides/cards.ts
+ * SEE_STEP_SECONDS), so the hero's two ways stay in step.
+ */
+export const SECONDS_PER_SEE_STEP = 15;
+
+/** A worked example's step count by its id, for a See it that names one (`{ type: "see", workedExample }`). */
+export type SeeSteps = Readonly<Record<string, number>>;
+
+/** The step counts a bundle's worked examples give the See its that name them. */
+export function seeStepsOf(workedExamples: ReadonlyArray<{ id: string; steps: readonly unknown[] }> | null | undefined): SeeSteps {
+  return Object.fromEntries((workedExamples ?? []).map((w) => [w.id, w.steps.length]));
+}
+
+/**
+ * What each See it block of a note costs, in seconds, keyed by the block itself: 15 a step, its own steps or the named
+ * worked example's; a name `steps` does not hold counts nothing (the deck counts it the same way). The blocks are found
+ * with the note parser the Slides card grammar shares (src/lib/slides/readiness.ts sectionsOf), so both ways in agree on
+ * what a See it is.
+ */
+export function seeSeconds(blocks: readonly unknown[] | null | undefined, steps: SeeSteps = {}): Map<unknown, number> {
+  const cost = new Map<unknown, number>();
+  for (const section of sectionsOf(blocks))
+    for (const { block } of section.see) {
+      const named = "workedExample" in block && typeof block.workedExample === "string" ? block.workedExample : null;
+      const own = "steps" in block && Array.isArray(block.steps) ? block.steps.length : 0;
+      cost.set(block, (named !== null ? (steps[named] ?? 0) : own) * SECONDS_PER_SEE_STEP);
+    }
+  return cost;
+}
+
+// ---- end of See it pricing ------------------------------------------------------------------------------------------
 
 type Block = Record<string, unknown>;
 
@@ -306,7 +343,7 @@ function figureAt(block: unknown): HeroFigure | null {
  * the note's first paragraph, there are no "you can" lines, and the estimate is computed from
  * the note itself rather than invented.
  */
-export function heroDataFor(blocks: readonly unknown[] | null | undefined): TopicHeroData {
+export function heroDataFor(blocks: readonly unknown[] | null | undefined, steps?: SeeSteps): TopicHeroData {
   const list = blocks ?? [];
   const figure = figureAt(list[hoistedFigureIndex(list)]);
   const hero = list.find((b) => blockType(b) === "hero");
@@ -318,7 +355,7 @@ export function heroDataFor(blocks: readonly unknown[] | null | undefined): Topi
     // screen never shows two numbers. The authored number stands in only for a note with nothing to measure.
     const measurable = list.some((b) => ["p", "callout", "h", "gate"].includes(blockType(b)));
     const authored = typeof hero.minutes === "number" && hero.minutes > 0 ? Math.round(hero.minutes) : 0;
-    const minutes = measurable || authored === 0 ? lessonMinutes(list, lede) : authored;
+    const minutes = measurable || authored === 0 ? lessonMinutes(list, lede, steps) : authored;
     const short = str(hero.short).trim() || null;
     return { short, lede, can, minutes, untimedVideos: untimedVideosIn(list, lede), generated: hero.generated === true, fallback: false, figure };
   }
@@ -328,7 +365,7 @@ export function heroDataFor(blocks: readonly unknown[] | null | undefined): Topi
     short: null,
     lede,
     can: [],
-    minutes: lessonMinutes(list, lede),
+    minutes: lessonMinutes(list, lede, steps),
     untimedVideos: untimedVideosIn(list, lede),
     generated: false,
     fallback: true,
@@ -342,8 +379,8 @@ function untimedVideosIn(blocks: readonly unknown[], lede: string): number {
 }
 
 /** The lesson's minutes as the spine counts them: every section, each rounded to a whole minute, added up. */
-export function lessonMinutes(blocks: readonly unknown[] | null | undefined, lede?: string): number {
-  return Math.max(1, lessonSections(blocks, lede).reduce((n, s) => n + s.minutes, 0));
+export function lessonMinutes(blocks: readonly unknown[] | null | undefined, lede?: string, steps?: SeeSteps): number {
+  return Math.max(1, lessonSections(blocks, lede, steps).reduce((n, s) => n + s.minutes, 0));
 }
 
 /** Words and checks over the whole note, as minutes. */
@@ -459,12 +496,14 @@ export function sameTitle(a: string, b: string): boolean {
  * The note's sections, one per heading the lesson actually renders and in the same order, which
  * is what lets the spine follow the scroll position. Prose before the first heading belongs to
  * the first section; a note with no headings is one section. Pass the hero's lede so the rows
- * match the note after its opening has been hoisted.
+ * match the note after its opening has been hoisted, and the bundle's worked examples (seeStepsOf) so a See it that names
+ * one is priced by its steps.
  */
-export function lessonSections(blocks: readonly unknown[] | null | undefined, lede?: string): LessonSection[] {
+export function lessonSections(blocks: readonly unknown[] | null | undefined, lede?: string, steps?: SeeSteps): LessonSection[] {
   const list = lessonBlocks(blocks ?? [], lede);
-  // What a section is made of while it is read: its words and checks, and the timed work beside them (a prompt, a video
-  // with a stated length) in seconds.
+  const see = seeSeconds(blocks, steps);
+  // What a section is made of while it is read: its words and checks, and the timed work beside them (a prompt, a See it,
+  // a video with a stated length) in seconds.
   type Open = Omit<LessonSection, "n" | "minutes"> & { seconds: number };
   const sections: Open[] = [];
   const open = (heading: string) => {
@@ -483,6 +522,7 @@ export function lessonSections(blocks: readonly unknown[] | null | undefined, le
     if (t === "p" || t === "callout") current.words += countWords(str((b as Block).md));
     else if (t === "gate") current.gateIds.push(str((b as Block).id));
     else if (t === "prompt") current.seconds += SECONDS_PER_PROMPT;
+    else if (t === "see") current.seconds += see.get(b) ?? 0;
     else if (t === "video") {
       const s = videoSeconds(b);
       if (s === null) current.untimedVideos += 1;
@@ -498,19 +538,6 @@ export function lessonSections(blocks: readonly unknown[] | null | undefined, le
     sections.shift();
   }
   return sections.map(({ seconds, ...s }, i) => ({ ...s, n: i + 1, minutes: estimateMinutes(s.words, s.gateIds.length, seconds) }));
-}
-
-/**
- * Read v2 shows the lesson one section at a time, each opened by Continue. On arrival, how many sections are open: up to
- * and including the one holding the first check she has not answered, so a returning visit opens where she stopped;
- * every section once every check is answered; the first alone for a note with no checks.
- */
-export function initialOpen(sections: readonly LessonSection[], answered: Iterable<string>): number {
-  if (sections.length === 0) return 0;
-  const done = new Set(answered);
-  const pending = sections.findIndex((s) => s.gateIds.some((id) => !done.has(id)));
-  if (pending >= 0) return pending + 1;
-  return sections.some((s) => s.gateIds.length > 0) ? sections.length : 1;
 }
 
 /**
