@@ -13,7 +13,8 @@
     ],
     "prerequisites": [
       "maths.m3.factorising-quadratics-x2-plus-bx-plus-c",
-      "maths.m4.algebraic-fractions-with-linear-denominators"
+      "maths.m4.algebraic-fractions-with-linear-denominators",
+      "maths.m4.factorising-harder-quadratics-ax2-plus-bx-plus-c"
     ],
     "order": 0,
     "hardness": "S",
@@ -121,7 +122,9 @@
         "Spot two squares hidden behind a common factor, such as 2x² − 392 = 2(x + 14)(x − 14)",
         "Cancel a factor that appears on both lines, and explain why a term cannot be cancelled",
         "Cancel a remaining numerical factor so the answer is fully simplified",
-        "Check a simplified answer by substituting a value into both the original and the answer"
+        "Check a simplified answer by substituting a value into both the original and the answer",
+        "Read a line written with the number first, such as 64 − x² = (8 − x)(8 + x), keeping the signs right",
+        "Give an answer with no fraction line when every factor of the bottom cancels, such as 3 or 2x"
       ],
       "howExamined": "FM1 is a single 2-hour calculator paper of 100 marks with 13 to 15 questions. Algebraic fractions appear every year, between Q7 and Q12, and simplifying is a step inside a longer question rather than a question of its own: Summer 2023 Q9 (4 marks) was a subtraction then a division, Summer 2024 Q8(a) (4 marks) a division of two fractions, and Summer 2025 Q7 (7 marks) a subtraction then a division in one part. The command is Simplify fully, or one fraction in its simplest form; schemes give MW1 marks for the factorising, M1 for turning a division into a multiplication, and the last mark for the fully simplified answer.",
       "traps": [
@@ -137,7 +140,7 @@
     },
     "verification": "ver.note.fm.u1.algebraic-fractions-simplify",
     "version": 1,
-    "updated": "2026-09-25"
+    "updated": "2026-09-29"
   },
   "workedExamples": [
     {
@@ -2085,6 +2088,22 @@
       ],
       "examUnit": "FM1",
       "difficultyPrior": 3
+    },
+    {
+      "id": "rp.fm.u1.algebraic-fractions-simplify.13",
+      "topic": "fm.u1.algebraic-fractions-simplify",
+      "specRefs": [
+        "FM1-ALF-01"
+      ],
+      "kind": "procedure",
+      "prompt": "After the brackets go, what is left to check before the answer line?",
+      "answer": "Any number or lone x that still divides both lines.",
+      "keyWords": [
+        "number",
+        "x"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 5
     }
   ],
   "insight": {
@@ -2309,6 +2328,38 @@
           "detail": "The owner's trial topic (Slides judged much better, 24 Sep 2026; answer 7 of 27 Sep): Slides and Read v2 stay on while the note keeps its 25 Sep structure. The waiver lapses when the note gains its first See it block; the migrated note then needs a pass review.",
           "at": "2026-09-27T17:00:00Z",
           "by": "developer"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "Trial v3 pass (27-29 Sep 2026): every printed identity re-evaluated at seven sample points by edit-trial.mjs: the hero 3x(x + 7)/6(x + 7)(x − 7) = x/2(x − 7); 12/18 = 2/3 and (6 + 2)/18 ≠ 2/3; x(x + 8)/5x = (x + 8)/5 and (x + 8)/5x at x = 2 is 1, not 8/5; (7x + 35)/(x² + 5x) = 7/x; (5x + 15)/(x² + 3x) = 5/x; (3x + 24)/(x² − 64) = 3/(x − 8); (25x² − 4)/(5x² − 2x) = (5x + 2)/x; (2x² − 392)/(x² + 14x) = 2(x − 14)/x; (x² + 9x + 20)/(x² + 8x + 16) = (x + 5)/(x + 4); (2x² + 9x + 10)/(x² + 2x) = (2x + 5)/x; (9x² − 45x)/(3x² − 15x) = 3; x/(x − 15) − (x − 6)/(x + 15) = (36x − 90)/(x² − 225), and that ÷ (2x − 5)/(x − 15) = 18/(x + 15); (32 + 4x − x²)/(64 − x²) = (x + 4)/(x + 8); every gate, twin and wrong option (g14, g15, g16, g17, g18 new; twins on all eleven gates); every check value (x = 1, 2, 3, 5, 6, 9).",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "Trial v3 pass (27-29 Sep 2026), citations read in the schemes, papers and reports: 2021 Q8(i) (MW1 MW1 M1 MW1 W1; answer 2x) and (ii) (2x² − x − 1); 2022 Q9(b) (4x² − 1 'commonly' left unfactorised; 2x² + x − 1; answer 5(2x + 1)/(x + 1)); 2023 Q9 (x² − 4 built by a subtraction; answer 3(x − 2)); 2024 Q8(a) (2x² + 3x − 5; the factor of 2 missed by 'a high number') and (b) (an addition); 2025 Q7 (2x + 12 built by a subtraction; answer 2); 2026 Q10 from the paper only (16 − x², 4 + 3x − x², 2x² + 5x + 3; no scheme yet, so no mark claim); 2019 Q12(ii) (dividing by 3 before factorising; the cubic terms cancel); 2018 and 2022 'simplest form'. The pointer's tariffs (4 to 7 marks, Q7 to Q12, 2018 to 2026) are unchanged and hold.",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass (textbook check included): no breach for this topic. New expressions and our own wording throughout the rebuilt note.",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced; no inline maths over 60 characters of TeX; every gate and twin explanation at most 60 words and free of positional wording (src/lib/gate-order.ts positionalWording, probe-trial.mts).",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2345,9 +2396,23 @@
         {
           "id": "g7",
           "kind": "gate",
-          "replacedBy": "g13",
-          "reason": "Withdrawn because its expression, x³ − 9x, is the numerator of practice question 0008, so the note worked that question's first line; g13 checks the same step on new numbers.",
+          "replacedBy": "g15",
+          "reason": "Withdrawn because its expression, x³ − 9x, is the numerator of practice question 0008, so the note worked that question's first line; g13 checks the same step on new numbers. g13 was itself withdrawn on 29 Sep 2026 (a cubic the specification leaves out), so g15 now replaces both.",
           "on": "2026-09-25T04:50:00Z"
+        },
+        {
+          "id": "g13",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "It checked a cubic numerator, x³ − 144x, which the specification (linear and quadratic lines) and every FM1 paper from 2018 to 2026 leave out; g15 checks the section's own move, a number out first uncovering two squares, inside a fraction.",
+          "on": "2026-09-28T23:20:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g18",
+          "reason": "Its answer, (x + 2)/(x − 2), is practice question 0003's answer, so the two-way overlap scan flags it (the strictest review's R-12); g18 checks the same move, two quadratics sharing a bracket, on new numbers.",
+          "on": "2026-09-28T23:20:00Z"
         }
       ]
     },
@@ -4299,10 +4364,27 @@
           "detail": "Answer 9 words (cap 25); key words [\"numbers\",\"numerical factor\"] found in the answer and in her typed spellings by keywordsPresent (probe-trial-pass-0925.mts).",
           "at": "2026-09-25T04:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (trial v3 pass; the strictest review's R-09): the answer 'The numbers: no numerical factor left on both lines' drops the lone x that g11 and the recap teach; rp.13 replaces it in the note and in the deck.",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.algebraic-fractions-simplify.08",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.algebraic-fractions-simplify.13",
+          "reason": "Its answer names only the numbers, while the note's last check (section 'Fully means fully', g11) is the numbers and any lone x; its answer is frozen, so rp.13 asks the whole check.",
+          "on": "2026-09-28T23:20:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.algebraic-fractions-simplify.09",
@@ -4759,6 +4841,63 @@
           "result": "pass",
           "detail": "The fix box probed through markFix (probe-trial-pass-0925.mts): every line of the correction is accepted, every line of her working is refused.",
           "at": "2026-09-25T04:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.algebraic-fractions-simplify.13",
+      "itemId": "rp.fm.u1.algebraic-fractions-simplify.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; content limited to statement FM1-ALF-01",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach for this topic. Our own wording; no eight-word run shared with the FM1 papers, schemes or reports",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; no maths segment",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "The last check before the answer line, as the note's section 'Fully means fully' teaches it: numbers and a lone x as well as brackets (Summer 2024 Q8(a), the factor of 2; Summer 2023 Q9, the x left on both lines). Carries no finding itself (the Sheet's traps do).",
+          "at": "2026-09-28T23:20:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (trial v3 pass, 27-29 Sep 2026: scratchpad trial-v3/edit-trial.mjs re-evaluates every printed identity at sample points and runs the two-way overlap scan; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by trial-v3/probe-trial.mts)",
+          "result": "pass",
+          "detail": "Question 13 words (cap 15), answer 9 words (target about 12); key words 'number' and 'x' found in the answer and in her natural spellings by keywordsPresent (probe-trial.mts); chosen as a recall card by src/lib/slides/recall.ts chooseRecall (probe).",
+          "at": "2026-09-28T23:20:00Z",
           "by": "claude"
         }
       ],
