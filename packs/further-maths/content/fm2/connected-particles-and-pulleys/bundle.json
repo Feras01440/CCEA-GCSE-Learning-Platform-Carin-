@@ -482,7 +482,7 @@
       "figure": {
         "kind": "svg",
         "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 262' xmlns='http://www.w3.org/2000/svg' width='400' height='262'><g fill='currentColor' font-family='inherit'><path d='M24 66L250 66' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.6'/><path d='M272 88L272 250' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.6'/><path d='M250 88L302 36' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M288 22l28 28' fill='none' stroke='currentColor' stroke-width='2'/><circle cx='250' cy='88' r='22' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='250' cy='88' r='2.5' fill='currentColor'/><path d='M250 88L154 88' fill='none' stroke='currentColor' stroke-width='2'/><path d='M154 88L164 83.8L164 92.2Z' fill='currentColor'/><path d='M250 88L250 184' fill='none' stroke='currentColor' stroke-width='2'/><path d='M250 184L245.8 174L254.2 174Z' fill='currentColor'/><text x='146' y='93' text-anchor='end' font-size='15'>42 N</text><text x='250' y='204' text-anchor='middle' font-size='15'>42 N</text></g></svg>",
-        "alt": "A pulley at the corner of a table. One string section runs horizontally to the left and the other hangs straight down, and each pulls the pulley with 42 newtons along its own direction, drawn from the axle."
+        "alt": "A pulley at the corner of a table. One string section runs horizontally to the left and the other hangs straight down, each marked with the tension, 42 N."
       },
       "steps": [
         {
@@ -496,7 +496,33 @@
               "Because the force on the pulley is the difference of the two weights"
             ],
             "correct": 0,
-            "explain": "Doubling the tension is right only when the two sections are parallel. Here they are at a right angle, and doubling is exactly what most candidates did on the least well-answered part of the Summer 2025 paper."
+            "explain": "Doubling the tension is right only when the two sections are parallel. Here they are at a right angle, and doubling is exactly what a large number of candidates did on the least well-answered part of the Summer 2025 paper."
+          },
+          "input": {
+            "kind": "mcq",
+            "options": [
+              {
+                "id": "a",
+                "text": "Two pulls of 42 N, one along each section, at right angles to each other",
+                "correct": true,
+                "feedback": "Each section pulls the pulley along itself with the tension; here the sections meet at a right angle."
+              },
+              {
+                "id": "b",
+                "text": "One pull of 84 N, twice the tension",
+                "correct": false,
+                "feedback": "Doubling is right only when the sections are parallel; here they are at a right angle.",
+                "misconception": "fm.connected.pulley-resultant-of-tensions"
+              },
+              {
+                "id": "c",
+                "text": "One pull equal to the difference of the two weights",
+                "correct": false,
+                "feedback": "The pulley feels the string, not the blocks: it is the two tensions that combine.",
+                "misconception": "fm.connected.pulley-resultant-of-tensions"
+              }
+            ],
+            "shuffle": true
           }
         },
         {
@@ -505,7 +531,15 @@
           "decision": "Draw the two pulls before reaching for a formula. Equal sides at a right angle make a square, and Pythagoras gives its diagonal. This line is the method mark.",
           "earns": [
             "MW1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "R^2 = 42^2 + 42^2",
+            "equivalence": "equivalent",
+            "variables": [
+              "R"
+            ]
+          }
         },
         {
           "n": 3,
@@ -513,7 +547,21 @@
           "decision": "For the record, two equal pulls with an angle $\\theta$ between the sections give $2T\\cos\\frac{\\theta}{2}$: parallel sections have $\\theta = 0°$, which gives $2T$, and a right angle gives $2T\\cos 45° = T\\sqrt{2}$. CCEA's arrangements only ever make those two.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 59.4,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         }
       ],
       "finalAnswer": "$59.40$ N, at $45°$ to each section of the string",
@@ -581,7 +629,24 @@
           "decision": "Each resistance per kilogram belongs to one vehicle, so multiply by that vehicle's own mass. Keep $k$ as a letter: the working has to produce its value, not use it.",
           "earns": [
             "MW1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "960k"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "960k",
+                  "960 k",
+                  "480 x 2k"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         },
         {
           "n": 2,
@@ -599,6 +664,14 @@
             ],
             "correct": 0,
             "explain": "The tension acts forwards on the trailer and backwards on the car. Taken together those cancel, which leaves one equation with only $k$ in it."
+          },
+          "input": {
+            "kind": "algebraic",
+            "latex": "2766 - 1500k - 960k = 1980*0.9",
+            "equivalence": "equivalent",
+            "variables": [
+              "k"
+            ]
           }
         },
         {
@@ -607,7 +680,20 @@
           "decision": "Collect the $k$ terms and solve. In a show-that this is the line that earns the mark: the value has come out of the working, not gone into it.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 0.4,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         },
         {
           "n": 4,
@@ -625,6 +711,20 @@
             ],
             "correct": 0,
             "explain": "Either vehicle's own equation gives the tension. The car's gives the same: $2766 - 600 - T = 1500 \\times 0.9$."
+          },
+          "input": {
+            "kind": "numeric",
+            "value": 816,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
           }
         },
         {
@@ -643,6 +743,20 @@
             ],
             "correct": 0,
             "explain": "The 2019 report records the old acceleration kept after a tow-bar breaks. Redraw the trailer on its own: resistance backwards, and nothing forwards."
+          },
+          "input": {
+            "kind": "numeric",
+            "value": 0.8,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "m/s²",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
           }
         },
         {
@@ -652,7 +766,21 @@
           "earns": [
             "MW6",
             "W4"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 9,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "s",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         }
       ],
       "finalAnswer": "(i) $k = 0.4$  (ii) $T = 816$ N  (iii) 0.8 m/s²  (iv) 9 s",
@@ -696,6 +824,337 @@
       ],
       "verification": "ver.we.fm.u2.connected-particles-and-pulleys.04",
       "version": 1
+    },
+    {
+      "id": "we.fm.u2.connected-particles-and-pulleys.06",
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "Two blocks of masses 13 kg and 7 kg hang at the ends of a light inextensible string passing over a smooth fixed pulley. The system is released from rest.\n\n(i) Calculate the acceleration of the blocks.\n(ii) Calculate the tension in the string.\n\nTake $g = 10$ m/s².",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 230' xmlns='http://www.w3.org/2000/svg' width='400' height='230'><g fill='currentColor' font-family='inherit'><path d='M130 22H270' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M134 22l8 -8M146 22l8 -8M158 22l8 -8M170 22l8 -8M182 22l8 -8M194 22l8 -8M206 22l8 -8M218 22l8 -8M230 22l8 -8M242 22l8 -8M254 22l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><path d='M200 22V30' fill='none' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='70' r='40' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='200' cy='70' r='2.5' fill='currentColor'/><path d='M160 70L160 160' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='128' y='160' width='64' height='50' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='160' y='190.5' text-anchor='middle' font-size='15' font-weight='600'>13 kg</text><path d='M240 70L240 160' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='208' y='160' width='64' height='50' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='240' y='190.5' text-anchor='middle' font-size='15' font-weight='600'>7 kg</text></g></svg>",
+        "alt": "A pulley fixed to a ceiling with a 13 kilogram block hanging on the left-hand section of the string and a 7 kilogram block on the right."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "One light inextensible string over a smooth pulley: the tension $T$ is the same throughout, and both blocks have the same acceleration $a$.",
+          "decision": "Say this before anything else: it is what lets one $T$ and one $a$ appear in two different equations.",
+          "whyMenu": {
+            "options": [
+              "Because the string is light and inextensible and the pulley is smooth",
+              "Because the two blocks have the same mass",
+              "Because the two blocks move in the same direction"
+            ],
+            "correct": 0,
+            "explain": "They move in opposite directions, and their masses differ. It is the string and the pulley that force one tension and one rate of change of speed."
+          },
+          "input": {
+            "kind": "mcq",
+            "options": [
+              {
+                "id": "a",
+                "text": "The same tension in both sections, and the same acceleration for both blocks",
+                "correct": true,
+                "feedback": "A light string over a smooth pulley carries one tension, and an inextensible one forces one acceleration."
+              },
+              {
+                "id": "b",
+                "text": "A different tension on each side, because the masses differ",
+                "correct": false,
+                "feedback": "The masses differ, but a light string over a smooth pulley carries the same pull throughout.",
+                "misconception": "fm.forces.tensions-same-label"
+              },
+              {
+                "id": "c",
+                "text": "The same tension, but a larger acceleration for the heavier block",
+                "correct": false,
+                "feedback": "The string cannot stretch, so the blocks move together at one rate.",
+                "misconception": "fm.connected.system-vs-separate"
+              }
+            ],
+            "shuffle": true
+          }
+        },
+        {
+          "n": 2,
+          "working": "$130 - T = 13a$\nFor the 13 kg block, with down as positive.",
+          "decision": "One body, one equation, in that body's own direction of travel: the heavier block goes down.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "130 - T = 13a",
+            "equivalence": "equivalent",
+            "variables": [
+              "T",
+              "a"
+            ]
+          }
+        },
+        {
+          "n": 3,
+          "working": "$T - 70 = 7a$\nFor the 7 kg block, with up as positive.",
+          "decision": "The lighter block rises, so its resultant is the tension minus its weight. Write it under the first, ready to add.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "T - 70 = 7a",
+            "equivalence": "equivalent",
+            "variables": [
+              "T",
+              "a"
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "Adding:\n$60 = 20a$\n$a = 3$ m/s²",
+          "decision": "Adding cancels $T$ at once; both masses stay on the right, because both blocks are being accelerated.",
+          "earns": [
+            "MW1",
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 3,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "m/s²",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 5,
+          "working": "Substituting back: $T = 70 + 7 \\times 3$\nCheck in the other equation: $130 - 91 = 13 \\times 3$\nSo $T = 91$ N",
+          "decision": "Put $a$ back into either equation, then check in the one you did not use: it catches a sign slip in seconds.",
+          "earns": [
+            "MW1",
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 91,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "(i) $a = 3$ m/s²  (ii) $T = 91$ N",
+      "twin": {
+        "stem": "Blocks of 15 kg and 5 kg hang at the ends of a light inextensible string over a smooth pulley. Calculate the acceleration of the blocks, in m/s². Take $g = 10$ m/s².",
+        "answer": {
+          "kind": "numeric",
+          "value": 5,
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.005
+          },
+          "unit": "m/s²",
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "fraction"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 3,
+          "studentSupplies": [
+            4,
+            5
+          ]
+        },
+        {
+          "showSteps": 0,
+          "studentSupplies": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u2.connected-particles-and-pulleys.06",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u2.connected-particles-and-pulleys.07",
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "A block of mass 8 kg rests on a rough horizontal table. It is joined by a light inextensible string, passing over a smooth pulley at the edge of the table, to a block of mass 4 kg hanging freely. The friction on the block on the table is 10 N. The system is released from rest.\n\n(i) Calculate the acceleration of the blocks.\n(ii) Calculate the tension in the string.\n\nTake $g = 10$ m/s².",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 222' xmlns='http://www.w3.org/2000/svg' width='400' height='222'><g fill='currentColor' font-family='inherit'><rect x='16' y='92' width='232' height='116' fill='currentColor' fill-opacity='0.05'/><path d='M16 92H248V208' fill='none' stroke='currentColor' stroke-width='1.8'/><rect x='78' y='46' width='88' height='46' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='122' y='74.5' text-anchor='middle' font-size='15' font-weight='600'>8 kg</text><circle cx='268' cy='83' r='14' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.8'/><circle cx='268' cy='83' r='2.5' fill='currentColor'/><path d='M268 83L248 104' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M166 69L268 69' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M282 83L282 142' fill='none' stroke='currentColor' stroke-width='1.3'/><rect x='254' y='142' width='56' height='46' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='282' y='170.5' text-anchor='middle' font-size='15' font-weight='600'>4 kg</text></g></svg>",
+        "alt": "An 8 kilogram block on a rough horizontal table, joined by a string running over a pulley at the table's edge to a 4 kilogram block hanging below."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "$40 - T = 4a$\nFor the hanging block, with down as positive.",
+          "decision": "Take each body on its own. The hanging block has its weight and the tension, and it travels downwards.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "40 - T = 4a",
+            "equivalence": "equivalent",
+            "variables": [
+              "T",
+              "a"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "$T - 10 = 8a$\nFor the block on the table, along the table.",
+          "decision": "It moves horizontally, so its weight and the normal reaction balance and play no part; along its motion are the tension and the friction.",
+          "earns": [
+            "MW1"
+          ],
+          "whyMenu": {
+            "options": [
+              "Because it moves horizontally, so the vertical forces on it balance",
+              "Because the weight of a block on a table is always zero",
+              "Because friction has already accounted for the weight"
+            ],
+            "correct": 0,
+            "explain": "Its weight and the normal reaction are equal and opposite, so they contribute nothing along the direction of motion. They still belong on the diagram."
+          },
+          "input": {
+            "kind": "algebraic",
+            "latex": "T - 10 = 8a",
+            "equivalence": "equivalent",
+            "variables": [
+              "T",
+              "a"
+            ]
+          }
+        },
+        {
+          "n": 3,
+          "working": "Adding:\n$30 = 12a$\n$a = 2.5$ m/s²",
+          "decision": "Add the equations and $T$ disappears; the friction stays, because it acts on one block only.",
+          "earns": [
+            "MW1",
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 2.5,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "m/s²",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "Substituting: $T = 10 + 8 \\times 2.5$\nCheck: $40 - 30 = 4 \\times 2.5$\nSo $T = 30$ N",
+          "decision": "Substitute into either equation and check in the other. The tension is less than the hanging weight, as it must be while that block speeds up downwards.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 30,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "(i) $a = 2.5$ m/s²  (ii) $T = 30$ N",
+      "twin": {
+        "stem": "A 3 kg block on a smooth horizontal table is joined over a pulley at the edge to a 5 kg block hanging freely. Calculate the acceleration, in m/s². Take $g = 10$ m/s².",
+        "answer": {
+          "kind": "numeric",
+          "value": 6.25,
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.005
+          },
+          "unit": "m/s²",
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "fraction"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 0,
+          "studentSupplies": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u2.connected-particles-and-pulleys.07",
+      "version": 1
     }
   ],
   "diagnostics": [
@@ -708,31 +1167,31 @@
       "when": "pre",
       "items": [
         {
-          "id": "01",
+          "id": "05",
           "skill": "Prerequisite: solving simultaneous equations by adding",
-          "stem": "From an earlier topic: add $50 - T = 5a$ and $T - 30 = 3a$. What is left?",
+          "stem": "From an earlier topic: add $70 - T = 7a$ and $T - 20 = 2a$. What is left?",
           "options": [
             {
               "id": "a",
-              "text": "$20 = 8a$",
+              "text": "$50 = 9a$",
               "correct": true,
-              "feedback": "The $T$ terms cancel: $50 - 30 = 20$ and $5a + 3a = 8a$."
+              "feedback": "The $T$ terms cancel: $70 - 20 = 50$ and $7a + 2a = 9a$."
             },
             {
               "id": "b",
-              "text": "$20 = 2a$",
+              "text": "$50 = 5a$",
               "correct": false,
-              "feedback": "The two $a$ terms add, so the right-hand side is $8a$."
+              "feedback": "The two $a$ terms add, so the right-hand side is $9a$."
             },
             {
               "id": "c",
-              "text": "$80 = 8a$",
+              "text": "$90 = 9a$",
               "correct": false,
-              "feedback": "The left-hand sides give $50 - 30$, not $50 + 30$."
+              "feedback": "The left-hand sides give $70 - 20$, not $70 + 20$."
             },
             {
               "id": "d",
-              "text": "$20 - 2T = 8a$",
+              "text": "$50 - 2T = 9a$",
               "correct": false,
               "feedback": "$-T$ and $+T$ cancel, so no $T$ survives."
             }
@@ -1114,6 +1573,356 @@
         },
         {
           "id": "12",
+          "skill": "Each part uses only what is known at that point",
+          "stem": "A car of known mass, driving force and resistance tows a trailer of unknown mass. Part (i) asks for the tension in the tow-bar; part (ii) says 'Show that the mass of the trailer is 600 kg'. How should part (i) be answered?",
+          "options": [
+            {
+              "id": "a",
+              "text": "From the car's own equation of motion, which has only one unknown",
+              "correct": true,
+              "feedback": "Everything acting on the car is given, so its equation gives the tension straight away. The 600 kg belongs to part (ii) and is not yet yours to use."
+            },
+            {
+              "id": "b",
+              "text": "From the trailer's equation, putting in 600 kg because the question prints it",
+              "correct": false,
+              "feedback": "A value printed in a later part may not be used in an earlier one. In Summer 2024 this exact substitution scored zero for the whole part.",
+              "misconception": "fm.show-that.given-value-used-early"
+            },
+            {
+              "id": "c",
+              "text": "From the whole system, with 600 kg added to the car's mass",
+              "correct": false,
+              "feedback": "That also borrows the printed 600 kg before it has been shown, and the whole system could never give the tension anyway: the tension is internal to the pair.",
+              "misconception": "fm.show-that.given-value-used-early"
+            },
+            {
+              "id": "d",
+              "text": "From the trailer's equation, with its mass left as a letter",
+              "correct": false,
+              "feedback": "The trailer's equation has two unknowns at this point, the tension and the mass, so on its own it cannot give either. The car's equation has only one.",
+              "misconception": "fm.connected.system-vs-separate"
+            }
+          ],
+          "secondsExpected": 45,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u2.connected-particles-and-pulleys.pre-withdrawn",
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "when": "pre",
+      "items": [
+        {
+          "id": "01",
+          "skill": "Prerequisite: solving simultaneous equations by adding",
+          "stem": "From an earlier topic: add $50 - T = 5a$ and $T - 30 = 3a$. What is left?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$20 = 8a$",
+              "correct": true,
+              "feedback": "The $T$ terms cancel: $50 - 30 = 20$ and $5a + 3a = 8a$."
+            },
+            {
+              "id": "b",
+              "text": "$20 = 2a$",
+              "correct": false,
+              "feedback": "The two $a$ terms add, so the right-hand side is $8a$."
+            },
+            {
+              "id": "c",
+              "text": "$80 = 8a$",
+              "correct": false,
+              "feedback": "The left-hand sides give $50 - 30$, not $50 + 30$."
+            },
+            {
+              "id": "d",
+              "text": "$20 - 2T = 8a$",
+              "correct": false,
+              "feedback": "$-T$ and $+T$ cancel, so no $T$ survives."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u2.connected-particles-and-pulleys.post-b",
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "01",
+          "skill": "One tension, one acceleration",
+          "stem": "Two blocks are joined by a light inextensible string over a smooth pulley. Which is true?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The tension is the same on both sections and the blocks have the same acceleration",
+              "correct": true,
+              "feedback": "A light string over a smooth pulley carries one tension, and an inextensible string forces one rate of change of speed."
+            },
+            {
+              "id": "b",
+              "text": "Each block has its own tension, found from its own weight",
+              "correct": false,
+              "feedback": "That would need a heavy string or a rough pulley. Two different letters here is what the reports record going wrong.",
+              "misconception": "fm.forces.tensions-same-label"
+            },
+            {
+              "id": "c",
+              "text": "The heavier block has the larger acceleration",
+              "correct": false,
+              "feedback": "The string ties them together, so they speed up at the same rate in opposite directions.",
+              "misconception": "fm.connected.system-vs-separate"
+            },
+            {
+              "id": "d",
+              "text": "The tension equals the heavier block's weight",
+              "correct": false,
+              "feedback": "That would be true only if the heavier block hung still. It is accelerating downwards, so its weight must be larger than the tension.",
+              "misconception": "fm.forces.equilibrium-assumed-when-accelerating"
+            }
+          ],
+          "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "02",
+          "skill": "An equation for one body",
+          "stem": "A 12 kg block hangs from a string and accelerates downwards. Which equation is right for that block? Take $g = 10$ m/s².",
+          "options": [
+            {
+              "id": "a",
+              "text": "$120 - T = 12a$",
+              "correct": true,
+              "feedback": "Its own forces are its weight and the tension, and it is travelling downwards."
+            },
+            {
+              "id": "b",
+              "text": "$T - 120 = 12a$",
+              "correct": false,
+              "feedback": "That takes up as the direction of travel, so the acceleration would come out negative.",
+              "misconception": "fm.forces.resultant-direction-not-motion"
+            },
+            {
+              "id": "c",
+              "text": "$120 - T - 15 = 12a$",
+              "correct": false,
+              "feedback": "A friction force on some other block does not belong here. Each equation carries only its own body's forces.",
+              "misconception": "fm.connected.system-vs-separate"
+            },
+            {
+              "id": "d",
+              "text": "$120 - T = 20a$",
+              "correct": false,
+              "feedback": "That uses the whole system's mass in one body's equation.",
+              "misconception": "fm.connected.system-vs-separate"
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "03",
+          "skill": "The force on a pulley, parallel sections",
+          "stem": "Two blocks hang either side of a pulley and the tension is 40 N. What is the magnitude of the force on the pulley?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$80$ N",
+              "correct": true,
+              "feedback": "Both sections hang vertically, so the two pulls are parallel and add directly to $2T$."
+            },
+            {
+              "id": "b",
+              "text": "$40$ N",
+              "correct": false,
+              "feedback": "That is one pull. The pulley feels both sections.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            },
+            {
+              "id": "c",
+              "text": "$56.57$ N",
+              "correct": false,
+              "feedback": "That is $40\\sqrt{2}$, which is the answer when the sections are at a right angle, not parallel.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            },
+            {
+              "id": "d",
+              "text": "$0$ N",
+              "correct": false,
+              "feedback": "The two pulls point the same way, downwards, so they reinforce rather than cancel.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "04",
+          "skill": "The force on a pulley, sections at a right angle",
+          "stem": "A string runs horizontally from a table, over a pulley at the edge, and vertically down. The tension is 40 N. What is the magnitude of the force on the pulley?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$56.57$ N",
+              "correct": true,
+              "feedback": "$40\\sqrt{2} = 56.57$ N: the two equal pulls at a right angle make a square, and the resultant is its diagonal."
+            },
+            {
+              "id": "b",
+              "text": "$80$ N",
+              "correct": false,
+              "feedback": "Doubling the tension is right only when the two sections are parallel. This is the substitution the reports call the least well-answered item on the paper.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            },
+            {
+              "id": "c",
+              "text": "$40$ N",
+              "correct": false,
+              "feedback": "That is one pull on its own.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            },
+            {
+              "id": "d",
+              "text": "$0$ N",
+              "correct": false,
+              "feedback": "Two pulls at a right angle cannot cancel; only two opposite pulls could.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "05",
+          "skill": "The pulley feels the tensions, not the weights",
+          "stem": "A 6 kg block and a 2 kg block hang either side of a smooth pulley, and the tension in the string is 30 N. What is the magnitude of the force the string exerts on the pulley?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$60$ N",
+              "correct": true,
+              "feedback": "Both sections pull straight down with 30 N, so the resultant is $2 \\times 30 = 60$ N. It is always the tensions that combine."
+            },
+            {
+              "id": "b",
+              "text": "$80$ N",
+              "correct": false,
+              "feedback": "That adds the two weights, 60 N and 20 N. The pulley is pulled by the string, and while the blocks accelerate the tension equals neither weight.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            },
+            {
+              "id": "c",
+              "text": "$30$ N",
+              "correct": false,
+              "feedback": "That is one section's pull. The pulley is held by both sections, and here they pull the same way.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            },
+            {
+              "id": "d",
+              "text": "$40$ N",
+              "correct": false,
+              "feedback": "That is the difference of the weights, the force that accelerates the blocks. The force on the pulley is built from the two tensions.",
+              "misconception": "fm.connected.pulley-resultant-of-tensions"
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "06",
+          "skill": "After the connection breaks",
+          "stem": "A tow-bar snaps while a car is towing a trailer. What happens to the trailer?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It becomes its own problem: no tension, so only the resistance acts and it decelerates",
+              "correct": true,
+              "feedback": "Redraw it on its own. The tension is gone, and whatever forces remain give it a new acceleration."
+            },
+            {
+              "id": "b",
+              "text": "It keeps the acceleration it had before",
+              "correct": false,
+              "feedback": "The force that was pulling it forward has gone, so its acceleration cannot be the same.",
+              "misconception": "fm.connected.old-acceleration-after-string-breaks"
+            },
+            {
+              "id": "c",
+              "text": "It immediately stops",
+              "correct": false,
+              "feedback": "It still has its speed; the resistance takes that speed away over time rather than at once.",
+              "misconception": "fm.connected.old-acceleration-after-string-breaks"
+            },
+            {
+              "id": "d",
+              "text": "It accelerates at $g$",
+              "correct": false,
+              "feedback": "It is on a horizontal road, so gravity is balanced by the ground.",
+              "misconception": "fm.connected.old-acceleration-after-string-breaks"
+            }
+          ],
+          "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "07",
+          "skill": "Mass against force in a connected equation",
+          "stem": "A 9 kg block on a rough table is pulled by a string with tension $T$ against friction of 16 N. Which equation is right for that block? Take $g = 10$ m/s².",
+          "options": [
+            {
+              "id": "a",
+              "text": "$T - 16 = 9a$",
+              "correct": true,
+              "feedback": "Along its motion are the tension forward and the friction back, and the $m$ is the mass in kilograms."
+            },
+            {
+              "id": "b",
+              "text": "$T - 16 - 90 = 9a$",
+              "correct": false,
+              "feedback": "Its weight acts downwards, at right angles to the motion, and the normal reaction balances it; the Summer 2025 report saw this shape often.",
+              "misconception": "fm.connected.weight-on-table-in-equation"
+            },
+            {
+              "id": "c",
+              "text": "$T - 16 = 90a$",
+              "correct": false,
+              "feedback": "That uses the weight where $F = ma$ wants the mass.",
+              "misconception": "fm.connected.multiplies-weight-by-a"
+            },
+            {
+              "id": "d",
+              "text": "$T = 9a$",
+              "correct": false,
+              "feedback": "The friction is given and it opposes the motion, so it belongs in the equation.",
+              "misconception": "fm.new.resultant-not-formed"
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "08",
           "skill": "Each part uses only what is known at that point",
           "stem": "A car of known mass, driving force and resistance tows a trailer of unknown mass. Part (i) asks for the tension in the tow-bar; part (ii) says 'Show that the mass of the trailer is 600 kg'. How should part (i) be answered?",
           "options": [
@@ -1785,7 +2594,7 @@
                   "places": 2
                 }
               },
-              "feedback": "That doubles the tension, which is right only when the two sections are parallel. Here one is horizontal and one is vertical, so they combine by Pythagoras: $R^2 = 50^2 + 50^2$. Doubling was what most candidates did on the least well-answered part of the Summer 2025 paper.",
+              "feedback": "That doubles the tension, which is right only when the two sections are parallel. Here one is horizontal and one is vertical, so they combine by Pythagoras: $R^2 = 50^2 + 50^2$. Doubling was what a large number of candidates did on the least well-answered part of the Summer 2025 paper.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:further-maths:2025-summer:FM2:Q4"
             },
@@ -3207,7 +4016,7 @@
                   "places": 2
                 }
               },
-              "feedback": "That doubles the tension. $2T$ is right only when the two sections pull the same way; here one is horizontal and one is vertical, so the pulls combine by Pythagoras. Doubling was what most candidates did on the least well-answered part of the Summer 2025 paper.",
+              "feedback": "That doubles the tension. $2T$ is right only when the two sections pull the same way; here one is horizontal and one is vertical, so the pulls combine by Pythagoras. Doubling was what a large number of candidates did on the least well-answered part of the Summer 2025 paper.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:further-maths:2025-summer:FM2:Q4"
             },
@@ -3243,7 +4052,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "x * √2"
           }
         }
       ],
@@ -3436,7 +4246,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "a",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "30 + 3 * x"
           }
         },
         {
@@ -3515,7 +4326,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "2 * x"
           }
         },
         {
@@ -3578,7 +4390,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "a",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "√(1.6 * x)"
           }
         },
         {
@@ -4107,6 +4920,419 @@
       "version": 1
     },
     {
+      "id": "q.fm.u2.connected-particles-and-pulleys.0023",
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "style": "exam-style",
+      "difficulty": 5,
+      "ao": [
+        "AO1",
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Show that",
+        "Calculate"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "A car and trailer, and then the tow-bar snaps",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 104' xmlns='http://www.w3.org/2000/svg' width='400' height='104'><g fill='currentColor' font-family='inherit'><path d='M8 86H392' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M12 94l8 -8M24 94l8 -8M36 94l8 -8M48 94l8 -8M60 94l8 -8M72 94l8 -8M84 94l8 -8M96 94l8 -8M108 94l8 -8M120 94l8 -8M132 94l8 -8M144 94l8 -8M156 94l8 -8M168 94l8 -8M180 94l8 -8M192 94l8 -8M204 94l8 -8M216 94l8 -8M228 94l8 -8M240 94l8 -8M252 94l8 -8M264 94l8 -8M276 94l8 -8M288 94l8 -8M300 94l8 -8M312 94l8 -8M324 94l8 -8M336 94l8 -8M348 94l8 -8M360 94l8 -8M372 94l8 -8M384 94l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='44' y='26' width='92' height='56' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='90' y='51' text-anchor='middle' font-size='15' font-weight='600'>trailer</text><text x='90' y='69' text-anchor='middle' font-size='15'>400 kg</text><rect x='200' y='16' width='108' height='66' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><text x='254' y='46' text-anchor='middle' font-size='15' font-weight='600'>car</text><text x='254' y='64' text-anchor='middle' font-size='15'>1200 kg</text><path d='M136 60H200' fill='none' stroke='currentColor' stroke-width='3'/></g></svg>",
+          "alt": "A car of 1200 kilograms towing a trailer of 400 kilograms along a horizontal road by a tow-bar."
+        }
+      ],
+      "parts": [
+        {
+          "id": "a",
+          "marks": 3,
+          "stem": "A car of mass 1200 kg tows a trailer of mass 400 kg along a straight horizontal road by a light horizontal tow-bar. The car's engine provides a driving force of 4100 N. Resistance to motion acts on each vehicle: 1.5 N for every kilogram of the car's mass and 0.75 N for every kilogram of the trailer's mass.\n\nShow that the acceleration of the car and trailer is 1.25 m/s².\n\n[3]",
+          "answer": {
+            "kind": "text",
+            "accepted": [
+              "The resistances are 1800 N on the car and 300 N on the trailer. For the whole system, 4100 - 1800 - 300 = 1600a, so 2000 = 1600a and a = 1.25 m/s²."
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "1800",
+                  "1.5 x 1200",
+                  "1.5(1200)",
+                  "1.5 * 1200",
+                  "2100"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "1600a",
+                  "1600 x a",
+                  "1600 a",
+                  "(1200 + 400)a",
+                  "1600 * a"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "a = 1.25",
+                  "a=1.25",
+                  "= 1.25"
+                ],
+                "marks": 1,
+                "reject": [
+                  "1.25 or",
+                  "or 1.25",
+                  "1.3"
+                ]
+              }
+            ],
+            "listingRule": false
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "resistances $1.5 \\times 1200 = 1800$ N and $0.75 \\times 400 = 300$ N"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "$4100 - 1800 - 300 = 1600a$",
+              "accept": [
+                "2000 = 1600a"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$a = 1.25$",
+              "dependsOn": [
+                "MW2"
+              ],
+              "examinerNote": "Substituting the printed value of a into the equation and checking both sides agree is verification, not a derivation, and CCEA caps that route at two marks."
+            }
+          ],
+          "hints": [
+            "Convert each per-kilogram resistance first: each vehicle has its own rate.",
+            "The tow-bar's tension is internal to the pair, so the whole system is the quickest route here."
+          ],
+          "workedSolution": "The resistances are 1800 N on the car and 300 N on the trailer. For the whole system, 4100 - 1800 - 300 = 1600a, so 2000 = 1600a and a = 1.25 m/s².",
+          "commonErrors": [
+            {
+              "misconception": "fm.show-that.verify-by-substitution",
+              "pattern": {
+                "kind": "text",
+                "regex": "\\bsub(?:stitut\\w*|bing)\\b[^.;\\n]{0,40}\\b1\\.25\\b|\\b1\\.25\\b[^.;\\n]{0,30}\\b(?:into|in) the equation\\b|\\bif\\s+a\\s*=\\s*1\\.25\\b|\\bboth sides (?:agree|balance|match|are equal)\\b"
+              },
+              "feedback": "Putting 1.25 into the equation and checking both sides agree is verification, not a derivation: CCEA caps that route at two of the three marks, and the mark it cannot reach is for forming the equation and solving it. Convert the resistances, form the equation and solve it forwards.",
+              "marksTypicallyEarned": 2,
+              "source": "ccea-cer:further-maths:2024-summer:FM2:Q6"
+            },
+            {
+              "misconception": "fm.new.friction-per-kg-not-converted",
+              "pattern": {
+                "kind": "text",
+                "regex": "\\b4100\\s*-\\s*1\\.5\\s*-\\s*0\\.75\\b|\\b4100\\s*-\\s*2\\.25\\b|\\bresistances? (?:of |is |are )?1\\.5 N\\b"
+              },
+              "feedback": "The rates per kilogram have been used as whole forces. Multiply each by its own vehicle's mass: 1.5 × 1200 = 1800 N on the car and 0.75 × 400 = 300 N on the trailer.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2022-summer:FM2:Q3"
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "b",
+          "marks": 3,
+          "stem": "Calculate the tension in the tow-bar.\n\nAnswer ________ N",
+          "answer": {
+            "kind": "numeric",
+            "value": 800,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "an equation of motion for one vehicle on its own",
+              "ft": true
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "$T - 300 = 400 \\times 1.25$",
+              "accept": [
+                "4100 - 1800 - T = 1200 \\times 1.25"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$800$",
+              "dependsOn": [
+                "MW2"
+              ]
+            }
+          ],
+          "hints": [
+            "The tension is internal to the pair, so the whole system cannot find it.",
+            "Use one vehicle on its own. For the trailer, only the tow-bar and its resistance act along its motion."
+          ],
+          "workedSolution": "For the trailer alone: $T - 300 = 400 \\times 1.25 = 500$, so $T = 800$ N. The car's equation, $4100 - 1800 - T = 1200 \\times 1.25$, gives the same.",
+          "commonErrors": [
+            {
+              "misconception": "fm.connected.system-vs-separate",
+              "pattern": {
+                "kind": "numeric",
+                "value": 3300,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That writes the trailer's equation with the car's mass and the car's resistance. Each equation carries only its own vehicle's numbers: for the trailer, $T - 300 = 400 \\times 1.25$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM2:Q5"
+            },
+            {
+              "misconception": "fm.new.resultant-not-formed",
+              "pattern": {
+                "kind": "numeric",
+                "value": 500,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That is the trailer's resultant, $ma$, not the tension. The tow-bar also has to overcome the trailer's own resistance of 300 N.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM2:Q5"
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value"
+          }
+        },
+        {
+          "id": "c",
+          "marks": 3,
+          "stem": "When the car and trailer are moving at 6 m/s, the tow-bar snaps. The resistance to the trailer's motion is unchanged.\n\nCalculate the trailer's deceleration once the tow-bar has snapped.\n\nAnswer ________ m/s²",
+          "answer": {
+            "kind": "numeric",
+            "value": 0.75,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "m/s²",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "the trailer is now on its own, with no tension acting"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "$-300 = 400a$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "deceleration $0.75$",
+              "dependsOn": [
+                "MW2"
+              ]
+            }
+          ],
+          "hints": [
+            "Redraw the trailer alone: the tow-bar is gone.",
+            "Only its resistance is left, acting backwards, so the trailer slows."
+          ],
+          "workedSolution": "With the tow-bar gone the only force along the trailer's motion is its resistance of 300 N, acting backwards: $-300 = 400a$, so $a = -0.75$ m/s² and the deceleration is $0.75$ m/s².",
+          "commonErrors": [
+            {
+              "misconception": "fm.connected.old-acceleration-after-string-breaks",
+              "pattern": {
+                "kind": "numeric",
+                "value": 1.25,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That is the acceleration the pair had while the tow-bar held. The bar has snapped, so the force pulling the trailer forward is gone: redraw it and start again.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM2:Q5"
+            },
+            {
+              "misconception": "fm.connected.system-vs-separate",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.1875,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That divides the trailer's own resistance by the mass of both vehicles. They are separate bodies now, so only the trailer's mass belongs here.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2024-summer:FM2:Q6"
+            },
+            {
+              "misconception": "fm.kin.deceleration-sign",
+              "pattern": {
+                "kind": "numeric",
+                "value": -0.75,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "Your working is right: with forwards positive, $a = -0.75$ m/s². The question asks for the deceleration, which is the size of that, so the answer is 0.75 m/s² with no minus sign.",
+              "marksTypicallyEarned": 2,
+              "source": "ccea-cer:further-maths:2024-summer:FM2:Q6"
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "d",
+          "marks": 2,
+          "stem": "Calculate the distance the trailer travels after the tow-bar snaps, until it comes to rest.\n\nAnswer ________ m",
+          "answer": {
+            "kind": "numeric",
+            "value": 24,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "m",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$0 = 6^2 + 2(-0.75)s$",
+              "ft": true
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$24$",
+              "dependsOn": [
+                "MW1"
+              ]
+            }
+          ],
+          "hints": [
+            "You know $u$, $v$ and $a$, and you want $s$: choose the formula without $t$.",
+            "With forwards positive, the deceleration goes in as a negative $a$."
+          ],
+          "workedSolution": "$u = 6$, $v = 0$, $a = -0.75$: $0 = 6^2 + 2(-0.75)s$, so $1.5s = 36$ and $s = 24$ m.",
+          "commonErrors": [
+            {
+              "misconception": "fm.connected.old-acceleration-after-string-breaks",
+              "pattern": {
+                "kind": "numeric",
+                "value": 14.4,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That slows the trailer at 1.25 m/s², the acceleration the pair had while they were joined. After the snap its deceleration is the 0.75 m/s² from part (c).",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2024-summer:FM2:Q6"
+            },
+            {
+              "misconception": "fm.kin.wrong-equation-chosen",
+              "pattern": {
+                "kind": "numeric",
+                "value": 48,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That divides $u^2$ by $a$ instead of by $2a$. From $0 = u^2 + 2as$ with $a = -0.75$, $s = \\frac{36}{1.5}$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2024-summer:FM2:Q6"
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "c",
+            "rule": "use-candidate-value"
+          }
+        }
+      ],
+      "totalMarks": 11,
+      "timeAllowanceSec": 792,
+      "skeleton": "(a)show3|(b)calculate3|(c)calculate3|(d)calculate2",
+      "methodLock": {
+        "instruction": "Show that the acceleration of the car and trailer is 1.25 m/s²",
+        "requiredMethod": "Convert both resistances, form the equation of motion for the whole system (or for each vehicle, then add) and solve it for a; substituting the printed value back in is verification and is capped at two marks.",
+        "evidence": "ccea-cer:further-maths:2024-summer:FM2:Q6"
+      },
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM2:Q5",
+        "ccea-cer:further-maths:2024-summer:FM2:Q6"
+      ],
+      "solutionProgram": "rC = 1.5*1200; rT = 0.75*400; a = (4100 - rC - rT)/(1200 + 400); T = 400*a + rT; afterSnap = -rT/400; s = 6^2/(2*rT/400)",
+      "verification": "ver.q.fm.u2.connected-particles-and-pulleys.0023",
+      "version": 1
+    },
+    {
       "id": "q.fm.u2.connected-particles-and-pulleys.0020",
       "topic": "fm.u2.connected-particles-and-pulleys",
       "specRefs": [
@@ -4364,7 +5590,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "(x - 18) / 2"
           }
         },
         {
@@ -4422,7 +5649,7 @@
                   "places": 2
                 }
               },
-              "feedback": "That doubles the tension. $2T$ is right only when the two sections are parallel; here one is horizontal and one vertical, so the pulls combine by Pythagoras. The Summer 2025 report found most candidates doubling on this part.",
+              "feedback": "That doubles the tension. $2T$ is right only when the two sections are parallel; here one is horizontal and one vertical, so the pulls combine by Pythagoras. The Summer 2025 report found a large number of candidates doubling on this part.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:further-maths:2025-summer:FM2:Q4"
             },
@@ -4444,7 +5671,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "x * √2"
           }
         }
       ],
@@ -4774,6 +6002,30 @@
       "marksEarnedAsWritten": [],
       "feedback": "Noticing that the bar has snapped is the right starting point; the marks come from what follows it. Make the redraw an explicit step: new diagram, new equation, new acceleration. The Summer 2019 report records this as the part only the more able candidates managed.",
       "source": "ccea-cer:further-maths:2019-summer:FM2:Q5"
+    },
+    {
+      "id": "ftm.fm.u2.connected-particles-and-pulleys.04",
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "stem": "Ruairí is finding the magnitude of the force on a pulley at the edge of a table. The string runs horizontally along the table, over the pulley, and vertically down, and the tension is 45 N. His working:",
+      "studentWorking": [
+        "The force on the pulley is the resultant of the two tensions",
+        "Each section pulls with 45 N",
+        "Force = 2 × 45 = 90 N"
+      ],
+      "mistakeLine": 3,
+      "misconception": "fm.connected.pulley-resultant-of-tensions",
+      "whatWentWrong": "Line 3 adds the two pulls as if they pointed the same way. One section is horizontal and the other vertical, so the pulls are at a right angle, and doubling works only when the sections are parallel. The two equal pulls make a square, and the resultant is its diagonal: $\\sqrt{45^2 + 45^2} = 63.64$ N.",
+      "correction": [
+        "The force on the pulley is the resultant of the two tensions",
+        "Each section pulls with 45 N, one horizontally and one vertically",
+        "Force = √(45² + 45²) = 63.64 N"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Line 1 is the right principle; the method mark is for carrying it out, combining the two pulls by Pythagoras at a right angle. Draw the two pulls before reaching for a formula: doubling here is what a large number of candidates did on the least well-answered part of the Summer 2025 paper.",
+      "source": "ccea-cer:further-maths:2025-summer:FM2:Q4"
     }
   ],
   "prompts": [
@@ -5013,6 +6265,66 @@
         "FM2-NEW-01"
       ],
       "examUnit": "FM2"
+    },
+    {
+      "id": "rp.fm.u2.connected-particles-and-pulleys.16",
+      "kind": "procedure",
+      "prompt": "What is the method for two connected bodies?",
+      "answer": "An equation for each body, with the same T and a, then add them.",
+      "keyWords": [
+        "add"
+      ],
+      "difficultyPrior": 3,
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "examUnit": "FM2"
+    },
+    {
+      "id": "rp.fm.u2.connected-particles-and-pulleys.17",
+      "kind": "procedure",
+      "prompt": "Two equal pulls of T meet at a right angle. How do you combine them?",
+      "answer": "By Pythagoras, as the diagonal of a square: T√2.",
+      "keyWords": [
+        "pythagoras"
+      ],
+      "difficultyPrior": 3,
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "examUnit": "FM2"
+    },
+    {
+      "id": "rp.fm.u2.connected-particles-and-pulleys.18",
+      "kind": "definition",
+      "prompt": "Why do both bodies have the same acceleration?",
+      "answer": "The string is inextensible: it cannot stretch.",
+      "keyWords": [
+        "inextensible"
+      ],
+      "difficultyPrior": 3,
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "examUnit": "FM2"
+    },
+    {
+      "id": "rp.fm.u2.connected-particles-and-pulleys.19",
+      "kind": "trap",
+      "prompt": "Does a table block's weight go in its equation of motion?",
+      "answer": "No: the normal reaction balances it.",
+      "keyWords": [
+        "no"
+      ],
+      "difficultyPrior": 3,
+      "topic": "fm.u2.connected-particles-and-pulleys",
+      "specRefs": [
+        "FM2-NEW-01"
+      ],
+      "examUnit": "FM2"
     }
   ],
   "insight": {
@@ -5096,14 +6408,14 @@
       ],
       "itemIds": [
         "dx.fm.u2.connected-particles-and-pulleys.pre",
-        "dx.fm.u2.connected-particles-and-pulleys.post",
+        "dx.fm.u2.connected-particles-and-pulleys.post-b",
         "q.fm.u2.connected-particles-and-pulleys.0018",
         "q.fm.u2.connected-particles-and-pulleys.0019",
         "q.fm.u2.connected-particles-and-pulleys.0012",
         "q.fm.u2.connected-particles-and-pulleys.0013",
         "q.fm.u2.connected-particles-and-pulleys.0001",
         "q.fm.u2.connected-particles-and-pulleys.0002",
-        "rp.fm.u2.connected-particles-and-pulleys.01",
+        "rp.fm.u2.connected-particles-and-pulleys.16",
         "q.fm.u2.connected-particles-and-pulleys.0007",
         "q.fm.u2.connected-particles-and-pulleys.0008"
       ],
@@ -5124,10 +6436,9 @@
         "q.fm.u2.connected-particles-and-pulleys.0004",
         "q.fm.u2.connected-particles-and-pulleys.0005",
         "q.fm.u2.connected-particles-and-pulleys.0006",
-        "ftm.fm.u2.connected-particles-and-pulleys.01",
-        "rp.fm.u2.connected-particles-and-pulleys.04",
-        "rp.fm.u2.connected-particles-and-pulleys.05",
-        "rp.fm.u2.connected-particles-and-pulleys.06"
+        "ftm.fm.u2.connected-particles-and-pulleys.04",
+        "rp.fm.u2.connected-particles-and-pulleys.17",
+        "rp.fm.u2.connected-particles-and-pulleys.05"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -5150,14 +6461,11 @@
         "q.fm.u2.connected-particles-and-pulleys.0014",
         "q.fm.u2.connected-particles-and-pulleys.0015",
         "q.fm.u2.connected-particles-and-pulleys.0016",
-        "q.fm.u2.connected-particles-and-pulleys.0017",
+        "q.fm.u2.connected-particles-and-pulleys.0023",
         "q.fm.u2.connected-particles-and-pulleys.0021",
         "q.fm.u2.connected-particles-and-pulleys.0020",
         "q.fm.u2.connected-particles-and-pulleys.0022",
-        "rp.fm.u2.connected-particles-and-pulleys.13",
-        "rp.fm.u2.connected-particles-and-pulleys.11",
-        "rp.fm.u2.connected-particles-and-pulleys.15",
-        "rp.fm.u2.connected-particles-and-pulleys.14"
+        "rp.fm.u2.connected-particles-and-pulleys.13"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -5264,24 +6572,40 @@
           "detail": "Read end to end as the student under the owner's ruling of 24 Sep 2026 (teach, then show, then check). Section 1 shows one pair's equations added before gate g1 asks for another; section 2 points the cancelling at those lines; section 7 shows 2T worked; the twists show an unknown mass kept as a letter and an acceleration found from a timing before gates g11 and g12; every gate's explanation re-teaches before the answer. The note's demonstrations take numbers no item uses: the 23 Sep note solved exam-style q.0015 (7 kg table pair), q.0016 (5 kg and 3 kg from 0.8 m, with that question's own figure) and q.0017 (1200 kg car) in front of her, and gate g1 was the pre-diagnostic's own question; now 9/3 kg, 8/2 kg (from 0.9 m), 3 kg on the table with 7 kg hanging against 9 N, and an 1100 kg car with a 300 kg trailer. Two short prompts are embedded.",
           "at": "2026-09-25T04:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "v3 migration with the V3.1 additions (29 Sep 2026), band H5: twelve sections with roles, each explaining in at most 225 words, showing its method in a See it of 2 to 4 steps with the marks where the CCEA schemes put them (MW1 on each equation of motion and on the adding, W1 on each value, as Summer 2022 Q5 and 2025 Q4 did), then asking its Your turn; the twists section works two See its, each with its own. The worked lines that stood as paragraphs are now See its on the note's own numbers: a two-way overlap scan against every question, worked example and twin, find-the-mistake item, live diagnostic and shipped prompt found nothing shared (probe-connected.mts). Gates g1 and g5 withdrawn (overlaps with practice 0001 and 0014); g8 moved to follow the first See it; g16 and g17 new; every explanation re-teaches in other words and points at its step; every gate has a twin on new numbers; every wrong option of every choice gate and twin carries its note; every See it its kind. Figure 4's two weights labelled W_A and W_B (the review's F25); the examiner callout quotes the 2025 report's 'a large number' (F22). Prompts wired: rp.16, rp.17.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Every printed number computed and asserted in ed-connected.mjs: 9 and 6 kg, 30 = 15a, a = 2, T = 72; g8 40 = 10a, a = 4, twin 120 = 20a, a = 6; 11 and 9 kg: 3, 1, 4.5; 8 and 2 kg: a = 6, T = 32, pulley 64; g16 3 and 17 kg at 7, T = 51, twin 84; table pair 61 = 10a, a = 6.1, T = 27.3, R = 38.61; g2 twin 2; car 1320 and 150, a = 1.4, T = 570; g9 twin 420; g14 twin 82; g15 twin 24.04; slack v² = 10.8, rise 0.54, height 2.34; g17 0.8, twin 2.45; trailer 0.5 m/s², 49 m; g10 twin 0.25; 3 = 1.5a, a = 2; T = 700, M = 350; car runs on 1.2, 12, 2.4, 24; g13 twin 2.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
       "reports": [],
       "withdrawn": [
         {
-          "id": "g3",
+          "id": "g1",
           "kind": "gate",
-          "replacedBy": "g14",
-          "reason": "It asked what diagnostic item 07 asks (the force on the pulley from T = 40 N, answer 80); g14 checks the same step with 26 N.",
-          "on": "2026-09-24T23:57:00Z"
+          "replacedBy": "g8",
+          "reason": "Its pair of equations, 60 − T = 6a and T − 20 = 2a, shared 60 − T = 6a with practice 0001's first method line, and it asked for a coefficient typed in a blank; g8, kept, now follows the first See it on its own pair.",
+          "on": "2026-09-29T00:30:00Z"
         },
         {
-          "id": "g4",
+          "id": "g5",
           "kind": "gate",
-          "replacedBy": "g15",
-          "reason": "It asked what diagnostic item 08 asks (T = 40 N at a right angle, answer 56.57); g15 checks the same step with 30 N.",
-          "on": "2026-09-24T23:57:00Z"
+          "replacedBy": "g17",
+          "reason": "Its block rising at 3 m/s, 0.45 m higher, was practice 0014 word for word (the review's F09); g17 asks the same step at 4 m/s.",
+          "on": "2026-09-29T00:30:00Z"
         }
       ]
     },
@@ -5363,8 +6687,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u2.connected-particles-and-pulleys.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u2.connected-particles-and-pulleys.06",
+          "reason": "It was exam-style 0016(a)(b) number for number (5 kg and 3 kg, a = 2.5, T = 37.5), so the lesson printed that question's answers (the review's F09); we.06 teaches the same route on 13 kg and 7 kg.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u2.connected-particles-and-pulleys.02",
@@ -5444,8 +6777,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u2.connected-particles-and-pulleys.02",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u2.connected-particles-and-pulleys.07",
+          "reason": "It was exam-style 0015(a)(b) number for number (7 kg on the table, 5 kg hanging, 14 N, a = 3, T = 35; the review's F09); we.07 teaches the same route on 8 kg, 4 kg and 10 N.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u2.connected-particles-and-pulleys.03",
@@ -5613,6 +6955,14 @@
           "detail": "Summer 2025 Q4(iv), the least well-answered item on that paper: the whyMenu on step 1 puts the 2T substitution up against the vector sum explicitly, and step 2 is the line the method mark is for. Replaces we.03 (25 Sep 2026), whose numbers other items used.",
           "at": "2026-09-19T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Input specs added to all three steps (an addition): the two pulls as a choice against doubling and the difference of the weights, R² = 42² + 42² in any equivalent form, 59.40 N numeric; each probed through markAnswer (probe-connected.mts). Its figure's description no longer states step 1's working (the WE-LEAK line), and its why-menu quotes the 2025 report's 'a large number' (the review's F22).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5685,6 +7035,14 @@
           "result": "pass",
           "detail": "Summer 2024 Q6 and Summer 2026 Q4, the car and trailer with a value to show: step 1 keeps k as a letter and step 3 produces it, the show-that lock (lock.fm.show-that) the 2024 report enforced; step 5's whyMenu is the old acceleration kept after the break (Summer 2019 Q5). The numbers are our own: no mass, force or speed here is on a paper.",
           "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Input specs added to all six steps (the 27 Sep ruling: an addition; lines, answers and earns unchanged): 960k as a key word, the substituted equation in k in any equivalent form, 0.4, 816 N, 0.8 m/s² and 9 s numeric; each probed through markAnswer (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
           "by": "claude"
         }
       ],
@@ -5767,10 +7125,27 @@
           "detail": "Every item has exactly one correct option, no two option texts are the same, each post-instruction distractor names a registry misconception, and every distractor is refused by the marker (scratchpad/fm2-batch-d/check-marking.mts).",
           "at": "2026-09-19T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Item 05: 70 − 20 = 50 and 7a + 2a = 9a; the slips 5a (a terms subtracted), 90 (weights added), a surviving 2T.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.pre#01",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.pre#05",
+          "reason": "It added 50 − T = 5a and T − 30 = 3a, exam-style 0016(a)'s own equations, so the pre-check worked that part's method marks; item 05 asks the same step on 70 − T = 7a and T − 20 = 2a.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u2.connected-particles-and-pulleys.post",
@@ -5850,8 +7225,66 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#10",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#06",
+          "reason": "Moved unchanged into dx.post-b, which replaces the whole set.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#11",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#07",
+          "reason": "Its equation T − 14 = 7a was exam-style 0015(a)'s second method line word for word; item 07 asks the same choice for a 9 kg block against 16 N.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#12",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#08",
+          "reason": "Moved unchanged into dx.post-b, which replaces the whole set.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#05",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#01",
+          "reason": "Moved unchanged into dx.post-b, which replaces the whole set.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#06",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#02",
+          "reason": "Its equation for a 5 kg block, 50 − T = 5a, was exam-style 0016(a)'s first method line word for word; item 02 asks the same choice for a 12 kg block.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#07",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#03",
+          "reason": "Moved unchanged into dx.post-b, which replaces the whole set.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#08",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#04",
+          "reason": "Moved unchanged into dx.post-b, which replaces the whole set.",
+          "on": "2026-09-29T00:30:00Z"
+        },
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.post#09",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.post-b#05",
+          "reason": "Its 5 kg and 3 kg pair with tension 37.5 N was exam-style 0016(c) number for number (the review's F09); item 05 asks it for a 6 kg and 2 kg pair.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u2.connected-particles-and-pulleys.01",
@@ -5931,8 +7364,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.fm.u2.connected-particles-and-pulleys.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.fm.u2.connected-particles-and-pulleys.04",
+          "reason": "Its tension of 35 N was exam-style 0015(c)'s, so its correction printed that part's answer, 49.50 N (the review's F09); ftm.04 is the same Summer 2025 finding at 45 N.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u2.connected-particles-and-pulleys.02",
@@ -6174,8 +7616,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.01",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.connected-particles-and-pulleys.16",
+          "reason": "A 21-word answer on the method; rp.16 asks it in 13, keyed on the one step that matters, adding.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.02",
@@ -6336,8 +7787,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.03",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.connected-particles-and-pulleys.18",
+          "reason": "A 20-word answer; rp.18 keeps the reason, inextensible, in seven.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.04",
@@ -6417,8 +7877,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.04",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.connected-particles-and-pulleys.17",
+          "reason": "A 23-word definition of the force on a pulley; rp.17 asks the case the papers set, two pulls at a right angle.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.05",
@@ -6579,8 +8048,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.06",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.connected-particles-and-pulleys.17",
+          "reason": "A 16-word question, over the 15-word cap, and its chip 'root two' refused the natural 'T√2' (the review's F14); rp.17 asks it in 14 words.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.07",
@@ -6766,8 +8244,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.08",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.connected-particles-and-pulleys.19",
+          "reason": "A 22-word answer; rp.19 asks the same trap in seven.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.09",
@@ -7034,8 +8521,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.11",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 20-word answer; the twists section's See it now shows the timing giving the acceleration first, and the set keeps eight prompts.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.12",
@@ -7302,8 +8798,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.14",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 21-word answer; the note's why section and the car-and-trailer See it carry it, and the set keeps eight prompts.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.connected-particles-and-pulleys.15",
@@ -7383,8 +8888,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.connected-particles-and-pulleys.15",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 20-word answer; the twists section's See it on an unknown to show carries it, and the set keeps eight prompts.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u2.connected-particles-and-pulleys.0018",
@@ -7914,6 +9428,14 @@
           "result": "pass",
           "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t3-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
           "at": "2026-09-25T04:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "(main) a common error's feedback now quotes the Summer 2025 report as it reads, 'a large number of candidates' (the review's F22); value, pattern, tag and marks unchanged.",
+          "at": "2026-09-29T00:30:00Z",
           "by": "claude"
         }
       ],
@@ -8894,6 +10416,22 @@
           "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t3-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
           "at": "2026-09-25T04:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Follow-through relations added in place (29 Sep 2026; ruling 14; a credit-only addition): (c) x * √2; each probed with a wrong earlier value and the consistent later answer through markAnswer (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "(c) a common error's feedback now quotes the Summer 2025 report as it reads, 'a large number of candidates' (the review's F22); value, pattern, tag and marks unchanged.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -8982,6 +10520,14 @@
           "result": "pass",
           "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t3-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
           "at": "2026-09-25T04:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Follow-through relations added in place (29 Sep 2026; ruling 14; a credit-only addition): (b) 30 + 3 * x, (c) 2 * x, (d) √(1.6 * x); each probed with a wrong earlier value and the consistent later answer through markAnswer (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
           "by": "claude"
         }
       ],
@@ -9074,8 +10620,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u2.connected-particles-and-pulleys.0017",
+          "kind": "question",
+          "replacedBy": "q.fm.u2.connected-particles-and-pulleys.0023",
+          "reason": "Part (a)'s show-that key words paid correct derivations 2 of 3 (the resistances written 1.5(1200), or as 2100 together; the equation written 1600 × a) and a hedged answer, a = 1.25 or 1.3, 3 of 3 (the strictest FM2 review, F03); a key change, so reissued as q.0023 with the groups widened to the scheme's forms and the hedge rejected.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u2.connected-particles-and-pulleys.0020",
@@ -9160,6 +10715,22 @@
           "result": "pass",
           "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t3-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
           "at": "2026-09-25T04:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Follow-through relations added in place (29 Sep 2026; ruling 14; a credit-only addition): (c) (x - 18) / 2, (d) x * √2; each probed with a wrong earlier value and the consistent later answer through markAnswer (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "(d) a common error's feedback now quotes the Summer 2025 report as it reads, 'a large number of candidates' (the review's F22); value, pattern, tag and marks unchanged.",
+          "at": "2026-09-29T00:30:00Z",
           "by": "claude"
         }
       ],
@@ -9338,6 +10909,457 @@
           "result": "pass",
           "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t3-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
           "at": "2026-09-25T04:00:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u2.connected-particles-and-pulleys.pre-withdrawn",
+      "itemId": "dx.fm.u2.connected-particles-and-pulleys.pre-withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "The kept copy of dx.fm.u2.connected-particles-and-pulleys.pre#01: It added 50 − T = 5a and T − 30 = 3a, exam-style 0016(a)'s own equations, so the pre-check worked that part's method marks; item 05 asks the same step on 70 − T = 7a and T − 20 = 2a.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u2.connected-particles-and-pulleys.pre-withdrawn#01",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.connected-particles-and-pulleys.pre#05",
+          "reason": "The kept copy of dx.fm.u2.connected-particles-and-pulleys.pre#01, withdrawn: It added 50 − T = 5a and T − 30 = 3a, exam-style 0016(a)'s own equations, so the pre-check worked that part's method marks; item 05 asks the same step on 70 − T = 7a and T − 20 = 2a.",
+          "on": "2026-09-29T00:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.q.fm.u2.connected-particles-and-pulleys.0023",
+      "itemId": "q.fm.u2.connected-particles-and-pulleys.0023",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Two connected bodies in exactly the three configurations the FM2-NEW-01 Teacher Guidance permits — both horizontal, both vertical, or one of each — with friction given as a value or per unit mass, and the magnitude of the resultant force a string exerts on a pulley, which the same guidance names. Connected bodies on an inclined plane, three or more bodies, heavy strings, impulse and momentum are all outside the specification and are listed in notOnThisSpec.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma and the four constant-acceleration formulae, and the note lists them. g = 10 m/s², one tension and one acceleration for a light inextensible string over a smooth pulley, and the resultant of the two tensions on the pulley are recall and are listed in mustKnow.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, range 2 to 6), Show that (typical 3) and Identify. The Show that part carries the lock from packs/further-maths/exam-true/method-locks.json (lock.fm.show-that) with CCEA's two-mark cap for verification recorded in the mark point's examinerNote.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4; per-question median 8 and 90th percentile 13. The four exam-style questions are 8, 12, 11 and 10 marks, against Summer 2025 Q4 (2 + 6 + 2 + 2, the force diagram included), Summer 2022 Q5 (2 + 3 + 2 + 1 + 2 + 3, ending with the slack string), Summer 2024 Q6 (4 + 3 + 3 + 2, ending with the snap and the distance to rest) and Summer 2023 Q4 (2 + 2 + 3 + 3, a timing, the tension and an unknown mass). The pulley's resultant is 2 marks, method then value, as CCEA marks it. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "g = 10 m/s²; every system solved once and the solution checked against BOTH of its equations by the generator. Vertical pair 5/3 kg: a = 2.5, T = 37.5, force on the pulley 2T = 75; released 0.8 m above the floor, the heavier lands at 2 m/s, the string goes slack and the lighter rises a further 0.2 m to 1.8 m above the floor. Table pair 7/5 kg with friction 14 N: a = 3, T = 35, force on the pulley T root 2 = 49.4974746831 printed 49.50. Tow-bar 1200/400 kg, drive 4100 N, 1.5 and 0.75 N per kg: resistances 1800 and 300, a = 1.25, tow-bar tension 800, trailer deceleration after the snap 0.75, and from 6 m/s it stops in 24 m. Practice: 6/4 kg gives a = 2, T = 48, pulley 96; 50 N at a right angle gives 70.71; 3/2 kg smooth gives a = 4, T = 12 and a pulley force of 16.97; 2/3 kg smooth gives a = 6, T = 12; 5/5 kg with 10 N friction gives a = 4, T = 30; 1000/500 kg with 1 N per kg gives a = 2, T = 1500, then 1 m/s² deceleration; a 3 m/s break gives 0.45 m. Find-the-mistake: 4/6 kg with 12 N friction gives a = 4.8 (the extra weight term gives 0.8); a 250 kg trailer with 200 N resistance decelerates at 0.8 (the old 1.2 is the error). Added 23 Sep 2026: rungs 6 kg at rest gives T = 60 and 4 kg lowered at 2 m/s² gives T = 32; the timed table pair (exam-style q.0020) from rest over 1.44 m in 1.2 s gives a = 2, then T = 48, M = 15 and a pulley force of 67.88, checked in the combined equation; worked example 4, 1500/480 kg with 2766 N and k and 2k N per kg at 0.9 m/s², gives k = 0.4 from the whole system, T = 816 (checked in the car's equation), a deceleration of 0.8 after the break and 9 s to rest from 7.2 m/s, twin T = 740; the note's run-on car, 1000/600 kg at 0.8 N per kg with 3200 N, gives a = 1.2, 12 m/s after 10 s, then 2.4 m/s² alone and 24 m/s 5 s later; gates g8 4, g9 850, g10 0.8, g13 2.5. Added 24 Sep 2026, the tail-only items: q.0021 lists the forces on a 6 kg block on the table (weight 60 N; the distractor's extra force is the 4 kg block's weight, 40 N); q.0022 holds a 5 kg block and a 2 kg block at rest, so T = 20 N and the friction is 20 N (its errors: 2, the mass; 50, the table block's weight; 0, friction left out). No set of masses, forces or speeds here is taken from a CCEA paper: the Summer 2025 Q4 table pair and the Summer 2024 Q6 car mass were replaced on 22 Sep 2026. The tow-bar car's 1200 kg equals the Summer 2026 car's mass by coincidence; its trailer, driving force, resistances and acceleration all differ.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Masses in kg, forces in N, accelerations in m/s², distances in m, speeds in m/s. Every numeric spec carries its unit with unitRequired false, so a bare number is accepted and a wrong unit is named. Answers that are not exact are given to 2 decimal places, and the stem says so in those words.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Summer 2025 Q4, Summer 2022 Q5 and Summer 2024 Q6: the table-and-pulley chain ending in the pulley's resultant, the vertical pair ending with a slack string and a free rise, and the tow-bar with its capped 'show that', its snap and its distance to rest are the three shapes this question takes, and every common error here is one the reports name.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-b before writing)",
+          "result": "pass",
+          "detail": "Marked back through the app's own engines by scratchpad/fm2-batch-d/check-marking.mts: every accepted spelling of the answer earns full marks, every text part earns full marks from its own worked solution, and every commonError value is refused, matches its own pattern, tags its own misconception and earns exactly the marks its entry claims. Every numeric commonError value is the result of an error route in scratchpad/fm2-batch-d/routes.mjs, re-executed against the published JSON by verify-published.mjs.",
+          "at": "2026-09-19T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM2 batch D, fourth session: semantic audit, audit-errors.mjs)",
+          "result": "pass",
+          "detail": "Every numeric common error read beside the route that produced it and its inputs (audit-t3-0925.txt): each value is what the slip its feedback describes produces on this item's own numbers, and each claimed mark matches the scheme line the slip keeps.",
+          "at": "2026-09-25T04:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Reissue of q.0017 with part (a)'s key words widened to the scheme's forms (1.5(1200), 2100 together, 1600 × a, (1200 + 400)a) and a hedge rejected; the reviewer's nine derivations and the hedge re-marked through markAnswer (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u2.connected-particles-and-pulleys.06",
+      "itemId": "we.fm.u2.connected-particles-and-pulleys.06",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts and published by pipeline/build-content.mts (npm run content:check).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper; connected particles (FM2-NEW-01), g = 10 m/s².",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "130 − T = 13a and T − 70 = 7a: 60 = 20a, a = 3; T = 70 + 21 = 91, check 130 − 91 = 39 = 13 × 3. Twin: 100 = 20a, a = 5.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Summer 2022 Q5 scheme: a method mark for each equation of motion and for adding them, the working mark for each value; Summer 2023 Q4 (one tension, one letter).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Every step's input marked through markAnswer: the statement as a choice, each equation in its equivalent forms and against its sign slips, the values with and without units (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Written new; scripts/qa/shingles.mjs --unit fm2 finds no shared sequence for this topic.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, no verdict word; every $…$ compiles (content:check).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u2.connected-particles-and-pulleys.07",
+      "itemId": "we.fm.u2.connected-particles-and-pulleys.07",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts and published by pipeline/build-content.mts (npm run content:check).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper; connected particles (FM2-NEW-01), g = 10 m/s².",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "40 − T = 4a and T − 10 = 8a: 30 = 12a, a = 2.5; T = 10 + 20 = 30, check 40 − 30 = 10 = 4 × 2.5. Twin: 50 = 8a, a = 6.25.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Summer 2025 Q4: the table block's weight put into its own equation was a frequent error; each block treated separately did better.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Every step's input marked through markAnswer (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Written new; scripts/qa/shingles.mjs --unit fm2 finds no shared sequence for this topic.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, no verdict word; every $…$ compiles (content:check).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u2.connected-particles-and-pulleys.post-b",
+      "itemId": "dx.fm.u2.connected-particles-and-pulleys.post-b",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts and published by pipeline/build-content.mts (npm run content:check).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper; connected particles (FM2-NEW-01), g = 10 m/s².",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "02: 12 × 10 = 120, 120 − T = 12a; slips T − 120 (direction), a stray 15 N, the system's 20 kg. 05: 6 and 2 kg, a = 5, T = 30, force 60 N; slips 80 (weights), 30 (one section), 40 (difference). 07: T − 16 = 9a; slips the 90 N weight, 90a, the friction left out. 01, 03, 04, 06 and 08 moved unchanged from dx.post (05, 07, 08, 10, 12).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Summer 2025 Q4 (table weight in the equation; mass and force confused; 2T at a right angle), Summer 2022 Q5 (2T for parallel sections).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Written new; scripts/qa/shingles.mjs --unit fm2 finds no shared sequence for this topic.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, no verdict word; every $…$ compiles (content:check).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u2.connected-particles-and-pulleys.04",
+      "itemId": "ftm.fm.u2.connected-particles-and-pulleys.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "FindTheMistake shape; one wrong line (3).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "√(45² + 45²) = 45√2 = 63.64; the slip 2 × 45 = 90.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Summer 2025 Q4(iv): the least well-answered part of the paper; a large number of candidates took the force to be 2T.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "The fix box through markFix with the corrected line in several spellings; the flagged line is not a fix (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u2.connected-particles-and-pulleys.16",
+      "itemId": "rp.fm.u2.connected-particles-and-pulleys.16",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; question 8 words, answer 14 words.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Its key word is a word of its own answer and of a natural right answer, probed through keywordsPresent (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u2.connected-particles-and-pulleys.17",
+      "itemId": "rp.fm.u2.connected-particles-and-pulleys.17",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; question 15 words, answer 9 words.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Its key word is a word of its own answer and of a natural right answer, probed through keywordsPresent (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u2.connected-particles-and-pulleys.18",
+      "itemId": "rp.fm.u2.connected-particles-and-pulleys.18",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; question 8 words, answer 7 words.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Its key word is a word of its own answer and of a natural right answer, probed through keywordsPresent (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u2.connected-particles-and-pulleys.19",
+      "itemId": "rp.fm.u2.connected-particles-and-pulleys.19",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; question 11 words, answer 6 words.",
+          "at": "2026-09-29T00:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 0: scratchpad v3-fm2-0 scripted editor, every value computed there)",
+          "result": "pass",
+          "detail": "Its key word is a word of its own answer and of a natural right answer, probed through keywordsPresent (probe-connected.mts).",
+          "at": "2026-09-29T00:30:00Z",
           "by": "claude"
         }
       ],
