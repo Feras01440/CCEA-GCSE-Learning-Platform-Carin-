@@ -7,12 +7,12 @@
       "Explain how the fuse, the earth wire and double insulation protect you",
       "Calculate an appliance's current and choose its fuse: 3 A, 5 A or 13 A"
     ],
-    "minutes": 19
+    "minutes": 26
   },
   {
     "type": "h",
-    "role": "idea",
-    "text": "One wire carries the danger"
+    "text": "One wire carries the danger",
+    "role": "idea"
   },
   {
     "type": "p",
@@ -29,26 +29,83 @@
     "md": "An appliance joins the mains by two wires: the **live** wire brings the supply in and the **neutral** wire completes the circuit. Touch the live wire and a current can pass through you. The **earth** wire carries no current in normal use: it is a safety route, joined to a metal case."
   },
   {
-    "type": "p",
-    "md": "Follow the appliance in the figure:\n1. The supply comes in along the live wire, through the fuse and switch.\n2. It returns along the neutral wire.\n3. The earth wire carries nothing."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "The figure shows an appliance on the mains. Give the job of each of its three wires. [3]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Live: brings the supply in at 230 V, through the fuse and the switch.",
+        "decision": "It is joined to the supply, so touching it lets a current pass through you.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Neutral: carries the current back, completing the circuit.",
+        "decision": "The return path, close to 0 V.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Earth: carries no current in normal use, and joins the metal case to earth.",
+        "decision": "A safety route, used only in a fault.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g1",
     "kind": "choice",
-    "prompt": "In an appliance's mains circuit, which wire brings the supply in and is dangerous to touch?",
+    "prompt": "A fault joins one of an appliance's wires to its metal case. Which wire, touching the case, makes the case dangerous to hold?",
     "options": [
       "the live wire",
       "the neutral wire",
       "the earth wire"
     ],
     "answer": "the live wire",
-    "explain": "Follow the circuit from the supply: the live wire brings the supply in, through the fuse and the switch, and the neutral wire carries it back. The earth wire carries nothing in normal use; it is only a safety route. The dangerous one is the live wire."
+    "explain": "Step 1 of the See it: the live wire brings the supply in at 230 V, so a case joined to it is at 230 V and a current could pass through you. The neutral only carries the current back, and the earth carries none. So it is the live wire.",
+    "optionNotes": [
+      {
+        "option": "the neutral wire",
+        "why": "The neutral carries current too, so it can seem dangerous, but it is the return path, near 0 V: the push comes from the live wire."
+      },
+      {
+        "option": "the earth wire",
+        "why": "The earth wire is joined to the case on purpose, as the safety route; it carries nothing in normal use."
+      }
+    ],
+    "twin": {
+      "prompt": "Which wire in a working appliance's cable normally carries no current?",
+      "options": [
+        "the earth wire",
+        "the live wire",
+        "the neutral wire"
+      ],
+      "answer": "the earth wire",
+      "explain": "The earth wire carries current only in a fault. The live brings the current in and the neutral carries it back, all the time the appliance runs.",
+      "optionNotes": [
+        {
+          "option": "the live wire",
+          "why": "The live wire carries the current in whenever the appliance is on."
+        },
+        {
+          "option": "the neutral wire",
+          "why": "The neutral carries the current back, so it carries it whenever the appliance is on."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "variant",
-    "text": "1. Direct and alternating current"
+    "text": "1. Direct and alternating current",
+    "role": "variant"
   },
   {
     "type": "figure",
@@ -65,8 +122,40 @@
     "md": "One rise and fall is one cycle, and the UK mains makes 50 cycles a second: 50 hertz. The current changes direction twice a cycle: 50 × 2 = 100 times every second."
   },
   {
-    "type": "p",
-    "md": "Read the traces in the figure:\n**Does the d.c. trace cross zero?** No, so its current never changes direction.\n**Does the a.c. trace?** Yes, again and again: each crossing is a change of direction."
+    "type": "see",
+    "kind": "data",
+    "stem": "Two traces are on a CRO. Trace X is a flat line two squares above the zero line. Trace Y is a wave that goes two squares above the zero line and two below it. Which trace is a.c., which is d.c., and why? [3]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Trace X never crosses zero: its current flows one way only. It is d.c.",
+        "decision": "A flat line on one side of zero is one direction, steady.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Trace Y crosses zero again and again: its current changes direction, regularly. It is a.c.",
+        "decision": "Each crossing of the zero line is a change of direction.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "X could come from a cell, and Y from the mains.",
+        "decision": "A cell or battery gives d.c.; the mains gives a.c."
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "B1XiX3sNV-c",
+    "title": "GCSE Physics - Alternating Current & Direct Current",
+    "channel": "Cognito",
+    "why": "The two kinds of current and their traces, moving. It is made for another board: its potential difference is CCEA's voltage, and peak voltage and the National Grid are not on the CCEA specification."
   },
   {
     "type": "gate",
@@ -79,35 +168,133 @@
       "a wave that stays above the zero line"
     ],
     "answer": "a wave that crosses the zero line",
-    "explain": "Alternating current changes direction, and on a CRO a change of direction means the trace crosses the zero line, as the mains wave does. A flat line above zero is a cell's d.c., and a wave that never crosses zero never changes direction. The answer is the wave that crosses the zero line."
+    "explain": "As in step 2 of the See it, a.c. changes direction, and on a CRO a change of direction is a crossing of the zero line. A flat line is d.c., and a wave that never crosses zero never changes direction. So the a.c. trace is the wave that crosses the zero line.",
+    "optionNotes": [
+      {
+        "option": "a flat line above the zero line",
+        "why": "That is a cell's d.c.: one direction, steady. Alternating current changes direction, so its trace has to cross zero.",
+        "misconception": "sci.circuits.ac-dc-trace"
+      },
+      {
+        "option": "a wave that stays above the zero line",
+        "why": "It rises and falls, which looks like a.c., but it never crosses zero, so the current never changes direction.",
+        "misconception": "sci.circuits.ac-dc-trace"
+      }
+    ],
+    "twin": {
+      "prompt": "A CRO trace crosses the zero line four times across the screen. What does that tell you about the current?",
+      "options": [
+        "it changes direction",
+        "it flows one way only",
+        "it has stopped"
+      ],
+      "answer": "it changes direction",
+      "explain": "Each crossing of the zero line is a change of direction, so the current changes direction: it is a.c.",
+      "optionNotes": [
+        {
+          "option": "it flows one way only",
+          "why": "A one-way current is a flat line that stays on one side of zero; this trace crosses it.",
+          "misconception": "sci.circuits.ac-dc-trace"
+        },
+        {
+          "option": "it has stopped",
+          "why": "No current is a line along zero. A trace that crosses zero is a current changing direction."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "see",
-    "text": "See it done: a.c. and d.c."
-  },
-  {
-    "type": "video",
-    "videoId": "B1XiX3sNV-c",
-    "title": "GCSE Physics - Alternating Current & Direct Current",
-    "channel": "Cognito",
-    "why": "The two kinds of current and their traces, explained with the pictures moving."
-  },
-  {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "Watching it for CCEA",
-    "md": "The video is made for another exam board: its 'potential difference' is what CCEA calls voltage, and anything about peak voltage or the National Grid is not on the CCEA specification."
+    "text": "2. A cell on the CRO, and turned round",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "A full answer, line by line:\n**d.c.** Flows in one direction only. Source: a cell or battery.\n**a.c.** Changes direction, and does so regularly. Source: the mains.\n**Sketch for d.c.** A flat line on one side of zero, never the wave.\n**Cell turned round.** The current still flows one way only, so the trace is still flat, now on the other side of zero."
+    "md": "A cell's current is steady and flows one way, so its trace is flat and sits on one side of zero. Turn the cell round and the current flows the other way round the circuit: still one way, still steady, but now on the other side of zero."
+  },
+  {
+    "type": "see",
+    "kind": "data",
+    "stem": "A cell joined to a CRO gives the trace shown. The cell is then turned round. Describe the trace now. [2]",
+    "figure": {
+      "kind": "svg",
+      "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><title>An oscilloscope screen with a dashed zero line across the middle: a cell, a flat horizontal line 2 squares above the zero line.</title><text x=\"60\" y=\"22\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" font-weight=\"bold\">a cell</text><path d=\"M60 34 h300 v180 h-300 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M97.5 34 L97.5 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M135 34 L135 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M172.5 34 L172.5 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M210 34 L210 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M247.5 34 L247.5 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M285 34 L285 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M322.5 34 L322.5 214\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M60 64 L360 64\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M60 94 L360 94\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M60 124 L360 124\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M60 154 L360 154\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M60 184 L360 184\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M60 124 L360 124\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M60 64 L210 64 L360 64\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"50\" y=\"129\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"end\">0</text><text x=\"360\" y=\"238\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"end\">time →</text></svg>",
+      "alt": "An oscilloscope screen with a dashed zero line: a cell's trace, a flat horizontal line two squares above the zero line."
+    },
+    "steps": [
+      {
+        "n": 1,
+        "working": "Turning the cell round reverses the current.",
+        "decision": "Its positive terminal is now on the other side, so the current goes the other way round."
+      },
+      {
+        "n": 2,
+        "working": "It still flows one way only and stays steady, so the trace stays flat.",
+        "decision": "Still d.c.: one direction, no change in size.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "It now sits two squares below the zero line.",
+        "decision": "The same size, on the other side of zero.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "figure",
-    "alt": "Four oscilloscope screens with dashed zero lines. A: a flat line below the zero line. B: a wave that crosses the zero line, going above and below it. C: a wave that rises and falls but stays above the zero line the whole time. D: a flat line lying on the zero line.",
-    "svg": "<svg viewBox=\"0 0 400 256\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"croChoiceG3\"><title id=\"croChoiceG3\">Four oscilloscope screens, each with a dashed zero line across the middle. A: a flat line below the zero line. B: a wave that crosses the zero line, going above and below it. C: a wave that rises and falls but stays above the zero line the whole time. D: a flat line lying on the zero line.</title><path d=\"M16 12 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M44.3 12 L44.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M72.7 12 L72.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M101 12 L101 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M129.3 12 L129.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M157.7 12 L157.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 33.5 L186 33.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 55 L186 55\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 76.5 L186 76.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 55 L186 55\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M16 76.5L101 76.5L186 76.5\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"101\" y=\"120\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"600\">A</text><path d=\"M214 12 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M242.3 12 L242.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M270.7 12 L270.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M299 12 L299 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M327.3 12 L327.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M355.7 12 L355.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 33.5 L384 33.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 55 L384 55\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 76.5 L384 76.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 55 L384 55\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M214 55L215.7 51.2L217.4 47.5L219.1 43.9L220.8 40.5L222.5 37.3L224.2 34.4L225.9 31.8L227.6 29.6L229.3 27.8L231 26.4L232.7 25.4L234.4 25L236.1 25L237.8 25.4L239.5 26.4L241.2 27.8L242.9 29.6L244.6 31.8L246.3 34.4L248 37.3L249.7 40.5L251.4 43.9L253.1 47.5L254.8 51.2L256.5 55L258.2 58.8L259.9 62.5L261.6 66.1L263.3 69.5L265 72.7L266.7 75.6L268.4 78.2L270.1 80.4L271.8 82.2L273.5 83.6L275.2 84.6L276.9 85L278.6 85L280.3 84.6L282 83.6L283.7 82.2L285.4 80.4L287.1 78.2L288.8 75.6L290.5 72.7L292.2 69.5L293.9 66.1L295.6 62.5L297.3 58.8L299 55L300.7 51.2L302.4 47.5L304.1 43.9L305.8 40.5L307.5 37.3L309.2 34.4L310.9 31.8L312.6 29.6L314.3 27.8L316 26.4L317.7 25.4L319.4 25L321.1 25L322.8 25.4L324.5 26.4L326.2 27.8L327.9 29.6L329.6 31.8L331.3 34.4L333 37.3L334.7 40.5L336.4 43.9L338.1 47.5L339.8 51.2L341.5 55L343.2 58.8L344.9 62.5L346.6 66.1L348.3 69.5L350 72.7L351.7 75.6L353.4 78.2L355.1 80.4L356.8 82.2L358.5 83.6L360.2 84.6L361.9 85L363.6 85L365.3 84.6L367 83.6L368.7 82.2L370.4 80.4L372.1 78.2L373.8 75.6L375.5 72.7L377.2 69.5L378.9 66.1L380.6 62.5L382.3 58.8L384 55\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"299\" y=\"120\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"600\">B</text><path d=\"M16 134 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M44.3 134 L44.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M72.7 134 L72.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M101 134 L101 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M129.3 134 L129.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M157.7 134 L157.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 155.5 L186 155.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 177 L186 177\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 198.5 L186 198.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 177 L186 177\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M16 157.7L17.7 156L19.4 154.4L21.1 152.9L22.8 151.4L24.5 150.1L26.2 148.8L27.9 147.7L29.6 146.8L31.3 146L33 145.4L34.7 145L36.4 144.8L38.1 144.8L39.8 145L41.5 145.4L43.2 146L44.9 146.8L46.6 147.7L48.3 148.8L50 150.1L51.7 151.4L53.4 152.9L55.1 154.4L56.8 156L58.5 157.7L60.2 159.3L61.9 160.9L63.6 162.4L65.3 163.9L67 165.2L68.7 166.5L70.4 167.6L72.1 168.5L73.8 169.3L75.5 169.9L77.2 170.3L78.9 170.5L80.6 170.5L82.3 170.3L84 169.9L85.7 169.3L87.4 168.5L89.1 167.6L90.8 166.5L92.5 165.2L94.2 163.9L95.9 162.4L97.6 160.9L99.3 159.3L101 157.7L102.7 156L104.4 154.4L106.1 152.9L107.8 151.4L109.5 150.1L111.2 148.8L112.9 147.7L114.6 146.8L116.3 146L118 145.4L119.7 145L121.4 144.8L123.1 144.8L124.8 145L126.5 145.4L128.2 146L129.9 146.8L131.6 147.7L133.3 148.8L135 150.1L136.7 151.4L138.4 152.9L140.1 154.4L141.8 156L143.5 157.7L145.2 159.3L146.9 160.9L148.6 162.4L150.3 163.9L152 165.2L153.7 166.5L155.4 167.6L157.1 168.5L158.8 169.3L160.5 169.9L162.2 170.3L163.9 170.5L165.6 170.5L167.3 170.3L169 169.9L170.7 169.3L172.4 168.5L174.1 167.6L175.8 166.5L177.5 165.2L179.2 163.9L180.9 162.4L182.6 160.9L184.3 159.3L186 157.7\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"101\" y=\"242\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"600\">C</text><path d=\"M214 134 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M242.3 134 L242.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M270.7 134 L270.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M299 134 L299 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M327.3 134 L327.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M355.7 134 L355.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 155.5 L384 155.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 177 L384 177\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 198.5 L384 198.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 177 L384 177\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M214 177L299 177L384 177\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"299\" y=\"242\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"600\">D</text></svg>",
-    "caption": "Four traces to tell apart. This time the cell is joined to the CRO the other way round."
+    "alt": "Four oscilloscope screens with dashed zero lines. A: a flat line below the zero line. B: a flat line above the zero line. C: a wave that crosses the zero line. D: a flat line lying on the zero line.",
+    "svg": "<svg viewBox=\"0 0 400 256\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><title>Four oscilloscope screens, each with a dashed zero line across the middle. A: a flat line below the zero line. B: a flat line above the zero line. C: a wave that crosses the zero line, going above and below it. D: a flat line lying on the zero line.</title><path d=\"M16 12 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M44.3 12 L44.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M72.7 12 L72.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M101 12 L101 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M129.3 12 L129.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M157.7 12 L157.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 33.5 L186 33.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 55 L186 55\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 76.5 L186 76.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 55 L186 55\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M16 76.5 L101 76.5 L186 76.5\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"101\" y=\"120\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"bold\">A</text><path d=\"M214 12 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M242.3 12 L242.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M270.7 12 L270.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M299 12 L299 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M327.3 12 L327.3 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M355.7 12 L355.7 98\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 33.5 L384 33.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 55 L384 55\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 76.5 L384 76.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 55 L384 55\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M214 33.5 L299 33.5 L384 33.5\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"299\" y=\"120\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"bold\">B</text><path d=\"M16 134 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M44.3 134 L44.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M72.7 134 L72.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M101 134 L101 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M129.3 134 L129.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M157.7 134 L157.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 155.5 L186 155.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 177 L186 177\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 198.5 L186 198.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M16 177 L186 177\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M16 177 L17.7 173.2 L19.4 169.5 L21.1 165.9 L22.8 162.5 L24.5 159.3 L26.2 156.4 L27.9 153.8 L29.6 151.6 L31.3 149.8 L33 148.4 L34.7 147.4 L36.4 147 L38.1 147 L39.8 147.4 L41.5 148.4 L43.2 149.8 L44.9 151.6 L46.6 153.8 L48.3 156.4 L50 159.3 L51.7 162.5 L53.4 165.9 L55.1 169.5 L56.8 173.2 L58.5 177 L60.2 180.8 L61.9 184.5 L63.6 188.1 L65.3 191.5 L67 194.7 L68.7 197.6 L70.4 200.2 L72.1 202.4 L73.8 204.2 L75.5 205.6 L77.2 206.6 L78.9 207 L80.6 207 L82.3 206.6 L84 205.6 L85.7 204.2 L87.4 202.4 L89.1 200.2 L90.8 197.6 L92.5 194.7 L94.2 191.5 L95.9 188.1 L97.6 184.5 L99.3 180.8 L101 177 L102.7 173.2 L104.4 169.5 L106.1 165.9 L107.8 162.5 L109.5 159.3 L111.2 156.4 L112.9 153.8 L114.6 151.6 L116.3 149.8 L118 148.4 L119.7 147.4 L121.4 147 L123.1 147 L124.8 147.4 L126.5 148.4 L128.2 149.8 L129.9 151.6 L131.6 153.8 L133.3 156.4 L135 159.3 L136.7 162.5 L138.4 165.9 L140.1 169.5 L141.8 173.2 L143.5 177 L145.2 180.8 L146.9 184.5 L148.6 188.1 L150.3 191.5 L152 194.7 L153.7 197.6 L155.4 200.2 L157.1 202.4 L158.8 204.2 L160.5 205.6 L162.2 206.6 L163.9 207 L165.6 207 L167.3 206.6 L169 205.6 L170.7 204.2 L172.4 202.4 L174.1 200.2 L175.8 197.6 L177.5 194.7 L179.2 191.5 L180.9 188.1 L182.6 184.5 L184.3 180.8 L186 177\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"101\" y=\"242\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"bold\">C</text><path d=\"M214 134 h170 v86 h-170 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M242.3 134 L242.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M270.7 134 L270.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M299 134 L299 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M327.3 134 L327.3 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M355.7 134 L355.7 220\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 155.5 L384 155.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 177 L384 177\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 198.5 L384 198.5\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M214 177 L384 177\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M214 177 L299 177 L384 177\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"299\" y=\"242\" font-family=\"inherit\" font-size=\"17\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"bold\">D</text></svg>",
+    "caption": "Four traces to tell apart, each on the same kind of screen."
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A CRO is joined to a battery. What should its trace look like?",
+    "options": [
+      "a flat line above the zero line",
+      "a wave that crosses the zero line",
+      "a flat line along the zero line"
+    ],
+    "answer": "a flat line above the zero line",
+    "explain": "Step 2 of the See it: a battery's current flows one way and stays steady, so its trace is flat on one side of zero. A wave crossing zero is a.c., and a line along zero means no current. So: a flat line above the zero line.",
+    "optionNotes": [
+      {
+        "option": "a wave that crosses the zero line",
+        "why": "That is the mains' a.c. In Summer 2025 many sketched this wave for d.c.; a battery's current never changes direction.",
+        "misconception": "sci.circuits.ac-dc-trace"
+      },
+      {
+        "option": "a flat line along the zero line",
+        "why": "Flat is right, but along zero means no current at all. A battery drives a current, so the line sits off zero."
+      }
+    ],
+    "twin": {
+      "prompt": "A CRO is joined to a solar cell in bright light. What should its trace look like?",
+      "options": [
+        "a flat line on one side of the zero line",
+        "a wave that crosses the zero line",
+        "a flat line along the zero line"
+      ],
+      "answer": "a flat line on one side of the zero line",
+      "explain": "A solar cell gives d.c.: one direction, steady, so a flat line on one side of zero.",
+      "optionNotes": [
+        {
+          "option": "a wave that crosses the zero line",
+          "why": "Only a.c. crosses zero; a solar cell's current flows one way.",
+          "misconception": "sci.circuits.ac-dc-trace"
+        },
+        {
+          "option": "a flat line along the zero line",
+          "why": "A line along zero means no current; in bright light the solar cell drives one."
+        }
+      ]
+    }
   },
   {
     "type": "gate",
@@ -121,12 +308,54 @@
       "D"
     ],
     "answer": "A",
-    "explain": "Turning the cell round reverses the current, but it still flows one way only and stays steady, so its trace is still a flat line, now below the zero line: screen A. Screen B crosses zero, so it is a.c.; in Summer 2025 many drew that wave when asked for d.c. C rises and falls, and D sits on zero, which is no current. The answer is A."
+    "explain": "Follow steps 1 to 3 of the See it: turning the cell round reverses the current, but it still flows one way and stays steady, so the trace is still flat, now below the zero line: screen A. Screen B is the trace before it was turned round; C crosses zero, so it is a.c.; D is no current.",
+    "optionNotes": [
+      {
+        "option": "B",
+        "why": "B is the cell before it was turned round. Reversing the current moves the flat line to the other side of zero."
+      },
+      {
+        "option": "C",
+        "why": "C crosses the zero line, so its current changes direction: a.c. A cell turned round still gives d.c.",
+        "misconception": "sci.circuits.ac-dc-trace"
+      },
+      {
+        "option": "D",
+        "why": "D lies on the zero line: no current. The turned cell still drives a current, the other way."
+      }
+    ],
+    "twin": {
+      "prompt": "In the four screens, which one shows a current that keeps changing direction?",
+      "options": [
+        "C",
+        "A",
+        "B",
+        "D"
+      ],
+      "answer": "C",
+      "explain": "A current that changes direction crosses the zero line: screen C. A and B are flat, one way each, and D is no current.",
+      "optionNotes": [
+        {
+          "option": "A",
+          "why": "A is flat below zero: one direction only, d.c.",
+          "misconception": "sci.circuits.ac-dc-trace"
+        },
+        {
+          "option": "B",
+          "why": "B is flat above zero: one direction only, d.c.",
+          "misconception": "sci.circuits.ac-dc-trace"
+        },
+        {
+          "option": "D",
+          "why": "D is on the zero line: no current at all."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "why",
-    "text": "Why the switch goes in the live wire"
+    "text": "3. Why the switch goes in the live wire",
+    "role": "why"
   },
   {
     "type": "figure",
@@ -139,8 +368,32 @@
     "md": "A switch makes or breaks the circuit. It goes in the **live** wire, so that switching off cuts the appliance off from the supply. A switch in the neutral wire stops the current too, but leaves everything inside **still joined to the live wire**, so it could still give a shock."
   },
   {
-    "type": "p",
-    "md": "Take the two lamps in the figure, both switched off:\n1. Top lamp, switch in the live wire: the lamp is cut off from the live wire, so it is safe to touch.\n2. Bottom lamp, switch in the neutral wire: the lamp is dark, but still joined to the live wire, so it could give a shock."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Two fans are switched off. Fan X has its switch in the live wire; fan Y has its switch in the neutral wire. Which one is safe to open up and touch inside, and why? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Fan X: the switch has cut it off from the live supply, so nothing inside is at 230 V.",
+        "decision": "A switch in the live wire disconnects everything beyond it.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Fan Y: no current flows, but the live wire still reaches its motor.",
+        "decision": "The switch is on the return side, so the live side is untouched.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "So only fan X is safe to touch inside.",
+        "decision": "That is why the switch always goes in the live wire."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -153,12 +406,42 @@
       "the current through the lamp becomes too high"
     ],
     "answer": "the lamp is still joined to the live wire",
-    "explain": "Look at the lower circuit: with the switch off in the neutral wire, the lamp goes dark, but the thick line shows it is still joined to the live wire. Touching the lamp's insides could give a shock. That is why the switch belongs in the live wire. The answer is that the lamp is still joined to the live wire."
+    "explain": "Step 2 of the See it: with the switch off in the neutral wire, no current flows, but the live wire still reaches the appliance. The lamp goes dark yet is still joined to the live wire, so touching its insides could give a shock. That is why the switch belongs in the live wire.",
+    "optionNotes": [
+      {
+        "option": "the lamp stays switched on",
+        "why": "The lamp does go out: the circuit is broken. The danger is quieter than that: its insides are still joined to the live wire."
+      },
+      {
+        "option": "the current through the lamp becomes too high",
+        "why": "No current flows once the switch is off. The danger is the live connection left behind, not a big current."
+      }
+    ],
+    "twin": {
+      "prompt": "A heater's switch is fitted in its live wire and is turned off. What is true of the heater's insides?",
+      "options": [
+        "they are cut off from the live supply",
+        "they are still joined to the live wire",
+        "they carry a large current"
+      ],
+      "answer": "they are cut off from the live supply",
+      "explain": "A switch in the live wire disconnects everything beyond it from the supply, so nothing inside is live.",
+      "optionNotes": [
+        {
+          "option": "they are still joined to the live wire",
+          "why": "That happens when the switch is in the neutral wire. In the live wire, the switch cuts the live supply off."
+        },
+        {
+          "option": "they carry a large current",
+          "why": "With the switch off, no current flows at all."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "variant",
-    "text": "2. The three-pin plug"
+    "text": "4. The three-pin plug",
+    "role": "variant"
   },
   {
     "type": "figure",
@@ -171,8 +454,35 @@
     "md": "Each wire in a plug has its own colour, pin and job:\n**Live.** Brown, to the bottom right, through the fuse. It brings the supply in.\n**Neutral.** Blue, to the bottom left. It completes the circuit.\n**Earth.** Green and yellow, to the top pin. A safety wire, joined to a metal case.\nThe **cable grip** clamps the cable so no wire can be pulled loose."
   },
   {
-    "type": "p",
-    "md": "Read the plug in the figure:\n**Which terminal has the fuse beside it?** The bottom right one, next to the live pin.\n**Which wire is screwed there?** The brown live wire, so the fuse is on the live side."
+    "type": "see",
+    "kind": "process",
+    "stem": "Wire a plug for a new metal-cased toaster: which wire goes to which terminal? [3]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Brown, the live: to the bottom-right terminal, which the fuse sits beside.",
+        "decision": "The fuse must be on the live side, the wire that brings the supply in.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Blue, the neutral: to the bottom-left terminal.",
+        "decision": "It completes the circuit.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Green and yellow, the earth: to the top pin, then the cable grip clamped over the cable.",
+        "decision": "The toaster's metal case needs its safety route to earth.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -185,12 +495,42 @@
       "the green and yellow earth wire"
     ],
     "answer": "the brown live wire",
-    "explain": "In the plug the fuse sits between the bottom-right terminal and its pin, and the brown live wire goes there, so a melted fuse breaks the live wire's path. That is the point of it: melting cuts off the wire that brings the supply in. The answer is the brown live wire."
+    "explain": "Step 1 of the See it: the fuse sits by the bottom-right terminal, and the brown live wire goes there. So a melted fuse breaks the live wire's path, which is the point of it: it cuts off the wire that brings the supply in.",
+    "optionNotes": [
+      {
+        "option": "the blue neutral wire",
+        "why": "The neutral goes to the bottom-left pin, away from the fuse, so a melted fuse leaves its path whole."
+      },
+      {
+        "option": "the green and yellow earth wire",
+        "why": "The earth goes straight to the top pin. A melted fuse must never break the safety route to earth."
+      }
+    ],
+    "twin": {
+      "prompt": "A plug's fuse has melted. Which pin does the wire it now cuts off lead to?",
+      "options": [
+        "the bottom-right pin",
+        "the top pin",
+        "the bottom-left pin"
+      ],
+      "answer": "the bottom-right pin",
+      "explain": "The fuse sits by the bottom-right terminal, on the brown live wire, so that is the path it breaks.",
+      "optionNotes": [
+        {
+          "option": "the top pin",
+          "why": "The top pin is the earth's, and the fuse is not on the earth wire."
+        },
+        {
+          "option": "the bottom-left pin",
+          "why": "The bottom-left pin is the neutral's; the fuse is on the live side."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "variant",
-    "text": "3. How fuse and earth protect you"
+    "text": "5. How the earth wire and fuse protect you",
+    "role": "variant"
   },
   {
     "type": "figure",
@@ -209,43 +549,100 @@
     "caption": "The large current heats the thin fuse wire until it melts, leaving a gap."
   },
   {
-    "type": "p",
-    "md": "Take the fault in the figure, in order:\n**1.** The live wire touches the metal case.\n**2.** A very large current flows through the case and the earth wire.\n**3.** The current heats the fuse wire, and it melts.\n**4.** The circuit is broken: the live supply is cut off, so the case is safe."
-  },
-  {
-    "type": "gate",
-    "id": "g6",
-    "kind": "choice",
-    "prompt": "When the live wire touches an earthed metal case, what makes the fuse melt?",
-    "options": [
-      "a very large current heats the fuse wire",
-      "the case's voltage rises above 230 V",
-      "the earth wire pushes current back into the fuse"
-    ],
-    "answer": "a very large current heats the fuse wire",
-    "explain": "Go back to step 2 and 3: the fault lets a very large current flow down the earth wire, and that current passes through the fuse in the live wire and heats its thin wire until it melts. Summer 2023 examiners named missing this heating as the main slip. The answer is that a very large current heats the fuse wire."
-  },
-  {
-    "type": "h",
-    "role": "see",
-    "text": "See it done: the three-mark fuse answer"
+    "type": "see",
+    "kind": "process",
+    "stem": "A metal-cased kettle develops a fault: its live wire touches the case. What happens if its earth wire is missing, and what happens when it is connected? [4]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "No earth wire: the case becomes live, and stays live until someone touches it.",
+        "decision": "The near-miss: without the earth route nothing makes the fuse melt, so the danger waits for the user."
+      },
+      {
+        "n": 2,
+        "working": "With the earth wire: a very large current flows from the live wire through the case to earth.",
+        "decision": "The earth wire is an easy route, so the current is far bigger than normal.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "That large current passes through the fuse and heats its thin wire until it melts.",
+        "decision": "The fuse is in the live wire, so the fault current goes through it.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "The circuit is broken and the live supply is cut off, so the case is safe.",
+        "decision": "What melting achieves: the case is no longer live.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "mcvH4JU2stM",
     "title": "GCSE Physics - Fuses & Earthing",
     "channel": "Cognito",
-    "why": "The fault, the earth wire and the melting fuse, animated."
+    "why": "The fault, the earth wire and the melting fuse, animated. Circuit breakers and residual current devices may appear: they are not on the CCEA specification."
   },
   {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "Watching it for CCEA",
-    "md": "Circuit breakers and residual current devices may appear in the video. They are not on the CCEA specification: CCEA asks about the fuse and the earth wire."
+    "type": "gate",
+    "id": "g15",
+    "kind": "choice",
+    "prompt": "A lamp has an earthed metal base. A fault joins its live wire to the base. Which way does the large fault current flow?",
+    "options": [
+      "from the live wire, through the base, down the earth wire",
+      "from the neutral wire, through the base, down the earth wire",
+      "from the earth wire, through the base, into the live wire"
+    ],
+    "answer": "from the live wire, through the base, down the earth wire",
+    "explain": "As in step 2 of the See it, the fault current starts where the supply comes in, the live wire, crosses the metal it touches, and takes the easy route to earth down the earth wire. That large current is what melts the fuse.",
+    "optionNotes": [
+      {
+        "option": "from the neutral wire, through the base, down the earth wire",
+        "why": "The neutral is the return path, near 0 V; it pushes nothing. The fault joins the live wire to the base."
+      },
+      {
+        "option": "from the earth wire, through the base, into the live wire",
+        "why": "It runs the path backwards. The supply's push is in the live wire, so the current flows from live to earth."
+      }
+    ],
+    "twin": {
+      "prompt": "In that fault, where is the fuse that melts?",
+      "options": [
+        "in the live wire",
+        "in the earth wire",
+        "in the neutral wire"
+      ],
+      "answer": "in the live wire",
+      "explain": "The fuse sits in the live wire, so the fault current, which starts in the live wire, passes through it and melts it.",
+      "optionNotes": [
+        {
+          "option": "in the earth wire",
+          "why": "A fuse in the earth wire would break the safety route itself. The fuse is on the live side."
+        },
+        {
+          "option": "in the neutral wire",
+          "why": "The fault current never reaches the neutral wire, so a fuse there would not melt."
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "6. The three-mark fuse answer",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "A three-mark 'describe how a fuse protects' question, marked line by line:\n**Mark 1.** The current becomes too high.\n**Mark 2.** The fuse wire melts.\n**Mark 3.** The circuit is broken, so the current stops."
+    "md": "A three-mark question on how a fuse protects is marked as a chain: the **current becomes too high**, the **fuse melts**, and the **circuit is broken**, so the current stops. Melting is the middle link; the first mark needs the cause and the last needs what melting achieves."
   },
   {
     "type": "callout",
@@ -253,6 +650,37 @@
     "title": "Where the marks went",
     "md": "**Summer 2024:** no question on that paper was answered worse. Most candidates wrote that the fuse melted and stopped there: one mark of three.",
     "source": "ccea-cer:science:2024-summer:P2F:Q6"
+  },
+  {
+    "type": "see",
+    "kind": "extended",
+    "stem": "Two answers to 'Describe how a fuse protects a hair straightener if a fault develops. [3]' Answer P: 'The fuse melts.' Answer Q: 'The current gets far too big, so the fuse wire melts and leaves a gap, so no current flows.' Mark them.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Answer P names only the melting.",
+        "decision": "The middle link alone: one mark.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Answer Q gives the cause first: the current gets far too big.",
+        "decision": "The first link: a mark.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Answer Q then melts the wire and leaves a gap, so no current flows.",
+        "decision": "The melting and what it achieves: two more marks, three in all.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -265,12 +693,46 @@
       "The fuse is in the live wire."
     ],
     "answer": "The circuit is broken, so the current stops.",
-    "explain": "The three marks follow the chain: the current becomes too high, the fuse melts, and the melting breaks the circuit so the current stops. The answer has the first two links; the missing one is what melting achieves. A fuse absorbs nothing, and where it sits does not describe what it does. The answer is that the circuit is broken, so the current stops."
+    "explain": "Answer Q in step 3 of the See it earned its last mark for what melting achieves: a gap, so no current. The answer given has the first two links; the missing one is that the circuit is broken, so the current stops. A fuse absorbs nothing, and where it sits describes nothing it does.",
+    "optionNotes": [
+      {
+        "option": "The fuse absorbs the extra current.",
+        "why": "It sounds like protection, but a fuse stores nothing: it melts, and the gap it leaves stops the current.",
+        "misconception": "sci.circuits.fuse-action"
+      },
+      {
+        "option": "The fuse is in the live wire.",
+        "why": "True, but it says where the fuse is, not what its melting does. The last mark is for the broken circuit.",
+        "misconception": "sci.circuits.fuse-action"
+      }
+    ],
+    "twin": {
+      "prompt": "An answer says: 'The fuse melts and the circuit breaks.' Which line would earn the missing mark?",
+      "options": [
+        "The current becomes too high.",
+        "The fuse gets hot.",
+        "The appliance switches off."
+      ],
+      "answer": "The current becomes too high.",
+      "explain": "The chain is: current too high, fuse melts, circuit broken. The answer has the last two links; the missing one is the cause, a current that is too high.",
+      "optionNotes": [
+        {
+          "option": "The fuse gets hot.",
+          "why": "Getting hot is part of melting, which the answer already has. The missing link is what makes it hot: too high a current.",
+          "misconception": "sci.circuits.fuse-action"
+        },
+        {
+          "option": "The appliance switches off.",
+          "why": "That repeats the effect in other words. The missing mark is the cause: the current becomes too high.",
+          "misconception": "sci.circuits.fuse-action"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "variant",
-    "text": "4. Double insulation"
+    "text": "7. Double insulation",
+    "role": "variant"
   },
   {
     "type": "figure",
@@ -283,12 +745,32 @@
     "md": "Some appliances, like most hairdryers, have a **plastic** case. Plastic is an insulator, so a loose live wire could never make the outside live. With nothing for an earth wire to protect, the cable has **no earth wire**: only live and neutral. These appliances are **double insulated** and carry the double-square symbol."
   },
   {
-    "type": "p",
-    "md": "Double insulation does not mean two layers of insulation on the wires. Summer 2024 examiners saw many answers say exactly that."
-  },
-  {
-    "type": "p",
-    "md": "Count the wires in the two cables in the figure:\n1. The kettle, with a metal case: live + neutral + earth = 3 wires.\n2. The hairdryer, double insulated: live + neutral = 2 wires, and no earth wire."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A metal-cased iron and a plastic-cased hairdryer each have a loose live wire inside. Which needs an earth wire, and why? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "The iron: a loose live wire can make its metal case live, so it needs the earth wire.",
+        "decision": "Metal conducts: the earth route is what protects its user.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "The hairdryer: its plastic case cannot become live, so it needs no earth; its cable has live and neutral only.",
+        "decision": "An insulating case is the protection itself.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Double insulated does not mean two layers of insulation on the wires.",
+        "decision": "The near-miss answer: Summer 2024 examiners saw it often."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -301,12 +783,45 @@
       "the brown live wire"
     ],
     "answer": "no earth wire",
-    "explain": "The top pin is for the earth wire, which protects a metal case. Like the hairdryer in the figure, a double-insulated drill has a plastic case that can never become live, so its cable has live and neutral only and nothing goes to the top pin. The answer is no earth wire."
+    "explain": "Step 2 of the See it: an appliance with a plastic case cannot become live, so it has no earth to join. The top pin is the earth's, so for a double-insulated drill nothing goes there: its cable has live and neutral only.",
+    "optionNotes": [
+      {
+        "option": "the green and yellow earth wire",
+        "why": "That is where the earth goes in an earthed appliance. A double-insulated drill has no earth wire at all.",
+        "misconception": "sci.circuits.double-insulation-earth"
+      },
+      {
+        "option": "the brown live wire",
+        "why": "The live goes to the bottom-right pin, through the fuse, in every plug."
+      }
+    ],
+    "twin": {
+      "prompt": "How many wires are in the cable of a double-insulated food processor?",
+      "options": [
+        "two: live and neutral",
+        "three: live, neutral and earth",
+        "four: two live and two neutral"
+      ],
+      "answer": "two: live and neutral",
+      "explain": "With a plastic case there is nothing for an earth wire to protect, so the cable has live and neutral only.",
+      "optionNotes": [
+        {
+          "option": "three: live, neutral and earth",
+          "why": "Three wires is an earthed, metal-cased appliance. Double insulated means no earth wire.",
+          "misconception": "sci.circuits.double-insulation-earth"
+        },
+        {
+          "option": "four: two live and two neutral",
+          "why": "'Double' is about the insulation, not the number of wires.",
+          "misconception": "sci.circuits.double-insulation-earth"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "variant",
-    "text": "5. Choosing the right fuse"
+    "text": "8. Choosing the right fuse",
+    "role": "variant"
   },
   {
     "type": "figure",
@@ -325,8 +840,43 @@
     "md": "Below the normal current, a fuse melts in normal use. Far above it, a fuse may not melt in a fault. The smallest fuse above the current does both jobs."
   },
   {
-    "type": "p",
-    "md": "An 805 W coffee machine:\n**Step 1.** P = I × V\n**Step 2.** 805 = I × 230\n**Step 3.** I = 805 ÷ 230 = 3.5 A\n**Step 4.** 3 A is too small, so the fuse is 5 A"
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A coffee machine is rated 805 W and runs on the 230 V mains. Calculate its current and choose its fuse: 3 A, 5 A or 13 A. [4]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P = I \\times V$",
+        "decision": "The equation first: it earns a mark of its own.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$805 = I \\times 230$",
+        "decision": "Substitute the power and the mains voltage.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$I = 805 \\div 230 = 3.5$ A",
+        "decision": "Divide the power by the voltage.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "3 A is below 3.5 A, so the fuse is 5 A",
+        "decision": "The smallest fuse above the normal current.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -334,16 +884,17 @@
     "kind": "number",
     "prompt": "A food mixer is rated 368 W and runs on the 230 V mains. What is its normal current, in amps?",
     "answer": "1.6",
-    "explain": "Turn P = I × V round, as in the steps: I = P ÷ V = 368 ÷ 230 = 1.6 A. Its fuse would then be 3 A, the smallest above 1.6 A."
+    "explain": "As in step 3 of the See it, divide the power by the voltage: I = P ÷ V = 368 ÷ 230 = 1.6 A. Its fuse would then be 3 A, the smallest above 1.6 A.",
+    "twin": {
+      "prompt": "A lamp is rated 69 W and runs on the 230 V mains. What is its normal current, in amps?",
+      "answer": "0.3",
+      "explain": "I = P ÷ V = 69 ÷ 230 = 0.3 A."
+    }
   },
   {
     "type": "h",
-    "role": "see",
-    "text": "See it done: kilowatts first"
-  },
-  {
-    "type": "p",
-    "md": "Powers are often given in kilowatts. Convert to watts first, or the current comes out 1000 times too small; Summer 2023 examiners saw marks lost exactly there."
+    "text": "9. Kilowatts first",
+    "role": "variant"
   },
   {
     "type": "figure",
@@ -353,7 +904,47 @@
   },
   {
     "type": "p",
-    "md": "A 2.53 kW kettle on the 230 V mains:\n**Convert.** 2.53 kW = 2530 W\n**Current.** I = 2530 ÷ 230 = 11 A\n**Choose.** 11 A is above 5 A, so the fuse is 13 A"
+    "md": "Powers are often given in kilowatts. Convert to watts first, or the current comes out 1000 times too small; Summer 2023 examiners saw marks lost exactly there."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A kettle is rated 2.53 kW and runs on the 230 V mains. Calculate its current and choose its fuse. [5]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P = I \\times V$",
+        "decision": "The equation first.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2.53$ kW $= 2530$ W",
+        "decision": "Kilowatts to watts: multiply by 1000.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$I = 2530 \\div 230 = 11$ A",
+        "decision": "Divide the power in watts by the voltage.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "11 A is above 5 A, so the fuse is 13 A",
+        "decision": "The smallest fuse above the current.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -361,12 +952,17 @@
     "kind": "number",
     "prompt": "A heater is rated 1.38 kW and runs on the 230 V mains. What is its normal current, in amps?",
     "answer": "6",
-    "explain": "Convert first, as the kettle did: 1.38 kW = 1380 W. Then I = 1380 ÷ 230 = 6 A. Left in kilowatts, 1.38 ÷ 230 gives a current 1000 times too small. Its fuse would be 13 A."
+    "explain": "Convert first, as in step 2 of the See it: 1.38 kW = 1380 W. Then I = 1380 ÷ 230 = 6 A. Left in kilowatts, 1.38 ÷ 230 gives a current 1000 times too small. Its fuse would be 13 A.",
+    "twin": {
+      "prompt": "A toaster is rated 1.15 kW and runs on the 230 V mains. What is its normal current, in amps?",
+      "answer": "5",
+      "explain": "1.15 kW = 1150 W, so I = 1150 ÷ 230 = 5 A."
+    }
   },
   {
     "type": "h",
-    "role": "twists",
-    "text": "Exam twists"
+    "text": "Exam twists",
+    "role": "twists"
   },
   {
     "type": "p",
@@ -374,20 +970,7 @@
   },
   {
     "type": "p",
-    "md": "**The fuse list changes.** Summer 2019 offered 1 A, 3 A and 5 A. Whatever the list, take the smallest fuse above the current. For example, a clock taking 0.8 A:\n**Which fuses are above 0.8 A?** All three: 1 A, 3 A and 5 A.\n**Which is the smallest of those?** 1 A, so that is the one to fit."
-  },
-  {
-    "type": "gate",
-    "id": "g11",
-    "kind": "choice",
-    "prompt": "A question offers 1 A, 3 A and 5 A fuses for an appliance whose normal current is 2.2 A. Which fuse should be chosen?",
-    "options": [
-      "1 A",
-      "3 A",
-      "5 A"
-    ],
-    "answer": "3 A",
-    "explain": "The rule is the same whatever the list: the smallest fuse above the current. 1 A is below 2.2 A and would melt in normal use; 5 A is bigger than needed. The answer is 3 A."
+    "md": "**The fuse list changes.** Summer 2019 offered 1 A, 3 A and 5 A. Whatever the list, take the smallest fuse above the current."
   },
   {
     "type": "p",
@@ -402,36 +985,76 @@
     "md": "**A sentence with gaps.** Summer 2021 set the fuse as a sentence to complete: the current is too high, the fuse melts, and that breaks the circuit."
   },
   {
-    "type": "figure",
-    "alt": "Two oscilloscope screens with dashed zero lines. Top, labelled d.c. from a cell: the trace is replaced by a question mark. Bottom, labelled a.c. from the mains: a wave rising above and falling below the zero line.",
-    "svg": "<svg viewBox=\"0 0 400 310\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"croQdc\"><title id=\"croQdc\">Two oscilloscope screens on the same settings, each with a dashed zero line across the middle and time running left to right. Top, d.c. from a cell: the trace is replaced by a question mark. Bottom, a.c. from the mains: a smooth wave that rises above the zero line and falls below it, 2 cycles across the screen.</title><text x=\"58\" y=\"26\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" font-weight=\"600\">d.c. from a cell</text><path d=\"M58 38 h300 v100 h-300 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M95.5 38 L95.5 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M133 38 L133 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M170.5 38 L170.5 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M208 38 L208 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M245.5 38 L245.5 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M283 38 L283 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M320.5 38 L320.5 138\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 63 L358 63\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 88 L358 88\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 113 L358 113\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 88 L358 88\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><text x=\"208\" y=\"78\" font-family=\"inherit\" font-size=\"24\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"600\">?</text><text x=\"50\" y=\"93\" font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"end\">0</text><text x=\"58\" y=\"184\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" font-weight=\"600\">a.c. from the mains</text><path d=\"M58 196 h300 v100 h-300 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"currentColor\" fill-opacity=\"0.03\"/><path d=\"M95.5 196 L95.5 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M133 196 L133 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M170.5 196 L170.5 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M208 196 L208 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M245.5 196 L245.5 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M283 196 L283 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M320.5 196 L320.5 296\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 221 L358 221\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 246 L358 246\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 271 L358 271\" stroke=\"currentColor\" stroke-width=\"0.7\" fill=\"none\" stroke-opacity=\"0.22\"/><path d=\"M58 246 L358 246\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"6 4\"/><path d=\"M58 246L60.5 242.3L63 238.7L65.5 235.2L68 231.8L70.5 228.5L73 225.4L75.5 222.6L78 220L80.5 217.7L83 215.7L85.5 214L88 212.7L90.5 211.8L93 211.2L95.5 211L98 211.2L100.5 211.8L103 212.7L105.5 214L108 215.7L110.5 217.7L113 220L115.5 222.6L118 225.4L120.5 228.5L123 231.8L125.5 235.2L128 238.7L130.5 242.3L133 246L135.5 249.7L138 253.3L140.5 256.8L143 260.2L145.5 263.5L148 266.6L150.5 269.4L153 272L155.5 274.3L158 276.3L160.5 278L163 279.3L165.5 280.2L168 280.8L170.5 281L173 280.8L175.5 280.2L178 279.3L180.5 278L183 276.3L185.5 274.3L188 272L190.5 269.4L193 266.6L195.5 263.5L198 260.2L200.5 256.8L203 253.3L205.5 249.7L208 246L210.5 242.3L213 238.7L215.5 235.2L218 231.8L220.5 228.5L223 225.4L225.5 222.6L228 220L230.5 217.7L233 215.7L235.5 214L238 212.7L240.5 211.8L243 211.2L245.5 211L248 211.2L250.5 211.8L253 212.7L255.5 214L258 215.7L260.5 217.7L263 220L265.5 222.6L268 225.4L270.5 228.5L273 231.8L275.5 235.2L278 238.7L280.5 242.3L283 246L285.5 249.7L288 253.3L290.5 256.8L293 260.2L295.5 263.5L298 266.6L300.5 269.4L303 272L305.5 274.3L308 276.3L310.5 278L313 279.3L315.5 280.2L318 280.8L320.5 281L323 280.8L325.5 280.2L328 279.3L330.5 278L333 276.3L335.5 274.3L338 272L340.5 269.4L343 266.6L345.5 263.5L348 260.2L350.5 256.8L353 253.3L355.5 249.7L358 246\" stroke=\"currentColor\" stroke-width=\"2.6\" fill=\"none\"/><text x=\"50\" y=\"251\" font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"end\">0</text><path d=\"M248 158 L355.2 158\" stroke=\"currentColor\" stroke-width=\"1.3\" fill=\"none\"/><path d=\"M358 158 L350 161.4 L350 154.6 Z\" fill=\"currentColor\"/><text x=\"240\" y=\"163\" font-family=\"inherit\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"end\">time</text></svg>",
-    "caption": "The d.c. screen has been left blank."
-  },
-  {
-    "type": "p",
-    "md": "Work out the missing trace from the a.c. screen in the figure:\n**What makes the a.c. trace cross zero?** Its current changes direction.\n**Does a cell's current ever change direction, or its size?** No, so its trace never crosses zero and never rises or falls."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A shaver charger takes a normal current of 1.4 A. Choose its fuse from 1 A, 2 A, 5 A. [1]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Below 1.4 A: 1 A. It would melt in normal use.",
+        "decision": "Cross out any fuse smaller than the normal current first."
+      },
+      {
+        "n": 2,
+        "working": "Above 1.4 A: 2 A and 5 A. The smallest of those: 2 A.",
+        "decision": "The same rule on any list: the smallest fuse above the current.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g12",
+    "id": "g11",
     "kind": "choice",
-    "prompt": "The top CRO screen is for d.c. from a cell, and its trace is missing. What should be sketched there?",
+    "prompt": "A question offers 1 A, 3 A and 5 A fuses for an appliance whose normal current is 2.2 A. Which fuse should be chosen?",
     "options": [
-      "a flat line above the zero line",
-      "a wave that crosses the zero line",
-      "a flat line along the zero line"
+      "1 A",
+      "3 A",
+      "5 A"
     ],
-    "answer": "a flat line above the zero line",
-    "explain": "Direct current flows one way and stays steady, so its trace is a flat line on one side of zero. The wave belongs on the a.c. screen below it, and a line along zero would mean no current at all. The answer is a flat line above the zero line."
+    "answer": "3 A",
+    "explain": "The rule in step 2 of the See it holds whatever the list: the smallest fuse above the current. 1 A is below 2.2 A and would melt in normal use; 5 A is bigger than needed. The answer is 3 A.",
+    "optionNotes": [
+      {
+        "option": "1 A",
+        "why": "It is the smallest on the list, but it is below 2.2 A, so it would melt every time the appliance was used."
+      },
+      {
+        "option": "5 A",
+        "why": "It would carry 2.2 A, but it is not the smallest above it: in a fault it could let a bigger current through before melting."
+      }
+    ],
+    "twin": {
+      "prompt": "A question offers 1 A, 3 A and 5 A fuses for an appliance whose normal current is 4.2 A. Which fuse should be chosen?",
+      "options": [
+        "5 A",
+        "3 A",
+        "1 A"
+      ],
+      "answer": "5 A",
+      "explain": "Only 5 A is above 4.2 A, so it is the smallest fuse above the current.",
+      "optionNotes": [
+        {
+          "option": "3 A",
+          "why": "3 A is below 4.2 A, so it would melt in normal use."
+        },
+        {
+          "option": "1 A",
+          "why": "1 A is far below 4.2 A: it would melt as soon as the appliance was switched on."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "further",
-    "text": "Going further: the whole appliance question"
+    "text": "Going further: the whole appliance question",
+    "role": "further"
   },
   {
     "type": "p",
-    "md": "The longest P2 questions chain this topic to the heating effect (Summer 2019, Summer 2023). One chain, start to finish:"
+    "md": "The longest P2 questions chain this topic to the heating effect (Summer 2019, Summer 2023). One chain, start to finish, for a kettle with a metal case."
   },
   {
     "type": "figure",
@@ -440,32 +1063,104 @@
     "caption": "The kettle's current, 9 A, on the fuse scale."
   },
   {
-    "type": "p",
-    "md": "A 2.07 kW kettle with a metal case:\n**Heat.** Free electrons collide with the metal atoms of the element.\n**Current.** 2.07 kW = 2070 W, and I = 2070 ÷ 230 = 9 A.\n**Fuse.** 9 A is above 5 A, so 13 A.\n**Plug.** The fuse sits in the brown live wire, and the metal case needs the green and yellow earth wire."
-  },
-  {
     "type": "callout",
     "kind": "notonspec",
     "title": "Where CCEA stops",
     "md": "Circuit breakers, RCDs, the National Grid and peak or r.m.s. voltages are not on the CCEA specification."
   },
   {
+    "type": "see",
+    "kind": "extended",
+    "stem": "A 2.07 kW kettle has a metal case and a metal element. Why does the element heat up, what current does it take on the 230 V mains, which fuse does it need, and what must its plug and cable have? [9]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Heat: the free electrons collide with the metal atoms of the element.",
+        "decision": "The heating effect's marks: heat, electrons, atoms, collide.",
+        "earns": [
+          "P1",
+          "P1",
+          "P1",
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2.07$ kW $= 2070$ W, so $I = 2070 \\div 230 = 9$ A",
+        "decision": "Watts first, then I = P ÷ V.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "9 A is above 5 A, so the fuse is 13 A.",
+        "decision": "The smallest fuse above the current.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "The fuse sits on the brown live wire, and the metal case is joined to the green and yellow earth wire.",
+        "decision": "The plug's two safety parts, working together.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g13",
     "kind": "choice",
-    "prompt": "A 2.07 kW kettle has a metal case. Which set of features must its plug and cable have?",
+    "prompt": "A 1.495 kW deep fryer has a metal case. Which set of features must its plug and cable have?",
     "options": [
       "a 13 A fuse in the live wire, and an earth wire",
       "a 5 A fuse in the live wire, and an earth wire",
       "a 13 A fuse in the live wire, and no earth wire"
     ],
     "answer": "a 13 A fuse in the live wire, and an earth wire",
-    "explain": "Go through the chain: the current is 9 A, so the fuse is 13 A, because a 5 A fuse would melt in normal use; and a metal case must be earthed. Only a double-insulated appliance goes without an earth wire. The answer is a 13 A fuse in the live wire, and an earth wire."
+    "explain": "Go through the chain as in steps 2 to 4 of the See it: 1495 ÷ 230 = 6.5 A, so the fuse is 13 A, because a 5 A fuse would melt in normal use; and a metal case must be earthed. Only a double-insulated appliance goes without an earth wire.",
+    "optionNotes": [
+      {
+        "option": "a 5 A fuse in the live wire, and an earth wire",
+        "why": "5 A is below the fryer's 6.5 A, so it would melt every time the fryer was switched on."
+      },
+      {
+        "option": "a 13 A fuse in the live wire, and no earth wire",
+        "why": "The fuse is right, but a metal case needs the earth wire; only a double-insulated appliance goes without.",
+        "misconception": "sci.circuits.double-insulation-earth"
+      }
+    ],
+    "twin": {
+      "prompt": "A 92 W desk lamp has a metal base. Which set of features must its plug and cable have?",
+      "options": [
+        "a 3 A fuse in the live wire, and an earth wire",
+        "a 13 A fuse in the live wire, and an earth wire",
+        "a 3 A fuse in the live wire, and no earth wire"
+      ],
+      "answer": "a 3 A fuse in the live wire, and an earth wire",
+      "explain": "92 ÷ 230 = 0.4 A, so the smallest fuse above it is 3 A; and the metal base must be earthed.",
+      "optionNotes": [
+        {
+          "option": "a 13 A fuse in the live wire, and an earth wire",
+          "why": "13 A would carry 0.4 A, but it is far above it: 3 A is the smallest fuse above the current."
+        },
+        {
+          "option": "a 3 A fuse in the live wire, and no earth wire",
+          "why": "The fuse is right, but a metal base needs the earth wire.",
+          "misconception": "sci.circuits.double-insulation-earth"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "derivation",
-    "text": "Where I = P ÷ V comes from"
+    "text": "Where I = P ÷ V comes from",
+    "role": "derivation"
   },
   {
     "type": "p",
@@ -478,35 +1173,92 @@
     "caption": "Which letter is which: P for the element's power, V for the supply's voltage, I for the current in the live wire."
   },
   {
-    "type": "p",
-    "md": "**Start.** $P = I \\times V$\n**Divide both sides by V.** $P \\div V = I \\times V \\div V$\n**Cancel the Vs.** $I = P \\div V$\n**Check the units.** watts ÷ volts = amperes, a current.\n**Check with numbers.** 690 W on 230 V: I = 690 ÷ 230 = 3 A, and 3 × 230 = 690 W, back where it started."
+    "type": "see",
+    "kind": "proof",
+    "stem": "Show that $I = P \\div V$ starts from $P = I \\times V$, and check it for 690 W on the 230 V mains.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P = I \\times V$",
+        "decision": "Start from the equation you remember."
+      },
+      {
+        "n": 2,
+        "working": "$P \\div V = I \\times V \\div V$",
+        "decision": "Divide both sides by V."
+      },
+      {
+        "n": 3,
+        "working": "$I = P \\div V$",
+        "decision": "The Vs on the right cancel, leaving I."
+      },
+      {
+        "n": 4,
+        "working": "Units: watts ÷ volts = amperes. Numbers: $690 \\div 230 = 3$ A, and $3 \\times 230 = 690$ W.",
+        "decision": "Both checks come back to where they started."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g14",
+    "id": "g16",
     "kind": "choice",
-    "prompt": "An appliance on the 230 V mains has a power P. Which expression gives the current I it takes?",
+    "prompt": "Rearrange P = I × V to give the voltage V.",
     "options": [
-      "I = P ÷ V",
-      "I = V ÷ P",
-      "I = P × V"
+      "V = P ÷ I",
+      "V = I ÷ P",
+      "V = P × I"
     ],
-    "answer": "I = P ÷ V",
-    "explain": "Start from P = I × V and divide both sides by V: the Vs on the right cancel and leave I = P ÷ V. The check: watts divided by volts gives amperes. V ÷ P is the upside-down slip, and it makes a bigger power give a smaller current. The answer is I = P ÷ V."
+    "answer": "V = P ÷ I",
+    "explain": "Do what steps 2 and 3 of the See it did, dividing by the other letter: divide both sides of P = I × V by I, the Is cancel, and V = P ÷ I. Check the units: watts ÷ amperes = volts.",
+    "optionNotes": [
+      {
+        "option": "V = I ÷ P",
+        "why": "It divides the right letters the wrong way up: the slip that makes a bigger power give a smaller voltage.",
+        "misconception": "sci.circuits.p-iv-not-recalled"
+      },
+      {
+        "option": "V = P × I",
+        "why": "Multiplying undoes nothing: to get V alone you divide both sides by I.",
+        "misconception": "sci.circuits.p-iv-not-recalled"
+      }
+    ],
+    "twin": {
+      "prompt": "An appliance takes a current I from the mains at voltage V. Which expression gives its power P?",
+      "options": [
+        "P = I × V",
+        "P = I ÷ V",
+        "P = V ÷ I"
+      ],
+      "answer": "P = I × V",
+      "explain": "Power is current times voltage: P = I × V. The other two are divisions, which belong to rearranging it.",
+      "optionNotes": [
+        {
+          "option": "P = I ÷ V",
+          "why": "Power is the product of current and voltage, not a quotient.",
+          "misconception": "sci.circuits.p-iv-not-recalled"
+        },
+        {
+          "option": "P = V ÷ I",
+          "why": "V ÷ I is the resistance, not the power.",
+          "misconception": "sci.circuits.p-iv-not-recalled"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "role": "recap",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Tell a.c. (changes direction, crosses zero) from d.c. (one direction, a flat line).\nWire a plug: brown live through the fuse, blue neutral, green and yellow earth.\nExplain a fault: current to earth, fuse melts, live cut off.\nSay why the switch and fuse are live-side, and why double insulation needs no earth.\nChoose a fuse: I = P ÷ V, then the next of 3, 5, 13 A."
+    "md": "Tell a.c. (changes direction, crosses zero) from d.c. (one direction, a flat line), even with the cell turned round.\nWire a plug: brown live through the fuse, blue neutral, green and yellow earth.\nExplain a fault: a large current to earth, the fuse melts, the live supply is cut off.\nSay why the switch and fuse are live-side, and why double insulation needs no earth.\nChoose a fuse: I = P ÷ V in watts, then the smallest fuse above the current."
   },
   {
     "type": "h",
-    "role": "pointer",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
