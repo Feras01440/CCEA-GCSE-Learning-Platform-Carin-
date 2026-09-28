@@ -7,15 +7,11 @@
       "Resolve the weight of a body on a slope into its two components",
       "Read which angle to use, and which line it is measured from"
     ],
-    "minutes": 8
-  },
-  {
-    "type": "p",
-    "md": "Pull a suitcase by its handle and some of your pull drags it forwards while some lifts it. Splitting that one pull into a forwards part and an upwards part is what resolving does."
+    "minutes": 12
   },
   {
     "type": "h",
-    "text": "1. One force, two straight parts",
+    "text": "One force, two straight parts",
     "role": "idea"
   },
   {
@@ -26,93 +22,36 @@
   },
   {
     "type": "p",
-    "md": "Drop a dashed line from the tip of the force onto the line you care about. The force is now the longest side of a right-angled triangle, and the two shorter sides are its components: the side beside the angle uses cosine, the side opposite uses sine."
+    "md": "Drop a dashed line from the tip of the force onto the line you care about. The force becomes the longest side of a right-angled triangle, and the two shorter sides are its components: the side beside the angle takes the cosine, the side opposite it takes the sine."
   },
   {
     "type": "p",
-    "md": "**Along the floor:** $46\\cos 22° = 42.65$ N, the side beside the angle.\n**Upwards:** $46\\sin 22° = 17.23$ N, the side opposite it."
+    "md": "Two quick checks catch most slips. Each component is smaller than the force, and squaring the two, adding and taking the square root gives the force back. The larger component always goes with the smaller angle, so a large angle to the floor means a small part along it."
   },
   {
-    "type": "gate",
-    "id": "g6",
-    "kind": "number",
-    "prompt": "A rope pulls a sledge with a force of 25 N at 40° to the ground. What is the part of the pull along the ground, in newtons, to 2 decimal places?",
-    "answer": "19.15",
-    "explain": "The ground is beside the $40°$ angle, so it takes the cosine, as the floor did above: $25\\cos 40° = 19.15$ N. The sine would give the part lifting the sledge."
-  },
-  {
-    "type": "h",
-    "text": "2. Why cosine goes with the angle",
-    "role": "why"
-  },
-  {
-    "type": "callout",
-    "kind": "why",
-    "title": "Why cosine shortens the force",
-    "md": "Think of the arrow's shadow on the line. When the force lies along the line there is no tilt, $\\cos 0° = 1$, and the whole force counts. Turn it to a right angle and the shadow vanishes. Cosine is the fraction of the force that survives the turn."
-  },
-  {
-    "type": "p",
-    "md": "**Shown, a 50 N force:** at $60°$ to the line, $50\\cos 60° = 50 \\times 0.5 = 25$ N survives.\n**At $90°$:** $50\\cos 90° = 50 \\times 0 = 0$: none of it acts along the line."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "A force of 20 N acts at 60° to a straight line. What is its component along that line, in newtons?",
-    "answer": "10",
-    "explain": "Half the force survives a turn of $60°$, as for the 50 N force above: $20\\cos 60° = 20 \\times 0.5 = 10$ N."
-  },
-  {
-    "type": "h",
-    "text": "3. The weight on a slope",
-    "role": "variant"
-  },
-  {
-    "type": "figure",
-    "alt": "The weight of 110 N drawn straight down from a point on a slope inclined at 30 degrees, split into 110 sin 30 degrees down the slope and 110 cos 30 degrees into it. The slope's angle appears again between the weight and the part into the slope.",
-    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M24 274L376 70.8L376 274Z' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.5'/><path d='M68 274A44 44 0 0 0 62.1 252' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='76' y='266' text-anchor='start' font-size='15'>30°</text><path d='M141 139.5L192.1 228L243.2 198.5' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='3 3' stroke-opacity='0.6'/><circle cx='192.1' cy='110' r='3.5' fill='currentColor'/><path d='M192.1 110L192.1 228' fill='none' stroke='currentColor' stroke-width='2.2'/><path d='M192.1 228L187.9 218L196.3 218Z' fill='currentColor'/><path d='M192.1 110L141 139.5' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M141 139.5L147.6 130.8L151.8 138.1Z' fill='currentColor'/><path d='M192.1 110L243.2 198.5' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M243.2 198.5L234.6 191.9L241.9 187.7Z' fill='currentColor'/><path d='M192.1 140A30 30 0 0 0 207.1 135.9' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='205.5' y='158.5' text-anchor='start' font-size='15'>30°</text><text x='184.1' y='232' text-anchor='end' font-size='15'>110 N</text><text x='133' y='137.5' text-anchor='end' font-size='15'>110 sin 30°</text><text x='251.2' y='202.5' text-anchor='start' font-size='15'>110 cos 30°</text></g></svg>",
-    "caption": "The weight split down the slope and into it."
-  },
-  {
-    "type": "p",
-    "md": "On a slope the useful directions are along the surface and at right angles to it, so the weight is the force to split. The angle between the weight and the line into the slope is the slope's own angle $\\alpha$, so into the slope is $mg\\cos\\alpha$ and down the slope is $mg\\sin\\alpha$."
-  },
-  {
-    "type": "p",
-    "md": "**Weight first:** $11 \\times 10 = 110$ N.\n**Down the slope:** $110\\sin 30° = 55$ N; **into it:** $110\\cos 30° = 95.26$ N."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "choice",
-    "prompt": "A box of weight $W$ rests on a slope inclined at $\\alpha$ to the horizontal. Which expression gives the component of the weight acting down the slope?",
-    "options": [
-      "$W\\sin\\alpha$",
-      "$W\\cos\\alpha$",
-      "$W\\tan\\alpha$"
-    ],
-    "answer": "$W\\sin\\alpha$",
-    "explain": "The slope's angle sits between the weight and the line into the surface, so the cosine part goes into the slope and the sine part runs down it, as for the 11 kg box above."
-  },
-  {
-    "type": "h",
-    "text": "4. Which line the angle is measured from",
-    "role": "variant"
-  },
-  {
-    "type": "figure",
-    "alt": "A box on a slope inclined at 21 degrees, pulled by a rope with a force of 75 N at 32 degrees to the slope itself. The slope's direction is continued as a dashed line from the box, and the 32 degree angle is marked between it and the rope.",
-    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 139.5L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 68.9 253.5' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>21°</text><path d='M162.4 217.6L229.6 191.8L211.7 145.2L144.5 171Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><path d='M220.6 168.5L286 143.4' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='3 3' stroke-opacity='0.7'/><path d='M220.6 168.5L278.4 91.8' fill='none' stroke='currentColor' stroke-width='2.2'/><path d='M278.4 91.8L275.8 102.3L269.1 97.3Z' fill='currentColor'/><text x='286.4' y='89.8' text-anchor='start' font-size='15'>75 N</text><path d='M258 154.2A40 40 0 0 0 244.7 136.6' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='262.2' y='142.2' text-anchor='start' font-size='14'>32°</text></g></svg>",
-    "caption": "An angle given to the slope, not to the horizontal."
-  },
-  {
-    "type": "p",
-    "md": "A question may give the angle to the horizontal, to the vertical, or to the slope itself. Only the angle between the force and the direction you are resolving along belongs in the cosine."
-  },
-  {
-    "type": "p",
-    "md": "**Shown:** the rope is $32°$ from the slope, so along the slope it gives $75\\cos 32° = 75 \\times 0.848 = 63.60$ N.\n**Not:** $32°$ from the horizontal, which would resolve along the wrong line."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A rope pulls a box with 46 N at 22° above the floor. Find the parts of the pull along the floor and straight up.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Along the floor: $46\\cos 22° = 42.65$ N",
+        "decision": "The floor is beside the 22° angle, so this part takes the cosine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Straight up: $46\\sin 22° = 17.23$ N",
+        "decision": "Straight up is opposite the angle, so this part takes the sine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
@@ -123,20 +62,269 @@
   },
   {
     "type": "gate",
-    "id": "g4",
-    "kind": "choice",
-    "prompt": "A rope pulls a box up a slope. The rope is at 32° to the slope, and the slope is at 21° to the horizontal. Which angle is used for the component of the pull along the slope?",
-    "options": [
-      "$32°$",
-      "$21°$",
-      "$53°$"
-    ],
-    "answer": "$32°$",
-    "explain": "The component along the slope needs the angle between the rope and the slope, which the question gives directly as $32°$, as in the line above."
+    "id": "g6",
+    "kind": "number",
+    "prompt": "A rope pulls a sledge with a force of 25 N at 40° to the ground. What is the part of the pull along the ground, in newtons, to 2 decimal places?",
+    "answer": "19.15",
+    "explain": "The ground is beside the $40°$ angle, so it takes the cosine, as step 1 of See it did: $25\\cos 40° = 19.15$ N. The sine would give the part lifting the sledge.",
+    "twin": {
+      "prompt": "A rope pulls a cart with 34 N at 35° to the ground. What is the part of the pull along the ground, in newtons, to 2 decimal places?",
+      "answer": "27.85",
+      "explain": "Beside the angle, so the cosine: $34\\cos 35° = 27.85$ N."
+    }
   },
   {
     "type": "h",
-    "text": "5. Which way a component points",
+    "text": "Why cosine goes with the angle",
+    "role": "why"
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why cosine shortens the force",
+    "md": "Think of the arrow's shadow on the line. When the force lies along the line there is no tilt, $\\cos 0° = 1$, and the whole force counts. Turn it to a right angle and the shadow vanishes. Cosine is the fraction of the force that survives the turn."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A force of 50 N is turned away from a straight line. How much of it acts along the line at $0°$, at $60°$ and at $90°$?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$50\\cos 0° = 50$ N",
+        "decision": "Lying along the line, the whole force counts."
+      },
+      {
+        "n": 2,
+        "working": "$50\\cos 60° = 50 \\times 0.5 = 25$ N",
+        "decision": "Turned through 60°, half of it survives."
+      },
+      {
+        "n": 3,
+        "working": "$50\\cos 90° = 0$ N",
+        "decision": "At a right angle to the line, none of it acts along the line."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "number",
+    "prompt": "A force of 20 N acts at 60° to a straight line. What is its component along that line, in newtons?",
+    "answer": "10",
+    "explain": "Half the force survives a turn of $60°$, as step 2 of See it showed: $20\\cos 60° = 20 \\times 0.5 = 10$ N.",
+    "twin": {
+      "prompt": "A force of 44 N acts at 60° to a straight line. What is its component along that line, in newtons?",
+      "answer": "22",
+      "explain": "$44\\cos 60° = 44 \\times 0.5 = 22$ N: half of it survives a 60° turn."
+    }
+  },
+  {
+    "type": "h",
+    "text": "The weight on a slope",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "The weight of 110 N drawn straight down from a point above a slope inclined at 30 degrees, split into 110 sin 30 degrees down the slope and 110 cos 30 degrees into it. The slope's angle appears again between the weight and the part into the slope.",
+    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M20 280L380 72.2L380 280Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6' stroke-linejoin='round'/><path d='M64 280A44 44 0 0 0 58.1 258' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='72' y='272' text-anchor='start' font-size='15'>30°</text><path d='M131.7 61L175 136L218.3 111' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='4 4' stroke-opacity='0.6' stroke-linecap='round' stroke-linejoin='round'/><path d='M175 36L175 126' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round'/><path d='M175 136L170.5 126L179.5 126Z' fill='currentColor'/><path d='M175 36L140.4 56' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='6 4' stroke-linecap='round'/><path d='M131.7 61L138.1 52.1L142.6 59.9Z' fill='currentColor'/><path d='M175 36L213.3 102.3' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='6 4' stroke-linecap='round'/><path d='M218.3 111L209.4 104.6L217.2 100.1Z' fill='currentColor'/><circle cx='175' cy='36' r='4' fill='currentColor' fill-opacity='1'/><path d='M175 96A60 60 0 0 0 205 88' fill='none' stroke='currentColor' stroke-width='1.3'/><text x='195.2' y='116.3' text-anchor='middle' font-size='15'>30°</text><text x='165' y='140' text-anchor='end' font-size='15'>110 N</text><text x='123.7' y='63' text-anchor='end' font-size='15'>110 sin 30°</text><text x='212.2' y='64.5' text-anchor='start' font-size='15'>110 cos 30°</text></g></svg>",
+    "caption": "The weight split down the slope and into it."
+  },
+  {
+    "type": "p",
+    "md": "On a slope the useful directions are along the surface and at right angles to it, so the weight is the force to split. The angle between the weight and the line into the slope is the slope's own angle $\\alpha$: into the slope is $mg\\cos\\alpha$ and down the slope is $mg\\sin\\alpha$."
+  },
+  {
+    "type": "p",
+    "md": "On any slope under 45° the larger part of the weight presses into the surface. Resolving the mass instead of the weight gives a number ten times too small: a component of a mass means nothing, so work out $mg$ first."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A box of mass 11 kg rests on a slope inclined at 30°. Resolve its weight down the slope and into it.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight $= 11 \\times 10 = 110$ N",
+        "decision": "Resolve a force, never a mass: the weight first.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Down the slope: $110\\sin 30° = 55$ N",
+        "decision": "Down the slope is opposite the slope's angle, so it takes the sine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Into the slope: $110\\cos 30° = 95.26$ N",
+        "decision": "Into the slope sits beside the angle, so it takes the cosine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g3",
+    "kind": "choice",
+    "prompt": "A box of weight $W$ sits on a slope at an angle $\\alpha$ to the horizontal. Which expression is the part of its weight pulling it down the slope?",
+    "options": [
+      "$W\\sin\\alpha$",
+      "$W\\cos\\alpha$",
+      "$W\\tan\\alpha$"
+    ],
+    "answer": "$W\\sin\\alpha$",
+    "explain": "The slope's angle sits between the weight and the line into the surface, so the cosine part goes into the slope and the sine part runs down it, as in step 2 of See it.",
+    "twin": {
+      "prompt": "A crate of weight 80 N rests on a slope inclined at 30° to the horizontal. Which is the component of its weight down the slope?",
+      "options": [
+        "$40$ N",
+        "$69.28$ N",
+        "$46.19$ N"
+      ],
+      "answer": "$40$ N",
+      "explain": "Down the slope is opposite the slope's angle, so it takes the sine: $80\\sin 30° = 40$ N. The cosine gives the part into the slope.",
+      "optionNotes": [
+        {
+          "option": "$69.28$ N",
+          "why": "That is 80 cos 30°, the part pressing into the slope; down the slope is opposite the slope's angle, so it takes the sine.",
+          "misconception": "fm.forces.sin-cos-swapped"
+        },
+        {
+          "option": "$46.19$ N",
+          "why": "That is 80 tan 30°; a component of the weight is the weight times a sine or a cosine, never a tangent.",
+          "misconception": "fm.forces.sin-cos-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$W\\cos\\alpha$",
+        "why": "That is the part pressing into the slope, which sits beside the slope's angle; down the slope is opposite it, so it takes the sine.",
+        "misconception": "fm.forces.sin-cos-swapped"
+      },
+      {
+        "option": "$W\\tan\\alpha$",
+        "why": "Tangent compares the two components with each other; each component itself is the weight times a sine or a cosine.",
+        "misconception": "fm.forces.sin-cos-swapped"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "An angle to the vertical",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A force of 18 N acting up and to the right from a point, at 25 degrees to the vertical, with dashed horizontal and vertical reference lines through the point.",
+    "svg": "<svg viewBox='0 0 400 330' xmlns='http://www.w3.org/2000/svg' width='400' height='330'><g fill='currentColor' font-family='inherit'><path d='M100 165H300M200 65V265' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><circle cx='200' cy='165' r='3.5' fill='currentColor'/><path d='M200 165L244 70.7' fill='none' stroke='currentColor' stroke-width='2'/><path d='M244 70.7L243.5 81.6L235.9 78Z' fill='currentColor'/><text x='248.2' y='59.7' text-anchor='start' font-size='15'>18 N</text><path d='M229.6 101.6A70 70 0 0 0 200 95' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='218.6' y='86' text-anchor='middle' font-size='14'>25°</text><text x='192' y='185' text-anchor='end' font-size='15' font-weight='600'>O</text></g></svg>",
+    "caption": "The angle is given to the vertical, not to the horizontal."
+  },
+  {
+    "type": "p",
+    "md": "A question may give the angle to the horizontal or to the vertical. Whichever line the angle is measured from, the component along that line takes the cosine and the one at right angles to it takes the sine. So with an angle to the vertical, the vertical part is the cosine."
+  },
+  {
+    "type": "p",
+    "md": "Look for the words 'to the horizontal' or 'to the vertical', and mark the angle on the diagram before choosing a ratio. Summer 2024 Q3 set forces with their angles given from different lines, and reading one from the wrong line cost marks."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A force of 18 N acts at 25° to the vertical. Find its vertical and horizontal components.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Vertically: $18\\cos 25° = 16.31$ N",
+        "decision": "The vertical is the line the angle is measured from, so it is beside the angle: cosine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Horizontally: $18\\sin 25° = 7.61$ N",
+        "decision": "The horizontal is at right angles to the vertical, opposite the angle: sine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "A force of P newtons acts at 30° to the vertical. Which expression gives its vertical component?",
+    "options": [
+      "P cos 30°",
+      "P sin 30°",
+      "P tan 30°"
+    ],
+    "answer": "P cos 30°",
+    "explain": "Measured from the vertical, the vertical side is beside the angle, so it takes the cosine, as step 1 of See it did.",
+    "twin": {
+      "prompt": "A strut pushes with a force of $Q$ newtons at 50° to the horizontal. Which expression gives its vertical component?",
+      "options": [
+        "Q sin 50°",
+        "Q cos 50°",
+        "Q tan 50°"
+      ],
+      "answer": "Q sin 50°",
+      "explain": "The angle is measured from the horizontal, so the vertical part is opposite it: the sine. The cosine gives the horizontal part.",
+      "optionNotes": [
+        {
+          "option": "Q cos 50°",
+          "why": "That is the horizontal part, beside the angle to the horizontal; the vertical part is opposite it, so it takes the sine.",
+          "misconception": "fm.forces.angle-from-wrong-line"
+        },
+        {
+          "option": "Q tan 50°",
+          "why": "Tangent is the ratio of the two components, not a component of the force.",
+          "misconception": "fm.forces.sin-cos-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "P sin 30°",
+        "why": "Measured from the vertical, the vertical side is beside the angle, so it takes the cosine; the sine gives the horizontal part.",
+        "misconception": "fm.forces.angle-from-wrong-line"
+      },
+      {
+        "option": "P tan 30°",
+        "why": "Tangent is the ratio of the two components, not a component of the force.",
+        "misconception": "fm.forces.sin-cos-swapped"
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "A cable pulls with 30 N at 35° to the vertical. What is its horizontal component, in newtons, to 2 decimal places?",
+    "answer": "17.21",
+    "explain": "The angle is to the vertical, so the horizontal part is opposite it and takes the sine, as step 2 of See it did: $30\\sin 35° = 17.21$ N. The cosine would give the vertical part.",
+    "twin": {
+      "prompt": "A strut pushes with 26 N at 50° to the vertical. What is its horizontal component, in newtons, to 2 decimal places?",
+      "answer": "19.92",
+      "explain": "Opposite the angle to the vertical, so the sine: $26\\sin 50° = 19.92$ N."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Which way a component points",
     "role": "variant"
   },
   {
@@ -151,7 +339,36 @@
   },
   {
     "type": "p",
-    "md": "**Shown:** the 14 N pull gives $14\\cos 60° = 7$ N to the left, which is $-7$ N.\n**To the right in total:** $36 - 7 = 29$ N, not $36 + 7 = 43$ N."
+    "md": "Write the sign with the component as you work it out, and say which way is positive at the start of the line, so the total is a sum of signed parts."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A point is pulled by 36 N to the right and by 14 N up and to the left at 60° to the horizontal. Find the total component to the right.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$14\\cos 60° = 7$ N, to the left",
+        "decision": "Beside the angle to the horizontal, so the cosine; it points left.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Right positive: it counts as $-7$ N",
+        "decision": "Pointing the negative way, it is subtracted."
+      },
+      {
+        "n": 3,
+        "working": "Total to the right: $36 - 7 = 29$ N",
+        "decision": "Not 36 + 7: the two parts face each other.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -164,45 +381,93 @@
       "−13.86 N"
     ],
     "answer": "−8 N",
-    "explain": "Its size is $16\\cos 60° = 8$ N, and it points left, the negative way, as the 14 N pull did above: $-8$ N."
+    "explain": "Its size is $16\\cos 60° = 8$ N, and it points left, the negative way, as the 14 N pull did in step 2 of See it: $-8$ N.",
+    "twin": {
+      "prompt": "A force of 22 N acts at 60° above the horizontal, to the left. Taking to the right as positive, which is its horizontal component?",
+      "options": [
+        "−11 N",
+        "11 N",
+        "−19.05 N"
+      ],
+      "answer": "−11 N",
+      "explain": "Its size is $22\\cos 60° = 11$ N, beside the angle to the horizontal, and it points left, the negative way: $-11$ N.",
+      "optionNotes": [
+        {
+          "option": "11 N",
+          "why": "The size is right, but the force points left, the negative way, so its component carries a minus sign.",
+          "misconception": "fm.forces.opposing-component-sign-dropped"
+        },
+        {
+          "option": "−19.05 N",
+          "why": "That is 22 sin 60°, the vertical part; the horizontal part is beside the 60° angle to the horizontal, so it takes the cosine.",
+          "misconception": "fm.forces.sin-cos-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "8 N",
+        "why": "The size is right, but the force points left, the negative way, so its component carries a minus sign.",
+        "misconception": "fm.forces.opposing-component-sign-dropped"
+      },
+      {
+        "option": "−13.86 N",
+        "why": "That is 16 sin 60°, the vertical part; the horizontal part is beside the 60° angle to the horizontal, so it takes the cosine.",
+        "misconception": "fm.forces.sin-cos-swapped"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "6. Exam twists",
+    "text": "How the paper asks it",
     "role": "twists"
   },
   {
     "type": "p",
-    "md": "**An angle to the vertical** (2024, 2026). Now the vertical part is beside the angle, so it takes the cosine, and the horizontal part the sine."
+    "md": "**A mass, not a weight** (2023, 2025). The question gives the mass; the weight $mg$ is what gets resolved. **Inside a longer question** (2019, 2022, 2024): the component is one line inside 'Calculate the normal reaction' or 'Calculate the value of $P$', and the first mark is for writing it down."
   },
   {
-    "type": "p",
-    "md": "**Shown:** 18 N at $25°$ to the vertical: vertically $18\\cos 25° = 16.31$ N.\n**Horizontally:** $18\\sin 25° = 7.61$ N."
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Not on this paper",
+    "md": "A pull at an angle to a slope is not set. The Teacher Guidance puts every force applied to a body on a slope along the slope, so on a slope only the weight needs resolving."
   },
   {
-    "type": "gate",
-    "id": "g8",
-    "kind": "choice",
-    "prompt": "A force of P newtons acts at 30° to the vertical. Which expression gives its vertical component?",
-    "options": [
-      "P cos 30°",
-      "P sin 30°",
-      "P tan 30°"
-    ],
-    "answer": "P cos 30°",
-    "explain": "Measured from the vertical, the vertical side is beside the angle, so it takes the cosine, as the 18 N force above did."
-  },
-  {
-    "type": "p",
-    "md": "**A mass, not a weight** (2023, 2025). The question gives the mass; the weight $mg$ is what gets resolved. **Shown:** a 3 kg parcel on a 30° slope: $3 \\times 10 = 30$ N first, then $30\\sin 30° = 15$ N down the slope."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A parcel of mass 3 kg rests on a slope inclined at 30°. Find the component of its weight down the slope.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight $= 3 \\times 10 = 30$ N",
+        "decision": "The mass becomes a weight before anything is resolved.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Down the slope: $30\\sin 30° = 15$ N",
+        "decision": "Opposite the slope's angle, so the sine.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g9",
     "kind": "number",
-    "prompt": "A crate of mass 12 kg rests on a slope inclined at 30° to the horizontal. What is the component of its weight acting down the slope, in newtons?",
+    "prompt": "A 12 kg crate is on a slope at 30° to the horizontal. How big is the part of its weight down the slope, in newtons?",
     "answer": "60",
-    "explain": "Weight first, as for the parcel above: $12 \\times 10 = 120$ N. Then $120\\sin 30° = 60$ N down the slope."
+    "explain": "Weight first, as step 1 of See it did: $12 \\times 10 = 120$ N. Then $120\\sin 30° = 60$ N down the slope; resolving the mass would give 6.",
+    "twin": {
+      "prompt": "A 7 kg sack is on a slope at 30° to the horizontal. How big is the part of its weight down the slope, in newtons?",
+      "answer": "35",
+      "explain": "$7 \\times 10 = 70$ N, then $70\\sin 30° = 35$ N."
+    }
   },
   {
     "type": "h",
@@ -211,7 +476,7 @@
   },
   {
     "type": "p",
-    "md": "Split any force into a component along a line and one at right angles to it.\nResolve the weight on a slope into mg sine and mg cosine of the slope's angle.\nPick out which angle the question gives, and which line it is measured from.\nCombine components that point opposite ways by subtracting."
+    "md": "Split any force into a component along a line and one at right angles to it.\nResolve the weight on a slope into mg sine and mg cosine of the slope's angle.\nRead whether the angle is given to the horizontal or to the vertical, and choose the ratio.\nCombine components that point opposite ways by subtracting."
   },
   {
     "type": "h",
@@ -224,10 +489,10 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.resolving-forces.01"
+    "promptId": "rp.fm.u2.resolving-forces.08"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.resolving-forces.05"
+    "promptId": "rp.fm.u2.resolving-forces.09"
   }
 ]

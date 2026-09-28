@@ -37,7 +37,8 @@
       "Resolving in two directions that are not at right angles to each other",
       "The coefficient of friction and F = μR: a frictional force is given, as a number or as so many newtons per kilogram",
       "Resolving in three dimensions",
-      "g = 9.8 m/s²: this unit takes g = 10 m/s², as the front page of every FM2 paper states"
+      "g = 9.8 m/s²: this unit takes g = 10 m/s², as the front page of every FM2 paper states",
+      "A force applied at an angle to an inclined plane: the Teacher Guidance puts every applied force on a plane parallel to it, so on a slope only the weight is resolved"
     ],
     "externalRefs": [
       {
@@ -91,7 +92,8 @@
       "Resolving in two directions that are not at right angles to each other",
       "The coefficient of friction and F = μR: a frictional force is given, as a number or as so many newtons per kilogram",
       "Resolving in three dimensions",
-      "g = 9.8 m/s²: this unit takes g = 10 m/s², as the front page of every FM2 paper states"
+      "g = 9.8 m/s²: this unit takes g = 10 m/s², as the front page of every FM2 paper states",
+      "A force applied at an angle to an inclined plane: the Teacher Guidance puts every applied force on a plane parallel to it, so on a slope only the weight is resolved"
     ],
     "hardness": "S",
     "examinerFlagged": true,
@@ -116,14 +118,14 @@
         "Write the component at right angles to it as F sin of the same angle",
         "Turn a mass into a weight before resolving it",
         "Resolve the weight of a body on a slope into mg sin of the slope's angle down it and mg cos into it",
-        "Read whether an angle is given to the horizontal, to the vertical or to the plane, and use the right one",
+        "Read whether an angle is given to the horizontal or to the vertical, and use the right ratio",
         "Give a component a sign, and subtract one that points the other way",
         "Round a component to 2 decimal places when the question says so"
       ],
       "howExamined": "Unit 2, one hour, fifty marks, six questions, calculator allowed, formula sheet on page 2. Resolving sits inside a longer forces question and carries 2 or 3 marks a part: Summer 2025 Q6(ii) asked for the normal reaction on a slope for 2, Summer 2023 Q3(i) and (ii) for 2 each, and Summer 2024 Q3(i) and (ii) for 3 each where two angled forces had to be resolved before an equation could be written. The scheme gives MW for a correct resolved component and W for the value, with follow-through into the parts that use it.",
       "traps": [
         "Sine and cosine interchanged, the error the reports name year after year (Summer 2024 Q3, Summer 2025 Q6(ii), Summer 2022 Q3(b)(ii))",
-        "An angle measured from the wrong line, so a force given at an angle to the vertical or to the plane is resolved as though it were given to the horizontal (Summer 2024 Q3)",
+        "An angle measured from the wrong line, so a force given at an angle to the vertical is resolved as though it were given to the horizontal (Summer 2024 Q3)",
         "A force left unresolved, with its whole magnitude put into the working (Summer 2024 Q3)",
         "The magnitude of a force and its angle mixed up when resolving (Summer 2024 Q3)",
         "g left out, so the mass is resolved instead of the weight (Summer 2019 Q3(ii))",
@@ -132,7 +134,7 @@
     },
     "verification": "ver.note.fm.u2.resolving-forces",
     "version": 1,
-    "updated": "2026-09-23"
+    "updated": "2026-09-29"
   },
   "workedExamples": [
     {
@@ -265,7 +267,21 @@
           "decision": "Turn the mass into a force first: a component of a mass means nothing, and g = 10 on this paper.",
           "earns": [
             "MW1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 90,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         },
         {
           "n": 2,
@@ -273,7 +289,30 @@
           "decision": "The two right angles in the picture force it: tilt the surface by 24° and the normal tilts by 24° as well.",
           "earns": [
             "MW1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 24,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "°",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "whyMenu": {
+            "options": [
+              "Because tilting the surface by 24° tilts the line at right angles to it by 24° too",
+              "Because the weight always makes 24° with a slope",
+              "Because 24° is the angle at the top of the slope"
+            ],
+            "correct": 0,
+            "explain": "The weight is at right angles to the horizontal and the line into the slope is at right angles to the slope, so turning one by 24° turns the other by 24°."
+          }
         },
         {
           "n": 3,
@@ -282,7 +321,27 @@
           "earns": [
             "MW1",
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "90sin24 = 36.61"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "36.61",
+                  "36.6"
+                ],
+                "marks": 1,
+                "reject": [
+                  "cos",
+                  "82.22"
+                ]
+              }
+            ],
+            "listingRule": false
+          }
         },
         {
           "n": 4,
@@ -291,7 +350,27 @@
           "earns": [
             "MW1",
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "90cos24 = 82.22"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "82.22",
+                  "82.2"
+                ],
+                "marks": 1,
+                "reject": [
+                  "sin",
+                  "36.61"
+                ]
+              }
+            ],
+            "listingRule": false
+          }
         }
       ],
       "finalAnswer": "(i) $36.61$ N  (ii) $82.22$ N",
@@ -330,7 +409,206 @@
         }
       ],
       "verification": "ver.we.fm.u2.resolving-forces.02",
-      "version": 1
+      "version": 1,
+      "figurePlain": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 118.6L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 68 251.3' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>24°</text><path d='M163.1 209L228.9 179.7L208.6 134L142.8 163.3Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><text x='185.8' y='166.5' text-anchor='middle' font-size='14' font-weight='600'>9 kg</text><path d='M185.8 171.5L185.8 249.5' fill='none' stroke='currentColor' stroke-width='2'/><path d='M185.8 249.5L181.6 239.5L190 239.5Z' fill='currentColor'/><text x='193.8' y='247.5' text-anchor='start' font-size='15'>90 N</text></g></svg>",
+        "alt": "A box of mass 9 kg resting on a slope inclined at 24 degrees, with its weight of 90 N drawn straight down."
+      }
+    },
+    {
+      "id": "we.fm.u2.resolving-forces.03",
+      "topic": "fm.u2.resolving-forces",
+      "specRefs": [
+        "FM2-FOR-03"
+      ],
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "A sledge is pulled along level ground by a rope. The pull along the rope is $42$ N and the rope makes an angle of $28°$ with the ground.\n\nCalculate the component of the pull\n(i) parallel to the ground,\n(ii) at right angles to the ground.\n\nRound each answer to 2 decimal places.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' width='400' height='290'><g fill='currentColor' font-family='inherit'><path d='M20 199H380' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M24 207l8 -8M36 207l8 -8M48 207l8 -8M60 207l8 -8M72 207l8 -8M84 207l8 -8M96 207l8 -8M108 207l8 -8M120 207l8 -8M132 207l8 -8M144 207l8 -8M156 207l8 -8M168 207l8 -8M180 207l8 -8M192 207l8 -8M204 207l8 -8M216 207l8 -8M228 207l8 -8M240 207l8 -8M252 207l8 -8M264 207l8 -8M276 207l8 -8M288 207l8 -8M300 207l8 -8M312 207l8 -8M324 207l8 -8M336 207l8 -8M348 207l8 -8M360 207l8 -8M372 207l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='104' y='145' width='92' height='54' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><path d='M196 168L300.2 112.6' fill='none' stroke='currentColor' stroke-width='2.2'/><path d='M300.2 112.6L293.3 121L289.4 113.6Z' fill='currentColor'/><text x='308.2' y='110.6' text-anchor='start' font-size='15'>42 N</text><path d='M196 168H258' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='3 3' stroke-opacity='0.7'/><path d='M234 168A38 38 0 0 0 229.6 150.2' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='244.5' y='160.9' text-anchor='start' font-size='14'>28°</text></g></svg>",
+        "alt": "A sledge pulled along level ground by a rope with a force of 42 N at 28 degrees to the ground."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "The pull, the ground and the dashed vertical make a right-angled triangle with the $28°$ angle at the sledge.",
+          "decision": "Draw the triangle before choosing a ratio: the angle has to be marked between the force and the line you are resolving along.",
+          "earns": [
+            "MW1"
+          ],
+          "whyMenu": {
+            "options": [
+              "Because the ratio depends on which side of the angle the direction lies",
+              "Because the triangle gives the size of the force",
+              "Because the angle must always be measured from the horizontal"
+            ],
+            "correct": 0,
+            "explain": "The force is known already. What the triangle settles is which of its two shorter sides you want, and that is what fixes sine or cosine."
+          },
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "At the sledge, between the rope and the ground",
+                "correct": true,
+                "feedback": "The angle sits where the rope meets the line you resolve along, the ground."
+              },
+              {
+                "id": "b",
+                "text": "At the top, between the rope and the vertical",
+                "correct": false,
+                "misconception": "fm.forces.angle-from-wrong-line",
+                "feedback": "That is the other acute angle of the triangle, 90° minus 28°. The question gives the angle to the ground."
+              },
+              {
+                "id": "c",
+                "text": "It does not matter which corner it is at",
+                "correct": false,
+                "misconception": "fm.forces.sin-cos-swapped",
+                "feedback": "It decides everything: the side beside the angle takes the cosine and the side opposite takes the sine."
+              }
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "Parallel to the ground: $42\\cos 28° = 37.08$ N.",
+          "decision": "The ground is the side beside the angle, so this component takes the cosine.",
+          "earns": [
+            "MW1",
+            "W1"
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "42cos28 = 37.08"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "37.08",
+                  "37.1"
+                ],
+                "marks": 1,
+                "reject": [
+                  "sin28",
+                  "sin 28",
+                  "42sin28",
+                  "42 sin 28",
+                  "sin 28°",
+                  "19.72"
+                ]
+              }
+            ],
+            "listingRule": false
+          }
+        },
+        {
+          "n": 3,
+          "working": "At right angles to the ground: $42\\sin 28° = 19.72$ N.",
+          "decision": "The upward direction is opposite the angle, so this one takes the sine.",
+          "earns": [
+            "MW1",
+            "W1"
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "42sin28 = 19.72"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "19.72",
+                  "19.7"
+                ],
+                "marks": 1,
+                "reject": [
+                  "cos28",
+                  "cos 28",
+                  "42cos28",
+                  "42 cos 28",
+                  "cos 28°",
+                  "37.08"
+                ]
+              }
+            ],
+            "listingRule": false
+          }
+        },
+        {
+          "n": 4,
+          "working": "Check: the size of the pull is $\\sqrt{37.08^2 + 19.72^2} = 42.00$ N.",
+          "decision": "The two components are the legs of a right-angled triangle whose longest side is the force, so Pythagoras is a free check. A check earns no mark of its own; it catches a slip before the answer is written.",
+          "earns": [],
+          "input": {
+            "kind": "numeric",
+            "value": 42,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "(i) $37.08$ N  (ii) $19.72$ N",
+      "twin": {
+        "stem": "A rope pulls a crate along level ground with a force of $44$ N at $57°$ to the ground. Calculate the component of the pull parallel to the ground, rounded to 2 decimal places.\n\nAnswer ________ N",
+        "answer": {
+          "kind": "numeric",
+          "value": 23.96,
+          "tolerance": {
+            "type": "dp",
+            "places": 2
+          },
+          "unit": "N",
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "fraction"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u2.resolving-forces.03",
+      "version": 1,
+      "figurePlain": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' width='400' height='290'><g fill='currentColor' font-family='inherit'><path d='M20 199H380' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M24 207l8 -8M36 207l8 -8M48 207l8 -8M60 207l8 -8M72 207l8 -8M84 207l8 -8M96 207l8 -8M108 207l8 -8M120 207l8 -8M132 207l8 -8M144 207l8 -8M156 207l8 -8M168 207l8 -8M180 207l8 -8M192 207l8 -8M204 207l8 -8M216 207l8 -8M228 207l8 -8M240 207l8 -8M252 207l8 -8M264 207l8 -8M276 207l8 -8M288 207l8 -8M300 207l8 -8M312 207l8 -8M324 207l8 -8M336 207l8 -8M348 207l8 -8M360 207l8 -8M372 207l8 -8' fill='none' stroke='currentColor' stroke-width='0.9' stroke-opacity='0.5'/><rect x='104' y='145' width='92' height='54' rx='4' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='1.6'/><path d='M196 168L300.2 112.6' fill='none' stroke='currentColor' stroke-width='2.2'/><path d='M300.2 112.6L293.3 121L289.4 113.6Z' fill='currentColor'/><text x='308.2' y='110.6' text-anchor='start' font-size='15'>42 N</text><path d='M196 168H258' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='3 3' stroke-opacity='0.7'/><path d='M234 168A38 38 0 0 0 229.6 150.2' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='244.5' y='160.9' text-anchor='start' font-size='14'>28°</text></g></svg>",
+        "alt": "A sledge pulled along level ground by a rope with a force of 42 N at 28 degrees to the ground."
+      }
     }
   ],
   "diagnostics": [
@@ -794,6 +1072,201 @@
             }
           ],
           "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "05",
+          "skill": "Combining components that face each other",
+          "stem": "One pull gives a component of $30$ N to the right and another gives $12$ N to the left. What is the total component to the right?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$18$ N",
+              "correct": true,
+              "feedback": "Opposite directions subtract, so $30 - 12 = 18$ N to the right."
+            },
+            {
+              "id": "b",
+              "text": "$42$ N",
+              "correct": false,
+              "misconception": "fm.forces.opposing-component-sign-dropped",
+              "feedback": "Adding treats the second pull as helping the first, when it works against it."
+            },
+            {
+              "id": "c",
+              "text": "$360$ N",
+              "correct": false,
+              "misconception": "fm.forces.components-added-as-scalars",
+              "feedback": "Components are added and subtracted, never multiplied."
+            },
+            {
+              "id": "d",
+              "text": "$12$ N",
+              "correct": false,
+              "misconception": "fm.forces.term-missing-from-equation",
+              "feedback": "That leaves the first component out of the total altogether."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u2.resolving-forces.post-c",
+      "topic": "fm.u2.resolving-forces",
+      "specRefs": [
+        "FM2-FOR-03"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "01",
+          "skill": "Choosing sine or cosine",
+          "stem": "A force $F$ acts at an angle $\\theta$ to a straight line. Which expression gives its component along that line?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$F\\cos\\theta$",
+              "correct": true,
+              "feedback": "The line is the side beside the angle, so the cosine gives the part along it."
+            },
+            {
+              "id": "b",
+              "text": "$F\\sin\\theta$",
+              "correct": false,
+              "misconception": "fm.forces.sin-cos-swapped",
+              "feedback": "That is the component at right angles to the line, opposite the angle."
+            },
+            {
+              "id": "c",
+              "text": "$F\\tan\\theta$",
+              "correct": false,
+              "misconception": "fm.forces.sin-cos-swapped",
+              "feedback": "Tangent compares the two components with each other, not either of them with the force."
+            },
+            {
+              "id": "d",
+              "text": "$\\dfrac{F}{\\cos\\theta}$",
+              "correct": false,
+              "misconception": "fm.forces.sin-cos-swapped",
+              "feedback": "A component is never bigger than the force it came from, so it is multiplied, not divided."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "02",
+          "skill": "The weight on a slope",
+          "stem": "A body of weight $W$ rests on a slope inclined at $\\alpha$ to the horizontal. Which expression gives the component of $W$ at right angles to the slope?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$W\\cos\\alpha$",
+              "correct": true,
+              "feedback": "The slope's angle sits between the weight and the line into the surface, so that component takes the cosine."
+            },
+            {
+              "id": "b",
+              "text": "$W\\sin\\alpha$",
+              "correct": false,
+              "misconception": "fm.forces.sin-cos-swapped",
+              "feedback": "That is the component down the slope."
+            },
+            {
+              "id": "c",
+              "text": "$W$",
+              "correct": false,
+              "misconception": "fm.forces.force-left-unresolved",
+              "feedback": "The whole weight only presses into the surface when the surface is horizontal."
+            },
+            {
+              "id": "d",
+              "text": "$W\\tan\\alpha$",
+              "correct": false,
+              "misconception": "fm.forces.sin-cos-swapped",
+              "feedback": "Tangent would make the component larger than the weight once the slope passes 45°."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "06",
+          "skill": "An angle to the vertical",
+          "stem": "A force of $32$ N acts at $20°$ to the vertical. Which expression gives its horizontal component?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$32\\sin 20°$",
+              "correct": true,
+              "feedback": "Measured from the vertical, the horizontal side is opposite the angle, so it takes the sine."
+            },
+            {
+              "id": "b",
+              "text": "$32\\cos 20°$",
+              "correct": false,
+              "misconception": "fm.forces.angle-from-wrong-line",
+              "feedback": "That is the vertical part: the vertical is beside an angle measured from it."
+            },
+            {
+              "id": "c",
+              "text": "$32\\tan 20°$",
+              "correct": false,
+              "misconception": "fm.forces.sin-cos-swapped",
+              "feedback": "Tangent compares the two components; it gives neither from the force."
+            },
+            {
+              "id": "d",
+              "text": "$32$ N",
+              "correct": false,
+              "misconception": "fm.forces.force-left-unresolved",
+              "feedback": "The whole force would act horizontally only if it were horizontal."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "08",
+          "skill": "Turn an angle to the vertical into an angle to the horizontal",
+          "stem": "A force acts at $35°$ to the vertical. What angle does it make with the horizontal?",
+          "options": [
+            {
+              "id": "a",
+              "text": "$55°$",
+              "correct": true,
+              "feedback": "The vertical and the horizontal are at right angles, so the two angles make up 90°: $90 - 35 = 55°$."
+            },
+            {
+              "id": "b",
+              "text": "$35°$",
+              "correct": false,
+              "feedback": "That is its angle to the vertical, the line it is given from. The horizontal is a quarter turn away.",
+              "misconception": "fm.forces.angle-from-wrong-line"
+            },
+            {
+              "id": "c",
+              "text": "$145°$",
+              "correct": false,
+              "feedback": "That takes 35° from a straight line, 180°. The vertical and the horizontal meet at 90°, so take it from 90.",
+              "misconception": "fm.forces.angle-from-wrong-line"
+            },
+            {
+              "id": "d",
+              "text": "$125°$",
+              "correct": false,
+              "feedback": "That adds 35° to the right angle; the angle to the horizontal is what is left of the right angle.",
+              "misconception": "fm.forces.angle-from-wrong-line"
+            }
+          ],
+          "secondsExpected": 30,
           "confidence": true,
           "hypercorrectionQueue": true
         },
@@ -1566,7 +2039,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 205' xmlns='http://www.w3.org/2000/svg' width='360' height='205'><g fill='currentColor' font-family='inherit'><path d='M12 106.7H184M98 20.7V192.7' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><path d='M98 106.7L180 106.7' fill='none' stroke='currentColor' stroke-width='1.9' stroke-opacity='1'/><path d='M180 106.7L171 110.5L171 102.9Z' fill='currentColor'/><text x='187' y='110.7' text-anchor='start' font-size='12.5' font-weight='600'>34 N</text><path d='M98 106.7L57 35.7' fill='none' stroke='currentColor' stroke-width='1.9' stroke-opacity='1'/><path d='M57 35.7L64.8 41.6L58.2 45.4Z' fill='currentColor'/><text x='53.5' y='24.6' text-anchor='end' font-size='12.5' font-weight='600'>20 N</text><path d='M62 106.7A36 36 0 0 1 80 75.5' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='53.8' y='85.2' text-anchor='middle' font-size='11.5'>60°</text><circle cx='98' cy='106.7' r='4.5' fill='currentColor'/><text x='89' y='124.7' text-anchor='end' font-size='12.5' font-weight='600'>O</text></g></svg>",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 330' xmlns='http://www.w3.org/2000/svg' width='400' height='330'><g fill='currentColor' font-family='inherit'><path d='M100 165H300M200 65V265' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><circle cx='200' cy='165' r='3.5' fill='currentColor'/><path d='M200 165L304 165' fill='none' stroke='currentColor' stroke-width='2'/><path d='M304 165L294 169.2L294 160.8Z' fill='currentColor'/><text x='314' y='170' text-anchor='start' font-size='15'>34 N</text><path d='M200 165L148 74.9' fill='none' stroke='currentColor' stroke-width='2'/><path d='M148 74.9L156.6 81.5L149.4 85.7Z' fill='currentColor'/><text x='143' y='64.3' text-anchor='end' font-size='15'>20 N</text><path d='M181 132.1A38 38 0 0 0 162 165' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='153.2' y='143' text-anchor='end' font-size='14'>60°</text><text x='192' y='185' text-anchor='end' font-size='15' font-weight='600'>O</text></g></svg>",
           "alt": "A ring at O pulled by a 34 N force acting horizontally to the right and a 20 N force acting up and to the left at 60 degrees to the horizontal, with dashed reference lines through O."
         }
       ],
@@ -2024,7 +2497,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 305 187' xmlns='http://www.w3.org/2000/svg' width='305' height='187'><g fill='currentColor' font-family='inherit'><path d='M30 157.7L229 81.3' fill='none' stroke='currentColor' stroke-width='1.5'/><text x='232.6' y='110.6' text-anchor='end' font-size='11.5'>the ramp</text><path d='M58 146.9L154.4 32' fill='none' stroke='currentColor' stroke-width='1.9' stroke-opacity='1'/><path d='M154.4 32L151.5 41.3L145.7 36.5Z' fill='currentColor'/><text x='158.9' y='21.6' text-anchor='start' font-size='12.5' font-weight='600'>68 N</text><path d='M97.2 131.9A42 42 0 0 0 85 114.7' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='105.2' y='117.2' text-anchor='middle' font-size='12'>29°</text></g></svg>",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 139.5L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 68.9 253.5' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>21°</text><path d='M162.4 217.6L229.6 191.8L211.7 145.2L144.5 171Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><path d='M220.6 168.5L286 143.4' fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='3 3' stroke-opacity='0.7'/><path d='M220.6 168.5L282.4 95' fill='none' stroke='currentColor' stroke-width='2.2'/><path d='M282.4 95L279.1 105.3L272.7 99.9Z' fill='currentColor'/><text x='290.4' y='93' text-anchor='start' font-size='15'>68 N</text><path d='M258 154.2A40 40 0 0 0 246.4 137.9' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='263' y='143.3' text-anchor='start' font-size='14'>29°</text></g></svg>",
           "alt": "A ramp drawn at 21 degrees to the horizontal, with a rope pulling with a force of 68 N at 29 degrees to the ramp itself."
         }
       ],
@@ -2262,6 +2735,274 @@
       "version": 1
     },
     {
+      "id": "q.fm.u2.resolving-forces.0015",
+      "topic": "fm.u2.resolving-forces",
+      "specRefs": [
+        "FM2-FOR-03"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "style": "exam-style",
+      "difficulty": 3,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Calculate"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "A box on a smooth ramp, then a rope along the ramp",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' width='400' height='300'><g fill='currentColor' font-family='inherit'><path d='M26 270L366 139.5L366 270Z' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1.6'/><path d='M72 270A46 46 0 0 0 68.9 253.5' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='80' y='262' text-anchor='start' font-size='15'>21°</text><path d='M162.4 217.6L229.6 191.8L211.7 145.2L144.5 171Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.6'/><text x='187' y='176.4' text-anchor='middle' font-size='14' font-weight='600'>16 kg</text></g></svg>",
+          "alt": "A box of mass 16 kg on a ramp inclined at 21 degrees to the horizontal."
+        }
+      ],
+      "parts": [
+        {
+          "id": "a",
+          "stem": "A box of mass $16$ kg rests on a ramp inclined at $21°$ to the horizontal.\n\nCalculate the component of the weight of the box acting down the ramp. Round to 2 decimal places.\n\nAnswer ________ N",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 57.34,
+            "tolerance": {
+              "type": "dp",
+              "places": 2
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$160\\sin 21°$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$57.34$",
+              "dependsOn": [
+                "MW1"
+              ]
+            }
+          ],
+          "hints": [
+            "Turn the mass into a weight first.",
+            "Down the ramp is opposite the ramp's angle."
+          ],
+          "workedSolution": "Weight $= 16 \\times 10 = 160$ N, so the component down the ramp is $160\\sin 21° = 57.34$ N.",
+          "commonErrors": [
+            {
+              "misconception": "fm.forces.sin-cos-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 149.37,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That is $160\\cos 21°$, the component pressing into the ramp. Down the ramp is opposite the ramp's angle, so it takes the sine.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2025-summer:FM2:Q6"
+            },
+            {
+              "misconception": "fm.forces.g-omitted-weight",
+              "pattern": {
+                "kind": "numeric",
+                "value": 14.94,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That resolves the mass and swaps the ratio as well. Work out the weight, $160$ N, and take the sine for the component down the ramp.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM2:Q3"
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "b",
+          "stem": "Calculate the component of the weight acting at right angles to the ramp. Round to 2 decimal places.\n\nAnswer ________ N",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 149.37,
+            "tolerance": {
+              "type": "dp",
+              "places": 2
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$160\\cos 21°$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$149.37$",
+              "dependsOn": [
+                "MW1"
+              ]
+            }
+          ],
+          "hints": [
+            "Into the ramp sits beside the ramp's angle."
+          ],
+          "workedSolution": "Component $= 160\\cos 21° = 149.37$ N.",
+          "commonErrors": [
+            {
+              "misconception": "fm.forces.sin-cos-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 57.34,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That is $160\\sin 21°$, the component down the ramp. Into the ramp sits beside the ramp's angle, so it takes the cosine.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2025-summer:FM2:Q6"
+            },
+            {
+              "misconception": "fm.forces.force-left-unresolved",
+              "pattern": {
+                "kind": "numeric",
+                "value": 160,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That is the whole weight. All of it presses into the surface only when the surface is horizontal; on a ramp the cosine takes its share.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2024-summer:FM2:Q3"
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "c",
+          "stem": "The ramp is smooth. A rope parallel to the ramp now pulls the box up the ramp with a force of $68$ N.\n\nTaking up the ramp as positive, calculate the total of this pull and the component of the weight along the ramp. Round to 2 decimal places.\n\nAnswer ________ N",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 10.66,
+            "tolerance": {
+              "type": "dp",
+              "places": 2
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$68 - 160\\sin 21°$",
+              "ft": true
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$10.66$",
+              "dependsOn": [
+                "MW1"
+              ]
+            }
+          ],
+          "hints": [
+            "The rope pulls up the ramp and the weight's part along it points down: give them opposite signs.",
+            "The weight's part along the ramp is your answer to part (a)."
+          ],
+          "workedSolution": "Up the ramp positive: the rope gives $+68$ N and the weight's part gives $-57.34$ N, so the total is $68 - 57.34 = 10.66$ N up the ramp.",
+          "commonErrors": [
+            {
+              "misconception": "fm.forces.opposing-component-sign-dropped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 125.34,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "Both parts are right, but the weight's part points down the ramp, against the rope, so it is taken away: $68 - 57.34$.",
+              "marksTypicallyEarned": 0
+            },
+            {
+              "misconception": "fm.forces.sin-cos-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": -81.37,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That takes off the part into the ramp, $160\\cos 21°$. Along the ramp it is the part down the slope, $160\\sin 21°$, from part (a).",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value",
+            "relation": "68 - x"
+          }
+        }
+      ],
+      "totalMarks": 6,
+      "timeAllowanceSec": 432,
+      "skeleton": "(a)calculate2|(b)calculate2|(c)calculate2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM2:Q3",
+        "ccea-cer:further-maths:2025-summer:FM2:Q6"
+      ],
+      "solutionProgram": "m = 16; alpha = 21; W = 10m; down = W sin(alpha); into = W cos(alpha); pull = 68; net = pull - down",
+      "verification": "ver.q.fm.u2.resolving-forces.0015",
+      "version": 1
+    },
+    {
       "id": "q.fm.u2.resolving-forces.0011",
       "topic": "fm.u2.resolving-forces",
       "specRefs": [
@@ -2293,7 +3034,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 201' xmlns='http://www.w3.org/2000/svg' width='360' height='201'><g fill='currentColor' font-family='inherit'><path d='M29.9 100H201.9M115.9 14V186' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><path d='M115.9 100L180.5 49.5' fill='none' stroke='currentColor' stroke-width='1.9' stroke-opacity='1'/><path d='M180.5 49.5L175.8 58L171.1 52.1Z' fill='currentColor'/><text x='186' y='40.2' text-anchor='start' font-size='12.5' font-weight='600'>45 N</text><path d='M151.9 100A36 36 0 0 0 144.3 77.8' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='164.1' y='87.4' text-anchor='middle' font-size='11.5'>38°</text><path d='M115.9 100L48.7 53' fill='none' stroke='currentColor' stroke-width='1.9' stroke-opacity='1'/><path d='M48.7 53L58.3 55L53.9 61.2Z' fill='currentColor'/><text x='43' y='44' text-anchor='end' font-size='12.5' font-weight='600'>28 N</text><path d='M115.9 46A54 54 0 0 0 71.7 69' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='84' y='42.8' text-anchor='middle' font-size='11.5'>55°</text><circle cx='115.9' cy='100' r='4.5' fill='currentColor'/><text x='106.9' y='118' text-anchor='end' font-size='12.5' font-weight='600'>O</text></g></svg>",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 330' xmlns='http://www.w3.org/2000/svg' width='400' height='330'><g fill='currentColor' font-family='inherit'><path d='M100 165H300M200 65V265' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><circle cx='200' cy='165' r='3.5' fill='currentColor'/><path d='M200 165L282 101' fill='none' stroke='currentColor' stroke-width='2'/><path d='M282 101L276.7 110.4L271.5 103.8Z' fill='currentColor'/><text x='289.8' y='92.8' text-anchor='start' font-size='15'>45 N</text><path d='M238 165A38 38 0 0 0 229.9 141.6' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='251.1' y='152.4' text-anchor='start' font-size='14'>38°</text><path d='M200 165L114.8 105.3' fill='none' stroke='currentColor' stroke-width='2'/><path d='M114.8 105.3L125.4 107.6L120.6 114.5Z' fill='currentColor'/><text x='106.6' y='97.6' text-anchor='end' font-size='15'>28 N</text><path d='M200 127A38 38 0 0 0 168.9 143.2' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='175.1' y='122.1' text-anchor='end' font-size='14'>55°</text><text x='192' y='185' text-anchor='end' font-size='15' font-weight='600'>O</text></g></svg>",
           "alt": "A ring at O pulled by two forces. A 45 N force acts up and to the right at 38 degrees to the horizontal. A 28 N force acts up and to the left at 55 degrees to the vertical. Dashed horizontal and vertical reference lines cross at O."
         }
       ],
@@ -2492,7 +3233,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "35.46 - x"
           }
         }
       ],
@@ -2754,6 +3496,146 @@
       "solutionProgram": "W = 13 * 10; down = W * sin(28 deg); up = 80 * cos(18 deg); total up = up - down",
       "verification": "ver.q.fm.u2.resolving-forces.0012",
       "version": 1
+    },
+    {
+      "id": "q.fm.u2.resolving-forces.0013",
+      "topic": "fm.u2.resolving-forces",
+      "specRefs": [
+        "FM2-FOR-03"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Calculate"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "Two ropes pulling a ring upwards",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 330' xmlns='http://www.w3.org/2000/svg' width='400' height='330'><g fill='currentColor' font-family='inherit'><path d='M100 165H300M200 65V265' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><circle cx='200' cy='165' r='3.5' fill='currentColor'/><path d='M200 165L258.2 78.8' fill='none' stroke='currentColor' stroke-width='2'/><path d='M258.2 78.8L256 89.4L249.1 84.7Z' fill='currentColor'/><text x='263.7' y='68.5' text-anchor='start' font-size='15'>52 N</text><path d='M239.1 107A70 70 0 0 0 200 95' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='225.1' y='87.8' text-anchor='start' font-size='14'>34°</text><path d='M200 165L101.1 132.9' fill='none' stroke='currentColor' stroke-width='2'/><path d='M101.1 132.9L111.9 132L109.3 139.9Z' fill='currentColor'/><text x='91.6' y='127.8' text-anchor='end' font-size='15'>40 N</text><path d='M163.9 153.3A38 38 0 0 0 162 165' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='146.7' y='161.6' text-anchor='end' font-size='14'>18°</text><text x='192' y='185' text-anchor='end' font-size='15' font-weight='600'>O</text></g></svg>",
+          "alt": "A ring at O pulled by two ropes: 52 N up and to the right at 34 degrees to the vertical, and 40 N up and to the left at 18 degrees to the horizontal, with dashed reference lines through O."
+        }
+      ],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "A ring at $O$ is pulled by two ropes. One pulls with a force of $52$ N at $34°$ to the vertical, up and to the right. The other pulls with a force of $40$ N at $18°$ to the horizontal, up and to the left.\n\nCalculate the total upward component of the two pulls. Round to 2 decimal places.\n\nAnswer ________ N",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 55.47,
+            "tolerance": {
+              "type": "dp",
+              "places": 2
+            },
+            "unit": "N",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$52\\cos 34°$ upwards (the angle is to the vertical)"
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "$40\\sin 18°$ upwards (the angle is to the horizontal)"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$55.47$",
+              "dependsOn": [
+                "MW1",
+                "MW2"
+              ]
+            }
+          ],
+          "hints": [
+            "Each rope's angle is measured from a different line: read which before choosing the ratio.",
+            "Measured from the vertical, the upward part takes the cosine; measured from the horizontal, it takes the sine.",
+            "Both upward parts point the same way, so add them."
+          ],
+          "workedSolution": "The 52 N rope is at 34° to the vertical, so its upward part is $52\\cos 34° = 43.11$ N. The 40 N rope is at 18° to the horizontal, so its upward part is $40\\sin 18° = 12.36$ N. Both point up: $43.11 + 12.36 = 55.47$ N.",
+          "commonErrors": [
+            {
+              "misconception": "fm.forces.angle-from-wrong-line",
+              "pattern": {
+                "kind": "numeric",
+                "value": 41.44,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That reads the 52 N rope's 34° as an angle to the horizontal. It is given to the vertical, so its upward part is beside the angle and takes the cosine; the 40 N rope's part is right, which earns its mark (M).",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "fm.forces.angle-from-wrong-line",
+              "pattern": {
+                "kind": "numeric",
+                "value": 81.15,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That reads the 40 N rope's 18° as an angle to the vertical. It is given to the horizontal, so its upward part is opposite the angle and takes the sine; the 52 N rope's part is right, which earns its mark (M).",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "fm.forces.force-left-unresolved",
+              "pattern": {
+                "kind": "numeric",
+                "value": 92,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 2
+                }
+              },
+              "feedback": "That adds the two forces whole. Each rope is at an angle, so only its upward part counts: resolve each one before adding.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(main)calculate3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM2:Q3",
+        "ccea-cer:further-maths:2025-summer:FM2:Q6"
+      ],
+      "solutionProgram": "F1 = 52; a1 = 34 (to the vertical); F2 = 40; a2 = 18 (to the horizontal); up = F1*cos(a1) + F2*sin(a2)",
+      "verification": "ver.q.fm.u2.resolving-forces.0013",
+      "version": 1
     }
   ],
   "findTheMistake": [
@@ -2834,7 +3716,7 @@
         "FM2-FOR-03"
       ],
       "kind": "formula",
-      "prompt": "A force $F$ makes an angle $\\theta$ with a line. What is its component at right angles to the line?",
+      "prompt": "Force $F$ at $\\theta$ to a line: its component at right angles to it?",
       "answer": "F sin of theta, because that direction is opposite the angle.",
       "keyWords": [
         "sin",
@@ -2850,7 +3732,7 @@
         "FM2-FOR-03"
       ],
       "kind": "procedure",
-      "prompt": "What is the first thing to do before resolving the weight of a body given as a mass?",
+      "prompt": "A body's mass is given. What comes before resolving its weight?",
       "answer": "Turn the mass into a weight by multiplying by g, which is 10 on this paper.",
       "keyWords": [
         "weight",
@@ -2866,7 +3748,7 @@
         "FM2-FOR-03"
       ],
       "kind": "definition",
-      "prompt": "On a slope inclined at an angle to the horizontal, what are the two components of the weight?",
+      "prompt": "On a slope, what are the weight's two components?",
       "answer": "mg sine of the angle down the slope, and mg cosine of the angle into the slope.",
       "keyWords": [
         "down the slope",
@@ -2922,6 +3804,36 @@
       ],
       "examUnit": "FM2",
       "difficultyPrior": 5
+    },
+    {
+      "id": "rp.fm.u2.resolving-forces.08",
+      "topic": "fm.u2.resolving-forces",
+      "specRefs": [
+        "FM2-FOR-03"
+      ],
+      "kind": "formula",
+      "prompt": "Force $F$ at $\\theta$ to a line: its component along the line?",
+      "answer": "$F\\cos\\theta$: the cosine goes with the side beside the angle.",
+      "keyWords": [
+        "cos"
+      ],
+      "examUnit": "FM2",
+      "difficultyPrior": 2
+    },
+    {
+      "id": "rp.fm.u2.resolving-forces.09",
+      "topic": "fm.u2.resolving-forces",
+      "specRefs": [
+        "FM2-FOR-03"
+      ],
+      "kind": "trap",
+      "prompt": "A force at an angle to the vertical: is its horizontal part sin or cos?",
+      "answer": "sin: the horizontal is at right angles to the vertical, so it is opposite the angle.",
+      "keyWords": [
+        "sin"
+      ],
+      "examUnit": "FM2",
+      "difficultyPrior": 4
     }
   ],
   "sets": [
@@ -2935,7 +3847,7 @@
         "FM2"
       ],
       "itemIds": [
-        "q.fm.u2.resolving-forces.0012",
+        "q.fm.u2.resolving-forces.0013",
         "q.fm.u2.resolving-forces.0004",
         "q.fm.u2.resolving-forces.0006",
         "q.fm.u2.resolving-forces.0003",
@@ -2953,98 +3865,98 @@
       "checks": [
         {
           "type": "schema",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "scope-tier",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "formula-sheet",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "command-words",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "tariff",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "maths-numeric",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
-          "detail": "Every component is computed from the stem's own force and angle: 42 cos 28 = 37.08 and 42 sin 28 = 19.72; 90 sin 24 = 36.61 and 90 cos 24 = 82.22; 50 cos 32 = 42.4 and 50 sin 32 = 26.5; 36 cos 65 = 15.21; 140 sin 18 = 43.26 and 140 cos 18 = 133.15; 24 sin 40 = 15.43 and 24 cos 40 = 18.39; 50 cos 35 = 40.96; 30 - 20 cos 60 = 20; 160 sin 21 = 57.34 and 160 cos 21 = 149.37; 75 cos 32 = 63.6 in the note and 68 cos 29 = 59.47 in exam-style A (c); 45 cos 38 = 35.46, 28 sin 55 = 22.94 and their difference 12.52; the twins 44 cos 57 = 23.96 and 170 sin 26 = 74.52. Every distractor value is produced by executing its route in scratchpad/fm2-batch-c/routes.mjs (sinForCos, cosForSin, angleFromWrongLine, forceNotResolved, combine, magnitudesSummed) and re-checked against the published JSON by verify-published.mjs.",
-          "at": "2026-09-20T09:00:00Z",
+          "detail": "The v3 note works its own numbers, each computed in scratchpad/v3-fm2-1/res/resolving-v3.mjs: 46 N at 22°: 42.65 and 17.23; 50 N at 0°, 60°, 90°: 50, 25, 0; 11 kg on 30°: 55 down, 95.26 into; 18 N at 25° to the vertical: 16.31 vertical, 7.61 horizontal; 36 - 7 = 29; 3 kg on 30°: 15. No value the note works is asked by a later item (two-way scan).",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "units-dimensions",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "examiner-alignment",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "copy-shingle",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "style-lint",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "katex-compile",
-          "tool": "claude (author-unit-batch pass; every value computed in scratchpad/fm2-batch-c before writing)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
-          "at": "2026-09-20T09:00:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         },
         {
           "type": "human-spot",
-          "tool": "claude (FM2 batch C depth pass, 25 Sep 2026)",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
           "result": "pass",
           "detail": "Rebuilt to the depth standard and read end to end as the student under the owner's ruling of 24 Sep 2026 (teach, then show, then check): six sections with roles (idea, why cosine, three variants: the weight on a slope, the line the angle is measured from, signed components; exam twists: an angle to the vertical, 2024 and 2026, and a mass not a weight, 2023 and 2025), seven gates, each after its section's explanation and two worked lines with numbers. The 23 Sep note resolved worked example 1's rope and worked example 2's box in front of her; every demonstration now has numbers no item uses (46 N at 22°; 50 N at 60° and 90°; 11 kg on 30°; 36 N and 14 N at 60°; 18 N at 25° to the vertical; 3 kg on 30°). Gates g1 (worked example 1's rope) and g5 (practice 6's question, numbers changed) are retired, replaced by g6 (25 N at 40°: 19.15) and g7 (one signed component, a choice so no minus sign has to be typed). Worked examples 1 and 2 now show the situation only (they printed 42 cos 28°, 42 sin 28°, 90 sin 24° and 90 cos 24°, the working their faded steps ask for). Two short prompts are embedded (the owner's ruling of 24 Sep, 23:40).",
-          "at": "2026-09-25T04:44:00Z",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         }
       ],
@@ -3064,6 +3976,13 @@
           "replacedBy": "g7",
           "reason": "It asked practice 6's question with the numbers changed; g7 checks one signed component instead.",
           "on": "2026-09-25T04:44:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "It asked which angle resolves a rope at an angle to a slope, a force the Teacher Guidance keeps off the paper (applied forces on a plane act parallel to it); g10 asks the on-specification choice, a force given at an angle to the vertical.",
+          "on": "2026-09-29T00:55:00Z"
         }
       ]
     },
@@ -3161,8 +4080,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u2.resolving-forces.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u2.resolving-forces.03",
+          "reason": "Its check line earned a W1 mark, and with no inputs its steps accepted '42 sin 28 = 37.08' for the cosine line by value; we.03 is the same example with the check unmarked and an input on every step.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u2.resolving-forces.02",
@@ -3743,8 +4671,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u2.resolving-forces.0005",
+          "kind": "question",
+          "replacedBy": null,
+          "reason": "It resolved a rope at an angle to a slope, which the Teacher Guidance excludes (applied forces on a plane act parallel to it); the choice of line it trained is asked on-specification by practice 0004 and gate g10.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u2.resolving-forces.0006",
@@ -4228,8 +5165,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u2.resolving-forces.0010",
+          "kind": "question",
+          "replacedBy": "q.fm.u2.resolving-forces.0015",
+          "reason": "Its part (c) resolved a rope at an angle to the ramp, off the specification; exam-style 0015 keeps parts (a) and (b) and asks (c) with the rope along the ramp.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u2.resolving-forces.0011",
@@ -4430,8 +5376,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u2.resolving-forces.0012",
+          "kind": "question",
+          "replacedBy": "q.fm.u2.resolving-forces.0013",
+          "reason": "Its parts (b) and (c) resolved a rope at an angle to the slope, off the specification, and (c) was marked in M and A where FM2 uses MW and W; practice 0013 is the difficulty-4 rung on the specification, two pulls at a point with angles to different lines.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u2.resolving-forces.pre",
@@ -4782,8 +5737,45 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u2.resolving-forces.post-b#01",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.resolving-forces.post-c#01",
+          "reason": "Its set was withdrawn because item 07 was off the specification; this item is carried over unchanged.",
+          "on": "2026-09-29T00:55:00Z"
+        },
+        {
+          "id": "dx.fm.u2.resolving-forces.post-b#02",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.resolving-forces.post-c#02",
+          "reason": "Its set was withdrawn because item 07 was off the specification; this item is carried over unchanged.",
+          "on": "2026-09-29T00:55:00Z"
+        },
+        {
+          "id": "dx.fm.u2.resolving-forces.post-b#06",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.resolving-forces.post-c#06",
+          "reason": "Its set was withdrawn because item 07 was off the specification; this item is carried over unchanged.",
+          "on": "2026-09-29T00:55:00Z"
+        },
+        {
+          "id": "dx.fm.u2.resolving-forces.post-b#07",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.resolving-forces.post-c#08",
+          "reason": "It asked a rope's angle to the horizontal from its angle to a slope, a force the Teacher Guidance keeps off the paper; item 08 asks the on-specification conversion, an angle to the vertical into an angle to the horizontal.",
+          "on": "2026-09-29T00:55:00Z"
+        },
+        {
+          "id": "dx.fm.u2.resolving-forces.post-b#05",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u2.resolving-forces.post-c#05",
+          "reason": "Its set was withdrawn because item 07 was off the specification; this item is carried over unchanged.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u2.resolving-forces.01",
@@ -5081,8 +6073,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.resolving-forces.01",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.resolving-forces.08",
+          "reason": "Its chips asked for 'beside the angle' as well as cos, so the natural right answer 'F cos θ' showed a key word missing; rp.08 has cos as its chip.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.resolving-forces.02",
@@ -5469,8 +6470,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u2.resolving-forces.05",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u2.resolving-forces.09",
+          "reason": "Its chips asked for 'right angles' as well as sine, so the natural right answer 'sine' showed a key word missing; rp.09 has one chip.",
+          "on": "2026-09-29T00:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u2.resolving-forces.06",
@@ -5660,6 +6670,604 @@
           "result": "pass",
           "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
           "at": "2026-09-20T09:00:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u2.resolving-forces.03",
+      "itemId": "we.fm.u2.resolving-forces.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every component is computed from the stem's own force and angle: 42 cos 28 = 37.08 and 42 sin 28 = 19.72; 90 sin 24 = 36.61 and 90 cos 24 = 82.22; 50 cos 32 = 42.4 and 50 sin 32 = 26.5; 36 cos 65 = 15.21; 140 sin 18 = 43.26 and 140 cos 18 = 133.15; 24 sin 40 = 15.43 and 24 cos 40 = 18.39; 50 cos 35 = 40.96; 30 - 20 cos 60 = 20; 160 sin 21 = 57.34 and 160 cos 21 = 149.37; 75 cos 32 = 63.6 in the note and 68 cos 29 = 59.47 in exam-style A (c); 45 cos 38 = 35.46, 28 sin 55 = 22.94 and their difference 12.52; the twins 44 cos 57 = 23.96 and 170 sin 26 = 74.52. Every distractor value is produced by executing its route in scratchpad/fm2-batch-c/routes.mjs (sinForCos, cosForSin, angleFromWrongLine, forceNotResolved, combine, magnitudesSummed) and re-checked against the published JSON by verify-published.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "katex-compile",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u2.resolving-forces.0013",
+      "itemId": "q.fm.u2.resolving-forces.0013",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "52 cos 34° + 40 sin 18° = 55.47 N.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "katex-compile",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Practice 10 (difficulty 4): a 13 kg box on a 28° slope pulled by 80 N at 18° to the slope; the weight's part down (61.03), the rope's part up (76.08) and the signed total up the slope (15.05, from the unrounded and the rounded parts alike).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u2.resolving-forces.0015",
+      "itemId": "q.fm.u2.resolving-forces.0015",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "W = 160 N; 57.34 N down the ramp, 149.37 N into it; 68 - 57.34 = 10.66 N up the ramp.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "katex-compile",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u2.resolving-forces.post-c",
+      "itemId": "dx.fm.u2.resolving-forces.post-c",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every component is computed from the stem's own force and angle: 42 cos 28 = 37.08 and 42 sin 28 = 19.72; 90 sin 24 = 36.61 and 90 cos 24 = 82.22; 50 cos 32 = 42.4 and 50 sin 32 = 26.5; 36 cos 65 = 15.21; 140 sin 18 = 43.26 and 140 cos 18 = 133.15; 24 sin 40 = 15.43 and 24 cos 40 = 18.39; 50 cos 35 = 40.96; 30 - 20 cos 60 = 20; 160 sin 21 = 57.34 and 160 cos 21 = 149.37; 75 cos 32 = 63.6 in the note and 68 cos 29 = 59.47 in exam-style A (c); 45 cos 38 = 35.46, 28 sin 55 = 22.94 and their difference 12.52; the twins 44 cos 57 = 23.96 and 170 sin 26 = 74.52. Every distractor value is produced by executing its route in scratchpad/fm2-batch-c/routes.mjs (sinForCos, cosForSin, angleFromWrongLine, forceNotResolved, combine, magnitudesSummed) and re-checked against the published JSON by verify-published.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "katex-compile",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Replaces dx.post (withdrawn, reason on its log): items 01, 02 and 05 unchanged; 06 (32 N at 20° to the vertical) and 07 (a rope 20° above a 30° slope makes 50° with the horizontal). No item repeats a gate, a worked example, a twin or a question.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u2.resolving-forces.08",
+      "itemId": "rp.fm.u2.resolving-forces.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every component is computed from the stem's own force and angle: 42 cos 28 = 37.08 and 42 sin 28 = 19.72; 90 sin 24 = 36.61 and 90 cos 24 = 82.22; 50 cos 32 = 42.4 and 50 sin 32 = 26.5; 36 cos 65 = 15.21; 140 sin 18 = 43.26 and 140 cos 18 = 133.15; 24 sin 40 = 15.43 and 24 cos 40 = 18.39; 50 cos 35 = 40.96; 30 - 20 cos 60 = 20; 160 sin 21 = 57.34 and 160 cos 21 = 149.37; 75 cos 32 = 63.6 in the note and 68 cos 29 = 59.47 in exam-style A (c); 45 cos 38 = 35.46, 28 sin 55 = 22.94 and their difference 12.52; the twins 44 cos 57 = 23.96 and 170 sin 26 = 74.52. Every distractor value is produced by executing its route in scratchpad/fm2-batch-c/routes.mjs (sinForCos, cosForSin, angleFromWrongLine, forceNotResolved, combine, magnitudesSummed) and re-checked against the published JSON by verify-published.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "katex-compile",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u2.resolving-forces.09",
+      "itemId": "rp.fm.u2.resolving-forces.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Further Mathematics Unit 2, untiered, calculator paper. Resolving one force into a component along a named line and a component at right angles to it, on the horizontal, on an inclined plane, with the angle given to the horizontal, to the vertical or to the plane, and combining components that lie along the same line. Up to four separate forces, as the Teacher Guidance limits. No coefficient of friction and no resolving in a direction that is not perpendicular to the first.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "The Unit 2 sheet gives F = ma, the constant-acceleration formulae, the magnitude of xi + yj, the angle between xi + yj and i, and the quadratic formula. It does not give the resolving rule or W = mg, so F cos and F sin, and g = 10 m/s², are recall and are listed in mustKnow.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Command words from packs/further-maths/exam-true/command-words.json: Calculate (typical 3 marks, min 2). Every numeric stem instructs the accuracy in our own words ('Round to 2 decimal places'), which the marker reads as an accuracy instruction, so the written form is marked as well as the value, and every answer line carries its unit as the FM2 booklet prints it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "packs/further-maths/exam-true/tariffs.json FM2: per-part median 2 marks and 90th percentile 4. The resolving parts in the papers are 2 marks (Summer 2025 Q6(ii), Summer 2023 Q3(i) and (ii)) or 3 when a second force has to be resolved as well (Summer 2024 Q3(i) and (ii)); the two exam-style questions here are 7 marks each, inside the per-question median of 8. Time allowance is marks x 1.2 minutes.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every component is computed from the stem's own force and angle: 42 cos 28 = 37.08 and 42 sin 28 = 19.72; 90 sin 24 = 36.61 and 90 cos 24 = 82.22; 50 cos 32 = 42.4 and 50 sin 32 = 26.5; 36 cos 65 = 15.21; 140 sin 18 = 43.26 and 140 cos 18 = 133.15; 24 sin 40 = 15.43 and 24 cos 40 = 18.39; 50 cos 35 = 40.96; 30 - 20 cos 60 = 20; 160 sin 21 = 57.34 and 160 cos 21 = 149.37; 75 cos 32 = 63.6 in the note and 68 cos 29 = 59.47 in exam-style A (c); 45 cos 38 = 35.46, 28 sin 55 = 22.94 and their difference 12.52; the twins 44 cos 57 = 23.96 and 170 sin 26 = 74.52. Every distractor value is produced by executing its route in scratchpad/fm2-batch-c/routes.mjs (sinForCos, cosForSin, angleFromWrongLine, forceNotResolved, combine, magnitudesSummed) and re-checked against the published JSON by verify-published.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "units-dimensions",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Masses in kilograms, forces in newtons, angles in degrees; g = 10 m/s² throughout. Every numeric spec carries N with unitRequired false, so a bare number is accepted and a wrong unit is named, and every part instructs 2 decimal places so the rounding is marked as the papers mark it.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Summer 2024 FM2 Q3 (the sine and cosine mix-up; forces not resolved at all; the magnitude of a force confused with its angle) drives sections 1, 2 and 4, gates g1, g2 and g4, diagnostics 01, 03 and 04, both exam-style questions and the find-the-mistake item. Summer 2025 FM2 Q6(ii) (the same mix-up, less often) drives section 3, gate g3, diagnostic 02 and the slope parts. Summer 2019 FM2 Q3(ii) (g omitted, the mass used as the weight) drives the weight step of every slope part and its distractor. Summer 2022 FM2 Q3(b)(ii) (the usual errors in resolving) drives section 5, gate g5, diagnostic 05 and the combining parts.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Read privately for this batch with grep -a from docs/sources/papers/further-maths: the Summer 2025 FM2 paper and mark scheme (Q6 resolving at right angles to the slope, 2 marks), the Summer 2024 FM2 paper and mark scheme (Q3 four forces at a point, 3 + 3) and the Summer 2023 FM2 paper and mark scheme (Q3 resolving vertically and horizontally, 2 + 2), with Summer 2019, 2021 and 2022 scanned for part structure. Tariffs, command words, answer-line layout and part structure only; every context, force, angle and sentence here is new, and the eight-word shingle intersection against the whole private FM corpus is empty (scratchpad/fm2-batch-c/verify-text.mjs).",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every $...$ segment compiles with KaTeX (throwOnError) and carries no TeX command missing its backslash; British English, second person, no exclamation marks, none of the banned verdict words; checked mechanically by scratchpad/fm2-batch-c/verify-text.mjs.",
+          "at": "2026-09-29T00:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "katex-compile",
+          "tool": "claude (v3 migration, FM2 group 1: every value computed in the generator, every answer probed through the engine)",
+          "result": "pass",
+          "detail": "Every inline SVG carries a viewBox, draws in currentColor, is under 12 KB and contains no style element, script, event handler, href or prefers-color-scheme rule, and no hash or percent sign. Each triangle, slope and arrow is plotted from the same forces and angles the stems carry, and the canvas asserts that no drawn marker or text edge falls outside the viewBox (scratchpad/fm2-batch-c/svg.mjs).",
+          "at": "2026-09-29T00:55:00Z",
           "by": "claude"
         }
       ],
