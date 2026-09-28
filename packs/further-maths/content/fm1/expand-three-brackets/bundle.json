@@ -136,8 +136,8 @@
       ]
     },
     "verification": "ver.note.fm.u1.expand-three-brackets",
-    "version": 1,
-    "updated": "2026-09-13"
+    "version": 2,
+    "updated": "2026-09-29"
   },
   "workedExamples": [
     {
@@ -222,6 +222,139 @@
         }
       ],
       "verification": "ver.we.fm.u1.expand-three-brackets.01",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u1.expand-three-brackets.02",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "Expand and simplify\n$(2 - 3x)(x + 4)(x - 1)$",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$(2 - 3x)(x + 4) = -3x^{2} - 10x + 8$",
+          "decision": "Keep (2 − 3x) as printed: 2x + 8 − 3x² − 12x, collected.",
+          "whyMenu": {
+            "options": [
+              "Turning the bracket round would change the expression and every sign of the answer",
+              "The first two brackets must always be expanded first",
+              "A bracket with the number first cannot be multiplied"
+            ],
+            "correct": 0,
+            "explain": "$(2 - 3x)$ and $(3x - 2)$ differ by a factor of $-1$, so swapping them flips every sign. Any pair may go first; this one is simply convenient."
+          },
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "-3x^{2}-10x+8",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "mustBeExpanded": true
+          }
+        },
+        {
+          "n": 2,
+          "working": "$x(-3x^{2} - 10x + 8) = -3x^{3} - 10x^{2} + 8x$",
+          "decision": "The x of the last bracket meets all three terms.",
+          "input": {
+            "kind": "algebraic",
+            "latex": "-3x^{3}-10x^{2}+8x",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "mustBeExpanded": true
+          }
+        },
+        {
+          "n": 3,
+          "working": "$-1(-3x^{2} - 10x + 8) = 3x^{2} + 10x - 8$",
+          "decision": "The −1 meets all three too: six products, and every sign flips.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "3x^{2}+10x-8",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "mustBeExpanded": true
+          }
+        },
+        {
+          "n": 4,
+          "working": "$-3x^{3} - 7x^{2} + 18x - 8$",
+          "decision": "Collect in descending powers. The ends check: −3x³ and 2 × 4 × (−1) = −8.",
+          "whyMenu": {
+            "options": [
+              "The x³ term is the three x terms multiplied and the constant the three numbers multiplied",
+              "The middle terms always cancel",
+              "A cubic always ends in a negative number"
+            ],
+            "correct": 0,
+            "explain": "$(-3x)(x)(x) = -3x^{3}$ and $2 \\times 4 \\times (-1) = -8$: both ends agree with the answer, so no product at either end is missing."
+          },
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "-3x^{3}-7x^{2}+18x-8",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "mustBeExpanded": true
+          }
+        }
+      ],
+      "finalAnswer": "$-3x^{3} - 7x^{2} + 18x - 8$",
+      "twin": {
+        "stem": "Expand and simplify\n$(1 - 2x)(x + 3)(x - 2)$",
+        "answer": {
+          "kind": "algebraic",
+          "latex": "-2x^{3}-x^{2}+13x-6",
+          "equivalence": "equivalent",
+          "variables": [
+            "x"
+          ],
+          "mustBeExpanded": true
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.expand-three-brackets.02",
       "version": 1
     }
   ],
@@ -355,6 +488,141 @@
           "hypercorrectionQueue": true
         }
       ]
+    },
+    {
+      "id": "dx.fm.u1.expand-three-brackets.pre",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "when": "pre",
+      "items": [
+        {
+          "id": "p1",
+          "stem": "Not yet taught here: a warm-up from earlier maths. What is $(x + 3)(x - 5)$ multiplied out?",
+          "skill": "Expand two brackets",
+          "options": [
+            {
+              "id": "a",
+              "text": "$x^{2} - 2x - 15$",
+              "correct": true,
+              "feedback": "$x^{2} - 5x + 3x - 15$, collected."
+            },
+            {
+              "id": "b",
+              "text": "$x^{2} - 15$",
+              "correct": false,
+              "feedback": "The two middle products, −5x and +3x, are missing."
+            },
+            {
+              "id": "c",
+              "text": "$x^{2} + 8x - 15$",
+              "correct": false,
+              "feedback": "The middle products are −5x and +3x, which make −2x, not 8x."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "p2",
+          "stem": "Not yet taught here: a warm-up from earlier maths. What is $-(x^{2} - 4x + 2)$ without the bracket?",
+          "skill": "A minus in front of a bracket",
+          "options": [
+            {
+              "id": "a",
+              "text": "$-x^{2} + 4x - 2$",
+              "correct": true,
+              "feedback": "The minus changes the sign of every term."
+            },
+            {
+              "id": "b",
+              "text": "$-x^{2} - 4x + 2$",
+              "correct": false,
+              "misconception": "fm.alm.like-terms-not-collected",
+              "feedback": "Only the first sign changed; the minus reaches every term."
+            },
+            {
+              "id": "c",
+              "text": "$x^{2} - 4x + 2$",
+              "correct": false,
+              "feedback": "The minus in front was dropped altogether."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "p3",
+          "stem": "Not yet taught here: a warm-up from earlier maths. What is $3x^{2} - 5x + 2x^{2} + 7x$ collected?",
+          "skill": "Collect like terms",
+          "options": [
+            {
+              "id": "a",
+              "text": "$5x^{2} + 2x$",
+              "correct": true,
+              "feedback": "The x² terms make 5x² and the x terms make 2x."
+            },
+            {
+              "id": "b",
+              "text": "$7x^{4}$",
+              "correct": false,
+              "feedback": "Unlike terms do not combine, and powers are not added when terms are."
+            },
+            {
+              "id": "c",
+              "text": "$5x^{2} - 12x$",
+              "correct": false,
+              "feedback": "−5x + 7x is +2x."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.expand-three-brackets.post",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "d5",
+          "stem": "Which is $(x + 6)(x - 1)(x - 2)$ expanded and simplified?",
+          "skill": "Expand three brackets",
+          "options": [
+            {
+              "id": "a",
+              "text": "$x^{3} + 3x^{2} - 16x + 12$",
+              "correct": true,
+              "feedback": "$(x + 6)(x - 1) = x^{2} + 5x - 6$, then its three terms meet the $x$ and the $-2$: six products, collected."
+            },
+            {
+              "id": "b",
+              "text": "$x^{3} + 5x^{2} - 6x$",
+              "correct": false,
+              "misconception": "fm.alm.third-bracket-partial",
+              "feedback": "Only the x of the last bracket was used; the −2 must meet all three terms."
+            },
+            {
+              "id": "c",
+              "text": "$x^{3} + 12$",
+              "correct": false,
+              "misconception": "fm.alm.firsts-and-lasts",
+              "feedback": "Only the two ends were kept; the middle products are missing."
+            }
+          ],
+          "secondsExpected": 45,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
     }
   ],
   "questions": [
@@ -445,8 +713,8 @@
                 "kind": "algebraic",
                 "latex": "x^{3}+3x^{2}+2x+5x^{2}+15x+10"
               },
-              "feedback": "Every product is right, so the method-and-working marks for the two multiplications are safe. The last mark is for the collected form in descending powers, so gather the like terms and write one term for each power.",
-              "marksTypicallyEarned": 2,
+              "feedback": "Every product is right, so the method-and-working mark for the first pair is safe. The last mark is for the collected form in descending powers, so gather the like terms and write one term for each power.",
+              "marksTypicallyEarned": 1,
               "source": "ccea-cer:further-maths:2019-summer:FM1:Q12"
             }
           ],
@@ -932,8 +1200,7 @@
                 "latex": "x^{3}+4x^{2}-11x-30"
               },
               "feedback": "Every term has the opposite sign, which happens when (3-x) is read the other way round. Keep the bracket exactly as it is printed, or write it as $-(x-3)$ and carry the minus through.",
-              "marksTypicallyEarned": 2,
-              "source": "ccea-cer:further-maths:2023-summer:FM1:Q12"
+              "marksTypicallyEarned": 2
             }
           ],
           "requiresWorking": true
@@ -1068,6 +1335,128 @@
       "verification": "ver.q.fm.u1.expand-three-brackets.0006",
       "version": 1,
       "solutionProgram": "(2x - 3)(3x + 1) = 6x² - 7x - 3; (6x² - 7x - 3)(x - 2) = 6x³ - 19x² + 11x + 6; checked at x = 1.5, -2.5, 3.25"
+    },
+    {
+      "id": "q.fm.u1.expand-three-brackets.0008",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "style": "practice",
+      "difficulty": 3,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Expand and simplify"
+      ],
+      "emphasis": [
+        "expand and simplify",
+        "subtract every term"
+      ],
+      "context": {
+        "setting": "Pure algebra, no context",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Expand and simplify\n$(x + 3)(x - 1)(x + 5) - (x + 4)^{2}$",
+          "marks": 4,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "x^{3}+6x^{2}-x-31",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "mustBeExpanded": true
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "a pair of the three brackets expanded correctly",
+              "accept": [
+                "any pair of the three brackets"
+              ]
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "the product of the three brackets expanded and collected to a cubic",
+              "dependsOn": [
+                "MW1"
+              ],
+              "ft": true
+            },
+            {
+              "id": "MW3",
+              "code": "MW",
+              "marks": 1,
+              "for": "the squared bracket expanded to three terms"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "every term of the square subtracted and the answer collected",
+              "dependsOn": [
+                "MW2",
+                "MW3"
+              ]
+            }
+          ],
+          "hints": [
+            "Expand the three brackets as usual.",
+            "Write (x + 4) squared as (x + 4)(x + 4).",
+            "Put the square in a bracket with the minus in front, then change every sign inside."
+          ],
+          "workedSolution": "$(x + 3)(x - 1) = x^{2} + 2x - 3$, and times $(x + 5)$ that is $x^{3} + 7x^{2} + 7x - 15$.\n$(x + 4)^{2} = x^{2} + 8x + 16$.\n$x^{3} + 7x^{2} + 7x - 15 - (x^{2} + 8x + 16) = x^{3} + 6x^{2} - x - 31$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.alm.like-terms-not-collected",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "x^{3}+6x^{2}+15x+1"
+              },
+              "feedback": "Both expansions are right. The minus reached only the first term of the square: in a bracket it changes all three, so +8x + 16 become −8x − 16.",
+              "marksTypicallyEarned": 3,
+              "source": "ccea-cer:further-maths:2022-summer:FM1:Q9"
+            },
+            {
+              "misconception": "fm.alm.like-terms-not-collected",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "x^{3}+8x^{2}+15x+1"
+              },
+              "feedback": "Both expansions are right, but the square was added. It is subtracted: in a bracket with the minus in front, every one of its signs changes.",
+              "marksTypicallyEarned": 3
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 4,
+      "timeAllowanceSec": 288,
+      "skeleton": "(main)expand4",
+      "examinerSources": [
+        "ccea-cer:further-maths:2022-summer:FM1:Q9"
+      ],
+      "verification": "ver.q.fm.u1.expand-three-brackets.0008",
+      "version": 1
     },
     {
       "id": "q.fm.u1.expand-three-brackets.0007",
@@ -1245,8 +1634,7 @@
                 "value": 238
               },
               "feedback": "That comes from an expansion built out of the first terms and the last terms only. The volume is the product of the three edge lengths, 6 × 9 × 7.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2019-summer:FM1:Q12"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true,
@@ -1365,6 +1753,69 @@
       ],
       "examUnit": "FM1",
       "difficultyPrior": 5
+    },
+    {
+      "id": "rp.fm.u1.expand-three-brackets.05",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "kind": "qa",
+      "prompt": "How do you expand three brackets?",
+      "answer": "Expand any two, then multiply that quadratic by the third bracket.",
+      "keyWords": [
+        "any two",
+        "third bracket"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 2
+    },
+    {
+      "id": "rp.fm.u1.expand-three-brackets.06",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "kind": "qa",
+      "prompt": "How many products does a quadratic times a bracket give?",
+      "answer": "Six: three terms times two terms, before collecting.",
+      "keyWords": [
+        "six"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 2
+    },
+    {
+      "id": "rp.fm.u1.expand-three-brackets.07",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "kind": "qa",
+      "prompt": "What gives the x³ term and the constant of three brackets?",
+      "answer": "The x terms multiplied together, and the numbers multiplied together.",
+      "keyWords": [
+        "x terms",
+        "numbers"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 2
+    },
+    {
+      "id": "rp.fm.u1.expand-three-brackets.08",
+      "topic": "fm.u1.expand-three-brackets",
+      "specRefs": [
+        "FM1-ALM-01"
+      ],
+      "kind": "qa",
+      "prompt": "Why bracket an expansion you are subtracting?",
+      "answer": "So the minus changes the sign of every term inside it.",
+      "keyWords": [
+        "every term",
+        "sign"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 2
     }
   ],
   "sets": [
@@ -1381,12 +1832,13 @@
         "dx.fm.u1.expand-three-brackets",
         "q.fm.u1.expand-three-brackets.0001",
         "q.fm.u1.expand-three-brackets.0002",
-        "rp.fm.u1.expand-three-brackets.01",
+        "rp.fm.u1.expand-three-brackets.05",
         "q.fm.u1.expand-three-brackets.0003",
-        "q.fm.u1.expand-three-brackets.0005"
+        "q.fm.u1.expand-three-brackets.0005",
+        "q.fm.u1.expand-three-brackets.0008"
       ],
       "showTopicLabels": false,
-      "version": 1
+      "version": 2
     }
   ],
   "verification": [
@@ -1474,10 +1926,50 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026, Lesson structure v3 (the teach-first case approved by the owner, with his eight answers): five teaching sections (idea, why, three variants), each explain -> See it -> Your turn; the first check, g6, follows the first See it; gates g2, g3 and g5 keep their ids, kinds and answers (g2 was diagnostic 02's question word for word and g3's expression was question 0002's: both now on new expressions); every explanation re-teaches, points at a step of its See it and names no option by position; every gate has a twin; two short prompts wired (rp.05, rp.07).",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Every product computed and every printed expression re-evaluated at three points against it; every gate option computed as the route its explanation names.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "isomorph",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Two-way overlap scan (fm1-migration-0/overlap.mjs): no expression the note, a gate, a twin or a worked example works is asked by a later question, post diagnostic, find-the-mistake item or shipped prompt.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g6",
+          "reason": "An interface warm-up ('One tap to start') asked before anything was shown; the owner's answer 8 of 27 Sep makes the first check a real one after the first See it, which g6 now is.",
+          "on": "2026-09-29T00:05:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g6",
+          "reason": "Its expression, (2x + 1)(x − 4)(x + 2), is practice question 0003's own, and its explanation named the options by position (a build GATE line); g6 asks a full expansion on new numbers.",
+          "on": "2026-09-29T00:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.expand-three-brackets.01",
@@ -1555,10 +2047,27 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): It had one faded version where two are the standard, and its step 2 printed two lines (the two rows of products), which no single input spec can mark as the step prints them; worked example 02 shows the same routine with one line a step and two faded versions. Replaced by we.fm.u1.expand-three-brackets.02.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u1.expand-three-brackets.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u1.expand-three-brackets.02",
+          "reason": "It had one faded version where two are the standard, and its step 2 printed two lines (the two rows of products), which no single input spec can mark as the step prints them; worked example 02 shows the same routine with one line a step and two faded versions.",
+          "on": "2026-09-29T00:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u1.expand-three-brackets",
@@ -1724,6 +2233,14 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026 (FM1 migration, group 0; the lead's rulings of 27 Sep 17:22 and 23:10): the uncollected-expansion common error re-valued from 2 to 1 of 2. Its own scheme gives MW1 for the first pair and MW2 for the multiplication and the collected answer together, so the uncollected line earns MW1 only; the feedback now says so. Pattern and tag unchanged.",
+          "at": "2026-09-29T00:05:00Z",
           "by": "claude"
         }
       ],
@@ -2081,6 +2598,14 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the source removed from the fm.alm.bracket-reversed common error (the Summer 2023 Q12 report does not mention a reversed bracket); pattern, feedback, marks and tag unchanged.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2259,6 +2784,14 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the source removed from the fm.alm.firsts-and-lasts common error (the Summer 2019 Q12 report does not mention an expansion built from the ends only); pattern, feedback, marks and tag unchanged.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2421,10 +2954,27 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): A numbered three-step procedure in 40 words, over the 25-word cap and a list (the recap's job), and its key word 'two brackets' is not in its own answer; rp.05 asks the routine in eleven words. Replaced by rp.fm.u1.expand-three-brackets.05.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.expand-three-brackets.01",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.expand-three-brackets.05",
+          "reason": "A numbered three-step procedure in 40 words, over the 25-word cap and a list (the recap's job), and its key word 'two brackets' is not in its own answer; rp.05 asks the routine in eleven words.",
+          "on": "2026-09-29T00:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.expand-three-brackets.02",
@@ -2502,10 +3052,27 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): A 23-word question, over the 15 a recall card allows; rp.06 asks the count of products in ten words. Replaced by rp.fm.u1.expand-three-brackets.06.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.expand-three-brackets.02",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.expand-three-brackets.06",
+          "reason": "A 23-word question, over the 15 a recall card allows; rp.06 asks the count of products in ten words.",
+          "on": "2026-09-29T00:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.expand-three-brackets.03",
@@ -2583,10 +3150,27 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): A 40-word answer, over the 25-word cap; rp.07 asks what gives each end in eleven words. Replaced by rp.fm.u1.expand-three-brackets.07.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.expand-three-brackets.03",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.expand-three-brackets.07",
+          "reason": "A 40-word answer, over the 25-word cap; rp.07 asks what gives each end in eleven words.",
+          "on": "2026-09-29T00:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.expand-three-brackets.04",
@@ -2663,6 +3247,495 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on its own line",
           "at": "2026-09-13T09:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): Its answer carried an examiner's finding with its series, which belongs on the Sheet's traps; rp.08 asks why the bracket matters in seven words. Replaced by rp.fm.u1.expand-three-brackets.08.",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.expand-three-brackets.04",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.expand-three-brackets.08",
+          "reason": "Its answer carried an examiner's finding with its series, which belongs on the Sheet's traps; rp.08 asks why the bracket matters in seven words.",
+          "on": "2026-09-29T00:05:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.we.fm.u1.expand-three-brackets.02",
+      "itemId": "we.fm.u1.expand-three-brackets.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-ALM-01 (expand three linear brackets)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet applies",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Expand and simplify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "3 marks as earned (MW1 MW1 MW1), the Summer 2019 Q12(i) and 2026 Q5 split",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "(2 − 3x)(x + 4) = −3x² − 10x + 8; the two rows and the collected −3x³ − 7x² + 18x − 8 equal the product at three points; the twin (1 − 2x)(x + 3)(x − 2) = −2x³ − x² + 13x − 6 the same way",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Summer 2026 Q5 prints a bracket number first; the lesson's reversed-bracket section and this example keep it as printed",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2019 Q12, 2022 Q9(a), 2023 Q12(iii) and 2026 Q5 with their schemes and reports; new expressions and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.expand-three-brackets.pre",
+      "itemId": "dx.fm.u1.expand-three-brackets.pre",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-ALM-01 (expand three linear brackets)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet applies",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Expand and simplify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "p1: (x + 3)(x − 5) = x² − 2x − 15; p2: −(x² − 4x + 2) = −x² + 4x − 2; p3: 3x² − 5x + 2x² + 7x = 5x² + 2x",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Prerequisites the lesson relies on, labelled as not yet taught here (pre), and the routine on new numbers after the lesson (post)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2019 Q12, 2022 Q9(a), 2023 Q12(iii) and 2026 Q5 with their schemes and reports; new expressions and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.expand-three-brackets.post",
+      "itemId": "dx.fm.u1.expand-three-brackets.post",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-ALM-01 (expand three linear brackets)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet applies",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Expand and simplify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "d5: (x + 6)(x − 1)(x − 2) = x³ + 3x² − 16x + 12; the third-bracket-partial route x³ + 5x² − 6x and the ends-only x³ + 12 executed",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Prerequisites the lesson relies on, labelled as not yet taught here (pre), and the routine on new numbers after the lesson (post)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2019 Q12, 2022 Q9(a), 2023 Q12(iii) and 2026 Q5 with their schemes and reports; new expressions and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.expand-three-brackets.0008",
+      "itemId": "q.fm.u1.expand-three-brackets.0008",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-ALM-01 (expand three linear brackets)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet applies",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Expand and simplify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "4 marks (MW1 MW2 MW3 W1): Summer 2022 Q9(a) gave 5 for a cube less a square; here a product of three brackets less a square",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "(x + 3)(x − 1)(x + 5) = x³ + 7x² + 7x − 15; (x + 4)² = x² + 8x + 16; the difference x³ + 6x² − x − 31 equal at three points; the one-sign route x³ + 6x² + 15x + 1 and the added route x³ + 8x² + 15x + 1 executed",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Summer 2022 Q9(a) report: many lost the final mark by not subtracting every term of the quadratic; brackets asked for",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2019 Q12, 2022 Q9(a), 2023 Q12(iii) and 2026 Q5 with their schemes and reports; new expressions and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.expand-three-brackets.05",
+      "itemId": "rp.fm.u1.expand-three-brackets.05",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "FM1-ALM-01; a fact she needs on the paper, answered in at most 25 words (prompt-few.mjs), no series or examiner's finding in it",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (Summer 2019, 2022 and 2023 reports) as one short fact, never the finding itself",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; its key words appear in its own answer (keywordsPresent probed)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.expand-three-brackets.06",
+      "itemId": "rp.fm.u1.expand-three-brackets.06",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "FM1-ALM-01; a fact she needs on the paper, answered in at most 25 words (prompt-few.mjs), no series or examiner's finding in it",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (Summer 2019, 2022 and 2023 reports) as one short fact, never the finding itself",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; its key words appear in its own answer (keywordsPresent probed)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.expand-three-brackets.07",
+      "itemId": "rp.fm.u1.expand-three-brackets.07",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "FM1-ALM-01; a fact she needs on the paper, answered in at most 25 words (prompt-few.mjs), no series or examiner's finding in it",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (Summer 2019, 2022 and 2023 reports) as one short fact, never the finding itself",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; its key words appear in its own answer (keywordsPresent probed)",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.expand-three-brackets.08",
+      "itemId": "rp.fm.u1.expand-three-brackets.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "FM1-ALM-01; a fact she needs on the paper, answered in at most 25 words (prompt-few.mjs), no series or examiner's finding in it",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (Summer 2019, 2022 and 2023 reports) as one short fact, never the finding itself",
+          "at": "2026-09-29T00:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/expand-three-brackets.mjs, every product computed by poly.mjs and every printed expression re-evaluated at three points from its TeX; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-expand-three-brackets.mts)",
+          "result": "pass",
+          "detail": "British English; its key words appear in its own answer (keywordsPresent probed)",
+          "at": "2026-09-29T00:05:00Z",
           "by": "claude"
         }
       ],
