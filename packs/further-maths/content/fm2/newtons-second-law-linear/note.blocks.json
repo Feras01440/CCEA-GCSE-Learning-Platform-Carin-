@@ -1,26 +1,17 @@
 [
   {
     "type": "hero",
-    "lede": "Push something heavy and it shifts slowly; push something light with the same effort and it shoots away. Newton's second law puts a number on that. Unit 2 uses it on boxes dragged along a floor, often by a rope at an angle, and on lifts hanging from a cable.",
+    "lede": "Push something heavy and it shifts slowly; push something light with the same effort and it shoots away. Newton's second law puts a number on that. Unit 2 uses it on boxes dragged along a level floor, often by a rope at an angle, and inside its connected-body and slope questions.",
     "can": [
       "Find the resultant force along the line of motion and use it in $F = ma$",
       "Put the mass in the equation and the weight on the diagram",
       "Split a pull at an angle into the part that drives and the part that lifts"
     ],
-    "minutes": 11
+    "minutes": 17
   },
   {
     "type": "h",
-    "text": "Force, mass and the motion that follows",
-    "role": "idea"
-  },
-  {
-    "type": "p",
-    "md": "Forces do not make things move at a steady speed; they make things change speed. The bigger the resultant force and the lighter the body, the faster that change happens, and one short equation says exactly how much."
-  },
-  {
-    "type": "h",
-    "text": "1. The resultant is what goes in",
+    "text": "The resultant is what goes in",
     "role": "idea"
   },
   {
@@ -31,7 +22,38 @@
   },
   {
     "type": "p",
-    "md": "$F = ma$ is on the Unit 2 sheet, and the $F$ is the **resultant** along the line of motion. Here that is $100 - 20 = 80$ N.\n\nThen $80 = 16a$ gives $a = 5$ m/s². The dashed arrow marks the acceleration, and it is deliberately drawn differently: it is not a force."
+    "md": "$F = ma$ is on the Unit 2 sheet, and its $F$ is the **resultant**: what is left along the line of motion once every force there is counted with its sign, a force against the motion counting minus. The dashed arrow on the diagram marks the acceleration. It is not a force, so it never goes into the resultant."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The box in the diagram has mass 16 kg. It is pulled by 100 N against a resistance of 20 N. Calculate its acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Resultant $= 100 - 20 = 80$ N",
+        "decision": "Along the line of motion, with the direction of motion positive: the resistance acts backwards, so it is taken off.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$80 = 16a$",
+        "decision": "$F = ma$, with the resultant as $F$ and the mass as $m$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$a = 5$ m/s²",
+        "decision": "Divide by the mass. Positive, so the box speeds up the way it is moving.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -39,20 +61,21 @@
     "kind": "number",
     "prompt": "A trolley is pushed by 55 N against a resistance of 15 N. What resultant force goes into $F = ma$, in newtons?",
     "answer": "40",
-    "explain": "The resultant is what the push has left once the resistance, acting backwards, is taken off it, just as the box above had 100 N take away 20 N. Here that is $55 - 15 = 40$ N."
+    "explain": "Take the resistance off the push, as step 1 of See it did with $100 - 20$: $55 - 15 = 40$ N. Adding them would treat the resistance as helping, and 55 N alone ignores it.",
+    "twin": {
+      "prompt": "A cart is pulled by 38 N against a resistance of 11 N. What resultant force goes into $F = ma$, in newtons?",
+      "answer": "27",
+      "explain": "$38 - 11 = 27$ N: the resistance acts against the pull, so it comes off."
+    }
   },
   {
     "type": "h",
-    "text": "2. The mass goes in, not the weight",
+    "text": "The mass goes in, not the weight",
     "role": "why"
   },
   {
     "type": "p",
-    "md": "The 16 kg box weighs $16 \\times 10 = 160$ N: that is the arrow pointing down on the diagram. The $m$ in $F = ma$ is the mass, in kilograms."
-  },
-  {
-    "type": "p",
-    "md": "For the box above, $80 = 16a$ gives $5$ m/s². Put the weight in its place, $80 = 160a$, and you get $0.5$ m/s²: ten times too small, the slip the 2019 report found on this step."
+    "md": "The 16 kg box weighs $16 \\times 10 = 160$ N: that is the downward arrow on the diagram. The $m$ in $F = ma$ is the mass, in kilograms. Put the weight in its place and every acceleration comes out ten times too small, the slip the 2019 report found on this step."
   },
   {
     "type": "callout",
@@ -61,25 +84,88 @@
     "md": "Mass is how much matter there is; weight is how hard gravity pulls on it. $F = ma$ asks how hard a body is to accelerate, which depends on the matter, so the mass belongs in it."
   },
   {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "The same box: a resultant of 80 N, a mass of 16 kg and a weight of 160 N. Which number does the 80 N go with?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight $= 16 \\times 10 = 160$ N",
+        "decision": "The weight is gravity's pull, in newtons: it belongs on the diagram."
+      },
+      {
+        "n": 2,
+        "working": "$80 = 16a$, so $a = 5$ m/s²",
+        "decision": "The equation of motion takes the mass: how much matter has to be sped up.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Not $80 = 160a$, which gives $0.5$ m/s²",
+        "decision": "Dividing by the weight is the ten-times-too-small slip."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g2",
     "kind": "number",
-    "prompt": "A block of mass 4 kg, weight 40 N, feels a resultant force of 24 N. What is its acceleration, in m/s²?",
+    "prompt": "A block of mass 3.5 kg, weight 35 N, feels a resultant force of 21 N. What is its acceleration, in m/s²?",
     "answer": "6",
-    "explain": "The $m$ in $F = ma$ is how much matter there is, the mass in kilograms, just as the box above used 16 and not 160. So $24 = 4a$ and $a = 6$ m/s²; dividing by the weight, 40, would give 0.6."
+    "explain": "The $m$ in $F = ma$ is the mass, 3.5 kg, as step 2 of See it used 16 and not 160: $21 = 3.5a$, so $a = 6$ m/s². Dividing by the weight, 35, gives 0.6, ten times too small.",
+    "twin": {
+      "prompt": "A sack of mass 9 kg, weight 90 N, feels a resultant force of 27 N. What is its acceleration, in m/s²?",
+      "answer": "3",
+      "explain": "$27 = 9a$, so $a = 3$ m/s²: the mass goes in, not the 90 N weight."
+    }
   },
   {
     "type": "h",
-    "text": "3. See it done: four lines",
-    "role": "see"
+    "text": "Name the body, then four lines",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "**A 15 kg crate dragged by 75 N against 30 N.**\n**Line 1:** *for the crate*, with the direction of motion positive.\n**Line 2:** resultant $= 75 - 30 = 45$ N\n**Line 3:** $45 = 15a$\n**Line 4:** $a = 3$ m/s²"
+    "md": "The 2019 report saw one body's forces mixed up with a whole system's. Start every equation by naming the body and its positive direction. Then write the resultant, then $= ma$, then the answer: four lines, and the equation line keeps its mark even if the division then slips."
   },
   {
-    "type": "p",
-    "md": "Naming the body keeps one body's forces apart from a whole system's, which the 2019 report saw mixed up. Line 3 is a method mark that survives an arithmetic slip, so write it even when the numbers look awkward."
+    "type": "see",
+    "kind": "process",
+    "stem": "A 22 kg crate is dragged by 95 N against a resistance of 29 N. Calculate its acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "For the crate, with its direction of motion positive:",
+        "decision": "Name the body first, so only its own forces go in."
+      },
+      {
+        "n": 2,
+        "working": "Resultant $= 95 - 29 = 66$ N",
+        "decision": "Take the resistance off the pull.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$66 = 22a$",
+        "decision": "The equation line: write it even when the numbers look awkward.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$a = 3$ m/s²",
+        "decision": "Divide by the mass.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
@@ -92,13 +178,18 @@
     "type": "gate",
     "id": "g3",
     "kind": "number",
-    "prompt": "A crate of mass 10 kg is dragged by 80 N against a resistance of 30 N. What is its acceleration, in m/s²?",
+    "prompt": "A chest of mass 8 kg is dragged by 65 N against a resistance of 25 N. What is its acceleration, in m/s²?",
     "answer": "5",
-    "explain": "The same four lines as the crate above: name the body, form the resultant, $80 - 30 = 50$ N, then $50 = 10a$, so $a = 5$ m/s²."
+    "explain": "The same four lines as See it: for the chest, $65 - 25 = 40$ N, then $40 = 8a$, so $a = 5$ m/s².",
+    "twin": {
+      "prompt": "A trunk of mass 25 kg is dragged by 160 N against a resistance of 60 N. What is its acceleration, in m/s²?",
+      "answer": "4",
+      "explain": "For the trunk: $160 - 60 = 100$ N, then $100 = 25a$, so $a = 4$ m/s²."
+    }
   },
   {
     "type": "h",
-    "text": "4. A resistance given per kilogram",
+    "text": "A resistance given per kilogram",
     "role": "variant"
   },
   {
@@ -109,23 +200,55 @@
   },
   {
     "type": "p",
-    "md": "CCEA never tests $F = \\mu R$. Friction arrives either as a plain value or as **so many newtons per kilogram**, and the second form is a one-step conversion: multiply by the mass. It looks like a coefficient and it is not one."
+    "md": "CCEA never tests $F = \\mu R$. Friction arrives as a plain value or as **so many newtons per kilogram**, and the second form is a one-step conversion: multiply by the mass. It looks like a coefficient and it is not one. Give the conversion its own line: it carries its own mark."
   },
   {
-    "type": "p",
-    "md": "**Resistance:** a 14 kg trolley at $2$ N per kg feels $2 \\times 14 = 28$ N.\n**Equation:** pushed by 70 N, $70 - 28 = 14a$\n**So:** $a = 3$ m/s². The conversion is its own line, and it carries its own mark."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 14 kg trolley is pushed by 70 N against a resistance of 2 N per kg. Calculate its acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Resistance $= 2 \\times 14 = 28$ N",
+        "decision": "Every kilogram is resisted by 2 N, so multiply by the mass.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$70 - 28 = 14a$",
+        "decision": "The resultant along the floor equals mass times acceleration.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$a = 3$ m/s²",
+        "decision": "42 divided by 14.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g4",
     "kind": "number",
-    "prompt": "A resistance of 3 N per kg acts on a sledge of mass 15 kg. What is the resisting force, in newtons?",
+    "prompt": "A resistance of 5 N per kg acts on a sledge of mass 9 kg. What is the resisting force, in newtons?",
     "answer": "45",
-    "explain": "Per kilogram means every kilogram of the body is resisted by that much, so multiply by the mass, as the trolley above did: $3 \\times 15 = 45$ N."
+    "explain": "Multiply by the mass, as step 1 of See it did: $5 \\times 9 = 45$ N. The 5 N is the pull on one kilogram only.",
+    "twin": {
+      "prompt": "A resistance of 6 N per kg acts on a cart of mass 7 kg. What is the resisting force, in newtons?",
+      "answer": "42",
+      "explain": "$6 \\times 7 = 42$ N: every one of its 7 kilograms is resisted by 6 N."
+    }
   },
   {
     "type": "h",
-    "text": "5. A lift on a cable",
+    "text": "Up or down on a cable",
     "role": "variant"
   },
   {
@@ -136,16 +259,38 @@
   },
   {
     "type": "p",
-    "md": "Vertical motion is the same equation with the weight in it. Choose a direction, say so, and write the resultant in that direction.\n\n**Up positive:** $7560 - 7000 = 700a$, so $a = 0.8$ m/s². The answer is positive, so the acceleration is upwards. A negative answer would simply mean downwards."
+    "md": "Vertical motion is the same equation with the weight in it. Choose a direction, say so, and write the resultant in that direction: with up positive, the tension minus the weight. A positive answer means the acceleration is upwards; a negative one means downwards."
   },
   {
-    "type": "sim",
-    "provider": "phet",
-    "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
-    "title": "PhET: Forces and Motion: Basics",
-    "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)",
-    "licence": "CC BY-NC 4.0",
-    "task": "On the Acceleration screen, set friction to zero and apply a known force to a known mass. Predict the acceleration from $F = ma$ before you release, then check the readout. Turn friction on and predict again: the resultant is now the applied force minus the friction. The model is horizontal only, so it says nothing about the lift."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A lift of mass 700 kg hangs on a cable with tension 7560 N. Find its acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight $= 700 \\times 10 = 7000$ N",
+        "decision": "The weight in newtons, for the diagram and the resultant.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Up positive: $7560 - 7000 = 700a$",
+        "decision": "The tension pulls up and counts plus; the weight pulls down and counts minus.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$a = 0.8$ m/s², upwards",
+        "decision": "Positive with up positive, so the acceleration is upwards: say so.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -158,11 +303,45 @@
       "$3300 - 300 = 300a$"
     ],
     "answer": "$3300 - 3000 = 300a$",
-    "explain": "With up positive, the tension counts plus and the weight counts minus, as in the lift above. The weight is the mass times $g$, $300 \\times 10 = 3000$ N, so the equation is $3300 - 3000 = 300a$. Leaving the weight out, or taking off the mass instead, are the two usual slips."
+    "explain": "With up positive the tension counts plus and the weight minus, as in step 2 of See it. The weight is $300 \\times 10 = 3000$ N, so the equation is $3300 - 3000 = 300a$.",
+    "twin": {
+      "prompt": "A lift of mass 450 kg hangs on a cable with tension 4200 N. Taking up as positive, which equation is right?",
+      "options": [
+        "$4200 - 4500 = 450a$",
+        "$4200 = 450a$",
+        "$4200 - 450 = 450a$"
+      ],
+      "answer": "$4200 - 4500 = 450a$",
+      "explain": "Tension up, weight down: the weight is $450 \\times 10 = 4500$ N, larger than the tension, so $a$ comes out negative and the acceleration is downwards.",
+      "optionNotes": [
+        {
+          "option": "$4200 = 450a$",
+          "why": "It leaves the weight out, but gravity pulls down on the lift the whole time, so the resultant is the tension minus the weight.",
+          "misconception": "fm.forces.g-omitted-weight"
+        },
+        {
+          "option": "$4200 - 450 = 450a$",
+          "why": "It takes off the mass, 450, where the weight in newtons belongs: 450 times 10 is 4500.",
+          "misconception": "fm.connected.mass-force-confused"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$3300 = 300a$",
+        "why": "It leaves the weight out, but gravity pulls down on the lift the whole time, so the resultant is the tension minus the weight.",
+        "misconception": "fm.forces.g-omitted-weight"
+      },
+      {
+        "option": "$3300 - 300 = 300a$",
+        "why": "It takes off the mass, 300, where the weight in newtons belongs: 300 times 10 is 3000.",
+        "misconception": "fm.connected.mass-force-confused"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "6. Pulled at an angle",
+    "text": "Pulled at an angle",
     "role": "variant"
   },
   {
@@ -173,11 +352,30 @@
   },
   {
     "type": "p",
-    "md": "A rope at an angle $\\theta$ above the floor does two jobs at once. Its part along the floor, $P\\cos\\theta$, drives the box; its part upwards, $P\\sin\\theta$, lifts a little of the box's weight. Only the first goes into $F = ma$, because the box moves along the floor."
+    "md": "A rope at an angle $\\theta$ above the floor does two jobs. Its part along the floor, $P\\cos\\theta$, drives the box; its part upwards, $P\\sin\\theta$, lifts a little of the box's weight. Only the first goes into $F = ma$, because the box moves along the floor."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a 30 N rope at 20°.\n**Along the floor:** $30\\cos 20° = 28.19$ N, the side next to the angle.\n**Straight up:** $30\\sin 20° = 10.26$ N, the side opposite it."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A rope pulls a box with 30 N at 20° above the horizontal. Find the parts of the pull along the floor and straight up.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Along the floor: $30\\cos 20° = 28.19$ N",
+        "decision": "The side next to the angle takes the cosine.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Straight up: $30\\sin 20° = 10.26$ N",
+        "decision": "The side opposite the angle takes the sine.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -185,11 +383,16 @@
     "kind": "number",
     "prompt": "A rope pulls a sledge with 20 N at 30° above the horizontal. What is the part of the pull along the ground, in newtons, to 2 decimal places?",
     "answer": "17.32",
-    "explain": "The part along the ground is the side of the triangle next to the angle, so it takes the cosine, as $P\\cos\\theta$ does in the picture: $20\\cos 30° = 17.32$ N. The sine gives 10 N, the part that lifts."
+    "explain": "The part along the ground is next to the angle, so it takes the cosine, as step 1 of See it did: $20\\cos 30° = 17.32$ N. The sine gives 10 N, the part that lifts.",
+    "twin": {
+      "prompt": "A rope pulls a sled with 35 N at 15° above the horizontal. What is the part of the pull along the ground, in newtons, to 2 decimal places?",
+      "answer": "33.81",
+      "explain": "Next to the angle, so the cosine: $35\\cos 15° = 33.81$ N."
+    }
   },
   {
     "type": "h",
-    "text": "7. The floor pushes back less",
+    "text": "The floor pushes back less",
     "role": "variant"
   },
   {
@@ -200,57 +403,89 @@
   },
   {
     "type": "p",
-    "md": "**Vertically, nothing accelerates:** $R + 30\\sin 20° = 60$, so $R = 49.74$ N.\n**Along the floor:** $30\\cos 20° - 8 = 6a$\n**So:** $20.19 = 6a$, giving $a = 3.37$ m/s²."
+    "md": "The rope carries part of the weight, so the floor pushes back with less than the whole weight. Vertically nothing accelerates: the reaction and the rope's upward part together hold up the weight. Writing $R$ as the weight, or as the rope's upward part alone, lost the reaction marks in 2019 and 2023."
   },
   {
-    "type": "p",
-    "md": "The rope carries part of the weight, so the floor pushes back with less than the whole weight. Writing $R$ as the weight, or as the rope's upward part on its own, lost the reaction marks in 2019 and 2023."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 6 kg box on a rough level floor is pulled by 30 N at 20° above the horizontal against friction of 8 N. Find the normal reaction and the acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Vertically: $R + 30\\sin 20° = 60$, so $R = 49.74$ N",
+        "decision": "Nothing moves up or down, so the upward forces balance the weight.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Along the floor: $30\\cos 20° - 8 = 6a$",
+        "decision": "Only the rope's part along the floor drives; the friction opposes it.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$20.19 = 6a$, so $a = 3.37$ m/s²",
+        "decision": "Divide by the mass, not the weight.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g8",
     "kind": "number",
-    "prompt": "A 4 kg block on a level floor is pulled along by a string at 30° above the horizontal with a tension of 10 N. What is the normal reaction, in newtons?",
+    "prompt": "An 8 kg block on a level floor is pulled along by a string at 30° above the horizontal with a tension of 90 N. What is the normal reaction, in newtons?",
     "answer": "35",
-    "explain": "Vertically nothing accelerates, so the reaction and the string's upward part together hold up the weight, as for the 6 kg box above. The upward part is $10\\sin 30° = 5$ N, so $R + 5 = 40$ and $R = 35$ N."
+    "explain": "Nothing accelerates vertically, so $R$ and the string's upward part hold up the weight, as in step 1 of See it: $90\\sin 30° = 45$ N, so $R + 45 = 80$ and $R = 35$ N.",
+    "twin": {
+      "prompt": "A 9 kg crate on a level floor is pulled along by a rope at 30° above the horizontal with a tension of 16 N. What is the normal reaction, in newtons?",
+      "answer": "82",
+      "explain": "The rope's upward part is $16\\sin 30° = 8$ N, so $R = 90 - 8 = 82$ N."
+    }
   },
   {
     "type": "h",
-    "text": "8. Exam twists",
-    "role": "twists"
+    "text": "At a steady speed",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "**Show that** (2022, 2024, 2026). A value is printed for you to reach. Form the equation with the letter in it and solve forwards. Putting the printed value in and checking earned nothing in 2022 and at most two marks in 2024."
+    "md": "Constant velocity means no acceleration, so there is no $ma$: the resultant is zero and the forces along the floor balance. With a pull at an angle, its part along the floor equals the friction. Summer 2023 Q3 asked exactly this, and many looked for an acceleration that was not there."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a lift of mass $M$ pulled up by 5460 N at 0.5 m/s², where you must show $M = 520$.\n**Up positive:** $5460 - 10M = 0.5M$\n**Collect:** $5460 = 10.5M$, so $M = 520$. The printed value arrives last."
-  },
-  {
-    "type": "gate",
-    "id": "g6",
-    "kind": "choice",
-    "prompt": "A part says 'Show that the mass of the lift is 520 kg'. Which route earns full marks?",
-    "options": [
-      "Forming the equation of motion and solving it for the mass",
-      "Putting 520 into the equation and showing both sides agree",
-      "Writing down 520 kg with its units"
-    ],
-    "answer": "Forming the equation of motion and solving it for the mass",
-    "explain": "A show-that is marked on the derivation: the equation built from the forces with $M$ still in it, the $M$ terms collected, then solved, exactly as the lift above reached 520 on its last line. So forming and solving earns every mark; putting the value in and checking is verification, capped at two marks."
-  },
-  {
-    "type": "p",
-    "md": "**Something changes** (2022, 2023). A later part swaps the box, the pull or the friction. First line: the equation again, with the new mass or force in every place it appears."
-  },
-  {
-    "type": "p",
-    "md": "**How fast, or how far** (2019). The acceleration you found goes into a constant-acceleration formula. First line: list $u$, $a$ and $t$, with $u = 0$ when it starts from rest."
-  },
-  {
-    "type": "p",
-    "md": "**At a steady speed** (2023). Constant velocity means no acceleration, so there is no $ma$ at all: the pull's part along the floor equals the friction. For 40 N at 20°: $40\\cos 20° - F = 0$, so $F = 37.59$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 9 kg block is dragged at a constant velocity by a rope pulling 40 N at 20° above the horizontal. Find the friction on it.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Constant velocity, so $a = 0$",
+        "decision": "No change of speed means no resultant along the floor."
+      },
+      {
+        "n": 2,
+        "working": "$40\\cos 20° - F = 0$",
+        "decision": "The pull's part along the floor balances the friction.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$F = 37.59$ N",
+        "decision": "The friction equals the pull's part along the floor.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -263,7 +498,128 @@
       "The rope's pull along the floor"
     ],
     "answer": "Zero, so the forces along the floor balance",
-    "explain": "Constant velocity means the speed is not changing, so $a = 0$ and the resultant is $m \\times 0 = 0$: the forces along the floor balance, as the 40 N pull and its friction did above. In 2023 many looked for an acceleration here that was not there."
+    "explain": "Constant velocity means $a = 0$, as step 1 of See it said, so the resultant is $m \\times 0 = 0$ and the forces along the floor balance. The pull along the floor is cancelled by the friction, and mass times speed is not a force at all.",
+    "twin": {
+      "prompt": "A sledge is pulled across snow at a constant velocity by a horizontal rope. How does the pull compare with the friction?",
+      "options": [
+        "They are equal, so the resultant is zero",
+        "The pull is larger, or the sledge would not move",
+        "The friction is larger, because the snow slows it"
+      ],
+      "answer": "They are equal, so the resultant is zero",
+      "explain": "Constant velocity means no acceleration, so no resultant: the pull and the friction balance exactly. A larger pull would make the sledge speed up.",
+      "optionNotes": [
+        {
+          "option": "The pull is larger, or the sledge would not move",
+          "why": "A larger pull would make the sledge speed up; to keep moving at a steady speed it needs no resultant at all."
+        },
+        {
+          "option": "The friction is larger, because the snow slows it",
+          "why": "A larger friction would slow the sledge down, but its velocity is constant, so the two forces balance."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Its mass times its speed",
+        "why": "Mass times speed is not a force; the resultant is mass times acceleration, and the acceleration here is zero."
+      },
+      {
+        "option": "The rope's pull along the floor",
+        "why": "The pull along the floor is cancelled by the friction, so together they leave no resultant at all."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Show that** (2022, 2024, 2026). A value is printed for you to reach. Form the equation with the letter still in it and solve forwards; putting the printed value in and checking earned nothing in 2022 and at most two marks in 2024."
+  },
+  {
+    "type": "p",
+    "md": "**Something changes** (2022, 2023). A later part swaps the load, the pull or the friction: write the equation again with the new mass or force in every place it appears. **How fast, or how far** (2019): the acceleration goes into a constant-acceleration formula, with $u = 0$ from rest."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "A lift of mass $M$ kg is pulled up by a cable with tension 5460 N and accelerates upwards at 0.5 m/s². Show that $M = 520$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Up positive: $5460 - 10M = 0.5M$",
+        "decision": "The resultant upwards equals mass times acceleration, with M still a letter.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$5460 = 10.5M$",
+        "decision": "Collect the M terms on one side.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$M = 520$",
+        "decision": "The printed value arrives last, as the result of the working.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "A part says 'Show that the mass of the lift is 520 kg'. Which route earns full marks?",
+    "options": [
+      "Forming the equation of motion and solving it for the mass",
+      "Putting 520 into the equation and showing both sides agree",
+      "Writing down 520 kg with its units"
+    ],
+    "answer": "Forming the equation of motion and solving it for the mass",
+    "explain": "A show-that is marked on the derivation: the equation built from the forces with $M$ still in it, the $M$ terms collected, then solved, as See it reached 520 on its last line. Putting the value in and checking is verification, capped at two marks.",
+    "twin": {
+      "prompt": "A part says 'Show that the tension is 3900 N'. Which route earns full marks?",
+      "options": [
+        "Forming the equation of motion with $T$ in it and solving it",
+        "Putting 3900 into the equation and showing both sides agree",
+        "Quoting 3900 N from the question"
+      ],
+      "answer": "Forming the equation of motion with $T$ in it and solving it",
+      "explain": "The marks are for the derivation: the equation with the letter in it, then its solution. Checking the printed value is verification, capped at two marks.",
+      "optionNotes": [
+        {
+          "option": "Putting 3900 into the equation and showing both sides agree",
+          "why": "That checks the answer rather than finding it, which CCEA caps at two marks.",
+          "misconception": "fm.show-that.verify-by-substitution"
+        },
+        {
+          "option": "Quoting 3900 N from the question",
+          "why": "The printed value earns nothing on its own: the marks are for the equation and its solution.",
+          "misconception": "fm.show-that.steps-missing"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Putting 520 into the equation and showing both sides agree",
+        "why": "That checks the answer rather than finding it, which CCEA caps at two marks.",
+        "misconception": "fm.show-that.verify-by-substitution"
+      },
+      {
+        "option": "Writing down 520 kg with its units",
+        "why": "The printed value earns nothing on its own: the marks are for the equation and its solution.",
+        "misconception": "fm.show-that.steps-missing"
+      }
+    ]
   },
   {
     "type": "h",
@@ -272,7 +628,7 @@
   },
   {
     "type": "p",
-    "md": "Form the resultant along the line of motion before using $F = ma$.\nPut the mass in the equation and the weight on the diagram.\nTurn a resistance per kilogram into one force, and write a lift's equation with its direction.\nSplit a pull at an angle: $P\\cos\\theta$ drives, $P\\sin\\theta$ lightens the reaction.\nSpot the twists: a show-that, a change of load, a formula after, a steady speed."
+    "md": "Form the resultant along the line of motion before using $F = ma$.\nPut the mass in the equation and the weight on the diagram.\nTurn a resistance per kilogram into one force, and write a lift's equation with its direction.\nSplit a pull at an angle: $P\\cos\\theta$ drives, $P\\sin\\theta$ lightens the reaction.\nSpot the twists: a steady speed, a show-that, a change of load, a formula after."
   },
   {
     "type": "h",
@@ -285,10 +641,10 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.newtons-second-law-linear.02"
+    "promptId": "rp.fm.u2.newtons-second-law-linear.01"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.newtons-second-law-linear.10"
+    "promptId": "rp.fm.u2.newtons-second-law-linear.12"
   }
 ]
