@@ -7,7 +7,7 @@
       "Expand one logarithm, or write it in terms of the logarithms you are given",
       "Solve log P = log Q, and write one letter in terms of another"
     ],
-    "minutes": 17
+    "minutes": 26
   },
   {
     "type": "h",
@@ -26,20 +26,37 @@
   },
   {
     "type": "p",
-    "md": "Multiplying adds steps, and that one fact gives three laws:\n$\\log a + \\log b = \\log(ab)$\n$\\log a - \\log b = \\log\\frac{a}{b}$\n$n\\log a = \\log a^{n}$\nEach works forwards, squeezing logarithms into one, or backwards, opening one out."
+    "md": "Multiplying adds steps, and that one fact gives the three laws of the next three sections. Each works forwards, squeezing logarithms into one, or backwards, opening one out."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\log 10\\,000$ and $\\log 0.001$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$10\\,000 = 10^{4}$, so $\\log 10\\,000 = 4$",
+        "decision": "Count the steps of ten from $1$: there are four."
+      },
+      {
+        "n": 2,
+        "working": "$0.001 = 10^{-3}$, so $\\log 0.001 = -3$",
+        "decision": "A number below $1$ sits to the left of $1$: three steps the other way, so its logarithm is negative."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to begin. When two logarithms are added, as in $\\log a + \\log b$, what happens to $a$ and $b$ inside the single logarithm?",
-    "options": [
-      "The two numbers are multiplied",
-      "The two numbers are added",
-      "The two numbers are divided"
-    ],
-    "answer": "The two numbers are multiplied",
-    "explain": "$\\log a + \\log b = \\log(ab)$. Adding outside means multiplying inside, which is the index rule read backwards."
+    "id": "g16",
+    "kind": "number",
+    "prompt": "What is $\\log 100\\,000$?",
+    "answer": "5",
+    "explain": "$100\\,000 = 10^{5}$: five steps of ten from $1$, so its logarithm is $5$. This is step 1 of See it.",
+    "twin": {
+      "prompt": "What is $\\log 0.01$?",
+      "answer": "-2",
+      "explain": "$0.01 = 10^{-2}$: two steps to the left of $1$, so its logarithm is $-2$."
+    }
   },
   {
     "type": "h",
@@ -57,17 +74,66 @@
     "md": "$\\log a + \\log b = \\log(ab)$. The plus sign outside becomes a times sign inside; it never goes in as a plus.\nThe ruler shows why. The hop for $4$ is $0.602$ and the hop for $25$ is $1.398$, and together they reach $2$, which is where $100$ sits."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write $\\log 4 + \\log 25$ as a single logarithm, and find its value.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log 4 + \\log 25 = \\log(4 \\times 25)$",
+        "decision": "Adding outside multiplies inside."
+      },
+      {
+        "n": 2,
+        "working": "$= \\log 100 = 2$",
+        "decision": "$100 = 10^{2}$, so the single logarithm is exactly $2$, as the two hops showed."
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g2",
+    "id": "g17",
     "kind": "choice",
-    "prompt": "What is $\\log 5 + \\log 6$ as a single logarithm?",
+    "prompt": "What is $\\log 6 + \\log 7$ as a single logarithm?",
     "options": [
-      "$\\log 30$",
-      "$\\log 11$",
-      "$\\log 5 \\times \\log 6$"
+      "$\\log 42$",
+      "$\\log 13$",
+      "$\\log 6 \\times \\log 7$"
     ],
-    "answer": "$\\log 30$",
-    "explain": "Adding the logarithms multiplies the numbers inside, so it is $\\log 30$. Writing $\\log 11$ adds them inside, which is the most reported misuse of this law."
+    "answer": "$\\log 42$",
+    "optionNotes": [
+      {
+        "option": "$\\log 13$",
+        "why": "Adding the numbers inside is the slip to watch: the plus outside becomes a times inside, so it is $\\log 42$.",
+        "misconception": "fm.logs.sum-inside-the-log"
+      },
+      {
+        "option": "$\\log 6 \\times \\log 7$",
+        "why": "That multiplies the logarithms themselves; the law multiplies the numbers inside one logarithm, $\\log(6 \\times 7)$."
+      }
+    ],
+    "explain": "Adding outside multiplies inside: $\\log 6 + \\log 7 = \\log(6 \\times 7) = \\log 42$. This is step 1 of See it.",
+    "twin": {
+      "prompt": "What is $\\log 3 + \\log 13$ as a single logarithm?",
+      "options": [
+        "$\\log 39$",
+        "$\\log 16$",
+        "$\\log 3 \\times \\log 13$"
+      ],
+      "answer": "$\\log 39$",
+      "optionNotes": [
+        {
+          "option": "$\\log 16$",
+          "why": "Adding the numbers inside is the slip to watch: the plus outside becomes a times inside, so it is $\\log 39$.",
+          "misconception": "fm.logs.sum-inside-the-log"
+        },
+        {
+          "option": "$\\log 3 \\times \\log 13$",
+          "why": "That multiplies the logarithms themselves; the law multiplies the numbers inside one logarithm, $\\log(3 \\times 13)$."
+        }
+      ],
+      "explain": "$\\log 3 + \\log 13 = \\log(3 \\times 13) = \\log 39$."
+    }
   },
   {
     "type": "h",
@@ -85,6 +151,23 @@
     "md": "$\\log a - \\log b = \\log\\frac{a}{b}$. The minus goes inside as a division.\nIt is not $\\frac{\\log a}{\\log b}$, which divides the logarithms themselves: $\\log 100 \\div \\log 4$ is about $3.32$, and that is not the logarithm of anything here."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write $\\log 60 - \\log 5$ as a single logarithm.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log 60 - \\log 5 = \\log\\frac{60}{5}$",
+        "decision": "Subtracting outside divides inside."
+      },
+      {
+        "n": 2,
+        "working": "$= \\log 12$",
+        "decision": "Simplify the fraction inside: the answer is still one logarithm."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g3",
     "kind": "choice",
@@ -95,7 +178,39 @@
       "$\\frac{\\log 12}{\\log 3}$"
     ],
     "answer": "$\\log 4$",
-    "explain": "Subtracting outside divides inside, so it is $\\log\\frac{12}{3} = \\log 4$. Dividing the two logarithms is a different calculation altogether."
+    "optionNotes": [
+      {
+        "option": "$\\log 9$",
+        "why": "That subtracts the numbers inside; subtracting logarithms divides inside, so it is $\\log\\frac{12}{3}$."
+      },
+      {
+        "option": "$\\frac{\\log 12}{\\log 3}$",
+        "why": "That divides the logarithms themselves; the division belongs inside one logarithm.",
+        "misconception": "fm.logs.quotient-as-divided-logs"
+      }
+    ],
+    "explain": "Subtracting outside divides inside, so it is $\\log\\frac{12}{3} = \\log 4$. Dividing the two logarithms is a different calculation altogether. This is step 1 of See it.",
+    "twin": {
+      "prompt": "What is $\\log 35 - \\log 5$ as a single logarithm?",
+      "options": [
+        "$\\log 7$",
+        "$\\log 30$",
+        "$\\frac{\\log 35}{\\log 5}$"
+      ],
+      "answer": "$\\log 7$",
+      "optionNotes": [
+        {
+          "option": "$\\log 30$",
+          "why": "That subtracts the numbers inside; subtracting logarithms divides inside, so it is $\\log\\frac{35}{5}$."
+        },
+        {
+          "option": "$\\frac{\\log 35}{\\log 5}$",
+          "why": "That divides the logarithms themselves; the division belongs inside one logarithm.",
+          "misconception": "fm.logs.quotient-as-divided-logs"
+        }
+      ],
+      "explain": "$\\log 35 - \\log 5 = \\log\\frac{35}{5} = \\log 7$."
+    }
   },
   {
     "type": "h",
@@ -104,20 +219,48 @@
   },
   {
     "type": "figure",
-    "alt": "A cube whose edges are all 2x, cut into eight smaller cubes whose edges are x.",
-    "svg": "<svg viewBox='0 20 400 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A cube whose edges are all 2x, cut into eight smaller cubes whose edges are x'><title>A cube whose edges are all 2x, cut into eight smaller cubes whose edges are x</title><path d='M 110 90 L 230 90 L 230 210 L 110 210 Z' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 110 90 L 190 34 L 310 34 L 230 90' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 230 210 L 310 154 L 310 34' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 170 90 L 170 210 M 110 150 L 230 150' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 150 62 L 270 62 M 170 90 L 250 34' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 270 62 L 270 182 M 230 150 L 310 94' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='170' y='236' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>2x</text><text x='98' y='156' font-family='inherit' font-size='16' fill='currentColor' text-anchor='end'>2x</text><text x='286' y='200' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>2x</text></svg>",
-    "caption": "A cube of edge 2x holds eight cubes of edge x, so (2x)³ = 8x³, not 2x³."
+    "alt": "A square whose sides are both 4x, ruled into sixteen smaller squares whose sides are x.",
+    "svg": "<svg viewBox='0 0 400 214' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A square whose sides are both 4x, ruled into sixteen smaller squares whose sides are x'><title>A square whose sides are both 4x, ruled into sixteen smaller squares whose sides are x</title><path d='M 120 22 L 280 22 L 280 182 L 120 182 Z' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 160 22 L 160 182 M 120 62 L 280 62 M 200 22 L 200 182 M 120 102 L 280 102 M 240 22 L 240 182 M 120 142 L 280 142' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='200' y='208' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>4x</text><text x='108' y='108' font-family='inherit' font-size='16' fill='currentColor' text-anchor='end'>4x</text><text x='292' y='47' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>x</text><path d='M 286 22 L 286 62' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round'/></svg>",
+    "caption": "A square of side 4x holds sixteen squares of side x, so (4x)² = 16x², not 4x²."
   },
   {
     "type": "p",
-    "md": "$n\\log a = \\log a^{n}$. The coefficient climbs inside as an index, and the index lands on **everything** inside.\n$3\\log 2x = \\log\\left((2x)^{3}\\right)$, and $(2x)^{3} = 8x^{3}$, as the eight small cubes show. Leaving the $2$ alone gives $\\log 2x^{3}$, a different expression."
+    "md": "$n\\log a = \\log a^{n}$. The coefficient climbs inside as an index, and the index lands on **everything** inside: when the inside is a bracket such as $4x$, the number is raised as well as the letter, as the sixteen small squares show."
   },
   {
     "type": "callout",
     "kind": "examiner",
     "title": "Summer 2024, Unit 1, Question 6",
-    "md": "Marks went here: writing $3\\log 2x$ as a single logarithm, the majority forgot to cube the $2$. Write the bracket $(2x)^{3}$ before you expand it, every time.",
+    "md": "Marks went on the last step. Raising a bracket with a number in it, most candidates raised the letter and forgot the number. Write the bracket out before you expand it, every time.",
     "source": "ccea-cer:further-maths:2024-summer:FM1:Q6"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write $2\\log 4x$ as a single logarithm.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$2\\log 4x = \\log\\left((4x)^{2}\\right)$",
+        "decision": "The coefficient becomes an index on the whole bracket.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$(4x)^{2} = 4^{2} \\times x^{2} = 16x^{2}$",
+        "decision": "The square lands on the $4$ as well as on the $x$."
+      },
+      {
+        "n": 3,
+        "working": "$2\\log 4x = \\log 16x^{2}$",
+        "decision": "One logarithm, with the bracket multiplied out.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -130,7 +273,41 @@
       "$\\log 6x$"
     ],
     "answer": "$\\log 9x^{2}$",
-    "explain": "$(3x)^{2} = 9x^{2}$. The square lands on the $3$ as well as on the $x$, which is the step the Summer 2024 report says most candidates missed."
+    "optionNotes": [
+      {
+        "option": "$\\log 3x^{2}$",
+        "why": "The square reached the $x$ but not the $3$; $(3x)^{2}$ squares both, giving $9x^{2}$.",
+        "misconception": "fm.logs.coefficient-not-raised"
+      },
+      {
+        "option": "$\\log 6x$",
+        "why": "The $2$ went inside as a multiplier; a coefficient goes inside as a power, so it is $(3x)^{2}$.",
+        "misconception": "fm.logs.power-as-multiplier-inside"
+      }
+    ],
+    "explain": "$2\\log 3x = \\log\\left((3x)^{2}\\right)$, and $(3x)^{2} = 9x^{2}$: the square lands on the $3$ as well as the $x$. This is steps 1 and 2 of See it.",
+    "twin": {
+      "prompt": "What is $3\\log 5x$ as a single logarithm?",
+      "options": [
+        "$\\log 125x^{3}$",
+        "$\\log 5x^{3}$",
+        "$\\log 15x$"
+      ],
+      "answer": "$\\log 125x^{3}$",
+      "optionNotes": [
+        {
+          "option": "$\\log 5x^{3}$",
+          "why": "The cube reached the $x$ but not the $5$; $(5x)^{3}$ cubes both, giving $125x^{3}$.",
+          "misconception": "fm.logs.coefficient-not-raised"
+        },
+        {
+          "option": "$\\log 15x$",
+          "why": "The $3$ went inside as a multiplier; a coefficient goes inside as a power, so it is $(5x)^{3}$.",
+          "misconception": "fm.logs.power-as-multiplier-inside"
+        }
+      ],
+      "explain": "$3\\log 5x = \\log\\left((5x)^{3}\\right)$, and $(5x)^{3} = 125x^{3}$."
+    }
   },
   {
     "type": "h",
@@ -148,12 +325,34 @@
     "md": "A logarithm is an index, and the laws are the index laws read the other way: multiply two powers of ten and the indices add. The index laws hold in every base, so these laws do too."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Given that $\\log 3 = 0.477$ to 3 decimal places, find $\\log 3000$ and $\\log 27$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$3000 = 3 \\times 1000$, so $\\log 3000 = 0.477 + 3 = 3.477$",
+        "decision": "Multiplying by $1000$ is three more steps of ten."
+      },
+      {
+        "n": 2,
+        "working": "$27 = 3^{3}$, so $\\log 27 = 3 \\times 0.477 = 1.431$",
+        "decision": "A cube is three hops of $\\log 3$."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g9",
     "kind": "number",
     "prompt": "Given that $\\log 2 = 0.301$ to 3 decimal places, what is $\\log 200$ to 3 decimal places?",
     "answer": "2.301",
-    "explain": "$200 = 2 \\times 100$, and multiplying by $100$ is two more steps of ten, so $\\log 200 = 0.301 + 2 = 2.301$."
+    "explain": "$200 = 2 \\times 100$, and multiplying by $100$ is two more steps of ten, so $\\log 200 = 0.301 + 2 = 2.301$. This is step 1 of See it.",
+    "twin": {
+      "prompt": "Given that $\\log 7 = 0.845$ to 3 decimal places, what is $\\log 700$ to 3 decimal places?",
+      "answer": "2.845",
+      "explain": "$700 = 7 \\times 100$: two more steps of ten, so $\\log 700 = 0.845 + 2 = 2.845$."
+    }
   },
   {
     "type": "h",
@@ -162,30 +361,95 @@
   },
   {
     "type": "figure",
-    "alt": "The terms log a and plus log b cubed are sent above a fraction line, and minus log c squared is sent below it, giving a b cubed over c squared.",
-    "svg": "<svg viewBox='0 0 400 210' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The terms log a and plus log b cubed are sent above a fraction line, and minus log c squared is sent below it, giving a b cubed over c squared'><title>The terms log a and plus log b cubed are sent above a fraction line, and minus log c squared is sent below it, giving a b cubed over c squared</title><rect x='16' y='18' width='112' height='38' stroke='currentColor' stroke-width='1.2' fill='none'/><rect x='144' y='18' width='112' height='38' stroke='currentColor' stroke-width='1.2' fill='none'/><rect x='272' y='18' width='112' height='38' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='72' y='43' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>log a</text><text x='200' y='43' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>+ log b³</text><text x='328' y='43' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>− log c²</text><path d='M 72 58 L 178 128' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 168.9 127.3 L 178 128 L 173.7 119.9' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 58 L 200 126' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 195.6 118 L 200 126 L 204.4 118' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 328 58 L 328 181 L 226 181' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 234 176.6 L 226 181 L 234 185.4' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='210' y='96' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>on top</text><text x='318' y='130' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>underneath</text><path d='M 130 160 L 270 160' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='200' y='148' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>a b³</text><text x='200' y='186' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>c²</text></svg>",
-    "caption": "Added terms go on top and the subtracted term goes underneath: log a + log b³ − log c² is log(ab³/c²)."
+    "alt": "The terms log u and plus log v squared are sent above a fraction line, and minus log w to the fourth is sent below it, giving u v squared over w to the fourth.",
+    "svg": "<svg viewBox='0 0 400 210' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The terms log u and plus log v squared are sent above a fraction line, and minus log w to the fourth is sent below it, giving u v squared over w to the fourth'><title>The terms log u and plus log v squared are sent above a fraction line, and minus log w to the fourth is sent below it, giving u v squared over w to the fourth</title><rect x='16' y='18' width='112' height='38' stroke='currentColor' stroke-width='1.2' fill='none'/><rect x='144' y='18' width='112' height='38' stroke='currentColor' stroke-width='1.2' fill='none'/><rect x='272' y='18' width='112' height='38' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='72' y='43' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>log u</text><text x='200' y='43' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>+ log v²</text><text x='328' y='43' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>− log w⁴</text><path d='M 72 58 L 178 128' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 168.9 127.3 L 178 128 L 173.7 119.9' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 58 L 200 126' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 195.6 118 L 200 126 L 204.4 118' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 328 58 L 328 181 L 226 181' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 234 176.6 L 226 181 L 234 185.4' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='210' y='96' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>on top</text><text x='318' y='130' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>underneath</text><path d='M 130 160 L 270 160' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='200' y='148' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>u v²</text><text x='200' y='186' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>w⁴</text></svg>",
+    "caption": "Added terms go on top and the subtracted term goes underneath: log u + log v² − log w⁴ is log(uv²/w⁴)."
   },
   {
     "type": "p",
-    "md": "To write $\\log a + 3\\log b - 2\\log c$ as one logarithm, work in this order.\n**Step 1.** Coefficients become powers: $\\log a + \\log b^{3} - \\log c^{2}$.\n**Step 2.** Added terms multiply on top: $\\log(ab^{3}) - \\log c^{2}$.\n**Step 3.** The subtracted term goes underneath: $\\log\\frac{ab^{3}}{c^{2}}$."
+    "md": "To write several logarithms as one, work in a fixed order. Coefficients become powers first. Then the added terms multiply on top, and the subtracted terms go underneath."
   },
   {
     "type": "p",
     "md": "If the argument then simplifies, simplify it: $\\log\\frac{9x^{2}}{3x}$ is $\\log 3x$. Putting a term on the wrong side of the line is a slip the Summer 2025 report names."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write $\\log u + 2\\log v - 4\\log w$ as a single logarithm.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log u + \\log v^{2} - \\log w^{4}$",
+        "decision": "Coefficients become powers first.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\log(uv^{2}) - \\log w^{4}$",
+        "decision": "The added terms multiply.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\log\\frac{uv^{2}}{w^{4}}$",
+        "decision": "The subtracted term goes underneath.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g5",
+    "id": "g18",
     "kind": "choice",
-    "prompt": "$\\log a + 3\\log b - 2\\log c$ is being written as one logarithm, and $-2\\log c$ has become $-\\log c^{2}$. Where does $c^{2}$ end up?",
+    "prompt": "What is $3\\log h + \\log k - 2\\log m$ as a single logarithm?",
     "options": [
-      "In the denominator",
-      "In the numerator",
-      "Outside the logarithm"
+      "$\\log\\frac{h^{3}k}{m^{2}}$",
+      "$\\log\\frac{h^{3}}{km^{2}}$",
+      "$\\log\\frac{3hk}{2m}$"
     ],
-    "answer": "In the denominator",
-    "explain": "A subtracted logarithm divides, so $c^{2}$ goes underneath: $\\log\\frac{ab^{3}}{c^{2}}$."
+    "answer": "$\\log\\frac{h^{3}k}{m^{2}}$",
+    "optionNotes": [
+      {
+        "option": "$\\log\\frac{h^{3}}{km^{2}}$",
+        "why": "The $k$ was added, so it belongs on top with $h^{3}$; only the subtracted term goes underneath.",
+        "misconception": "fm.logs.subtraction-rule-misapplied"
+      },
+      {
+        "option": "$\\log\\frac{3hk}{2m}$",
+        "why": "The coefficients went in as multipliers; each becomes a power first, so $3\\log h$ is $\\log h^{3}$.",
+        "misconception": "fm.logs.power-as-multiplier-inside"
+      }
+    ],
+    "explain": "Powers first: $\\log h^{3} + \\log k - \\log m^{2}$. The added terms multiply on top and the subtracted one goes underneath: $\\log\\frac{h^{3}k}{m^{2}}$. This is steps 1 to 3 of See it.",
+    "twin": {
+      "prompt": "What is $\\log s + 4\\log t - 3\\log n$ as a single logarithm?",
+      "options": [
+        "$\\log\\frac{st^{4}}{n^{3}}$",
+        "$\\log\\frac{t^{4}}{sn^{3}}$",
+        "$\\log\\frac{4st}{3n}$"
+      ],
+      "answer": "$\\log\\frac{st^{4}}{n^{3}}$",
+      "optionNotes": [
+        {
+          "option": "$\\log\\frac{t^{4}}{sn^{3}}$",
+          "why": "The $s$ was added, so it belongs on top with $t^{4}$; only the subtracted term goes underneath.",
+          "misconception": "fm.logs.subtraction-rule-misapplied"
+        },
+        {
+          "option": "$\\log\\frac{4st}{3n}$",
+          "why": "The coefficients went in as multipliers; each becomes a power first, so $4\\log t$ is $\\log t^{4}$.",
+          "misconception": "fm.logs.power-as-multiplier-inside"
+        }
+      ],
+      "explain": "Powers first, then multiply the added terms on top and put the subtracted one underneath: $\\log\\frac{st^{4}}{n^{3}}$."
+    }
   },
   {
     "type": "h",
@@ -194,24 +458,80 @@
   },
   {
     "type": "p",
-    "md": "The laws only combine logarithms, so a bare number must become one first. To base ten, $1 = \\log 10$ and $2 = \\log 100$.\nSo $2 + \\log x$ becomes $\\log 100 + \\log x$, which is $\\log 100x$."
-  },
-  {
-    "type": "gate",
-    "id": "g6",
-    "kind": "choice",
-    "prompt": "To base $10$, $1 = \\log 10$. What is $1 + \\log x$ as a single logarithm?",
-    "options": [
-      "$\\log 10x$",
-      "$\\log(1 + x)$",
-      "$\\log x$"
-    ],
-    "answer": "$\\log 10x$",
-    "explain": "$1 = \\log 10$, so $1 + \\log x = \\log 10 + \\log x = \\log 10x$. Dropping the $1$ altogether would leave $\\log x$, which is a different number."
+    "md": "The laws only combine logarithms, so a bare number must become one first. To base ten, $1 = \\log 10$ and $3 = \\log 1000$, so $3 + \\log x$ becomes $\\log 1000 + \\log x$, which is $\\log 1000x$."
   },
   {
     "type": "p",
     "md": "A root is a power too: $\\sqrt{x} = x^{\\frac{1}{2}}$, so $\\frac{1}{2}\\log x = \\log\\sqrt{x}$.\nWith a coefficient in front, multiply the powers: $6\\log\\sqrt{c} = \\log c^{3}$, because $6 \\times \\frac{1}{2} = 3$. The Summer 2025 report found numbers and roots combined wrongly."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write $1 + 4\\log\\sqrt{y}$ as a single logarithm.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$1 = \\log 10$",
+        "decision": "The bare number becomes a logarithm first."
+      },
+      {
+        "n": 2,
+        "working": "$4\\log\\sqrt{y} = \\log y^{2}$",
+        "decision": "$\\sqrt{y} = y^{\\frac{1}{2}}$, and $4 \\times \\frac{1}{2} = 2$."
+      },
+      {
+        "n": 3,
+        "working": "$\\log 10 + \\log y^{2} = \\log 10y^{2}$",
+        "decision": "Now the product law combines them as usual."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g19",
+    "kind": "choice",
+    "prompt": "To base $10$, what is $\\log h - 1$ as a single logarithm?",
+    "options": [
+      "$\\log\\frac{h}{10}$",
+      "$\\log(h - 1)$",
+      "$\\log\\frac{10}{h}$"
+    ],
+    "answer": "$\\log\\frac{h}{10}$",
+    "optionNotes": [
+      {
+        "option": "$\\log(h - 1)$",
+        "why": "The $1$ went inside as a number; it has to become $\\log 10$ first, and subtracting a logarithm divides.",
+        "misconception": "fm.logs.sum-inside-the-log"
+      },
+      {
+        "option": "$\\log\\frac{10}{h}$",
+        "why": "The fraction is upside down: $\\log 10$ is the term being subtracted, so the $10$ goes underneath.",
+        "misconception": "fm.logs.subtraction-rule-misapplied"
+      }
+    ],
+    "explain": "$1 = \\log 10$, so $\\log h - 1 = \\log h - \\log 10 = \\log\\frac{h}{10}$. This is step 1 of See it, then the quotient law.",
+    "twin": {
+      "prompt": "To base $10$, what is $\\log y - 2$ as a single logarithm?",
+      "options": [
+        "$\\log\\frac{y}{100}$",
+        "$\\log(y - 2)$",
+        "$\\log\\frac{100}{y}$"
+      ],
+      "answer": "$\\log\\frac{y}{100}$",
+      "optionNotes": [
+        {
+          "option": "$\\log(y - 2)$",
+          "why": "The $2$ went inside as a number; it has to become $\\log 100$ first, and subtracting a logarithm divides.",
+          "misconception": "fm.logs.sum-inside-the-log"
+        },
+        {
+          "option": "$\\log\\frac{100}{y}$",
+          "why": "The fraction is upside down: $\\log 100$ is the term being subtracted, so the $100$ goes underneath.",
+          "misconception": "fm.logs.subtraction-rule-misapplied"
+        }
+      ],
+      "explain": "$2 = \\log 100$, so $\\log y - 2 = \\log\\frac{y}{100}$."
+    }
   },
   {
     "type": "gate",
@@ -224,7 +544,39 @@
       "$\\log y^{16}$"
     ],
     "answer": "$\\log y^{4}$",
-    "explain": "$\\sqrt{y} = y^{\\frac{1}{2}}$, and $8 \\times \\frac{1}{2} = 4$, so it is $\\log y^{4}$. Squaring instead of halving gives $y^{16}$."
+    "optionNotes": [
+      {
+        "option": "$\\log 8\\sqrt{y}$",
+        "why": "The $8$ went inside as a multiplier; it becomes a power, and $8 \\times \\frac{1}{2} = 4$.",
+        "misconception": "fm.logs.power-as-multiplier-inside"
+      },
+      {
+        "option": "$\\log y^{16}$",
+        "why": "The root was treated as a square; $\\sqrt{y}$ is $y^{\\frac{1}{2}}$, so the powers multiply to $4$, not $16$."
+      }
+    ],
+    "explain": "$\\sqrt{y} = y^{\\frac{1}{2}}$, and $8 \\times \\frac{1}{2} = 4$, so it is $\\log y^{4}$. Squaring instead of halving gives $y^{16}$. This is step 2 of See it.",
+    "twin": {
+      "prompt": "What is $12\\log\\sqrt{z}$ as a single logarithm?",
+      "options": [
+        "$\\log z^{6}$",
+        "$\\log 12\\sqrt{z}$",
+        "$\\log z^{24}$"
+      ],
+      "answer": "$\\log z^{6}$",
+      "optionNotes": [
+        {
+          "option": "$\\log 12\\sqrt{z}$",
+          "why": "The $12$ went inside as a multiplier; it becomes a power, and $12 \\times \\frac{1}{2} = 6$.",
+          "misconception": "fm.logs.power-as-multiplier-inside"
+        },
+        {
+          "option": "$\\log z^{24}$",
+          "why": "The root was treated as a square; $\\sqrt{z}$ is $z^{\\frac{1}{2}}$, so the powers multiply to $6$, not $24$."
+        }
+      ],
+      "explain": "$\\sqrt{z} = z^{\\frac{1}{2}}$, and $12 \\times \\frac{1}{2} = 6$, so it is $\\log z^{6}$."
+    }
   },
   {
     "type": "h",
@@ -233,27 +585,83 @@
   },
   {
     "type": "p",
-    "md": "Some questions want one logarithm opened into several. Run the laws from right to left: a product splits into a sum, a quotient into a difference, and each power drops in front.\n$\\log\\frac{x^{3}}{y^{2}}$ splits into $\\log x^{3} - \\log y^{2}$, which is $3\\log x - 2\\log y$. A square root drops in as $\\frac{1}{2}$."
+    "md": "Some questions want one logarithm opened into several. Run the laws from right to left: a product splits into a sum, a quotient into a difference, and each power drops in front.\n$\\log\\frac{a^{5}}{b^{3}}$ splits into $\\log a^{5} - \\log b^{3}$, which is $5\\log a - 3\\log b$. A square root drops in as $\\frac{1}{2}$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write $\\log\\frac{\\sqrt{a}}{b^{2}c}$ as separate logarithms.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log\\sqrt{a} - \\log(b^{2}c)$",
+        "decision": "The quotient splits first."
+      },
+      {
+        "n": 2,
+        "working": "$\\log\\sqrt{a} - \\log b^{2} - \\log c$",
+        "decision": "All of the denominator is subtracted: the product splits, and both parts are taken away."
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{1}{2}\\log a - 2\\log b - \\log c$",
+        "decision": "Each power drops in front, the root as $\\frac{1}{2}$."
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "LKJJ2YtK-ic",
     "title": "LOGS - Laws of Logs CCEA GCSE Further Mathematics",
     "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher running the three laws against this specification, in both directions."
+    "why": "A Northern Ireland teacher running the three laws against this specification, in both directions, beside our own steps."
   },
   {
     "type": "gate",
-    "id": "g7",
+    "id": "g20",
     "kind": "choice",
-    "prompt": "What is $\\log(m^{4}n)$ written as separate logarithms?",
+    "prompt": "What is $\\log(h^{5}k)$ written as separate logarithms?",
     "options": [
-      "$4\\log m + \\log n$",
-      "$4\\log m \\times \\log n$",
-      "$\\log 4m + \\log n$"
+      "$5\\log h + \\log k$",
+      "$5\\log h \\times \\log k$",
+      "$\\log 5h + \\log k$"
     ],
-    "answer": "$4\\log m + \\log n$",
-    "explain": "The product splits into a sum, then the power on $m$ drops out in front as a $4$."
+    "answer": "$5\\log h + \\log k$",
+    "optionNotes": [
+      {
+        "option": "$5\\log h \\times \\log k$",
+        "why": "A product splits into a sum of logarithms, not a product of them.",
+        "misconception": "fm.logs.product-to-sum"
+      },
+      {
+        "option": "$\\log 5h + \\log k$",
+        "why": "The power belongs to $h$ and drops in front as a coefficient: $5\\log h$, not $\\log 5h$.",
+        "misconception": "fm.logs.power-as-multiplier-inside"
+      }
+    ],
+    "explain": "The product splits into a sum, $\\log h^{5} + \\log k$, then the power drops in front: $5\\log h + \\log k$. This is steps 2 and 3 of See it.",
+    "twin": {
+      "prompt": "What is $\\log(r^{6}s)$ written as separate logarithms?",
+      "options": [
+        "$6\\log r + \\log s$",
+        "$6\\log r \\times \\log s$",
+        "$\\log 6r + \\log s$"
+      ],
+      "answer": "$6\\log r + \\log s$",
+      "optionNotes": [
+        {
+          "option": "$6\\log r \\times \\log s$",
+          "why": "A product splits into a sum of logarithms, not a product of them.",
+          "misconception": "fm.logs.product-to-sum"
+        },
+        {
+          "option": "$\\log 6r + \\log s$",
+          "why": "The power belongs to $r$ and drops in front as a coefficient: $6\\log r$, not $\\log 6r$.",
+          "misconception": "fm.logs.power-as-multiplier-inside"
+        }
+      ],
+      "explain": "$\\log(r^{6}s) = \\log r^{6} + \\log s = 6\\log r + \\log s$."
+    }
   },
   {
     "type": "h",
@@ -262,19 +670,55 @@
   },
   {
     "type": "p",
-    "md": "Once an equation reads $\\log P = \\log Q$, the logarithms can go: $P = Q$. Make each side a single logarithm first.\nSo $\\log x + \\log 3 = \\log 21$ becomes $\\log 3x = \\log 21$, then $3x = 21$ and $x = 7$."
+    "md": "Once an equation reads $\\log P = \\log Q$, the logarithms can go: $P = Q$. Make each side a single logarithm first."
   },
   {
     "type": "p",
-    "md": "The same step writes one letter in terms of another. From $2\\log y = 5\\log x$, the power law gives $\\log y^{2} = \\log x^{5}$.\nSo $y^{2} = x^{5}$, and $y = x^{\\frac{5}{2}}$."
+    "md": "The same step writes one letter in terms of another. From $2\\log y = 5\\log x$, the power law gives $\\log y^{2} = \\log x^{5}$, so $y^{2} = x^{5}$ and $y = x^{\\frac{5}{2}}$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Solve $\\log x + \\log 3 = \\log 21$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log 3x = \\log 21$",
+        "decision": "Make the left side one logarithm.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$3x = 21$",
+        "decision": "Equal logarithms have equal arguments.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$x = 7$",
+        "decision": "Check it: $\\log 7 + \\log 3 = \\log 21$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g8",
+    "id": "g21",
     "kind": "number",
-    "prompt": "Combining the left-hand side of $\\log x + \\log 4 = \\log 20$ gives $\\log 4x = \\log 20$. What is $x$?",
-    "answer": "5",
-    "explain": "Equal logarithms have equal arguments, so $4x = 20$ and $x = 5$. Writing $x + 4 = 20$ instead would give $16$."
+    "prompt": "Solve $\\log x + \\log 6 = \\log 54$.",
+    "answer": "9",
+    "explain": "Combine: $\\log 6x = \\log 54$, so $6x = 54$ and $x = 9$. Writing $x + 6 = 54$ adds inside and gives $48$. This is steps 1 to 3 of See it.",
+    "twin": {
+      "prompt": "Solve $\\log x + \\log 2 = \\log 26$.",
+      "answer": "13",
+      "explain": "$\\log 2x = \\log 26$, so $2x = 26$ and $x = 13$."
+    }
   },
   {
     "type": "h",
@@ -289,50 +733,163 @@
   },
   {
     "type": "p",
-    "md": "Told that $\\log 2 = a$ and $\\log 5 = b$, you can reach any number built from twos and fives. Factorise it first: $50 = 2 \\times 5^{2}$, so $\\log 50 = \\log 2 + 2\\log 5$, which is $a + 2b$."
+    "md": "Told that $\\log 2 = u$ and $\\log 5 = v$, you can reach any number built from twos and fives. Factorise it first: $50 = 2 \\times 5^{2}$, so $\\log 50 = \\log 2 + 2\\log 5$, which is $u + 2v$."
   },
   {
     "type": "p",
-    "md": "A logarithm with no letter of its own is built from the ones you have. With only $\\log 3 = p$ and $\\log 5 = q$, write $2 = \\frac{10}{5}$: then $\\log 2 = 1 - q$, because $\\log 10 = 1$."
+    "md": "A number outside your factors may still be reached through $10$, because $\\log 10 = 1$: with only $\\log 2 = u$, write $5 = \\frac{10}{2}$, so $\\log 5 = 1 - u$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Given that $\\log 2 = u$ and $\\log 7 = w$, express $\\log 5.6$ in terms of $u$ and $w$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$5.6 = \\frac{56}{10} = \\frac{2^{3} \\times 7}{10}$",
+        "decision": "Write it with the numbers you have, and a power of ten.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\log 5.6 = 3\\log 2 + \\log 7 - \\log 10$",
+        "decision": "Product to sum, quotient to difference, power in front.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$= 3u + w - 1$",
+        "decision": "$\\log 10 = 1$ to base ten.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g11",
+    "id": "g22",
     "kind": "choice",
-    "prompt": "Given that $\\log 2 = a$ and $\\log 3 = b$, what is $\\log 12$ in terms of $a$ and $b$?",
+    "prompt": "Given that $\\log 2 = u$ and $\\log 3 = w$, what is $\\log 54$ in terms of $u$ and $w$?",
     "options": [
-      "$2a + b$",
-      "$a^{2} + b$",
-      "$2ab$"
+      "$u + 3w$",
+      "$u + w^{3}$",
+      "$3uw$"
     ],
-    "answer": "$2a + b$",
-    "explain": "$12 = 2^{2} \\times 3$, so $\\log 12 = 2\\log 2 + \\log 3$, which is $2a + b$. The index comes down in front of the logarithm; it does not stay on the letter."
+    "answer": "$u + 3w$",
+    "optionNotes": [
+      {
+        "option": "$u + w^{3}$",
+        "why": "The index stayed on the letter; the power law brings it down in front, so $\\log 3^{3} = 3\\log 3 = 3w$."
+      },
+      {
+        "option": "$3uw$",
+        "why": "$54 = 2 \\times 3^{3}$ is a product, so the logarithms add: $u + 3w$, not a product of the letters.",
+        "misconception": "fm.logs.product-to-sum"
+      }
+    ],
+    "explain": "$54 = 2 \\times 3^{3}$, so $\\log 54 = \\log 2 + 3\\log 3 = u + 3w$. This is steps 1 and 2 of See it.",
+    "twin": {
+      "prompt": "Given that $\\log 2 = u$ and $\\log 7 = w$, what is $\\log 28$ in terms of $u$ and $w$?",
+      "options": [
+        "$2u + w$",
+        "$u^{2} + w$",
+        "$2uw$"
+      ],
+      "answer": "$2u + w$",
+      "optionNotes": [
+        {
+          "option": "$u^{2} + w$",
+          "why": "The index stayed on the letter; the power law brings it down in front, so $\\log 2^{2} = 2\\log 2 = 2u$."
+        },
+        {
+          "option": "$2uw$",
+          "why": "$28 = 2^{2} \\times 7$ is a product, so the logarithms add: $2u + w$, not a product of the letters.",
+          "misconception": "fm.logs.product-to-sum"
+        }
+      ],
+      "explain": "$28 = 2^{2} \\times 7$, so $\\log 28 = 2u + w$."
+    }
   },
   {
     "type": "h",
-    "text": "See it done: a base other than ten",
-    "role": "see"
+    "text": "A base other than ten",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Given $\\log_{3} 2 = t$, express $\\log_{3} 13.5$ in terms of $t$.\n**Line 1.** $13.5 = \\frac{27}{2}$, and $27 = 3^{3}$.\n**Line 2.** $\\log_{3} 13.5 = \\log_{3} 3^{3} - \\log_{3} 2$.\n**Line 3.** $\\log_{3} 3^{3} = 3$, since $\\log_{3} 3 = 1$.\n**Line 4.** So $\\log_{3} 13.5 = 3 - t$."
+    "md": "The laws hold in every base, and the base's own logarithm is $1$: $\\log_{5} 5 = 1$. So the base is the one number whose logarithm needs no letter, and it is worth looking for as a factor before anything else."
   },
   {
-    "type": "p",
-    "md": "The base is the one number whose logarithm needs no letter, so look for it as a factor before anything else."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Given that $\\log_{5} 2 = t$, express $\\log_{5} 12.5$ in terms of $t$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$12.5 = \\frac{25}{2}$, and $25 = 5^{2}$",
+        "decision": "Factor out the base."
+      },
+      {
+        "n": 2,
+        "working": "$\\log_{5} 12.5 = \\log_{5} 5^{2} - \\log_{5} 2$",
+        "decision": "The quotient becomes a difference."
+      },
+      {
+        "n": 3,
+        "working": "$= 2 - t$",
+        "decision": "$\\log_{5} 5^{2} = 2$, because $\\log_{5} 5 = 1$."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g12",
+    "id": "g23",
     "kind": "choice",
-    "prompt": "Given that $\\log_{3} 2 = t$, what is $\\log_{3} 18$ in terms of $t$?",
+    "prompt": "Given that $\\log_{5} 2 = t$, what is $\\log_{5} 50$ in terms of $t$?",
     "options": [
       "$t + 2$",
-      "$t + 9$",
-      "$t + 3$"
+      "$t + 25$",
+      "$t + 5$"
     ],
     "answer": "$t + 2$",
-    "explain": "$18 = 2 \\times 3^{2}$, so $\\log_{3} 18 = t + 2$. The base's own logarithm is $1$, so $\\log_{3} 9 = 2$: not $9$, and not $9 \\div 3$."
+    "optionNotes": [
+      {
+        "option": "$t + 25$",
+        "why": "$\\log_{5} 25$ is the power of $5$ that gives $25$, which is $2$, not $25$ itself."
+      },
+      {
+        "option": "$t + 5$",
+        "why": "$25 \\div 5 = 5$ divides instead of asking for the power: $5^{2} = 25$, so $\\log_{5} 25 = 2$.",
+        "misconception": "fm.logs.unknown-base-divided"
+      }
+    ],
+    "explain": "$50 = 2 \\times 5^{2}$, so $\\log_{5} 50 = \\log_{5} 2 + 2 = t + 2$: the base's own power gives a plain $2$. This is steps 1 and 3 of See it.",
+    "twin": {
+      "prompt": "Given that $\\log_{5} 2 = t$, what is $\\log_{5} 250$ in terms of $t$?",
+      "options": [
+        "$t + 3$",
+        "$t + 125$",
+        "$t + 25$"
+      ],
+      "answer": "$t + 3$",
+      "optionNotes": [
+        {
+          "option": "$t + 125$",
+          "why": "$\\log_{5} 125$ is the power of $5$ that gives $125$, which is $3$, not $125$ itself."
+        },
+        {
+          "option": "$t + 25$",
+          "why": "$125 \\div 5 = 25$ divides instead of asking for the power: $5^{3} = 125$, so $\\log_{5} 125 = 3$.",
+          "misconception": "fm.logs.unknown-base-divided"
+        }
+      ],
+      "explain": "$250 = 2 \\times 5^{3}$, so $\\log_{5} 250 = t + 3$."
+    }
   },
   {
     "type": "h",
@@ -341,11 +898,7 @@
   },
   {
     "type": "p",
-    "md": "**$x$ in the indices** (every paper, 2018 to 2026). The partner part is an equation with $x$ in two indices. Take logarithms of both sides; each index comes down whole, in a bracket."
-  },
-  {
-    "type": "p",
-    "md": "**A base other than ten** (2022, 2023, 2026). The laws are unchanged, and the base's own logarithm is $1$. Factorise the number with the base as one factor."
+    "md": "**$x$ in the indices** (every paper, 2018 to 2026). The partner part is an equation with $x$ in two indices: take logarithms of both sides, and each index comes down whole, in a bracket. **A base other than ten** (2022, 2023, 2026): the laws are unchanged, and the base's own logarithm is $1$."
   },
   {
     "type": "p",
@@ -356,17 +909,69 @@
     "md": "**One letter in terms of another** (2019, 2021). Make each side a single logarithm, or write both letters as multiples of one shared logarithm, then compare."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Given that $y = \\log 9$ and $z = \\log 27$, express $z$ in terms of $y$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = \\log 3^{2} = 2\\log 3$",
+        "decision": "Write each letter as a multiple of one shared logarithm."
+      },
+      {
+        "n": 2,
+        "working": "$z = \\log 3^{3} = 3\\log 3$",
+        "decision": "The same shared logarithm, $\\log 3$."
+      },
+      {
+        "n": 3,
+        "working": "$\\log 3 = \\frac{y}{2}$, so $z = \\frac{3y}{2}$",
+        "decision": "Remove the shared logarithm between the two lines."
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g13",
+    "id": "g24",
     "kind": "choice",
-    "prompt": "The part after a laws question often has $x$ in two indices, with a different base on each side. What do you do first?",
+    "prompt": "Given that $p = \\log 4$ and $q = \\log 32$, what is $q$ in terms of $p$?",
     "options": [
-      "Take logarithms of both sides",
-      "Divide both sides by one of the bases",
-      "Set the two indices equal"
+      "$q = \\frac{5p}{2}$",
+      "$q = 8p$",
+      "$q = \\frac{2p}{5}$"
     ],
-    "answer": "Take logarithms of both sides",
-    "explain": "Different bases cannot be compared directly, so take logarithms of both sides; the power law then brings each index down, in a bracket. Setting the indices equal works only when the bases match."
+    "answer": "$q = \\frac{5p}{2}$",
+    "optionNotes": [
+      {
+        "option": "$q = 8p$",
+        "why": "That divides the numbers inside, $32 \\div 4 = 8$; compare the logarithms instead: $p = 2\\log 2$ and $q = 5\\log 2$."
+      },
+      {
+        "option": "$q = \\frac{2p}{5}$",
+        "why": "The ratio is upside down: $\\log 2 = \\frac{p}{2}$, so $q = 5 \\times \\frac{p}{2}$."
+      }
+    ],
+    "explain": "$p = \\log 2^{2} = 2\\log 2$ and $q = \\log 2^{5} = 5\\log 2$. So $\\log 2 = \\frac{p}{2}$ and $q = \\frac{5p}{2}$. This is steps 1 to 3 of See it.",
+    "twin": {
+      "prompt": "Given that $m = \\log 25$ and $n = \\log 125$, what is $n$ in terms of $m$?",
+      "options": [
+        "$n = \\frac{3m}{2}$",
+        "$n = 5m$",
+        "$n = \\frac{2m}{3}$"
+      ],
+      "answer": "$n = \\frac{3m}{2}$",
+      "optionNotes": [
+        {
+          "option": "$n = 5m$",
+          "why": "That divides the numbers inside, $125 \\div 25 = 5$; compare the logarithms instead: $m = 2\\log 5$ and $n = 3\\log 5$."
+        },
+        {
+          "option": "$n = \\frac{2m}{3}$",
+          "why": "The ratio is upside down: $\\log 5 = \\frac{m}{2}$, so $n = 3 \\times \\frac{m}{2}$."
+        }
+      ],
+      "explain": "$m = 2\\log 5$ and $n = 3\\log 5$, so $n = \\frac{3m}{2}$."
+    }
   },
   {
     "type": "h",
@@ -381,13 +986,30 @@
   },
   {
     "type": "p",
-    "md": "The laws turn a curve into a straight line. Take logarithms of $y = kx^{n}$: the product law splits the right side and the power law brings $n$ down.\n$\\log y = n\\log x + \\log k$\nThat is a line with gradient $n$ and intercept $\\log k$. The papers set it every year from 2018 to 2025, and the log/log graphs lesson takes it from here."
+    "md": "The laws turn a curve into a straight line. Take logarithms of $y = kx^{n}$: the product law splits the right side and the power law brings $n$ down, so $\\log y = n\\log x + \\log k$.\nThat is a line with gradient $n$ and intercept $\\log k$. The papers set it every year from 2018 to 2025, and the log/log graphs lesson takes it from here."
   },
   {
     "type": "callout",
     "kind": "notonspec",
     "title": "Where the specification stops",
     "md": "The change of base rule, natural logarithms and the number $e$ are not on this specification. Every logarithm here is to base ten or to a base the question states."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "If $y = 2x^{4}$, write $\\log y$ in terms of $\\log x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log y = \\log 2 + \\log x^{4}$",
+        "decision": "The product law splits the right side."
+      },
+      {
+        "n": 2,
+        "working": "$\\log y = \\log 2 + 4\\log x$",
+        "decision": "The power law brings the $4$ down, onto $\\log x$ alone."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -400,7 +1022,37 @@
       "$5 + 3\\log x$"
     ],
     "answer": "$\\log 5 + 3\\log x$",
-    "explain": "The product law splits $5x^{3}$ into $\\log 5 + \\log x^{3}$, and the power law brings the $3$ down. The $3$ belongs to $x$ alone, so $\\log 5$ keeps no coefficient."
+    "optionNotes": [
+      {
+        "option": "$3\\log 5x$",
+        "why": "The $3$ belongs to $x$ alone; $3\\log 5x$ would cube the $5$ as well."
+      },
+      {
+        "option": "$5 + 3\\log x$",
+        "why": "The $5$ stays inside a logarithm: the product law gives $\\log 5$, not $5$."
+      }
+    ],
+    "explain": "The product law splits $5x^{3}$ into $\\log 5 + \\log x^{3}$, and the power law brings the $3$ down. The $3$ belongs to $x$ alone, so $\\log 5$ keeps no coefficient. This is steps 1 and 2 of See it.",
+    "twin": {
+      "prompt": "If $y = 7x^{2}$, what is $\\log y$?",
+      "options": [
+        "$\\log 7 + 2\\log x$",
+        "$2\\log 7x$",
+        "$7 + 2\\log x$"
+      ],
+      "answer": "$\\log 7 + 2\\log x$",
+      "optionNotes": [
+        {
+          "option": "$2\\log 7x$",
+          "why": "The $2$ belongs to $x$ alone; $2\\log 7x$ would square the $7$ as well."
+        },
+        {
+          "option": "$7 + 2\\log x$",
+          "why": "The $7$ stays inside a logarithm: the product law gives $\\log 7$, not $7$."
+        }
+      ],
+      "explain": "$\\log y = \\log 7 + \\log x^{2} = \\log 7 + 2\\log x$."
+    }
   },
   {
     "type": "h",
@@ -409,11 +1061,33 @@
   },
   {
     "type": "p",
-    "md": "Let $a = 10^{p}$ and $b = 10^{q}$, so that $p = \\log a$ and $q = \\log b$.\nThen $ab = 10^{p + q}$, because indices add.\nSo $\\log(ab) = p + q$, which is $\\log a + \\log b$.\nIn the same way $\\frac{a}{b} = 10^{p - q}$, so $\\log\\frac{a}{b} = \\log a - \\log b$.\nAnd $a^{n} = 10^{np}$, so $\\log a^{n} = np$, which is $n\\log a$."
+    "md": "Let $a = 10^{p}$ and $b = 10^{q}$, so that $p = \\log a$ and $q = \\log b$.\nThen $ab = 10^{p + q}$, because indices add, so the logarithm of the product is $p + q$: the product law."
   },
   {
     "type": "p",
     "md": "Nothing here needs base ten: put any base in place of $10$ and every line still holds."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Show that $\\log\\frac{a}{b} = \\log a - \\log b$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let $a = 10^{p}$ and $b = 10^{q}$",
+        "decision": "Write each number as a power of ten; then $p = \\log a$ and $q = \\log b$."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{a}{b} = 10^{p - q}$",
+        "decision": "Dividing powers of ten subtracts the indices."
+      },
+      {
+        "n": 3,
+        "working": "$\\log\\frac{a}{b} = p - q = \\log a - \\log b$",
+        "decision": "Read the index back as a logarithm."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -426,7 +1100,37 @@
       "$p + 3$"
     ],
     "answer": "$3p$",
-    "explain": "$a^{3} = (10^{p})^{3} = 10^{3p}$, so $\\log a^{3} = 3p$, which is $3\\log a$: the power law, derived."
+    "optionNotes": [
+      {
+        "option": "$p^{3}$",
+        "why": "Cubing $a$ multiplies its index by $3$: $(10^{p})^{3} = 10^{3p}$, so the logarithm is $3p$."
+      },
+      {
+        "option": "$p + 3$",
+        "why": "Adding $3$ to the index would multiply $a$ by $1000$; cubing multiplies the index instead."
+      }
+    ],
+    "explain": "$a^{3} = (10^{p})^{3} = 10^{3p}$, so $\\log a^{3} = 3p$, which is $3\\log a$: the power law, derived the way step 2 of See it derived the quotient law.",
+    "twin": {
+      "prompt": "Let $b = 10^{q}$. What is $\\log b^{5}$ in terms of $q$?",
+      "options": [
+        "$5q$",
+        "$q^{5}$",
+        "$q + 5$"
+      ],
+      "answer": "$5q$",
+      "optionNotes": [
+        {
+          "option": "$q^{5}$",
+          "why": "Raising $b$ to the fifth multiplies its index by $5$: $(10^{q})^{5} = 10^{5q}$, so the logarithm is $5q$."
+        },
+        {
+          "option": "$q + 5$",
+          "why": "Adding $5$ to the index would multiply $b$ by $100\\,000$; the power multiplies the index instead."
+        }
+      ],
+      "explain": "$b^{5} = (10^{q})^{5} = 10^{5q}$, so $\\log b^{5} = 5q$."
+    }
   },
   {
     "type": "h",
@@ -448,22 +1152,10 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.laws-of-logarithms.01"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.laws-of-logarithms.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.laws-of-logarithms.05"
-  },
-  {
-    "type": "prompt",
     "promptId": "rp.fm.u1.laws-of-logarithms.08"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.laws-of-logarithms.12"
+    "promptId": "rp.fm.u1.laws-of-logarithms.13"
   }
 ]

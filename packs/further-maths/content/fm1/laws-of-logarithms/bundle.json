@@ -123,15 +123,15 @@
       ],
       "howExamined": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. This is the first half of the logarithm question almost every year, worth 2 or 3 marks, and it is the part that separates the grades: Summer 2019 Q9(a) (most gave a ratio of logarithms and very few finished), Summer 2022 Q5(a) (which the report placed among the hardest questions that year), Summer 2023 Q7(a) (a good discriminator, only the best scored any marks), Summer 2024 Q6(a) (most lost the final mark), Summer 2025 Q9(a) (only a few reached the final answer). The Summer 2024 scheme gave M1 for the powers taken inside, M1 for the combining step and W1 for the finished single logarithm, with follow-through into the equation part that follows. Three of the last five papers set the laws part in a base other than ten (2022, 2023, 2026); the part after it is an indicial equation every year, and Summer 2019 joined the two with a one-line \"show that\" and a \"hence\".",
       "traps": [
-        "Writing log a + log b as log(a + b), so the plus goes inside unchanged (Summer 2022 FM1 Q5)",
+        "Writing log a + log b as log(a + b), so the plus goes inside unchanged",
         "Writing log a − log b as log a ÷ log b, dividing the logarithms instead of the arguments (Summer 2025 FM1 Q9, Summer 2019 FM1 Q9)",
         "Applying a coefficient to the variable but not to its number, so 3 log 2x becomes log 2x³ (Summer 2024 FM1 Q6)",
-        "Taking a coefficient inside as a multiplier rather than as a power (Summer 2024 FM1 Q6)",
+        "Taking a coefficient inside as a multiplier rather than as a power, so 3 log x becomes log 3x",
         "Putting a subtracted term in the numerator, or an added one in the denominator (Summer 2025 FM1 Q9)",
         "Being unable to split a product or a quotient into separate logarithms at all (Summer 2022 FM1 Q5)",
         "Not seeing how to build a number from the logarithms given, such as 10.5 from logs of 2, 3 and 7 (Summer 2023 FM1 Q7)",
         "Reaching log y² = log x³ and stopping, instead of dropping the logarithms (Summer 2019 FM1 Q9)",
-        "Dropping the bracket when a built logarithm such as 1 − q is substituted (Summer 2025 FM1 Q9)",
+        "Dropping the bracket when a built logarithm such as 1 − q is substituted, so p + q − (1 − q) is written p + q − 1 − q",
         "Combining constants and roots wrongly inside a single logarithm (Summer 2025 FM1 Q9)",
         "Leaving the bracket off when a whole expression comes down as a coefficient, writing 2x − 1 log 3 where (2x − 1) log 3 is meant (Summer 2018 FM1 Q6)",
         "Treating log as a number to divide by, which leaves a ratio of logarithms instead of an equation in y and x; it was the most common answer that year (Summer 2019 FM1 Q9)",
@@ -180,12 +180,60 @@
           },
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "log b^3 and log c^2"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "b^3",
+                  "b³"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "c^2",
+                  "c²"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         },
         {
           "n": 2,
           "working": "The expression is now $\\log a + \\log b^{3} - \\log c^{2}$.",
-          "decision": "Rewriting the whole line before combining anything keeps the three terms visible, so nothing is lost when the laws start to act."
+          "decision": "Rewriting the whole line before combining anything keeps the three terms visible, so nothing is lost when the laws start to act.",
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\log a + \\log b^{3} - \\log c^{2}$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\log a + \\log 3b - \\log 2c$",
+                "correct": false,
+                "feedback": "A coefficient goes inside as a power, not a multiplier: $3\\log b = \\log b^{3}$.",
+                "misconception": "fm.logs.power-as-multiplier-inside"
+              },
+              {
+                "id": "c",
+                "text": "$\\log a + \\log b^{3} + \\log c^{2}$",
+                "correct": false,
+                "feedback": "The last term was subtracted, and it stays subtracted."
+              }
+            ]
+          }
         },
         {
           "n": 3,
@@ -193,7 +241,17 @@
           "decision": "Added logarithms multiply inside. Doing the addition before the subtraction keeps the subtracted term where it belongs.",
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "\\log(ab^{3})",
+            "equivalence": "equivalent",
+            "variables": [
+              "a",
+              "b"
+            ],
+            "form": "single-log"
+          }
         },
         {
           "n": 4,
@@ -201,7 +259,18 @@
           "decision": "The subtracted term goes underneath. Swapping top and bottom is the slip the Summer 2025 report names, and it is invisible unless you check which term had the minus.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "\\log\\frac{ab^{3}}{c^{2}}",
+            "equivalence": "equivalent",
+            "variables": [
+              "a",
+              "b",
+              "c"
+            ],
+            "form": "single-log"
+          }
         }
       ],
       "finalAnswer": "$\\log\\frac{ab^{3}}{c^{2}}$",
@@ -266,7 +335,16 @@
           "decision": "The bracket is the whole point. Written without it, the cube looks as though it belongs to the x alone, and that is exactly what the examiners report happening.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "\\log\\left((2x)^{3}\\right)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "form": "single-log"
+          }
         },
         {
           "n": 2,
@@ -283,7 +361,15 @@
           },
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "8x^{3}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 3,
@@ -291,7 +377,16 @@
           "decision": "Compare it with $\\log 2x^{3}$, which is what the slip produces: at $x = 1.5$ that comes to $0.829304$, not $1.431364$.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "\\log 8x^{3}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "form": "single-log-expanded"
+          }
         }
       ],
       "finalAnswer": "$\\log 8x^{3}$",
@@ -354,12 +449,45 @@
           "decision": "Factorising the number is the whole question. Until it is written in threes, fives and twos, none of the three laws has anything to act on.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{3 \\times 5}{2}$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{3 \\times 5}{10}$",
+                "correct": false,
+                "feedback": "That is $1.5$: the $2$ underneath has become a $10$."
+              },
+              {
+                "id": "c",
+                "text": "$3 \\times 2.5$",
+                "correct": false,
+                "feedback": "True, but $2.5$ has no logarithm you are given; write $7.5$ with $3$, $5$ and $2$ only."
+              }
+            ]
+          }
         },
         {
           "n": 2,
           "working": "Apply the laws: $\\log 7.5 = \\log 3 + \\log 5 - \\log 2 = p + q - \\log 2$.",
-          "decision": "The product becomes a sum and the division becomes a subtraction. What is left is one logarithm with no letter of its own."
+          "decision": "The product becomes a sum and the division becomes a subtraction. What is left is one logarithm with no letter of its own.",
+          "input": {
+            "kind": "algebraic",
+            "latex": "p + q - \\log 2",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ]
+          }
         },
         {
           "n": 3,
@@ -376,7 +504,15 @@
           },
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "1 - q",
+            "equivalence": "equivalent",
+            "variables": [
+              "q"
+            ]
+          }
         },
         {
           "n": 4,
@@ -384,7 +520,16 @@
           "decision": "The bracket changes the sign of both terms inside it. Dropping it leaves $p + q - 1$, which is short of a whole $q$.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "p + 2q - 1",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ]
+          }
         }
       ],
       "finalAnswer": "$p + 2q - 1$",
@@ -448,6 +593,32 @@
             ],
             "correct": 0,
             "explain": "The power law takes a coefficient inside as an index. It never multiplies what is inside, and it is not a factor to divide out."
+          },
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\log y^{2} = \\log x + \\log 9$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\log 2y = \\log x + \\log 9$",
+                "correct": false,
+                "feedback": "The $2$ went inside as a multiplier; a coefficient goes inside as a power, $y^{2}$.",
+                "misconception": "fm.logs.power-as-multiplier-inside"
+              },
+              {
+                "id": "c",
+                "text": "$2y = x + 9$",
+                "correct": false,
+                "feedback": "The logarithms were dropped before each side was a single logarithm.",
+                "misconception": "fm.logs.cannot-remove-logs"
+              }
+            ]
           }
         },
         {
@@ -456,7 +627,33 @@
           "decision": "Now each side is one logarithm, which is what dropping them needs.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\log y^{2} = \\log 9x$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\log y^{2} = \\log(x + 9)$",
+                "correct": false,
+                "feedback": "Added logarithms multiply inside: $\\log x + \\log 9 = \\log 9x$.",
+                "misconception": "fm.logs.sum-inside-the-log"
+              },
+              {
+                "id": "c",
+                "text": "$\\log y^{2} = \\log x \\times \\log 9$",
+                "correct": false,
+                "feedback": "The law multiplies the numbers inside one logarithm, not the logarithms themselves.",
+                "misconception": "fm.logs.product-to-sum"
+              }
+            ]
+          }
         },
         {
           "n": 3,
@@ -464,7 +661,16 @@
           "decision": "Dropping the logarithms is allowed only now, with a single logarithm on each side.",
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "y^{2} = 9x",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          }
         },
         {
           "n": 4,
@@ -472,7 +678,16 @@
           "decision": "$\\sqrt{9x} = 3\\sqrt{x}$, and $y$ is positive because it sits inside a logarithm. The Summer 2019 report found that very few candidates took this last step.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "y = 3\\sqrt{x}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          }
         }
       ],
       "finalAnswer": "$y = 3\\sqrt{x}$",
@@ -528,12 +743,62 @@
           "decision": "A quotient inside becomes a difference outside. Deal with the division first, so the minus lands on the root term alone.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\log_{3}(9x^{3}) - \\log_{3}\\sqrt{y}$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\log_{3}(9x^{3}) \\div \\log_{3}\\sqrt{y}$",
+                "correct": false,
+                "feedback": "The quotient splits into a difference of logarithms, not a division of them.",
+                "misconception": "fm.logs.quotient-as-divided-logs"
+              },
+              {
+                "id": "c",
+                "text": "$\\log_{3}(9x^{3}) + \\log_{3}\\sqrt{y}$",
+                "correct": false,
+                "feedback": "The root is underneath, so its logarithm is subtracted."
+              }
+            ]
+          }
         },
         {
           "n": 2,
           "working": "Split the product: $\\log_{3} 9 + \\log_{3} x^{3} - \\log_{3}\\sqrt{y}$.",
-          "decision": "The product becomes a sum. This is the separation the Summer 2022 report found hardest."
+          "decision": "The product becomes a sum. This is the separation the Summer 2022 report found hardest.",
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\log_{3} 9 + \\log_{3} x^{3} - \\log_{3}\\sqrt{y}$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\log_{3} 9 \\times \\log_{3} x^{3} - \\log_{3}\\sqrt{y}$",
+                "correct": false,
+                "feedback": "A product splits into a sum of logarithms, not a product of them.",
+                "misconception": "fm.logs.product-to-sum"
+              },
+              {
+                "id": "c",
+                "text": "$\\log_{3} 9 + \\log_{3} x^{3} + \\log_{3}\\sqrt{y}$",
+                "correct": false,
+                "feedback": "The root is still underneath, so its logarithm stays subtracted."
+              }
+            ]
+          }
         },
         {
           "n": 3,
@@ -550,12 +815,51 @@
           },
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\log_{3} 9 + 3\\log_{3} x - \\frac{1}{2}\\log_{3} y$",
+                "correct": true,
+                "feedback": "Right: this is the line the laws give."
+              },
+              {
+                "id": "b",
+                "text": "$\\log_{3} 9 + 3\\log_{3} x - 2\\log_{3} y$",
+                "correct": false,
+                "feedback": "A square root is the power $\\frac{1}{2}$, not $2$.",
+                "misconception": "fm.logs.root-not-brought-down"
+              },
+              {
+                "id": "c",
+                "text": "$\\log_{3} 9 + \\log_{3} 3x - \\frac{1}{2}\\log_{3} y$",
+                "correct": false,
+                "feedback": "The power belongs to $x$ and drops in front as a coefficient, $3\\log_{3} x$.",
+                "misconception": "fm.logs.power-as-multiplier-inside"
+              }
+            ]
+          }
         },
         {
           "n": 4,
           "working": "Use the base: $\\log_{3} 9 = 2$, since $3^{2} = 9$.",
-          "decision": "The base is the one number whose logarithm needs no letter."
+          "decision": "The base is the one number whose logarithm needs no letter.",
+          "input": {
+            "kind": "numeric",
+            "value": 2,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         },
         {
           "n": 5,
@@ -563,7 +867,16 @@
           "decision": "Replace each logarithm by its letter, keeping every sign.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "2 + 3p - \\frac{1}{2}q",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ]
+          }
         }
       ],
       "finalAnswer": "$2 + 3p - \\frac{1}{2}q$",
@@ -1016,8 +1329,7 @@
                 "latex": "\\log(a + b)"
               },
               "feedback": "The plus sign has gone inside unchanged. Adding logarithms multiplies the arguments, so it is $\\log(ab)$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q5"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -1106,8 +1418,7 @@
                 "latex": "\\log(x - y)"
               },
               "feedback": "The minus sign has gone inside unchanged. Subtracting logarithms divides the arguments, so it is $\\log\\frac{x}{y}$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q5"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -1195,8 +1506,7 @@
                 "latex": "\\log 3m"
               },
               "feedback": "The $3$ has gone inside as a multiplier. A coefficient becomes a power, so it is $\\log m^{3}$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2024-summer:FM1:Q6"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -1494,8 +1804,7 @@
                 "latex": "a^{3} + b"
               },
               "feedback": "The index has stayed where it was. The power law brings it down in front, so $\\log 2^{3} = 3\\log 2 = 3a$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2023-summer:FM1:Q7"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1602,8 +1911,7 @@
                 }
               },
               "feedback": "The left side was read as $\\log(x + 4)$. Adding logarithms multiplies inside, so it is $\\log 4x$ and $x = 5$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q5"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -1712,8 +2020,7 @@
                 "latex": "\\log 6x"
               },
               "feedback": "The $3$ has gone inside as a multiplier rather than as a power. It becomes an index on everything inside.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2024-summer:FM1:Q6"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -1824,8 +2131,7 @@
                 "latex": "\\log\\frac{2pq}{3r}"
               },
               "feedback": "The coefficients have gone inside as multipliers. Each one becomes a power, giving $\\log\\frac{p^{2}q}{r^{3}}$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q9"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -2549,8 +2855,7 @@
                 "latex": "\\log\\frac{2ab}{c}"
               },
               "feedback": "The $2$ went inside as a multiplier. A coefficient becomes a power, so $2\\log b = \\log b^{2}$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2024-summer:FM1:Q6"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -2613,8 +2918,7 @@
                 }
               },
               "feedback": "The right side was read as $\\log 7$, adding inside instead of multiplying. It combines to $\\log 12$, and the answer is $6.5$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q5"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -2825,7 +3129,12 @@
               "marksTypicallyEarned": 1
             }
           ],
-          "requiresWorking": true
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "b",
+            "rule": "use-candidate-value",
+            "relation": "250/5^x"
+          }
         }
       ],
       "totalMarks": 7,
@@ -2910,8 +3219,7 @@
                 "latex": "m + n^{2}"
               },
               "feedback": "The index stayed inside. The power law brings it down, so $\\log 3^{2} = 2\\log 3 = 2n$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2023-summer:FM1:Q7"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -3187,8 +3495,7 @@
                 }
               },
               "feedback": "The left side was read as $\\log(2x)$, adding inside instead of multiplying. Multiplying the brackets gives $x^{2} - 4 = 12$ and $x = 4$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q5"
+              "marksTypicallyEarned": 0
             },
             {
               "misconception": "fm.qin.context-not-applied",
@@ -3310,8 +3617,7 @@
                 "latex": "\\log 3"
               },
               "feedback": "The $2$ went inside as a multiplier, so the $x$ cancelled away. A coefficient becomes a power: $\\log 36x^{2}$ first, then divide by $4x$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2024-summer:FM1:Q6"
+              "marksTypicallyEarned": 0
             },
             {
               "misconception": "fm.logs.subtraction-rule-misapplied",
@@ -3497,7 +3803,12 @@
               "marksTypicallyEarned": 2
             }
           ],
-          "requiresWorking": true
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "c",
+            "rule": "use-candidate-value",
+            "relation": "(x*0.30103 + 0.69897)/(2*0.69897 - 0.30103)"
+          }
         }
       ],
       "totalMarks": 10,
@@ -3619,8 +3930,7 @@
                 }
               },
               "feedback": "The two logarithms were added inside, as $\\log_{2}(2x + 2)$. Added logarithms multiply inside: $\\log_{2}\\left(x(x + 2)\\right) = 3$, so $x(x + 2) = 8$ and $x = 2$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q5"
+              "marksTypicallyEarned": 0
             },
             {
               "misconception": "fm.logs.unknown-base-divided",
@@ -3633,8 +3943,7 @@
                 }
               },
               "feedback": "The logarithm was undone by multiplying the base by the $3$, giving $x(x + 2) = 6$. The index form raises the base to that power instead: $x(x + 2) = 2^{3} = 8$, and then $x = 2$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2019-summer:FM1:Q9"
+              "marksTypicallyEarned": 1
             },
             {
               "misconception": "fm.qin.context-not-applied",
@@ -3964,6 +4273,22 @@
         "FM1-LOG-02"
       ],
       "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.laws-of-logarithms.13",
+      "kind": "formula",
+      "prompt": "In any base $b$, what is $\\log_{b} b$?",
+      "answer": "It is 1, because $b^{1} = b$: each factor of the base gives 1.",
+      "keyWords": [
+        "1",
+        "factor"
+      ],
+      "difficultyPrior": 5,
+      "topic": "fm.u1.laws-of-logarithms",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "examUnit": "FM1"
     }
   ],
   "insight": {
@@ -4066,91 +4391,124 @@
     {
       "id": "ver.note.fm.u1.laws-of-logarithms",
       "itemId": "note.fm.u1.laws-of-logarithms",
-      "version": 2,
+      "version": 3,
       "checks": [
         {
           "type": "schema",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
           "result": "pass",
-          "detail": "Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, the 15 gate ids (g1, g2, g3, g4, g9, g5, g6, g10, g7, g8, g11, g12, g13, g14, g15) are unique, every heading carries a role from the depth standard, every prompt block names a prompt in this bundle, and every gate restates the expression it works on so it reads alone in the review inbox.",
-          "at": "2026-09-23T15:00:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "scope-tier",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "FM1 is untiered and calculator-allowed. The change-of-base rule, which the FM1-LOG-02 teacher guidance excludes, appears nowhere, and the Going further section says so in a not-on-this-specification callout: every logarithm is to base 10, to an unstated common base, or to a stated base (3 or 5, and 2 in the items) that is answered by factorising with the base as a factor, since the base's own logarithm is 1. Natural logarithms and e do not appear.",
-          "at": "2026-09-23T15:00:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "formula-sheet",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "The Unit 1 sheet gives only a^x = n so x = log_a n. The three laws are must-know (mk.fm1.log-laws in packs/further-maths/exam-true/formula-sheets.json); the Where the laws come from section derives all three from the index laws in five lines.",
-          "at": "2026-09-23T15:00:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "command-words",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "Express, Solve, Write down, Hence and Find are the command words, with the tariffs from packs/further-maths/exam-true/command-words.json. The stems keep the shape of the logarithm parts read in the 2018, 2019, 2021, 2022, 2023, 2024, 2025 and 2026 FM1 papers while every letter, number and sentence is our own.",
-          "at": "2026-09-23T15:00:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "tariff",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "2 to 3 marks for a single-logarithm part and 2 for an in-terms-of part, matching Summer 2023 Q7(a) (2), Summer 2024 Q6(a) (3) and Summer 2025 Q9(a) (3); the exam-style questions run 3 + 3, 2 + 3, 3 + 2 + 4, the synoptic chain 3 + 2 + 1 + 4 (the Summer 2019 show-then-hence pairing at full length) and the context 2 + 3 + 2. The Summer 2024 scheme gives the last mark to the single logarithm before its argument is cancelled, so the unsimplified form earns full marks here too.",
-          "at": "2026-09-23T15:00:00Z",
+          "detail": "Rebuilt to the teach-first shape (docs/plan/review/2026-09-27-see-it-block-shape.md), asserted by mig.mjs assertTeachFirst: idea:A logarithm counts powers of ten; idea:Adding logarithms multiplies inside; idea:Subtracting logarithms divides inside; idea:A number in front becomes a power; why:Why the three laws hold; variant:Combining into one logarithm; variant:Numbers and roots inside; variant:The same laws, read backwards; variant:Equal logarithms, equal arguments; variant:In terms of given logarithms; variant:A base other than ten; twists:Exam twists; further:Going further: a power law in disguise; derivation:Where the laws come from. Every section explains, shows its own See it, then asks; every gate has a twin on new numbers; every choice gate and every choice twin carries one option note per wrong option, with the registry misconception where one exists. Kept with their kind and answer: g3, g4, g9, g10, g14, g15. Hero minutes = the lint's model (26).",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         },
         {
           "type": "maths-numeric",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
           "result": "pass",
-          "detail": "Each law was checked at three sample points before the lesson was written: product (2 = 2, 1.322219 = 1.322219, 0.60206 = 0.60206); quotient (1.39794 = 1.39794, 0.845098 = 0.845098, -0.39794 = -0.39794); power (2.334454 = 2.334454, 0.150515 = 0.150515, -1.908485 = -1.908485); constant-as-log (1 = 1, 2 = 2, -1 = -1). Every decomposition was verified against the real logarithm (log 40 = 1.60206 against 3a + b = 1.60206; log 7.5 = 0.875061 against p + 2q - 1 = 0.875061; log 18 = 1.255273 against m + 2n = 1.255273; log 0.75 = -0.124939 against n - 2m = -0.124939; log 50 = 1.69897 against a + 2b; log_3 13.5 = 2.36907 against 3 - t = 2.36907; log_3 18 = 2.63093 against t + 2), the figure hops were computed (log 4 = 0.602 and log 25 = 1.398 reach 2), and every equation's solution was substituted back into the equation it came from.",
-          "at": "2026-09-23T15:00:00Z",
+          "detail": "Every value the note prints is computed in the generator and checked: log 3000 = 3.477 and log 27 = 1.431 from log 3 = 0.477; log 700 = 2.845; log 5.6 = 3u + w - 1 against the real logarithm; log_5 12.5, 50 and 250 against 2 - t, t + 2 and t + 3; z = 3y/2, q = 5p/2 and n = 3m/2 against the logarithms; the equations' roots (7, 9, 13) substituted back; every single-logarithm identity the gates and twins state checked at three sample points (sameAt), and every distractor shown to differ.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         },
         {
-          "type": "maths-symbolic",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
           "result": "pass",
-          "detail": "The three laws are used symbolically throughout; the (2x)^3 identity was checked at three values of x (x = 1.5: 1.431364, x = 4: 2.70927, x = 0.2: -1.19382) and separated from the coefficient-not-raised slip at each of them. Every new identity (the roots 6 log root c = log c^3, 8 log root c = log c^4, 10 log root c = log c^5; 2 log 7x = log 49x^2; log 5x^3 = log 5 + 3 log x; log a^3 = 3p for a = 10^p) was checked at sample points and every gate distractor shown to differ from its answer.",
-          "at": "2026-09-23T15:00:00Z",
+          "detail": "Every gate and twin marked through markGate and checked by positionalWording (src/lib/gate-order.ts); a two-way overlap scan of maths spans finds no expression the note, a gate or a twin works that a question, a diagnostic, a worked example or its twin, a find-the-mistake item or a shipped prompt asks, nor the reverse, apart from the laws' own statements (FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts).",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         },
         {
           "type": "examiner-alignment",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
           "result": "pass",
-          "detail": "One examiner callout stands in the body beside the power-law step (Summer 2024 Q6); every other finding is a Sheet trap. The Exam twists section cites the series for each twist from the 2018 to 2026 papers, most frequent first, and each twist has been set at least twice. The four find-the-mistake items are seeded from Summer 2024 Q6, Summer 2025 Q9 (twice) and Summer 2018 Q6.",
-          "at": "2026-09-23T15:00:00Z",
+          "detail": "One examiner callout in the body, Summer 2024 Q6 (the number in a bracket not raised), reworded without the paper's expression. The twists section cites the series that set each twist, 2018 to 2026 (the base other than ten read from the papers: base 4 in 2022, base 7 in 2023, base 5 in 2026). The number-and-root and wrong-side slips cite Summer 2025 Q9.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         },
         {
-          "type": "copy-shingle",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
           "result": "pass",
-          "detail": "An 8-word shingle scan of the note and the bundle against every text file of the private FM corpus (scratchpad/fm1-batch-f/lib.mjs shingleClash) returns nothing. The corpus expressions were read for tariff and part structure only: none is reused.",
-          "at": "2026-09-23T15:00:00Z",
+          "detail": "Sheet traps corrected against the reports on 29 Sep 2026: log(a + b) no longer cites Summer 2022 Q5 (that block names a product not separated into a sum), the coefficient as a multiplier no longer cites Summer 2024 Q6 (that block names the 2 not cubed, which its own trap keeps), and the dropped bracket on 1 - q no longer cites Summer 2025 Q9 (whose bullets are constants and roots, c in the denominator and the subtraction rule); each trap stays, unsourced, with an example.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         },
         {
           "type": "style-lint",
-          "tool": "claude (FM1 batch-F generators in scratchpad/fm1-batch-f: lib.mjs computes every power, logarithm, integral and rational value; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
           "result": "pass",
-          "detail": "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. 7 phone-native inline SVG figures (a 400-unit viewBox, labels of 14 to 16 units), each drawing one idea from the checked numbers, and one embeddable video from data/links/media-map.json followed immediately by a gate. The closing panel is a pointer of under 80 words followed by the prompts.",
-          "at": "2026-09-23T15:00:00Z",
+          "detail": "British English, calm, no exclamation marks; every figure on a 400-unit viewBox with labels of 14 units or more, rendered at 358 px and looked at (a square of side 4x replaces the cube of 2x, which drew worked example 02's own answer; the combining figure uses the note's own letters); the video sits beside its See it; every re-teaching explanation at most 60 words and no option named by its place.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "An interface warm-up (\"One tap to begin\"): the owner's answer 8 of 27 Sep 2026 makes the first check a real one, answerable from the first See it, which g16 is.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g17",
+          "reason": "It asked log 5 + log 6 as a single logarithm, word for word the diagnostic item d1 asks after the lesson; g17 checks the product law on numbers no item uses.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g18",
+          "reason": "It asked where c squared goes in log a + 3 log b - 2 log c, the worked example 01's own expression, and the diagnostic d4 asks the same placement; g18 checks a whole combination on the note's own letters.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g19",
+          "reason": "It asked 1 + log x as a single logarithm, word for word diagnostic item d5; g19 checks a number as a logarithm (log h - 1) on the note's own expression.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g20",
+          "reason": "It asked log(m^4 n) as separate logarithms, word for word diagnostic item d7; g20 checks the expansion on new letters.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": "g21",
+          "reason": "It solved log x + log 4 = log 20, the equation question 0011 asks and diagnostic d6 continues; g21 solves a new equation.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g11",
+          "kind": "gate",
+          "replacedBy": "g22",
+          "reason": "It gave log 2 = a and log 3 = b, the letters of question 0009 and the pair of logarithms question 0015 builds from; g22 uses the note's own letters (u, w) and a new number, 24.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g12",
+          "kind": "gate",
+          "replacedBy": "g23",
+          "reason": "It worked in base 3, the base of worked example 05, and asked log_3 18, the very example prompt 12 printed; g23 checks a base other than ten in base 5.",
+          "on": "2026-09-28T23:40:00Z"
+        },
+        {
+          "id": "g13",
+          "kind": "gate",
+          "replacedBy": "g24",
+          "reason": "It asked the first move of an indicial equation, a step no See it in this note shows (it is the neighbouring topic's); g24 checks the twists section's own See it, one letter in terms of another.",
+          "on": "2026-09-28T23:40:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.laws-of-logarithms.01",
@@ -4212,6 +4570,14 @@
           "detail": "The steps earn M1 (the powers inside), M2 (the product) and W1 (the single logarithm): q0005's 3-mark scheme for the same shape, and the 3 marks of Summer 2025 Q9(a). The twin is marked out of those 3 (scratchpad/fm1-batch-g/depth-pilot/probe-depth-laws.mts). Until the 23 Sep fix pass the steps carried M1 M2 M3 W1, four marks for a 3-mark task.",
           "at": "2026-09-23T18:45:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Step inputs added on 29 Sep 2026 (an addition to the marked surface; lines, earns, fading and twin unchanged): step 1 text, step 2 mcq, step 3 algebraic (single-log), step 4 algebraic (single-log). Each accepts the step's own line in the ways she would type it and refuses the slips the step warns about, probed through markAnswer.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4268,6 +4634,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Step inputs added on 29 Sep 2026 (an addition to the marked surface; lines, earns, fading and twin unchanged): step 1 algebraic (single-log), step 2 algebraic, step 3 algebraic (single-log-expanded). Each accepts the step's own line in the ways she would type it and refuses the slips the step warns about, probed through markAnswer.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -4334,6 +4708,14 @@
           "detail": "The steps earn M1 (7.5 written as 3 x 5 / 2), M2 (log 2 = 1 - q) and W1 (p + 2q - 1): q0010's 3-mark scheme for this same task. The Summer 2023 Q7(a) in-terms-of part is worth 2 because the base's own logarithm is given there; here log 2 has to be built from log 10 and log 5, which is the third mark. The twin, the same shape on 4.5, is marked out of 3 (scratchpad/fm1-batch-g/depth-pilot/probe-depth-laws.mts). Until the 23 Sep fix pass the steps carried four marks and the twin was log 18 = m + 2n, a 2-mark task and q0015(a) word for word.",
           "at": "2026-09-23T18:45:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Step inputs added on 29 Sep 2026 (an addition to the marked surface; lines, earns, fading and twin unchanged): step 1 mcq, step 2 algebraic, step 3 algebraic, step 4 algebraic. Each accepts the step's own line in the ways she would type it and refuses the slips the step warns about, probed through markAnswer.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4390,6 +4772,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-23T15:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Step inputs added on 29 Sep 2026 (an addition to the marked surface; lines, earns, fading and twin unchanged): step 1 mcq, step 2 mcq, step 3 algebraic, step 4 algebraic. Each accepts the step's own line in the ways she would type it and refuses the slips the step warns about, probed through markAnswer.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -4448,6 +4838,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-23T15:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Step inputs added on 29 Sep 2026 (an addition to the marked surface; lines, earns, fading and twin unchanged): step 1 mcq, step 2 mcq, step 3 mcq, step 4 numeric, step 5 algebraic. Each accepts the step's own line in the ways she would type it and refuses the slips the step warns about, probed through markAnswer.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4504,6 +4902,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -4562,6 +4968,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4618,6 +5032,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -4790,6 +5212,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4846,6 +5276,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -4904,6 +5342,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4960,6 +5406,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -5360,6 +5814,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5416,6 +5878,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-23T15:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Follow-through added in place to part (c) on 29 Sep 2026 (ruling 14): relation 250/5^x, her n from part (b); at n = 3 it reaches the key, 2. Probed through markAnswer with a wrong n carried consistently.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -5474,6 +5944,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5530,6 +6008,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -5588,6 +6074,22 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-23T15:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Follow-through added in place to part (d) on 29 Sep 2026 (the Fable judge's ruling 14: a part that uses an earlier part's value carries it): relation (x*0.30103 + 0.69897)/(2*0.69897 - 0.30103), her value of a from part (c); checked at a = 2, 3 and 4 against (a log 2 + log 5) / (2 log 5 - log 2), and at a = 3 it reaches the key, 1.46. Probed through markAnswer with a wrong a carried consistently.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5644,6 +6146,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks. Answer forms follow scratchpad/fm1-batch-f/probe-log-forms.mts: single-log only where the answer is one logarithm, expanded-logs only where it is a sum of logarithms, and no form at all where the answer holds none.",
           "at": "2026-09-23T18:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 29 Sep 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check naming only these sources): the sum-inside-the-log errors drop Summer 2022 Q5 (that block names a product not separated into a sum, not a sum put inside; the 2025 Q9 citation for a constant combined inside stands); the power-as-multiplier errors drop Summer 2024 Q6 (that block names the 2 not cubed, the coefficient-not-raised slip, which keeps its citation) and Summer 2023 Q7 (that block names 10.5 not reached from 2, 3 and 7); the coefficient-not-raised errors that are really multipliers (2pq/3r, 2ab/c) drop their sources; the base-times-index error on question 0021 drops Summer 2019 Q9, which names none.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
@@ -6088,10 +6598,27 @@
           "detail": "British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T15:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Withdrawn: it answered question 0004.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.laws-of-logarithms.05",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asked 3 log 2x as a single logarithm, the very expression question 0004, worked example 02 and find-the-mistake 01 ask, so the card answered them.",
+          "on": "2026-09-28T23:40:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.laws-of-logarithms.06",
@@ -6220,10 +6747,27 @@
           "detail": "British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T15:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Withdrawn: over the 25-word cap, and a worked example's step.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.laws-of-logarithms.09",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 26-word answer (over the owner's 25-word cap) that worked worked example 03's own step (2 = 10/5).",
+          "on": "2026-09-28T23:40:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.laws-of-logarithms.10",
@@ -6253,10 +6797,27 @@
           "detail": "British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T15:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Withdrawn: it answered question 0013.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.laws-of-logarithms.10",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asked 2 log y = 3 log x to y in terms of x, the answer question 0013 and diagnostic d8 ask.",
+          "on": "2026-09-28T23:40:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.laws-of-logarithms.11",
@@ -6286,10 +6847,27 @@
           "detail": "British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T15:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Withdrawn: over the 25-word cap.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.laws-of-logarithms.11",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 33-word derivation, over the owner's 25-word cap; the note's derivation section carries it.",
+          "on": "2026-09-28T23:40:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.laws-of-logarithms.12",
@@ -6318,6 +6896,56 @@
           "result": "pass",
           "detail": "British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T15:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Withdrawn: over the 15-word question and 25-word answer caps.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.laws-of-logarithms.12",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.laws-of-logarithms.13",
+          "reason": "An 18-word question and a 34-word answer that worked log_3 18; rp.13 recalls the fact itself in 13 words.",
+          "on": "2026-09-28T23:40:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.rp.fm.u1.laws-of-logarithms.13",
+      "itemId": "rp.fm.u1.laws-of-logarithms.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Validated by pipeline/build-content.mts against the Zod RetrievalPrompt schema.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "A short recall (a 9-word question, a 13-word answer) of the one fact a base other than ten turns on; both key words are in the answer's own words, checked through keywordsPresent in the probe.",
+          "at": "2026-09-28T23:40:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 27-29 Sep 2026: scratchpad/fm1-batch-f/laws-of-logarithms.mjs checks every law and every value it prints at sample points; FORK_SP/fm1-mig2/probe-laws-of-logarithms.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; FORK_SP/fm1-mig2/render.mjs renders every figure)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free.",
+          "at": "2026-09-28T23:40:00Z",
           "by": "claude"
         }
       ],
