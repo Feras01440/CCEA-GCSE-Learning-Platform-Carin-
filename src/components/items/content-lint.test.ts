@@ -693,10 +693,43 @@ describe("sizeWarnings", () => {
     const blocks = Array.from({ length: 4 }, () => ({ type: "p", md: pad(39) }));
     const r = sizeWarnings(bundle, blocks, label);
     expect(r).toEqual([
-      `${label} bundle.json: 624 KB serialised (a bundle is at most 600 KB)`,
+      `${label} bundle as shipped: 625 KB serialised (a bundle is at most 600 KB, counted on what the build ships)`,
       `${label} note.blocks.json: 156 KB serialised (a note is at most 150 KB)`,
     ]);
     expect(sizeWarnings(null, null, label)).toEqual([]);
+  });
+
+  /**
+   * The lead, 29 Sep 2026: a withdrawn item stays in the pack by rule but is never shipped, so it is never counted: not
+   * against the item limit, and not in the bundle, which is measured as the build writes it (compact JSON of the shipped
+   * items). The same rule as markingWarnings (item 15): an id in a withdrawn record, or a log that is not verified or
+   * published, is left out.
+   */
+  test("a pack with a 500 KB withdrawn copy and 100 KB of shipped items reports nothing", () => {
+    const shipped = (id: string, kb: number) => ({ id, verification: `ver.${id}`, stem: pad(kb) });
+    const bundle = {
+      topic: { id: "science.b2.x" },
+      questions: [shipped("q.1", 33), shipped("q.2", 33), shipped("q.3", 33), { id: "q.old", verification: "ver.q.old", stem: pad(500) }],
+      workedExamples: [{ id: "we.old", verification: "ver.we.old", stem: pad(90) }],
+      verification: [
+        { id: "ver.q.1", itemId: "q.1", status: "verified" },
+        { id: "ver.q.2", itemId: "q.2", status: "verified" },
+        { id: "ver.q.3", itemId: "q.3", status: "published", withdrawn: [{ id: "q.old", kind: "question", replacedBy: "q.3", reason: "r", on: "2026-09-29T00:00:00Z" }] },
+        { id: "ver.q.old", itemId: "q.old", status: "verified" },
+        { id: "ver.we.old", itemId: "we.old", status: "withdrawn" },
+      ],
+    };
+    expect(sizeWarnings(bundle, [{ type: "p", md: "short" }], label)).toEqual([]);
+    // the same copy shipped (no withdrawn record, a shipped log) is named, and so is the bundle it swells past 600 KB
+    const shippedCopy = {
+      ...bundle,
+      questions: [...bundle.questions.slice(0, 3), { id: "q.old", verification: "ver.q.old", stem: pad(520) }],
+      verification: bundle.verification.map((l) => ({ ...l, withdrawn: undefined })),
+    };
+    const r = sizeWarnings(shippedCopy, null, label);
+    expect(r[0]).toBe(`${label} q.old: 520 KB serialised (a question is at most 40 KB; inline figure markup is the usual cause)`);
+    expect(r[1]).toMatch(/^science\/content\/b2\/b2-natural-selection-selective-breeding bundle as shipped: 6[12]\d KB serialised \(a bundle is at most 600 KB, counted on what the build ships\)$/);
+    expect(r).toHaveLength(2);
   });
 });
 

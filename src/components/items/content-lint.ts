@@ -18,7 +18,8 @@ import { plotLattice, type HistogramExpect, type PointsExpect } from "@/lib/mark
 import { formatMatrixResponse, sameMatrixEntries } from "@/lib/marking/matrix";
 import { followThroughValue, instructsAccuracy, isFormTask } from "./mark";
 import { positionalWording } from "@/lib/gate-order";
-import type { AnswerSpec } from "@/lib/content/schema";
+import type { AnswerSpec, VerificationLog } from "@/lib/content/schema";
+import { publicVerification } from "@/lib/build/public-verification";
 import { planFade } from "./fade";
 import type { z } from "zod";
 import { SeeBlockInline, SeeBlockReference, WorkedExampleStep } from "@/lib/content/schema";
@@ -788,8 +789,51 @@ export const SIZE_LIMITS_KB = { item: 40, note: 150, bundle: 600 } as const;
 const kbOf = (v: unknown) => new TextEncoder().encode(JSON.stringify(v) ?? "").length / 1024;
 
 /**
+ * What an item ships by, the build's own rule (pipeline/build-content.mts `keep`, `statusOf`) with the withdrawn records
+ * added (the lead's item 15): an item ships when no verification log records its id as withdrawn and its own log (found
+ * by its `verification` ref, else by `itemId`) says verified or published. A bundle with no logs is read in full.
+ */
+function shipsIn(bundle: Record<string, unknown>): (item: Record<string, unknown>) => boolean {
+  const logs = Array.isArray(bundle.verification) ? onlyObjects(bundle.verification) : null;
+  const gone = withdrawnIds(bundle);
+  return (it) => {
+    if (gone.has(String(it.id))) return false;
+    if (logs === null) return true;
+    const log = typeof it.verification === "string" ? logs.find((l) => l.id === it.verification) : logs.find((l) => l.itemId === it.id);
+    return SHIPPED_LOG.has(String(log?.status));
+  };
+}
+
+/**
+ * The public bundle as pipeline/build-content.mts writes it (public/content/<subject>/<id>.json): the shipped items only,
+ * the note and its blocks only when the note's log ships, and the verification logs trimmed by publicVerification.
+ */
+function shippedView(b: Record<string, unknown>, blocks: unknown): Record<string, unknown> {
+  const ships = shipsIn(b);
+  const logs = Array.isArray(b.verification) ? onlyObjects(b.verification) : null;
+  const note = b.note && typeof b.note === "object" ? (b.note as Record<string, unknown>) : null;
+  const noteOk = note !== null && (logs === null || SHIPPED_LOG.has(String(logs.find((l) => l.id === note.verification)?.status)));
+  const questions = onlyObjects(b.questions).filter(ships);
+  return {
+    topic: b.topic,
+    note: noteOk ? note : null,
+    noteBlocks: noteOk && Array.isArray(blocks) ? blocks : null,
+    workedExamples: onlyObjects(b.workedExamples).filter(ships),
+    diagnostics: onlyObjects(b.diagnostics).filter(ships),
+    questions,
+    findTheMistake: onlyObjects(b.findTheMistake).filter(ships),
+    prompts: onlyObjects(b.prompts).filter(ships),
+    insight: b.insight ?? null,
+    sets: Array.isArray(b.sets) ? b.sets : [],
+    verification: logs ? publicVerification({ note: note as { verification?: string } | null, questions, verification: logs as unknown as VerificationLog[] }) : [],
+  };
+}
+
+/**
  * Warnings (never refusals) on size, one line each naming the item and its size: a question, a worked example or a See
- * it over 40 KB, a note (note.blocks.json) over 150 KB, a bundle over 600 KB.
+ * it over 40 KB, a note (note.blocks.json) over 150 KB, a bundle over 600 KB. Only what ships counts (the lead, 29 Sep
+ * 2026): a withdrawn or unshipped question or worked example stays in the pack by rule but never reaches her, so it is
+ * never named, and the bundle is measured as the build writes it (shippedView, compact JSON), not as the pack holds it.
  */
 export function sizeWarnings(bundle: unknown, blocks: unknown, label: string): string[] {
   const out: string[] = [];
@@ -799,12 +843,16 @@ export function sizeWarnings(bundle: unknown, blocks: unknown, label: string): s
     const kb = kbOf(v);
     if (kb > SIZE_LIMITS_KB.item) out.push(line(what, kb, `${noun} is at most ${SIZE_LIMITS_KB.item} KB; inline figure markup is the usual cause`));
   };
+  const ships = b ? shipsIn(b) : () => true;
   if (b) {
-    for (const q of onlyObjects(b.questions)) item(String(q.id), q, "a question");
-    for (const w of onlyObjects(b.workedExamples)) item(String(w.id), w, "a worked example");
+    for (const q of onlyObjects(b.questions).filter(ships)) item(String(q.id), q, "a question");
+    for (const w of onlyObjects(b.workedExamples).filter(ships)) item(String(w.id), w, "a worked example");
   }
   if (Array.isArray(blocks)) blocks.forEach((x, i) => x && typeof x === "object" && (x as Record<string, unknown>).type === "see" && item(`note block ${i} (See it)`, x, "a See it"));
-  if (b && kbOf(b) > SIZE_LIMITS_KB.bundle) out.push(line("bundle.json", kbOf(b), `a bundle is at most ${SIZE_LIMITS_KB.bundle} KB`));
+  if (b) {
+    const kb = kbOf(shippedView(b, blocks));
+    if (kb > SIZE_LIMITS_KB.bundle) out.push(line("bundle as shipped", kb, `a bundle is at most ${SIZE_LIMITS_KB.bundle} KB, counted on what the build ships`));
+  }
   if (Array.isArray(blocks) && kbOf(blocks) > SIZE_LIMITS_KB.note) out.push(line("note.blocks.json", kbOf(blocks), `a note is at most ${SIZE_LIMITS_KB.note} KB`));
   return out;
 }
