@@ -1,121 +1,144 @@
 [
   {
     "type": "hero",
-    "lede": "A third written as a decimal is $0.333\\ldots$, going on for ever. It is still a perfectly ordinary fraction, and every recurring decimal is: there is a short method that finds exactly which fraction, using nothing more than a subtraction that makes the endless tail disappear.",
+    "lede": "A third is $0.333\\ldots$, going on for ever, and it is still an ordinary fraction. Every recurring decimal is. A short method finds exactly which fraction, with one subtraction that makes the endless tail disappear.",
     "can": [
       "Read the dot notation and say which digits repeat.",
-      "Choose the power of ten from the length of the repeating block.",
-      "Subtract the two lines and simplify the fraction that falls out."
+      "Choose the multipliers from the digits before and inside the block.",
+      "Subtract, clear any decimal, and simplify the fraction."
     ],
-    "minutes": 10
+    "minutes": 15
   },
   {
     "type": "h",
-    "text": "Changing recurring decimals to fractions"
+    "text": "1. Two numbers with the same tail",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "You cannot write $0.\\dot{1}\\dot{8}$ down in full, and rounding it throws the exactness away. The way out is to make a second number with exactly the same endless tail, by multiplying by 10, or 100, or 1000, whichever shifts the repeating block by one whole turn, and then subtract. The tails cancel, and what is left is a whole number equal to a whole number of $x$."
+    "md": "You cannot write $0.\\dot{4}$ out in full, and rounding it throws the exactness away. The way round is to make a second number with exactly the same endless tail, then subtract. Call the decimal $x$. Multiplying by 10 moves every digit one place left, and because every digit is a 4, the tail of $10x$ is the tail of $x$."
   },
   {
     "type": "figure",
-    "alt": "Two lines of working, x and 100x, written so the digits after the decimal point line up under one another. A dashed line marks the point of alignment, and beneath the subtraction the result 99x equals 45 is shown.",
-    "svg": "<svg viewBox='0 0 560 210' xmlns='http://www.w3.org/2000/svg' width='560' height='210' role='img' aria-labelledby='fig-align'><title id='fig-align'>Lining up two multiples of the same recurring decimal so the repeating tails cancel</title><g fill='none' stroke='currentColor' stroke-width='1.1'><path d='M176 134 h300'/></g><g fill='none' stroke='currentColor' stroke-width='1' stroke-dasharray='4 3' stroke-opacity='0.8'><path d='M260 62 v60'/></g><g fill='currentColor' font-family='inherit'><text x='160' y='78' text-anchor='end' font-size='14'>x =</text><text x='176' y='78' text-anchor='start' font-size='14' letter-spacing='1.5'>0.45454545...</text><text x='160' y='118' text-anchor='end' font-size='14'>100 x =</text><text x='176' y='118' text-anchor='start' font-size='14' letter-spacing='1.5'>45.45454545...</text><text x='160' y='160' text-anchor='end' font-size='14'>99 x =</text><text x='176' y='160' text-anchor='start' font-size='14' font-weight='600'>45</text><text x='280' y='30' text-anchor='middle' font-size='13' font-weight='600'>Subtract, and the endless tail disappears</text><text x='280' y='50' text-anchor='middle' font-size='12'>both lines have exactly the same digits after the point</text><text x='176' y='186' text-anchor='start' font-size='13'>so x = 45 / 99 = 5/11</text></g></svg>",
-    "caption": "The tails are identical, so subtracting removes them completely and leaves $99x = 45$."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "number",
-    "prompt": "A warm-up. What is $\\dfrac{1}{4}$ as a decimal?",
-    "answer": "0.25",
-    "explain": "That one stops. The interesting fractions are the ones whose decimals do not, and this page runs that conversion backwards."
-  },
-  {
-    "type": "h",
-    "text": "The idea: two numbers with the same endless tail"
-  },
-  {
-    "type": "p",
-    "md": "You cannot subtract an endless decimal away by rounding it. But you can make a **second** number whose digits after the point are exactly the same, and subtract that.\n\nMultiplying by $10$ moves the point one place. Multiplying by 100 moves it 2 places, which for a 2-digit block is exactly one whole block: every digit lands on a copy of itself."
+    "alt": "Two rows of working lined up at the decimal point: x = 0.4444444… and 10x = 4.4444444…, with the digits after the point shaded to show they are identical. Under a rule, 9x = 4, so x = 4/9.",
+    "svg": "<svg viewBox=\"0 0 400 118\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Two lines with the same tail\"><title>Two lines with the same tail</title><rect x=\"200\" y=\"19\" width=\"160\" height=\"21\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"0\"/><text x=\"118\" y=\"34\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">x =</text><text x=\"196\" y=\"34\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">0</text><text x=\"196\" y=\"34\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.4444444…</text><rect x=\"200\" y=\"51\" width=\"160\" height=\"21\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"0\"/><text x=\"118\" y=\"66\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">10x =</text><text x=\"196\" y=\"66\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">4</text><text x=\"196\" y=\"66\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.4444444…</text><path d=\"M40 78 L360 78\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><text x=\"118\" y=\"104\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\" font-weight=\"600\">9x = 4, so x = 4/9</text></svg>",
+    "caption": "The tails match digit for digit, so subtracting removes them and leaves whole numbers."
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why the tails cancel",
-    "md": "Both lines carry the same digits for ever after the point, so taking one from the other cancels every one of them. Nothing is rounded, which is why the answer is exact rather than an approximation."
+    "md": "Both lines carry the same digits for ever after the point, so taking one from the other cancels every one of them. Nothing is rounded, which is why the fraction is exact, not an approximation."
   },
   {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "The decimal $0.\\dot{1}3\\dot{5}$ has a repeating block 3 digits long. What do you multiply $x$ by?",
-    "answer": "1000",
-    "explain": "One power of ten for each digit in the block, so 3 digits means 1000. After subtracting, the left-hand side is $999x$."
-  },
-  {
-    "type": "h",
-    "text": "When a digit does not repeat"
-  },
-  {
-    "type": "p",
-    "md": "In $0.1\\dot{6}$ the dot sits over the 6 only, so the 1 happens once and never again. Those two digits behave differently, and one multiplication cannot deal with both.\n\nSo do two. Multiply by 10 to push the non-repeating digit past the point, then by 100 to move a whole block further. Those two lines share a tail; the original does not."
-  },
-  {
-    "type": "figure",
-    "alt": "Three lines of working for a decimal with one non-repeating digit: x, 10x and 100x, each annotated with where the decimal point now sits. Only the last two are subtracted, leaving 90x equals 15.",
-    "svg": "<svg viewBox='0 0 560 226' xmlns='http://www.w3.org/2000/svg' width='560' height='226' role='img' aria-labelledby='fig-twostep'><title id='fig-twostep'>Two multiplications when a digit before the repeating block does not repeat</title><g fill='none' stroke='currentColor' stroke-width='1.1'><path d='M166 182 h160'/></g><g fill='currentColor' font-family='inherit'><text x='150' y='92' text-anchor='end' font-size='14'>x =</text><text x='166' y='92' text-anchor='start' font-size='14' letter-spacing='1.5'>0.16666666...</text><text x='340' y='92' text-anchor='start' font-size='11'>the 1 has not repeated yet</text><text x='150' y='130' text-anchor='end' font-size='14'>10 x =</text><text x='166' y='130' text-anchor='start' font-size='14' letter-spacing='1.5'>1.66666666...</text><text x='340' y='130' text-anchor='start' font-size='11'>now the point sits just before the tail</text><text x='150' y='168' text-anchor='end' font-size='14'>100 x =</text><text x='166' y='168' text-anchor='start' font-size='14' letter-spacing='1.5'>16.6666666...</text><text x='340' y='168' text-anchor='start' font-size='11'>one whole block further on</text><text x='150' y='206' text-anchor='end' font-size='14'>90 x =</text><text x='166' y='206' text-anchor='start' font-size='14' font-weight='600'>15</text><text x='340' y='206' text-anchor='start' font-size='11'>subtract the last two lines only</text><text x='280' y='34' text-anchor='middle' font-size='13' font-weight='600'>A digit that does not repeat needs two multiplications</text><text x='280' y='54' text-anchor='middle' font-size='12'>push the non-repeating part past the point first, then move one whole block</text><text x='166' y='230' text-anchor='start' font-size='13'>x = 15 / 90 = 1/6</text></g></svg>",
-    "caption": "Subtract the last two lines, not the first and last: $90x = 15$, so $x = 1/6$."
-  },
-  {
-    "type": "gate",
-    "id": "g2b",
-    "kind": "number",
-    "prompt": "In $0.1\\dot{6}$, how many digits come after the point before the repeating block starts?",
-    "answer": "1",
-    "explain": "One: the 1. That is why you multiply by 10 first, moving it left of the point before the block shifts."
-  },
-  {
-    "type": "callout",
-    "kind": "mustknow",
-    "md": "**The recipe.** Let $x$ be the decimal. Count the digits in the repeating block, $b$, and the digits between the point and the block, $a$. Multiply by $10^{a}$ and by $10^{a+b}$, subtract those two, divide, simplify.\n\nWhen $a = 0$ the first multiplier is $1$, which is why the simple case looks like one multiplication. It is the same recipe."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "choice",
-    "prompt": "For $0.4\\dot{1}\\dot{6}$, which two lines do you subtract?",
-    "options": [
-      "$1000x$ and $10x$",
-      "$1000x$ and $x$",
-      "$10x$ and $x$"
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Change the recurring decimal $0.\\dot{4}$ to a fraction.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let $x = 0.4444\\ldots$",
+        "decision": "Naming the decimal lets you make a second copy of it. This line is the first thing the scheme looks for.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$10x = 4.4444\\ldots$",
+        "decision": "One digit repeats, so multiply by 10: the point moves one place and the tails line up."
+      },
+      {
+        "n": 3,
+        "working": "$10x - x = 9x = 4$",
+        "decision": "Subtract. Every 4 after the point cancels, and whole numbers are left on both sides.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$x = \\dfrac{4}{9}$",
+        "decision": "Divide by 9. It is already in its lowest terms.",
+        "earns": [
+          "A1"
+        ]
+      }
     ],
-    "answer": "$1000x$ and $10x$",
-    "explain": "One digit sits outside the block and the block itself is 2 digits, so the multipliers are 10 and 1000. The subtraction leaves $990x$."
+    "finalAnswer": "$0.\\dot{4} = \\dfrac{4}{9}$"
   },
   {
     "type": "video",
     "videoId": "KZbKYokJ3SQ",
     "title": "Recurring decimals to fractions - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "The same four lines, worked at speed on several decimals including one with a non-repeating digit. Watch it, then do the question underneath without scrolling back.",
-    "corbettmathsNumber": 96
+    "corbettmathsNumber": 96,
+    "why": "Corbettmaths 96 works the same four lines on several decimals, including one with a digit that does not repeat. Watch it, then do the question below without scrolling back."
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g9",
     "kind": "number",
-    "prompt": "Change $0.\\dot{7}$ to a fraction in its simplest form.",
-    "answer": "7/9",
-    "explain": "$10x - x = 9x = 7$, so $x = 7/9$."
+    "prompt": "Change $0.\\dot{8}$ to a fraction in its simplest form.",
+    "answer": "8/9",
+    "explain": "As in steps 2 to 4 of See it: $10x = 8.888\\ldots$, subtract $x$ and $9x = 8$, so $x = \\dfrac{8}{9}$. The 9 comes from the subtraction, not from place value.",
+    "twin": {
+      "prompt": "Change $1.\\dot{4}$ to a fraction in its simplest form.",
+      "answer": "13/9",
+      "explain": "$x = 1.444\\ldots$ and $10x = 14.444\\ldots$, so $9x = 13$ and $x = \\dfrac{13}{9}$. A whole-number part changes nothing in the method."
+    }
   },
   {
     "type": "h",
-    "text": "Finishing properly"
+    "text": "2. Longer blocks",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Three things decide the last mark.\n\n**Simplify.** The subtraction hands you something like $27/99$, and the question asks for the simplest form.\n"
+    "md": "In $0.\\dot{3}\\dot{6}$ the dots mark the first and last digits of the block, so 36 repeats: $0.363636\\ldots$ Multiplying by 10 would shift it half a block, and the tails would not match. Use one power of ten for each digit in the block: 100 for two digits, 1000 for three. Then the subtraction leaves 99 or 999 on the left."
+  },
+  {
+    "type": "figure",
+    "alt": "Two rows lined up at the decimal point: x = 0.3636363… and 100x = 36.3636363…, the matching tails shaded. Under a rule, 99x = 36, so x = 36/99 = 4/11.",
+    "svg": "<svg viewBox=\"0 0 400 118\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"A two-digit block\"><title>A two-digit block</title><rect x=\"200\" y=\"19\" width=\"160\" height=\"21\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"0\"/><text x=\"118\" y=\"34\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">x =</text><text x=\"196\" y=\"34\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">0</text><text x=\"196\" y=\"34\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.3636363…</text><rect x=\"200\" y=\"51\" width=\"160\" height=\"21\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"0\"/><text x=\"118\" y=\"66\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">100x =</text><text x=\"196\" y=\"66\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">36</text><text x=\"196\" y=\"66\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.3636363…</text><path d=\"M40 78 L360 78\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><text x=\"118\" y=\"104\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\" font-weight=\"600\">99x = 36, so x = 36/99 = 4/11</text></svg>",
+    "caption": "A two-digit block needs 100: the point moves one whole block and the tails line up again."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Change the recurring decimal $0.\\dot{3}\\dot{6}$ to a fraction in its simplest form.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let $x = 0.3636\\ldots$",
+        "decision": "Two digits sit under the dots, so the block is 36.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$100x = 36.3636\\ldots$",
+        "decision": "Two digits in the block, so two places: multiply by 100.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$100x - x = 99x = 36$",
+        "decision": "The tails cancel, leaving whole numbers."
+      },
+      {
+        "n": 4,
+        "working": "$x = \\dfrac{36}{99} = \\dfrac{4}{11}$",
+        "decision": "Divide top and bottom by 9: the last mark is for the lowest terms.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$0.\\dot{3}\\dot{6} = \\dfrac{4}{11}$"
   },
   {
     "type": "gate",
@@ -123,50 +146,318 @@
     "kind": "blank",
     "prompt": "Fill the gap: you multiply by one power of ten for each digit in the ______ block.",
     "answer": "repeating | recurring | repeating block | recurring block",
-    "explain": "Count the digits under the dots. That count is the power of ten, and nothing else about the decimal changes it."
-  },
-  {
-    "type": "p",
-    "md": "**No decimals left.** If the subtraction leaves $9x = 7.5$, multiply top and bottom by $10$ before dividing.\n\n**Keep it exact.** Rounding the decimal first and converting that instead gives a fraction that is close but not equal, and it earns nothing."
+    "explain": "Step 2 of See it: count the digits under the dots and use that many tens. Two digits meant 100; three would mean 1000.",
+    "twin": {
+      "prompt": "Fill the gap: a block of three digits needs a multiplier of ______.",
+      "answer": "1000",
+      "explain": "One power of ten per digit in the block: three digits, 10 × 10 × 10 = 1000."
+    }
   },
   {
     "type": "gate",
-    "id": "g5",
-    "kind": "choice",
-    "prompt": "A correct method ends with $99x = 27$. Which answer would gain the final mark?",
-    "options": [
-      "$\\dfrac{3}{11}$",
-      "$\\dfrac{27}{99}$",
-      "$\\dfrac{9}{33}$"
+    "id": "g10",
+    "kind": "number",
+    "prompt": "The decimal $0.\\dot{2}4\\dot{3}$ has a repeating block of three digits. What do you multiply $x$ by?",
+    "answer": "1000",
+    "explain": "Step 2 of See it, one digit longer: three digits in the block, so three places, 1000. The subtraction then leaves $999x$.",
+    "twin": {
+      "prompt": "What do you multiply $x$ by for $0.\\dot{5}\\dot{8}$?",
+      "answer": "100",
+      "explain": "Two digits in the block, so 100: the point moves one whole block and the tails line up."
+    }
+  },
+  {
+    "type": "h",
+    "text": "3. When a digit does not repeat",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "In $0.7\\dot{2}$ the dot sits over the 2 only, so the 7 happens once and never again. One multiplication cannot line up both. So do two: multiply by 10 to push the 7 past the point, then by 100 to move one block further. Those two lines share a tail; subtract them."
+  },
+  {
+    "type": "p",
+    "md": "There is a shorter route, and CCEA's schemes use it: subtract $x$ from $10x$ straight away. The right-hand side then ends, as $9x = 6.5$ does. A decimal that ends is not an error; multiply top and bottom by 10."
+  },
+  {
+    "type": "figure",
+    "alt": "Three rows lined up at the decimal point: x = 0.7222222…, 10x = 7.2222222… and 100x = 72.2222222…. The tails of the last two rows are shaded. Under a rule, 90x = 65, so x = 65/90 = 13/18.",
+    "svg": "<svg viewBox=\"0 0 400 178\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"A digit that does not repeat\"><title>A digit that does not repeat</title><text x=\"200\" y=\"22\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"middle\" font-style=\"italic\">subtract the two shaded rows</text><text x=\"118\" y=\"62\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">x =</text><text x=\"196\" y=\"62\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">0</text><text x=\"196\" y=\"62\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.7222222…</text><rect x=\"200\" y=\"79\" width=\"160\" height=\"21\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"0\"/><text x=\"118\" y=\"94\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">10x =</text><text x=\"196\" y=\"94\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">7</text><text x=\"196\" y=\"94\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.2222222…</text><rect x=\"200\" y=\"111\" width=\"160\" height=\"21\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"0\"/><text x=\"118\" y=\"126\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">100x =</text><text x=\"196\" y=\"126\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"end\">72</text><text x=\"196\" y=\"126\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\">.2222222…</text><path d=\"M40 138 L360 138\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><text x=\"118\" y=\"164\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\" text-anchor=\"start\" font-weight=\"600\">90x = 65, so x = 65/90 = 13/18</text></svg>",
+    "caption": "Only the last two rows share a tail, so those are the two to subtract."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Change the recurring decimal $0.7\\dot{2}$ to a fraction in its simplest form.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let $x = 0.7222\\ldots$",
+        "decision": "Only the 2 carries a dot, so the 7 is outside the block. That decision sets everything else.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$10x = 7.2222\\ldots$",
+        "decision": "Multiply by 10 to push the 7 past the point. From here on everything after the point repeats.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$100x = 72.2222\\ldots$",
+        "decision": "One block further: this line and the last now share a tail."
+      },
+      {
+        "n": 4,
+        "working": "$100x - 10x = 90x = 65$, so $x = \\dfrac{65}{90} = \\dfrac{13}{18}$",
+        "decision": "Subtract the pair with matching tails, divide, and simplify by 5.",
+        "earns": [
+          "A1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "Short route: $10x - x = 9x = 6.5$, and $\\dfrac{6.5}{9} = \\dfrac{65}{90}$",
+        "decision": "The same fraction by the other route. A right-hand side that ends is fine: multiply top and bottom by 10."
+      }
     ],
-    "answer": "$\\dfrac{3}{11}$",
-    "explain": "All three are the same number and the method marks stand for each. Only the fully simplified one answers the question as it was asked."
+    "finalAnswer": "$0.7\\dot{2} = \\dfrac{13}{18}$"
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "number",
+    "prompt": "Change $0.4\\dot{6}$ to a fraction in its simplest form.",
+    "answer": "7/15",
+    "explain": "Steps 2 to 4 of See it: $10x = 4.666\\ldots$ and $100x = 46.666\\ldots$, so $90x = 42$ and $x = \\dfrac{42}{90} = \\dfrac{7}{15}$. Treating both digits as repeating would give $\\dfrac{46}{99}$.",
+    "twin": {
+      "prompt": "Change $0.1\\dot{3}$ to a fraction in its simplest form.",
+      "answer": "2/15",
+      "explain": "$100x - 10x = 13.333\\ldots - 1.333\\ldots = 12$, so $90x = 12$ and $x = \\dfrac{12}{90} = \\dfrac{2}{15}$."
+    }
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "Working on $0.3\\dot{4}$, you subtract $x$ from $10x$ and get $9x = 3.1$. What next?",
+    "options": [
+      "Multiply top and bottom by 10: $x = \\dfrac{31}{90}$",
+      "Start again: the multiplier must be wrong",
+      "Round 3.1 to 3: $x = \\dfrac{3}{9}$"
+    ],
+    "answer": "Multiply top and bottom by 10: $x = \\dfrac{31}{90}$",
+    "explain": "Step 5 of See it: the right-hand side ends, so the tails did cancel. $x = \\dfrac{3.1}{9}$, and multiplying top and bottom by 10 clears the decimal: $\\dfrac{31}{90}$.",
+    "twin": {
+      "prompt": "Working on $0.0\\dot{4}\\dot{5}$, you subtract $x$ from $100x$ and get $99x = 4.5$. What next?",
+      "options": [
+        "Multiply top and bottom by 10: $x = \\dfrac{45}{990} = \\dfrac{1}{22}$",
+        "Start again: the multiplier must be wrong",
+        "Round 4.5 to 5: $x = \\dfrac{5}{99}$"
+      ],
+      "answer": "Multiply top and bottom by 10: $x = \\dfrac{45}{990} = \\dfrac{1}{22}$",
+      "explain": "4.5 ends, so the tails did cancel. $\\dfrac{4.5}{99} = \\dfrac{45}{990}$, which simplifies to $\\dfrac{1}{22}$.",
+      "optionNotes": [
+        {
+          "option": "Start again: the multiplier must be wrong",
+          "why": "The subtraction left a number that ends, so the tails matched. Only a tail that still goes on would mean the multiplier was wrong."
+        },
+        {
+          "option": "Round 4.5 to 5: $x = \\dfrac{5}{99}$",
+          "why": "Rounding changes the value: $\\dfrac{5}{99}$ is $0.0505\\ldots$, not $0.0454\\ldots$",
+          "misconception": "maths.recurring.truncated-decimal-used"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Start again: the multiplier must be wrong",
+        "why": "Only an endless tail left on the right means the lines did not match. A decimal that ends, like 3.1, is expected on this route; CCEA's schemes run $9x = 7.3$."
+      },
+      {
+        "option": "Round 3.1 to 3: $x = \\dfrac{3}{9}$",
+        "why": "Rounding throws the exactness away: $\\dfrac{3}{9}$ is $0.333\\ldots$, not the decimal you started with.",
+        "misconception": "maths.recurring.truncated-decimal-used"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "4. A digit before a longer block",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "The two moves combine. Count the digits between the point and the block, $a$, and the digits in the block, $b$. Multiply by $10^{a}$ and by $10^{a+b}$, and subtract those two lines. In $0.1\\dot{3}\\dot{6}$, $a = 1$ and $b = 2$, so the lines are $10x$ and $1000x$, and the subtraction leaves $990x$."
+  },
+  {
+    "type": "callout",
+    "kind": "mustknow",
+    "title": "The recipe",
+    "md": "Let $x$ be the decimal. Multiply by $10^{a}$ and $10^{a+b}$, subtract those two lines, clear any decimal, then simplify. When nothing sits before the block, $a = 0$ and the first line is $x$ itself."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Change the recurring decimal $0.1\\dot{3}\\dot{6}$ to a fraction in its simplest form.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let $x = 0.13636\\ldots$: one digit before the block, a block of two.",
+        "decision": "Read the dots: they sit over the 3 and the 6, so the 1 is outside the block.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$10x = 1.3636\\ldots$",
+        "decision": "$10^{a}$ with $a = 1$ pushes the 1 past the point."
+      },
+      {
+        "n": 3,
+        "working": "$1000x = 136.3636\\ldots$",
+        "decision": "$10^{a+b}$ with $a + b = 3$ moves one whole block further.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$1000x - 10x = 990x = 135$, so $x = \\dfrac{135}{990} = \\dfrac{3}{22}$",
+        "decision": "Subtract the two lines with matching tails, then simplify: 135 and 990 share 45.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$0.1\\dot{3}\\dot{6} = \\dfrac{3}{22}$"
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "number",
+    "prompt": "Change $0.2\\dot{1}\\dot{8}$ to a fraction in its simplest form.",
+    "answer": "12/55",
+    "explain": "As in See it: $1000x = 218.1818\\ldots$ and $10x = 2.1818\\ldots$, so $990x = 216$ and $x = \\dfrac{216}{990} = \\dfrac{12}{55}$. The 990 is the sign that both moves were used.",
+    "twin": {
+      "prompt": "Change $0.3\\dot{4}\\dot{5}$ to a fraction in its simplest form.",
+      "answer": "19/55",
+      "explain": "$1000x - 10x = 345.4545\\ldots - 3.4545\\ldots = 342$, so $x = \\dfrac{342}{990} = \\dfrac{19}{55}$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "5. How the paper twists it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "CCEA sets this on the non-calculator paper, and it varies more than the decimal. Twists: **two decimals combined**, converted to fractions first and then added or subtracted exactly; **show that** a decimal equals a given fraction, where the working is the mark; and a **bare answer**, which risks every mark if one digit slips."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "November 2025 M8 Paper 1 Q10",
-    "md": "A single two-mark conversion, and 70% of the entry could do it, many without writing any calculation at all. That is worth knowing in both directions: it is a mark you should expect to get, and a bare answer with no working risks everything if the arithmetic slips.",
-    "source": "ccea-cer:maths:2025-november:M81:Q10"
+    "title": "Examiners' view",
+    "md": "Most candidates gained a mark for the easier of two recurring decimals, and a reasonable number converted both and subtracted for all four marks. A minority subtracted the decimals first and then converted, sometimes correctly.",
+    "source": "ccea-cer:maths:2025-summer:M81:Q12"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Work out $0.7\\dot{3} - 0.\\dot{5}$, giving your answer as a fraction in its lowest terms.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$0.7\\dot{3}$: $100x - 10x = 73.333\\ldots - 7.333\\ldots = 66$, so $90x = 66$ and $0.7\\dot{3} = \\dfrac{66}{90} = \\dfrac{11}{15}$",
+        "decision": "Convert the harder one with both moves; the 7 is outside the block.",
+        "earns": [
+          "M1",
+          "A1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$0.\\dot{5}$: $10y - y = 9y = 5$, so $0.\\dot{5} = \\dfrac{5}{9}$",
+        "decision": "The easier one, one move. Use a new letter so the two do not get mixed.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{11}{15} = \\dfrac{33}{45}$ and $\\dfrac{5}{9} = \\dfrac{25}{45}$, so the difference is $\\dfrac{8}{45}$",
+        "decision": "A common denominator of 45, then subtract. It is already in lowest terms.",
+        "earns": [
+          "A1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "Check: $0.7333\\ldots - 0.5555\\ldots = 0.1777\\ldots$, and $0.1\\dot{7} = \\dfrac{16}{90} = \\dfrac{8}{45}$",
+        "decision": "Subtracting first and converting after gives the same answer: a check, or a route of its own."
+      }
+    ],
+    "finalAnswer": "$\\dfrac{8}{45}$"
   },
   {
     "type": "gate",
-    "id": "g6",
-    "kind": "choice",
-    "prompt": "You have written the subtraction and the right-hand side has come out as $2.45$. What does that tell you?",
-    "options": [
-      "The multiplier was the wrong size, so the tails did not match",
-      "Nothing is wrong; divide by 9 and simplify",
-      "The decimal must be irrational"
-    ],
-    "answer": "The multiplier was the wrong size, so the tails did not match",
-    "explain": "When the tails are identical the subtraction always leaves a whole number. A decimal surviving on the right is the fastest signal that the power of ten was wrong."
+    "id": "g14",
+    "kind": "number",
+    "prompt": "Work out $0.2\\dot{6} + 0.\\dot{4}$ as a fraction in its lowest terms.",
+    "answer": "32/45",
+    "explain": "As in steps 1 to 3 of See it: $0.2\\dot{6} = \\dfrac{24}{90} = \\dfrac{4}{15}$ and $0.\\dot{4} = \\dfrac{4}{9}$. Then $\\dfrac{12}{45} + \\dfrac{20}{45} = \\dfrac{32}{45}$.",
+    "twin": {
+      "prompt": "Work out $0.\\dot{5}\\dot{4} - 0.\\dot{3}$ as a fraction in its lowest terms.",
+      "answer": "7/33",
+      "explain": "$0.\\dot{5}\\dot{4} = \\dfrac{54}{99}$ and $0.\\dot{3} = \\dfrac{33}{99}$, so the difference is $\\dfrac{21}{99} = \\dfrac{7}{33}$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "6. Why every recurring decimal is a fraction",
+    "role": "why"
+  },
+  {
+    "type": "p",
+    "md": "The method never fails on a recurring decimal, and that is the point of it: it proves every recurring decimal is **rational**, one whole number divided by another. A decimal that neither ends nor repeats, like the one for $\\sqrt{2}$, never lines up with a copy of itself, and that is what makes it irrational."
   },
   {
     "type": "callout",
     "kind": "notonspec",
-    "title": "Not on this spec",
-    "md": "You will not be asked for an infinite-series or limit argument, and you will not be asked to prove that an irrational number cannot be written as a fraction. Deciding whether a given number is rational or irrational does appear, but as part of the surds statement M8-NA-01, which is a separate topic here."
+    "title": "Not on this specification",
+    "md": "Infinite-series or limit arguments, and proving that a number is irrational. Deciding whether a given number is rational belongs to the surds statement, M8-NA-01, a separate topic here."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Explain why any recurring decimal can be written as a fraction.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let $x$ be the decimal, with $a$ digits before its repeating block and $b$ digits in it.",
+        "decision": "Every recurring decimal fits this description, whatever its digits."
+      },
+      {
+        "n": 2,
+        "working": "$10^{a}x$ and $10^{a+b}x$ have identical tails.",
+        "decision": "The second is the first moved one whole block along."
+      },
+      {
+        "n": 3,
+        "working": "Subtracting leaves $(10^{a+b} - 10^{a})x$ equal to a number that ends.",
+        "decision": "The tails cancel exactly; nothing is rounded."
+      },
+      {
+        "n": 4,
+        "working": "Clearing any decimal, $x$ is one whole number divided by another.",
+        "decision": "That is the definition of a rational number."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -179,38 +470,63 @@
       "Because every decimal, recurring or not, is rational"
     ],
     "answer": "Because it always ends with x equal to one whole number divided by another",
-    "explain": "The subtraction leaves whole numbers on both sides, so $x$ is a ratio of two integers, which is the definition of rational. A decimal that neither stops nor repeats cannot be caught this way, and that is what makes it irrational."
+    "explain": "Steps 3 and 4 of See it: the subtraction always leaves whole numbers once any decimal is cleared, so $x$ is one integer over another. That is what rational means.",
+    "optionNotes": [
+      {
+        "option": "Because a recurring decimal can be rounded to a fraction",
+        "why": "Rounding gives a fraction close to the decimal, not equal to it. Rational means exactly one whole number over another.",
+        "misconception": "maths.recurring.truncated-decimal-used"
+      },
+      {
+        "option": "Because every decimal, recurring or not, is rational",
+        "why": "A decimal that never ends and never repeats, like the one for $\\sqrt{2}$, is irrational: without a repeat there is no copy to subtract."
+      }
+    ],
+    "twin": {
+      "prompt": "Which decimal can the subtraction method NOT turn into a fraction?",
+      "options": [
+        "One that never ends and never repeats, such as 0.1010010001…",
+        "$0.\\dot{1}\\dot{0}$",
+        "$0.12\\dot{3}$"
+      ],
+      "answer": "One that never ends and never repeats, such as 0.1010010001…",
+      "explain": "With no repeating block there is no power of ten that lines a copy up with it, so the tail never cancels.",
+      "optionNotes": [
+        {
+          "option": "$0.\\dot{1}\\dot{0}$",
+          "why": "Its block 10 repeats: $100x - x = 99x = 10$, so it is $\\dfrac{10}{99}$."
+        },
+        {
+          "option": "$0.12\\dot{3}$",
+          "why": "Two digits sit before the block: $1000x - 100x = 900x = 111$, so it is $\\dfrac{111}{900}$."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Read the dot notation and say which digits repeat.\nChoose the power of ten from the repeating block length.\nLine the two rows up and subtract so the tails vanish.\nSimplify, and check the fraction as a decimal."
+    "md": "Read the dot notation and say which digits repeat.\nMultiply by $10^{a}$ and $10^{a+b}$, and subtract the lines whose tails match.\nClear a decimal that ends by multiplying top and bottom by 10.\nGive the fraction in its lowest terms, and combine two decimals as fractions."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "Two or three marks on the non-calculator paper, often worded **show that** or **prove**. The first mark is the multiplied line that lines the recurring blocks up; the last is the fraction in its lowest terms. Stuck: write $x$ equal to the decimal and multiply by the power of ten that matches the block."
+    "md": "Two to four marks on the non-calculator paper. The first mark is for naming the decimal and the multiplied line; the last is for the fraction in its lowest terms. Two decimals combined is four marks, with follow-through from your own conversions. Stuck: write x equal to the decimal and multiply by the power of ten that moves one whole block."
   },
   {
     "type": "prompt",
-    "promptId": "rp.maths.m8.recurring-decimals-to-fractions.01"
+    "promptId": "rp.maths.m8.recurring-decimals-to-fractions.09"
   },
   {
     "type": "prompt",
-    "promptId": "rp.maths.m8.recurring-decimals-to-fractions.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m8.recurring-decimals-to-fractions.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m8.recurring-decimals-to-fractions.06"
+    "promptId": "rp.maths.m8.recurring-decimals-to-fractions.10"
   }
 ]
