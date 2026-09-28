@@ -336,6 +336,215 @@
       ],
       "verification": "ver.we.fm.u3.tree-diagrams-probability.02",
       "version": 1
+    },
+    {
+      "id": "we.fm.u3.tree-diagrams-probability.03",
+      "topic": "fm.u3.tree-diagrams-probability",
+      "specRefs": [
+        "FM3-PRB-02",
+        "FM3-PRB-03"
+      ],
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "stem": "A box holds 9 light bulbs: 2 faulty and 7 working. Two bulbs are taken out one after the other, without replacement.\nCalculate the probability that exactly one of the two bulbs is faulty.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 212' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two bulbs taken without replacement from 9, 2 faulty and 7 working, with second-stage denominators of 8'><title>A two-stage probability tree for two bulbs taken without replacement from 9, 2 faulty and 7 working, with second-stage denominators of 8</title><circle cx='14' cy='106' r='3.5' fill='currentColor'/><path d='M18 106 L146 64' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='85' y='76.6' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>2/9</text><text x='150' y='52' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Faulty</text><path d='M18 106 L146 148' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='85' y='145.4' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/9</text><text x='150' y='170' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Working</text><path d='M154 64 L282 43' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='44.9' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>1/8</text><text x='295' y='48' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Faulty</text><path d='M154 64 L282 85' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='93.1' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/8</text><text x='295' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Working</text><path d='M154 148 L282 127' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='128.9' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>2/8</text><text x='295' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Faulty</text><path d='M154 148 L282 169' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='177.1' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/8</text><text x='295' y='174' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Working</text></svg>",
+        "alt": "A two-stage probability tree for two bulbs taken without replacement from 9, 2 faulty and 7 working, with second-stage denominators of 8."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "$P(\\text{faulty}) = \\dfrac{2}{9}$\n$P(\\text{working}) = \\dfrac{7}{9}$",
+          "decision": "Nothing has been taken yet, so both denominators are 9. Writing the first stage down before the second keeps the two apart.",
+          "earns": [
+            "M1"
+          ]
+        },
+        {
+          "n": 2,
+          "working": "After a faulty bulb: $\\dfrac{1}{8}$ faulty, $\\dfrac{7}{8}$ working\nAfter a working bulb: $\\dfrac{2}{8}$ faulty, $\\dfrac{6}{8}$ working",
+          "decision": "One bulb has gone, so every second denominator is 8. Only the kind already taken loses one from its numerator.",
+          "whyMenu": {
+            "options": [
+              "8, because one bulb has been taken and not put back",
+              "9, because it is the same box",
+              "7, because two bulbs are being taken altogether"
+            ],
+            "correct": 0,
+            "explain": "The second draw happens after one bulb has left. Keeping 9 would give $0.35$ for exactly one faulty instead of $0.39$."
+          },
+          "earns": [
+            "MW1"
+          ]
+        },
+        {
+          "n": 3,
+          "working": "Faulty then working: $\\dfrac{2}{9} \\times \\dfrac{7}{8} = \\dfrac{14}{72}$\nWorking then faulty: $\\dfrac{7}{9} \\times \\dfrac{2}{8} = \\dfrac{14}{72}$",
+          "decision": "Multiply along each branch. Exactly one faulty can come out in either order, so both branches belong to the event.",
+          "earns": [
+            "M1"
+          ]
+        },
+        {
+          "n": 4,
+          "working": "$P(\\text{exactly one faulty}) = \\dfrac{14}{72} + \\dfrac{14}{72}$\n$= \\dfrac{28}{72}$\n$= \\dfrac{7}{18}$",
+          "decision": "Add across the branches, then cancel. The check: with the two-faulty path, $\\dfrac{1}{36}$, and the two-working path, $\\dfrac{7}{12}$, the three come to 1.",
+          "earns": [
+            "W1"
+          ]
+        }
+      ],
+      "finalAnswer": "$P(\\text{exactly one faulty}) = \\dfrac{7}{18}$",
+      "twin": {
+        "stem": "Using the same box of 9 bulbs, calculate the probability that both bulbs taken are faulty.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.027777777777777776,
+          "tolerance": {
+            "type": "dp",
+            "places": 2
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "fraction",
+            "decimal"
+          ]
+        },
+        "figure": {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 212' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two bulbs taken without replacement from 9, 2 faulty and 7 working, with second-stage denominators of 8'><title>A two-stage probability tree for two bulbs taken without replacement from 9, 2 faulty and 7 working, with second-stage denominators of 8</title><circle cx='14' cy='106' r='3.5' fill='currentColor'/><path d='M18 106 L146 64' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='85' y='76.6' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>2/9</text><text x='150' y='52' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Faulty</text><path d='M18 106 L146 148' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='85' y='145.4' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/9</text><text x='150' y='170' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Working</text><path d='M154 64 L282 43' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='44.9' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>1/8</text><text x='295' y='48' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Faulty</text><path d='M154 64 L282 85' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='93.1' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>7/8</text><text x='295' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Working</text><path d='M154 148 L282 127' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='128.9' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>2/8</text><text x='295' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Faulty</text><path d='M154 148 L282 169' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='236.7' y='177.1' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>6/8</text><text x='295' y='174' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Working</text></svg>",
+          "alt": "A two-stage probability tree for two bulbs taken without replacement from 9, 2 faulty and 7 working."
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u3.tree-diagrams-probability.03",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u3.tree-diagrams-probability.04",
+      "topic": "fm.u3.tree-diagrams-probability",
+      "specRefs": [
+        "FM3-PRB-02",
+        "FM3-PRB-03"
+      ],
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "stem": "Two seeds are planted. Each grows, independently of the other, with probability $0.8$.\nCalculate the probability that exactly one of the two seeds grows.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 360 212' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-stage probability tree for two seeds, each growing with probability 0.8 and failing with probability 0.2'><title>A two-stage probability tree for two seeds, each growing with probability 0.8 and failing with probability 0.2</title><circle cx='14' cy='106' r='3.5' fill='currentColor'/><path d='M18 106 L153 64' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='88.5' y='76.8' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.8</text><text x='157' y='52' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Grows</text><path d='M18 106 L153 148' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='88.5' y='145.2' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.2</text><text x='157' y='170' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Fails</text><path d='M161 64 L296 43' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='243.3' y='45.7' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.8</text><text x='309' y='48' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Grows</text><path d='M161 64 L296 85' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='243.3' y='92.3' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.2</text><text x='309' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Fails</text><path d='M161 148 L296 127' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='243.3' y='129.7' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.8</text><text x='309' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Grows</text><path d='M161 148 L296 169' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='243.3' y='176.3' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='middle' fill-opacity='0.95'>0.2</text><text x='309' y='174' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>Fails</text></svg>",
+        "alt": "A two-stage probability tree for two seeds, each growing with probability 0.8 and failing with probability 0.2."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "$P(\\text{grows}) = 0.8$\n$P(\\text{fails}) = 1 - 0.8 = 0.2$",
+          "decision": "Find the second branch of each pair by subtracting from 1. The two branches leaving a point always total 1, which is the quickest check on a tree.",
+          "earns": [
+            "MW1"
+          ]
+        },
+        {
+          "n": 2,
+          "working": "The seeds are independent, so the second stage carries the same two probabilities as the first.",
+          "decision": "Independent means the first outcome changes nothing. That is what makes this different from a without-replacement tree, where the second stage has to be recalculated.",
+          "earns": [
+            "M1"
+          ]
+        },
+        {
+          "n": 3,
+          "working": "Grows then fails: $0.8 \\times 0.2 = 0.16$\nFails then grows: $0.2 \\times 0.8 = 0.16$",
+          "decision": "Exactly one is two different paths, not one. Writing both down before adding is what stops the answer being halved.",
+          "earns": [
+            "M1"
+          ],
+          "whyMenu": {
+            "options": [
+              "Two paths, grows then fails and fails then grows",
+              "One path, grows then fails, because that is how the question reads",
+              "Every path except both growing"
+            ],
+            "correct": 0,
+            "explain": "'Exactly one' does not say which seed. Both orders qualify, so leaving one out gives 0.16, half the answer; 'every path except both growing' would wrongly include both failing."
+          }
+        },
+        {
+          "n": 4,
+          "working": "$P(\\text{exactly one}) = 0.16 + 0.16$\n$= 0.32$",
+          "decision": "Add the two branches. A check: the four paths come to 0.64 + 0.32 + 0.04 = 1.",
+          "earns": [
+            "W1"
+          ]
+        }
+      ],
+      "finalAnswer": "$P(\\text{exactly one grows}) = 0.32$",
+      "twin": {
+        "stem": "With the same two seeds, calculate the probability that at least one of them grows.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.96,
+          "tolerance": {
+            "type": "dp",
+            "places": 2
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "fraction"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u3.tree-diagrams-probability.04",
+      "version": 1
     }
   ],
   "diagnostics": [
@@ -2576,8 +2785,8 @@
           "type": "maths-numeric",
           "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
           "result": "pass",
-          "detail": "Every branch probability and every product in the note and its six figures is emitted by scratchpad/fm3-batch-b/topic3.mjs from exact rationals in lib.mjs; every branch probability is built from the stem's own counts, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): every heading carries its role; each gate follows a worked demonstration in its own section (g1 a bag of marbles' first branches adding to 1, g2 the marbles' second stage, g8 a product cancelled at the end), so no gate's answer is printed above it; one relation to a maths segment; an \"Exam twists\" section (kept or put back, and 'not all the same' by subtraction, both Summer 2024 Q3) with a new gate g9; every figure redrawn phone-native (360-unit viewBox, no label under 13.5 units); two prompts wired, not five; a difficulty-4 practice item q0011 (three socks, not all the same colour) and a second find-the-mistake (one order counted for 'one of each', Summer 2022 Q6). Fix pass of 23 Sep: every tree's branching names sit above or below their node instead of under the next branches, the opening tree no longer prints the product gate 3 asks for (the path products, now in words, follow in section 3), the working prints each branch as the tree does (6/10, not 3/5), section 4 leaves the sum of the two orders to gate 5 (it printed the 28/55 the gate asks for), and the Sheet's account of Summer 2024 Q3 and Summer 2025 Q7 now says what those papers and reports say.",
-          "at": "2026-09-25T04:21:00Z",
+          "detail": "Every branch probability and every product in the note and its six figures is emitted by scratchpad/fm3-batch-b/topic3.mjs from exact rationals in lib.mjs; every branch probability is built from the stem's own counts, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): every heading carries its role; each gate follows a worked demonstration in its own section (g1 a bag of marbles' first branches adding to 1, g2 the marbles' second stage, g8 a product cancelled at the end), so no gate's answer is printed above it; one relation to a maths segment; an \"Exam twists\" section (kept or put back, and 'not all the same' by subtraction, both Summer 2024 Q3) with a new gate g9; every figure redrawn phone-native (360-unit viewBox, no label under 13.5 units); two prompts wired, not five; a difficulty-4 practice item q0011 (three socks, not all the same colour) and a second find-the-mistake (one order counted for 'one of each', Summer 2022 Q6). Fix pass of 23 Sep: every tree's branching names sit above or below their node instead of under the next branches, the opening tree no longer prints the product gate 3 asks for (the path products, now in words, follow in section 3), the working prints each branch as the tree does (6/10, not 3/5), section 4 leaves the sum of the two orders to gate 5 (it printed the 28/55 the gate asks for), and the Sheet's account of Summer 2024 Q3 and Summer 2025 Q7 now says what those papers and reports say. Review pass (27 Sep 2026): the note teaches on its own numbers (a tray of 12 cupcakes, 7 vanilla and 5 lemon; a delivery late with probability 0.1 each day; a bag of 9 tokens), so no value a question, twin or find-the-mistake asks is worked in front of her (scratchpad/overlap-scan.mjs prints nothing for this topic); seven gates withdrawn and replaced, recorded above; the three-stage tree leaves its third stage blank and the paragraph works a different path from g14's. v3 (27 Sep 2026, the lead's ruling): every section is explain, See it (a see block with its kind, on the cupcake, marble, delivery and token numbers) and Your turn (the gate, with a twin on new numbers; each choice gate notes every wrong option); scratchpad/stage-lint.mts, lesson-v2 --see and revprobe/gates-probe.mts clean.",
+          "at": "2026-09-27T21:47:00Z",
           "by": "claude"
         },
         {
@@ -2606,7 +2815,58 @@
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "It read the pen tree, which is questions 0001-0004's and 0010's; g10 reads the note's own cupcake tree.",
+          "on": "2026-09-27T15:19:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "The pen case was the questions' data; g16 asks the same step of the note's own tray, whose answer is 11.",
+          "on": "2026-09-27T15:19:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "It asked the pens' black-black path, which the questions work from the same tree; g11 asks the cupcakes' lemon-lemon path.",
+          "on": "2026-09-27T15:19:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "Its answer, 28/55, is question 0004's; g12 asks the cupcakes' one-of-each.",
+          "on": "2026-09-27T15:19:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "Its answer, 0.2775, is question 0009(b)'s; g13 asks the note's own delivery tree.",
+          "on": "2026-09-27T15:19:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "Its answer, 5/9, is question 0010(a)'s and was printed on the tree and in the paragraph above it; g14 asks a branch the note's three-stage tree leaves blank.",
+          "on": "2026-09-27T15:19:00Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "Its answer, 5/14, is question 0005's; g15 asks the note's own token tree.",
+          "on": "2026-09-27T15:19:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u3.tree-diagrams-probability.01",
@@ -2678,8 +2938,25 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-09-27T15:19:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the 25 Sep 2026 review pass: It worked the bag of counters that questions 0005 and 0006 ask, with their figure; we.03 works its own box of bulbs.",
+          "resolvedAt": "2026-09-27T15:19:00Z",
+          "resolution": "Replaced by we.fm.u3.tree-diagrams-probability.03."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "we.fm.u3.tree-diagrams-probability.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u3.tree-diagrams-probability.03",
+          "reason": "It worked the bag of counters that questions 0005 and 0006 ask, with their figure; we.03 works its own box of bulbs.",
+          "on": "2026-09-27T15:19:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u3.tree-diagrams-probability.02",
@@ -2748,6 +3025,169 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose and of a TeX command without its backslash.",
           "at": "2026-09-23T13:29:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-09-27T15:19:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the 25 Sep 2026 review pass: It had no why-menu; we.04 is the same seeds with one at the step where exactly one is two paths.",
+          "resolvedAt": "2026-09-27T15:19:00Z",
+          "resolution": "Replaced by we.fm.u3.tree-diagrams-probability.04."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "we.fm.u3.tree-diagrams-probability.02",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u3.tree-diagrams-probability.04",
+          "reason": "It had no why-menu; we.04 is the same seeds with one at the step where exactly one is two paths.",
+          "on": "2026-09-27T15:19:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.we.fm.u3.tree-diagrams-probability.03",
+      "itemId": "we.fm.u3.tree-diagrams-probability.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (WorkedExample) by pipeline/build-content.mts",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator throughout; content limited to statements FM3-PRB-02 and FM3-PRB-03. Trees run to three stages, which is as far as the papers in the corpus go.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Complete, Calculate, Write down).",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Four steps carrying M1, MW1, M1, W1, the pattern the 2024 and 2025 schemes use for a two-branch tree read.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Every branch, product and sum in the example and its twin is emitted by scratchpad/fm3-batch-b/topic3.mjs from exact rationals in lib.mjs; every branch probability is built from the stem's own counts, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): added in the review pass (reviewer F13) to replace we.01: its own box of bulbs, one relation to a line.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The why-menu exercises the unreduced denominator reported in ccea-cer:further-maths:2024-summer:FM3:Q3.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers and mark schemes read for this batch (Summer 2019 Q2 and Q7, Summer 2021 Q5, Summer 2022 Q1 and Q6, Summer 2023 Q3, Summer 2024 Q3 and Q6, Summer 2025 Q3 and Q7, Summer 2026 Q5 and Q7): every context, count and sentence is new, and scratchpad/fm3-batch-b/verify-text.mjs reports no eight-word sequence in common.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose and of a TeX command without its backslash.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u3.tree-diagrams-probability.04",
+      "itemId": "we.fm.u3.tree-diagrams-probability.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (WorkedExample) by pipeline/build-content.mts",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator throughout; content limited to statements FM3-PRB-02 and FM3-PRB-03. Trees run to three stages, which is as far as the papers in the corpus go.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Complete, Calculate, Write down).",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Four steps carrying M1, MW1, M1, W1, the pattern the 2024 and 2025 schemes use for a two-branch tree read.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Every branch, product and sum in the example and its twin is emitted by scratchpad/fm3-batch-b/topic3.mjs from exact rationals in lib.mjs; every branch probability is built from the stem's own counts, every distractor is the value produced by executing its own error route in routes.mjs, and verify-published.mjs re-executes all of them against the published JSON. Depth pass (25 Sep 2026): added in the review pass (reviewer F20) to replace we.02: the same seeds with a why-menu at the step where exactly one is two paths.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "The why-menu exercises the unreduced denominator reported in ccea-cer:further-maths:2024-summer:FM3:Q3.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "Compared against the FM3 papers and mark schemes read for this batch (Summer 2019 Q2 and Q7, Summer 2021 Q5, Summer 2022 Q1 and Q6, Summer 2023 Q3, Summer 2024 Q3 and Q6, Summer 2025 Q3 and Q7, Summer 2026 Q5 and Q7): every context, count and sentence is new, and scratchpad/fm3-batch-b/verify-text.mjs reports no eight-word sequence in common.",
+          "at": "2026-09-25T04:21:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM3 batch-B generators in scratchpad/fm3-batch-b: lib.mjs carries every probability as an exact rational and prints it from those integers; routes.mjs executes each described error in code; verify-published.mjs re-executes every route against the published JSON; check-marking.mts feeds every part to the app's own marker)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose and of a TeX command without its backslash.",
+          "at": "2026-09-25T04:21:00Z",
           "by": "claude"
         }
       ],

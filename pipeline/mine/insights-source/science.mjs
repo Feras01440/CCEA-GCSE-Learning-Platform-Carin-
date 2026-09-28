@@ -573,8 +573,8 @@ export const insights = [
       {
         source: S("2025-summer", "C2H", 7),
         asked: "Rate of the fastest reaction from data (three decimal places), then sketch the curve for half the acid concentration.",
-        wentWrong: "Rates were right but not to three decimal places, and some calculated all four; the half-concentration sketch usually scored two of three because it did not level off at the same final mass (4 g).",
-        rule: "Same amount of the limiting reactant means the same final value; lower concentration means a shallower curve.",
+        wentWrong: "Rates were right but not to three decimal places, and some calculated all four; the half-concentration sketch usually scored two of three because it did not level off at 4 g, half the original 8 g: the thiosulfate was in excess, so the acid ran out first and half the acid made half the precipitate.",
+        rule: "The reactant that runs out sets the final value: the same amounts give the same height, half of that reactant gives half the height; a lower concentration also gives a shallower curve.",
         misconceptions: ["sci.rates.sketch-wrong-endpoint", "sci.quant.decimal-places-instruction"],
       },
       {
