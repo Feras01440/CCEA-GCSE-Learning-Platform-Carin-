@@ -22,7 +22,7 @@
       "ccea-cer:further-maths:2018-summer:FM1:Q6",
       "ccea-cer:further-maths:2022-summer:FM1:Q5",
       "ccea-cer:further-maths:2023-summer:FM1:Q7",
-      "ccea-cer:further-maths:2025-summer:FM1:Q9"
+      "ccea-cer:further-maths:2019-summer:FM1:Q9"
     ],
     "examWeightHint": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. An indicial equation is the second half of the logarithm question almost every year, worth 4 or 5 marks: Summer 2018 Q6 (5), Summer 2022 Q5(b) (4), Summer 2023 Q7(b) (4), Summer 2024 Q6(b) (5), Summer 2025 Q9(b) (5). The scheme gives M for taking logarithms of both sides, MW for bringing each index down in a bracket, M for collecting the x terms, M for factorising and dividing, and W for the answer to two decimal places, with follow-through after a slip.",
     "mustMemorise": [
@@ -118,17 +118,17 @@
       "howExamined": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. An indicial equation is the second half of the logarithm question almost every year, worth 4 or 5 marks: Summer 2018 Q6 (5 marks, a two-sided equation), Summer 2022 Q5(b) (4), Summer 2023 Q7(b) (4, with a coefficient in front), Summer 2024 Q6(b) (5), Summer 2025 Q9(b) (5). The scheme gives M for taking logarithms of both sides, MW for the indices brought down in brackets, M for collecting the x terms, M for factorising and dividing, and W for the answer to two decimal places. Later marks are given on follow-through, so a slip early does not cost everything.",
       "traps": [
         "Brackets left off the index, so the logarithm multiplies only the constant (Summer 2018 FM1 Q6)",
-        "Errors moving the x terms to one side, usually a sign that does not change (Summer 2022 FM1 Q5, Summer 2023 FM1 Q7)",
-        "A quotient of logarithms carried out as a difference (Summer 2025 FM1 Q9)",
+        "Errors moving the x terms to one side of the equation (Summer 2022 FM1 Q5, Summer 2023 FM1 Q7)",
+        "A quotient of logarithms carried out as a difference: log 40 ÷ log 2 is not log 40 − log 2",
         "Bases other than ten producing extra slips in the working (Summer 2018 FM1 Q6)",
-        "The calculator used on the way rather than at the end, so the second decimal place moves (Summer 2018 FM1 Q6, Summer 2025 FM1 Q9)",
-        "Isolating the unknown attempted before the brackets are expanded (Summer 2018 FM1 Q6)",
+        "The calculator used on the way rather than at the end, so the second decimal place moves (Summer 2018 FM1 Q6)",
+        "Trouble isolating x once the logarithms are down (Summer 2018 FM1 Q6)",
         "The index route overlooked when both sides share a base, so the question takes longer than it needs (Summer 2019 FM1 Q9)"
       ]
     },
     "verification": "ver.note.fm.u1.indicial-equations",
-    "version": 1,
-    "updated": "2026-09-20"
+    "version": 2,
+    "updated": "2026-09-29"
   },
   "workedExamples": [
     {
@@ -153,7 +153,15 @@
           "decision": "Both sides, always. Taking logs of one side alone changes the equation, and this line is the first mark whatever happens next.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "\\log 5^{3x-2}=\\log 40",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 2,
@@ -170,15 +178,31 @@
           },
           "earns": [
             "MW1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "(3x-2)\\log 5=\\log 40",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 3,
           "working": "Divide both sides by $\\log 5$: $3x - 2 = \\frac{\\log 40}{\\log 5}$.",
-          "decision": "Leave it as a quotient of logarithms. Writing $\\log 40 - \\log 5$ here is the slip the reports name, and it changes the answer.",
+          "decision": "Leave it as a quotient of logarithms. Writing $\\log 40 - \\log 5$ here is a common slip, and it changes the answer.",
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "3x-2=\\frac{\\log 40}{\\log 5}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 4,
@@ -186,7 +210,19 @@
           "decision": "One calculator step for the whole expression. Rounding the logarithms on the way in moves the second decimal place, which is where the last mark sits.",
           "earns": [
             "M3"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 1.430677,
+            "tolerance": {
+              "type": "dp",
+              "places": 4
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 5,
@@ -194,7 +230,19 @@
           "decision": "Check it: $5^{3(1.43) - 2} = 39.87$, which is the right-hand side to the accuracy carried.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 1.43,
+            "tolerance": {
+              "type": "dp",
+              "places": 2
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "$x = 1.43$",
@@ -549,8 +597,7 @@
                 }
               },
               "feedback": "That is $40 \\div 2$. An index is not a multiplier, so it cannot be divided away; taking logarithms is what frees the $x$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:further-maths:2019-summer:FM1:Q9"
+              "marksTypicallyEarned": 0
             },
             {
               "misconception": "fm.logs.quotient-as-divided-logs",
@@ -563,8 +610,7 @@
                 }
               },
               "feedback": "The two logarithms have been subtracted where the method divides them. From $x \\log 2 = \\log 40$ you divide, which gives $5.32$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q9"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1123,7 +1169,7 @@
               },
               "feedback": "The method is right and the logarithms were rounded before they were divided. Keeping them in the calculator to the last step gives $2.18$.",
               "marksTypicallyEarned": 2,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q9"
+              "source": "ccea-cer:further-maths:2018-summer:FM1:Q6"
             }
           ],
           "requiresWorking": true
@@ -1274,8 +1320,7 @@
                 }
               },
               "feedback": "The two logarithms on the top line were divided where the working subtracts them. The numerator is $3 \\log 7 - \\log 2$, which gives $6.22$.",
-              "marksTypicallyEarned": 2,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q9"
+              "marksTypicallyEarned": 2
             }
           ],
           "requiresWorking": true
@@ -1474,6 +1519,36 @@
         "FM1-LOG-03"
       ],
       "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.indicial-equations.07",
+      "topic": "fm.u1.indicial-equations",
+      "specRefs": [
+        "FM1-LOG-03"
+      ],
+      "kind": "qa",
+      "prompt": "Why does the index go in a bracket when it comes down?",
+      "answer": "The whole index multiplies the logarithm, not just its last term.",
+      "keyWords": [
+        "whole index"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 2
+    },
+    {
+      "id": "rp.fm.u1.indicial-equations.08",
+      "topic": "fm.u1.indicial-equations",
+      "specRefs": [
+        "FM1-LOG-03"
+      ],
+      "kind": "qa",
+      "prompt": "From x log 2 = log 40, how do you find x?",
+      "answer": "Divide: x = log 40 ÷ log 2, never log 40 − log 2.",
+      "keyWords": [
+        "divide"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 2
     }
   ],
   "verification": [
@@ -1553,10 +1628,57 @@
           "detail": "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. Five inline SVG figures, all built from the computed working, and one embeddable video from data/links/media-map.json followed immediately by a gate. The closing panel is a pointer of under 80 words followed by the prompts.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026, Lesson structure v3 (the teach-first case approved by the owner, with his eight answers): five teaching sections (idea, four variants), each explain -> See it -> Your turn; the first check, g2, follows the first See it; g2 and g5 keep their ids, kinds and answers on new equations (5^x = 10 and 6^x = 50); every explanation re-teaches, points at a step of its See it and names no option by position; every gate has a twin; two short prompts wired (rp.07, rp.08).",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "Every solution computed from its logarithms, checked by substituting back, and rounded by the generator; the rounded-first value in the fourth section computed from logarithms rounded to two decimal places.",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "isomorph",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "Two-way overlap scan (fm1-migration-0/overlap.mjs): no equation the note, a gate, a twin or the worked example works is asked by a later question, post diagnostic, find-the-mistake item or shipped prompt.",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g2",
+          "reason": "An interface warm-up ('One tap to begin') asked before anything was shown; the owner's answer 8 of 27 Sep makes the first check a real one after the first See it, which g2 now is.",
+          "on": "2026-09-28T23:48:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g6",
+          "reason": "Its equation, 2^(4x + 1) = 7^(x + 3), is exam question 0007's own part (a), and its answer is that equation's line; g6 checks the bracket on a new equation.",
+          "on": "2026-09-28T23:48:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "Its answer, 6.22, is exam question 0007(a)'s own, reached from that question's collected line; g7 solves a two-base equation on new numbers.",
+          "on": "2026-09-28T23:48:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.indicial-equations.01",
@@ -1609,6 +1731,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026 (FM1 migration, group 0; the ruling of 16:40): an input spec added to every step (the two logarithm lines and the divided line as equations, x to four decimal places, x to two), marked through markAnswer; lines, earns, faded and the twin unchanged. Step 3's reason no longer says the reports name the difference-of-logarithms slip (they do not).",
+          "at": "2026-09-28T23:48:00Z",
           "by": "claude"
         }
       ],
@@ -1666,6 +1796,22 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the source of the fm.logs.unknown-base-divided common error (20) removed (the Summer 2019 Q9 report is about using logarithms where indices would do, not dividing 40 by 2); pattern, feedback, marks and tag unchanged.",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the source of the fm.logs.quotient-as-divided-logs common error (1.3) removed (the Summer 2025 Q9 report says part (b) was very well answered; its subtraction slips were in part (a)'s simplification); pattern, feedback, marks and tag unchanged.",
+          "at": "2026-09-28T23:48:00Z",
           "by": "claude"
         }
       ],
@@ -1952,6 +2098,14 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the source of the fm.logs.rounded-too-early common error (2.17) changed to ccea-cer:further-maths:2018-summer:FM1:Q6 (the Summer 2018 Q6 report is the one that notes candidates leaving the calculator to the last step did better; Summer 2025 Q9 does not discuss rounding); pattern, feedback, marks and tag unchanged.",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2008,6 +2162,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the source of the fm.logs.quotient-as-divided-logs common error (23.46) removed (the Summer 2025 Q9 report does not describe a quotient of logarithms divided in solving); pattern, feedback, marks and tag unchanged.",
+          "at": "2026-09-28T23:48:00Z",
           "by": "claude"
         }
       ],
@@ -2206,10 +2368,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): A 28-word answer, over the 25-word cap for a recall card; rp.07 asks why the bracket matters in eleven words. Replaced by rp.fm.u1.indicial-equations.07.",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.indicial-equations.02",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.indicial-equations.07",
+          "reason": "A 28-word answer, over the 25-word cap for a recall card; rp.07 asks why the bracket matters in eleven words.",
+          "on": "2026-09-28T23:48:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.indicial-equations.03",
@@ -2272,10 +2451,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): Its key words ('quotient', 'divide', 'not') are not all in its own answer, so her recall could never show them, and frozen key words cannot change in place; rp.08 asks the same step in nine words with a key word its answer carries. Replaced by rp.fm.u1.indicial-equations.08.",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.indicial-equations.04",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.indicial-equations.08",
+          "reason": "Its key words ('quotient', 'divide', 'not') are not all in its own answer, so her recall could never show them, and frozen key words cannot change in place; rp.08 asks the same step in nine words with a key word its answer carries.",
+          "on": "2026-09-28T23:48:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.indicial-equations.05",
@@ -2337,6 +2533,88 @@
           "result": "pass",
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.indicial-equations.07",
+      "itemId": "rp.fm.u1.indicial-equations.07",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "FM1-LOG-03; a fact she needs on the paper, answered in at most 25 words (prompt-few.mjs), no series or examiner's finding in it",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (the Summer 2018 Q6 report's brackets) as one short fact",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "British English; its key words appear in its own answer (keywordsPresent probed)",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.indicial-equations.08",
+      "itemId": "rp.fm.u1.indicial-equations.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "FM1-LOG-03; a fact she needs on the paper, answered in at most 25 words (prompt-few.mjs), no series or examiner's finding in it",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (the Summer 2018 Q6 report's brackets) as one short fact",
+          "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/indicial-equations.mjs, every solution computed from its logarithms and checked by substituting back, every rounding computed; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-indicial-equations.mts)",
+          "result": "pass",
+          "detail": "British English; its key words appear in its own answer (keywordsPresent probed)",
+          "at": "2026-09-28T23:48:00Z",
           "by": "claude"
         }
       ],
