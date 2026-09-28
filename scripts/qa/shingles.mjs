@@ -34,12 +34,16 @@
  *   node scripts/qa/shingles.mjs --json             the findings as JSON, for an author's generator
  *   node scripts/qa/shingles.mjs --n 10             a different sequence length (default 8)
  *
+ * Withdrawn items are not read (29 Sep 2026): an id in a withdrawn record or an item whose own log says "withdrawn"
+ * stays byte-identical in the pack and never ships, so it is never a breach to fix (shingles-allow.mjs withoutWithdrawn,
+ * noteWithoutWithdrawn; the rule of the marking and size lints). Drafts are read.
+ *
  * Exit 1 on any breach, 0 with counts otherwise.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { allowEntries, allowedBy as allowEntryFor, bookWords, pageOfWord, textbookPages, verdict } from "./shingles-allow.mjs";
+import { allowEntries, allowedBy as allowEntryFor, bookWords, noteWithoutWithdrawn, pageOfWord, textbookPages, verdict, withoutWithdrawn } from "./shingles-allow.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const PACKS = path.join(ROOT, "packs");
@@ -108,10 +112,24 @@ function contentFiles() {
 
 const ours = new Map(); // sequence -> { where, subject, unit, slug, sentence, at }
 const files = contentFiles();
+/** A topic's bundle, read once for its withdrawn records (the note's withdrawn gates are recorded there). */
+const bundleOf = (dir) => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(dir, "bundle.json"), "utf8"));
+  } catch {
+    return null;
+  }
+};
+let withdrawnSkipped = 0;
 for (const { file, subject, unit, slug } of files) {
   const strings = [];
   try {
-    collectStrings(JSON.parse(fs.readFileSync(file, "utf8")), strings, "");
+    // Withdrawn items are not read (the lead, 29 Sep 2026): they stay byte-identical in the pack, and a line against
+    // one would tempt an author to edit it. Same rule as the marking and size lints (shingles-allow.mjs).
+    const raw = JSON.parse(fs.readFileSync(file, "utf8"));
+    const read = path.basename(file) === "bundle.json" ? withoutWithdrawn(raw) : noteWithoutWithdrawn(raw, bundleOf(path.dirname(file)));
+    withdrawnSkipped += JSON.stringify(raw).length - JSON.stringify(read).length > 0 ? 1 : 0;
+    collectStrings(read, strings, "");
   } catch {
     continue; // a malformed bundle is build-content's finding, not this one's
   }
@@ -404,6 +422,7 @@ const counts = {
   stock: stock.length,
   allowed: allowed.length,
   specQuotes,
+  filesWithWithdrawnSkipped: withdrawnSkipped,
   textbookCopies: breaches.filter((b) => b.kind === "textbook-copy").length,
   breaches: breaches.length,
 };
@@ -443,6 +462,8 @@ if (asJson) {
     for (const [statement, e] of byStatement)
       console.log(`  ${e.runs} run${e.runs === 1 ? "" : "s"}  "${statement}"\n      ${[...e.where].join(", ")} — ${e.reason}`);
   }
+  if (withdrawnSkipped > 0)
+    console.log(`\nwithdrawn items are not read: ${withdrawnSkipped} content file(s) hold withdrawn items, left out as the build leaves them unshipped (they stay byte-identical in the pack).`);
   if (counts.textbooks > 0)
     console.log(`\ntextbooks: ${counts.textbookCopies} run(s) shared with a CCEA textbook (breaches above, with the book and page); ${counts.specQuotes} more the textbook shares only because both quote the specification (not held against us).`);
   if (breaches.length === 0) {

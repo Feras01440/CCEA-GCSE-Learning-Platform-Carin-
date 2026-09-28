@@ -104,3 +104,37 @@ export function pageOfWord(pages, at) {
   }
   return hit ? { pdfPage: hit.pdfPage, printed: hit.printed } : null;
 }
+
+/*
+ * Withdrawn items are not read (the lead, 29 Sep 2026). A withdrawn item stays in the pack byte-identical by rule (a
+ * review card may still point at it), and a shingle line against it tempts an author to edit a copy that must not
+ * change (one did). The rule is the marking and size lints' (src/components/items/content-lint.ts, item 15): an id in a
+ * withdrawn record (VerificationLog.withdrawn[].id; a diagnostic item as "<set id>#<item id>"), or an item whose own log
+ * (found by its `verification` ref, else by `itemId`) says "withdrawn". Drafts are still read: they are what an author
+ * checks before filing. The pack is never changed; these return filtered copies.
+ */
+const logsOf = (bundle) => (Array.isArray(bundle?.verification) ? bundle.verification.filter((l) => l && typeof l === "object") : []);
+const recordsOf = (bundle) => logsOf(bundle).flatMap((l) => (Array.isArray(l.withdrawn) ? l.withdrawn : [])).filter((r) => r && typeof r === "object");
+
+/** The bundle without its withdrawn questions, worked examples, diagnostic sets and items, find-the-mistake items and prompts. */
+export function withoutWithdrawn(bundle) {
+  if (!bundle || typeof bundle !== "object") return bundle;
+  const logs = logsOf(bundle);
+  const gone = new Set(recordsOf(bundle).map((r) => String(r.id)));
+  const ownLog = (it) => (typeof it.verification === "string" ? logs.find((l) => l.id === it.verification) : logs.find((l) => l.itemId === it.id));
+  const withdrawn = (it) => it && typeof it === "object" && (gone.has(String(it.id)) || ownLog(it)?.status === "withdrawn");
+  const copy = { ...bundle };
+  for (const key of ["questions", "workedExamples", "findTheMistake", "prompts"]) if (Array.isArray(bundle[key])) copy[key] = bundle[key].filter((it) => !withdrawn(it));
+  if (Array.isArray(bundle.diagnostics))
+    copy.diagnostics = bundle.diagnostics
+      .filter((d) => !withdrawn(d))
+      .map((d) => (Array.isArray(d?.items) ? { ...d, items: d.items.filter((it) => !gone.has(`${d.id}#${it?.id}`)) } : d));
+  return copy;
+}
+
+/** The note without the gates its bundle's logs withdraw (records of kind "gate"). */
+export function noteWithoutWithdrawn(blocks, bundle) {
+  if (!Array.isArray(blocks)) return blocks;
+  const gates = new Set(recordsOf(bundle).filter((r) => r.kind === "gate").map((r) => String(r.id)));
+  return gates.size ? blocks.filter((b) => !(b && b.type === "gate" && gates.has(String(b.id)))) : blocks;
+}

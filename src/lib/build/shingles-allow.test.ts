@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { allowEntries, allowedBy, bookWords, pageOfWord, textbookPages, verdict, words } from "../../../scripts/qa/shingles-allow.mjs";
+import { allowEntries, allowedBy, bookWords, noteWithoutWithdrawn, pageOfWord, textbookPages, verdict, withoutWithdrawn, words } from "../../../scripts/qa/shingles-allow.mjs";
 
 /**
  * scripts/qa/shingles.mjs's verdict on a run it shares with the corpus (QA fixer, 25 Sep 2026): the M4
@@ -78,5 +78,50 @@ describe("textbook pages", () => {
     expect(bookWords(text)).toEqual(words("Motion in a straight line Speed is distance over time. 2 A figure"));
     expect(pageOfWord(pages, 0)).toEqual({ pdfPage: 2, printed: "2" });
     expect(pageOfWord(pages, words("Motion in a straight line Speed is distance over time. 2").length)).toEqual({ pdfPage: 3, printed: null });
+  });
+});
+
+/**
+ * Withdrawn items are not read (the lead, 29 Sep 2026): a withdrawn copy stays in the pack byte-identical by rule, and a
+ * shingle line against it tempts an author to edit it (one did). The rule of the marking and size lints: an id in a
+ * withdrawn record, or an item whose own log says "withdrawn". Drafts are still read: they are what an author checks
+ * before filing.
+ */
+describe("withdrawn items are not read", () => {
+  const record = (id: string, kind: string) => ({ id, kind, replacedBy: null, reason: "r", on: "2026-09-29T00:00:00Z" });
+  const bundle = {
+    note: { verification: "ver.note.x" },
+    questions: [{ id: "q.1", verification: "ver.q.1" }, { id: "q.2", verification: "ver.q.2" }, { id: "q.3", verification: "ver.q.3" }, { id: "q.4", verification: "ver.q.4" }],
+    workedExamples: [{ id: "we.1", verification: "ver.we.1" }, { id: "we.2", verification: "ver.we.2" }],
+    diagnostics: [{ id: "dx.pre", verification: "ver.dx.pre", items: [{ id: "i1" }, { id: "i2" }] }],
+    findTheMistake: [{ id: "ftm.1" }],
+    prompts: [{ id: "rp.1" }, { id: "rp.2" }],
+    verification: [
+      { id: "ver.note.x", itemId: "note.x", status: "verified", withdrawn: [record("g3", "gate"), record("q.2", "question"), record("dx.pre#i2", "diagnostic"), record("rp.2", "prompt")] },
+      { id: "ver.q.1", itemId: "q.1", status: "verified" },
+      { id: "ver.q.2", itemId: "q.2", status: "verified" },
+      { id: "ver.q.3", itemId: "q.3", status: "withdrawn" },
+      { id: "ver.q.4", itemId: "q.4", status: "draft" },
+      { id: "ver.we.2", itemId: "we.2", status: "withdrawn" },
+      { id: "ver.ftm.1", itemId: "ftm.1", status: "withdrawn" },
+    ],
+  };
+
+  it("drops an id in a withdrawn record and an item whose own log says withdrawn, and keeps drafts", () => {
+    const kept = withoutWithdrawn(bundle);
+    expect(kept.questions.map((q: { id: string }) => q.id)).toEqual(["q.1", "q.4"]);
+    expect(kept.workedExamples.map((w: { id: string }) => w.id)).toEqual(["we.1"]);
+    expect(kept.diagnostics[0].items.map((i: { id: string }) => i.id)).toEqual(["i1"]);
+    expect(kept.findTheMistake).toEqual([]);
+    expect(kept.prompts.map((p: { id: string }) => p.id)).toEqual(["rp.1"]);
+    // the pack is not changed: the copy stays byte-identical
+    expect(bundle.questions).toHaveLength(4);
+  });
+
+  it("drops a withdrawn gate from the note, and nothing else", () => {
+    const blocks = [{ type: "p", md: "Text." }, { type: "gate", id: "g3" }, { type: "gate", id: "g4" }];
+    expect(noteWithoutWithdrawn(blocks, bundle)).toEqual([{ type: "p", md: "Text." }, { type: "gate", id: "g4" }]);
+    expect(noteWithoutWithdrawn(blocks, null)).toEqual(blocks);
+    expect(withoutWithdrawn({ questions: [{ id: "q.1" }] })).toEqual({ questions: [{ id: "q.1" }] });
   });
 });
