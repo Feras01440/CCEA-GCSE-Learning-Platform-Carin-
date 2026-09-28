@@ -7,7 +7,7 @@
       "Use the formula on the sheet, with the condition on the denominator",
       "Spot when one event sits inside another, so the numerator is the smaller one"
     ],
-    "minutes": 15
+    "minutes": 24
   },
   {
     "type": "h",
@@ -26,7 +26,29 @@
   },
   {
     "type": "p",
-    "md": "A row's cells add to its total: the tea row is $42 + 33 = 75$. A column works the same way, and the column totals add to all 250."
+    "md": "Think of the condition as a cover laid over the table. Everything outside the named group is hidden, and the question is now about the people still showing. The count on top must come from inside that group, and the total underneath is the size of the group itself."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the tea row's total and the 30-and-over column's total on the cafe table.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Tea: $42 + 33 = 75$",
+        "decision": "A row's cells add to its total."
+      },
+      {
+        "n": 2,
+        "working": "30 and over: $33 + 67 = 100$",
+        "decision": "A column works the same way."
+      },
+      {
+        "n": 3,
+        "working": "Check: $75 + 175 = 250$",
+        "decision": "The row totals add to everybody asked, and so do the column totals."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -34,7 +56,12 @@
     "kind": "number",
     "prompt": "On the cafe table, how many of the 250 customers are under 30?",
     "answer": "150",
-    "explain": "$42 + 108 = 150$: the under-30 column's two cells. That total is the group any 'given under 30' question divides by."
+    "explain": "As in step 2 of See it, add the column's cells: $42 + 108 = 150$. That total is the group any 'given under 30' question divides by.",
+    "twin": {
+      "prompt": "A two-way table has 19 and 28 in its under-16 column. How many people are under 16?",
+      "answer": "47",
+      "explain": "The column's cells add to its total: $19 + 28 = 47$."
+    }
   },
   {
     "type": "h",
@@ -43,13 +70,43 @@
   },
   {
     "type": "p",
-    "md": "'The probability of tea, given under 30' is written $P(\\text{tea} \\mid \\text{under 30})$. The upright bar is read 'given'.\nThe condition, under 30, is the group you are now choosing from. So the 42 under-30 tea drinkers go over the 150 under-30s: $\\dfrac{42}{150} = \\dfrac{7}{25}$, which is $0.28$."
+    "md": "'The probability of tea, given under 30' is written $P(\\text{tea} \\mid \\text{under 30})$. The upright bar is read 'given'. The condition is the group you are now choosing from, so its total goes on the bottom."
+  },
+  {
+    "type": "p",
+    "md": "The top of the fraction is the cell where the event meets the condition: the people in the group who also do the thing asked about. So the top always sits inside the bottom, and a conditional probability is never more than 1. An answer above 1 means the fraction is upside down."
   },
   {
     "type": "figure",
     "alt": "The cafe table with its totals, the under-30 column ringed by a dashed box, showing that the group has shrunk from 250 to 150.",
     "svg": "<svg viewBox='0 0 358 152' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-way table of 250 cafe customers by drink and age. Tea: 42 under 30 and 33 aged 30 and over, total 75. Coffee: 108 under 30 and 67 aged 30 and over, total 175. Column totals 150 and 100. The under-30 column is ringed with a dashed box'><title>A two-way table of 250 cafe customers by drink and age. Tea: 42 under 30 and 33 aged 30 and over, total 75. Coffee: 108 under 30 and 67 aged 30 and over, total 175. Column totals 150 and 100. The under-30 column is ringed with a dashed box</title><path d='M8 8 L350 8' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M8 42 L350 42' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M8 76 L350 76' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M8 110 L350 110' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M8 144 L350 144' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M8 8 L8 144' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M97 8 L97 144' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M178 8 L178 144' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M282 8 L282 144' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M350 8 L350 144' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='137.5' y='30' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Under 30</text><text x='230' y='30' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>30 and over</text><text x='316' y='30' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Total</text><text x='52.5' y='64' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Tea</text><text x='137.5' y='64' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>42</text><text x='230' y='64' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>33</text><text x='316' y='64' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>75</text><text x='52.5' y='98' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Coffee</text><text x='137.5' y='98' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>108</text><text x='230' y='98' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>67</text><text x='316' y='98' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>175</text><text x='52.5' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Total</text><text x='137.5' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>150</text><text x='230' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>100</text><text x='316' y='132' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>250</text><rect x='99' y='10' width='77' height='132' fill='none' stroke='currentColor' stroke-width='2.4' stroke-dasharray='6 3'/></svg>",
     "caption": "The ringed column is the new whole: 150 customers, not 250."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "On the cafe table, find $P(\\text{coffee} \\mid \\text{30 and over})$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "The group: the 100 customers aged 30 and over",
+        "decision": "The condition names the whole."
+      },
+      {
+        "n": 2,
+        "working": "Of those, 67 drink coffee",
+        "decision": "The cell where coffee meets the condition's column."
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{67}{100} = 0.67$",
+        "decision": "The cell over the condition's total.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -62,7 +119,41 @@
       "250, everybody asked"
     ],
     "answer": "150, the under-30 total",
-    "explain": "The condition names the under-30s, so those 150 are the group you are choosing from. Dividing by 250 would ignore the condition altogether."
+    "explain": "As in step 1 of See it, the condition names the group: here the under-30s, so those 150 are the group you are choosing from. Dividing by 250 would ignore the condition altogether.",
+    "optionNotes": [
+      {
+        "option": "75, the tea total",
+        "why": "Tea is the event asked about, not the condition; dividing by its total answers 'under 30, given tea'.",
+        "misconception": "fm.condprob.condition-reversed"
+      },
+      {
+        "option": "250, everybody asked",
+        "why": "Everybody is the whole only before the condition; 'given under 30' shrinks it to that column.",
+        "misconception": "fm.condprob.denominator-not-conditioned"
+      }
+    ],
+    "twin": {
+      "prompt": "In a survey of 200 pupils, 90 walk to school. Which total is the denominator of $P(\\text{late} \\mid \\text{walks})$?",
+      "options": [
+        "90, the walkers' total",
+        "The total who are late",
+        "200, everybody asked"
+      ],
+      "answer": "90, the walkers' total",
+      "explain": "The condition, walks, names the group: the 90 walkers are the whole you divide by.",
+      "optionNotes": [
+        {
+          "option": "The total who are late",
+          "why": "Late is the event asked about; its total would answer 'walks, given late'.",
+          "misconception": "fm.condprob.condition-reversed"
+        },
+        {
+          "option": "200, everybody asked",
+          "why": "The 200 is the whole only before the condition; 'given walks' shrinks it to the 90.",
+          "misconception": "fm.condprob.denominator-not-conditioned"
+        }
+      ]
+    }
   },
   {
     "type": "h",
@@ -71,11 +162,38 @@
   },
   {
     "type": "p",
-    "md": "Divide the top and the bottom of $\\dfrac{42}{150}$ by the 250 asked. The fraction does not change, but its two parts become probabilities:\n$\\dfrac{42}{150} = \\dfrac{42/250}{150/250}$\nThe top is now $P(\\text{tea and under 30})$ and the bottom $P(\\text{under 30})$."
+    "md": "The formula printed on page 2 of the Unit 3 booklet, $P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$, is the table's share written in probabilities. A table question can be answered straight from the counts; a tree question, where only probabilities are given, uses the formula as printed."
   },
   {
     "type": "p",
-    "md": "That is the formula printed on page 2 of the Unit 3 booklet: $P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$. A table question can be answered straight from the counts; a tree question, where only probabilities are given, uses the formula as printed."
+    "md": "Read the formula from the bar outwards. Whatever follows the bar is the condition, and its probability goes underneath; the top is the chance that both happen at once. Writing the two pieces in words first, 'both' over 'the condition', keeps the fraction the right way up before any number goes in."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Show that $\\dfrac{42}{150}$, the share of the under-30s who drink tea, is $\\dfrac{P(\\text{tea and under 30})}{P(\\text{under 30})}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\dfrac{42}{150} = \\dfrac{42/250}{150/250}$",
+        "decision": "Divide the top and the bottom by the 250 asked: the fraction does not change."
+      },
+      {
+        "n": 2,
+        "working": "$\\dfrac{42}{250} = P(\\text{tea and under 30})$",
+        "decision": "The top has become a probability of both at once."
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{150}{250} = P(\\text{under 30})$",
+        "decision": "The bottom has become the condition's probability."
+      },
+      {
+        "n": 4,
+        "working": "$P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$",
+        "decision": "With $A$ for tea and $B$ for under 30: the sheet's formula."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -88,7 +206,39 @@
       "The probability of $A$ and $B$ together"
     ],
     "answer": "The probability of the condition, $B$",
-    "explain": "The condition is the new whole group, so it is the denominator. The numerator is the probability that both happen."
+    "explain": "As step 3 of See it shows, the bottom came from the condition's total, so it is the condition's probability. The numerator is the probability that both happen.",
+    "optionNotes": [
+      {
+        "option": "The probability of $A$",
+        "why": "$A$ is the event asked about; dividing by its probability answers '$B$ given $A$'.",
+        "misconception": "fm.condprob.condition-reversed"
+      },
+      {
+        "option": "The probability of $A$ and $B$ together",
+        "why": "Both together is the top of the fraction; the bottom is the group the condition names."
+      }
+    ],
+    "twin": {
+      "prompt": "In $P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$, which probability goes on the top?",
+      "options": [
+        "The probability of $A$ and $B$ together",
+        "The probability of $A$",
+        "The probability of $B$"
+      ],
+      "answer": "The probability of $A$ and $B$ together",
+      "explain": "The top is the share of the condition's group where $A$ happens as well: both at once, $P(A \\cap B)$.",
+      "optionNotes": [
+        {
+          "option": "The probability of $A$",
+          "why": "$A$ on its own counts cases outside the condition too; only those in both belong on top."
+        },
+        {
+          "option": "The probability of $B$",
+          "why": "$P(B)$ is the condition's probability, the bottom of the fraction.",
+          "misconception": "fm.condprob.condition-reversed"
+        }
+      ]
+    }
   },
   {
     "type": "h",
@@ -103,7 +253,33 @@
   },
   {
     "type": "p",
-    "md": "In the cafe table $P(\\text{tea and under 30})$ is $0.168$ and $P(\\text{under 30})$ is $0.6$. Rescaling: $0.168 \\div 0.6 = 0.28$, bigger than the joint probability, because the group is smaller than the whole survey."
+    "md": "That gives a quick check on any answer. A conditional probability is at least as big as the joint probability it came from, and at most 1. If a 'given' answer comes out smaller than the joint probability, something has been multiplied that should have been divided."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Rescale the cafe's $P(\\text{tea and under 30})$ by $P(\\text{under 30})$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(\\text{tea and under 30}) = 0.168$",
+        "decision": "The joint probability, a share of the whole survey."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{under 30}) = 0.6$",
+        "decision": "The condition's probability: the new whole."
+      },
+      {
+        "n": 3,
+        "working": "$0.168 \\div 0.6 = 0.28$",
+        "decision": "Bigger than the joint probability, because the group is smaller than the whole survey.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -111,7 +287,12 @@
     "kind": "number",
     "prompt": "$P(A \\cap B) = 0.21$ and $P(B) = 0.28$. What is $P(A \\mid B)$?",
     "answer": "0.75 | 3/4",
-    "explain": "Rescale by the condition: $0.21 \\div 0.28 = 0.75$. The share of the smaller group is larger than the joint probability, as it always is when $P(B)$ is below 1."
+    "explain": "As in step 3 of See it, rescale by the condition: $0.21 \\div 0.28 = 0.75$. The share of the smaller group is larger than the joint probability, as it always is when $P(B)$ is below 1.",
+    "twin": {
+      "prompt": "$P(A \\cap B) = 0.28$ and $P(B) = 0.35$. What is $P(A \\mid B)$?",
+      "answer": "0.8 | 4/5",
+      "explain": "Divide by the condition's probability: $0.28 \\div 0.35 = 0.8$."
+    }
   },
   {
     "type": "h",
@@ -120,11 +301,7 @@
   },
   {
     "type": "p",
-    "md": "$P(\\text{under 30} \\mid \\text{tea})$ is a different question. The condition is now 'drinks tea', so the group is the 75 in that row, and the same 42 go on top.\nSame cell on top, different total underneath, different answer."
-  },
-  {
-    "type": "p",
-    "md": "The coffee row shows it with other numbers:\n$P(\\text{coffee} \\mid \\text{under 30}) = \\dfrac{108}{150}$\n$P(\\text{under 30} \\mid \\text{coffee}) = \\dfrac{108}{175}$\nRead the condition before anything else."
+    "md": "$P(\\text{under 30} \\mid \\text{tea})$ is a different question from $P(\\text{tea} \\mid \\text{under 30})$. The condition is now 'drinks tea', so the group is the tea row. Same cell on top, different total underneath, different answer. Read the condition before anything else."
   },
   {
     "type": "figure",
@@ -133,12 +310,34 @@
     "caption": "The ringed row is the new group: 75 tea drinkers, 42 of them under 30."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "On the cafe table, compare $P(\\text{coffee} \\mid \\text{under 30})$ with $P(\\text{under 30} \\mid \\text{coffee})$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(\\text{coffee} \\mid \\text{under 30}) = \\dfrac{108}{150}$",
+        "decision": "The condition is the under-30 column: its total underneath."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{under 30} \\mid \\text{coffee}) = \\dfrac{108}{175}$",
+        "decision": "The condition is the coffee row now: the same cell on top, a different total underneath."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g16",
     "kind": "number",
     "prompt": "On the cafe table, 42 of the 75 tea drinkers are under 30. What is $P(\\text{under 30} \\mid \\text{tea})$? Give a fraction or a decimal.",
     "answer": "14/25 | 42/75 | 0.56",
-    "explain": "$\\dfrac{42}{75}$ is $\\dfrac{14}{25}$. The condition is the tea row this time, so 75 is the denominator."
+    "explain": "As in step 2 of See it, the condition is the row this time: $\\dfrac{42}{75}$ is $\\dfrac{14}{25}$, with the tea total, 75, underneath.",
+    "twin": {
+      "prompt": "In a survey, 18 of the 48 cyclists are under 16. What is $P(\\text{under 16} \\mid \\text{cycles})$? Give a fraction or a decimal.",
+      "answer": "3/8 | 18/48 | 0.375",
+      "explain": "The condition is cycling, so the 48 cyclists are the whole: $\\dfrac{18}{48} = \\dfrac{3}{8}$."
+    }
   },
   {
     "type": "h",
@@ -147,7 +346,7 @@
   },
   {
     "type": "p",
-    "md": "110 students take French, Spanish, both or neither. 70 take French, 45 take Spanish, 24 take both.\n**Step 1.** Fill the regions: French only 46, both 24, Spanish only 21, neither 19. They total 110.\n**Step 2.** Read the condition. 'Given that the student takes French' means the group is the 70 in that circle.\n**Step 3.** $P(\\text{Spanish} \\mid \\text{French}) = \\dfrac{24}{70}$, which is $\\dfrac{12}{35}$."
+    "md": "A Venn diagram is a two-way table drawn as circles. Each region is a cell, and a circle's total is every region inside it, the overlap included. 'Given French' makes the French circle the whole: both of its regions go underneath, and the overlap, the students who take both, goes on top."
   },
   {
     "type": "figure",
@@ -156,12 +355,43 @@
     "caption": "The French circle holds 46 + 24 = 70 students, and 24 of them take Spanish too."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "110 students take French, Spanish, both or neither. 70 take French, 45 take Spanish and 24 take both. Find $P(\\text{Spanish} \\mid \\text{French})$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "French only 46, both 24, Spanish only 21, neither 19",
+        "decision": "Fill the regions from the overlap outwards; they total 110."
+      },
+      {
+        "n": 2,
+        "working": "The group: the 70 in the French circle",
+        "decision": "'Given that the student takes French' names the whole."
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{24}{70} = \\dfrac{12}{35}$",
+        "decision": "Those who also take Spanish, over the French total.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g17",
     "kind": "number",
     "prompt": "On the French-and-Spanish diagram, 24 of the 45 Spanish students also take French. What is $P(\\text{French} \\mid \\text{Spanish})$? Give a fraction or a decimal.",
     "answer": "8/15 | 24/45 | 0.53",
-    "explain": "$\\dfrac{24}{45}$ is $\\dfrac{8}{15}$. The condition names Spanish, so the Spanish total goes underneath."
+    "explain": "As in step 2 of See it, the condition names the group, here the Spanish circle: $\\dfrac{24}{45}$ is $\\dfrac{8}{15}$.",
+    "twin": {
+      "prompt": "On a Venn diagram, 10 of the 32 people in circle $B$ are also in circle $A$. What is $P(A \\mid B)$? Give a fraction or a decimal.",
+      "answer": "5/16 | 10/32 | 0.3125",
+      "explain": "The condition is circle $B$, so its 32 are the whole: $\\dfrac{10}{32} = \\dfrac{5}{16}$."
+    }
   },
   {
     "type": "h",
@@ -170,7 +400,11 @@
   },
   {
     "type": "p",
-    "md": "A match is cancelled more often after rain. $P(\\text{rain}) = 0.3$; the match is cancelled with probability $0.5$ after rain and $0.1$ on a dry day.\nThere are no counts, so each path is a product: rain and cancelled is $0.3 \\times 0.5 = 0.15$, and dry and cancelled is $0.7 \\times 0.1 = 0.07$."
+    "md": "A match is cancelled more often after rain. $P(\\text{rain}) = 0.3$; the match is cancelled with probability $0.5$ after rain and $0.1$ on a dry day. There are no counts, so each path is a product."
+  },
+  {
+    "type": "p",
+    "md": "On a tree the condition is usually an outcome at the end of the branches, such as 'cancelled', and more than one path can reach it. Its probability is every one of those paths, each multiplied along and then added. Leaving a path out makes the denominator too small and the answer too big."
   },
   {
     "type": "figure",
@@ -179,12 +413,34 @@
     "caption": "Two paths end in 'cancelled'. Together they make $P(\\text{cancelled})$, the denominator of any 'given that it was cancelled' question."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "On the match tree, find the two branches that end in 'cancelled'.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Rain and cancelled: $0.3 \\times 0.5 = 0.15$",
+        "decision": "Multiply along the branch."
+      },
+      {
+        "n": 2,
+        "working": "Dry and cancelled: $0.7 \\times 0.1 = 0.07$",
+        "decision": "The other path to the same outcome."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g18",
     "kind": "number",
     "prompt": "On the match tree, the rain-and-cancelled branch is $0.15$ and the dry-and-cancelled branch is $0.07$. What is $P(\\text{cancelled})$?",
     "answer": "0.22 | 11/50",
-    "explain": "$0.15 + 0.07 = 0.22$. Two separate branches both end in 'cancelled', so they add."
+    "explain": "The two branches in See it both end in 'cancelled' and cannot both happen, so they add: $0.15 + 0.07 = 0.22$.",
+    "twin": {
+      "prompt": "Two branches of a tree end in 'late': $0.12$ and $0.15$. What is $P(\\text{late})$?",
+      "answer": "0.27 | 27/100",
+      "explain": "Separate branches to the same outcome add: $0.12 + 0.15 = 0.27$."
+    }
   },
   {
     "type": "h",
@@ -193,18 +449,7 @@
   },
   {
     "type": "p",
-    "md": "$P(\\text{rain} \\mid \\text{cancelled})$ is $P(\\text{rain and cancelled})$ divided by $P(\\text{cancelled})$: one branch over the sum of both cancelled branches.\nThe numerator is one branch; the denominator is every branch that satisfies the condition. Finding one of the two and stopping is the commonest way this part is lost."
-  },
-  {
-    "type": "p",
-    "md": "The dry days show the division done: given that the match was cancelled, the day was dry with probability $0.07 \\div 0.22 = \\dfrac{7}{22}$, about $0.32$."
-  },
-  {
-    "type": "video",
-    "videoId": "xhFDlmQUAZo",
-    "title": "Conditional Probability",
-    "channel": "corbettmaths",
-    "why": "Conditional probability from tables and from trees, in the notation this unit uses. The reversed-condition trap and the nested-event case are the steps this unit adds on top."
+    "md": "The numerator is one branch; the denominator is every branch that satisfies the condition. Finding one of the two and stopping is the commonest way this part is lost."
   },
   {
     "type": "callout",
@@ -214,12 +459,50 @@
     "source": "ccea-cer:further-maths:2025-summer:FM3:Q7"
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Given that the match was cancelled, find the probability that the day was dry.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(\\text{dry and cancelled}) = 0.07$",
+        "decision": "The numerator: the one branch that is dry and cancelled."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{cancelled}) = 0.22$",
+        "decision": "The denominator: every branch that ends in 'cancelled'."
+      },
+      {
+        "n": 3,
+        "working": "$0.07 \\div 0.22 = \\dfrac{7}{22}$",
+        "decision": "Combine the two pieces: about 0.32.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "xhFDlmQUAZo",
+    "title": "Conditional Probability",
+    "channel": "corbettmaths",
+    "why": "Conditional probability from tables and from trees, in the notation this unit uses. The reversed-condition trap and the nested-event case are the steps this unit adds on top."
+  },
+  {
     "type": "gate",
     "id": "g19",
     "kind": "number",
     "prompt": "Using the match tree, $P(\\text{rain and cancelled}) = 0.15$ and $P(\\text{cancelled}) = 0.22$. What is $P(\\text{rain} \\mid \\text{cancelled})$? Give a fraction or a decimal.",
     "answer": "15/22 | 0.682 | 0.68",
-    "explain": "$\\dfrac{0.15}{0.22}$ is $\\dfrac{15}{22}$, which is 0.682. Giving 0.15 on its own leaves the division undone."
+    "explain": "As in step 3 of See it: $\\dfrac{0.15}{0.22}$ is $\\dfrac{15}{22}$, which is 0.682. Giving 0.15 on its own leaves the division undone.",
+    "twin": {
+      "prompt": "$P(\\text{late and wet}) = 0.07$ and $P(\\text{late}) = 0.08$. What is $P(\\text{wet} \\mid \\text{late})$? Give a fraction or a decimal.",
+      "answer": "0.875 | 7/8",
+      "explain": "One branch over the condition's total: $0.07 \\div 0.08 = 0.875$."
+    }
   },
   {
     "type": "h",
@@ -228,11 +511,11 @@
   },
   {
     "type": "p",
-    "md": "Four coins are tossed. Ask for $P(\\text{four heads} \\mid \\text{at least two heads})$.\nFour heads **is** at least two heads, so the two events together are just the smaller one: $P(A \\cap B) = P(A)$. There is nothing to multiply on the numerator."
+    "md": "When one event lies wholly inside the other, the two together are just the smaller one: $P(A \\cap B) = P(A)$. There is nothing to multiply on the numerator."
   },
   {
     "type": "p",
-    "md": "So the top is $P(\\text{four heads}) = \\dfrac{1}{16}$ and the bottom $P(\\text{at least two}) = \\dfrac{11}{16}$, giving $\\dfrac{1}{16} \\div \\dfrac{11}{16} = \\dfrac{1}{11}$."
+    "md": "To spot it, ask whether one event forces the other. If every outcome of $A$ is also an outcome of $B$, then $A$ sits inside $B$, and 'both' adds nothing to $A$. Exam questions hide this in wording such as 'exactly three' inside 'at least two', or 'all the same' inside 'at least two the same'."
   },
   {
     "type": "figure",
@@ -241,17 +524,75 @@
     "caption": "The inner event sits wholly inside the outer one, so 'both' is the inner event alone."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Four coins are tossed. Find $P(\\text{four heads} \\mid \\text{at least two heads})$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Four heads is at least two heads, so $P(A \\cap B) = P(\\text{four heads})$",
+        "decision": "The inner event on its own is the top."
+      },
+      {
+        "n": 2,
+        "working": "Top $\\dfrac{1}{16}$, bottom $\\dfrac{11}{16}$",
+        "decision": "Four heads in one way of 16; at least two heads in 11 ways."
+      },
+      {
+        "n": 3,
+        "working": "$\\dfrac{1}{16} \\div \\dfrac{11}{16} = \\dfrac{1}{11}$",
+        "decision": "Divide; the sixteenths cancel.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g20",
+    "id": "g25",
     "kind": "choice",
-    "prompt": "'Four heads' lies entirely inside 'at least two heads'. What is $P(\\text{four heads and at least two heads})$?",
+    "prompt": "Every first-team player at a school plays football, so 'first team' lies entirely inside 'plays football'. What is $P(\\text{first team and plays football})$?",
     "options": [
-      "$P(\\text{four heads})$",
-      "$P(\\text{four heads}) \\times P(\\text{at least two heads})$",
-      "$P(\\text{at least two heads})$"
+      "$P(\\text{first team})$",
+      "$P(\\text{first team}) \\times P(\\text{plays football})$",
+      "$P(\\text{plays football})$"
     ],
-    "answer": "$P(\\text{four heads})$",
-    "explain": "Every outcome with four heads already has at least two, so the two events together are the inner event on its own. Multiplying would treat them as unrelated."
+    "answer": "$P(\\text{first team})$",
+    "explain": "As with the coins in See it, the inner event decides: every first-team player already plays football, so the two together are the first team on its own. Multiplying would treat them as unrelated.",
+    "optionNotes": [
+      {
+        "option": "$P(\\text{first team}) \\times P(\\text{plays football})$",
+        "why": "Multiplying treats the events as independent, but being in the first team settles 'plays football' completely.",
+        "misconception": "fm.condprob.subset-event-multiplied"
+      },
+      {
+        "option": "$P(\\text{plays football})$",
+        "why": "Football players include those outside the first team, who are not in both."
+      }
+    ],
+    "twin": {
+      "prompt": "'Exactly three sixes' lies entirely inside 'at least one six'. What is $P(\\text{exactly three sixes and at least one six})$?",
+      "options": [
+        "$P(\\text{exactly three sixes})$",
+        "$P(\\text{exactly three sixes}) \\times P(\\text{at least one six})$",
+        "$P(\\text{at least one six})$"
+      ],
+      "answer": "$P(\\text{exactly three sixes})$",
+      "explain": "Exactly three sixes is already at least one six, so 'both' is the inner event alone.",
+      "optionNotes": [
+        {
+          "option": "$P(\\text{exactly three sixes}) \\times P(\\text{at least one six})$",
+          "why": "A product needs independent events; three sixes settles 'at least one' completely.",
+          "misconception": "fm.condprob.subset-event-multiplied"
+        },
+        {
+          "option": "$P(\\text{at least one six})$",
+          "why": "The larger event includes one or two sixes, which are not exactly three."
+        }
+      ]
+    }
   },
   {
     "type": "h",
@@ -260,7 +601,11 @@
   },
   {
     "type": "p",
-    "md": "A conditional probability scales a group, and the group it scales is the one named in the condition.\nIf the cafe expects 500 customers under 30 next week, the expected number drinking tea is $500 \\times \\dfrac{7}{25} = 140$.\nThe whole survey's share would give $500 \\times \\dfrac{42}{250} = 84$, far too few."
+    "md": "A conditional probability scales a group, and the group it scales is the one named in the condition."
+  },
+  {
+    "type": "p",
+    "md": "An expected number is the size of a group multiplied by a probability. With a condition, check that the group in the question is the group the condition names, then multiply its size by the conditional probability. The result is an estimate of how many, so it need not be a whole number."
   },
   {
     "type": "figure",
@@ -269,25 +614,72 @@
     "caption": "Next week's customers are all under 30, so the ringed column is the one that scales them."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The cafe expects 500 customers under 30 next week. How many would you expect to drink tea?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$500 \\times \\dfrac{7}{25} = 140$",
+        "decision": "Scale the group the condition names by the conditional probability.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Not $500 \\times \\dfrac{42}{250} = 84$",
+        "decision": "The whole survey's share would give far too few: next week's customers are all under 30."
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g21",
     "kind": "number",
     "prompt": "In the cafe survey, 108 of the 150 customers under 30 drink coffee. The cafe expects 500 customers under 30 next week. How many of them would you expect to drink coffee?",
     "answer": "360",
-    "explain": "$500 \\times \\dfrac{108}{150} = 360$. The 500 is the group the condition names, so that is what gets scaled, and with the 140 tea drinkers it makes the 500."
+    "explain": "As in step 1 of See it: $500 \\times \\dfrac{108}{150} = 360$. The 500 is the group the condition names, and with the 140 tea drinkers it makes the 500.",
+    "twin": {
+      "prompt": "A shop expects 50 customers under 16 next week, and $P(\\text{juice} \\mid \\text{under 16}) = 0.3$. How many would you expect to buy juice?",
+      "answer": "15",
+      "explain": "Scale the group the condition names: $50 \\times 0.3 = 15$."
+    }
   },
   {
     "type": "h",
     "role": "twists",
-    "text": "Exam twists"
+    "text": "Exam twists: where the condition hides"
   },
   {
     "type": "p",
-    "md": "**No 'given' in the words.** Summer 2023 stated the condition as a sentence of its own, and many answers came over the whole group. 'A customer picked from those aged 30 and over' is a condition too: of those 100, 33 drink tea, $\\dfrac{33}{100} = 0.33$."
+    "md": "**No 'given' in the words.** Summer 2023 stated the condition as a sentence of its own, and many answers came over the whole group. 'A customer picked from those aged 30 and over' is a condition too."
   },
   {
     "type": "p",
-    "md": "**The condition is the second stage.** Summer 2025 gave the result of a second set and asked about the first. Two beads come from 6 red and 4 green; given the second is red, the first was red with probability $\\dfrac{30}{30 + 24} = \\dfrac{5}{9}$, counted out of 90."
+    "md": "**The condition is the second stage.** Summer 2025 gave the result of a second set and asked about the first. The bottom is every branch whose second stage meets the condition."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Two beads come from 6 red and 4 green, without replacement. Given that the second is red, find the probability that the first was red.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Out of 90: red then red 30, green then red 24",
+        "decision": "Every ordered pair counted out of the same total; both of these end in a red second bead."
+      },
+      {
+        "n": 2,
+        "working": "$\\dfrac{30}{30 + 24} = \\dfrac{5}{9}$",
+        "decision": "The branch with a red first over every branch with a red second.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -295,7 +687,17 @@
     "kind": "number",
     "prompt": "Two beads are taken without replacement from 6 red and 4 green. Given that the second bead is green, what is the probability that the first was red? Give a fraction or a decimal.",
     "answer": "2/3 | 0.67",
-    "explain": "Out of 90, red then green is 24 and green then green is 12. Given the second is green: $\\dfrac{24}{24 + 12}$, which is $\\dfrac{2}{3}$."
+    "explain": "As in See it, count out of 90: red then green is 24 and green then green is 12. Given a green second bead: $\\dfrac{24}{24 + 12}$, which is $\\dfrac{2}{3}$.",
+    "twin": {
+      "prompt": "Two beads are taken without replacement from 5 red and 3 green. Given that the second is green, what is the probability that the first was red? Give a fraction or a decimal.",
+      "answer": "5/7 | 0.71",
+      "explain": "Red then green is 5 × 3 = 15 ways, green then green 3 × 2 = 6: $\\dfrac{15}{21} = \\dfrac{5}{7}$."
+    }
+  },
+  {
+    "type": "h",
+    "role": "twists",
+    "text": "Exam twists: a 'not' and a missing overlap"
   },
   {
     "type": "p",
@@ -303,7 +705,31 @@
   },
   {
     "type": "p",
-    "md": "**The overlap is not given.** With $P(A) = 0.7$, $P(B) = 0.36$ and $P(A \\cup B) = 0.8$, the addition rule finds it first: $0.7 + 0.36 - 0.8 = 0.26$. Then $P(A \\mid B)$ is $0.26 \\div 0.36 = \\dfrac{13}{18}$."
+    "md": "**The overlap is not given.** When only $P(A)$, $P(B)$ and $P(A \\cup B)$ are known, the addition rule finds the overlap first."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$P(A) = 0.7$, $P(B) = 0.36$ and $P(A \\cup B) = 0.8$. Find $P(A \\mid B)$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(A \\cap B) = 0.7 + 0.36 - 0.8$\n$= 0.26$",
+        "decision": "The addition rule, used backwards, gives the overlap.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$P(A \\mid B) = 0.26 \\div 0.36 = \\dfrac{13}{18}$",
+        "decision": "Then the overlap over the condition's probability.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -311,7 +737,12 @@
     "kind": "number",
     "prompt": "$P(A) = 0.6$, $P(B) = 0.45$ and $P(A \\cup B) = 0.75$. What is $P(B \\mid A)$?",
     "answer": "0.5 | 1/2",
-    "explain": "The overlap first: $0.6 + 0.45 - 0.75 = 0.3$. The condition is $A$, so $0.3 \\div 0.6 = 0.5$."
+    "explain": "As in See it, the overlap first: $0.6 + 0.45 - 0.75 = 0.3$. The condition is $A$ this time, so $0.3 \\div 0.6 = 0.5$.",
+    "twin": {
+      "prompt": "$P(A) = 0.8$, $P(B) = 0.46$ and $P(A \\cup B) = 0.9$. What is $P(B \\mid A)$?",
+      "answer": "0.45 | 9/20",
+      "explain": "Overlap: $0.8 + 0.46 - 0.9 = 0.36$; then $0.36 \\div 0.8 = 0.45$."
+    }
   },
   {
     "type": "h",
@@ -320,11 +751,35 @@
   },
   {
     "type": "p",
-    "md": "The hardest shape on the paper: Summer 2026 ended its tree question with a condition of 'during the weekend', that is, on at least one day. Snow falls on each day of a weekend with probability $0.1$, the days independent.\nThe whole is $P(\\text{at least one}) = 1 - 0.9 \\times 0.9 = 0.19$."
+    "md": "The hardest shape on the paper: Summer 2026 ended its tree question with a condition of 'during the weekend', that is, on at least one day. Snow falls on each day of a weekend with probability $0.1$, the days independent."
   },
   {
-    "type": "p",
-    "md": "Given snow on at least one day, no snow on Sunday means snow on Saturday only: $0.1 \\times 0.9 = 0.09$, and $0.09 \\div 0.19 = \\dfrac{9}{19}$. The top sits inside the condition, so nothing more is multiplied."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Given that it snows on at least one day of the weekend, find the probability that it does not snow on Sunday.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(\\text{at least one}) = 1 - 0.9 \\times 0.9$\n$= 0.19$",
+        "decision": "The whole: everything except no snow on either day.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Saturday only: $0.1 \\times 0.9 = 0.09$",
+        "decision": "Given snow on at least one day, no snow on Sunday means snow on Saturday only."
+      },
+      {
+        "n": 3,
+        "working": "$0.09 \\div 0.19 = \\dfrac{9}{19}$",
+        "decision": "The top sits inside the condition, so nothing more is multiplied.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -332,7 +787,12 @@
     "kind": "number",
     "prompt": "On the same snowy weekend, given that it snows on at least one of the two days, what is the probability that it snows on both? Give a fraction or a decimal.",
     "answer": "1/19 | 0.05 | 0.053",
-    "explain": "Both days is $0.1 \\times 0.1 = 0.01$, and it sits inside 'at least one', so $0.01 \\div 0.19 = \\dfrac{1}{19}$."
+    "explain": "As in step 3 of See it, the top sits inside the condition: both days is $0.1 \\times 0.1 = 0.01$, so $0.01 \\div 0.19 = \\dfrac{1}{19}$.",
+    "twin": {
+      "prompt": "Rain falls on each day of a weekend with probability 0.9, the days independent. Given rain on at least one day, what is the probability of rain on both? Give a fraction or a decimal.",
+      "answer": "9/11 | 0.82 | 0.818",
+      "explain": "Both is $0.9 \\times 0.9 = 0.81$ and at least one is $0.99$, so $0.81 \\div 0.99 = \\dfrac{9}{11}$."
+    }
   },
   {
     "type": "h",
