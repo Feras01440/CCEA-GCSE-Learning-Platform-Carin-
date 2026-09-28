@@ -25,7 +25,7 @@
       "ccea-cer:maths:2024-summer:M81:Q10",
       "ccea-cer:maths:2025-summer:M71:Q17"
     ],
-    "examWeightHint": "M8 Paper 1 (non-calculator), early to middle of the paper, almost every series. Two shapes recur: a three-part short-value question of 1 mark per part around Q8 (Summer 2025 Q8: a zero index, an index of minus one and an index of minus three) and a two-mark show-that index proof around Q11 (November 2025 Q11(b)). A single simplification carrying 3 marks also appears (Summer 2024 Q10). The calculator paper touches the same laws in one-mark items (Summer 2024 Paper 2 Q2), but the exact-value work belongs to Paper 1.",
+    "examWeightHint": "M8 Paper 1 (non-calculator), early to middle of the paper, almost every series. Short Write down the value of parts at a mark each (Summer 2025 Q8: a zero index, minus one and minus three; Summer 2026 Q6: 2^(-2); November 2023 Q10(b): 4^(3/2)), a two-mark show-that for a negative fractional index (November 2025 Q11(b)), and simplifications with negative indices (Summer 2024 Q10). An index equation has also appeared (November 2021 Q11).",
     "mustMemorise": [
       "a^(1/n) is the nth root of a, because n copies of it multiply to give a^1",
       "a^(m/n) = (nth root of a)^m: the bottom number is the root, the top number is the power",
@@ -120,23 +120,28 @@
         "Give an exact answer as an integer or a fraction in its lowest terms, because Paper 1 allows no calculator",
         "Reach a printed result in a show-that index question by a written chain of steps",
         "Compare two index values without evaluating them as decimals, using the size of the denominators",
-        "Check a root forwards before using it, so a claimed fourth root is confirmed by raising it to the fourth power"
+        "Check a root forwards before using it, so a claimed fourth root is confirmed by raising it to the fourth power",
+        "Divide by a negative power by multiplying by the positive power",
+        "Solve a simple index equation by writing both sides as powers of one base (going further)"
       ],
       "howExamined": "M8 Paper 1 only for the exact-value work (non-calculator, 1 hour 15 minutes, 50 marks; the formula sheet on page 2 carries no index law). Expect it early to middle: a three-part question worth 1 mark per part worded Write down the value of, and a two-mark Show that index proof. A single simplification for 3 marks also appears. Schemes award A1 per short value with no working demanded, and M1 A1 on the longer items, where the method mark is for the root or the reciprocal being seen and the accuracy mark for the exact value.",
       "traps": [
-        "Reading a negative index as a negative answer: minus eight for 2^(-3), minus one thousand for 10^(-3), Summer 2025 M8 Paper 1 Q8 and Summer 2025 M7 Paper 1 Q17",
-        "Multiplying the base by the index instead of powering it: minus thirty for 10^(-3), Summer 2025 M7 Paper 1 Q17",
-        "Losing the minus sign altogether between the question and the working, Summer 2025 M8 Paper 1 Q8",
-        "Swapping the two numbers of a fractional index, so the denominator becomes the power, November 2025 M8 Paper 1 Q11",
-        "Treating a fractional index as a multiplier, so 16^(3/4) becomes 16 times three quarters, November 2025 M8 Paper 1 Q11",
-        "Applying only the root or only the power and stopping, Summer 2024 M8 Paper 1 Q10",
-        "Applying a zero index to the whole term, so 5 times 12^0 is given as one, Summer 2025 M7 Paper 1 Q17",
-        "Squaring or cubing the base before taking the root, which makes the arithmetic impossible without a calculator"
+        "Writing a negative index as a negative number, or multiplying by it: for 10^(-3) the common wrong answers were -1000 and -30 (Summer 2025 M7 Paper 1 Q17(c))",
+        "Reading a zero index as the base or as 0: for 3^0 the common wrong answers were 3 and 0 (Summer 2025 M7 Paper 1 Q17(a))",
+        "Leaving a letter in a zero-index answer: a common wrong answer to 1^y + y^0 still had y in it (Summer 2025 M7 Paper 1 Q17(d))",
+        "Stopping at the easy indices: most managed a zero index and many minus one, but only the stronger managed minus three (Summer 2025 M8 Paper 1 Q8)",
+        "A show-that with no chain: over half did not show they understood what the numbers in the index do (November 2025 M8 Paper 1 Q11(b))",
+        "Negative indices inside a bracket raised to a power: a very mixed response, with a quarter taking every mark and a quarter none (Summer 2024 M8 Paper 1 Q10)",
+        "Swapping the two numbers of a fractional index, so the denominator becomes the power",
+        "Treating a fractional index as a multiplier, so 16^(3/4) becomes 12",
+        "Applying only the root or only the power and stopping",
+        "Applying a zero index to the whole term, so 5 x 12^0 is given as 1",
+        "Dividing by a negative power as if it made the answer smaller: dividing by 1/9 multiplies by 9"
       ]
     },
     "verification": "ver.note.maths.m8.fractional-and-negative-indices",
     "version": 1,
-    "updated": "2026-09-13"
+    "updated": "2026-09-29"
   },
   "workedExamples": [
     {
@@ -170,6 +175,31 @@
             ],
             "correct": 0,
             "explain": "In $a^{\\frac{m}{n}}$ the bottom $n$ is the root and the top $m$ is the power. Nothing is added and nothing is divided into the base."
+          },
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "The 3, the bottom number",
+                "correct": true,
+                "feedback": "The denominator names the root."
+              },
+              {
+                "id": "b",
+                "text": "The 2, the top number",
+                "correct": false,
+                "feedback": "The top number is the power; the bottom names the root.",
+                "misconception": "maths.indices.root-and-power-swapped"
+              },
+              {
+                "id": "c",
+                "text": "The 27",
+                "correct": false,
+                "feedback": "27 is the base, the number being rooted."
+              }
+            ]
           }
         },
         {
@@ -178,7 +208,18 @@
           "decision": "Root first, because it makes the number smaller. Cubing $27$ first would give a five-figure number to take a cube root of afterwards, and this is the non-calculator paper.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 3,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 3,
@@ -186,7 +227,18 @@
           "decision": "Now the power. The answer is 9, a whole number, which is the usual sign that the root has been taken correctly.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 9,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "$27^{\\frac{2}{3}} = 9$",
@@ -254,6 +306,32 @@
             ],
             "correct": 0,
             "explain": "From $a^{n} \\times a^{-n} = a^{0} = 1$, the two must be reciprocals. That is where the rule comes from, and it is why the answer stays positive."
+          },
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "It turns the power over: one over $8^{\\frac{4}{3}}$",
+                "correct": true,
+                "feedback": "A negative index is a reciprocal."
+              },
+              {
+                "id": "b",
+                "text": "It makes the answer negative",
+                "correct": false,
+                "feedback": "A negative index never makes a positive base's answer negative.",
+                "misconception": "maths.indices.negative-power-gives-negative"
+              },
+              {
+                "id": "c",
+                "text": "It multiplies the base by $-\\tfrac{4}{3}$",
+                "correct": false,
+                "feedback": "An index is a power, not a multiplier.",
+                "misconception": "maths.indices.fractional-index-as-multiplier"
+              }
+            ]
           }
         },
         {
@@ -262,7 +340,18 @@
           "decision": "The bottom of the fraction index is $3$, so take the cube root of $8$. Root before power keeps the arithmetic small enough to do in your head.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 2,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 3,
@@ -270,7 +359,18 @@
           "decision": "The top of the fraction index is $4$, so raise 2 to the fourth power. That gives $8^{\\frac{4}{3}} = 16$.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 16,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 4,
@@ -278,12 +378,24 @@
           "decision": "Put the 16 back under the $1$ from step 1. The answer is a positive fraction, which is what a negative index always gives when the base is positive.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 0.0625,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "fraction",
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "$8^{-\\frac{4}{3}} = \\dfrac{1}{16}$",
       "twin": {
-        "stem": "Work out the value of $16^{-\\frac{3}{4}}$, giving your answer as a fraction in its lowest terms.",
+        "stem": "Work out the value of $32^{-\\frac{3}{5}}$, giving your answer as a fraction in its lowest terms.",
         "answer": {
           "kind": "numeric",
           "value": 0.125,
@@ -335,11 +447,46 @@
       "steps": [
         {
           "n": 1,
-          "working": "$\\left(\\dfrac{25}{4}\\right)^{-\\frac{3}{2}} = \\left(\\dfrac{4}{25}\\right)^{\\frac{3}{2}}$",
+          "working": "$\\left(\\dfrac{25}{4}\\right)^{-\\frac{3}{2}}$ becomes $\\left(\\dfrac{4}{25}\\right)^{\\frac{3}{2}}$",
           "decision": "A negative index on a fraction turns the fraction upside down and makes the index positive. Doing that first removes the minus sign for good, so it cannot come back as a minus in the answer.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\left(\\dfrac{4}{25}\\right)^{\\frac{3}{2}}$",
+                "correct": true,
+                "feedback": "Turn the fraction over and the index becomes positive."
+              },
+              {
+                "id": "b",
+                "text": "$\\left(\\dfrac{25}{4}\\right)^{\\frac{3}{2}}$",
+                "correct": false,
+                "feedback": "The minus sign was dropped without turning the fraction over.",
+                "misconception": "maths.indices.negative-index-sign-dropped"
+              },
+              {
+                "id": "c",
+                "text": "$-\\left(\\dfrac{25}{4}\\right)^{\\frac{3}{2}}$",
+                "correct": false,
+                "feedback": "A negative index turns the fraction over; it does not make it negative.",
+                "misconception": "maths.indices.negative-power-gives-negative"
+              }
+            ]
+          },
+          "whyMenu": {
+            "options": [
+              "A negative index turns a fraction upside down and makes the index positive",
+              "A negative index makes the fraction negative",
+              "A negative index swaps the root and the power"
+            ],
+            "correct": 0,
+            "explain": "$\\left(\\dfrac{a}{b}\\right)^{-n} = \\left(\\dfrac{b}{a}\\right)^{n}$: the reciprocal of a fraction is the fraction turned over."
+          }
         },
         {
           "n": 2,
@@ -347,7 +494,19 @@
           "decision": "The bottom of the index is $2$, so take the square root. Root the top and the bottom separately: $\\sqrt{4} = 2$ and $\\sqrt{25} = 5$.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 0.4,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "fraction",
+              "decimal"
+            ]
+          }
         },
         {
           "n": 3,
@@ -355,7 +514,19 @@
           "decision": "The top of the index is $3$, so cube what is left. Cube the numerator and the denominator separately.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 0.064,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "fraction",
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "$\\left(\\dfrac{25}{4}\\right)^{-\\frac{3}{2}} = \\dfrac{8}{125}$",
@@ -414,7 +585,41 @@
           "decision": "A show-that question is marked on the chain, not on the last line, so every step has to be written. The minus sign goes first.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\dfrac{1}{243^{\\frac{2}{5}}}$",
+                "correct": true,
+                "feedback": "The reciprocal first, on its own line."
+              },
+              {
+                "id": "b",
+                "text": "$-243^{\\frac{2}{5}}$",
+                "correct": false,
+                "feedback": "The minus in the index gives a reciprocal, not a negative.",
+                "misconception": "maths.indices.negative-power-gives-negative"
+              },
+              {
+                "id": "c",
+                "text": "$\\dfrac{1}{9}$",
+                "correct": false,
+                "feedback": "That is the printed result; a show-that earns its marks for the lines before it."
+              }
+            ]
+          },
+          "whyMenu": {
+            "options": [
+              "A show-that is marked on its chain, so the reciprocal goes on a line of its own",
+              "The reciprocal can be skipped because the answer is printed",
+              "The minus sign is dealt with last"
+            ],
+            "correct": 0,
+            "explain": "The printed result earns nothing on its own; each line of the chain carries a mark, the reciprocal first."
+          }
         },
         {
           "n": 2,
@@ -422,7 +627,18 @@
           "decision": "The denominator $5$ says fifth root. Checking rather than guessing: $3^{5} = 243$, so the fifth root is right.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 3,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 3,
@@ -430,7 +646,18 @@
           "decision": "The numerator $2$ squares it, and the reciprocal from step 1 puts it underneath. The last line matches the printed result, which is what the final mark is for.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 9,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "$243^{-\\frac{2}{5}} = \\dfrac{1}{9}$, as required",
@@ -729,6 +956,90 @@
           "confidence": true,
           "hypercorrectionQueue": true
         },
+        {
+          "id": "09",
+          "stem": "What is the value of $27^{-\\frac{1}{3}}$?",
+          "skill": "Evaluate a negative unit-fraction index: the reciprocal of a root",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\dfrac{1}{3}$",
+              "correct": true,
+              "feedback": "Turn it over and take the cube root: $\\sqrt[3]{27} = 3$, so the value is $\\tfrac{1}{3}$."
+            },
+            {
+              "id": "b",
+              "text": "$-3$",
+              "correct": false,
+              "misconception": "maths.indices.negative-power-gives-negative",
+              "feedback": "A negative index gives a reciprocal, not a negative number."
+            },
+            {
+              "id": "c",
+              "text": "$3$",
+              "correct": false,
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "feedback": "That is $27^{\\frac{1}{3}}$; the minus sign turns it over."
+            },
+            {
+              "id": "d",
+              "text": "$-9$",
+              "correct": false,
+              "misconception": "maths.indices.fractional-index-as-multiplier",
+              "feedback": "The index is not a multiplier: $27 \\times \\left(-\\tfrac{1}{3}\\right)$ is not a power of 27."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "10",
+          "stem": "What is the value of $\\left(\\dfrac{1}{3}\\right)^{-2}$?",
+          "skill": "Apply a negative index to a fraction base: turn it over",
+          "options": [
+            {
+              "id": "a",
+              "text": "$9$",
+              "correct": true,
+              "feedback": "Turn the fraction over: $3^{2} = 9$."
+            },
+            {
+              "id": "b",
+              "text": "$\\dfrac{1}{9}$",
+              "correct": false,
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "feedback": "That is $\\left(\\tfrac{1}{3}\\right)^{2}$; the minus sign turns the fraction over first."
+            },
+            {
+              "id": "c",
+              "text": "$-9$",
+              "correct": false,
+              "misconception": "maths.indices.negative-power-gives-negative",
+              "feedback": "Turning over is the minus sign's whole job; the answer is positive."
+            },
+            {
+              "id": "d",
+              "text": "$-\\dfrac{2}{3}$",
+              "correct": false,
+              "misconception": "maths.indices.negative-power-multiplies-base",
+              "feedback": "The index is a power, not a multiplier."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.maths.m8.fractional-and-negative-indices.withdrawn",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "when": "both",
+      "items": [
         {
           "id": "08",
           "stem": "What is the value of $8^{-\\frac{2}{3}}$?",
@@ -1399,7 +1710,7 @@
             "Sign first, then root, then power.",
             "The cube root of $8$ is 2."
           ],
-          "workedSolution": "$8^{-\\frac{2}{3}} = \\dfrac{1}{8^{\\frac{2}{3}}}$. Now $\\sqrt[3]{8} = 2$ and $2^{2} = 4$, so the value is \\dfrac{1}{4}.",
+          "workedSolution": "$8^{-\\frac{2}{3}} = \\dfrac{1}{8^{\\frac{2}{3}}}$. Now $\\sqrt[3]{8} = 2$ and $2^{2} = 4$, so the value is $\\dfrac{1}{4}$.",
           "commonErrors": [
             {
               "misconception": "maths.indices.negative-index-sign-dropped",
@@ -1673,7 +1984,7 @@
             "A negative index turns a fraction upside down.",
             "Cube the top and the bottom separately."
           ],
-          "workedSolution": "Turning it over, $\\left(\\dfrac{2}{5}\\right)^{-3} = \\left(\\dfrac{5}{2}\\right)^{3} = \\dfrac{125}{8}$.",
+          "workedSolution": "Turning it over, $\\left(\\dfrac{2}{5}\\right)^{-3} = \\left(\\dfrac{5}{2}\\right)^{3}$, which is $\\dfrac{125}{8}$.",
           "commonErrors": [
             {
               "misconception": "maths.indices.fraction-negative-power-mishandled",
@@ -1889,7 +2200,7 @@
             "Deal with the two powers separately before you divide.",
             "Dividing by 1/16 is the same as multiplying by 16."
           ],
-          "workedSolution": "$64^{\\frac{2}{3}} = 16$ and $4^{-2} = \\dfrac{1}{16}$. Dividing by \\dfrac{1}{16} means multiplying by 16, so the value is $16 \\times 16 = 256$.",
+          "workedSolution": "$64^{\\frac{2}{3}} = 16$ and $4^{-2} = \\dfrac{1}{16}$. Dividing by $\\dfrac{1}{16}$ means multiplying by 16, so the value is $16 \\times 16 = 256$.",
           "commonErrors": [
             {
               "misconception": "maths.indices.negative-index-sign-dropped",
@@ -2333,7 +2644,7 @@
             "Turn the fraction over first and the minus sign is gone.",
             "Cube-root the top and the bottom separately."
           ],
-          "workedSolution": "Turning it over, $\\left(\\dfrac{8}{27}\\right)^{-\\frac{2}{3}} = \\left(\\dfrac{27}{8}\\right)^{\\frac{2}{3}}$. The cube root is $\\dfrac{3}{2}$, and squaring that gives $\\dfrac{9}{4}$.",
+          "workedSolution": "Turning it over, $\\left(\\dfrac{8}{27}\\right)^{-\\frac{2}{3}}$ becomes $\\left(\\dfrac{27}{8}\\right)^{\\frac{2}{3}}$. The cube root is $\\dfrac{3}{2}$, and squaring that gives $\\dfrac{9}{4}$.",
           "commonErrors": [
             {
               "misconception": "maths.indices.fraction-negative-power-mishandled",
@@ -2504,6 +2815,585 @@
       ],
       "solutionProgram": "A = 4^(-3/2) = 1/8; B = 27^(-2/3) = 1/9; A - B = 1/72 > 0 so A is larger",
       "verification": "ver.q.maths.m8.fractional-and-negative-indices.0016",
+      "version": 1
+    },
+    {
+      "id": "q.maths.m8.fractional-and-negative-indices.0017",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "paper": {
+        "unit": "M8",
+        "paper": 1,
+        "calculator": false,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "practice",
+      "difficulty": 1,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Write down"
+      ],
+      "emphasis": [
+        "unit fractional index",
+        "square root"
+      ],
+      "context": {
+        "setting": "Pure number, no context",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Write down the value of $169^{\\frac{1}{2}}$.",
+          "marks": 1,
+          "answer": {
+            "kind": "numeric",
+            "value": 13,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "13"
+            }
+          ],
+          "hints": [
+            "An index of a half is a square root.",
+            "Which number squares to 169?"
+          ],
+          "workedSolution": "$169^{\\frac{1}{2}} = \\sqrt{169} = 13$, because $13^{2} = 169$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.indices.fractional-index-as-multiplier",
+              "pattern": {
+                "kind": "numeric",
+                "value": 84.5
+              },
+              "feedback": "An index of a half is a square root, not a multiplier: $\\sqrt{169} = 13$.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 1,
+      "timeAllowanceSec": 60,
+      "skeleton": "(main)write1",
+      "examinerSources": [],
+      "solutionProgram": "169^(1/2) = 13 (13^2 = 169)",
+      "verification": "ver.q.maths.m8.fractional-and-negative-indices.0017",
+      "version": 1
+    },
+    {
+      "id": "q.maths.m8.fractional-and-negative-indices.0019",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "paper": {
+        "unit": "M8",
+        "paper": 1,
+        "calculator": false,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "practice",
+      "difficulty": 5,
+      "ao": [
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [
+        "mixed-tail",
+        "index equation",
+        "powers of one base"
+      ],
+      "context": {
+        "setting": "Pure number, no context",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Find the value of $n$ when $8^{n} = \\dfrac{1}{32}$.\n\nGive your answer as a fraction.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": -1.6666666666666667,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "both sides as powers of 2: 2^(3n) = 2^(-5)"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "3n = -5, the indices equated"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "n = -5/3",
+              "dependsOn": [
+                "M2"
+              ]
+            }
+          ],
+          "hints": [
+            "Write 8 and 32 as powers of the same number.",
+            "$\\dfrac{1}{32} = 2^{-5}$.",
+            "With the same base on both sides, the indices are equal."
+          ],
+          "workedSolution": "$8 = 2^{3}$, so $8^{n} = 2^{3n}$; and $\\dfrac{1}{32} = 2^{-5}$. The bases match, so $3n = -5$ and $n = -\\dfrac{5}{3}$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 1.6666666666666667
+              },
+              "feedback": "$\\dfrac{1}{32}$ is $2^{-5}$, not $2^{5}$: the reciprocal carries the minus sign into the index.",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "maths.indices.equation-base-not-matched",
+              "pattern": {
+                "kind": "numeric",
+                "value": -5
+              },
+              "feedback": "8 and 2 are different bases, so $8^{n}$ cannot be compared with $2^{-5}$ directly; write 8 as $2^{3}$ first.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 270,
+      "skeleton": "(main)find3",
+      "examinerSources": [],
+      "solutionProgram": "8 = 2^3, 1/32 = 2^(-5): 3n = -5, n = -5/3",
+      "verification": "ver.q.maths.m8.fractional-and-negative-indices.0019",
+      "version": 1
+    },
+    {
+      "id": "q.maths.m8.fractional-and-negative-indices.0020",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "paper": {
+        "unit": "M8",
+        "paper": 1,
+        "calculator": false,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Work out"
+      ],
+      "emphasis": [
+        "mixed-tail",
+        "negative fractional index on a fraction",
+        "zero index"
+      ],
+      "context": {
+        "setting": "Pure number, no context",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Work out the value of $\\left(\\dfrac{1}{4}\\right)^{-\\frac{3}{2}} + 7^{0}$.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 9,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "the fraction turned over: 4^(3/2)"
+            },
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "4^(3/2) = 8"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "9, with 7^0 = 1"
+            }
+          ],
+          "hints": [
+            "A negative index turns a fraction base over.",
+            "$4^{\\frac{3}{2}}$: square root, then cube.",
+            "Any non-zero number to the power 0 is 1."
+          ],
+          "workedSolution": "Turning the fraction over, $\\left(\\dfrac{1}{4}\\right)^{-\\frac{3}{2}} = 4^{\\frac{3}{2}}$. Then $\\sqrt{4} = 2$ and $2^{3} = 8$. With $7^{0} = 1$, the value is $8 + 1 = 9$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 1.125
+              },
+              "feedback": "$\\left(\\tfrac{1}{4}\\right)^{\\frac{3}{2}} = \\tfrac{1}{8}$ ignores the minus sign, which turns the fraction over to give 8.",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "maths.indices.zero-power",
+              "pattern": {
+                "kind": "numeric",
+                "value": 8
+              },
+              "feedback": "The power is right; $7^{0}$ is 1, not 0.",
+              "marksTypicallyEarned": 2
+            },
+            {
+              "misconception": "maths.indices.zero-power",
+              "pattern": {
+                "kind": "numeric",
+                "value": 15
+              },
+              "feedback": "The power is right; $7^{0}$ is 1, not 7.",
+              "marksTypicallyEarned": 2
+            },
+            {
+              "misconception": "maths.indices.negative-power-gives-negative",
+              "pattern": {
+                "kind": "numeric",
+                "value": -7
+              },
+              "feedback": "A negative index turns the fraction over; it does not make the value negative.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 270,
+      "skeleton": "(main)find3",
+      "examinerSources": [
+        "ccea-cer:maths:2025-summer:M71:Q17"
+      ],
+      "solutionProgram": "(1/4)^(-3/2) = 4^(3/2) = 8; 7^0 = 1; 8 + 1 = 9",
+      "verification": "ver.q.maths.m8.fractional-and-negative-indices.0020",
+      "version": 1
+    },
+    {
+      "id": "q.maths.m8.fractional-and-negative-indices.0021",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "paper": {
+        "unit": "M8",
+        "paper": 1,
+        "calculator": false,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "exam-style",
+      "difficulty": 5,
+      "ao": [
+        "AO1",
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Work out",
+        "You must show your working"
+      ],
+      "emphasis": [
+        "fractional index",
+        "negative fractional index on a fraction",
+        "comparing negative powers"
+      ],
+      "context": {
+        "setting": "Pure number, no context",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "a",
+          "stem": "Work out the value of $49^{\\frac{3}{2}}$.",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 343,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "sqrt(49) = 7 seen"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "343"
+            }
+          ],
+          "hints": [
+            "The bottom number is 2: a square root.",
+            "Then the top number 3: a cube."
+          ],
+          "workedSolution": "$\\sqrt{49} = 7$, then $7^{3} = 343$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.indices.fractional-power-partial",
+              "pattern": {
+                "kind": "numeric",
+                "value": 7
+              },
+              "feedback": "The square root is right; the top number 3 still asks for the cube.",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "maths.indices.fractional-index-as-multiplier",
+              "pattern": {
+                "kind": "numeric",
+                "value": 73.5
+              },
+              "feedback": "An index is not a multiplier: root, then power.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "b",
+          "stem": "Work out the value of $\\left(\\dfrac{9}{25}\\right)^{-\\frac{3}{2}}$.\n\nGive your answer as a fraction in its lowest terms.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 4.62962962962963,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "fraction"
+            ],
+            "mustBeSimplified": true
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "(25/9)^(3/2), the fraction turned over"
+            },
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "sqrt(25/9) = 5/3"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "125/27"
+            }
+          ],
+          "hints": [
+            "The minus sign turns the fraction over.",
+            "Square-root the top and the bottom.",
+            "Then cube both."
+          ],
+          "workedSolution": "Turning it over, $\\left(\\dfrac{9}{25}\\right)^{-\\frac{3}{2}}$ becomes $\\left(\\dfrac{25}{9}\\right)^{\\frac{3}{2}}$. The square root is $\\dfrac{5}{3}$, and cubing gives $\\dfrac{125}{27}$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.216
+              },
+              "feedback": "Root and power are right, but the fraction was never turned over for the minus sign.",
+              "marksTypicallyEarned": 2
+            },
+            {
+              "misconception": "maths.indices.fraction-negative-power-mishandled",
+              "pattern": {
+                "kind": "numeric",
+                "value": 2.7777777777777777
+              },
+              "feedback": "The fraction was turned over, but the root and the power are still to come.",
+              "marksTypicallyEarned": 1
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "c",
+          "stem": "$A = 9^{-\\frac{3}{2}}$ and $B = 144^{-\\frac{1}{2}} \\times 2^{-1}$.\n\nWhich is larger, $A$ or $B$? You must show your working.",
+          "marks": 4,
+          "answer": {
+            "kind": "text",
+            "accepted": [
+              "B is larger: A = 1/27 and B = 1/24",
+              "B is larger because A = 1/27 and B = 1/12 x 1/2 = 1/24"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "B is larger",
+                  "B is the larger",
+                  "B is bigger",
+                  "B is greater",
+                  "B >",
+                  "A <"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "1/27",
+                  "\\dfrac{1}{27}",
+                  "0.037"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "1/24",
+                  "\\dfrac{1}{24}",
+                  "0.0416",
+                  "0.042"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "A = 1/27, from 9^(3/2) = 27"
+            },
+            {
+              "id": "MA2",
+              "code": "MA",
+              "marks": 1,
+              "for": "144^(-1/2) = 1/12 and 2^(-1) = 1/2"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "B = 1/24"
+            },
+            {
+              "id": "A2",
+              "code": "A",
+              "marks": 1,
+              "for": "B identified as the larger, with the two values compared",
+              "dependsOn": [
+                "MA1",
+                "A1"
+              ]
+            }
+          ],
+          "hints": [
+            "Write each as one over a whole number.",
+            "$9^{\\frac{3}{2}} = 27$ and $144^{\\frac{1}{2}} = 12$.",
+            "With 1 on top, the smaller bottom gives the larger number."
+          ],
+          "workedSolution": "$A = \\dfrac{1}{9^{\\frac{3}{2}}}$, and $\\sqrt{9} = 3$, $3^{3} = 27$, so $A = \\dfrac{1}{27}$. $B = \\dfrac{1}{12} \\times \\dfrac{1}{2} = \\dfrac{1}{24}$. Both have 1 on top and 24 is less than 27, so $B$ is the larger.",
+          "commonErrors": [
+            {
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "pattern": {
+                "kind": "text",
+                "regex": "\\bA\\b\\s*(is)?\\s*(the)?\\s*(larger|bigger|greater)"
+              },
+              "feedback": "Compared as 27 and 24 the order flips: the values are $\\tfrac{1}{27}$ and $\\tfrac{1}{24}$, and $\\tfrac{1}{24}$ is the larger.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 9,
+      "timeAllowanceSec": 810,
+      "skeleton": "(a)find2|(b)find3|(c)find4",
+      "examinerSources": [
+        "ccea-cer:maths:2025-november:M81:Q11"
+      ],
+      "solutionProgram": "(a) sqrt 49 = 7, 7^3 = 343; (b) (25/9)^(3/2) = (5/3)^3 = 125/27; (c) A = 1/27, B = 1/12 x 1/2 = 1/24, B larger",
+      "verification": "ver.q.maths.m8.fractional-and-negative-indices.0021",
       "version": 1
     }
   ],
@@ -2755,6 +3645,134 @@
         "M8-NA-03"
       ],
       "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.11",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "formula",
+      "prompt": "What does $a^{\\frac{1}{n}}$ mean?",
+      "answer": "The nth root of a: the number whose nth power is a.",
+      "keyWords": [
+        "nth root"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.12",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "formula",
+      "prompt": "In $a^{\\frac{m}{n}}$, which number is the root?",
+      "answer": "The bottom number, n, is the root; the top number, m, is the power.",
+      "keyWords": [
+        "bottom number",
+        "root",
+        "top number",
+        "power"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.13",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "formula",
+      "prompt": "What does a negative index mean?",
+      "answer": "Take the reciprocal: $a^{-n}$ is one over $a^{n}$.",
+      "keyWords": [
+        "reciprocal",
+        "one over"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.14",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "definition",
+      "prompt": "What is $a^{0}$, for any non-zero $a$?",
+      "answer": "It is 1, because a power divided by itself is 1.",
+      "keyWords": [
+        "divided by itself"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.15",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "procedure",
+      "prompt": "In what order do you do the jobs of $a^{-\\frac{m}{n}}$?",
+      "answer": "Turn it over, then take the root, then raise to the power.",
+      "keyWords": [
+        "turn it over",
+        "root",
+        "power"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.16",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "trap",
+      "prompt": "Can a negative index make a positive base's answer negative?",
+      "answer": "No: it gives a reciprocal, which is still positive.",
+      "keyWords": [
+        "reciprocal",
+        "positive"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.17",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "trap",
+      "prompt": "What does a negative index do to a fraction base?",
+      "answer": "It turns the fraction upside down, and the index becomes positive.",
+      "keyWords": [
+        "upside down",
+        "positive"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m8.fractional-and-negative-indices.18",
+      "topic": "maths.m8.fractional-and-negative-indices",
+      "specRefs": [
+        "M8-NA-03"
+      ],
+      "kind": "trap",
+      "prompt": "Where does the zero index in $5 \\times 11^{0}$ apply?",
+      "answer": "Only to the 11, so the value is 5.",
+      "keyWords": [
+        "only to the 11"
+      ],
+      "examUnit": "M8",
+      "difficultyPrior": 3
     }
   ],
   "insight": {
@@ -2804,7 +3822,7 @@
         "source": "ccea-cer:maths:2025-summer:M71:Q17",
         "url": "https://ccea.org.uk/key-stage-4/gcse/subjects/gcse-mathematics-2017/reports",
         "asked": "Four short index values, including a zero index on a term with a number in front of it.",
-        "wentWrong": "The report lists the commonest wrong answers part by part, and they are all sign or meaning errors rather than arithmetic: a value of minus eight for one part, minus one thousand or minus thirty for another, and an answer that still contained the letter for the zero-index part.",
+        "wentWrong": "The report lists the commonest wrong answer part by part: 3 or 0 for the zero index, minus eight for one part, minus one thousand or minus thirty for 10 to the minus 3, and an answer that still contained the letter for the last part.",
         "rule": "A zero index applies only to the symbol it sits on, and a minus index turns a power over rather than making it negative.",
         "misconceptions": [
           "maths.indices.zero-power",
@@ -2828,12 +3846,12 @@
       ],
       "itemIds": [
         "dx.maths.m8.fractional-and-negative-indices",
-        "rp.maths.m8.fractional-and-negative-indices.03",
-        "q.maths.m8.fractional-and-negative-indices.0001",
+        "rp.maths.m8.fractional-and-negative-indices.13",
+        "q.maths.m8.fractional-and-negative-indices.0017",
         "q.maths.m8.fractional-and-negative-indices.0003",
         "q.maths.m8.fractional-and-negative-indices.0005",
         "q.maths.m8.fractional-and-negative-indices.0007",
-        "rp.maths.m8.fractional-and-negative-indices.02"
+        "rp.maths.m8.fractional-and-negative-indices.12"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -2848,14 +3866,16 @@
         "M8"
       ],
       "itemIds": [
+        "q.maths.m8.fractional-and-negative-indices.0019",
         "q.maths.m8.fractional-and-negative-indices.0010",
         "ftm.maths.m8.fractional-and-negative-indices.01",
         "q.maths.m8.fractional-and-negative-indices.0011",
+        "q.maths.m8.fractional-and-negative-indices.0020",
         "q.maths.m8.fractional-and-negative-indices.0014",
         "ftm.maths.m8.fractional-and-negative-indices.03",
         "q.maths.m8.fractional-and-negative-indices.0015",
-        "q.maths.m8.fractional-and-negative-indices.0016",
-        "rp.maths.m8.fractional-and-negative-indices.06"
+        "q.maths.m8.fractional-and-negative-indices.0021",
+        "rp.maths.m8.fractional-and-negative-indices.17"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -2930,10 +3950,178 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner. Prose between gates checked against the 150-word limit in src/components/items/gates.ts.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass, the insight and the Sheet: the Summer 2025 M71 Q17 finding now names the zero-index wrong answers the report gives (3 or 0); the Sheet's traps cite only what each report says (the old trap attributing -8 for 2^(-3) to Summer 2025 M8 Paper 1 Q8 named an error that report does not name).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, statement M8-NA-03 (index notation and index laws for integer, fractional and negative powers); logarithms and inexact roots stay outside it.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Nothing for this topic is on the Higher formula sheet: every index law is recall.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Write down the value of, Work out, Show that and Find are from packs/maths/exam-true/command-words.json, used as the M8 papers of 2019-2026 use them.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "The pointer and the Sheet state the M8 tariffs 2019-2026: a mark each for Write down the value of parts, M1 A1 for a show-that, up to 3 for a simplification.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "The note's own numbers, each evaluated with exact integer roots in indices.mjs and asserted: the ladder of 6 to 1/36; 7^-2, 2^-6; 9^0 + 9^-1 = 10/9; 8^0 + 3 x 5^0 = 4; 121^(1/2) = 11, 729^(1/3) = 9, 625^(1/4) = 5, 32^(1/5) = 2; 4^(5/2) = 32, 100^(3/2) = 1000, 64^(3/2) = 512; 27^(-4/3) = 1/81, 121^(-3/2) = 1/1331, 16^(-5/4) = 1/32; (27/1000)^(-2/3) = 100/9, (16/25)^(-1/2) = 5/4, (4/81)^(-1/2) = 9/2; 36^(1/2) / 2^-2 = 24, 16^(1/4) / 2^-3 = 16, 9^(1/2) / 5^-1 = 15; 16^(-3/2) = 1/64, 32^(-4/5) = 1/16, 4^(-7/2) = 1/128; 25^(-1/2) = 1/5 > 216^(-1/3) = 1/6, 49^(-1/2) > 2^-3 > 81^(-1/2). Every distractor by its route.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Sections from every M8 index question of 2019-2026 (S19 P1 Q4(b), N21 P1 Q11, S22 P1 Q3(c), N23 P1 Q10(b), S24 P1 Q10, S25 P1 Q8, N25 P1 Q11, S26 P1 Q6) and the Summer 2025 M7 Paper 1 Q17 report. The one examiner callout is November 2025 M8 Paper 1 Q11, in our words.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "link-health",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Videos _K9XYyv1bU0 (Corbettmaths 175) and qYDClSo89eQ (Corbettmaths 173) are this topic's entries in data/links/media-map.json; each stands beside a See it.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: ten sections, each explain -> See it -> Your turn; gates and twins probed through markGate by text and position; a note on every wrong option; the two-way overlap scan in probe-indices.mts finds no power evaluated in the note, a gate or a twin that a later item asks. Ten gates withdrawn (the records above).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Read privately for pattern only: every M8 index question from Summer 2019 to Summer 2026 with its scheme, and the Chief Examiner's reports for Summer 2023 to November 2025 (with the Summer 2025 M7 Paper 1 section). New bases and indices; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks; the banned word for a miss and the 9-1 grade label do not occur; every $...$ pair balanced and no inline segment over 60 characters of TeX.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "A warm-up, 3 squared, asked before anything was shown; g11 checks a negative index after its section's See it.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "2^(-4) typed before the section showed the ladder worked; g11 asks a negative index on new numbers after See it.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "It asked for 2^(-3), a value the ladder figure prints, and credited -8 to the Summer 2025 M71 report for a part that set 5^(-1); g11 asks a negative index on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "Which number is the root, asked before any fractional index was worked; g14 checks a root after the why section's See it.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "16^(3/4) is question 0006's and find-the-mistake 01's own value; g15 checks root then power on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g10",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "A fill-the-gap blank set between two halves of a list, before the list was worked; g14 checks the root after its See it.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "8^(-2/3) is question 0007's, diagnostic 08's and find-the-mistake 02's own question; g16 asks a negative fractional index on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g17",
+          "reason": "(3/4)^(-2) is diagnostic 05's own question; g17 checks a fraction base on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": "g19",
+          "reason": "It asked which line earns the first mark for 125^(-2/3) = 1/25, question 0014's own show-that; g19 asks the first line on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        },
+        {
+          "id": "g9",
+          "kind": "gate",
+          "replacedBy": null,
+          "reason": "It asked what lies outside the specification, which checks nothing the note teaches, and its explanation named options by position; the notonspec callout carries the fact.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.maths.m8.fractional-and-negative-indices.01",
@@ -3010,6 +4198,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: an input spec added to every step (an addition to the marked surface under the 27 Sep 16:40 ruling; lines, earns, faded and the twin's answer unchanged), each probed through markAnswer as the step renders it.",
+          "at": "2026-09-29T01:30:00Z",
           "by": "claude"
         }
       ],
@@ -3092,6 +4288,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: an input spec added to every step (an addition to the marked surface under the 27 Sep 16:40 ruling; lines, earns, faded and the twin's answer unchanged), each probed through markAnswer as the step renders it; the twin's expression changed from 16^(-3/4) to 32^(-3/5) (answer unchanged, 1/8) so its value is not question 0006's and find-the-mistake 01's 16^(3/4) turned over.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3172,6 +4376,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: an input spec added to every step (an addition to the marked surface under the 27 Sep 16:40 ruling; lines, earns, faded and the twin's answer unchanged), each probed through markAnswer as the step renders it; a why menu on step 1.",
+          "at": "2026-09-29T01:30:00Z",
           "by": "claude"
         }
       ],
@@ -3254,6 +4466,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: an input spec added to every step (an addition to the marked surface under the 27 Sep 16:40 ruling; lines, earns, faded and the twin's answer unchanged), each probed through markAnswer as the step renders it; a why menu on step 1.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3335,10 +4555,35 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass, items 09-10 (post): 27^(-1/3) = 1/3 (-3, 3, -9 by their routes); (1/3)^(-2) = 9 (1/9, -9, -2/3 by their routes).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: item 08 withdrawn (its kept copy is the withdrawn set); items 09 (a negative unit-fraction index) and 10 (a fraction base) added for the check after the lesson, each distractor tagged; the live set splits 4 before and 5 after.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.maths.m8.fractional-and-negative-indices#08",
+          "kind": "diagnostic",
+          "replacedBy": "dx.maths.m8.fractional-and-negative-indices#09",
+          "reason": "It asked for the value of 8^(-2/3), practice question 0007's own question and find-the-mistake 02's, so the check after the lesson repeated a practice item word for word; item 09 checks a negative fractional index on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.maths.m8.fractional-and-negative-indices.0001",
@@ -3416,10 +4661,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by q.0017.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.maths.m8.fractional-and-negative-indices.0001",
+          "kind": "question",
+          "replacedBy": "q.maths.m8.fractional-and-negative-indices.0017",
+          "reason": "Its scheme's accuracy mark names the value 2 for 9^(1/2), whose value is 3; a frozen scheme cannot change in place, so q0017 asks a unit fractional index on new numbers with a true scheme.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.maths.m8.fractional-and-negative-indices.0002",
@@ -3902,6 +5164,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: a fraction in the worked solution that sat outside $...$ put inside it (worked solutions are not frozen).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4307,6 +5577,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: a fraction in the worked solution that sat outside $...$ put inside it (worked solutions are not frozen).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4550,6 +5828,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "29 Sep v3 pass: an inline maths segment over 60 characters of TeX in the worked solution split at its equals sign (worked solutions are not frozen).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4631,10 +5917,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by q.0021.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.maths.m8.fractional-and-negative-indices.0016",
+          "kind": "question",
+          "replacedBy": "q.maths.m8.fractional-and-negative-indices.0021",
+          "reason": "Its B = 27^(-2/3) needs 27^(2/3) = 9, worked example 01's own calculation (the Teacher Guidance example), so after the example half the question was one line; q0021 asks a comparison on new numbers, with two evaluations before it.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.maths.m8.fractional-and-negative-indices.01",
@@ -4931,10 +6234,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by rp.11.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.01",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.fractional-and-negative-indices.11",
+          "reason": "Its answer runs to 31 words, over the 25-word cap, and its key words (nth root; indices add to 1) are not in its own answer as written; rp.11 asks the meaning in eleven words.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.02",
@@ -4988,10 +6308,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by rp.12.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.02",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.fractional-and-negative-indices.12",
+          "reason": "Its answer runs to 31 words, over the 25-word cap, and its key words (bottom is the root; top is the power) are not in its own answer; rp.12 asks which number is the root.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.03",
@@ -5045,10 +6382,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by rp.13.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.03",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.fractional-and-negative-indices.13",
+          "reason": "Its answer runs to 33 words, over the 25-word cap, and its key words (one over; never negative) are not in its own answer; rp.13 asks the meaning of a negative index.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.04",
@@ -5102,10 +6456,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.04",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asks for 27^(2/3), worked example 01's own calculation (the Teacher Guidance example), so the card replays the example; rp.12 and rp.15 carry the method.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.05",
@@ -5159,10 +6530,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.05",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asks for 8^(-4/3), worked example 02's own calculation, so the card replays the example; rp.15 carries the order of the three jobs.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.06",
@@ -5216,10 +6604,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by rp.15.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.06",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.fractional-and-negative-indices.15",
+          "reason": "Its answer runs to 39 words, over the 25-word cap, and its key words (turn over first; then power) are not in its own answer; rp.15 asks the order of the jobs in eleven words.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.07",
@@ -5273,10 +6678,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by rp.16.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.07",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.fractional-and-negative-indices.16",
+          "reason": "Its answer runs to 38 words, over the 25-word cap, its key words (one eighth; reciprocal; not negative) are not in its own answer, and it asks for 2^(-3), a value the note's ladder prints; rp.16 asks the trap in general.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.08",
@@ -5330,10 +6752,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass; replaced by rp.18.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.08",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.fractional-and-negative-indices.18",
+          "reason": "Its answer runs to 32 words, over the 25-word cap, and its key word (zero index on the 5 only) is not in its own answer; rp.18 asks where a zero index applies, on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.09",
@@ -5387,10 +6826,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.09",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "Its answer runs to 38 words, over the 25-word cap, its key words (not on the sheet; must be known) are not in its own answer, and what the formula sheet omits checks nothing the note teaches; the Sheet's must-know list carries it.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.fractional-and-negative-indices.10",
@@ -5443,6 +6899,781 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax (\\frac, \\dfrac, \\sqrt[n]{}, ^{}); British English throughout; no exclamation marks; no 9-1 grade labels; the word for an incorrect answer is never used as a verdict on the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Withdrawn in the 29 Sep v3 pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.fractional-and-negative-indices.10",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "Its key words (smaller denominator is larger) are not in its own answer, and it asks for 5^(-2) and 2^(-5), diagnostic 01's and question 0013(c)'s values; the note's last section and rp.16 carry the comparison.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.dx.maths.m8.fractional-and-negative-indices.withdrawn",
+      "itemId": "dx.maths.m8.fractional-and-negative-indices.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "The kept copy of dx.maths.m8.fractional-and-negative-indices#08, withdrawn in the 29 Sep v3 pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawn": [
+        {
+          "id": "dx.maths.m8.fractional-and-negative-indices.withdrawn#08",
+          "kind": "diagnostic",
+          "replacedBy": "dx.maths.m8.fractional-and-negative-indices#09",
+          "reason": "The kept copy of dx.maths.m8.fractional-and-negative-indices#08, withdrawn: It asked for the value of 8^(-2/3), practice question 0007's own question and find-the-mistake 02's, so the check after the lesson repeated a practice item word for word; item 09 checks a negative fractional index on new numbers.",
+          "on": "2026-09-29T01:30:00Z"
+        }
+      ],
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m8.fractional-and-negative-indices.0017",
+      "itemId": "q.maths.m8.fractional-and-negative-indices.0017",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, statement M8-NA-03 (index notation and index laws for integer, fractional and negative powers); logarithms and inexact roots stay outside it.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Nothing for this topic is on the Higher formula sheet: every index law is recall.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Write down the value of, Work out, Show that and Find are from packs/maths/exam-true/command-words.json, used as the M8 papers of 2019-2026 use them.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "169^(1/2) = 13 (13^2 = 169). Every common-error value produced by its route in the script.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "One mark, A1, as the one-mark Write down the value of parts of Summer 2025 M8 Paper 1 Q8 are marked.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Replaces q0001 (its scheme named the wrong value). Probed through markAnswer.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Read privately for pattern only: every M8 index question from Summer 2019 to Summer 2026 with its scheme, and the Chief Examiner's reports for Summer 2023 to November 2025 (with the Summer 2025 M7 Paper 1 section). New bases and indices; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks; the banned word for a miss and the 9-1 grade label do not occur; every $...$ pair balanced and no inline segment over 60 characters of TeX.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m8.fractional-and-negative-indices.0019",
+      "itemId": "q.maths.m8.fractional-and-negative-indices.0019",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, statement M8-NA-03 (index notation and index laws for integer, fractional and negative powers); logarithms and inexact roots stay outside it.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Nothing for this topic is on the Higher formula sheet: every index law is recall.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Write down the value of, Work out, Show that and Find are from packs/maths/exam-true/command-words.json, used as the M8 papers of 2019-2026 use them.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "8 = 2^3, 1/32 = 2^(-5): 3n = -5, n = -5/3. Every common-error value produced by its route in the script.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Three marks, M1 M1 A1: both sides as powers of one base, the indices equated, the value, as November 2021 M8 Paper 1 Q11 marked an index equation.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "A tail-only item (mixed-tail). Probed through markAnswer: -5/3 in several spellings, the sign dropped (5/3) and the bases not matched (-5) named by their common errors.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Read privately for pattern only: every M8 index question from Summer 2019 to Summer 2026 with its scheme, and the Chief Examiner's reports for Summer 2023 to November 2025 (with the Summer 2025 M7 Paper 1 section). New bases and indices; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks; the banned word for a miss and the 9-1 grade label do not occur; every $...$ pair balanced and no inline segment over 60 characters of TeX.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m8.fractional-and-negative-indices.0020",
+      "itemId": "q.maths.m8.fractional-and-negative-indices.0020",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, statement M8-NA-03 (index notation and index laws for integer, fractional and negative powers); logarithms and inexact roots stay outside it.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Nothing for this topic is on the Higher formula sheet: every index law is recall.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Write down the value of, Work out, Show that and Find are from packs/maths/exam-true/command-words.json, used as the M8 papers of 2019-2026 use them.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "(1/4)^(-3/2) = 4^(3/2) = 8; 7^0 = 1; 8 + 1 = 9. Every common-error value produced by its route in the script.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Three marks, M1 MA1 A1, the fraction turned over, the power, the sum.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Summer 2025 M7 Paper 1 Q17: for a zero index the common wrong answers were 3 or 0, and for 10^(-3) -1000 or -30; this item's common errors are those slips on new numbers.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "A tail-only item (mixed-tail). Probed through markAnswer with each common error.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Read privately for pattern only: every M8 index question from Summer 2019 to Summer 2026 with its scheme, and the Chief Examiner's reports for Summer 2023 to November 2025 (with the Summer 2025 M7 Paper 1 section). New bases and indices; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks; the banned word for a miss and the 9-1 grade label do not occur; every $...$ pair balanced and no inline segment over 60 characters of TeX.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m8.fractional-and-negative-indices.0021",
+      "itemId": "q.maths.m8.fractional-and-negative-indices.0021",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, statement M8-NA-03 (index notation and index laws for integer, fractional and negative powers); logarithms and inexact roots stay outside it.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Nothing for this topic is on the Higher formula sheet: every index law is recall.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Write down the value of, Work out, Show that and Find are from packs/maths/exam-true/command-words.json, used as the M8 papers of 2019-2026 use them.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "(a) sqrt 49 = 7, 7^3 = 343; (b) (25/9)^(3/2) = (5/3)^3 = 125/27; (c) A = 1/27, B = 1/12 x 1/2 = 1/24, B larger. Every common-error value produced by its route in the script.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Nine marks in three parts, 2 + 3 + 4: a fractional index (M1 A1), a negative fractional index on a fraction (M1 MA1 A1), and a comparison of two negative powers with working (MA1 MA1 A1 A1).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "November 2025 M8 Paper 1 Q11: over half did not show that they understood what the numbers in an index do; every part here needs the root and the power read separately.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Replaces q0016 (it evaluated worked example 01's 27^(2/3)). Probed through markAnswer, each part with its common errors.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Read privately for pattern only: every M8 index question from Summer 2019 to Summer 2026 with its scheme, and the Chief Examiner's reports for Summer 2023 to November 2025 (with the Summer 2025 M7 Paper 1 section). New bases and indices; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks; the banned word for a miss and the 9-1 grade label do not occur; every $...$ pair balanced and no inline segment over 60 characters of TeX.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.11",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.11",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.01 carried, in a short card). Answer 12 words; key words [\"nth root\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.12",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.12",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.02 carried, in a short card). Answer 14 words; key words [\"bottom number\",\"root\",\"top number\",\"power\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.13",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.03 carried, in a short card). Answer 8 words; key words [\"reciprocal\",\"one over\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.14",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.14",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.08 carried, in a short card). Answer 11 words; key words [\"divided by itself\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.15",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.15",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.06 carried, in a short card). Answer 12 words; key words [\"turn it over\",\"root\",\"power\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.16",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.16",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.07 carried, in a short card). Answer 9 words; key words [\"reciprocal\",\"positive\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.17",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.17",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.06 carried, in a short card). Answer 11 words; key words [\"upside down\",\"positive\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.fractional-and-negative-indices.18",
+      "itemId": "rp.maths.m8.fractional-and-negative-indices.18",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check) after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-03.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Our own words; node scripts/qa/shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; the question at most 15 words and the answer at most 15 (the owner's recall-card sizes, 27 Sep).",
+          "at": "2026-09-29T01:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep v3 migration: FORK_SP/v3-m8-0/indices.mjs evaluates every power with exact integer roots and fractions; marking probed by probe-indices.mts through markAnswer, markGate and keywordsPresent)",
+          "result": "pass",
+          "detail": "Issued in the 29 Sep v3 pass (the fact rp.08 carried, in a short card). Answer 9 words; key words [\"only to the 11\"] found in the answer by keywordsPresent (probe-indices.mts).",
+          "at": "2026-09-29T01:30:00Z",
           "by": "claude"
         }
       ],
