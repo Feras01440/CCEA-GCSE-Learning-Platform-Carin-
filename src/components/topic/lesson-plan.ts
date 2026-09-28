@@ -6,18 +6,18 @@
  * client lesson renders the spine and the section eyebrows from the same ones, so the two can
  * never disagree about how long a topic takes or which figure was hoisted.
  *
- * The minute model, from the learner review (13 Sep 2026): prose at 180 words a minute, 40
- * seconds for a check, 2 minutes for a worked example, 1 minute for a check item, 1.2 minutes
- * a mark for a question, 2 minutes for a find-the-mistake. No number here is flattering.
- * Added 25 Sep (audit LD-04, CT-12): a retrieval prompt inside the note costs 30 seconds, what
- * the Slides deck charges the same prompt as a recall card, so the two ways price the same work
- * alike; a video counts its own length only when its block states one, and otherwise is named
- * beside the minutes ("plus a video"), never guessed into them, as Slides does.
+ * The minute model is src/lib/slides/minutes.ts (29 Sep 2026): one price list, by content, that
+ * Read and Slides both use, and the content session's lint can import (its header gives every
+ * constant and the reason for it). This file only walks the note into Read's sections and names
+ * them; the note as the lesson shows it is src/lib/slides/lesson-blocks.ts. Both are re-exported
+ * here under their old names, so every caller keeps its import.
  */
 import type { PhotoRef } from "@/components/media/PhotoFigure";
+import type { RetrievalPrompt } from "@/lib/content/schema";
 import { splitTex, type TexSegment } from "@/components/items/tex-split";
+import { hoistedFigureIndex, lessonBlocks, ledeOf } from "@/lib/slides/lesson-blocks";
+import { blockCost, lessonMinutesFor, lessonParts, lessonTotal, partShares, partWords, readPricing, untimedPhrase, wholeMinutes, type SeeSteps } from "@/lib/slides/minutes";
 import { slidesReadyFor } from "@/lib/slides/ready";
-import { sectionsOf } from "@/lib/slides/readiness";
 
 // ---- Readiness (readiness agent, 27 Sep 2026): which topics draw Read v2. Only this block reads it. ----------------
 
@@ -116,46 +116,36 @@ export function inlineLede(md: string): string {
   return joinTex(splitTex(md).map((s) => (s.type === "math" && !s.display ? { ...s, tex: s.tex.replace(/\\dfrac(?![a-zA-Z])/g, "\\frac") } : s)));
 }
 
-export const WORDS_PER_MINUTE = 180;
-export const SECONDS_PER_GATE = 40;
-/** A retrieval prompt inside the note: the Slides deck's recall card costs the same (src/lib/slides/cards.ts). */
-export const SECONDS_PER_PROMPT = 30;
+// ---- The minute model (src/lib/slides/minutes.ts), under the names this module always gave it ----------------------
 
-// ---- See it pricing (read-flow agent, 27 Sep 2026; the teach-first case §8.2) ---------------------------------------
+export {
+  countWords,
+  estimateMinutes,
+  videoSeconds,
+  seeStepsOf,
+  minutesForReading,
+  minutesForExamples,
+  minutesForCheckItems,
+  minutesForMarks,
+  minutesForMistakes,
+  untimedPhrase as plusVideos,
+  WORDS_PER_MINUTE,
+  YOUR_TURN_SECONDS as SECONDS_PER_GATE,
+  RECALL_SECONDS as SECONDS_PER_PROMPT,
+  SEE_STEP_SECONDS as SECONDS_PER_SEE_STEP,
+  type SeeSteps,
+} from "@/lib/slides/minutes";
+// The note as the lesson shows it (src/lib/slides/lesson-blocks.ts), under the names this module always gave it.
+export { hoistedFigureIndex, lessonBlocks, paragraphAfterLede, withPauses } from "@/lib/slides/lesson-blocks";
 
 /**
- * A See it (the note's own worked steps, docs/plan/review/2026-09-27-see-it-block-shape.md) costs 15 seconds a step, on
- * top of the reading of its section's explanation: what the Slides deck charges the same See it (src/lib/slides/cards.ts
- * SEE_STEP_SECONDS), so the hero's two ways stay in step.
- */
-export const SECONDS_PER_SEE_STEP = 15;
-
-/** A worked example's step count by its id, for a See it that names one (`{ type: "see", workedExample }`). */
-export type SeeSteps = Readonly<Record<string, number>>;
-
-/** The step counts a bundle's worked examples give the See its that name them. */
-export function seeStepsOf(workedExamples: ReadonlyArray<{ id: string; steps: readonly unknown[] }> | null | undefined): SeeSteps {
-  return Object.fromEntries((workedExamples ?? []).map((w) => [w.id, w.steps.length]));
-}
-
-/**
- * What each See it block of a note costs, in seconds, keyed by the block itself: 15 a step, its own steps or the named
- * worked example's; a name `steps` does not hold counts nothing (the deck counts it the same way). The blocks are found
- * with the note parser the Slides card grammar shares (src/lib/slides/readiness.ts sectionsOf), so both ways in agree on
- * what a See it is.
+ * What each See it block of a note costs, in seconds, keyed by the block itself (a view for tests: the lesson's minutes
+ * are priced in src/lib/slides/minutes.ts, a See it at 15 seconds a step, its own steps or the named worked example's; a
+ * name `steps` does not hold counts nothing, as the deck counts it).
  */
 export function seeSeconds(blocks: readonly unknown[] | null | undefined, steps: SeeSteps = {}): Map<unknown, number> {
-  const cost = new Map<unknown, number>();
-  for (const section of sectionsOf(blocks))
-    for (const { block } of section.see) {
-      const named = "workedExample" in block && typeof block.workedExample === "string" ? block.workedExample : null;
-      const own = "steps" in block && Array.isArray(block.steps) ? block.steps.length : 0;
-      cost.set(block, (named !== null ? (steps[named] ?? 0) : own) * SECONDS_PER_SEE_STEP);
-    }
-  return cost;
+  return new Map((blocks ?? []).filter((b) => blockType(b) === "see").map((b) => [b, blockCost(b, { steps }).seconds]));
 }
-
-// ---- end of See it pricing ------------------------------------------------------------------------------------------
 
 type Block = Record<string, unknown>;
 
@@ -163,53 +153,11 @@ const isBlock = (b: unknown): b is Block => typeof b === "object" && b !== null;
 const blockType = (b: unknown): string => (isBlock(b) && typeof b.type === "string" ? b.type : "");
 const str = (v: unknown): string => (typeof v === "string" ? v : "");
 
-/** Words in a content string; a TeX span counts as one word, markers do not count at all. */
-export function countWords(text: string): number {
-  return text
-    .replace(/\$\$[\s\S]*?\$\$/g, " x ")
-    .replace(/\$[^$\n]*\$/g, " x ")
-    .replace(/[*_`#>|]/g, " ")
-    .split(/\s+/)
-    .filter(Boolean).length;
-}
-
-/** Reading plus checks (plus any other timed work, in seconds), rounded to whole minutes and never less than one. */
-export function estimateMinutes(words: number, gates = 0, seconds = 0): number {
-  return Math.max(1, Math.round(words / WORDS_PER_MINUTE + (gates * SECONDS_PER_GATE) / 60 + seconds / 60));
-}
-
-/**
- * How long a video block runs, when the note says so (its `end`, less its `start`), or null: a length is never guessed.
- * The same rule as the Slides deck's (src/lib/slides/cards.ts videoSeconds).
- */
-export function videoSeconds(block: unknown): number | null {
-  if (!isBlock(block) || block.type !== "video" || typeof block.end !== "number") return null;
-  return Math.max(0, block.end - (typeof block.start === "number" ? block.start : 0));
-}
-
-const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
-
-/** "plus a video", "plus two videos": videos with no stated length, named beside the minutes; null when there are none. */
-export function plusVideos(untimed: number): string | null {
-  if (untimed <= 0) return null;
-  return `plus ${untimed === 1 ? "a video" : `${COUNT_WORDS[untimed] ?? untimed} videos`}`;
-}
-
-export const minutesForReading = (words: number): number => estimateMinutes(words, 0);
-/** A worked example is read, tried and checked: two minutes each. */
-export const minutesForExamples = (count: number): number => Math.max(1, count * 2);
-/** A check item is one question with its feedback: a minute each. */
-export const minutesForCheckItems = (count: number): number => Math.max(1, count);
-/** Exam marks are worth about 1.2 minutes each, the CCEA pace with the reading. */
-export const minutesForMarks = (marks: number): number => Math.max(1, Math.round(marks * 1.2));
-/** Find the line, then write the fix: two minutes each. */
-export const minutesForMistakes = (count: number): number => Math.max(1, count * 2);
-
 /** "about 5 min" — the phrase every section eyebrow ends with. */
-export const minutesPhrase = (minutes: number): string => `about ${Math.max(1, Math.round(minutes))} min`;
+export const minutesPhrase = (minutes: number): string => `about ${wholeMinutes(minutes)} min`;
 /** "About 25 minutes" — the spine's own heading ("About 1 minute" for one). */
 export const minutesHeading = (minutes: number): string => {
-  const n = Math.max(1, Math.round(minutes));
+  const n = wholeMinutes(minutes);
   return `About ${n} ${n === 1 ? "minute" : "minutes"}`;
 };
 
@@ -252,7 +200,7 @@ export function heroPromise({
   practicals: readonly string[];
 }): { ways: WayPromise[]; facts: string[] } {
   const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-  const plus = plusVideos(untimedVideos);
+  const plus = untimedPhrase(untimedVideos);
   const sections = plural(read.sections, "section", "sections");
   const ways: WayPromise[] = slides
     ? [
@@ -300,22 +248,16 @@ export interface LessonSection {
   title: string;
   /** The heading as the note renders it. */
   heading: string;
+  /** Words she reads in it: its heading (without the authored number) and its paragraphs and callouts. */
   words: number;
   gateIds: string[];
+  /**
+   * Its share of the lesson's minutes (src/lib/slides/minutes.ts partShares): its own work rounded, never under a
+   * minute, moved by a minute where needed so that the sections add up to the lesson's minutes the hero prints.
+   */
   minutes: number;
   /** Videos in the section with no stated length: not in its minutes, named beside them. */
   untimedVideos: number;
-}
-
-/** The first figure or photo in the note, which the hero promotes and the lesson therefore skips. */
-export function hoistedFigureIndex(blocks: readonly unknown[] | null | undefined): number {
-  const list = blocks ?? [];
-  for (let i = 0; i < list.length; i += 1) {
-    const t = blockType(list[i]);
-    if (t === "photo") return i;
-    if (t === "figure" && str((list[i] as Block).svg)) return i;
-  }
-  return -1;
 }
 
 function figureAt(block: unknown): HeroFigure | null {
@@ -342,59 +284,30 @@ function figureAt(block: unknown): HeroFigure | null {
  * What the hero shows. With a `hero` block it is the authored promise; without one the lede is
  * the note's first paragraph, there are no "you can" lines, and the estimate is computed from
  * the note itself rather than invented.
+ *
+ * The minutes are the lesson's own (src/lib/slides/minutes.ts lessonMinutesFor, Read): its work rounded once, which the
+ * track's Contents and the sections' labels add up to (lessonSections shares it out), so one screen never shows two
+ * numbers. The authored `hero.minutes` stands in only for a note with nothing to measure. `steps` prices a See it that
+ * names a worked example (seeStepsOf); `prompts`, the bundle's, leaves out a placed prompt the bundle does not hold (every
+ * placed prompt is priced when they are not given).
  */
-export function heroDataFor(blocks: readonly unknown[] | null | undefined, steps?: SeeSteps): TopicHeroData {
+export function heroDataFor(blocks: readonly unknown[] | null | undefined, steps?: SeeSteps, prompts?: readonly RetrievalPrompt[] | null): TopicHeroData {
   const list = blocks ?? [];
   const figure = figureAt(list[hoistedFigureIndex(list)]);
   const hero = list.find((b) => blockType(b) === "hero");
+  const lede = ledeOf(list);
+  const { read, untimedVideos } = lessonMinutesFor({ blocks: list, steps, prompts });
   if (isBlock(hero)) {
     const can = Array.isArray(hero.can) ? hero.can.filter((c): c is string => typeof c === "string") : [];
-    const lede = str(hero.lede);
-    // The hero promises exactly what the spine and the lesson's own label add up to: the sum of its sections, each
-    // rounded up to a whole minute. That is the larger of the two honest measures, so it never over-promises, and one
-    // screen never shows two numbers. The authored number stands in only for a note with nothing to measure.
-    const measurable = list.some((b) => ["p", "callout", "h", "gate"].includes(blockType(b)));
-    const authored = typeof hero.minutes === "number" && hero.minutes > 0 ? Math.round(hero.minutes) : 0;
-    const minutes = measurable || authored === 0 ? lessonMinutes(list, lede, steps) : authored;
     const short = str(hero.short).trim() || null;
-    return { short, lede, can, minutes, untimedVideos: untimedVideosIn(list, lede), generated: hero.generated === true, fallback: false, figure };
+    return { short, lede, can, minutes: read.minutes, untimedVideos, generated: hero.generated === true, fallback: false, figure };
   }
-  const firstParagraph = list.find((b) => blockType(b) === "p");
-  const lede = isBlock(firstParagraph) ? str(firstParagraph.md) : "";
-  return {
-    short: null,
-    lede,
-    can: [],
-    minutes: lessonMinutes(list, lede, steps),
-    untimedVideos: untimedVideosIn(list, lede),
-    generated: false,
-    fallback: true,
-    figure,
-  };
+  return { short: null, lede, can: [], minutes: read.minutes, untimedVideos, generated: false, fallback: true, figure };
 }
 
-/** Videos in the lesson with no stated length, over every section. */
-function untimedVideosIn(blocks: readonly unknown[], lede: string): number {
-  return lessonSections(blocks, lede).reduce((n, s) => n + s.untimedVideos, 0);
-}
-
-/** The lesson's minutes as the spine counts them: every section, each rounded to a whole minute, added up. */
-export function lessonMinutes(blocks: readonly unknown[] | null | undefined, lede?: string, steps?: SeeSteps): number {
-  return Math.max(1, lessonSections(blocks, lede, steps).reduce((n, s) => n + s.minutes, 0));
-}
-
-/** Words and checks over the whole note, as minutes. */
-export function noteMinutes(blocks: readonly unknown[] | null | undefined): number {
-  const list = blocks ?? [];
-  let words = 0;
-  let gates = 0;
-  for (const b of list) {
-    const t = blockType(b);
-    if (t === "p" || t === "callout") words += countWords(str((b as Block).md));
-    else if (t === "h") words += countWords(str((b as Block).text));
-    else if (t === "gate") gates += 1;
-  }
-  return estimateMinutes(words, gates);
+/** The lesson's minutes as the track and the Contents print them: what its sections' labels add up to. */
+export function lessonMinutes(blocks: readonly unknown[] | null | undefined, lede?: string, steps?: SeeSteps, prompts?: readonly RetrievalPrompt[] | null): number {
+  return lessonTotal(lessonParts(lessonBlocks(blocks ?? [], lede), readPricing(steps, prompts)));
 }
 
 /** Every gate in the note, in order. */
@@ -496,150 +409,28 @@ export function sameTitle(a: string, b: string): boolean {
  * The note's sections, one per heading the lesson actually renders and in the same order, which
  * is what lets the spine follow the scroll position. Prose before the first heading belongs to
  * the first section; a note with no headings is one section. Pass the hero's lede so the rows
- * match the note after its opening has been hoisted, and the bundle's worked examples (seeStepsOf) so a See it that names
- * one is priced by its steps.
+ * match the note after its opening has been hoisted, the bundle's worked examples (seeStepsOf) so a See it that names
+ * one is priced by its steps, and the bundle's prompts (optional) so a placed prompt it does not hold is not priced.
+ *
+ * Each section is a part of the lesson as src/lib/slides/minutes.ts prices it (lessonParts), and its minutes are its
+ * share of the lesson's minutes (partShares): its own work rounded, never under a minute, moved by a minute where the
+ * rows must add up to the lesson's work rounded once, so the Contents' rows add up to the total it and the hero print.
  */
-export function lessonSections(blocks: readonly unknown[] | null | undefined, lede?: string, steps?: SeeSteps): LessonSection[] {
-  const list = lessonBlocks(blocks ?? [], lede);
-  const see = seeSeconds(blocks, steps);
-  // What a section is made of while it is read: its words and checks, and the timed work beside them (a prompt, a See it,
-  // a video with a stated length) in seconds.
-  type Open = Omit<LessonSection, "n" | "minutes"> & { seconds: number };
-  const sections: Open[] = [];
-  const open = (heading: string) => {
-    sections.push({ title: heading ? spineTitle(heading) : "The lesson", heading, words: countWords(heading), gateIds: [], untimedVideos: 0, seconds: 0 });
-    return sections[sections.length - 1];
-  };
-  let current: Open | null = null;
-  for (const b of list) {
-    const t = blockType(b);
-    if (t === "hero") continue;
-    if (t === "h") {
-      current = open(str((b as Block).text));
-      continue;
-    }
-    if (!current) current = open("");
-    if (t === "p" || t === "callout") current.words += countWords(str((b as Block).md));
-    else if (t === "gate") current.gateIds.push(str((b as Block).id));
-    else if (t === "prompt") current.seconds += SECONDS_PER_PROMPT;
-    else if (t === "see") current.seconds += see.get(b) ?? 0;
-    else if (t === "video") {
-      const s = videoSeconds(b);
-      if (s === null) current.untimedVideos += 1;
-      else current.seconds += s;
-    }
-  }
-  // An unheaded opening belongs to the section it introduces, not to a row of its own.
-  if (sections.length > 1 && sections[0].heading === "") {
-    sections[1].words += sections[0].words;
-    sections[1].gateIds = [...sections[0].gateIds, ...sections[1].gateIds];
-    sections[1].untimedVideos += sections[0].untimedVideos;
-    sections[1].seconds += sections[0].seconds;
-    sections.shift();
-  }
-  return sections.map(({ seconds, ...s }, i) => ({ ...s, n: i + 1, minutes: estimateMinutes(s.words, s.gateIds.length, seconds) }));
-}
-
-/**
- * Markdown normalised for comparison: emphasis and maths markers dropped, whitespace collapsed.
- * Kept with an index back into the raw string so a prefix match can be cut from the raw markdown.
- */
-function normalisedWithMap(md: string): { text: string; map: number[] } {
-  let text = "";
-  const map: number[] = [];
-  let pendingSpace = false;
-  for (let i = 0; i < md.length; i += 1) {
-    const ch = md[i];
-    if (ch === "*" || ch === "_" || ch === "`" || ch === "$" || ch === "\\") continue;
-    if (/\s/.test(ch)) {
-      pendingSpace = text.length > 0;
-      continue;
-    }
-    if (pendingSpace) {
-      text += " ";
-      map.push(i);
-      pendingSpace = false;
-    }
-    text += ch.toLowerCase();
-    map.push(i);
-  }
-  return { text, map };
-}
-
-/** The end offset of each sentence in a string, for cutting an opening the hero has taken. */
-function sentenceEnds(s: string): number[] {
-  const ends: number[] = [];
-  for (const m of s.matchAll(/[.!?](?=["')\]]*(\s|$))/g)) ends.push(m.index + m[0].length);
-  if (ends[ends.length - 1] !== s.length) ends.push(s.length);
-  return ends;
-}
-
-/**
- * What is left of a paragraph once the hero has said its opening: the raw markdown after the
- * sentences the lede already carries, "" when the paragraph says nothing else, or null when this
- * paragraph is not the hero's. Sentence by sentence, because the pipeline lifts a lede and then
- * edits its punctuation. A cut that would leave unbalanced emphasis or maths markers is refused.
- */
-export function paragraphAfterLede(md: string, lede: string): string | null {
-  const wanted = normalisedWithMap(lede).text;
-  if (wanted.length < 24) return null;
-  let cut = 0;
-  for (const end of sentenceEnds(md)) {
-    const sentence = normalisedWithMap(md.slice(cut, end)).text;
-    if (sentence.length < 24 || !wanted.includes(sentence)) break;
-    cut = end;
-  }
-  if (cut === 0) return null;
-  const removed = md.slice(0, cut);
-  if ((removed.match(/\*\*/g) ?? []).length % 2 !== 0 || (removed.match(/\$/g) ?? []).length % 2 !== 0) return null;
-  return md.slice(cut).replace(/^[\s.;:,—–-]+/, "");
-}
-
-/**
- * The note as the lesson renders it: the hero block gone, the hoisted figure gone, and the
- * opening the hero already says trimmed off the first paragraph. The pipeline writes most ledes
- * by lifting the note's first sentences, and nobody should read the same sentence twice.
- */
-export function lessonBlocks<T>(blocks: readonly T[] | null | undefined, lede?: string): T[] {
-  const list = blocks ?? [];
-  const hoisted = hoistedFigureIndex(list);
-  const out: T[] = [];
-  let firstParagraph = true;
-  for (let i = 0; i < list.length; i += 1) {
-    const b = list[i];
-    const type = blockType(b);
-    if (type === "hero" || i === hoisted) continue;
-    if (type === "p" && firstParagraph) {
-      firstParagraph = false;
-      const rest = lede ? paragraphAfterLede(str((b as Block).md), lede) : null;
-      if (rest !== null) {
-        if (rest.trim().length === 0) continue;
-        out.push({ ...(b as Block), md: rest } as T);
-        continue;
-      }
-    }
-    out.push(b);
-  }
-  // A heading with nothing left under it is not a section: the hero has taken its paragraph.
-  const kept = out.filter((b, i) => !(blockType(b) === "h" && blockType(out[i + 1]) === "h"));
-  return withPauses(kept);
-}
-
-/**
- * A "Pause here" block at every section boundary: before each heading after the first (02-surfaces.md §3.3). A
- * twenty-minute school night does not end where the lesson does, so every boundary is a place to stop, not one in
- * the middle. The note shows a pause only once the stretch before it is open (nothing after an unanswered gate
- * renders), so it appears as she finishes a section. A pause block is not a section: the spine never counts it.
- */
-export function withPauses<T>(blocks: readonly T[]): T[] {
-  const out: T[] = [];
-  let headings = 0;
-  for (const b of blocks) {
-    if (blockType(b) === "h") {
-      headings += 1;
-      if (headings > 1) out.push({ type: "pause" } as T);
-    }
-    out.push(b);
-  }
-  return out;
+export function lessonSections(
+  blocks: readonly unknown[] | null | undefined,
+  lede?: string,
+  steps?: SeeSteps,
+  prompts?: readonly RetrievalPrompt[] | null,
+): LessonSection[] {
+  const parts = lessonParts(lessonBlocks(blocks ?? [], lede), readPricing(steps, prompts));
+  const shares = partShares(parts);
+  return parts.map((p, i) => ({
+    n: i + 1,
+    title: p.heading ? spineTitle(p.heading) : "The lesson",
+    heading: p.heading,
+    words: partWords(p),
+    gateIds: p.gateIds,
+    minutes: shares[i]!,
+    untimedVideos: p.untimedVideos,
+  }));
 }

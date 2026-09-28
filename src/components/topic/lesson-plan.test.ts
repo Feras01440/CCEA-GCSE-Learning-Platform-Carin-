@@ -127,8 +127,9 @@ describe("minutes: a See it at 15 seconds a step, as the Slides deck prices it (
   const p = (words: number) => ({ type: "p", md: "word ".repeat(words).trim() });
   const steps = (count: number) => Array.from({ length: count }, (_, i) => ({ n: i + 1, working: `$x + ${i + 1}$`, decision: "Because the line above says so." }));
   const gate = (id: string) => ({ type: "gate", id, kind: "choice", prompt: "Which line comes next?", options: ["$x$", "$2x$"], answer: "$x$", explain: "As step 2 of See it did." });
-  // One teaching section: 183 words (the heading's three and 180) are a minute of reading, the check 40 seconds, and the
-  // See it's four steps one minute more: 2.68 minutes, so 3 (2 without the See it).
+  // One teaching section: 182 words (the heading's two as she reads it, "Factorise first", and 180; the authored "1." is
+  // not read, src/lib/slides/minutes.ts headingWords) are a minute of reading, the check 40 seconds, and the See it's four
+  // steps one minute more: 2.68 minutes, so 3 (2 without the See it).
   const inline = { type: "see", stem: "Simplify $\\frac{x^{2}-9}{x^{2}+5x+6}$.", steps: steps(4) };
   const note = [{ type: "h", text: "1. Factorise first", role: "idea" }, p(180), inline, gate("g1")];
 
@@ -257,8 +258,10 @@ describe("heroDataFor", () => {
     const h = heroDataFor(blocks);
     expect(h.lede).toBe(hero.lede);
     expect(h.can).toHaveLength(3);
-    // The authored 30 gives way to the note's own measure, the figure the spine shows: 1 + 2 + 1 minutes.
-    expect(h.minutes).toBe(4);
+    // The authored 30 gives way to the note's own measure, the figure the spine shows. The number moved from 4 to 3 on 29
+    // Sep 2026 (src/lib/slides/minutes.ts): the lesson's work, 10 + 185 + 3 words and two checks, is 2.4 minutes, rounded
+    // once to 2 and never under its three sections, so 3; each section rounded on its own used to add up to 1 + 2 + 1.
+    expect(h.minutes).toBe(3);
     expect(h.minutes).toBe(lessonSections(blocks, h.lede).reduce((n, s) => n + s.minutes, 0));
     expect(heroDataFor([hero]).minutes).toBe(30);
     expect(h.fallback).toBe(false);
@@ -281,8 +284,10 @@ describe("heroDataFor", () => {
     expect(h.fallback).toBe(true);
     expect(h.lede).toBe("Cut the top off a cone and what is left is a frustum. You already know the separate shapes.");
     expect(h.can).toEqual([]);
-    // The spine's three sections, the lede's paragraph read in the hero rather than the lesson: 1 + 2 + 1.
-    expect(h.minutes).toBe(4);
+    // The spine's three sections, the lede's paragraph read in the hero rather than the lesson. 4 until 29 Sep 2026 (the
+    // sections rounded one by one, 1 + 2 + 1); now the lesson's 2.4 minutes of work rounded once, never under its three
+    // sections: 3 (src/lib/slides/minutes.ts).
+    expect(h.minutes).toBe(3);
   });
 
   it("promotes the first figure and leaves a photo-first note to its photo", () => {
@@ -304,7 +309,11 @@ describe("lessonSections", () => {
     expect(sections.map((s) => s.n)).toEqual([1, 2, 3]);
     expect(sections[0].gateIds).toEqual(["g1"]);
     expect(sections[1].gateIds).toEqual(["g2"]);
-    expect(sections[1].minutes).toBe(2); // 180 words + one check
+    // 185 words and a check are 1.7 minutes, which alone would round to 2 (the number here until 29 Sep 2026). The rows
+    // now share out the lesson's minutes so they add up to them (src/lib/slides/minutes.ts partShares): 2.5 minutes of
+    // work round once to 3, three sections of at least a minute each, so the row rounded up furthest gives its minute
+    // back: 1 + 1 + 1.
+    expect(sections.map((s) => s.minutes)).toEqual([1, 1, 1]);
     expect(sections[2].minutes).toBe(1);
   });
 

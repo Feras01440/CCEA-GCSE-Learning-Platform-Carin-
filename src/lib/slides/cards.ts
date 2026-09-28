@@ -11,7 +11,8 @@
  *   CARD_WORDS) is split at sentence boundaries, never inside a sentence or inside maths; the section's first card
  *   carries the heading;
  * - a drawn figure followed by a paragraph stands on that paragraph's first idea card, on its stage with its caption
- *   (art direction v2 §8.1, the Idea row); any other figure, a photo, a video or a simulation is a media card;
+ *   (art direction v2 §8.1, the Idea row), and one straight before the pointer's words stands on the pointer card; any
+ *   other figure, a photo, a video or a simulation is a media card;
  * - a `see` block is a See it card: the example's stem, then its steps one per Continue, each with its reason and the
  *   mark it earns; at most one step she types (never in the topic's first See it); a See it that names a bundle worked
  *   example shows that example's steps, without its why-menu and its inputs;
@@ -28,19 +29,21 @@
  */
 import type { GateBlock, NoteBlock } from "@/components/items/gates";
 import type { RetrievalPrompt, WorkedExample } from "@/lib/content/schema";
-import { countWords, headingText, heroDataFor, lessonBlocks, spineTitle, type HeroFigure } from "@/components/topic/lesson-plan";
+import { headingText, heroDataFor, spineTitle, type HeroFigure } from "@/components/topic/lesson-plan";
 import { positionalWording } from "@/lib/gate-order";
+import { closingRoleOf, lessonBlocks } from "./lesson-blocks";
+import { countWords, partsOfCards, slidesMinutes, untimedPhrase, videoSeconds, type PartRef } from "./minutes";
 import { chooseRecall, RECALL_MAX } from "./recall";
 import { sectionsOf } from "./readiness";
 import { resolveSee, seeShowsAnswer, typedStep, type ResolvedSee } from "./see";
 import { splitSentences } from "./text";
 
 export { splitSentences } from "./text";
+// The minute model is ./minutes.ts, the one both ways price the lesson with; these names are kept here for the deck's callers.
+export { cardSeconds, SEE_STEP_SECONDS, videoSeconds } from "./minutes";
 
 /** One idea per card: the depth standard's budget for a paragraph or callout (scripts/qa/lesson-v2.mjs CARD_WORDS). */
 export const CARD_WORDS = 75;
-/** The minute model counts a See it at 15 seconds a step (the teach-first case §8.3). */
-export const SEE_STEP_SECONDS = 15;
 
 export interface SectionRef {
   /** 1-based among the teaching sections (the recap and the pointer are not sections); 0 for a section after the close has begun. */
@@ -58,17 +61,22 @@ export type MediaBlock = Extract<NoteBlock, { type: "figure" | "photo" | "video"
 export type FigureBlock = Extract<NoteBlock, { type: "figure" }>;
 export type CalloutBlock = Extract<NoteBlock, { type: "callout" }>;
 
+/**
+ * Every card made from the note carries `part`: the part of the lesson it stands in (one per heading of the note, numbered
+ * as Read numbers its sections, the opening in the first), so the deck's minutes are added part by part as Read's are
+ * (./minutes.ts). The title, the close and a figure to act on stand in no part.
+ */
 export type Card =
   | { kind: "title"; key: "title"; lede: string; can: string[]; figure: HeroFigure | null }
   /** `figure`: the note's drawing that stands on this card, the one just before the paragraph that reads it. */
-  | { kind: "idea"; key: string; section: SectionRef; first: boolean; md: string; words: number; figure: FigureBlock | null }
-  | { kind: "media"; key: string; section: SectionRef | null; block: MediaBlock }
+  | { kind: "idea"; key: string; section: SectionRef; first: boolean; md: string; words: number; figure: FigureBlock | null; part?: PartRef }
+  | { kind: "media"; key: string; section: SectionRef | null; block: MediaBlock; part?: PartRef }
   /**
    * A See it: `see` is the resolved example (null when a named worked example is missing, which the build refuses);
    * `firstSee` marks the topic's first, which is shown and never typed; `typed` is the step she types (0-based), or null;
    * `first`, as on an idea card, when it is the first card under its heading, which it then carries.
    */
-  | { kind: "see"; key: string; section: SectionRef | null; first: boolean; see: ResolvedSee | null; firstSee: boolean; typed: number | null }
+  | { kind: "see"; key: string; section: SectionRef | null; first: boolean; see: ResolvedSee | null; firstSee: boolean; typed: number | null; part?: PartRef }
   /**
    * A Your turn (the gate). `turn` numbers two gates in a row ("1 of 2"); `seeKey` is the See it card it follows in its
    * section, the one its re-teach points back at. A retry card (`retry`) asks the gate's twin when `twin`, else the gate
@@ -84,12 +92,14 @@ export type Card =
       twin: boolean;
       turn: { n: number; of: number } | null;
       seeKey: string | null;
+      part?: PartRef;
     }
-  | { kind: "callout"; key: string; section: SectionRef | null; block: CalloutBlock }
+  | { kind: "callout"; key: string; section: SectionRef | null; block: CalloutBlock; part?: PartRef }
   | { kind: "interaction"; key: string; section: SectionRef | null; id: string }
-  | { kind: "recap"; key: "recap"; heading: string; lines: string[] }
-  | { kind: "pointer"; key: "pointer"; heading: string; md: string }
-  | { kind: "recall"; key: string; prompt: RetrievalPrompt; index: number; total: number }
+  | { kind: "recap"; key: "recap"; heading: string; lines: string[]; part?: PartRef }
+  /** `figure`: the note's drawing straight before the pointer's words (a scheme's marks), standing on this card as a figure stands on the idea card that reads it. */
+  | { kind: "pointer"; key: "pointer"; heading: string; md: string; figure: FigureBlock | null; part?: PartRef }
+  | { kind: "recall"; key: string; prompt: RetrievalPrompt; index: number; total: number; part?: PartRef }
   | { kind: "close"; key: "close" };
 
 export type CardKind = Card["kind"];
@@ -116,7 +126,11 @@ export interface DeckStats {
   videos: number;
   /** Videos whose block carries no length: named beside the minutes ("plus a video"), never guessed into them. */
   untimedVideos: number;
-  /** An honest estimate of the cards and checks, and of a video only when its block says how long it runs. */
+  /**
+   * The lesson's minutes as the deck shows it (./minutes.ts, the one model Read prices with too): its cards' work added
+   * part by part and rounded once, a video only when its block says how long it runs, and a whole minute for each figure
+   * she acts on.
+   */
   minutes: number;
 }
 
@@ -130,8 +144,6 @@ const isBlock = (b: unknown): b is Block => typeof b === "object" && b !== null;
 const blockType = (b: unknown): string => (isBlock(b) && typeof b.type === "string" ? b.type : "");
 const str = (v: unknown): string => (typeof v === "string" ? v : "");
 
-const RECAP = /^\s*you can now\b/i;
-const POINTER = /^\s*in the exam\b/i;
 const MEDIA_TYPES = new Set(["figure", "photo", "video", "sim"]);
 
 /** "The three moves" → "the-three-moves": a stable, readable key part. */
@@ -188,8 +200,26 @@ export function packParagraph(md: string, budget = CARD_WORDS): string[] {
 function withClosingRoles(blocks: readonly unknown[]): unknown[] {
   return blocks.map((b) => {
     if (blockType(b) !== "h" || str((b as Block).role)) return b;
-    const text = str((b as Block).text);
-    return RECAP.test(text) ? { ...(b as Block), role: "recap" } : POINTER.test(text) ? { ...(b as Block), role: "pointer" } : b;
+    // The one reading of the close's words (./lesson-blocks.ts), which the minute model shares.
+    const role = closingRoleOf(b);
+    return role ? { ...(b as Block), role } : b;
+  });
+}
+
+/**
+ * The part of the lesson each block of the lesson stands in: a heading opens the next part, numbered from 1 as Read
+ * numbers its sections (lesson-plan.ts lessonSections), and the opening before the first heading belongs to the first.
+ */
+function lessonPartsByBlock(body: readonly unknown[]): PartRef[] {
+  const first = body.find((b) => blockType(b) === "h");
+  let part: PartRef = { n: 1, heading: first ? str((first as Block).text) : "" };
+  let headings = 0;
+  return body.map((b) => {
+    if (blockType(b) === "h") {
+      headings += 1;
+      if (headings > 1) part = { n: headings, heading: str((b as Block).text) };
+    }
+    return part;
   });
 }
 
@@ -213,6 +243,9 @@ export function buildDeck(
   const hero = heroDataFor(list);
   const body = withClosingRoles(lessonBlocks<unknown>(list, hero.lede).filter((b) => blockType(b) !== "pause"));
   const sections = sectionsOf(body);
+  // The part of the lesson each block stands in, as Read numbers its sections: every card made from a block carries it,
+  // so the deck's minutes are the same parts' minutes (./minutes.ts).
+  const partAt = lessonPartsByBlock(body);
   const promptById = new Map<string, RetrievalPrompt>(prompts.map((p) => [p.id, p]));
   // The recall cards: of the prompts the note places, at most two light ones (src/lib/slides/recall.ts, the owner's
   // answer 3: at most two, with Skip, each answerable in about twelve words).
@@ -232,6 +265,8 @@ export function buildDeck(
   let mediaCount = 0;
   let seeCount = 0;
   let teachingN = 0;
+  /** The pointer's figure, on the pointer card already: skipped where it stands in the note. */
+  let pointerFigure: FigureBlock | null = null;
 
   for (const section of sections) {
     // The section's reference for its cards: numbered among the teaching sections; the opening belongs to the first.
@@ -247,8 +282,15 @@ export function buildDeck(
       // The closing pair: the heading and its words are one card each; anything else in it is a card of its own.
       const words = section.blocks.filter((b) => b.block.type === "p").map((b) => str((b.block as unknown as Block).md));
       const text = headingText(section.heading.text);
-      if (section.heading.role === "recap") cards.push({ kind: "recap", key: unique("recap") as "recap", heading: text, lines: words.join("\n").split(/\n+/).map((l) => l.trim()).filter(Boolean) });
-      else cards.push({ kind: "pointer", key: unique("pointer") as "pointer", heading: text, md: words.join("\n\n") });
+      const part = partAt[section.heading.at];
+      if (section.heading.role === "recap") cards.push({ kind: "recap", key: unique("recap") as "recap", heading: text, lines: words.join("\n").split(/\n+/).map((l) => l.trim()).filter(Boolean), part });
+      else {
+        // The pointer's drawing (the marks a paper gives, say): a drawn figure straight before its words stands on its
+        // card, as a figure stands on the idea card that reads it, never a picture-only card after the words.
+        const drawn = section.blocks.find((b) => b.block.type === "figure" && str((b.block as unknown as Block).svg).length > 0 && blockType(body[b.at + 1]) === "p");
+        pointerFigure = drawn ? (drawn.block as unknown as FigureBlock) : null;
+        cards.push({ kind: "pointer", key: unique("pointer") as "pointer", heading: text, md: words.join("\n\n"), figure: pointerFigure, part });
+      }
     }
     const closingPair = section.part === "closing" && (section.heading?.role === "recap" || section.heading?.role === "pointer");
     // A section the close has taken in that is neither the recap nor the pointer ("Going further" after the pointer):
@@ -269,6 +311,7 @@ export function buildDeck(
     let lastSeeKey: string | null = null;
     /** A drawn figure waiting for the paragraph straight after it, whose first card it stands on. */
     let pendingFigure: FigureBlock | null = null;
+    let pendingFigureAt = -1;
 
     for (const item of walk) {
       if (item.heading !== null) {
@@ -284,7 +327,14 @@ export function buildDeck(
         // The recap's and the pointer's words are their cards already.
         if (closingPair) continue;
         const sec = current ?? { n: 0, total: teachingTotal, heading: "", title: "", role: null };
-        packParagraph(str((b as Block).md)).forEach((piece, k) => {
+        const part = partAt[item.at];
+        const pieces = packParagraph(str((b as Block).md));
+        // An empty paragraph packs into no card: a figure waiting for it stands on a card of its own, never dropped.
+        if (pieces.length === 0 && pendingFigure) {
+          cards.push({ kind: "media", key: unique(`media:figure:${mediaCount}`), section: current, block: pendingFigure, part: partAt[pendingFigureAt] });
+          cardsUnderHeading += 1;
+        }
+        pieces.forEach((piece, k) => {
           ideasUnderHeading += 1;
           cards.push({
             kind: "idea",
@@ -294,6 +344,7 @@ export function buildDeck(
             md: piece,
             words: countWords(piece),
             figure: k === 0 ? pendingFigure : null,
+            part,
           });
           cardsUnderHeading += 1;
         });
@@ -304,13 +355,15 @@ export function buildDeck(
       if (MEDIA_TYPES.has(t)) {
         const block = b as MediaBlock;
         mediaCount += 1;
+        if (block === pointerFigure) continue;
         // A drawn figure with a paragraph straight after it goes on that paragraph's first card (the paragraph reads it).
         if (block.type === "figure" && typeof block.svg === "string" && block.svg.length > 0 && blockType(body[item.at + 1]) === "p" && !closingPair) {
           pendingFigure = block;
+          pendingFigureAt = item.at;
           continue;
         }
         const id = block.type === "video" ? block.videoId : block.type === "sim" ? slug(block.title) : String(mediaCount);
-        cards.push({ kind: "media", key: unique(`media:${block.type}:${id}`), section: current, block });
+        cards.push({ kind: "media", key: unique(`media:${block.type}:${id}`), section: current, block, part: partAt[item.at] });
         cardsUnderHeading += 1;
         lastMedia = block.type;
         continue;
@@ -321,7 +374,7 @@ export function buildDeck(
         const see = resolveSee(b as Parameters<typeof resolveSee>[0], options.workedExamples ?? null);
         const firstSee = seeCount === 1;
         const key = unique(`see:${slug(current?.heading ?? "") || "opening"}:${seesUnderHeading}`);
-        cards.push({ kind: "see", key, section: current, first: cardsUnderHeading === 0 && (current?.heading ?? "") !== "", see, firstSee, typed: typedStep(see, firstSee) });
+        cards.push({ kind: "see", key, section: current, first: cardsUnderHeading === 0 && (current?.heading ?? "") !== "", see, firstSee, typed: typedStep(see, firstSee), part: partAt[item.at] });
         cardsUnderHeading += 1;
         lastSeeKey = key;
         lastMedia = null;
@@ -329,27 +382,27 @@ export function buildDeck(
       }
       if (t === "gate") {
         const gate = b as GateBlock;
-        cards.push({ kind: "gate", key: unique(`gate:${gate.id}`), section: current, gate, afterMedia: lastMedia, retry: false, twin: false, turn: null, seeKey: lastSeeKey });
+        cards.push({ kind: "gate", key: unique(`gate:${gate.id}`), section: current, gate, afterMedia: lastMedia, retry: false, twin: false, turn: null, seeKey: lastSeeKey, part: partAt[item.at] });
         cardsUnderHeading += 1;
         lastMedia = null;
         continue;
       }
       if (t === "callout") {
         const block = b as CalloutBlock;
-        cards.push({ kind: "callout", key: unique(`callout:${block.kind}:${slug(block.title ?? "")}`), section: current, block });
+        cards.push({ kind: "callout", key: unique(`callout:${block.kind}:${slug(block.title ?? "")}`), section: current, block, part: partAt[item.at] });
         cardsUnderHeading += 1;
         lastMedia = null;
         continue;
       }
       if (t === "prompt") {
         const p = promptById.get(str((b as Block).promptId));
-        if (p && recallIds.has(p.id)) cards.push({ kind: "recall", key: unique(`recall:${p.id}`), prompt: p, index: 0, total: 0 });
+        if (p && recallIds.has(p.id)) cards.push({ kind: "recall", key: unique(`recall:${p.id}`), prompt: p, index: 0, total: 0, part: partAt[item.at] });
         continue;
       }
       // hero (already the title card), pause (Read's stopping points), or anything unknown: nothing.
     }
     // A figure left waiting (its paragraph was the recap's): a card of its own, never dropped.
-    if (pendingFigure) cards.push({ kind: "media", key: unique(`media:figure:${mediaCount}`), section: current, block: pendingFigure });
+    if (pendingFigure) cards.push({ kind: "media", key: unique(`media:figure:${mediaCount}`), section: current, block: pendingFigure, part: partAt[pendingFigureAt] });
   }
 
   // Recall cards know their place among the recall cards.
@@ -382,51 +435,14 @@ export function buildDeck(
   return { cards, stats: deckStats(cards) };
 }
 
-/** A video's own length in seconds when its block says it (an `end`, from `start` or the beginning), else null. */
-export function videoSeconds(block: MediaBlock): number | null {
-  if (block.type !== "video" || typeof block.end !== "number") return null;
-  return Math.max(0, block.end - (typeof block.start === "number" ? block.start : 0));
-}
-
-/** Seconds a card costs: the minute model of lesson-plan.ts (180 words a minute, 40 s a check), never flattering. */
-export function cardSeconds(card: Card): number {
-  switch (card.kind) {
-    case "title":
-    case "close":
-      return 0;
-    case "idea":
-      // A figure on the card costs the look it cost as a card of its own.
-      return Math.max(20, Math.round((card.words / 180) * 60)) + (card.figure ? 20 : 0);
-    case "callout":
-      return Math.max(20, Math.round((countWords(card.block.md) / 180) * 60));
-    case "media":
-      // A video counts its own length only when its block carries one; otherwise it is named, not timed ("plus a video").
-      return card.block.type === "video" ? (videoSeconds(card.block) ?? 0) : 20;
-    case "see":
-      // 15 seconds a step, the inline steps or the named worked example's (the teach-first case §8.3; the lead, 27 Sep:
-      // priced as Read prices it in lesson-plan.ts, so the two ways' minutes rest on one rule). A named worked example
-      // the caller did not pass has no steps to count: pass the bundle's worked examples (deckFor's fourth argument).
-      return SEE_STEP_SECONDS * (card.see?.steps.length ?? 0);
-    case "gate":
-      return 40;
-    case "interaction":
-      return 60;
-    case "recap":
-      return 20;
-    case "pointer":
-      return Math.max(20, Math.round((countWords(card.md) / 180) * 60));
-    case "recall":
-      return 30;
-  }
-}
-
 /**
  * The deck's numbers, the one truth every surface prints (the title card, the topic hero's Slides button, the close):
  * the cards actually in it, its Your turns (a retry is not a new one), its See its, its recall cards, its videos and
- * which of them have no stated length, and the minutes.
+ * which of them have no stated length, and the minutes. The minutes are ./minutes.ts's, the model Read prices with: each
+ * card's cost added into the part of the lesson it stands in, the whole rounded once, and a minute for each figure to
+ * act on; a card costs what it shows (cardSeconds, re-exported above), never a floor.
  */
 export function deckStats(cards: readonly Card[]): DeckStats {
-  const seconds = cards.reduce((n, c) => n + cardSeconds(c), 0);
   const videos = cards.filter((c): c is Extract<Card, { kind: "media" }> => c.kind === "media" && c.block.type === "video");
   return {
     cards: cards.length,
@@ -435,7 +451,7 @@ export function deckStats(cards: readonly Card[]): DeckStats {
     recall: cards.filter((c) => c.kind === "recall").length,
     videos: videos.length,
     untimedVideos: videos.filter((c) => videoSeconds(c.block) === null).length,
-    minutes: Math.max(1, Math.round(seconds / 60)),
+    minutes: slidesMinutes(partsOfCards(cards), cards.filter((c) => c.kind === "interaction").length),
   };
 }
 
@@ -553,8 +569,6 @@ export function seeAnswerPrinted(cards: readonly Card[]): Array<{ gate: string; 
   return out;
 }
 
-const NUMBER_WORDS = ["no", "a", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
-
 /**
  * "About 11 minutes plus a video": the minutes the deck is honestly worth, and, when a video has no stated length, the
  * video named beside them rather than guessed into them (a Corbettmaths video runs five or six minutes; the card asks
@@ -568,8 +582,8 @@ export function deckMinutesPhrase(stats: DeckStats): string {
 /** The two halves of the minutes phrase, for a renderer that sets the minutes in bold: "About 11 minutes", "plus a video". */
 export function deckMinutes(stats: DeckStats): { minutes: string; plus: string | null } {
   const minutes = `About ${stats.minutes} ${stats.minutes === 1 ? "minute" : "minutes"}`;
-  const n = stats.untimedVideos;
-  return { minutes, plus: n === 0 ? null : `plus ${n === 1 ? "a video" : `${NUMBER_WORDS[n] ?? n} videos`}` };
+  // The untimed video is named as Read names it (./minutes.ts untimedPhrase): one phrase for both ways.
+  return { minutes, plus: untimedPhrase(stats.untimedVideos) };
 }
 
 /**

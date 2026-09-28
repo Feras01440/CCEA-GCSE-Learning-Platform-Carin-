@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { SEE_KINDS, type RetrievalPrompt, type WorkedExample } from "@/lib/content/schema";
+import { NoteBlocks, SEE_KINDS, type RetrievalPrompt, type WorkedExample } from "@/lib/content/schema";
 import { countWords, heroDataFor, lessonBlocks } from "@/components/topic/lesson-plan";
 import { positionalWording } from "@/lib/gate-order";
 import {
@@ -27,20 +27,16 @@ import {
   type SeeCard,
 } from "./cards";
 import { deckFor, slidesCardCount } from "./deck";
-import { enrichmentFor } from "./enrichment";
-import { packTopics } from "./packs-corpus.test-helper";
+import { enrichmentFor, recapGlyphsFor } from "./enrichment";
+import { TRIAL_ID, packTopics, trialNote } from "./packs-corpus.test-helper";
+import { chooseRecall } from "./recall";
 import { stepPointer } from "./see";
 import { hasSeeBlock, lessonReadiness, noteStructure } from "./readiness";
 import { SEE_FIXTURE_BLOCKS, SEE_FIXTURE_PROMPTS, SEE_FIXTURE_WE_ID, SEE_FIXTURE_WORKED_EXAMPLE } from "./see-fixture";
 
 const ROOT = path.resolve(__dirname, "../../..");
-const TRIAL = path.join(ROOT, "packs", "further-maths", "content", "fm1", "algebraic-fractions-simplify");
-const TRIAL_ID = "fm.u1.algebraic-fractions-simplify";
 
 const readJson = (file: string) => JSON.parse(fs.readFileSync(file, "utf8"));
-const trialBlocks = (): unknown[] => readJson(path.join(TRIAL, "note.blocks.json")) as unknown[];
-const trialPrompts = (): RetrievalPrompt[] => (readJson(path.join(TRIAL, "bundle.json")) as { prompts: RetrievalPrompt[] }).prompts;
-const trialWorkedExamples = (): WorkedExample[] => (readJson(path.join(TRIAL, "bundle.json")) as { workedExamples: WorkedExample[] }).workedExamples;
 
 const kinds = (cards: readonly Card[]) => cards.map((c) => c.kind);
 type IdeaCard = Extract<Card, { kind: "idea" }>;
@@ -72,188 +68,265 @@ function sectionBefore(cards: readonly Card[], at: number): Card[] {
 /** The fixture deck, with its worked example and prompts. */
 const fixtureDeck = () => buildDeck(SEE_FIXTURE_BLOCKS, SEE_FIXTURE_PROMPTS as RetrievalPrompt[], null, { workedExamples: [SEE_FIXTURE_WORKED_EXAMPLE as unknown as WorkedExample] });
 
+/** A block's type, and a heading's role as the deck reads it (a note without roles has its closing pair read by its words). */
+const blockTypeOf = (b: unknown): string => (typeof b === "object" && b !== null && typeof (b as { type?: unknown }).type === "string" ? (b as { type: string }).type : "");
+function closingRole(h: Record<string, unknown>, noteHasRoles: boolean): "recap" | "pointer" | null {
+  const role = noteHasRoles ? h.role : /^\s*you can now\b/i.test(String(h.text)) ? "recap" : /^\s*in the exam\b/i.test(String(h.text)) ? "pointer" : null;
+  return role === "recap" || role === "pointer" ? role : null;
+}
+
 /**
- * The trial topic as it stands (25 Sep 2026): a note written before the See it block, teaching, showing and checking in
- * prose, so it keeps the rendering it had. The STRUCTURE is pinned here (ids, order, counts), because the note's words
- * and numbers may still be polished; a hash never is. Its "The three moves" heading has role `see`, so it continues
- * "A common factor first" (the readiness parser's reading and the build's): six teaching sections.
+ * The cards a note should deal, block by block, restated from the note's side of the grammar (the header of ./cards.ts):
+ * the title; each paragraph as its idea cards; a See it, a Your turn, a callout, a video, a photo or a simulation as one
+ * card each; a drawn figure with a paragraph straight after it on that paragraph's first card (in the pointer's section,
+ * on the pointer card), any other figure a card of its own; the recap and the pointer as one card each, their words on
+ * them; a placed prompt as a recall card when it is one of the two light ones; then the close. The enrichment's cards
+ * are not the note's and are not here.
  */
-describe("the trial topic's deck as it stands (fm1/algebraic-fractions-simplify, no See it blocks yet)", () => {
-  it("is 35 cards from the note alone, in the order the note teaches", () => {
-    const deck = buildDeck(trialBlocks(), trialPrompts());
-    expect(deck.stats).toMatchObject({ cards: 35, gates: 8, sees: 0, recall: 2, videos: 1, untimedVideos: 0 });
-    expect(kinds(deck.cards)).toEqual([
-      "title",
-      "idea", // 1 Why cancelling works: the drawing's idea (the registered drawing stands on it)
-      "idea", // 1 cancelling is division: a factor, a term
-      "idea", // 1 worked: x(x + 8) over 5x, and x + 8 over 5x at x = 2
-      "gate", // g2
-      "idea", // 2 A square minus a square, with the note's L-shape figure on it
-      "idea", // 2 worked: x² − 49
-      "gate", // g12
-      "idea", // 3 Two squares with a number in front
-      "idea", // 3 worked: 16x² − 81, 25x² − 1
-      "gate", // g9
-      "idea", // 4 A common factor first, with the note's rectangle figure on it
-      "idea", // 4 worked: 2x² − 392
-      "callout", // Beyond this specification: the cubic's first line
-      "gate", // g13
-      "idea", // 4, "The three moves" (a See it done heading, continuing section 4)
-      "idea", // 4 worked: 2x² − 128 over x² + 17x + 72
-      "media", // the video, timed
-      "gate", // g4, after the video
-      "idea", // 5 Fully means fully
-      "idea", // 5 worked: 8 over 4(x − 7)
-      "callout", // Summer 2024, FM1 Q8(a)
-      "gate", // g10
-      "callout", // Why a lone number or x still counts
-      "idea", // 5 worked: 5x² over x, 12x over 3x
-      "gate", // g11
-      "idea", // 6 How the paper asks it: a division
-      "idea", // 6 'simplest form'
-      "idea", // 6 'hence', worked: 3x² + 24x
-      "gate", // g8
-      "recap",
-      "pointer",
-      "recall", // rp.02
-      "recall", // rp.08
-      "close",
-    ]);
+function expectedKinds(blocks: readonly unknown[], prompts: readonly RetrievalPrompt[]): string[] {
+  const hero = heroDataFor(blocks);
+  const body = lessonBlocks<unknown>(blocks, hero.lede).filter((b) => blockTypeOf(b) !== "pause");
+  const noteHasRoles = body.some((b) => blockTypeOf(b) === "h" && typeof (b as { role?: unknown }).role === "string");
+  const byId = new Map<string, RetrievalPrompt>(prompts.map((p) => [p.id, p]));
+  const placedPrompts = body.flatMap((b) => (blockTypeOf(b) === "prompt" && byId.has(String((b as { promptId?: unknown }).promptId)) ? [byId.get(String((b as { promptId: string }).promptId))!] : []));
+  const recall = new Set<string>(chooseRecall(placedPrompts).map((p) => p.id));
+  const out = ["title"];
+  let part: "teaching" | "recap" | "pointer" | "after" = "teaching";
+  let pointerFigureTaken = false;
+  body.forEach((b, i) => {
+    const t = blockTypeOf(b);
+    const block = b as Record<string, unknown>;
+    const paragraphNext = blockTypeOf(body[i + 1]) === "p";
+    const drawn = t === "figure" && typeof block.svg === "string" && block.svg.length > 0;
+    if (t === "h") {
+      const role = closingRole(block, noteHasRoles);
+      if (role) {
+        part = role;
+        out.push(role);
+      } else if (part !== "teaching") part = "after";
+      return;
+    }
+    if (t === "p") {
+      if (part === "recap" || part === "pointer") return;
+      out.push(...packParagraph(String(block.md)).map(() => "idea"));
+      return;
+    }
+    if (t === "figure") {
+      if (drawn && paragraphNext && (part === "teaching" || part === "after")) return;
+      if (drawn && paragraphNext && part === "pointer" && !pointerFigureTaken) {
+        pointerFigureTaken = true;
+        return;
+      }
+      out.push("media");
+      return;
+    }
+    if (t === "photo" || t === "video" || t === "sim") out.push("media");
+    else if (t === "see" || t === "gate" || t === "callout") out.push(t);
+    else if (t === "prompt" && recall.has(String(block.promptId))) out.push("recall");
+  });
+  out.push("close");
+  return out;
+}
+
+/**
+ * The trial topic (fm1/algebraic-fractions-simplify), read from its note on disk (packs/, or the folder SLIDES_TRIAL_DIR
+ * names: packs-corpus.test-helper.ts). Every id, count, heading, figure and prompt below is the note's own, never typed
+ * here, so the suite holds on whichever version the content session commits: lesson structure v3 (explain, See it, Your
+ * turn, with twins and option notes) when the note has See it blocks, and the v2 shape (teach, show and check in prose)
+ * when it has none; a test for the other shape is skipped, not failed. A count is typed only where the count is the
+ * design, and says so. Run on 29 Sep 2026 against the final v3 note (sha256 13e7e0be…, bundle 0178c0f7…: 55 cards) and
+ * the committed v2 note (65d0c8be…: 36 cards).
+ */
+describe("the trial topic's deck, read from its note (v3 with See its; the v2 shape without)", () => {
+  const note = trialNote();
+  const v3 = hasSeeBlock(note.blocks);
+  const deck = deckFor(TRIAL_ID, note.blocks, note.prompts, note.workedExamples);
+  const plain = buildDeck(note.blocks, note.prompts, null, { workedExamples: note.workedExamples });
+  const ofType = (type: string) => note.blocks.filter((b) => blockTypeOf(b) === type) as Array<Record<string, unknown>>;
+  const gateCards = deck.cards.filter((c): c is GateCard => c.kind === "gate");
+  const enrichment = enrichmentFor(TRIAL_ID)!;
+
+  it("deals every block of the note once, in the note's order: its cards are the note's, counted from it, never typed", () => {
+    expect(kinds(plain.cards)).toEqual(expectedKinds(note.blocks, note.prompts));
+    const videos = ofType("video");
+    expect(deck.stats).toMatchObject({
+      gates: ofType("gate").length,
+      sees: ofType("see").length,
+      videos: videos.length,
+      untimedVideos: videos.filter((v) => typeof v.end !== "number").length,
+    });
+    // The enrichment adds its cards and nothing else: the figure she acts on, one card for each interaction it names.
+    expect(deck.stats.cards).toBe(plain.stats.cards + (enrichment.interactions?.length ?? 0));
+    expect(slidesCardCount(TRIAL_ID, note.blocks, note.prompts, note.workedExamples)).toBe(deck.stats.cards);
+    // The worked examples change no count: a See it the note writes inline carries its own steps.
+    expect(deckFor(TRIAL_ID, note.blocks, note.prompts).cards.map((c) => c.key)).toEqual(deck.cards.map((c) => c.key));
+    console.log(`[slides] the trial (${v3 ? "v3" : "v2"}): ${promiseLine(deck.stats)}, about ${deck.stats.minutes} minutes`);
   });
 
-  it("is 36 cards with its registered enrichment: the figure she acts on after the three moves' worked lines, then the video, then g4", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    expect(deck.stats).toMatchObject({ cards: 36, gates: 8, sees: 0, recall: 2, videos: 1, untimedVideos: 0 });
-    expect(slidesCardCount(TRIAL_ID, trialBlocks(), trialPrompts())).toBe(36);
-    // The worked examples change nothing in a note that names none.
-    expect(deckFor(TRIAL_ID, trialBlocks(), trialPrompts(), trialWorkedExamples()).cards.map((c) => c.key)).toEqual(deck.cards.map((c) => c.key));
-    const at = deck.cards.findIndex((c) => c.kind === "interaction");
-    expect(deck.cards[at]).toMatchObject({ kind: "interaction", id: "afs.tap-to-cancel", key: "interaction:afs.tap-to-cancel" });
-    // It follows the card that works the three moves in front of her, so the tap is hers to do once she has seen it done.
-    const host = deck.cards[at - 1] as IdeaCard;
-    expect(host).toMatchObject({ kind: "idea", key: "idea:the-three-moves:2" });
-    expect(showsWork(host)).toBe(true);
-    expect(host.section).toMatchObject({ n: 4, heading: "The three moves", role: "see" });
-    expect(deck.cards[at + 1]).toMatchObject({ kind: "media", block: { type: "video" } });
-    expect(deck.cards[at + 2]).toMatchObject({ kind: "gate", key: "gate:g4", afterMedia: "video" });
+  it("keeps the note's gate ids in the note's order, so an answer here is the Read record, and names the one after a video", () => {
+    expect(deckGateIds(deck.cards)).toEqual(noteGateIds(note.blocks));
+    for (const g of gateCards) {
+      const before = deck.cards[deck.cards.indexOf(g) - 1];
+      expect(g.afterMedia === "video", g.gate.id).toBe(before.kind === "media" && before.block.type === "video");
+    }
   });
 
-  it("keeps the note's gate ids in the note's order, so an answer here is the Read record", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    expect(deckGateIds(deck.cards)).toEqual(noteGateIds(trialBlocks()));
-    // The trial's eight checks since the withdraw-and-replace of 25 Sep (g1, g3, g5, g6 and g7 withdrawn, never reused).
-    expect(deckGateIds(deck.cards)).toEqual(["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"]);
-    const gates = deck.cards.filter((c): c is GateCard => c.kind === "gate");
-    expect(gates.filter((g) => g.afterMedia !== null).map((g) => g.gate.id)).toEqual(["g4"]);
-    // No two in a row, no See it to point back at, no twin: the rendering it had.
-    expect(gates.map((g) => [g.turn, g.seeKey, g.twin])).toEqual(gates.map(() => [null, null, false]));
+  it.runIf(v3)("points each Your turn back at the See it before it in its own section, and numbers two or more on one See it", () => {
+    for (const g of gateCards) {
+      const at = deck.cards.indexOf(g);
+      const seeAt = deck.cards.findIndex((c) => c.key === g.seeKey);
+      expect(seeAt, g.gate.id).toBeGreaterThanOrEqual(0);
+      expect(seeAt, g.gate.id).toBeLessThan(at);
+      expect((deck.cards[seeAt] as SeeCard).section?.n, g.gate.id).toBe(g.section?.n);
+    }
+    const bySee = new Map<string, GateCard[]>();
+    for (const g of gateCards) bySee.set(g.seeKey!, [...(bySee.get(g.seeKey!) ?? []), g]);
+    for (const group of bySee.values()) expect(group.map((g) => g.turn)).toEqual(group.length > 1 ? group.map((_, i) => ({ n: i + 1, of: group.length })) : [null]);
   });
 
-  it("asks every check only after its section has explained the idea and worked it in front of her (the owner's rule, 24 Sep)", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
+  it.runIf(v3)("teaches first: the build's structure and schema pass, the first Your turn follows the first See it and is a real one", () => {
+    expect(noteStructure(note.blocks)).toEqual({ ok: true, problems: [] });
+    expect(NoteBlocks.safeParse(note.blocks).success).toBe(true);
+    expect(grammarBreaches("trial", note.blocks, deck.cards)).toEqual([]);
+    expect(deckRuleViolations(deck.cards)).toEqual([]);
+    // The first See it never asks her to type: it is shown before anything is asked (the teach-first case §6.2).
+    const firstSee = deck.cards.find((c): c is SeeCard => c.kind === "see")!;
+    expect(firstSee).toMatchObject({ firstSee: true, typed: null });
+    // Every See it shows between two and six steps, as the schema bounds them (the design).
+    for (const c of deck.cards) if (c.kind === "see") expect(c.see?.steps.length ?? 0, c.key).toBeGreaterThanOrEqual(2);
+    console.log(`[slides] the trial's Your turns whose See it may print their answer (for the reviewer): ${JSON.stringify(seeAnswerPrinted(deck.cards))}`);
+  });
+
+  it.runIf(!v3)("asks every check only after its section has explained the idea and worked it in front of her (the owner's rule, 24 Sep)", () => {
     deck.cards.forEach((c, i) => {
       if (c.kind !== "gate") return;
       const before = sectionBefore(deck.cards, i);
       expect(before.some((b) => b.kind === "idea"), `${c.gate.id}: explained first`).toBe(true);
       expect(before.some(showsWork), `${c.gate.id}: shown worked first`).toBe(true);
-      expect(before.length, `${c.gate.id}: not a section's opening card`).toBeGreaterThan(0);
     });
     expect(deckRuleViolations(deck.cards)).toEqual([]);
+    // No See it to point back at, no twin, none numbered: the rendering the v2 note always had.
+    expect(gateCards.map((g) => [g.turn, g.seeKey, g.twin])).toEqual(gateCards.map(() => [null, null, false]));
   });
 
-  it("puts each note figure on the idea card that reads it, with its own caption, and leaves no picture-only card (art direction v2 §8.1, the Idea row)", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    const withFigure = deck.cards.filter((c): c is IdeaCard => c.kind === "idea" && c.figure !== null);
-    expect(withFigure.map((c) => [c.key, c.first])).toEqual([
-      ["idea:a-square-minus-a-square:1", true],
-      ["idea:a-common-factor-first:1", true],
-    ]);
-    const figures = trialBlocks().filter((b) => (b as { type?: string }).type === "figure") as Array<{ caption?: string; alt: string }>;
-    // The first figure is the hero's (the title card's); the other two stand on the cards that say "In the drawing".
-    expect(withFigure.map((c) => c.figure?.caption)).toEqual(figures.slice(1).map((f) => f.caption));
-    expect(withFigure.every((c) => /\bdrawing\b/.test(c.md))).toBe(true);
-    expect(deck.cards.filter((c) => c.kind === "media" && c.block.type === "figure")).toEqual([]);
-  });
-
-  it("titles its six sections, a See it done heading titling its own cards inside the section it continues, and keeps the recap and pointer outside the count", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    const firsts = deck.cards.filter((c): c is IdeaCard => c.kind === "idea" && c.first);
-    expect(firsts.map((c) => [c.section.n, c.section.total, c.section.heading, c.section.role])).toEqual([
-      [1, 6, "Why cancelling works, and when it does not", "idea"],
-      [2, 6, "A square minus a square", "variant"],
-      [3, 6, "Two squares with a number in front", "variant"],
-      [4, 6, "A common factor first", "variant"],
-      [4, 6, "The three moves", "see"],
-      [5, 6, "Fully means fully", "variant"],
-      [6, 6, "How the paper asks it", "twists"],
-    ]);
-    // A card after a gate or a callout in the same section is not the section's first card, and its key counts idea cards only.
-    expect(deck.cards.find((c) => c.key === "idea:fully-means-fully:3")).toMatchObject({ kind: "idea", first: false });
-    const recap = deck.cards.find((c) => c.kind === "recap") as Extract<Card, { kind: "recap" }>;
-    expect(recap.heading).toBe("You can now");
-    // One glyph a line (the enrichment's recapGlyphs): the count is the note's, the glyphs must keep up with it.
-    expect(recap.lines).toHaveLength(4);
-    expect(recap.lines).toHaveLength(enrichmentFor(TRIAL_ID)?.recapGlyphs?.length ?? -1);
-    const pointer = deck.cards.find((c) => c.kind === "pointer") as Extract<Card, { kind: "pointer" }>;
-    expect(pointer.heading).toBe("In the exam");
-    expect(pointer.md).toMatch(/\*\*simplify fully\*\*/);
-  });
-
-  it("carries the hoisted figure on the title card, a lede of two sentences at most, and the honest promise with the video's own length", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
+  it("puts every note figure where the words that read it are, each once with its own caption, never a picture-only card before its paragraph", () => {
+    const figures = ofType("figure");
     const title = deck.cards[0] as Extract<Card, { kind: "title" }>;
+    // The first drawing is the hero's: on the title card (and the Read hero), not in the lesson again.
     expect(title.figure?.kind).toBe("svg");
+    const placed = deck.cards.flatMap((c) =>
+      c.kind === "idea" && c.figure ? [c.figure] : c.kind === "pointer" && c.figure ? [c.figure] : c.kind === "media" && c.block.type === "figure" ? [c.block] : [],
+    );
+    const said = (f: unknown) => `${String((f as { caption?: unknown }).caption)}|${String((f as { alt?: unknown }).alt)}`;
+    expect(placed.map(said)).toEqual(figures.slice(1).map(said));
+    // A figure alone on a card never has a paragraph straight after it in the note.
+    for (const c of deck.cards) {
+      if (c.kind !== "media" || c.block.type !== "figure") continue;
+      const at = note.blocks.findIndex((b) => said(b) === said(c.block));
+      expect(blockTypeOf(note.blocks[at + 1]), c.key).not.toBe("p");
+    }
+    // A figure on an idea card stands on the first card of the paragraph straight after it.
+    for (const c of deck.cards) {
+      if (c.kind !== "idea" || !c.figure) continue;
+      const at = note.blocks.findIndex((b) => said(b) === said(c.figure));
+      expect(String((note.blocks[at + 1] as { md?: string }).md).startsWith(c.md.slice(0, 40)), c.key).toBe(true);
+    }
+  });
+
+  it("titles each teaching section with its heading, numbered among them, and gives the recap and the pointer the note's own words", () => {
+    const body = lessonBlocks<unknown>(note.blocks, heroDataFor(note.blocks).lede) as Array<Record<string, unknown>>;
+    const headings = body.filter((b) => blockTypeOf(b) === "h");
+    const closeAt = headings.findIndex((h) => closingRole(h, true) !== null);
+    const teaching = headings.slice(0, closeAt < 0 ? headings.length : closeAt);
+    const total = teaching.filter((h) => h.role !== "see").length;
+    let n = 0;
+    const expected = teaching.map((h) => {
+      if (h.role !== "see") n += 1;
+      return [n, total, String(h.text), h.role ?? null];
+    });
+    const firsts = deck.cards.filter((c): c is Extract<Card, { kind: "idea" | "see" }> => (c.kind === "idea" || c.kind === "see") && c.first);
+    expect(firsts.map((c) => [c.section!.n, c.section!.total, c.section!.heading, c.section!.role])).toEqual(expected);
+
+    const recapAt = body.findIndex((b) => blockTypeOf(b) === "h" && closingRole(b, true) === "recap");
+    const pointerAt = body.findIndex((b) => blockTypeOf(b) === "h" && closingRole(b, true) === "pointer");
+    const wordsAfter = (at: number) => {
+      const out: Array<Record<string, unknown>> = [];
+      for (let i = at + 1; i < body.length && blockTypeOf(body[i]) !== "h"; i += 1) out.push(body[i]);
+      return out;
+    };
+    const recap = deck.cards.find((c): c is Extract<Card, { kind: "recap" }> => c.kind === "recap")!;
+    expect(recap.heading).toBe(String(body[recapAt].text));
+    const recapLines = wordsAfter(recapAt).filter((b) => b.type === "p").flatMap((b) => String(b.md).split(/\n+/).map((l) => l.trim()).filter(Boolean));
+    expect(recap.lines).toEqual(recapLines);
+    // One glyph a line, each found by what its line says: the enrichment keeps up with the note's recap, line for line.
+    expect(recapGlyphsFor(recap.lines, enrichment), JSON.stringify(recap.lines)).toHaveLength(recap.lines.length);
+    const pointer = deck.cards.find((c): c is Extract<Card, { kind: "pointer" }> => c.kind === "pointer")!;
+    expect(pointer.heading).toBe(String(body[pointerAt].text));
+    expect(pointer.md).toBe(wordsAfter(pointerAt).filter((b) => b.type === "p").map((b) => String(b.md)).join("\n\n"));
+  });
+
+  it("opens on the hero: its drawing, a lede of two sentences at most, its three 'you can' lines, and the honest promise", () => {
+    const title = deck.cards[0] as Extract<Card, { kind: "title" }>;
+    const hero = heroDataFor(note.blocks);
+    expect(title.lede).toBe(hero.lede);
+    expect(title.can).toEqual(hero.can);
+    // The design (art direction v2 §8.2, the hero): three "you can" lines, and a lede of one or two sentences.
     expect(title.can).toHaveLength(3);
     expect(splitSentences(title.lede).length).toBeLessThanOrEqual(2);
-    // The video states its length (341 s), so it is counted in the minutes and listed with the counts (audit LD-03).
-    const video = deck.cards.find((c): c is Extract<Card, { kind: "media" }> => c.kind === "media" && c.block.type === "video")!;
-    expect(videoSeconds(video.block)).toBe(341);
-    // The check is named "Your turn" (the owner's answer 6), and the title card counts them so.
-    expect(promiseLine(deck.stats)).toBe("36 cards · 8 your turns · 1 video");
-    expect(deckPromise(deck.stats)).toBe(`About ${deck.stats.minutes} minutes · 36 cards · 8 your turns · 1 video`);
-    const seconds = deck.cards.reduce((n, c) => n + cardSeconds(c), 0);
-    expect(deck.stats.minutes).toBe(Math.max(1, Math.round(seconds / 60)));
-    expect(seconds).toBeGreaterThan(341);
-    expect(deck.stats.minutes).toBeGreaterThanOrEqual(19);
-    expect(deck.stats.minutes).toBeLessThanOrEqual(23);
+    // The promise names what the deck holds, counted from it: the cards, the Your turns, the See its and the video.
+    const line = promiseLine(deck.stats);
+    expect(line).toContain(`${deck.stats.cards} cards`);
+    expect(line).toContain(`${ofType("gate").length} your turns`);
+    if (v3) expect(line).toContain(`${ofType("see").length} see its`);
+    expect(deckPromise(deck.stats)).toBe(`About ${deck.stats.minutes} minutes · ${line}`);
+    // The minutes (./minutes.ts prices them) are never fewer than the timed video and the See its' steps alone.
+    const video = ofType("video").reduce((s, v) => s + (typeof v.end === "number" ? v.end - (typeof v.start === "number" ? v.start : 0) : 0), 0);
+    const steps = deck.cards.reduce((s, c) => s + (c.kind === "see" ? (c.see?.steps.length ?? 0) : 0), 0);
+    expect(deck.stats.minutes).toBeGreaterThanOrEqual(Math.floor((video + SEE_STEP_SECONDS * steps) / 60));
   });
 
   it("times a video only when its block says how long it runs", () => {
-    const withoutEnd = trialBlocks().map((b) => {
-      if ((b as { type?: string }).type !== "video") return b;
+    const withoutEnd = note.blocks.map((b) => {
+      if (blockTypeOf(b) !== "video") return b;
       const { end: _end, ...rest } = b as { end?: number };
       return rest;
     });
-    const timed = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    const untimed = deckFor(TRIAL_ID, withoutEnd, trialPrompts());
-    expect(untimed.stats).toMatchObject({ videos: 1, untimedVideos: 1 });
-    expect(timed.stats.minutes).toBe(Math.max(1, Math.round((untimed.cards.reduce((n, c) => n + cardSeconds(c), 0) + 341) / 60)));
-    expect(promiseLine(untimed.stats)).toBe("36 cards · 8 your turns");
-    expect(deckMinutesPhrase(untimed.stats)).toBe(`About ${untimed.stats.minutes} minutes plus a video`);
-    expect(deckMinutesPhrase(timed.stats)).toBe(`About ${timed.stats.minutes} minutes`);
+    const untimed = deckFor(TRIAL_ID, withoutEnd, note.prompts, note.workedExamples);
+    const videos = ofType("video");
+    expect(untimed.stats).toMatchObject({ videos: videos.length, untimedVideos: videos.length });
+    const own = videos.reduce((s, v) => s + (typeof v.end === "number" ? v.end - (typeof v.start === "number" ? v.start : 0) : 0), 0);
+    // A timed video adds its own length to the minutes (to the minute: each count is rounded once); an untimed one adds none.
+    expect(Math.abs(deck.stats.minutes - untimed.stats.minutes - own / 60)).toBeLessThanOrEqual(1);
+    if (videos.length === 1) {
+      expect(promiseLine(untimed.stats)).not.toMatch(/video/);
+      expect(deckMinutesPhrase(untimed.stats)).toBe(`About ${untimed.stats.minutes} minutes plus a video`);
+    }
+    if (deck.stats.untimedVideos === 0) expect(deckMinutesPhrase(deck.stats)).toBe(`About ${deck.stats.minutes} minutes`);
     expect(deckMinutesPhrase({ ...untimed.stats, untimedVideos: 2, videos: 2 })).toMatch(/plus two videos$/);
   });
 
-  it("keeps at most two recall cards, each one of the note's own placed prompts and light, numbered among themselves", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
+  it("keeps at most two recall cards, the note's own placed prompts that are light, in the note's order, numbered among themselves", () => {
+    const byId = new Map<string, RetrievalPrompt>(note.prompts.map((p) => [p.id, p]));
+    const placedPrompts = ofType("prompt").flatMap((b) => (byId.has(String(b.promptId)) ? [byId.get(String(b.promptId))!] : []));
     const recalls = deck.cards.filter((c): c is Extract<Card, { kind: "recall" }> => c.kind === "recall");
-    const placed = trialBlocks().filter((b) => (b as { type?: string }).type === "prompt").map((b) => (b as { promptId: string }).promptId);
+    // At most two (the owner's answer 3: the design).
     expect(recalls.length).toBeLessThanOrEqual(2);
-    expect(recalls.map((c) => c.prompt.id).every((id) => placed.includes(id))).toBe(true);
+    expect(recalls.map((c) => c.prompt.id)).toEqual(chooseRecall(placedPrompts).map((p) => p.id));
     expect(recalls.map((c) => [c.index, c.total])).toEqual(recalls.map((_, i) => [i + 1, recalls.length]));
-    expect(recalls.map((c) => c.prompt.id)).toEqual(["rp.fm.u1.algebraic-fractions-simplify.02", "rp.fm.u1.algebraic-fractions-simplify.08"]);
-    expect(deck.cards.slice(-3).map((c) => c.kind)).toEqual(["recall", "recall", "close"]);
-    expect(buildDeck(trialBlocks(), []).stats.recall).toBe(0);
+    if (recalls.length > 0) expect(deck.cards.slice(-recalls.length - 1).map((c) => c.kind)).toEqual([...recalls.map(() => "recall"), "close"]);
+    expect(buildDeck(note.blocks, []).stats.recall).toBe(0);
   });
 
-  it("brings a missed gate back once, before the recap, without a second record; with no twin it is the gate again", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
-    const [first, , , , , sixth] = deckGateIds(deck.cards);
-    const again = withRetries(deck.cards, [first, sixth]);
+  it("brings a missed Your turn back once, before the recap, without a second record: its twin where the note gives one, else itself", () => {
+    const ids = deckGateIds(deck.cards);
+    const [first, last] = [ids[0], ids[ids.length - 1]];
+    const hasTwin = (id: string) => Boolean((ofType("gate").find((g) => g.id === id) as { twin?: unknown } | undefined)?.twin);
+    const again = withRetries(deck.cards, [first, last]);
     expect(again).toHaveLength(deck.cards.length + 2);
     const recapAt = again.findIndex((c) => c.kind === "recap");
-    expect(again[recapAt - 2]).toMatchObject({ kind: "gate", key: `retry:${first}`, retry: true, twin: false, gate: { id: first } });
-    expect(again[recapAt - 1]).toMatchObject({ kind: "gate", key: `retry:${sixth}`, retry: true, twin: false });
+    // The retry card carries the gate itself; the runner asks its twin (twinGate) where `twin` is set.
+    expect(again[recapAt - 2]).toMatchObject({ kind: "gate", key: `retry:${first}`, retry: true, twin: hasTwin(first), gate: { id: first } });
+    expect(again[recapAt - 1]).toMatchObject({ kind: "gate", key: `retry:${last}`, retry: true, twin: hasTwin(last) });
     expect(deckGateIds(again)).toEqual(deckGateIds(deck.cards));
     expect(deckStats(again).gates).toBe(deck.stats.gates);
     expect(withRetries(again, [first])).toHaveLength(deck.cards.length + 1);
@@ -280,21 +353,33 @@ describe("the trial topic's deck as it stands (fm1/algebraic-fractions-simplify,
   });
 
   it("names every card with a stable key, and every key the enrichment names is a card of the deck", () => {
-    const deck = deckFor(TRIAL_ID, trialBlocks(), trialPrompts());
     const keys = deck.cards.map((c) => c.key);
     expect(new Set(keys).size).toBe(keys.length);
-    for (const id of noteGateIds(trialBlocks())) expect(keys).toContain(`gate:${id}`);
-    expect(keys).toContain("media:video:tlKN8NNNxdI");
-    expect(keys).toContain("callout:notonspec:beyond-this-specification");
-    expect(keys).toContain("callout:examiner:summer-2024-fm1-q8-a");
-    expect(keys).toContain("callout:why:why-a-lone-number-or-x-still-counts");
-    expect(keys).toContain("recall:rp.fm.u1.algebraic-fractions-simplify.02");
-    expect(keys).toContain("recall:rp.fm.u1.algebraic-fractions-simplify.08");
-    const enrichment = enrichmentFor(TRIAL_ID)!;
+    for (const id of noteGateIds(note.blocks)) expect(keys).toContain(`gate:${id}`);
+    for (const v of ofType("video")) expect(keys).toContain(`media:video:${String(v.videoId)}`);
+    for (const c of ofType("callout")) expect(keys.some((k) => k.startsWith(`callout:${String(c.kind)}:${slug(String(c.title ?? ""))}`)), String(c.title)).toBe(true);
+    for (const c of deck.cards) if (c.kind === "recall") expect(keys).toContain(`recall:${c.prompt.id}`);
     for (const key of Object.keys(enrichment.illustrations ?? {})) expect(keys).toContain(key);
-    // An interaction names the See it card a converted note will have, then the card it has today: one of them is here.
+    // An interaction names the card it follows in each shape the note has had: one of them is in this deck.
     for (const { after } of enrichment.interactions ?? []) expect((typeof after === "string" ? [after] : after).some((k) => keys.includes(k)), JSON.stringify(after)).toBe(true);
     for (const gateId of Object.keys(enrichment.reactions ?? {})) expect(keys).toContain(`gate:${gateId}`);
+  });
+
+  it("puts the figure she acts on after the card that works the three moves in front of her, then the section's video, then its Your turn", () => {
+    const at = deck.cards.findIndex((c) => c.kind === "interaction");
+    expect(deck.cards[at]).toMatchObject({ kind: "interaction", id: "afs.tap-to-cancel", key: "interaction:afs.tap-to-cancel" });
+    const host = deck.cards[at - 1];
+    const after = enrichment.interactions![0].after;
+    expect(typeof after === "string" ? [after] : after).toContain(host.key);
+    expect(showsWork(host)).toBe(true);
+    expect(deck.cards[at + 1]).toMatchObject({ kind: "media", block: { type: "video" } });
+    expect(deck.cards[at + 2]).toMatchObject({ kind: "gate", afterMedia: "video" });
+    // A registered drawing stands on the card that reads the hero's drawing, and on no other card.
+    for (const [key, id] of Object.entries(enrichment.illustrations ?? {})) {
+      const c = deck.cards.find((k) => k.key === key)!;
+      expect(id).toBe("afs.cancel");
+      if (c.kind === "idea") expect(c.md, key).toMatch(/\bdrawing\b/);
+    }
   });
 });
 
@@ -391,8 +476,9 @@ describe("a teach-first note's deck: explain → See it → Your turn", () => {
     const sees = deck.cards.filter((c): c is SeeCard => c.kind === "see");
     expect(sees.map(cardSeconds)).toEqual([3, 3, 3, 2].map((steps) => steps * SEE_STEP_SECONDS));
     expect(promiseLine(deck.stats)).toBe("20 cards · 5 your turns · 4 see its · 1 video");
-    // Every card's cost, and only those, makes the minutes.
-    expect(deck.stats.minutes).toBe(Math.max(1, Math.round(deck.cards.reduce((n, c) => n + cardSeconds(c), 0) / 60)));
+    // The minutes are the minute model's (./minutes.ts, the one Read prices with too: part by part, rounded once, a whole
+    // minute for a figure she acts on), and never fewer than the cards' own seconds, rounded down.
+    expect(deck.stats.minutes).toBeGreaterThanOrEqual(Math.floor(deck.cards.reduce((n, c) => n + cardSeconds(c), 0) / 60));
   });
 
   it("counts the same cards without the bundle's worked examples, and never shows an empty See it as if it were one", () => {
@@ -460,7 +546,9 @@ function grammarBreaches(file: string, blocks: readonly unknown[], deckCards: re
 
 describe("the grammar's rules", () => {
   const withBundles = publishedNotes.map((n) => {
-    const bundleFile = path.join(ROOT, "packs", ...n.file.split("/"), "bundle.json");
+    // packs/<subject>/content/<unit>/<slug>/bundle.json: the note's file is "<subject>/<unit>/<slug>".
+    const [subject, unit, slugName] = n.file.split("/");
+    const bundleFile = path.join(ROOT, "packs", subject!, "content", unit!, slugName!, "bundle.json");
     const bundle = fs.existsSync(bundleFile) ? (readJson(bundleFile) as { note?: { verification?: string } | null; verification?: unknown[]; prompts?: RetrievalPrompt[]; workedExamples?: WorkedExample[] }) : null;
     const readiness = bundle ? lessonReadiness({ note: bundle.note ?? null, noteBlocks: n.blocks, verification: bundle.verification ?? [] }) : null;
     const deck = buildDeck(n.blocks, bundle?.prompts ?? [], null, { workedExamples: bundle?.workedExamples ?? [] });
