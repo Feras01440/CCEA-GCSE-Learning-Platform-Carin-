@@ -1,236 +1,666 @@
 [
   {
     "type": "hero",
-    "lede": "A train pulls out of a station, runs at line speed, then brakes for the next one. Draw its velocity against time and the whole story is one line. Two readings come off it: how steeply the line rises, and how much space sits underneath it.",
+    "lede": "A go-kart pulls away from the grid, holds its top speed down the straight, then brakes for the hairpin. Draw its velocity against time and the whole run is one line. Two readings come off it: how steeply the line climbs, and how much space sits underneath.",
     "can": [
-      "Read an acceleration as the gradient of one section.",
-      "Find a distance as the area under the line.",
-      "Split that area into triangles, rectangles and trapezia."
+      "Read an acceleration as the gradient of one stage.",
+      "Find a distance as the area under the line, split at every joint.",
+      "Solve for an unknown stage, and for a catch-up on one clock."
     ],
-    "minutes": 15
+    "minutes": 21
   },
   {
     "type": "h",
-    "text": "Speed up, hold steady, slow down"
-  },
-  {
-    "type": "p",
-    "md": "On a velocity-time graph the height is how fast, not how far. Two readings come off it and they answer different questions: the gradient of a section is its acceleration, the area underneath it the distance covered. Split the shape at every joint and the journey comes apart into pieces you can already work out."
+    "text": "Three readings off one line",
+    "role": "idea"
   },
   {
     "type": "figure",
-    "alt": "A velocity/time graph for a train: a straight line from (0, 0) to (20, 24), a horizontal line to (50, 24), then a straight line down to (80, 0), with the area beneath shaded and split by dashed lines at 20 s and 50 s.",
-    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M85.7 20V308M109.4 20V308M133.1 20V308M156.8 20V308M180.5 20V308M204.2 20V308M227.9 20V308M251.6 20V308M275.3 20V308M299 20V308M322.7 20V308M346.4 20V308M370.1 20V308M393.8 20V308M417.5 20V308M441.2 20V308M464.9 20V308M488.6 20V308M512.3 20V308M536 20V308M62 308H536M62 298.4H536M62 288.8H536M62 279.2H536M62 269.6H536M62 260H536M62 250.4H536M62 240.8H536M62 231.2H536M62 221.6H536M62 212H536M62 202.4H536M62 192.8H536M62 183.2H536M62 173.6H536M62 164H536M62 154.4H536M62 144.8H536M62 135.2H536M62 125.6H536M62 116H536M62 106.4H536M62 96.8H536M62 87.2H536M62 77.6H536M62 68H536M62 58.4H536M62 48.8H536M62 39.2H536M62 29.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M180.5 20V308M299 20V308M417.5 20V308M536 20V308M62 308H536M62 260H536M62 212H536M62 164H536M62 116H536M62 68H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 308L180.5 77.6L358.3 77.6L536 308L536 308Z' fill='currentColor' fill-opacity='0.14' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.5'/><path d='M62 20V308M62 308H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 308l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M180.5 308v5M299 308v5M417.5 308v5M536 308v5M57 308h5M57 260h5M57 212h5M57 164h5M57 116h5M57 68h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='180.5' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>40</text><text x='417.5' y='326' text-anchor='middle'>60</text><text x='536' y='326' text-anchor='middle'>80</text><text x='53' y='312' text-anchor='end'>0</text><text x='53' y='264' text-anchor='end'>5</text><text x='53' y='216' text-anchor='end'>10</text><text x='53' y='168' text-anchor='end'>15</text><text x='53' y='120' text-anchor='end'>20</text><text x='53' y='72' text-anchor='end'>25</text><text x='53' y='24' text-anchor='end'>30</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Velocity (m/s)</text></g><path d='M180.5 308L180.5 77.6M358.3 308L358.3 77.6' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75'/><path d='M62 308L180.5 77.6L358.3 77.6L536 308' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='62' cy='308' r='3' fill='currentColor'/><circle cx='180.5' cy='77.6' r='3' fill='currentColor'/><circle cx='358.3' cy='77.6' r='3' fill='currentColor'/><circle cx='536' cy='308' r='3' fill='currentColor'/></svg>",
-    "caption": "A train leaving a station. The shaded area is the distance it covers."
-  },
-  {
-    "type": "h",
-    "text": "1. Three readings, and they never swap"
+    "alt": "A velocity/time graph for a go-kart: a straight line from the origin up to 14 m/s at 7 s, a horizontal line at 14 m/s to 25 s, then a straight line down to rest at 30 s.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M46 246L119.5 60.5L308.5 60.5L361 246Z' fill='currentColor' fill-opacity='0.12' stroke-linejoin='round'/><path d='M119.5 60.5L119.5 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M308.5 60.5L308.5 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 60.5L119.5 60.5' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='3 4' stroke-opacity='0.7' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M119.5 246L119.5 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='119.5' y='266' text-anchor='middle' font-size='15'>7</text><path d='M308.5 246L308.5 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='308.5' y='266' text-anchor='middle' font-size='15'>25</text><path d='M361 246L361 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='361' y='266' text-anchor='middle' font-size='15'>30</text><path d='M41 60.5L46 60.5' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='65.5' text-anchor='end' font-size='15'>14</text><path d='M46 246L119.5 60.5L308.5 60.5L361 246' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></g></svg>",
+    "caption": "A go-kart's first 30 seconds: speed up, hold, brake."
   },
   {
     "type": "p",
-    "md": "**Height** is the velocity at that instant. **Gradient** is the acceleration. **Area** between the line and the time axis is the distance travelled.\n\nA horizontal section is now a steady velocity, not a body at rest. That is the one habit a displacement/time graph teaches you that has to be unlearned here."
+    "md": "On a velocity/time graph the **height** is how fast at that instant, the **gradient** of a straight stage is its acceleration, and the **area** between the line and the time axis is the distance travelled. A flat stage is a steady speed, not a stop. A stage sloping down is a deceleration: give its size, and say that it is one."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Calculate the go-kart's acceleration during its first 7 seconds.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Rise $= 14 - 0 = 14$ m/s; run $= 7 - 0 = 7$ s",
+        "decision": "Take the two ends of that stage only. The rise is the change in velocity; the run is the time the change took."
+      },
+      {
+        "n": 2,
+        "working": "$a = \\dfrac{14}{7}$",
+        "decision": "Gradient is rise over run, so the units come out in metres per second, per second.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$a = 2$ m/s²",
+        "decision": "The line climbs, so this is an acceleration, not a deceleration.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g1",
-    "kind": "blank",
-    "prompt": "On a velocity/time graph, the area under the graph gives the ____ travelled.",
-    "answer": "distance | the distance | distance travelled",
-    "explain": "Metres per second multiplied by seconds gives metres, so an area on these axes is a length of road."
-  },
-  {
-    "type": "h",
-    "text": "2. Gradient is acceleration"
-  },
-  {
-    "type": "figure",
-    "alt": "The same train graph with dashed lines showing a rise of 24 metres per second over a run of 20 seconds, and a fall of 24 metres per second over a run of 30 seconds.",
-    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M85.7 20V308M109.4 20V308M133.1 20V308M156.8 20V308M180.5 20V308M204.2 20V308M227.9 20V308M251.6 20V308M275.3 20V308M299 20V308M322.7 20V308M346.4 20V308M370.1 20V308M393.8 20V308M417.5 20V308M441.2 20V308M464.9 20V308M488.6 20V308M512.3 20V308M536 20V308M62 308H536M62 298.4H536M62 288.8H536M62 279.2H536M62 269.6H536M62 260H536M62 250.4H536M62 240.8H536M62 231.2H536M62 221.6H536M62 212H536M62 202.4H536M62 192.8H536M62 183.2H536M62 173.6H536M62 164H536M62 154.4H536M62 144.8H536M62 135.2H536M62 125.6H536M62 116H536M62 106.4H536M62 96.8H536M62 87.2H536M62 77.6H536M62 68H536M62 58.4H536M62 48.8H536M62 39.2H536M62 29.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M180.5 20V308M299 20V308M417.5 20V308M536 20V308M62 308H536M62 260H536M62 212H536M62 164H536M62 116H536M62 68H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 308H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 308l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M180.5 308v5M299 308v5M417.5 308v5M536 308v5M57 308h5M57 260h5M57 212h5M57 164h5M57 116h5M57 68h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='180.5' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>40</text><text x='417.5' y='326' text-anchor='middle'>60</text><text x='536' y='326' text-anchor='middle'>80</text><text x='53' y='312' text-anchor='end'>0</text><text x='53' y='264' text-anchor='end'>5</text><text x='53' y='216' text-anchor='end'>10</text><text x='53' y='168' text-anchor='end'>15</text><text x='53' y='120' text-anchor='end'>20</text><text x='53' y='72' text-anchor='end'>25</text><text x='53' y='24' text-anchor='end'>30</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Velocity (m/s)</text></g><path d='M62 308L180.5 308M180.5 308L180.5 77.6M358.3 77.6L536 77.6M536 77.6L536 308' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75'/><path d='M62 308L180.5 77.6L358.3 77.6L536 308' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><circle cx='62' cy='308' r='3' fill='currentColor'/><circle cx='180.5' cy='77.6' r='3' fill='currentColor'/><circle cx='358.3' cy='77.6' r='3' fill='currentColor'/><circle cx='536' cy='308' r='3' fill='currentColor'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='121.3' y='322' text-anchor='middle' font-size='11.5'>20 s</text><text x='186.4' y='192.8' text-anchor='start' font-size='11.5'>24 m/s</text><text x='447.1' y='72.6' text-anchor='middle' font-size='11.5'>30 s</text><text x='530.1' y='192.8' text-anchor='end' font-size='11.5'>-24 m/s</text></g></svg>",
-    "caption": "Rise over run again, but the rise is now a change in velocity."
-  },
-  {
-    "type": "p",
-    "md": "Take the two ends of a section, subtract the velocities for the rise, subtract the times for the run, and divide. The units follow: metres per second, per second, written m/s².\n\nA falling section has a negative gradient, and that is a deceleration. Where a question asks for the deceleration, give its size and say what it is."
-  },
-  {
-    "type": "sim",
-    "provider": "phet",
-    "url": "https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html",
-    "title": "PhET: Forces and Motion: Basics",
-    "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)",
-    "licence": "CC BY-NC 4.0",
-    "task": "Open the Acceleration screen, tick the speedometer, and push with a small steady force. The speed climbs at a steady rate: that is a straight sloping line. Take the force away and the speed holds, which is a horizontal line with the box still moving. Push the other way and the speed falls."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
+    "id": "g10",
     "kind": "number",
-    "prompt": "Work out the acceleration of the train during the first 20 seconds, in m/s².",
-    "answer": "1.2",
-    "explain": "The velocity rises by 24 m/s in 20 s, so $24 \\div 20 = 1.2$ m/s². Gradient, not area."
+    "prompt": "The go-kart brakes from 14 m/s to rest between 25 s and 30 s. What is its deceleration, in m/s²?",
+    "answer": "2.8",
+    "explain": "Rise over run on the last stage: the velocity drops by 14 m/s in $30 - 25 = 5$ s, so $14 \\div 5 = 2.8$. As in step 1 of See it, the run is the stage's own time, not the 30 s on the clock, and a deceleration is given as a positive size.",
+    "twin": {
+      "prompt": "A scooter slows steadily from 15 m/s to rest between 36 s and 42 s. What is its deceleration, in m/s²?",
+      "answer": "2.5",
+      "explain": "A drop of 15 m/s over $42 - 36 = 6$ s: $15 \\div 6 = 2.5$ m/s². The run is the stage's own 6 s."
+    }
   },
   {
     "type": "h",
-    "text": "3. Area is distance"
+    "text": "Why an area is a distance",
+    "role": "why"
   },
   {
     "type": "figure",
-    "alt": "The same train graph with the three areas labelled 240 m, 720 m and 360 m.",
-    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M85.7 20V308M109.4 20V308M133.1 20V308M156.8 20V308M180.5 20V308M204.2 20V308M227.9 20V308M251.6 20V308M275.3 20V308M299 20V308M322.7 20V308M346.4 20V308M370.1 20V308M393.8 20V308M417.5 20V308M441.2 20V308M464.9 20V308M488.6 20V308M512.3 20V308M536 20V308M62 308H536M62 298.4H536M62 288.8H536M62 279.2H536M62 269.6H536M62 260H536M62 250.4H536M62 240.8H536M62 231.2H536M62 221.6H536M62 212H536M62 202.4H536M62 192.8H536M62 183.2H536M62 173.6H536M62 164H536M62 154.4H536M62 144.8H536M62 135.2H536M62 125.6H536M62 116H536M62 106.4H536M62 96.8H536M62 87.2H536M62 77.6H536M62 68H536M62 58.4H536M62 48.8H536M62 39.2H536M62 29.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M180.5 20V308M299 20V308M417.5 20V308M536 20V308M62 308H536M62 260H536M62 212H536M62 164H536M62 116H536M62 68H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 308L180.5 77.6L358.3 77.6L536 308L536 308Z' fill='currentColor' fill-opacity='0.14' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.5'/><path d='M62 20V308M62 308H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 308l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M180.5 308v5M299 308v5M417.5 308v5M536 308v5M57 308h5M57 260h5M57 212h5M57 164h5M57 116h5M57 68h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='180.5' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>40</text><text x='417.5' y='326' text-anchor='middle'>60</text><text x='536' y='326' text-anchor='middle'>80</text><text x='53' y='312' text-anchor='end'>0</text><text x='53' y='264' text-anchor='end'>5</text><text x='53' y='216' text-anchor='end'>10</text><text x='53' y='168' text-anchor='end'>15</text><text x='53' y='120' text-anchor='end'>20</text><text x='53' y='72' text-anchor='end'>25</text><text x='53' y='24' text-anchor='end'>30</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Velocity (m/s)</text></g><path d='M180.5 308L180.5 77.6M358.3 308L358.3 77.6' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75'/><path d='M62 308L180.5 77.6L358.3 77.6L536 308' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='139' y='250.4' text-anchor='middle' font-size='11.5'>240 m</text><text x='269.4' y='202.4' text-anchor='middle' font-size='11.5'>720 m</text><text x='399.7' y='250.4' text-anchor='middle' font-size='11.5'>360 m</text></g></svg>",
-    "caption": "Triangle, rectangle, triangle: $240 + 720 + 360 = 1320$ m."
+    "alt": "Two boats on one velocity/time graph over 52 seconds: a dashed horizontal line at 3 m/s for the steady boat, and a straight line from rest up to 3 m/s for the second boat, with thin strips under the sloping line filling half of the rectangle.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M46 246L46 236.1L85 236.1L85 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M85 246L85 216.2L124 216.2L124 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M124 246L124 196.3L163 196.3L163 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M163 246L163 176.4L202 176.4L202 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M202 246L202 156.6L241 156.6L241 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M241 246L241 136.7L280 136.7L280 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M280 246L280 116.8L319 116.8L319 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M319 246L319 96.9L358 96.9L358 246Z' fill='currentColor' fill-opacity='0.16' stroke='currentColor' stroke-width='1' stroke-linejoin='round'/><path d='M46 87L358 87L358 246' fill='none' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M358 246L358 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='358' y='266' text-anchor='middle' font-size='15'>52</text><path d='M41 87L46 87' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='92' text-anchor='end' font-size='15'>3</text><path d='M46 246L358 87' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/><text x='202' y='78' text-anchor='middle' font-size='15'>steady boat</text><text x='250' y='121.5' text-anchor='end' font-size='15'>second boat</text></g></svg>",
+    "caption": "Each strip is a velocity times a short time: a short distance."
   },
   {
     "type": "p",
-    "md": "Dashed lines at every joint cut the shape into pieces you already know: $\\tfrac{1}{2} \\times 20 \\times 24 = 240$ m, then $30 \\times 24 = 720$ m, then $\\tfrac{1}{2} \\times 30 \\times 24 = 360$ m, giving $1320$ m.\n\nThe whole shape here is also a trapezium, so $\\tfrac{1}{2}(80 + 30) \\times 24$ gives the same $1320$ m in one line."
+    "md": "Over a very short time the velocity hardly changes, so the distance covered is velocity × time: the area of a thin strip under the line, metres per second times seconds. Add every strip and you have the whole journey. That is why the area under the line is the distance, why a flat stage still adds distance, and why the units come out in metres."
   },
   {
-    "type": "callout",
-    "kind": "why",
-    "title": "Why an area is a distance",
-    "md": "A thin strip under the graph is a velocity multiplied by a short time, which is a short length of road. Add every strip and you have the whole journey. That is why the units come out in metres and why a flat section still adds distance."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A rowing boat moves at a steady 3 m/s for 52 s. A second boat speeds up steadily from rest to 3 m/s over the same 52 s. How far does each travel?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "First boat: $3 \\times 52 = 156$ m",
+        "decision": "Every strip is 3 m/s high, so the area is a rectangle: velocity times time.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Second boat: $\\tfrac{1}{2} \\times 52 \\times 3 = 78$ m",
+        "decision": "Its strips start at nothing and grow to 3 m/s, so together they fill half of that rectangle: a triangle.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Check: average speed $\\tfrac{0 + 3}{2} = 1.5$ m/s, and $1.5 \\times 52 = 78$ m",
+        "decision": "Half the distance, because its average speed is half of 3. The area and the average agree."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g3",
+    "id": "g11",
     "kind": "number",
-    "prompt": "A body's velocity rises uniformly from 8 m/s to 20 m/s over 15 s. How far does it travel, in metres?",
-    "answer": "210",
-    "explain": "A trapezium: half of $(8 + 20)$, times 15, which is $14 \\times 15 = 210$ m. Taking $20 \\times 15$ would count the empty triangle above the line."
+    "prompt": "A boat speeds up steadily from rest to 5 m/s over 44 s. How far does it travel, in metres?",
+    "answer": "110",
+    "explain": "Its strips grow from nothing to 5 m/s, so they fill half the rectangle $5 \\times 44$: $\\tfrac{1}{2} \\times 44 \\times 5 = 110$ m. That is step 2 of See it on new numbers; the whole rectangle, 220 m, counts the empty space above the line.",
+    "twin": {
+      "prompt": "A sledge slows steadily from 10 m/s to rest over 13 s. How far does it slide, in metres?",
+      "answer": "65",
+      "explain": "Its strips shrink from 10 m/s to nothing: half the rectangle $10 \\times 13$, so $\\tfrac{1}{2} \\times 13 \\times 10 = 65$ m."
+    }
   },
   {
     "type": "h",
-    "text": "4. Which shape is which"
+    "text": "Split the shape at every joint",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "A table of the pieces an area splits into: a rectangle is velocity times time; a triangle is half base times height; a trapezium is half the sum of the first and last velocities times the time; and the answer should sit between the two rectangles.",
-    "svg": "<svg viewBox='0 0 404 210' xmlns='http://www.w3.org/2000/svg' width='404' height='210'><rect x='2' y='2' width='400' height='206' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.5'/><path d='M6 76H398M6 106H398M6 136H398M6 166H398M6 196H398M136 46V196' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.45'/><g fill='currentColor' font-family='inherit'><text x='12' y='35' font-size='13.5' font-weight='600'>Split the area at every joint</text><text x='12' y='65' font-size='12' font-weight='600'>Piece</text><text x='142' y='65' font-size='12' font-weight='600'>Its area</text><text x='12' y='95' font-size='13'>rectangle</text><text x='142' y='95' font-size='13'>velocity × time</text><text x='12' y='125' font-size='13'>triangle</text><text x='142' y='125' font-size='13'>½ × base × height</text><text x='12' y='155' font-size='13'>trapezium</text><text x='142' y='155' font-size='13'>½ (first velocity + last) × time</text><text x='12' y='185' font-size='13'>a check</text><text x='142' y='185' font-size='13'>it sits between the two rectangles</text></g></svg>",
-    "caption": "Three pieces, and one check worth ten seconds."
+    "alt": "The go-kart's graph with dashed lines down from the joints at 7 s and 25 s, cutting the area into piece A (a triangle), piece B (a rectangle) and piece C (a triangle).",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M46 246L119.5 60.5L119.5 246Z' fill='currentColor' fill-opacity='0.2' stroke-linejoin='round'/><path d='M119.5 246L119.5 60.5L308.5 60.5L308.5 246Z' fill='currentColor' fill-opacity='0.1' stroke-linejoin='round'/><path d='M308.5 246L308.5 60.5L361 246Z' fill='currentColor' fill-opacity='0.2' stroke-linejoin='round'/><path d='M119.5 60.5L119.5 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M308.5 60.5L308.5 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M119.5 246L119.5 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='119.5' y='266' text-anchor='middle' font-size='15'>7</text><path d='M308.5 246L308.5 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='308.5' y='266' text-anchor='middle' font-size='15'>25</text><path d='M361 246L361 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='361' y='266' text-anchor='middle' font-size='15'>30</text><path d='M41 60.5L46 60.5' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='65.5' text-anchor='end' font-size='15'>14</text><path d='M46 246L119.5 60.5L308.5 60.5L361 246' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/><text x='98.5' y='199.6' text-anchor='middle' font-size='15'>A</text><text x='214' y='166.5' text-anchor='middle' font-size='15'>B</text><text x='325.3' y='199.6' text-anchor='middle' font-size='15'>C</text></g></svg>",
+    "caption": "Dashed lines at each joint: A and C are triangles, B is a rectangle."
   },
   {
     "type": "p",
-    "md": "A flat section gives a rectangle, a section starting or ending at rest gives a triangle, and any other sloping section gives a trapezium.\n\nThe check in the last row catches almost every slip: a stage from 9 m/s to 3 m/s over 30 s must cover more than $3 \\times 30 = 90$ m and less than $9 \\times 30 = 270$ m."
+    "md": "A journey in stages gives a shape you cannot find in one go. Draw a dashed line from every joint down to the time axis. Each piece is then a shape you know: a **triangle** where a stage starts or ends at rest, a **rectangle** where the line is flat, a **trapezium** where it slopes between two speeds. Work each piece and add."
   },
   {
-    "type": "gate",
-    "id": "g4",
-    "kind": "choice",
-    "prompt": "A stage falls from 9 m/s to 3 m/s over 30 s. Which answer is possible?",
-    "options": [
-      "$180$ m",
-      "$360$ m",
-      "$45$ m"
-    ],
-    "answer": "$180$ m",
-    "explain": "It has to lie between 90 m and 270 m. The 360 m comes from leaving the one half out, and 45 m is far too small."
-  },
-  {
-    "type": "h",
-    "text": "5. A worked example: an unknown last stage"
-  },
-  {
-    "type": "figure",
-    "alt": "A velocity/time graph for a tram: a straight line from (0, 18) down to (10, 12), a horizontal line to (35, 12), then a straight line down to (60, 0), with the three areas labelled 150 m, 300 m and 150 m.",
-    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M77.8 20V308M93.6 20V308M109.4 20V308M125.2 20V308M141 20V308M156.8 20V308M172.6 20V308M188.4 20V308M204.2 20V308M220 20V308M235.8 20V308M251.6 20V308M267.4 20V308M283.2 20V308M299 20V308M314.8 20V308M330.6 20V308M346.4 20V308M362.2 20V308M378 20V308M393.8 20V308M409.6 20V308M425.4 20V308M441.2 20V308M457 20V308M472.8 20V308M488.6 20V308M504.4 20V308M520.2 20V308M536 20V308M62 308H536M62 293.6H536M62 279.2H536M62 264.8H536M62 250.4H536M62 236H536M62 221.6H536M62 207.2H536M62 192.8H536M62 178.4H536M62 164H536M62 149.6H536M62 135.2H536M62 120.8H536M62 106.4H536M62 92H536M62 77.6H536M62 63.2H536M62 48.8H536M62 34.4H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M141 20V308M220 20V308M299 20V308M378 20V308M457 20V308M536 20V308M62 308H536M62 236H536M62 164H536M62 92H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 308L62 48.8L141 135.2L338.5 135.2L536 308Z' fill='currentColor' fill-opacity='0.14' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.5'/><path d='M62 20V308M62 308H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 308l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M141 308v5M220 308v5M299 308v5M378 308v5M457 308v5M536 308v5M57 308h5M57 236h5M57 164h5M57 92h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='141' y='326' text-anchor='middle'>10</text><text x='220' y='326' text-anchor='middle'>20</text><text x='299' y='326' text-anchor='middle'>30</text><text x='378' y='326' text-anchor='middle'>40</text><text x='457' y='326' text-anchor='middle'>50</text><text x='536' y='326' text-anchor='middle'>60</text><text x='53' y='312' text-anchor='end'>0</text><text x='53' y='240' text-anchor='end'>5</text><text x='53' y='168' text-anchor='end'>10</text><text x='53' y='96' text-anchor='end'>15</text><text x='53' y='24' text-anchor='end'>20</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Velocity (m/s)</text></g><path d='M141 308L141 135.2M338.5 308L338.5 135.2' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75'/><path d='M62 48.8L141 135.2L338.5 135.2L536 308' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='101.5' y='221.6' text-anchor='middle' font-size='11.5'>150 m</text><text x='239.8' y='221.6' text-anchor='middle' font-size='11.5'>300 m</text><text x='433.3' y='264.8' text-anchor='middle' font-size='11.5'>150 m</text></g></svg>",
-    "caption": "A tram braking into a terminus 600 m away."
-  },
-  {
-    "type": "p",
-    "md": "It brakes from 18 m/s at 0.6 m/s² for 10 s, so $V = 18 - 0.6 \\times 10 = 12$ m/s.\n**First two stages:** $\\tfrac{1}{2}(18 + 12) \\times 10 = 150$ m, then $12 \\times 25 = 300$ m, so 450 m.\n**Still to run:** $600 - 450 = 150$ m."
-  },
-  {
-    "type": "gate",
-    "id": "g8",
-    "kind": "choice",
-    "prompt": "You find the last braking stage takes 26 s, after 20 s of journey already gone. The question asks for the total time to the crossing. What do you write?",
-    "options": [
-      "46 s",
-      "26 s",
-      "20 s"
-    ],
-    "answer": "46 s",
-    "explain": "$20 + 26 = 46$ s. The scheme gives a mark for finding the last stage's time and then adding on the seconds already elapsed, which is exactly this step."
-  },
-  {
-    "type": "p",
-    "md": "**Last stage:** a triangle of height 12, so $\\tfrac{1}{2} \\times 12 \\times t = 150$ gives $t = 25$ s.\n**Total time:** $10 + 25 + 25 = 60$ s."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Calculate the total distance the go-kart travels in its 30 seconds.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "First stage: $\\tfrac{1}{2} \\times 7 \\times 14 = 49$ m",
+        "decision": "A triangle, because it starts at rest. Base 7 s, height 14 m/s.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Steady stage: $(25 - 7) \\times 14 = 252$ m",
+        "decision": "A rectangle. Its width is the stage's own 18 s: end time minus start time.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Last stage: $\\tfrac{1}{2} \\times 5 \\times 14 = 35$ m",
+        "decision": "A triangle again: it ends at rest, 5 s wide.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "Total $= 49 + 252 + 35 = 336$ m",
+        "decision": "Add the pieces. The whole shape is also one trapezium, $\\tfrac{1}{2}(30 + 18) \\times 14 = 336$: use one route and check with the other.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "3mqIlj9YG_Q",
     "title": "Using Velocity Time Graphs to find Distance and Acceleration",
     "channel": "Maths Genie",
-    "why": "The same two readings on one picture, at a slower pace. Watch how the area is split before anything is multiplied."
+    "why": "The same two readings at a slower pace. Watch the area split at each joint before anything is multiplied."
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g12",
     "kind": "number",
-    "prompt": "A body decelerates uniformly from 16 m/s to rest, covering 128 m. How many seconds does it take?",
-    "answer": "16",
-    "explain": "The stage is a triangle: $\\tfrac{1}{2} \\times 16 \\times t = 128$, so $8t = 128$ and $t = 16$ s. Write the area, set it equal to the distance, solve."
+    "prompt": "A delivery robot speeds up from rest to 2 m/s in 5 s, holds 2 m/s until 40 s, then stops steadily at 44 s. How far does it travel, in metres?",
+    "answer": "79",
+    "explain": "Split at the joints, as in See it: triangle $\\tfrac{1}{2} \\times 5 \\times 2 = 5$, rectangle $35 \\times 2 = 70$, triangle $\\tfrac{1}{2} \\times 4 \\times 2 = 4$, so 79 m. The rectangle is 35 s wide, from 5 s to 40 s.",
+    "twin": {
+      "prompt": "A toy train speeds up from rest to 2.5 m/s in 4 s, holds 2.5 m/s until 22 s, then stops steadily at 28 s. How far does it travel, in metres?",
+      "answer": "57.5",
+      "explain": "$\\tfrac{1}{2} \\times 4 \\times 2.5 = 5$, then $18 \\times 2.5 = 45$, then $\\tfrac{1}{2} \\times 6 \\times 2.5 = 7.5$: 57.5 m in all."
+    }
   },
   {
     "type": "h",
-    "text": "6. Two journeys on one grid"
+    "text": "A stage between two speeds",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "A velocity/time graph with two journeys: a bus as a horizontal line at 12 metres per second, and a taxi at rest until 8 seconds, rising in a straight line to 20 metres per second at 20 seconds and then horizontal, with a dashed line at 35 seconds.",
-    "svg": "<svg viewBox='0 0 560 360' xmlns='http://www.w3.org/2000/svg' width='560' height='360'><path d='M62 20V308M85.7 20V308M109.4 20V308M133.1 20V308M156.8 20V308M180.5 20V308M204.2 20V308M227.9 20V308M251.6 20V308M275.3 20V308M299 20V308M322.7 20V308M346.4 20V308M370.1 20V308M393.8 20V308M417.5 20V308M441.2 20V308M464.9 20V308M488.6 20V308M512.3 20V308M536 20V308M62 308H536M62 296.5H536M62 285H536M62 273.4H536M62 261.9H536M62 250.4H536M62 238.9H536M62 227.4H536M62 215.8H536M62 204.3H536M62 192.8H536M62 181.3H536M62 169.8H536M62 158.2H536M62 146.7H536M62 135.2H536M62 123.7H536M62 112.2H536M62 100.6H536M62 89.1H536M62 77.6H536M62 66.1H536M62 54.6H536M62 43H536M62 31.5H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.4' stroke-opacity='0.2'/><path d='M62 20V308M180.5 20V308M299 20V308M417.5 20V308M536 20V308M62 308H536M62 250.4H536M62 192.8H536M62 135.2H536M62 77.6H536M62 20H536' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M62 20V308M62 308H536' fill='none' stroke='currentColor' stroke-width='1.4'/><path d='M536 308l-7 -3.5v7Z M62 20l-3.5 7h7Z' fill='currentColor'/><path d='M62 308v5M180.5 308v5M299 308v5M417.5 308v5M536 308v5M57 308h5M57 250.4h5M57 192.8h5M57 135.2h5M57 77.6h5M57 20h5' fill='none' stroke='currentColor' stroke-width='1'/><g fill='currentColor' fill-opacity='0.8' font-family='inherit' font-size='11'><text x='62' y='326' text-anchor='middle'>0</text><text x='180.5' y='326' text-anchor='middle'>10</text><text x='299' y='326' text-anchor='middle'>20</text><text x='417.5' y='326' text-anchor='middle'>30</text><text x='536' y='326' text-anchor='middle'>40</text><text x='53' y='312' text-anchor='end'>0</text><text x='53' y='254.4' text-anchor='end'>5</text><text x='53' y='196.8' text-anchor='end'>10</text><text x='53' y='139.2' text-anchor='end'>15</text><text x='53' y='81.6' text-anchor='end'>20</text><text x='53' y='24' text-anchor='end'>25</text></g><g fill='currentColor' font-family='inherit' font-size='12.5'><text x='299' y='348' text-anchor='middle'>Time (s)</text><text transform='translate(15 164) rotate(-90)' text-anchor='middle'>Velocity (m/s)</text></g><path d='M476.8 308L476.8 77.6' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75'/><path d='M62 169.8L536 169.8' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><path d='M62 308L156.8 308L299 77.6L536 77.6' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><g fill='currentColor' font-family='inherit' font-size='11.5'><text x='488.6' y='152.5' text-anchor='end' font-size='11.5'>bus</text><text x='488.6' y='60.3' text-anchor='end' font-size='11.5'>taxi</text><text x='472' y='261.9' text-anchor='end' font-size='11.5'>level here</text></g></svg>",
-    "caption": "The taxi draws level at $T = 35$ s, which is 27 s after it started moving."
+    "alt": "A stage rising in a straight line from 5 m/s to 13 m/s over 14 s, its area shaded as a trapezium, with dashed lines at 5 m/s and 13 m/s marking the rectangles at the lower and the higher speed.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M46 246L46 179.8L340 73.8L340 246Z' fill='currentColor' fill-opacity='0.12' stroke-linejoin='round'/><path d='M46 179.8L340 179.8' fill='none' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 73.8L340 73.8' fill='none' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M340 73.8L340 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M340 246L340 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='340' y='266' text-anchor='middle' font-size='15'>14</text><path d='M41 179.8L46 179.8' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='184.8' text-anchor='end' font-size='15'>5</text><path d='M41 73.8L46 73.8' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='78.8' text-anchor='end' font-size='15'>13</text><path d='M46 179.8L340 73.8' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/><text x='193' y='65.8' text-anchor='middle' font-size='15'>rectangle at 13 m/s</text><text x='193' y='201.8' text-anchor='middle' font-size='15'>rectangle at 5 m/s</text></g></svg>",
+    "caption": "The trapezium lies between the rectangle at the lower speed and the one at the higher."
   },
   {
     "type": "p",
-    "md": "Start one clock when the first vehicle passes and call the time $T$. Write both distances as expressions in that same $T$: the bus covers $12T$, and the taxi covers $120 + 20(T - 20)$ once it is up to speed.\n\nLevel means equal distances from the same starting line, so set them equal and solve. The equation is linear, so no formula is needed."
+    "md": "When a stage slopes between two speeds, neither of them zero, its piece is a **trapezium**: half the sum of the two velocities, times the time. The answer must lie between the rectangle at the lower speed and the rectangle at the higher one. That check catches the commonest slip, the half left out, which lands beyond the higher rectangle."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why half the sum",
+    "md": "The speed changes steadily through the stage, so its average is halfway between the two ends: half of their sum. Average speed times time is distance, which is exactly what the trapezium's area works out."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A cyclist's velocity rises steadily from 5 m/s to 13 m/s over 14 s. How far does she travel in that time?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\tfrac{1}{2}(5 + 13) \\times 14$",
+        "decision": "The parallel sides are the two velocities; the width is the 14 s the stage lasts.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= 9 \\times 14 = 126$ m",
+        "decision": "Half the sum is the average of the two speeds, 9 m/s.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Check: $5 \\times 14 = 70 < 126 < 13 \\times 14 = 182$",
+        "decision": "It lies between the two rectangles, so the half is in."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g13",
     "kind": "choice",
-    "prompt": "In a catch-up question, what does 'draws level' tell you?",
+    "prompt": "A stage slows steadily from 19 m/s to 7 m/s over 15 s. Which distance is possible?",
     "options": [
-      "The two distances from the same starting line are equal",
-      "The two velocities are equal",
-      "The two accelerations are equal"
+      "$195$ m",
+      "$390$ m",
+      "$285$ m"
     ],
-    "answer": "The two distances from the same starting line are equal",
-    "explain": "Level is about position, so the areas under the two graphs are equal. The velocities are usually quite different at that moment, which is why one is overtaking the other."
+    "answer": "$195$ m",
+    "explain": "It must lie between $7 \\times 15 = 105$ m and $19 \\times 15 = 285$ m, as in step 3 of See it: $\\tfrac{1}{2}(19 + 7) \\times 15 = 195$ m. Leaving the half out doubles it, and the rectangle at 19 m/s counts space above a falling line.",
+    "twin": {
+      "prompt": "A stage rises steadily from 4 m/s to 14 m/s over 17 s. Which distance is possible?",
+      "options": [
+        "$153$ m",
+        "$306$ m",
+        "$238$ m"
+      ],
+      "answer": "$153$ m",
+      "explain": "Between $4 \\times 17 = 68$ and $14 \\times 17 = 238$: $\\tfrac{1}{2}(4 + 14) \\times 17 = 153$ m.",
+      "optionNotes": [
+        {
+          "option": "$306$ m",
+          "why": "The sum of the two speeds times 17 s, with the half left out, lands beyond the rectangle at the higher speed.",
+          "misconception": "fm.kin.half-omitted-in-area"
+        },
+        {
+          "option": "$238$ m",
+          "why": "The rectangle at 14 m/s counts the empty triangle above a line that is rising the whole time.",
+          "misconception": "fm.kin.area-as-rectangle"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$390$ m",
+        "why": "The sum of the two speeds times 15 s, with the half left out, lands beyond the rectangle at the higher speed.",
+        "misconception": "fm.kin.half-omitted-in-area"
+      },
+      {
+        "option": "$285$ m",
+        "why": "The rectangle at 19 m/s counts the empty triangle above a line that is falling the whole time.",
+        "misconception": "fm.kin.area-as-rectangle"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "7. Whose clock is the answer on?"
+    "text": "An unknown last stage",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "A table of the four steps of a catch-up: use one clock for both, started when the first vehicle passes; level means the two distances are equal; solving gives T on that shared clock; and the second vehicle has been going for T minus the head start.",
-    "svg": "<svg viewBox='0 0 469 210' xmlns='http://www.w3.org/2000/svg' width='469' height='210'><rect x='2' y='2' width='465' height='206' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.5'/><path d='M6 76H463M6 106H463M6 136H463M6 166H463M6 196H463M166 46V196' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.45'/><g fill='currentColor' font-family='inherit'><text x='12' y='35' font-size='13.5' font-weight='600'>A catch-up, in four steps</text><text x='12' y='65' font-size='12' font-weight='600'>Step</text><text x='172' y='65' font-size='12' font-weight='600'>What it says</text><text x='12' y='95' font-size='13'>one clock for both</text><text x='172' y='95' font-size='13'>start it when the first vehicle passes</text><text x='12' y='125' font-size='13'>level means</text><text x='172' y='125' font-size='13'>the two distances are equal</text><text x='12' y='155' font-size='13'>solve</text><text x='172' y='155' font-size='13'>gives T on that shared clock</text><text x='12' y='185' font-size='13'>the second vehicle</text><text x='172' y='185' font-size='13'>has been going for T minus the head start</text></g></svg>",
-    "caption": "The last row is the mark that gets missed."
+    "alt": "A velocity/time graph for a tractor: a straight line down from 9 m/s to V at 4 s, a horizontal line at V to 27 s, then a straight line down to rest at an unknown time.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M46 246L46 72.5L64.2 130.4L168.6 130.4L368.4 246Z' fill='currentColor' fill-opacity='0.12' stroke-linejoin='round'/><path d='M64.2 130.4L64.2 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M168.6 130.4L168.6 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M64.2 246L64.2 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='64.2' y='266' text-anchor='middle' font-size='15'>4</text><path d='M168.6 246L168.6 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='168.6' y='266' text-anchor='middle' font-size='15'>27</text><path d='M368.4 246L368.4 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='368.4' y='266' text-anchor='middle' font-size='15'>?</text><path d='M41 72.5L46 72.5' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='77.5' text-anchor='end' font-size='15'>9</text><path d='M41 130.4L46 130.4' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='135.4' text-anchor='end' font-size='15'>V</text><path d='M46 72.5L64.2 130.4L168.6 130.4L368.4 246' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></g></svg>",
+    "caption": "Two stages known; the last stage's time is the unknown."
   },
   {
     "type": "p",
-    "md": "$T$ is measured from the first vehicle. If the question asks how long the second has been moving, take off its head start. If it asks for a total time to a finishing point, add back the seconds already gone before the last stage began.\n\nEither way, read the question again before you write the number down."
+    "md": "The long question often gives the whole distance and leaves the last stage's time unknown. Find what the known stages cover, take it from the total, and write the last stage's area with the unknown time in it. Setting the two equal gives one equation in one unknown. Then answer on the question's clock: a total time adds back the seconds already gone."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Summer 2022 Q4",
+    "md": "The report found candidates stretching one constant-acceleration formula over the whole journey to the roadworks. A mark went to anyone who found the last stage's time and then added the 18 seconds already gone."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A tractor passes a gate at 9 m/s and at once decelerates uniformly at 0.75 m/s² for 4 s, reaching $V$ m/s. It holds $V$ m/s for 23 s, then brakes uniformly to rest at a barn 300 m from the gate. Find the total time from the gate to the barn.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$V = 9 - 0.75 \\times 4 = 6$",
+        "decision": "Decelerating means the velocity falls, so subtract: 0.75 m/s lost in every second for 4 s.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\tfrac{1}{2}(9 + 6) \\times 4 + 6 \\times 23 = 30 + 138 = 168$ m",
+        "decision": "A trapezium, then a rectangle: the two stages the question tells you about.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Still to run: $300 - 168 = 132$ m",
+        "decision": "Whatever the first two stages leave must be the last stage's area.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\tfrac{1}{2} \\times 6 \\times t = 132$, so $t = 44$ s",
+        "decision": "The last stage is a triangle of height 6 and unknown base t. Its area equals the distance left.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "Total $= 4 + 23 + 44 = 71$ s",
+        "decision": "The question asks from the gate, so add the 27 s already gone.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g7",
+    "id": "g14",
     "kind": "number",
-    "prompt": "A van passes a parked car and 6 s later the car starts. One clock, started when the van passed, gives $T = 33$ s when the car draws level. How many seconds has the car been moving?",
-    "answer": "27",
-    "explain": "$33 - 6 = 27$ s. The car's own clock started 6 seconds late, so it has been going for 6 seconds less."
+    "prompt": "A scooter has 84 m still to run when it brakes uniformly from 7 m/s to rest at the kerb. How long does the braking take, in seconds?",
+    "answer": "24",
+    "explain": "The braking is a triangle of height 7 and unknown width $t$, and its area is the 84 m left: $\\tfrac{1}{2} \\times 7 \\times t = 84$, so $3.5t = 84$ and $t = 24$ s. That is step 4 of See it on new numbers.",
+    "twin": {
+      "prompt": "A lorry has 145 m to go when it brakes uniformly from 10 m/s to a stop at the lights. How long does the braking take, in seconds?",
+      "answer": "29",
+      "explain": "$\\tfrac{1}{2} \\times 10 \\times t = 145$, so $5t = 145$ and $t = 29$ s."
+    }
   },
   {
-    "type": "callout",
-    "kind": "mustknow",
-    "title": "You can now",
-    "md": "Read an acceleration as the gradient of one section.\nFind a distance as an area, split at every joint.\nForm and solve an equation for an unknown stage time.\nWrite two vehicles' distances in one time, equate and solve.\nMove an answer between the two clocks a catch-up offers."
+    "type": "h",
+    "text": "Two journeys on one clock",
+    "role": "variant"
   },
   {
-    "type": "callout",
-    "kind": "mustknow",
-    "title": "Sheet or memory?",
-    "md": "**On the Unit 2 sheet:** the quadratic formula, vector magnitude and angle, $v = u + at$, $v^2 = u^2 + 2as$, $s = ut + \\tfrac{1}{2}at^2$, $s = \\tfrac{1}{2}(u + v)t$ and $F = ma$. Nothing about graphs.\n**Must be known:** gradient = acceleration; area = distance; the trapezium formula; and that one constant-acceleration formula covers one stage, never a whole journey."
+    "type": "figure",
+    "alt": "Two journeys on one velocity/time graph: the jogger as a horizontal line at 4 m/s, and the cyclist at rest until 3 s, rising in a straight line to 7 m/s at 9 s, then horizontal, with a dashed line at the time T when they are level.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M307.3 73.4L307.3 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M102 246L102 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='102' y='266' text-anchor='middle' font-size='15'>3</text><path d='M214 246L214 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='214' y='266' text-anchor='middle' font-size='15'>9</text><path d='M307.3 246L307.3 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='307.3' y='266' text-anchor='middle' font-size='15'>T</text><path d='M41 147.4L46 147.4' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='152.4' text-anchor='end' font-size='15'>4</text><path d='M41 73.4L46 73.4' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='78.4' text-anchor='end' font-size='15'>7</text><path d='M46 147.4L363.3 147.4' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/><text x='260.7' y='138.4' text-anchor='middle' font-size='15'>jogger</text><path d='M46 246L102 246L214 73.4L363.3 73.4' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/><text x='270' y='64.4' text-anchor='middle' font-size='15'>cyclist</text></g></svg>",
+    "caption": "One time axis for both: T counts from the moment the jogger passes."
+  },
+  {
+    "type": "p",
+    "md": "In a catch-up, one body passes another that is waiting. Start **one clock** when the first one passes and call its reading $T$. Write each distance as an area in that same $T$: a rectangle for the steady one, a triangle and then a rectangle for the one that sets off. **Level** means equal distances from the same starting line, so equate and solve."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A jogger running at a steady 4 m/s passes a cyclist waiting at a gate. 3 s later the cyclist sets off, speeding up uniformly for 6 s to 7 m/s, then holding 7 m/s. Find $T$, the time on the jogger's clock when the cyclist draws level.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Jogger: distance $= 4T$",
+        "decision": "One clock for both, started as the jogger passes. A steady 4 m/s for $T$ seconds is a rectangle.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Cyclist: $\\tfrac{1}{2} \\times 6 \\times 7 = 21$ m, by $T = 3 + 6 = 9$",
+        "decision": "She starts at $T = 3$ and speeds up for 6 s, so she reaches 7 m/s at $T = 9$ on the shared clock.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "After that, $7(T - 9)$, so she has gone $21 + 7(T - 9)$",
+        "decision": "A rectangle whose width is the time since $T = 9$. Both distances are now in the same $T$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$4T = 21 + 7T - 63$, so $3T = 42$ and $T = 14$ s",
+        "decision": "Level means equal distances, so equate. The equation is linear: no formula is needed.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g15",
+    "kind": "number",
+    "prompt": "A bus at a steady 9 m/s passes a waiting scooter, which sets off at that moment, speeding up uniformly for 8 s to 12 m/s, then holding 12 m/s. On one clock from that moment, when is it level, in seconds?",
+    "answer": "16",
+    "explain": "Bus: $9T$. Scooter: $\\tfrac{1}{2} \\times 8 \\times 12 = 48$, then $12(T - 8)$. Level: $9T = 48 + 12T - 96$, so $3T = 48$ and $T = 16$ s. The same four lines as See it, with no head start.",
+    "twin": {
+      "prompt": "A lorry at a steady 6 m/s passes a waiting motorbike, which sets off at once, speeding up uniformly for 6 s to 10 m/s, then holding it. On one clock from that moment, when is it level, in seconds?",
+      "answer": "7.5",
+      "explain": "Lorry $6T$; motorbike $\\tfrac{1}{2} \\times 6 \\times 10 = 30$, then $10(T - 6)$. $6T = 30 + 10T - 60$, so $4T = 30$ and $T = 7.5$ s."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Whose clock is the answer on?",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Solving gives $T$ on the first body's clock. If the question asks how long the second has been moving, take off its head start: the Summer 2023 report found many reached the right $T$ and stopped there. If it asks for a total time to a finishing point, add the stages already gone. Read the question again before you write the number."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "In the jogger and cyclist run, where $T = 14$ s, find how long the cyclist has been moving when she draws level, and how far each has run.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Cyclist's time $= 14 - 3 = 11$ s",
+        "decision": "$T$ started when the jogger passed; she set off 3 s later, so her own clock reads 3 s less.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Distance $= 4 \\times 14 = 56$ m",
+        "decision": "They are level, so either distance will do; the jogger's rectangle is quickest.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Check: $21 + 7 \\times (14 - 9) = 56$ m",
+        "decision": "Her own areas agree: 21 m speeding up, then 5 s at 7 m/s."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g16",
+    "kind": "number",
+    "prompt": "A van passes a parked car, and 7 s later the car sets off. One clock, started as the van passed, gives $T = 29$ s when the car draws level. How long has the car been moving, in seconds?",
+    "answer": "22",
+    "explain": "Its own clock started 7 s after $T$ did, so it has been moving $29 - 7 = 22$ s. As in step 1 of See it, take the head start off; adding it would give a time longer than the van's.",
+    "twin": {
+      "prompt": "A bus passes a waiting moped, and 5 s later the moped sets off. On the bus's clock the moped draws level at $T = 26$ s. How long has the moped been moving, in seconds?",
+      "answer": "21",
+      "explain": "$26 - 5 = 21$ s: the moped's clock started 5 s late."
+    }
+  },
+  {
+    "type": "h",
+    "text": "How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Draw it from the words first.** Summer 2021 Q3, 2023 Q6 and 2026 Q6 opened with the sketch: the shape, and the value at every joint. A chaser's line starts at its own start time on the shared axis; in 2023 a false origin was accepted on the drawing, but it put the later times on the wrong clock."
+  },
+  {
+    "type": "p",
+    "md": "**The last stage need not end at rest.** Summer 2021 Q3 ended a race at an unknown velocity $V$, so the last piece was a trapezium: half of $(9 + V)$, times its 2.5 s, set equal to the distance left."
+  },
+  {
+    "type": "p",
+    "md": "**Who is ahead afterwards.** Summer 2023 Q6(iv) and 2026 Q6(iv) let the chaser brake to rest after the catch-up: compare both distances over that braking time. And an **average speed** is the whole area over the whole time."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A cyclist rides a 250 m lap. From rest she speeds up uniformly to 12 m/s in 5 s, holds 12 m/s for 15 s, then slows uniformly to $V$ m/s over the last 5 s. Find $V$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "First two stages: $\\tfrac{1}{2} \\times 5 \\times 12 + 12 \\times 15 = 30 + 180 = 210$ m",
+        "decision": "A triangle and a rectangle, split at the joint as before.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Last stage: $250 - 210 = 40$ m",
+        "decision": "The lap's total, less what the first two stages cover.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\tfrac{1}{2}(12 + V) \\times 5 = 40$",
+        "decision": "It ends at V, not at rest, so the last piece is a trapezium with parallel sides 12 and V.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$12 + V = 16$, so $V = 4$",
+        "decision": "Multiply by 2 and divide by 5, then take off 12.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g17",
+    "kind": "number",
+    "prompt": "In that lap, what is the cyclist's deceleration over the last 5 s, in m/s²?",
+    "answer": "1.6",
+    "explain": "Rise over run on the last stage: the velocity falls from 12 to 4 m/s, a drop of 8, over 5 s, so $8 \\div 5 = 1.6$ m/s². It uses the $V$ of step 4; dividing 4 by 5 would read a height where the gradient was wanted.",
+    "twin": {
+      "prompt": "A cyclist slows uniformly from 12 m/s to 3 m/s over 10 s. What is her deceleration, in m/s²?",
+      "answer": "0.9",
+      "explain": "A drop of $12 - 3 = 9$ m/s over 10 s: $9 \\div 10 = 0.9$ m/s²."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Going further: an unknown top speed",
+    "role": "further"
+  },
+  {
+    "type": "figure",
+    "alt": "A velocity/time graph from rest to rest: a straight line up to V at 45 s, a horizontal line at V to 195 s, and a straight line down to rest at 220 s; the whole shaded area is one trapezium.",
+    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg'><g fill='currentColor' font-family='inherit'><path d='M46 246L110.6 76.4L326 76.4L361.9 246Z' fill='currentColor' fill-opacity='0.12' stroke-linejoin='round'/><path d='M110.6 76.4L110.6 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M326 76.4L326 246' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='4 4' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 76.4L110.6 76.4' fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='3 4' stroke-opacity='0.7' stroke-linecap='round' stroke-linejoin='round'/><path d='M46 246L387 246' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M396 246L387 250.1L387 242Z' fill='currentColor'/><path d='M46 246L46 19' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'/><path d='M46 10L50.1 19L42 19Z' fill='currentColor'/><text x='54' y='22' text-anchor='start' font-size='15'>Velocity (m/s)</text><text x='396' y='286' text-anchor='end' font-size='15'>Time (s)</text><text x='40' y='264' text-anchor='end' font-size='15'>0</text><path d='M110.6 246L110.6 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='110.6' y='266' text-anchor='middle' font-size='15'>45</text><path d='M326 246L326 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='326' y='266' text-anchor='middle' font-size='15'>195</text><path d='M361.9 246L361.9 251' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='361.9' y='266' text-anchor='middle' font-size='15'>220</text><path d='M41 76.4L46 76.4' fill='none' stroke='currentColor' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/><text x='38' y='81.4' text-anchor='end' font-size='15'>V</text><path d='M46 246L110.6 76.4L326 76.4L361.9 246' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></g></svg>",
+    "caption": "Rest to rest with one flat stage: a single trapezium."
+  },
+  {
+    "type": "p",
+    "md": "Sometimes the times are given and the top speed is not. A journey from rest to rest with one flat stage is a single trapezium: its parallel sides are the whole time and the time at top speed, and its height is the top speed $V$. Its area is the distance, which gives one equation in $V$. Change kilometres to metres first."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A train speeds up uniformly from rest for 45 s, holds its top speed $V$ m/s for 150 s, then slows uniformly to rest in 25 s. It covers 3.7 km. Find $V$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Whole time $= 45 + 150 + 25 = 220$ s",
+        "decision": "The long parallel side runs along the time axis from start to stop."
+      },
+      {
+        "n": 2,
+        "working": "Area $= \\tfrac{1}{2}(220 + 150)V = 185V$",
+        "decision": "The short parallel side is the 150 s at top speed; the height is V.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$185V = 3700$",
+        "decision": "The area is the distance in metres: 3.7 km is 3700 m.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$V = 20$ m/s",
+        "decision": "Divide both sides by the number in front of V.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g18",
+    "kind": "number",
+    "prompt": "A tram speeds up uniformly from rest for 16 s, holds its top speed for 90 s, then slows uniformly to rest in 24 s. It covers 1.54 km. What is its top speed, in m/s?",
+    "answer": "14",
+    "explain": "Whole time $16 + 90 + 24 = 130$ s, so the trapezium is $\\tfrac{1}{2}(130 + 90)V = 110V$. Setting $110V = 1540$ gives $V = 14$ m/s. As in step 3 of See it, the kilometres become metres first.",
+    "twin": {
+      "prompt": "A shuttle bus speeds up uniformly from rest for 15 s, holds its top speed for 45 s, then slows uniformly to rest in 10 s, covering 1.03 km. What is its top speed, in m/s?",
+      "answer": "18",
+      "explain": "Whole time 70 s: $\\tfrac{1}{2}(70 + 45)V = 57.5V = 1035$, so $V = 18$ m/s."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Where two sheet formulas come from",
+    "role": "derivation"
+  },
+  {
+    "type": "p",
+    "md": "Two of the formulas on the Unit 2 sheet are this graph written in letters. Take one straight stage from velocity $u$ to velocity $v$ over time $t$. Its gradient is the acceleration and its area is the distance, and the only assumption is that the stage is one straight line. That is why each formula covers one stage and never a whole journey."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "One straight stage runs from velocity $u$ to velocity $v$ over time $t$. Show that $v = u + at$ and $s = \\tfrac{1}{2}(u + v)t$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$a = \\dfrac{v - u}{t}$",
+        "decision": "The gradient of the stage: the rise $v - u$ over the run $t$."
+      },
+      {
+        "n": 2,
+        "working": "$v = u + at$",
+        "decision": "Multiply both sides by $t$, then add $u$."
+      },
+      {
+        "n": 3,
+        "working": "$s = \\tfrac{1}{2}(u + v)t$",
+        "decision": "The area under the stage is a trapezium with parallel sides $u$ and $v$ and width $t$."
+      },
+      {
+        "n": 4,
+        "working": "$s = ut + \\tfrac{1}{2}(v - u)t = ut + \\tfrac{1}{2}at^2$",
+        "decision": "Split the same area into a rectangle $ut$ and a triangle of height $v - u = at$ on top: the sheet's third formula."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -243,42 +673,66 @@
       "Yes, because the formula is on the sheet"
     ],
     "answer": "No, because the acceleration changes twice",
-    "explain": "Every constant-acceleration formula assumes one steady acceleration. Across stages, the area under the graph is the only safe route."
+    "explain": "Step 3 of See it needs one straight stage: a trapezium under a single line. A journey that speeds up, holds, then brakes has three straight stages, so its area has three pieces and the formula covers only one of them. Across stages, work the area piece by piece.",
+    "twin": {
+      "prompt": "Can you use $v^2 = u^2 + 2as$ from start to finish of a journey that speeds up and then brakes?",
+      "options": [
+        "No, because the acceleration changes part-way",
+        "Yes, if $u$ and $v$ are the first and last velocities",
+        "Yes, because $v^2 = u^2 + 2as$ has no $t$ in it"
+      ],
+      "answer": "No, because the acceleration changes part-way",
+      "explain": "Every sheet formula comes from one straight stage, as in See it. Two stages with different gradients need two calculations, or the area piece by piece.",
+      "optionNotes": [
+        {
+          "option": "Yes, if $u$ and $v$ are the first and last velocities",
+          "why": "The first and last velocities say nothing about where the gradient changes, so the formula would treat two stages as one straight line.",
+          "misconception": "fm.kin.one-formula-whole-journey"
+        },
+        {
+          "option": "Yes, because $v^2 = u^2 + 2as$ has no $t$ in it",
+          "why": "Leaving out t does not make it fit: the formula still assumes one steady acceleration from start to finish.",
+          "misconception": "fm.kin.one-formula-whole-journey"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Yes, as long as $u$ and $v$ are the first and last velocities",
+        "why": "The first and last velocities say nothing about the steady stage between them, so the formula would treat three stages as one straight line.",
+        "misconception": "fm.kin.one-formula-whole-journey"
+      },
+      {
+        "option": "Yes, because the formula is on the sheet",
+        "why": "Being on the sheet does not make a formula fit: every one there assumes a single steady acceleration.",
+        "misconception": "fm.kin.one-formula-whole-journey"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Read an acceleration as the gradient of one section.\nFind a distance as the area under the line.\nSplit that area at every joint before working it out.\nSubtract a section's start time to get its width."
+    "md": "Read an acceleration as the gradient of one stage, using that stage's own rise and run.\nFind a distance as the area under the line, split at every joint.\nSolve for an unknown last stage from the distance still to run.\nPut two journeys on one clock, equate the areas, then answer on the question's clock.\nFind a top speed from the whole trapezium, and an average speed as area over time."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "The long version asks for a missing velocity, then a distance from the area, then a total time, eight to ten marks with follow-through. The first mark is the area of one named piece; the last is the quantity asked for, on the right clock. Stuck: dash a vertical line at each joint and work out the pieces you can."
+    "md": "This is often the paper's long closing question: Summer 2022 Q4 (10 marks) and Summer 2023 Q6 (14 marks), and a catch-up again in Summer 2026 Q6. The early marks are for single areas and gradients, each earned on its own; the last are for a formed equation and the right clock. Stuck? Dash a line down from each joint and work the pieces you can."
+  },
+  {
+    "type": "prompt",
+    "promptId": "rp.fm.u2.velocity-time-graphs.01"
   },
   {
     "type": "prompt",
     "promptId": "rp.fm.u2.velocity-time-graphs.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u2.velocity-time-graphs.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u2.velocity-time-graphs.06"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u2.velocity-time-graphs.07"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u2.velocity-time-graphs.09"
   }
 ]
