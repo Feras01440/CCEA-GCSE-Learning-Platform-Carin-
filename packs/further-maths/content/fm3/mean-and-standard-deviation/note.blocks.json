@@ -1,213 +1,523 @@
 [
   {
     "type": "hero",
-    "lede": "Two bus routes both average 20 minutes. On one, every journey is close to 20. On the other, some take 9 minutes and some take 31. The mean cannot tell them apart. Standard deviation can: it is one number for how spread out a set of values is.",
+    "lede": "Two shooters both average 12 goals a match. One scores 11, 12 or 13 every time; the other anything from 5 to 19. The mean cannot tell them apart. The standard deviation can: one number, in the data's own units, for how far the values typically sit from their mean.",
     "can": [
-      "Write down $\\sum x$ and $\\sum x^{2}$, keeping the two apart.",
-      "Work out the mean and keep it unrounded for the next step.",
-      "Substitute into the formula and finish with the square root."
+      "Say which of two sets is more spread out, and why",
+      "Write $\\sum x$ and $\\sum x^{2}$, squaring each value before adding",
+      "Work out the standard deviation of a list with the sheet's formula"
     ],
-    "minutes": 10
+    "minutes": 13
   },
   {
     "type": "h",
-    "text": "Two bus routes, one average"
+    "text": "Same mean, different spread",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "The mean says where a set of values sits; the standard deviation says how tightly they sit around it. It is built from two totals, the sum of the values and the sum of their squares, and the last step is a square root. Keep the mean unrounded until then."
+    "md": "The mean says where a set of values sits. The standard deviation, written $\\sigma$, says how tightly the values sit around that mean: roughly how far a typical value is from it. A small $\\sigma$ means the values huddle; a large one means they scatter. It is in the units of the data, so a spread of goals is in goals."
   },
   {
     "type": "figure",
-    "alt": "Two dot plots on the same scale. The upper one, Route A, has five journey times bunched between 18 and 22 minutes. The lower one, Route B, has five times spread from 9 to 31 minutes. A dashed line marks the mean of 20 minutes, which is the same for both.",
-    "svg": "<svg viewBox='0 0 460 210' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two bus routes, both with a mean of 20 minutes: Route A clusters between 18 and 22, Route B spreads from 9 to 31'><title>Two bus routes, both with a mean of 20 minutes: Route A clusters between 18 and 22, Route B spreads from 9 to 31</title><path d='M268.0 24 L268.0 186' stroke='currentColor' stroke-width='1.2' stroke-dasharray='5 4' fill='none' stroke-opacity='0.8'/><text x='268.0' y='18' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>mean 20</text><path d='M96 58 L440 58' stroke='currentColor' stroke-width='1.2' fill='none'/><circle cx='245.1' cy='47' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='256.5' cy='47' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='268.0' cy='47' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='279.5' cy='47' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='290.9' cy='47' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><path d='M96.0 58 L96.0 63' stroke='currentColor' stroke-width='1'/><text x='96.0' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>5</text><path d='M153.3 58 L153.3 63' stroke='currentColor' stroke-width='1'/><text x='153.3' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>10</text><path d='M210.7 58 L210.7 63' stroke='currentColor' stroke-width='1'/><text x='210.7' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>15</text><path d='M268.0 58 L268.0 63' stroke='currentColor' stroke-width='1'/><text x='268.0' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>20</text><path d='M325.3 58 L325.3 63' stroke='currentColor' stroke-width='1'/><text x='325.3' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>25</text><path d='M382.7 58 L382.7 63' stroke='currentColor' stroke-width='1'/><text x='382.7' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>30</text><path d='M440.0 58 L440.0 63' stroke='currentColor' stroke-width='1'/><text x='440.0' y='76' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>35</text><path d='M96 140 L440 140' stroke='currentColor' stroke-width='1.2' fill='none'/><circle cx='141.9' cy='129' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='199.2' cy='129' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='268.0' cy='129' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='336.8' cy='129' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='394.1' cy='129' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><path d='M96.0 140 L96.0 145' stroke='currentColor' stroke-width='1'/><text x='96.0' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>5</text><path d='M153.3 140 L153.3 145' stroke='currentColor' stroke-width='1'/><text x='153.3' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>10</text><path d='M210.7 140 L210.7 145' stroke='currentColor' stroke-width='1'/><text x='210.7' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>15</text><path d='M268.0 140 L268.0 145' stroke='currentColor' stroke-width='1'/><text x='268.0' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>20</text><path d='M325.3 140 L325.3 145' stroke='currentColor' stroke-width='1'/><text x='325.3' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>25</text><path d='M382.7 140 L382.7 145' stroke='currentColor' stroke-width='1'/><text x='382.7' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>30</text><path d='M440.0 140 L440.0 145' stroke='currentColor' stroke-width='1'/><text x='440.0' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>35</text><text x='6' y='50' font-family='inherit' font-size='12' fill='currentColor'>Route A</text><text x='6' y='132' font-family='inherit' font-size='12' fill='currentColor'>Route B</text></svg>",
-    "caption": "Same mean, different spread. Route A has a standard deviation of 1.41 minutes; Route B has 7.92 minutes."
+    "alt": "Two dot plots of goals on one scale from 4 to 20. Shooter P's five matches sit at 11, 12, 12, 12 and 13; Shooter Q's at 5, 9, 12, 15 and 19. A dashed line marks the mean of 12 on both.",
+    "svg": "<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two dot plots of goals on one scale from 4 to 20. Shooter P scored 11, 12, 12, 12 and 13; Shooter Q scored 5, 9, 12, 15 and 19. A dashed line marks the mean of 12 on both.'><title>Two dot plots of goals on one scale from 4 to 20. Shooter P scored 11, 12, 12, 12 and 13; Shooter Q scored 5, 9, 12, 15 and 19. A dashed line marks the mean of 12 on both.</title><text x='12' y='28' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-weight='600'>Shooter P</text><text x='388' y='28' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>mean 12</text><path d='M24 88 L376 88' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M24 88 L24 94' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='24' y='111' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M46 88 L46 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M68 88 L68 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M90 88 L90 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M112 88 L112 94' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='112' y='111' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>8</text><path d='M134 88 L134 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M156 88 L156 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M178 88 L178 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M200 88 L200 94' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='200' y='111' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>12</text><path d='M222 88 L222 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M244 88 L244 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M266 88 L266 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M288 88 L288 94' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='288' y='111' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><path d='M310 88 L310 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M332 88 L332 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M354 88 L354 94' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M376 88 L376 94' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='376' y='111' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><path d='M200 38 L200 88' stroke='currentColor' stroke-width='1.3' fill='none' stroke-dasharray='5 4' stroke-opacity='0.85'/><circle cx='178' cy='75' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='75' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='222' cy='75' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='63' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='51' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><text x='12' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-weight='600'>Shooter Q</text><text x='388' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>mean 12</text><path d='M24 196 L376 196' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M24 196 L24 202' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='24' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M46 196 L46 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M68 196 L68 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M90 196 L90 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M112 196 L112 202' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='112' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>8</text><path d='M134 196 L134 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M156 196 L156 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M178 196 L178 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M200 196 L200 202' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='200' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>12</text><path d='M222 196 L222 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M244 196 L244 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M266 196 L266 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M288 196 L288 202' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='288' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><path d='M310 196 L310 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M332 196 L332 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M354 196 L354 202' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M376 196 L376 202' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='376' y='219' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><path d='M200 146 L200 196' stroke='currentColor' stroke-width='1.3' fill='none' stroke-dasharray='5 4' stroke-opacity='0.85'/><circle cx='46' cy='183' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='134' cy='183' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='200' cy='183' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='266' cy='183' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='354' cy='183' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/></svg>",
+    "caption": "Both shooters average 12 goals. P's standard deviation is 0.63 goals; Q's is 4.82 goals."
   },
   {
-    "type": "h",
-    "text": "1. Same average, different story"
-  },
-  {
-    "type": "p",
-    "md": "Standard deviation, written $\\sigma$, is roughly how far a typical value sits from the mean. Small $\\sigma$ means the values huddle; large $\\sigma$ means they scatter. It is measured in the same units as the data, so a spread of minutes is in minutes and a spread of cars is in cars."
+    "type": "see",
+    "kind": "data",
+    "stem": "Over five matches Shooter P scored 11, 12, 13, 12 and 12 goals, and Shooter Q scored 5, 9, 12, 15 and 19. Compare their spreads.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Both totals are 60, so $\\bar{x} = 12$ for both",
+        "decision": "The means are equal, so the mean cannot separate the two shooters."
+      },
+      {
+        "n": 2,
+        "working": "P: every match is within 1 goal of 12",
+        "decision": "Read how far each value sits from the mean, not the values themselves."
+      },
+      {
+        "n": 3,
+        "working": "Q: 5 and 19 are each 7 goals from 12",
+        "decision": "Q's values sit much further from the mean than P's."
+      },
+      {
+        "n": 4,
+        "working": "$\\sigma$ is larger for Q",
+        "decision": "The standard deviation measures exactly that distance: 4.82 goals for Q against 0.63 for P."
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g1",
     "kind": "choice",
-    "prompt": "Both routes above have a mean of 20 minutes. Which route has the larger standard deviation?",
+    "prompt": "Two bus routes both average 20 minutes. Route A's five journeys take from 18 to 22 minutes; Route B's take from 9 to 31 minutes. Which route has the larger standard deviation?",
     "options": [
       "Route B, with times from 9 to 31",
       "Route A, with times from 18 to 22",
       "They are equal, because the means are equal"
     ],
     "answer": "Route B, with times from 9 to 31",
-    "explain": "Spread, not average. Route B's values sit much further from the mean, so its standard deviation is larger."
+    "explain": "As in steps 2 and 3 of See it, look at how far the values sit from the mean, not at the mean: Route B's journeys reach 11 minutes from 20, Route A's only 2. The standard deviation measures that distance, so Route B's is larger.",
+    "twin": {
+      "prompt": "Two ferries both average 40 minutes a crossing. Ferry T's five crossings take 38, 39, 40, 41 and 42 minutes; Ferry U's take 31, 36, 40, 44 and 49. Which ferry has the smaller standard deviation?",
+      "options": [
+        "Ferry T",
+        "Ferry U",
+        "Neither: equal means give equal spreads"
+      ],
+      "answer": "Ferry T",
+      "explain": "T's crossings are all within 2 minutes of 40, U's as far as 9 minutes away, so T's standard deviation is the smaller.",
+      "optionNotes": [
+        {
+          "option": "Ferry U",
+          "why": "Ferry U's crossings sit as far as 9 minutes from the mean, so its spread is the larger."
+        },
+        {
+          "option": "Neither: equal means give equal spreads",
+          "why": "The means match but the spreads do not; the standard deviation measures the spread alone."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Route A, with times from 18 to 22",
+        "why": "Route A's times are the tightly packed ones, all within 2 minutes of 20, so its spread is the smaller."
+      },
+      {
+        "option": "They are equal, because the means are equal",
+        "why": "Equal means say nothing about spread; telling such sets apart is the whole reason the standard deviation exists."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "2. Square first, then add"
+    "text": "Two totals: $\\sum x$ and $\\sum x^{2}$",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "The formula needs a second column beside the data: each value squared. Squaring is what makes a value below the mean count as much as one above it, because a square is never negative.\n**Square first, then add down the column.** The symbol $\\sum x^{2}$ has the sigma outside the square, so the squaring happens value by value."
+    "md": "The sheet's formula is built from two totals. $\\sum x$ means add the values. $\\sum x^{2}$ means square each value first, then add the squares: the sigma sits outside the square, so the squaring happens value by value. $\\left(\\sum x\\right)^{2}$, the total squared, is a different and much larger number."
   },
   {
     "type": "figure",
-    "alt": "A two-column table for the values 3, 5, 8. The first column holds the values, the second holds 9, 25, 64. The columns total 16 and 98.",
-    "svg": "<svg viewBox='0 0 460 196' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A two-column table for the values 3, 5, 8: each value is squared in its own row and only then are the columns added'><title>A two-column table for the values 3, 5, 8: each value is squared in its own row and only then are the columns added</title><text x='20' y='22' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8'>square each value first, then add down the column</text><text x='125.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>x</text><text x='335.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>x squared</text><path d='M14 52 L446 52' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='125.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>3</text><text x='335.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>9</text><text x='125.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>5</text><text x='335.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>25</text><text x='125.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>8</text><text x='335.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>64</text><path d='M14 138 L446 138' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='125.0' y='162' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>sum x = 16</text><text x='335.0' y='162' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>sum x squared = 98</text></svg>",
-    "caption": "For 3, 5, 8: $\\sum x = 16$ but $\\sum x^{2} = 98$, while $\\left(\\sum x\\right)^{2}$ would be 256."
+    "alt": "A table of the values 3, 7, 9 and 10 beside their squares 9, 49, 81 and 100, with the column totals 29 and 239.",
+    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the values 3, 7, 9 and 10 beside their squares 9, 49, 81 and 100, with the column totals 29 and 239.'><title>A table of the values 3, 7, 9 and 10 beside their squares 9, 49, 81 and 100, with the column totals 29 and 239.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 182 L388 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 216 L388 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M200 12 L200 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M388 12 L388 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='106' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>x</text><text x='294' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>x²</text><text x='106' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='294' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>9</text><text x='106' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>7</text><text x='294' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>49</text><text x='106' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>9</text><text x='294' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>81</text><text x='106' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>10</text><text x='294' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>100</text><text x='106' y='205' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Σx = 29</text><text x='294' y='205' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Σx² = 239</text></svg>",
+    "caption": "Each value is squared in its own column before anything is added."
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why square at all?",
-    "md": "Distances from the mean add to zero every time: the values above cancel the values below. Squaring removes the signs, so the distances can be added without cancelling, and the square root at the end brings the units back."
+    "md": "The distances of the values from their mean always add to zero: those above cancel those below. Squaring makes every distance count as positive, so they can be added without cancelling, and the square root at the end brings the answer back to the data's units."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\sum x$ and $\\sum x^{2}$ for the values 3, 7, 9 and 10.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\sum x = 3 + 7 + 9 + 10$\n$= 29$",
+        "decision": "Add the values: no squaring yet."
+      },
+      {
+        "n": 2,
+        "working": "$3^{2}$, $7^{2}$, $9^{2}$, $10^{2}$ are 9, 49, 81, 100",
+        "decision": "Square every value on its own, in a second column."
+      },
+      {
+        "n": 3,
+        "working": "$\\sum x^{2} = 9 + 49 + 81 + 100$\n$= 239$",
+        "decision": "Then add the squares. The total squared, $29^{2} = 841$, would be a different number altogether.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g2",
+    "id": "g7",
     "kind": "number",
-    "prompt": "For the values 3, 5, 8, what is $\\sum x^{2}$?",
-    "answer": "98",
-    "explain": "$3^{2} + 5^{2} + 8^{2} = 98$. Adding first and squaring would give 256, which is a different number entirely."
+    "prompt": "For the values 6, 2 and 5, what is $\\sum x^{2}$?",
+    "answer": "65",
+    "explain": "As in steps 2 and 3 of See it, square each value first, then add: $36 + 4 + 25 = 65$. Adding first and squaring the total, $13^{2} = 169$, gives $\\left(\\sum x\\right)^{2}$ instead.",
+    "twin": {
+      "prompt": "For the values 2, 9 and 4, what is $\\sum x^{2}$?",
+      "answer": "101",
+      "explain": "Square each value, then add: $4 + 81 + 16 = 101$. The total squared would be $15^{2} = 225$."
+    }
   },
   {
     "type": "h",
-    "text": "3. The formula the sheet gives you"
+    "text": "A list: the formula in four steps",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Page 2 of the Unit 3 booklet prints $\\sigma = \\sqrt{\\dfrac{\\sum fx^{2}}{\\sum f} - \\bar{x}^{2}}$. For a plain list of values every value appears once, so $f$ is 1 and $\\sum f$ is $n$, and the formula reads $\\sigma = \\sqrt{\\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}}$.\nThat is the same formula, not a second one to learn."
+    "md": "Page 2 of the Unit 3 booklet prints $\\sigma = \\sqrt{\\dfrac{\\sum fx^{2}}{\\sum f} - \\bar{x}^{2}}$. For a plain list each value counts once, so $f$ is 1, $\\sum f$ is $n$, and the formula reads $\\sigma = \\sqrt{\\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}}$."
+  },
+  {
+    "type": "p",
+    "md": "Work in four steps: the mean, because the formula needs it; $\\sum x^{2}$, squaring first; the substitution; then the square root. The value under the root is the variance, and it is never negative."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the standard deviation of 4, 8, 9, 11 and 13.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\bar{x} = \\dfrac{45}{5}$\n$= 9$",
+        "decision": "Add the values and divide by $n = 5$: the formula needs the mean first.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\sum x^{2} = 16 + 64 + 81 + 121 + 169$\n$= 451$",
+        "decision": "Square each value, then add.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\sigma = \\sqrt{\\dfrac{451}{5} - 9^{2}}$",
+        "decision": "Substitute into the sheet's formula, with $\\sum f$ read as $n$.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$= \\sqrt{9.2}$\n$= 3.03$",
+        "decision": "9.2 is the variance; its square root is the answer, to 2 decimal places.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "YxOENWfDaXo",
     "title": "Standard deviation",
     "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher working through the Unit 3 formula on the kind of data this paper uses."
+    "why": "A Northern Ireland teacher working the Unit 3 formula on a list of values, step by step."
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "number",
+    "prompt": "Five values have a mean of 10 and $\\sum x^{2} = 530$. What is their standard deviation, to 2 decimal places?",
+    "answer": "2.45 | 2.449",
+    "explain": "As in steps 3 and 4 of See it, substitute, then take the root: $\\dfrac{530}{5} - 10^{2} = 6$, the variance, and $\\sqrt{6} = 2.45$. Stopping at 6 would give the variance, not the standard deviation.",
+    "twin": {
+      "prompt": "Six values have a mean of 12 and $\\sum x^{2} = 1000$. What is their standard deviation, to 2 decimal places?",
+      "answer": "4.76 | 4.761",
+      "explain": "$\\dfrac{1000}{6} - 12^{2} = 22.67$, the variance, and its square root is 4.76."
+    }
+  },
+  {
+    "type": "h",
+    "text": "A table of days is still a list",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "A question may print its values in a table beside days of the week or names. Those are labels, not classes: there is nothing to take a midpoint of and nothing to number. Each entry is one value, so $n$ is the number of rows, and $\\sum x^{2}$ is divided by $n$, never by $\\sum x$."
+  },
+  {
+    "type": "figure",
+    "alt": "A table of four school days with the minutes a bus was late: Monday 6, Tuesday 11, Wednesday 3, Thursday 8.",
+    "svg": "<svg viewBox='0 0 400 194' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of four school days with the minutes a bus was late: Monday 6, Tuesday 11, Wednesday 3, Thursday 8.'><title>A table of four school days with the minutes a bus was late: Monday 6, Tuesday 11, Wednesday 3, Thursday 8.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 182 L388 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M200 12 L200 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M388 12 L388 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='106' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Day</text><text x='294' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Minutes late</text><text x='106' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Monday</text><text x='294' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6</text><text x='106' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Tuesday</text><text x='294' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>11</text><text x='106' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Wednesday</text><text x='294' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='106' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Thursday</text><text x='294' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>8</text></svg>",
+    "caption": "Four values in a table: the days only label them."
+  },
+  {
+    "type": "see",
+    "kind": "data",
+    "stem": "A bus was late by 6 minutes on Monday, 11 on Tuesday, 3 on Wednesday and 8 on Thursday. Find the standard deviation of the four times.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Four values, so $n = 4$",
+        "decision": "The days only label the values: no midpoints, and no numbering the days 1 to 4."
+      },
+      {
+        "n": 2,
+        "working": "$\\bar{x} = \\dfrac{28}{4}$\n$= 7$",
+        "decision": "Add the minutes and divide by the number of days.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\sum x^{2} = 36 + 121 + 9 + 64$\n$= 230$",
+        "decision": "Square each time, then add.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\sigma = \\sqrt{\\dfrac{230}{4} - 7^{2}}$\n$= \\sqrt{8.5}$\n$= 2.92$",
+        "decision": "Divide $\\sum x^{2}$ by $n$, the 4 days, not by $\\sum x$; then take the root.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g3",
     "kind": "choice",
-    "prompt": "In the sheet's formula, what does $\\sum f$ come to for a plain list of six values?",
+    "prompt": "A table gives the hours of sunshine on each of six days, Monday to Saturday. In the sheet's formula, what does $\\sum f$ come to?",
     "options": [
       "6, the number of values",
       "The sum of the six values",
-      "The largest of the six values"
+      "21, the days numbered 1 to 6 and added"
     ],
     "answer": "6, the number of values",
-    "explain": "Each value appears once, so its frequency is 1 and the frequencies total the number of values."
+    "explain": "As in step 1 of See it, the days only label the values, so each value counts once and $\\sum f$ is $n$, here 6. The total of the values is $\\sum x$, and numbering the days puts numbers in the formula that were never measured.",
+    "twin": {
+      "prompt": "A table gives the number of emails a teacher received on each of the 4 days she was in school. In the sheet's formula, what does $\\sum f$ come to?",
+      "options": [
+        "4, the number of values",
+        "The total number of emails",
+        "10, the days numbered 1 to 4 and added"
+      ],
+      "answer": "4, the number of values",
+      "explain": "Each day's count is one value, so $\\sum f$ is $n$: the 4 days.",
+      "optionNotes": [
+        {
+          "option": "The total number of emails",
+          "why": "That is $\\sum x$, the total of the values; $\\sum f$ counts how many values there are.",
+          "misconception": "fm.sd.table-treated-as-grouped"
+        },
+        {
+          "option": "10, the days numbered 1 to 4 and added",
+          "why": "The days are labels, not data: numbering them invents values nobody measured.",
+          "misconception": "fm.sd.table-treated-as-grouped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The sum of the six values",
+        "why": "That total is $\\sum x$; dividing $\\sum x^{2}$ by it is a slip examiners saw in 2025. $\\sum f$ counts the values.",
+        "misconception": "fm.sd.table-treated-as-grouped"
+      },
+      {
+        "option": "21, the days numbered 1 to 6 and added",
+        "why": "Numbering the days treats labels as data, which examiners saw in 2025; the days are only names for the values.",
+        "misconception": "fm.sd.table-treated-as-grouped"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "4. A worked example, start to finish"
+    "text": "On the calculator: $\\sigma_{x}$, not $s_{x}$",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "At noon on six Saturdays a warden counted the cars at a nature reserve: 38, 52, 44, 61, 47, 40.\n**Step 1.** $\\sum x = 282$ and $n = 6$, so $\\bar{x} = 47$. The mean comes first because the formula needs it.\n**Step 2.** $\\sum x^{2} = 38^{2} + 52^{2} + 44^{2} + 61^{2} + 47^{2} + 40^{2} = 13614$. Square first, then add.\n**Step 3.** $\\dfrac{13614}{6} - 47^{2} = 2269 - 2209 = 60$.\n**Step 4.** $\\sigma = \\sqrt{60} = 7.75$ cars."
-  },
-  {
-    "type": "figure",
-    "alt": "A dot plot of the six counts 38, 52, 44, 61, 47, 40 on a scale from 35 to 65 cars, with a dashed vertical line at the mean of 47 cars.",
-    "svg": "<svg viewBox='0 0 460 176' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Six counts (38, 52, 44, 61, 47, 40) plotted on a scale from 35 to 65 with a dashed line at the mean of 47'><title>Six counts (38, 52, 44, 61, 47, 40) plotted on a scale from 35 to 65 with a dashed line at the mean of 47</title><path d='M40 122 L436 122' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M40.0 122 L40.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='40.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>35</text><path d='M106.0 122 L106.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='106.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>40</text><path d='M172.0 122 L172.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='172.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>45</text><path d='M238.0 122 L238.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='238.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>50</text><path d='M304.0 122 L304.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='304.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>55</text><path d='M370.0 122 L370.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='370.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>60</text><path d='M436.0 122 L436.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='436.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>65</text><path d='M198.4 18 L198.4 122' stroke='currentColor' stroke-width='1.2' stroke-dasharray='5 4' fill='none' stroke-opacity='0.8'/><text x='198.4' y='14' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>mean 47</text><circle cx='79.6' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='106.0' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='158.8' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='198.4' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='264.4' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='383.2' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><text x='40' y='164' font-family='inherit' font-size='12.5' fill='currentColor'>cars counted at noon</text></svg>",
-    "caption": "The six counts against their mean. A standard deviation of 7.75 cars matches what the picture shows."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "number",
-    "prompt": "Finish the worked example: $\\sqrt{60}$, to 2 decimal places.",
-    "answer": "7.75 | 7.746",
-    "explain": "7.75 cars. The variance 60 is in cars squared; the root brings it back to cars."
-  },
-  {
-    "type": "h",
-    "text": "5. The same thing on the calculator"
+    "md": "In statistics mode you type the values once, and the calculator shows $\\bar{x}$, $\\sum x$, $\\sum x^{2}$ and two deviations. $\\sigma_{x}$ divides by $n$, as the sheet's formula does. $s_{x}$ divides by $n - 1$: a different quantity that this specification never asks for."
   },
   {
     "type": "p",
-    "md": "In statistics mode you type the values once and read the answers off. Two cautions.\n**Use $\\sigma_{x}$, not $s_{x}$.** $s_{x}$ divides by $n - 1$ and is a different number.\n**Write the working anyway.** The paper says all working must be shown, and an unsupported calculator answer earns nothing if it is wrong."
+    "md": "The paper still pays the working, and the 2025 report asked for calculator answers to be backed by it. Write $\\sum x^{2}$, the substitution and then the value, so that a slip on the keys still leaves the method marks."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "The four late-bus times, 6, 11, 3 and 8 minutes, are typed into a calculator in statistics mode.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "It shows $\\sum x = 28$ and $\\sum x^{2} = 230$",
+        "decision": "The same totals as before: the calculator only saves the adding."
+      },
+      {
+        "n": 2,
+        "working": "$\\sigma_{x} = 2.9155\\ldots$",
+        "decision": "It divides by $n = 4$, so it agrees with the sheet's formula: 2.92."
+      },
+      {
+        "n": 3,
+        "working": "$s_{x} = 3.3665\\ldots$",
+        "decision": "It divides by $n - 1 = 3$: a different number, never asked for on this paper."
+      },
+      {
+        "n": 4,
+        "working": "Write $\\sum x^{2} = 230$, the substitution, then $\\sigma = 2.92$",
+        "decision": "The working carries the method marks, even if a key is pressed wrongly."
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "9mvT1Y_jufU",
     "title": "Finding mean and standard deviation on the Casio fx-85GT CW and Casio fx-911CW calculators",
     "channel": "N.I. Maths Tutor",
-    "why": "The exact key sequence on the two calculators most Northern Ireland centres use."
+    "why": "The key sequence on the two calculators most Northern Ireland centres use."
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g9",
     "kind": "choice",
-    "prompt": "A calculator shows $\\sigma_{x} = 3.74$ and $s_{x} = 4.18$. Which goes on the answer line?",
+    "prompt": "For five values a calculator shows $\\sigma_{x} = 2.64$ and $s_{x} = 2.95$. Which is the standard deviation this paper asks for?",
     "options": [
-      "$\\sigma_{x} = 3.74$",
-      "$s_{x} = 4.18$",
+      "$\\sigma_{x} = 2.64$",
+      "$s_{x} = 2.95$",
       "Whichever is larger"
     ],
-    "answer": "$\\sigma_{x} = 3.74$",
-    "explain": "The sheet's formula divides by $n$, and that is what $\\sigma_{x}$ reports."
+    "answer": "$\\sigma_{x} = 2.64$",
+    "explain": "As in step 2 of See it, the sheet's formula divides by $n$, and so does $\\sigma_{x}$: 2.64. $s_{x}$ divides by $n - 1$, which is why it always comes out a little larger.",
+    "twin": {
+      "prompt": "For six values a calculator shows $\\sigma_{x} = 4.2$ and $s_{x} = 4.60$. Which one does the sheet's formula give?",
+      "options": [
+        "$\\sigma_{x} = 4.2$",
+        "$s_{x} = 4.60$",
+        "Their mean, 4.40"
+      ],
+      "answer": "$\\sigma_{x} = 4.2$",
+      "explain": "The sheet divides by $n$, and so does $\\sigma_{x}$.",
+      "optionNotes": [
+        {
+          "option": "$s_{x} = 4.60$",
+          "why": "$s_{x}$ divides by $n - 1$, which this specification does not use.",
+          "misconception": "fm.sd.sample-divisor-used"
+        },
+        {
+          "option": "Their mean, 4.40",
+          "why": "Averaging the two keys gives neither; the sheet's formula matches $\\sigma_{x}$ exactly."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$s_{x} = 2.95$",
+        "why": "$s_{x}$ divides by $n - 1$, a different quantity; the sheet's formula divides by $n$.",
+        "misconception": "fm.sd.sample-divisor-used"
+      },
+      {
+        "option": "Whichever is larger",
+        "why": "Size does not decide it: the divisor does, and the sheet divides by $n$.",
+        "misconception": "fm.sd.sample-divisor-used"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "6. Rounding and the answer line"
+    "text": "Keep the mean exact, round at the end",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The front page of the paper says: where rounding is needed, give answers to 2 decimal places unless told otherwise. Two habits follow.\n**Keep the mean exact.** Round it early and every later figure moves.\n**Round, never chop.** Cutting digits off instead of rounding is a reported cause of lost marks."
+    "md": "Unless a question says otherwise, Unit 3 answers are given to 2 decimal places. That rounding happens once, at the end. A mean such as 10.75 goes into the formula exactly as it is: rounded to 11, it changes the variance, and the root can land a long way from the true value."
   },
   {
     "type": "figure",
-    "alt": "A zoomed number line from 7.7 to 7.8 carrying a single point at 7.7460, with a dashed line at 7.75 showing the nearer of the two neighbouring two-decimal values.",
-    "svg": "<svg viewBox='0 0 460 176' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A zoomed number line from 7.7 to 7.8 with the computed value 7.7460 marked and a dashed line at 7.75'><title>A zoomed number line from 7.7 to 7.8 with the computed value 7.7460 marked and a dashed line at 7.75</title><path d='M40 122 L436 122' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M40.0 122 L40.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='40.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>7.7</text><path d='M119.2 122 L119.2 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='119.2' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>7.72</text><path d='M198.4 122 L198.4 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='198.4' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>7.74</text><path d='M277.6 122 L277.6 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='277.6' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>7.76</text><path d='M356.8 122 L356.8 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='356.8' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>7.78</text><path d='M436.0 122 L436.0 128' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='436.0' y='143' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>7.8</text><path d='M238.0 18 L238.0 122' stroke='currentColor' stroke-width='1.2' stroke-dasharray='5 4' fill='none' stroke-opacity='0.8'/><text x='238.0' y='14' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>rounds to 7.75</text><circle cx='222.2' cy='110.0' r='5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><text x='40' y='164' font-family='inherit' font-size='12.5' fill='currentColor'>standard deviation in cars</text></svg>",
-    "caption": "The computed value 7.7460 sits nearer 7.75 than 7.74, so 7.75 goes on the answer line."
-  },
-  {
-    "type": "gate",
-    "id": "g6",
-    "kind": "number",
-    "prompt": "A standard deviation comes out as $7.7460$. What goes on the answer line?",
-    "answer": "7.75",
-    "explain": "7.75. The third decimal rounds the second one up; chopping would give a different answer and lose the mark."
+    "alt": "A number line from 0 to 3 with two marked points: 2.59, labelled mean kept exact, and 1.12, labelled mean rounded to 11.",
+    "svg": "<svg viewBox='0 0 400 150' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A number line from 0 to 3 with two marked points: 2.59, labelled mean kept exact, and 1.12, labelled mean rounded to 11.'><title>A number line from 0 to 3 with two marked points: 2.59, labelled mean kept exact, and 1.12, labelled mean rounded to 11.</title><path d='M28 96 L372 96' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M28 96 L28 102' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='28' y='122' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><path d='M85.3 96 L85.3 102' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M142.7 96 L142.7 102' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='142.7' y='122' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M200 96 L200 102' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M257.3 96 L257.3 102' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='257.3' y='122' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M314.7 96 L314.7 102' stroke='currentColor' stroke-width='1.2' fill='none'/><path d='M372 96 L372 102' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='372' y='122' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M156.4 36 L156.4 88' stroke='currentColor' stroke-width='1.2' fill='none' stroke-dasharray='4 3' stroke-opacity='0.8'/><circle cx='156.4' cy='96' r='6' fill='currentColor' fill-opacity='0.5' stroke='currentColor' stroke-width='1.4'/><text x='156.4' y='30' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>mean rounded: 1.12</text><path d='M325 62 L325 88' stroke='currentColor' stroke-width='1.2' fill='none' stroke-dasharray='4 3' stroke-opacity='0.8'/><circle cx='325' cy='96' r='6' fill='currentColor' fill-opacity='0.5' stroke='currentColor' stroke-width='1.4'/><text x='325' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>mean kept: 2.59</text></svg>",
+    "caption": "The same four values give 2.59 with the mean kept exact, and 1.12 with the mean rounded to 11."
   },
   {
     "type": "callout",
-    "kind": "mustknow",
-    "title": "You can now",
-    "md": "Find $\\sum x$ and $\\sum x^{2}$ from a list, keeping them apart from $\\left(\\sum x\\right)^{2}$.\nRead the sheet's formula for a plain list, with $\\sum f$ as $n$.\nWork the four steps in order: mean, squares, subtract, root.\nChoose $\\sigma_{x}$ rather than $s_{x}$ on the calculator, and show the working anyway.\nRound to 2 decimal places and keep the units of the data."
+    "kind": "examiner",
+    "title": "Round once, never chop",
+    "md": "The 2019 report asked that means not be rounded to whole numbers, after marks were lost that way. The 2024 and 2025 reports asked for working values to carry more accuracy than the answer, and for the answer to be rounded, never cut short.",
+    "source": "ccea-cer:further-maths:2019-summer:FM3:Q6"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the standard deviation of 7, 10, 12 and 14.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\bar{x} = \\dfrac{43}{4}$\n$= 10.75$",
+        "decision": "Keep 10.75 exactly: it goes into the next line as it is.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\sum x^{2} = 49 + 100 + 144 + 196$\n$= 489$",
+        "decision": "Square first, then add.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\sigma = \\sqrt{\\dfrac{489}{4} - 10.75^{2}}$\n$= \\sqrt{6.6875}$",
+        "decision": "Substitute with the exact mean.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$= 2.586\\ldots$, so $\\sigma = 2.59$",
+        "decision": "Round once, at the end. With the mean rounded to 11 the root would be $\\sqrt{1.25} = 1.12$, a different answer.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "Five values have $\\sum x = 34$ and $\\sum x^{2} = 250$. Keeping the mean exact, what is their standard deviation, to 2 decimal places?",
+    "answer": "1.94 | 1.939",
+    "explain": "As in See it, keep the mean exact: $\\bar{x} = 6.8$, so $\\dfrac{250}{5} - 6.8^{2} = 3.76$ and $\\sqrt{3.76} = 1.94$. Rounding the mean to 7 would give $\\sqrt{1} = 1$.",
+    "twin": {
+      "prompt": "Four values have $\\sum x = 29$ and $\\sum x^{2} = 243$. Keeping the mean exact, what is their standard deviation, to 2 decimal places?",
+      "answer": "2.86 | 2.861",
+      "explain": "$\\bar{x} = 7.25$, so $\\dfrac{243}{4} - 7.25^{2} = 8.1875$, and its square root is 2.86."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Write down $sum x$ and $sum x^{2}$, keeping the two apart.\nWork out the mean and keep it unrounded.\nSubstitute into the formula and finish with the square root."
+    "md": "Say which of two sets is more spread out, from how far the values sit from the mean.\nWrite $\\sum x$ and $\\sum x^{2}$, squaring each value before adding.\nWork the four steps: the mean, $\\sum x^{2}$, the substitution, the square root.\nTreat a table of days as a plain list, with $n$ the number of values.\nUse $\\sigma_{x}$, keep the mean exact and round only the answer, to 2 decimal places."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "Unit 3 opens with this, or sets it near the front, for three to five marks. The first marks are $sum x$ and $sum x^{2}$ written down; the last is the deviation itself, after the square root. Stuck: write the two totals and the mean, because each is worth a mark on its own."
+    "md": "Unit 3 sets this as a part of three to five marks (Summer 2023 Q6, Summer 2025 Q2), and most papers since 2019 ask for two means inside the Spearman question too. The first marks are for the mean and $\\sum x^{2}$; the last is for the root, to 2 decimal places. Stuck: write the mean and $\\sum x^{2}$, which earn marks on their own."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.mean-and-standard-deviation.01"
+    "promptId": "rp.fm.u3.mean-and-standard-deviation.10"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.mean-and-standard-deviation.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.mean-and-standard-deviation.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.mean-and-standard-deviation.05"
+    "promptId": "rp.fm.u3.mean-and-standard-deviation.06"
   }
 ]
