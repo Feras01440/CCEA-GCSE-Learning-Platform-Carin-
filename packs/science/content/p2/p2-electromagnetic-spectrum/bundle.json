@@ -3307,6 +3307,21 @@
    "difficultyPrior": 7
   },
   {
+   "id": "rp.science.p2.p2-electromagnetic-spectrum.11",
+   "topic": "science.p2.p2-electromagnetic-spectrum",
+   "specRefs": [
+    "DA-P2-2.1.8"
+   ],
+   "kind": "trap",
+   "prompt": "Which region of the spectrum has the longest wavelength?",
+   "answer": "Radio waves.",
+   "keyWords": [
+    "radio"
+   ],
+   "examUnit": "P2",
+   "difficultyPrior": 7
+  },
+  {
    "id": "rp.science.p2.p2-electromagnetic-spectrum.03",
    "topic": "science.p2.p2-electromagnetic-spectrum",
    "specRefs": [
@@ -3337,6 +3352,22 @@
     "tissue",
     "burns",
     "skin"
+   ],
+   "examUnit": "P2",
+   "difficultyPrior": 8
+  },
+  {
+   "id": "rp.science.p2.p2-electromagnetic-spectrum.10",
+   "topic": "science.p2.p2-electromagnetic-spectrum",
+   "specRefs": [
+    "DA-P2-2.1.9"
+   ],
+   "kind": "definition",
+   "prompt": "Give the danger of overexposure to microwaves.",
+   "answer": "Internal heating of body tissues.",
+   "keyWords": [
+    "internal heating",
+    "body tissues"
    ],
    "examUnit": "P2",
    "difficultyPrior": 8
@@ -3425,7 +3456,7 @@
     "q.science.p2.p2-electromagnetic-spectrum.0009",
     "q.science.p2.p2-electromagnetic-spectrum.0002",
     "q.science.p2.p2-electromagnetic-spectrum.0011",
-    "rp.science.p2.p2-electromagnetic-spectrum.02",
+    "rp.science.p2.p2-electromagnetic-spectrum.11",
     "q.science.p2.p2-electromagnetic-spectrum.0012",
     "rp.science.p2.p2-electromagnetic-spectrum.08"
    ],
@@ -3443,7 +3474,7 @@
    ],
    "itemIds": [
     "dx.science.p2.p2-electromagnetic-spectrum.post",
-    "rp.science.p2.p2-electromagnetic-spectrum.04",
+    "rp.science.p2.p2-electromagnetic-spectrum.10",
     "q.science.p2.p2-electromagnetic-spectrum.0010",
     "ftm.science.p2.p2-electromagnetic-spectrum.01",
     "q.science.p2.p2-electromagnetic-spectrum.0013",
@@ -4557,8 +4588,17 @@
      "by": "claude"
     }
    ],
-   "status": "verified",
-   "reports": []
+   "status": "withdrawn",
+   "reports": [],
+   "withdrawn": [
+    {
+     "id": "rp.science.p2.p2-electromagnetic-spectrum.02",
+     "kind": "prompt",
+     "replacedBy": "rp.science.p2.p2-electromagnetic-spectrum.11",
+     "reason": "It asked two things at once (the longest wavelength and the highest frequency), so the Slides deck's recall rule (recallFit) left it out; rp.11 asks one.",
+     "on": "2026-09-27T21:00:00Z"
+    }
+   ]
   },
   {
    "id": "ver.rp.science.p2.p2-electromagnetic-spectrum.03",
@@ -4655,8 +4695,17 @@
      "by": "claude"
     }
    ],
-   "status": "verified",
-   "reports": []
+   "status": "withdrawn",
+   "reports": [],
+   "withdrawn": [
+    {
+     "id": "rp.science.p2.p2-electromagnetic-spectrum.04",
+     "kind": "prompt",
+     "replacedBy": "rp.science.p2.p2-electromagnetic-spectrum.10",
+     "reason": "It asked for two dangers at once, so the Slides deck's recall rule (recallFit) left it out; rp.10 asks for the microwave danger alone, and the others live in the note and the practice.",
+     "on": "2026-09-27T21:00:00Z"
+    }
+   ]
   },
   {
    "id": "ver.rp.science.p2.p2-electromagnetic-spectrum.05",
@@ -5456,6 +5505,120 @@
      "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
      "result": "pass",
      "detail": "A short recall: the question 10 words, the answer 13; its key words are in its own answer.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    }
+   ],
+   "status": "verified",
+   "reports": []
+  },
+  {
+   "id": "ver.rp.science.p2.p2-electromagnetic-spectrum.11",
+   "itemId": "rp.science.p2.p2-electromagnetic-spectrum.11",
+   "version": 1,
+   "checks": [
+    {
+     "type": "schema",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts with zero problems.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "scope-tier",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "P2 §2.1 outcomes 2.1.8 and 2.1.9, both printed at Foundation Tier, so the content is common to both papers. One item is tagged tier H for demand rather than content: the calculation with the speed of light (q.0005) uses standard form, which is where the Higher paper sets this outcome. Uses of the regions appear only in the note's teaching and never as a marked answer, because the assessed outcomes cover the order, the common speed and the dangers; refraction, dispersion and the colours of the visible spectrum belong to §2.2 and are not used here.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "Exercises Summer 2024 P2 Foundation Q5 and P2 Higher Q2 (the banded question on the spectrum: the two ends, radio and gamma, were commonly swapped, and a minority did not realise hot objects emit infrared), Summer 2025 P2 Higher Q6(ii) (only the very best candidates linked the microwave danger to internal body tissue or organs), Summer 2025 P2 Foundation Q2(a)(i) (ultrasound recorded instead of ultraviolet), Summer 2023 P2 Foundation Q3 (the heating properties of microwaves and infrared confused) and Summer 2025 P2 Higher Q8(b) (different colours travel at different speeds in glass, which is the converse of the same-speed-in-a-vacuum rule).",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "copy-shingle",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "Compared by hand against the P2 and Unit 7 Physics papers and mark schemes read for this batch (Summer 2025 P2 Higher, Summer 2024 P2 Higher, Summer 2024 P2 Foundation, Summer 2023 P2 Foundation, Summer 2025 Unit 7 Physics Booklet B) and against the Chief Examiner report blocks under pipeline/mine/cer-blocks/science: new contexts, numbers, wording and diagrams throughout; no eight-word sequence in common with any source.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "British English; second person; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; colour is never the only signal in a figure; every $…$ pair opens and closes in one string and holds no prose; KaTeX segments compile.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "A light recall card: the question 9 words, the answer 2; recallFit passes; its key words are in its own answer.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    }
+   ],
+   "status": "verified",
+   "reports": []
+  },
+  {
+   "id": "ver.rp.science.p2.p2-electromagnetic-spectrum.10",
+   "itemId": "rp.science.p2.p2-electromagnetic-spectrum.10",
+   "version": 1,
+   "checks": [
+    {
+     "type": "schema",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts with zero problems.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "scope-tier",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "P2 §2.1 outcomes 2.1.8 and 2.1.9, both printed at Foundation Tier, so the content is common to both papers. One item is tagged tier H for demand rather than content: the calculation with the speed of light (q.0005) uses standard form, which is where the Higher paper sets this outcome. Uses of the regions appear only in the note's teaching and never as a marked answer, because the assessed outcomes cover the order, the common speed and the dangers; refraction, dispersion and the colours of the visible spectrum belong to §2.2 and are not used here.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "Exercises Summer 2024 P2 Foundation Q5 and P2 Higher Q2 (the banded question on the spectrum: the two ends, radio and gamma, were commonly swapped, and a minority did not realise hot objects emit infrared), Summer 2025 P2 Higher Q6(ii) (only the very best candidates linked the microwave danger to internal body tissue or organs), Summer 2025 P2 Foundation Q2(a)(i) (ultrasound recorded instead of ultraviolet), Summer 2023 P2 Foundation Q3 (the heating properties of microwaves and infrared confused) and Summer 2025 P2 Higher Q8(b) (different colours travel at different speeds in glass, which is the converse of the same-speed-in-a-vacuum rule).",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "copy-shingle",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "Compared by hand against the P2 and Unit 7 Physics papers and mark schemes read for this batch (Summer 2025 P2 Higher, Summer 2024 P2 Higher, Summer 2024 P2 Foundation, Summer 2023 P2 Foundation, Summer 2025 Unit 7 Physics Booklet B) and against the Chief Examiner report blocks under pipeline/mine/cer-blocks/science: new contexts, numbers, wording and diagrams throughout; no eight-word sequence in common with any source.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "British English; second person; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; colour is never the only signal in a figure; every $…$ pair opens and closes in one string and holds no prose; KaTeX segments compile.",
+     "at": "2026-09-27T21:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (27 Sep v3 migration: FORK_SP/v3-p2/em.mjs, every printed number computed and asserted in the script; marking probed by FORK_SP/v3-p2/probe-em.mts through markAnswer with the scheme, markWorking, markGate, markFix and stepLineMatches)",
+     "result": "pass",
+     "detail": "A light recall card: the question 7 words, the answer 5; recallFit passes; its key words are in its own answer.",
      "at": "2026-09-27T21:00:00Z",
      "by": "claude"
     }

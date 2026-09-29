@@ -7,30 +7,44 @@
       "Resolve forces given at angles and total the two directions",
       "Work out the magnitude and the direction of a resultant"
     ],
-    "minutes": 8
-  },
-  {
-    "type": "p",
-    "md": "Three people push a stalled car from slightly different angles. The car does not feel three pushes: it feels one, in one direction, of one size. That single equivalent force is the resultant."
+    "minutes": 13
   },
   {
     "type": "h",
-    "text": "1. Many forces, one arrow",
+    "text": "Many forces, one arrow",
     "role": "idea"
   },
   {
     "type": "figure",
-    "alt": "Three forces pulling a point O: 26 N horizontally to the right, 15 N up and to the right at 40 degrees to the horizontal, and 8 N horizontally to the left, with dashed reference lines through O.",
-    "svg": "<svg viewBox='0 0 400 330' xmlns='http://www.w3.org/2000/svg' width='400' height='330'><g fill='currentColor' font-family='inherit'><path d='M100 165H300M200 65V265' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><circle cx='200' cy='165' r='3.5' fill='currentColor'/><path d='M200 165L304 165' fill='none' stroke='currentColor' stroke-width='2'/><path d='M304 165L294 169.2L294 160.8Z' fill='currentColor'/><text x='314' y='170' text-anchor='start' font-size='15'>26 N</text><path d='M200 165L279.7 98.2' fill='none' stroke='currentColor' stroke-width='2'/><path d='M279.7 98.2L274.7 107.8L269.3 101.4Z' fill='currentColor'/><text x='287.3' y='89.7' text-anchor='start' font-size='15'>15 N</text><path d='M238 165A38 38 0 0 0 229.1 140.6' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='250.7' y='151.5' text-anchor='start' font-size='14'>40°</text><path d='M200 165L96 165' fill='none' stroke='currentColor' stroke-width='2'/><path d='M96 165L106 160.8L106 169.2Z' fill='currentColor'/><text x='86' y='170' text-anchor='end' font-size='15'>8 N</text><text x='192' y='185' text-anchor='end' font-size='15' font-weight='600'>O</text></g></svg>",
-    "caption": "Three pulls on one point; a single force could replace them all."
+    "alt": "Two forces pulling a point O: 11 N horizontally to the right and 6 N up and to the right at 70 degrees to the horizontal, with dashed reference lines through O.",
+    "svg": "<svg viewBox='0 0 400 330' xmlns='http://www.w3.org/2000/svg' width='400' height='330'><g fill='currentColor' font-family='inherit'><path d='M100 165H300M200 65V265' fill='none' stroke='currentColor' stroke-width='0.9' stroke-dasharray='4 4' stroke-opacity='0.45'/><circle cx='200' cy='165' r='3.5' fill='currentColor'/><path d='M200 165L304 165' fill='none' stroke='currentColor' stroke-width='2'/><path d='M304 165L294 169.2L294 160.8Z' fill='currentColor'/><text x='314' y='170' text-anchor='start' font-size='15'>11 N</text><path d='M200 165L235.6 67.3' fill='none' stroke='currentColor' stroke-width='2'/><path d='M235.6 67.3L236.1 78.1L228.2 75.2Z' fill='currentColor'/><text x='239' y='55.9' text-anchor='start' font-size='15'>6 N</text><path d='M238 165A38 38 0 0 0 213 129.3' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.85'/><text x='244.2' y='139' text-anchor='start' font-size='14'>70°</text><text x='192' y='185' text-anchor='end' font-size='15' font-weight='600'>O</text></g></svg>",
+    "caption": "Two pulls in different directions: one force could replace them both."
   },
   {
     "type": "p",
-    "md": "The resultant is the single force with the same effect as the whole set. It has a size and a direction, so an answer is finished only when both are given, or when it is written in $\\mathbf{i}$ and $\\mathbf{j}$ form. Forces pulling different ways never simply add up."
+    "md": "The resultant is the single force with the same effect as the whole set. It has a size and a direction, so an answer is finished only when both are given, or when it is written in $\\mathbf{i}$ and $\\mathbf{j}$ form. Forces pulling different ways never simply add up: their directions decide the total."
   },
   {
-    "type": "p",
-    "md": "**Shown:** 26 N and 8 N along one line but opposite ways give $26 - 8 = 18$ N, not $26 + 8 = 34$ N: the directions decide the total."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Two forces of 11 N and 6 N act at a point. How big can their resultant be?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Same direction: $11 + 6 = 17$ N",
+        "decision": "Pulling together, the whole of each counts: the largest the resultant can be."
+      },
+      {
+        "n": 2,
+        "working": "Opposite directions: $11 - 6 = 5$ N",
+        "decision": "Pulling against each other, the smaller cancels part of the larger: the smallest it can be."
+      },
+      {
+        "n": 3,
+        "working": "At right angles: $\\sqrt{11^2 + 6^2} = 12.53$ N",
+        "decision": "Any other direction gives a size between those two."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -43,11 +57,45 @@
       "50 N"
     ],
     "answer": "37 N",
-    "explain": "The sizes add to $35 + 12 = 47$ N only if the forces point the same way, as the line above showed; in different directions the resultant is less than 47 N, so 37 N is the only one possible."
+    "explain": "In different directions the resultant lies between the difference, $35 - 12 = 23$ N, and the sum, $47$ N, as steps 1 and 2 of See it showed; 47 N needs both to point the same way, so 37 N is the only one possible.",
+    "twin": {
+      "prompt": "Forces of 20 N and 9 N act at a point in different directions. Which could be the size of their resultant?",
+      "options": [
+        "24 N",
+        "29 N",
+        "31 N"
+      ],
+      "answer": "24 N",
+      "explain": "Between the difference, 11 N, and the sum, 29 N; the sum itself needs both to point the same way.",
+      "optionNotes": [
+        {
+          "option": "29 N",
+          "why": "29 N is their sum, which needs both forces to point the same way; in different directions the resultant is less.",
+          "misconception": "fm.forces.components-added-as-scalars"
+        },
+        {
+          "option": "31 N",
+          "why": "That is more than their sum, 29 N, and no pair of 20 N and 9 N can make more than that.",
+          "misconception": "fm.forces.components-added-as-scalars"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "47 N",
+        "why": "47 N is their sum, which needs both forces to point the same way; in different directions part of each works against the other.",
+        "misconception": "fm.forces.components-added-as-scalars"
+      },
+      {
+        "option": "50 N",
+        "why": "That is more than their sum, 47 N, and no pair of 35 N and 12 N can make more than that.",
+        "misconception": "fm.forces.components-added-as-scalars"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "2. In i and j: total each column",
+    "text": "In i and j: total each column",
     "role": "variant"
   },
   {
@@ -55,20 +103,49 @@
     "md": "When the forces are given in components the work is arithmetic: total the $\\mathbf{i}$ parts, total the $\\mathbf{j}$ parts, and keep the two columns apart. Watch the negatives: adding $-5$ takes five away, and subtracting a force instead of adding it is a slip the reports have seen here."
   },
   {
-    "type": "p",
-    "md": "**Shown:** the forces $(6\\mathbf{i} - 2\\mathbf{j})$, $(-9\\mathbf{i} + 5\\mathbf{j})$ and $(4\\mathbf{i} + 3\\mathbf{j})$ N.\n**Across:** $6 - 9 + 4 = 1$; **up:** $-2 + 5 + 3 = 6$; so the resultant is $(\\mathbf{i} + 6\\mathbf{j})$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the resultant of $(5\\mathbf{i} - 4\\mathbf{j})$ N, $(-8\\mathbf{i} + 9\\mathbf{j})$ N and $(6\\mathbf{i} + 2\\mathbf{j})$ N.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Across: $5 - 8 + 6 = 3$",
+        "decision": "Total the i column on its own, each number with its sign.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Up: $-4 + 9 + 2 = 7$",
+        "decision": "Then the j column, separately: nothing crosses between them."
+      },
+      {
+        "n": 3,
+        "working": "Resultant $= (3\\mathbf{i} + 7\\mathbf{j})$ N",
+        "decision": "The two totals side by side are the resultant in i and j form.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g2",
     "kind": "blank",
-    "prompt": "Two forces are $(8\\mathbf{i} - 3\\mathbf{j})$ N and $(-5\\mathbf{i} + 7\\mathbf{j})$ N. What is their resultant?",
-    "answer": "3i + 4j | 3i+4j | 4j + 3i | 3i + 4j N | 3i+4j N",
-    "explain": "Column by column, as above: $8 - 5 = 3$ across and $-3 + 7 = 4$ up, so the resultant is $3\\mathbf{i} + 4\\mathbf{j}$ N."
+    "prompt": "Two forces are $(10\\mathbf{i} - 2\\mathbf{j})$ N and $(-7\\mathbf{i} + 6\\mathbf{j})$ N. What is their resultant?",
+    "answer": "3i + 4j | 3i+4j | 4j + 3i | 3i + 4j N | 3i+4j N | R = 3i + 4j | R = 3i+4j | (3i + 4j) N | (3i+4j) N | (3i + 4j) | 3i + 4j newtons | R = (3i + 4j) N | 3 i + 4 j",
+    "explain": "Column by column, as See it did: $10 - 7 = 3$ across and $-2 + 6 = 4$ up, so the resultant is $3\\mathbf{i} + 4\\mathbf{j}$ N. Subtracting the second force instead of adding it is the slip to avoid.",
+    "twin": {
+      "prompt": "Two forces are $(9\\mathbf{i} + 4\\mathbf{j})$ N and $(-5\\mathbf{i} - 6\\mathbf{j})$ N. What is their resultant?",
+      "answer": "4i - 2j | 4i-2j | 4i − 2j | 4i - 2j N | 4i-2j N | -2j + 4i | R = 4i - 2j | (4i - 2j) N | (4i - 2j) | 4i - 2j newtons | 4 i - 2 j",
+      "explain": "Across $9 - 5 = 4$, up $4 - 6 = -2$: $4\\mathbf{i} - 2\\mathbf{j}$ N."
+    }
   },
   {
     "type": "h",
-    "text": "3. Forces at angles: resolve, then total",
+    "text": "Forces at angles: resolve, then total",
     "role": "variant"
   },
   {
@@ -79,11 +156,32 @@
   },
   {
     "type": "p",
-    "md": "Forces given at angles are resolved before they are combined. Take to the right and upwards as positive, resolve every force into those two directions, then total each direction."
+    "md": "Forces given at angles are resolved before they are combined. Take to the right and upwards as positive, resolve every force into those two directions, then total each direction. A force pointing left or down counts negative in its total."
   },
   {
-    "type": "p",
-    "md": "**Across:** $26 + 15\\cos 40° - 8 = 29.49$ N.\n**Up:** $15\\sin 40° = 9.64$ N; the two horizontal forces have no upward part."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Three forces pull a point: 26 N to the right, 15 N at 40° above the horizontal to the right, and 8 N to the left. Total each direction.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Across: $26 + 15\\cos 40° - 8 = 29.49$ N",
+        "decision": "Right positive: the 8 N force points left, so it is subtracted.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Up: $15\\sin 40° = 9.64$ N",
+        "decision": "The two horizontal forces have no upward part.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -91,11 +189,16 @@
     "kind": "number",
     "prompt": "A force of 20 N acts horizontally to the right and a force of 6 N acts horizontally to the left. What is the total component to the right, in newtons?",
     "answer": "14",
-    "explain": "The second force points the other way, so it is subtracted, as the 8 N was above: $20 - 6 = 14$ N."
+    "explain": "The second force points the other way, so it is subtracted, as the 8 N force was in step 1 of See it: $20 - 6 = 14$ N.",
+    "twin": {
+      "prompt": "A force of 17 N acts horizontally to the right and a force of 23 N acts horizontally to the left. What is the total component to the right, in newtons?",
+      "answer": "-6",
+      "explain": "$17 - 23 = -6$ N: the total is negative because the larger force points left."
+    }
   },
   {
     "type": "h",
-    "text": "4. The size of the resultant",
+    "text": "The size of the resultant",
     "role": "derivation"
   },
   {
@@ -110,7 +213,30 @@
   },
   {
     "type": "p",
-    "md": "**Shown, totals of 16 N and 12 N:** $\\sqrt{16^2 + 12^2} = \\sqrt{256 + 144} = \\sqrt{400} = 20$ N."
+    "md": "Keep the totals unrounded in the calculator until the last line. Rounding a total before squaring it can move the second decimal place of the magnitude, and the mark for the value goes with it."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The forces on a body total 16 N across and 12 N up. Find the magnitude of the resultant.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$R = \\sqrt{16^2 + 12^2}$",
+        "decision": "The two totals are the shorter sides; the resultant is the longest.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= \\sqrt{256 + 144} = \\sqrt{400} = 20$ N",
+        "decision": "Square, add, then take the square root: the root is the step most often left off.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
@@ -125,11 +251,16 @@
     "kind": "number",
     "prompt": "The forces on a body have a total component of 8 N to the right and 6 N upwards. What is the magnitude of the resultant, in newtons?",
     "answer": "10",
-    "explain": "The two totals are perpendicular, so Pythagoras applies, as above: $\\sqrt{8^2 + 6^2} = \\sqrt{100} = 10$ N."
+    "explain": "The two totals are perpendicular, so Pythagoras applies, as in See it: $\\sqrt{8^2 + 6^2} = \\sqrt{100} = 10$ N. Adding them, 14 N, treats them as pulling the same way.",
+    "twin": {
+      "prompt": "The forces on a body total 15 N across and 36 N up. What is the magnitude of the resultant, in newtons?",
+      "answer": "39",
+      "explain": "$\\sqrt{15^2 + 36^2} = \\sqrt{225 + 1296} = \\sqrt{1521} = 39$ N."
+    }
   },
   {
     "type": "h",
-    "text": "5. The direction, and its line",
+    "text": "The direction, and its line",
     "role": "variant"
   },
   {
@@ -140,7 +271,11 @@
   },
   {
     "type": "p",
-    "md": "In the same triangle the up total is opposite the angle and the across total beside it, so $\\theta = \\tan^{-1}\\dfrac{Y}{X}$: the angle with the horizontal, the line these questions almost always name."
+    "md": "In the same triangle the up total is opposite the angle with the horizontal and the across total is beside it, so $\\theta = \\tan^{-1}\\dfrac{Y}{X}$: the angle with the horizontal, the line these questions almost always name."
+  },
+  {
+    "type": "p",
+    "md": "Name the line in the answer, as in '28.07° above the horizontal'. A resultant pointing down or to the left still takes the inverse tangent of the two sizes; the sketch says which way it points."
   },
   {
     "type": "callout",
@@ -149,8 +284,32 @@
     "md": "Tangent is opposite over adjacent. Measuring from the horizontal makes the up total the opposite side and the across total the adjacent one, so the up total goes on top."
   },
   {
-    "type": "p",
-    "md": "**Shown:** $\\tan\\theta = \\dfrac{8}{15}$, so $\\theta = 28.07°$ with the horizontal.\n**Upside down:** $\\tan^{-1}\\dfrac{15}{8} = 61.93°$ is the angle with the vertical, a different answer."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A resultant has totals of 15 N across and 8 N up. Find the angle it makes with the horizontal.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\tan\\theta = \\dfrac{8}{15}$",
+        "decision": "The up total is opposite the angle, so it goes on top.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\theta = 28.07°$ with the horizontal",
+        "decision": "Name the line it is measured from.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Not $\\tan^{-1}\\dfrac{15}{8} = 61.93°$",
+        "decision": "The fraction turned over gives the angle with the vertical, a different answer."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -163,32 +322,135 @@
       "$\\sin^{-1}\\dfrac{Y}{X}$"
     ],
     "answer": "$\\tan^{-1}\\dfrac{Y}{X}$",
-    "explain": "The up total is opposite the angle and the across total beside it, as in the line above, so the up total is on top. The second option is the angle with the vertical."
+    "explain": "The up total is opposite the angle with the horizontal and the across total beside it, as in step 1 of See it, so the up total goes on top. Turning the fraction over gives the angle with the vertical.",
+    "twin": {
+      "prompt": "A resultant has a total component of $X$ to the right and $Y$ upwards. Which expression gives the angle it makes with the vertical?",
+      "options": [
+        "$\\tan^{-1}\\dfrac{X}{Y}$",
+        "$\\tan^{-1}\\dfrac{Y}{X}$",
+        "$\\cos^{-1}\\dfrac{Y}{X}$"
+      ],
+      "answer": "$\\tan^{-1}\\dfrac{X}{Y}$",
+      "explain": "Measured from the vertical, the across total is opposite the angle, so it goes on top.",
+      "optionNotes": [
+        {
+          "option": "$\\tan^{-1}\\dfrac{Y}{X}$",
+          "why": "That is the angle with the horizontal; measured from the vertical, the across total is opposite the angle and goes on top.",
+          "misconception": "fm.vectors.direction-ratio-inverted"
+        },
+        {
+          "option": "$\\cos^{-1}\\dfrac{Y}{X}$",
+          "why": "Cosine compares a side with the longest side, the resultant; the two totals compared with each other give a tangent.",
+          "misconception": "fm.vectors.direction-ratio-inverted"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\tan^{-1}\\dfrac{X}{Y}$",
+        "why": "That is the fraction turned over, which gives the angle with the vertical rather than the horizontal.",
+        "misconception": "fm.vectors.direction-ratio-inverted"
+      },
+      {
+        "option": "$\\sin^{-1}\\dfrac{Y}{X}$",
+        "why": "Sine compares a side with the longest side, the resultant; the two totals compared with each other give a tangent.",
+        "misconception": "fm.vectors.direction-ratio-inverted"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "6. Exam twists",
+    "text": "How the paper asks it",
     "role": "twists"
   },
   {
     "type": "p",
-    "md": "**The missing force** (2023). The resultant is given and one force is not: take the forces you know away from the resultant, column by column."
+    "md": "**The missing force** (2023). The resultant is given and one force is not: take the forces you know away from the resultant, column by column. **Both parts at once** (every year): a part may ask for the resultant in $\\mathbf{i}$ and $\\mathbf{j}$ and then its magnitude and direction, each using the one before."
   },
   {
     "type": "p",
-    "md": "**Shown:** $(6\\mathbf{i} - \\mathbf{j})$ N is the resultant of $(2\\mathbf{i} + 3\\mathbf{j})$ N, $(-\\mathbf{i} - 2\\mathbf{j})$ N and $\\mathbf{c}$.\n**Across:** $6 - 2 + 1 = 5$; **up:** $-1 - 3 + 2 = -2$; so $\\mathbf{c} = (5\\mathbf{i} - 2\\mathbf{j})$ N."
+    "md": "**An angle turned into i and j**: a force given by its size and angle is written in components first, then added in columns."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$(6\\mathbf{i} - \\mathbf{j})$ N is the resultant of $(2\\mathbf{i} + 3\\mathbf{j})$ N, $(-\\mathbf{i} - 2\\mathbf{j})$ N and $\\mathbf{c}$. Find $\\mathbf{c}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\mathbf{c} = \\mathbf{R} - \\mathbf{a} - \\mathbf{b}$",
+        "decision": "The three forces add to R, so c is what is left once a and b are taken away.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Across: $6 - 2 + 1 = 5$; up: $-1 - 3 + 2 = -2$",
+        "decision": "Column by column, each sign reversed as it is taken away."
+      },
+      {
+        "n": 3,
+        "working": "$\\mathbf{c} = (5\\mathbf{i} - 2\\mathbf{j})$ N",
+        "decision": "Check: a + b + c gives R back.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g7",
     "kind": "blank",
     "prompt": "The resultant of $(3\\mathbf{i} + 2\\mathbf{j})$ N, $(-\\mathbf{i} + 4\\mathbf{j})$ N and a third force $\\mathbf{c}$ is $(5\\mathbf{i} + \\mathbf{j})$ N. What is $\\mathbf{c}$?",
-    "answer": "3i - 5j | 3i-5j | 3i − 5j | 3i - 5j N | 3i-5j N | -5j + 3i",
-    "explain": "Take the known forces from the resultant, as above: across $5 - 3 + 1 = 3$, up $1 - 2 - 4 = -5$, so $\\mathbf{c} = 3\\mathbf{i} - 5\\mathbf{j}$ N."
+    "answer": "3i - 5j | 3i-5j | 3i − 5j | 3i - 5j N | 3i-5j N | -5j + 3i | c = 3i - 5j | c = 3i − 5j | (3i - 5j) N | (3i − 5j) N | (3i - 5j) | 3i - 5j newtons | c = (3i - 5j) N | 3i + -5j | 3 i - 5 j",
+    "explain": "Take the known forces from the resultant, as in See it: across $5 - 3 + 1 = 3$, up $1 - 2 - 4 = -5$, so $\\mathbf{c} = 3\\mathbf{i} - 5\\mathbf{j}$ N. Adding them all would give the resultant of four forces.",
+    "twin": {
+      "prompt": "The resultant of $(3\\mathbf{i} + 6\\mathbf{j})$ N, $(2\\mathbf{i} - 3\\mathbf{j})$ N and a third force $\\mathbf{c}$ is $(9\\mathbf{i} + 7\\mathbf{j})$ N. What is $\\mathbf{c}$?",
+      "answer": "4i + 4j | 4i+4j | 4j + 4i | 4i + 4j N | 4i+4j N | c = 4i + 4j | (4i + 4j) N | (4i + 4j) | 4i + 4j newtons | 4 i + 4 j",
+      "explain": "Across $9 - 3 - 2 = 4$, up $7 - 6 + 3 = 4$: $\\mathbf{c} = 4\\mathbf{i} + 4\\mathbf{j}$ N."
+    }
+  },
+  {
+    "type": "h",
+    "text": "An unknown part from the magnitude",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "**A magnitude given** (2021). The size is given and one part is unknown: square both parts, add, and set the total equal to the size squared. **Shown:** $(x\\mathbf{i} + 8\\mathbf{j})$ N of magnitude 10 N gives $x^2 + 64 = 100$, so $x^2 = 36$ and $x = 6$ or $-6$."
+    "md": "**A magnitude given** (2021). The size is given and one part is unknown: square both parts, add, and set the total equal to the size squared. The equation gives two roots; the question's picture or wording says which sign to keep."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A resultant force $(x\\mathbf{i} + 8\\mathbf{j})$ N has a magnitude of 10 N. Find $x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$x^2 + 8^2 = 10^2$",
+        "decision": "The magnitude squared is the sum of the two parts squared.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$x^2 = 100 - 64 = 36$",
+        "decision": "Take the known part's square away.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$x = 6$ or $x = -6$",
+        "decision": "Both roots fit the size; keep the one the question asks for.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -196,7 +458,12 @@
     "kind": "number",
     "prompt": "A resultant force $(x\\mathbf{i} + 40\\mathbf{j})$ N has a magnitude of 41 N. What is the positive value of $x$?",
     "answer": "9",
-    "explain": "As above: $x^2 + 40^2 = 41^2$, so $x^2 = 1681 - 1600 = 81$ and $x = 9$ (or $-9$)."
+    "explain": "As in See it: $x^2 + 40^2 = 41^2$, so $x^2 = 1681 - 1600 = 81$ and $x = 9$ (or $-9$).",
+    "twin": {
+      "prompt": "A resultant force $(x\\mathbf{i} + 15\\mathbf{j})$ N has a magnitude of 17 N. What is the positive value of $x$?",
+      "answer": "8",
+      "explain": "$x^2 = 17^2 - 15^2 = 289 - 225 = 64$, so $x = 8$ (or $-8$)."
+    }
   },
   {
     "type": "h",
@@ -218,10 +485,10 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.resultant-of-forces.02"
+    "promptId": "rp.fm.u2.resultant-of-forces.08"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.resultant-of-forces.05"
+    "promptId": "rp.fm.u2.resultant-of-forces.09"
   }
 ]

@@ -7,69 +7,147 @@
       "Multiply two matrices by pairing each row with each column",
       "Decide from the shapes whether a product exists, and what shape it will be"
     ],
-    "minutes": 12
+    "minutes": 10
   },
   {
     "type": "h",
-    "text": "Numbers kept in a rectangle"
+    "text": "Numbers kept in a rectangle",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "A matrix is written inside brackets and described by its shape: **rows first, then columns**. Here $A$ and $B$ are $2 \\times 2$, and $C$ is $2 \\times 3$.\nThe shape is not decoration. It decides what you are allowed to do: two matrices can only be added if they are the same shape, and can only be multiplied if the shapes fit together in one particular way."
+    "md": "A matrix is a rectangle of numbers in brackets, described by its shape: **rows first, then columns**. The shape decides what you may do with it: two matrices add only when they are the same shape, and multiply only when their shapes fit together in one particular way."
   },
   {
     "type": "figure",
-    "alt": "Three matrices drawn in square brackets: A and B are each 2 by 2, and C is 2 by 3.",
-    "svg": "<svg viewBox='0 0 420 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The three matrices used in this lesson: A and B are 2 by 2 and C is 2 by 3'><title>The three matrices used in this lesson: A and B are 2 by 2 and C is 2 by 3</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 103 42 L 112 42 L 112 110 L 103 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='46' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='90' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='46' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='90' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='68' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><path d='M 143 42 L 134 42 L 134 110 L 143 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 213 42 L 222 42 L 222 110 L 213 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='156' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='200' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='156' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='200' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='178' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>B</text><path d='M 253 42 L 244 42 L 244 110 L 253 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 373 42 L 382 42 L 382 110 L 373 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='267' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='313' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='359' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-2</text><text x='267' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='313' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='359' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='313' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>C</text><text x='210' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>A and B are 2 by 2; C is 2 by 3</text></svg>",
-    "caption": "$A$ and $B$ are $2 \\times 2$; $C$ is $2 \\times 3$. Rows first, then columns."
+    "alt": "Two matrices in brackets: P, with two rows and two columns, and R, with two rows and three columns.",
+    "svg": "<svg viewBox='0 0 400 118' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The matrix P, which is 2 by 2, and the matrix R, which is 2 by 3'><title>The matrix P, which is 2 by 2, and the matrix R, which is 2 by 3</title><path d='M 24 34 L 16 34 L 16 98 L 24 98 M 84 34 L 92 34 L 92 98 L 84 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='35' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='73' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='35' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−1</text><text x='73' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='54' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>P</text><path d='M 130 34 L 122 34 L 122 98 L 130 98 M 228 34 L 236 34 L 236 98 L 228 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='141' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='179' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0</text><text x='217' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='141' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−3</text><text x='179' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='217' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='179' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>R</text></svg>",
+    "caption": "$P$ is $2 \\times 2$ and $R$ is $2 \\times 3$: rows first, then columns."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "What shape is $R = \\begin{pmatrix}1 & 0 & 2 \\\\ -3 & 1 & 4\\end{pmatrix}$, and which entry is in row 2, column 3?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$2$ rows and $3$ columns, so $R$ is $2 \\times 3$",
+        "decision": "Count the rows down, then the columns across: rows first, always."
+      },
+      {
+        "n": 2,
+        "working": "Row 2 is $-3$, $1$, $4$, and its third entry is $4$",
+        "decision": "Find the row first, then move along it to the column."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g1",
+    "id": "g6",
     "kind": "choice",
-    "prompt": "One tap to begin. The matrix $C$ shown above has two rows and three columns. What is its shape called?",
+    "prompt": "What shape is the matrix $\\begin{pmatrix}1 & 5 \\\\ 0 & -2 \\\\ 7 & 3\\end{pmatrix}$?",
     "options": [
-      "$2 \\times 3$",
       "$3 \\times 2$",
+      "$2 \\times 3$",
       "$6$"
     ],
-    "answer": "$2 \\times 3$",
-    "explain": "Rows first, then columns, so $C$ is $2 \\times 3$. Getting that order the wrong way round is what makes the multiplication rule look impossible later."
+    "answer": "$3 \\times 2$",
+    "optionNotes": [
+      {
+        "option": "$2 \\times 3$",
+        "why": "Columns came first; the shape is rows first, then columns, and this matrix has three rows."
+      },
+      {
+        "option": "$6$",
+        "why": "That counts the entries; the shape names the rows and the columns separately."
+      }
+    ],
+    "explain": "Count the rows down, then the columns across: three rows and two columns, so it is $3 \\times 2$. This is step 1 of See it.",
+    "twin": {
+      "prompt": "What shape is the matrix $\\begin{pmatrix}4 & -1 & 2\\end{pmatrix}$?",
+      "options": [
+        "$1 \\times 3$",
+        "$3 \\times 1$",
+        "$3$"
+      ],
+      "answer": "$1 \\times 3$",
+      "optionNotes": [
+        {
+          "option": "$3 \\times 1$",
+          "why": "Columns came first; this matrix has one row and three columns, so it is $1 \\times 3$."
+        },
+        {
+          "option": "$3$",
+          "why": "That counts the entries; the shape names the rows and the columns separately."
+        }
+      ],
+      "explain": "One row and three columns: $1 \\times 3$."
+    }
   },
   {
     "type": "h",
-    "text": "1. Adding, subtracting and scaling"
+    "text": "Adding, subtracting and scaling",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "These three are the easy ones. To add, add the entries in matching positions. To subtract, subtract them. To multiply by a number, multiply **every** entry by it.\nThe only rule is shape: $A + B$ works because both are $2 \\times 2$, but $A + C$ does not exist at all, because the third column of $C$ has nothing in $A$ to pair with."
+    "md": "To add, add the entries in matching positions; to subtract, subtract them. To multiply by a number, multiply **every** entry by it. The only rule is shape: $P + Q$ works because both are $2 \\times 2$, but a $2 \\times 2$ and a $3 \\times 2$ cannot be added, because the third row has nothing to pair with."
   },
   {
     "type": "figure",
-    "alt": "Matrix A added to matrix B, with each pair of entries in matching positions added to give the sum.",
-    "svg": "<svg viewBox='0 0 430 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Matrix A added to matrix B, each pair of entries in matching positions added to give the sum'><title>Matrix A added to matrix B, each pair of entries in matching positions added to give the sum</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 103 42 L 112 42 L 112 110 L 103 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='46' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='90' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='46' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='90' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='68' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='146' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>+</text><path d='M 173 42 L 164 42 L 164 110 L 173 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 243 42 L 252 42 L 252 110 L 243 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='186' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='230' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='186' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='230' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='208' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>B</text><text x='286' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 313 42 L 304 42 L 304 110 L 313 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 383 42 L 392 42 L 392 110 L 383 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='326' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>8</text><text x='370' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='326' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='370' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='215' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>each entry added to the entry in the same position</text></svg>",
+    "alt": "The matrix P added to the matrix Q, each pair of entries in matching positions added to give P plus Q.",
+    "svg": "<svg viewBox='0 0 400 118' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='P added to Q: each pair of entries in matching positions added'><title>P added to Q: each pair of entries in matching positions added</title><path d='M 24 34 L 16 34 L 16 98 L 24 98 M 84 34 L 92 34 L 92 98 L 84 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='35' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='73' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='35' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−1</text><text x='73' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='54' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>P</text><text x='115' y='71' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>+</text><path d='M 136 34 L 128 34 L 128 98 L 136 98 M 196 34 L 204 34 L 204 98 L 196 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='147' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='185' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−2</text><text x='147' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='185' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6</text><text x='166' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>Q</text><text x='227' y='71' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 248 34 L 240 34 L 240 98 L 248 98 M 308 34 L 316 34 L 316 98 L 308 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='259' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6</text><text x='297' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='259' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0</text><text x='297' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>9</text><text x='278' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>P + Q</text></svg>",
     "caption": "Position by position, and nothing moves."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "With $P = \\begin{pmatrix}2 & 5 \\\\ -1 & 3\\end{pmatrix}$ and $Q = \\begin{pmatrix}4 & -2 \\\\ 1 & 6\\end{pmatrix}$, work out $P + Q$ and $2P$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P + Q = \\begin{pmatrix}6 & 3 \\\\ 0 & 9\\end{pmatrix}$",
+        "decision": "Add the entries in matching positions: $2 + 4$, then $5 + (-2)$, and so on.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2P = \\begin{pmatrix}4 & 10 \\\\ -2 & 6\\end{pmatrix}$",
+        "decision": "Every entry is multiplied by $2$, the negative one included.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g2",
+    "id": "g7",
     "kind": "number",
-    "prompt": "In the addition shown above, $A$ has $2$ in row 2, column 1 and $B$ has $-1$ in the same place. What is the entry in row 2, column 1 of $A + B$?",
-    "answer": "1",
-    "explain": "$2 + (-1) = 1$. Every entry of a sum comes from the one position it sits in."
+    "prompt": "$Q = \\begin{pmatrix}4 & -2 \\\\ 1 & 6\\end{pmatrix}$. What is the entry in row 1, column 2 of $3Q$?",
+    "answer": "-6",
+    "explain": "Every entry of $Q$ is multiplied by $3$, and the entry in row 1, column 2 is $-2$, so it becomes $-6$. This is step 2 of See it with $3$ for $2$.",
+    "twin": {
+      "prompt": "$P = \\begin{pmatrix}2 & 5 \\\\ -1 & 3\\end{pmatrix}$ and $Q = \\begin{pmatrix}4 & -2 \\\\ 1 & 6\\end{pmatrix}$. What is the entry in row 2, column 1 of $Q - P$?",
+      "answer": "2",
+      "explain": "Subtract in matching positions: $1 - (-1) = 2$."
+    }
   },
   {
     "type": "h",
-    "text": "2. Multiplying: a row meets a column"
+    "text": "Multiplying: a row meets a column",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Multiplication does not work position by position. To find the entry in **row $i$, column $j$** of $AB$, take row $i$ of $A$ and column $j$ of $B$, multiply term by term and add.\nWhy not entry by entry? Because a matrix stands for a whole set of combinations at once, and each row of the first has to meet every column of the second."
+    "md": "Multiplication is not position by position. For the entry in **row $i$, column $j$** of $PQ$, take row $i$ of $P$ and column $j$ of $Q$, multiply term by term, and add."
   },
   {
     "type": "figure",
-    "alt": "The product of A and B, with the first row of A and the first column of B shaded and the entry they produce outlined in the answer matrix.",
-    "svg": "<svg viewBox='0 0 600 184' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The product of A and B with the first row of A and the first column of B shaded, and the entry they produce outlined in the answer matrix'><title>The product of A and B with the first row of A and the first column of B shaded, and the entry they produce outlined in the answer matrix</title><path d='M 33 48 L 24 48 L 24 116 L 33 116' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 103 48 L 112 48 L 112 116 L 103 116' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='46' y='68.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='90' y='68.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='46' y='102.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='90' y='102.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='68' y='39' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='127' y='82' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>×</text><path d='M 155 48 L 146 48 L 146 116 L 155 116' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 225 48 L 234 48 L 234 116 L 225 116' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='168' y='68.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='212' y='68.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='168' y='102.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='212' y='102.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='190' y='39' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>B</text><text x='252' y='82' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 277 48 L 268 48 L 268 116 L 277 116' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 347 48 L 356 48 L 356 116 L 347 116' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='290' y='68.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><text x='334' y='68.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><text x='290' y='102.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><text x='334' y='102.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><rect x='24' y='48' width='88' height='34' fill='currentColor' fill-opacity='0.12' stroke='none'/><rect x='146' y='48' width='44' height='68' fill='currentColor' fill-opacity='0.12' stroke='none'/><rect x='268' y='48' width='44' height='34' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='300' y='150' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>row 1 of A against column 1 of B gives the entry in row 1, column 1</text><text x='300' y='168' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>(3)(5) + (-1)(-1) = 16</text></svg>",
+    "alt": "P times Q, with row 1 of P and column 1 of Q shaded and the entry they make outlined in the answer, and the sum 2 times 4 plus 5 times 1 equals 13 underneath.",
+    "svg": "<svg viewBox='0 0 400 150' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='P times Q with row 1 of P and column 1 of Q shaded, and the entry they make outlined in the answer'><title>P times Q with row 1 of P and column 1 of Q shaded, and the entry they make outlined in the answer</title><rect x='16' y='36' width='76' height='30' fill='currentColor' fill-opacity='0.13' stroke='none'/><path d='M 24 34 L 16 34 L 16 98 L 24 98 M 84 34 L 92 34 L 92 98 L 84 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='35' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='73' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='35' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−1</text><text x='73' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='54' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>P</text><text x='115' y='71' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>×</text><rect x='128' y='36' width='38' height='60' fill='currentColor' fill-opacity='0.13' stroke='none'/><path d='M 136 34 L 128 34 L 128 98 L 136 98 M 196 34 L 204 34 L 204 98 L 196 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='147' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='185' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−2</text><text x='147' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='185' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6</text><text x='166' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>Q</text><text x='227' y='71' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><rect x='242' y='38' width='34' height='26' fill='none' stroke='currentColor' stroke-width='1.5'/><path d='M 248 34 L 240 34 L 240 98 L 248 98 M 308 34 L 316 34 L 316 98 L 308 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='259' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>13</text><text x='297' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>26</text><text x='259' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−1</text><text x='297' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>20</text><text x='278' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>PQ</text><text x='200' y='128' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>(2)(4) + (5)(1) = 13</text></svg>",
     "caption": "Row 1 against column 1 lands in row 1, column 1."
   },
   {
@@ -79,53 +157,147 @@
     "md": "Multiplying matching entries would leave each number of the answer resting on one number from each matrix. Row by column makes every entry rest on a whole row and a whole column, which is what lets one matrix stand for a system of equations later in this unit."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Work out $PQ$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Both are $2 \\times 2$, so $PQ$ is $2 \\times 2$",
+        "decision": "Check the shapes first: they say the product exists and how many entries to find."
+      },
+      {
+        "n": 2,
+        "working": "Row 1: $(2)(4) + (5)(1) = 13$ and $(2)(-2) + (5)(6) = 26$",
+        "decision": "Along the row and down the column at once, with each product written out.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Row 2: $(-1)(4) + (3)(1) = -1$ and $(-1)(-2) + (3)(6) = 20$",
+        "decision": "The same two columns, now with row 2; the signs need care."
+      },
+      {
+        "n": 4,
+        "working": "$PQ = \\begin{pmatrix}13 & 26 \\\\ -1 & 20\\end{pmatrix}$",
+        "decision": "Four entries, as the shapes promised.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
-    "id": "g3",
+    "id": "g8",
     "kind": "number",
-    "prompt": "Using $A$ and $B$ from this lesson, row 2 of $A$ is $2$, $4$ and column 1 of $B$ is $5$, $-1$. What is the entry in row 2, column 1 of $AB$?",
-    "answer": "6",
-    "explain": "$(2)(5) + (4)(-1) = 6$. Term by term along the row and down the column, then add."
+    "prompt": "$M = \\begin{pmatrix}1 & 3 \\\\ 2 & -1\\end{pmatrix}$ and $N = \\begin{pmatrix}4 & 0 \\\\ -2 & 5\\end{pmatrix}$. What is the entry in row 1, column 2 of $MN$?",
+    "answer": "15",
+    "explain": "Row 1 of $M$ is $1$, $3$ and column 2 of $N$ is $0$, $5$: $(1)(0) + (3)(5) = 15$. This is step 2 of See it.",
+    "twin": {
+      "prompt": "$M = \\begin{pmatrix}1 & 3 \\\\ 2 & -1\\end{pmatrix}$ and $N = \\begin{pmatrix}4 & 0 \\\\ -2 & 5\\end{pmatrix}$. What is the entry in row 2, column 1 of $MN$?",
+      "answer": "10",
+      "explain": "Row 2 of $M$ is $2$, $-1$ and column 1 of $N$ is $4$, $-2$: $(2)(4) + (-1)(-2) = 10$."
+    }
   },
   {
     "type": "h",
-    "text": "3. The shape rule"
+    "text": "The shape rule",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Write the two shapes side by side. The product exists only when the **inner** two numbers match, and then the **outer** two give the shape of the answer.\nSo $2 \\times 2$ times $2 \\times 3$ works and gives a $2 \\times 3$ answer. The other way round, $2 \\times 3$ times $2 \\times 2$, has inner numbers $3$ and $2$, so that product does not exist."
+    "md": "Write the two shapes side by side. The product exists only when the **inner** two numbers match, and then the **outer** two give the shape of the answer. So $3 \\times 2$ times $2 \\times 2$ works and gives $3 \\times 2$, while $2 \\times 2$ times $3 \\times 2$ has inner numbers $2$ and $3$, and does not exist."
   },
   {
     "type": "figure",
-    "alt": "The shape rule: a 2 by 2 multiplied by a 2 by 3, with the inner numbers joined to show they match and the outer numbers joined to show they give the product's shape.",
-    "svg": "<svg viewBox='0 0 600 166' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The shape rule: a 2 by 2 multiplied by a 2 by 3, with the two inner numbers joined to show they match and the two outer numbers joined to show they give the product&apos;s shape'><title>The shape rule: a 2 by 2 multiplied by a 2 by 3, with the two inner numbers joined to show they match and the two outer numbers joined to show they give the product&apos;s shape</title><text x='300' y='30' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>the two middle numbers must match</text><text x='150' y='72' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>2 × 2</text><text x='150' y='92' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='300' y='72' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>2 × 3</text><text x='300' y='92' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>C</text><text x='225' y='72' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>×</text><path d='M 178 84 L 178 106 L 272 106 L 272 84' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='225' y='122' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>these two are both 2, so the product exists</text><path d='M 350 72 L 392 72 M 382 65 L 392 72 L 382 79' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='432' y='72' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>2 × 3</text><text x='432' y='92' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>the product</text><path d='M 128 56 L 128 40 L 462 40 L 462 56' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='300' y='150' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the outer two numbers give the shape of the answer</text></svg>",
-    "caption": "Inner numbers match, outer numbers give the answer's shape."
+    "alt": "The shape rule: 3 by 2 times 2 by 2, the inner numbers joined to show they are both 2, and the outer numbers giving the answer's shape, 3 by 2.",
+    "svg": "<svg viewBox='0 0 400 140' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The shape rule: a 3 by 2 times a 2 by 2, the inner numbers joined to show they match and the outer numbers giving the answer&apos;s shape, 3 by 2'><title>The shape rule: a 3 by 2 times a 2 by 2, the inner numbers joined to show they match and the outer numbers giving the answer&apos;s shape, 3 by 2</title><text x='165' y='26' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>outer numbers: the answer&apos;s shape</text><text x='95' y='78' font-family='inherit' font-size='22' fill='currentColor' text-anchor='middle'>3 × 2</text><text x='165' y='78' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>×</text><text x='235' y='78' font-family='inherit' font-size='22' fill='currentColor' text-anchor='middle'>2 × 2</text><path d='M 118 90 L 118 104 L 212 104 L 212 90' stroke='currentColor' stroke-width='1.3' fill='none' stroke-dasharray='5 4'/><text x='165' y='126' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>inner numbers both 2: the product exists</text><path d='M 290 72 L 318 72 M 310 66 L 318 72 L 310 78' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='355' y='78' font-family='inherit' font-size='22' fill='currentColor' text-anchor='middle'>3 × 2</text><path d='M 72 58 L 72 44 L 258 44 L 258 58' stroke='currentColor' stroke-width='1.3' fill='none' stroke-dasharray='5 4'/></svg>",
+    "caption": "Inner numbers match; outer numbers give the answer's shape."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "$K$ is $3 \\times 2$ and $L$ is $2 \\times 2$. Can $KL$ and $LK$ be worked out? Give the shape of any that can.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$KL$: $3 \\times 2$ then $2 \\times 2$, inner numbers $2$ and $2$",
+        "decision": "They match, so $KL$ exists."
+      },
+      {
+        "n": 2,
+        "working": "$KL$ is $3 \\times 2$",
+        "decision": "The outer numbers give its shape."
+      },
+      {
+        "n": 3,
+        "working": "$LK$: $2 \\times 2$ then $3 \\times 2$, inner numbers $2$ and $3$",
+        "decision": "They differ, so $LK$ does not exist."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g9",
     "kind": "choice",
-    "prompt": "Using the shape rule shown above, what shape is the product of a $2 \\times 2$ matrix and a $2 \\times 3$ matrix, in that order?",
+    "prompt": "$M$ is $3 \\times 2$ and $N$ is $2 \\times 1$. What shape is $MN$?",
     "options": [
-      "$2 \\times 3$",
+      "$3 \\times 1$",
       "$2 \\times 2$",
-      "$3 \\times 2$"
+      "$MN$ does not exist"
     ],
-    "answer": "$2 \\times 3$",
-    "explain": "The inner numbers are both $2$, so the product exists, and the outer numbers $2$ and $3$ give its shape."
+    "answer": "$3 \\times 1$",
+    "optionNotes": [
+      {
+        "option": "$2 \\times 2$",
+        "why": "Those are the inner numbers, which only say the product exists; the outer numbers, $3$ and $1$, give its shape."
+      },
+      {
+        "option": "$MN$ does not exist",
+        "why": "The inner numbers are both $2$, so it does exist; only the other order, $NM$, fails.",
+        "misconception": "fm.matrix.dimensions-not-conformable"
+      }
+    ],
+    "explain": "The inner numbers are both $2$, so $MN$ exists, and the outer numbers give its shape: $3 \\times 1$. This is steps 1 and 2 of See it.",
+    "twin": {
+      "prompt": "$M$ is $1 \\times 3$ and $N$ is $3 \\times 2$. What shape is $MN$?",
+      "options": [
+        "$1 \\times 2$",
+        "$3 \\times 3$",
+        "$MN$ does not exist"
+      ],
+      "answer": "$1 \\times 2$",
+      "optionNotes": [
+        {
+          "option": "$3 \\times 3$",
+          "why": "Those are the inner numbers, which only say the product exists; the outer numbers, $1$ and $2$, give its shape."
+        },
+        {
+          "option": "$MN$ does not exist",
+          "why": "The inner numbers are both $3$, so it does exist.",
+          "misconception": "fm.matrix.dimensions-not-conformable"
+        }
+      ],
+      "explain": "Inner numbers $3$ and $3$ match; the outer numbers give $1 \\times 2$."
+    }
   },
   {
     "type": "h",
-    "text": "4. Two things that catch people out"
+    "text": "Two things that catch people out",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "**The order matters.** $AB$ and $BA$ are different matrices, and often only one of them exists. Never swap them to make the arithmetic easier.\n**Squaring means multiplying.** $A^{2}$ is $A \\times A$, worked out row by column. It is not the matrix you get by squaring each entry, and that is the slip examiners report most often on this topic."
+    "md": "**The order matters.** $PQ$ and $QP$ are different matrices, and often only one of them exists: never swap them to make the arithmetic easier. **Squaring means multiplying.** $P^{2}$ is $P \\times P$, worked row by column, never the matrix made by squaring each entry."
   },
   {
     "type": "figure",
-    "alt": "The product AB beside the product BA, showing that the two are different matrices.",
-    "svg": "<svg viewBox='0 0 320 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The product of A and B beside the product of B and A, showing that the two are different matrices'><title>The product of A and B beside the product of B and A, showing that the two are different matrices</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 103 42 L 112 42 L 112 110 L 103 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='46' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><text x='90' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><text x='46' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><text x='90' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='68' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>AB</text><text x='146' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>≠</text><path d='M 173 42 L 164 42 L 164 110 L 173 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 243 42 L 252 42 L 252 110 L 243 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='186' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>19</text><text x='230' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='186' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3</text><text x='230' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='208' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>BA</text><text x='160' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the same two matrices, multiplied the other way round</text></svg>",
-    "caption": "Same two matrices, opposite order, different answer."
+    "alt": "The product PQ beside the product QP, with a not-equal sign between them: the entries are different.",
+    "svg": "<svg viewBox='0 0 400 118' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The product PQ beside the product QP: the same two matrices, the other order, a different answer'><title>The product PQ beside the product QP: the same two matrices, the other order, a different answer</title><path d='M 24 34 L 16 34 L 16 98 L 24 98 M 84 34 L 92 34 L 92 98 L 84 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='35' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>13</text><text x='73' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>26</text><text x='35' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−1</text><text x='73' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>20</text><text x='54' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>PQ</text><text x='115' y='71' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>≠</text><path d='M 136 34 L 128 34 L 128 98 L 136 98 M 196 34 L 204 34 L 204 98 L 196 98' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='147' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>10</text><text x='185' y='56' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>14</text><text x='147' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−4</text><text x='185' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>23</text><text x='166' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>QP</text></svg>",
+    "caption": "The same two matrices, the other order, a different answer."
   },
   {
     "type": "callout",
@@ -135,23 +307,62 @@
     "source": "ccea-cer:further-maths:2024-summer:FM1:Q7"
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Work out $P^{2}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P^{2} = P \\times P$",
+        "decision": "Write the multiplication out: squaring a matrix multiplies it by itself."
+      },
+      {
+        "n": 2,
+        "working": "Row 1: $(2)(2) + (5)(-1) = -1$ and $(2)(5) + (5)(3) = 25$",
+        "decision": "Row by column, exactly as for any product.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Row 2: $(-1)(2) + (3)(-1) = -5$ and $(-1)(5) + (3)(3) = 4$",
+        "decision": "The second row against both columns."
+      },
+      {
+        "n": 4,
+        "working": "$P^{2} = \\begin{pmatrix}-1 & 25 \\\\ -5 & 4\\end{pmatrix}$",
+        "decision": "Squaring each entry would give $\\begin{pmatrix}4 & 25 \\\\ 1 & 9\\end{pmatrix}$, a different matrix.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "video",
     "videoId": "X66YHxuGUvE",
     "title": "Multiplying Matrices 2x2 by 2x2 - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "The row-by-column sweep worked through slowly on several pairs of matrices."
+    "why": "The row-by-column sweep worked through slowly on several pairs of matrices, beside our own steps."
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g10",
     "kind": "number",
-    "prompt": "For the matrix $A$ in this lesson, $A^{2}$ means $A \\times A$. Row 1 of $A$ is $3$, $-1$ and column 1 of $A$ is $3$, $2$. What is the entry in row 1, column 1 of $A^{2}$?",
-    "answer": "7",
-    "explain": "$(3)(3) + (-1)(2) = 7$. Squaring the entry alone would give $9$, which is a different matrix."
+    "prompt": "$N = \\begin{pmatrix}4 & 0 \\\\ -2 & 5\\end{pmatrix}$. What is the entry in row 2, column 1 of $N^{2}$?",
+    "answer": "-18",
+    "explain": "Row 2 of $N$ is $-2$, $5$ and column 1 of $N$ is $4$, $-2$: $(-2)(4) + (5)(-2) = -18$. Squaring the entry alone would give $4$. This is steps 1 to 3 of See it.",
+    "twin": {
+      "prompt": "$M = \\begin{pmatrix}1 & 3 \\\\ 2 & -1\\end{pmatrix}$. What is the entry in row 1, column 1 of $M^{2}$?",
+      "answer": "7",
+      "explain": "Row 1 of $M$ is $1$, $3$ and column 1 is $1$, $2$: $(1)(1) + (3)(2) = 7$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
@@ -159,26 +370,19 @@
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "Matrix arithmetic is a short question, usually $4$ to $6$ marks across two or three parts: a scalar multiple or a sum, then a product. It opened the paper in Summer 2019 and Summer 2025. The first mark is the row-by-column working written out; the last is every entry right. Stuck on a product? Write the shapes down first — they tell you whether to start at all, and how many entries the answer needs."
+    "md": "Matrix arithmetic is a short question, $3$ to $5$ marks in one or two parts: a sum or a scalar multiple, then a product or a square. It opened the paper in Summer 2019 and Summer 2025. The first mark is the working written out; the last is every entry right. Stuck on a product? Write the shapes down first."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-arithmetic.01"
+    "promptId": "rp.fm.u1.matrix-arithmetic.08"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-arithmetic.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-arithmetic.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-arithmetic.06"
+    "promptId": "rp.fm.u1.matrix-arithmetic.07"
   }
 ]
