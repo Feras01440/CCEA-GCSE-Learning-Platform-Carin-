@@ -18,6 +18,8 @@ import { lintKeyWords } from "../src/components/items/keyword-lint.ts";
 import { figureLeakWarnings, lintContent, lintNoteBlocks, markingWarnings, noteBlockWarnings, sizeWarnings } from "../src/components/items/content-lint.ts";
 import { lessonReadiness } from "../src/lib/slides/readiness.ts";
 import { publicVerification } from "../src/lib/build/public-verification.ts";
+import { characterWarnings, keyWordBarWarnings } from "../src/lib/content/shipped-text-lint.ts";
+import { withModelMinutes } from "../src/lib/build/hero-minutes.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKS = path.join(ROOT, "packs");
@@ -77,6 +79,7 @@ let figureWarnings = 0;
 let markingWarningCount = 0;
 let gateWarningCount = 0;
 let sizeWarningCount = 0;
+let characterWarningCount = 0;
 
 for (const file of files) {
   const text = fs.readFileSync(file, "utf8");
@@ -157,15 +160,20 @@ for (const file of files) {
   const noteOk = b.note ? SHIPPABLE.has(statusOf(logs, b.note.verification)) : false;
 
   const questions = keep(b.questions);
+  const shippedWorkedExamples = keep(b.workedExamples);
+  const shippedPrompts = keep(b.prompts);
   const shipped = {
     topic: b.topic,
     note: noteOk ? b.note : null,
-    noteBlocks: noteOk ? noteBlocks : null,
-    workedExamples: keep(b.workedExamples),
+    // The hero's minutes are the app's own (the lead's ruling, 29 Sep 2026, 18:00): the model's Read minutes, priced on what
+    // ships (src/lib/build/hero-minutes.ts, reading src/lib/slides/minutes.ts lessonMinutesFor, as the page does); the
+    // authored number stays only where the model has nothing to measure. The pack is not changed.
+    noteBlocks: noteOk ? withModelMinutes(noteBlocks, { workedExamples: shippedWorkedExamples, prompts: shippedPrompts, topicId: b.topic.id }) : null,
+    workedExamples: shippedWorkedExamples,
     diagnostics: keep(b.diagnostics),
     questions,
     findTheMistake: keep(b.findTheMistake),
-    prompts: keep(b.prompts),
+    prompts: shippedPrompts,
     insight: b.insight ?? null,
     sets: b.sets ?? [],
     // The public copy of the logs (the lead's item 18, 27 Sep 2026): the note's own log and every exam-style question's
@@ -173,6 +181,20 @@ for (const file of files) {
     // whole). src/lib/build/public-verification.ts; its test guards readiness, the withdrawn records and the exam logs.
     verification: publicVerification({ note: b.note, questions, verification: logs }),
   };
+
+  // Read on what ships, exactly as it is written below (src/lib/content/shipped-text-lint.ts; the lead's items b and d, 29 Sep
+  // 2026): a character that must never ship (a control character, a tab or newline that ate a TeX command's backslash
+  // inside maths, U+FFFD, a zero-width character, a line or paragraph separator, a lone surrogate), and a "|" where the
+  // marker compares the string whole or the bars break a key word into pieces. Warned, never fatal.
+  const shippedLabel = path.relative(PACKS, path.dirname(file)).split(path.sep).join("/");
+  for (const w of characterWarnings(shipped, shippedLabel)) {
+    console.warn("CHARACTER", w);
+    characterWarningCount += 1;
+  }
+  for (const w of keyWordBarWarnings(shipped, shippedLabel)) {
+    console.warn("MARKING", w);
+    markingWarningCount += 1;
+  }
 
   const counts = {
     we: shipped.workedExamples.length,
@@ -221,7 +243,7 @@ function listFiles(dir: string, out: string[] = []): string[] {
 for (const stale of listFiles(OUT_PUBLIC).filter((p) => !written.has(path.resolve(p)))) fs.rmSync(stale, { force: true });
 console.log(
   `\n${manifest.topics.length} topic bundle(s) published, ${manifest.problems.length} problem(s), ${keyWordWarnings.hard} key-word warning(s)` +
-    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}${markingWarningCount ? `, ${markingWarningCount} marking warning(s) (MARKING above)` : ""}${gateWarningCount ? `, ${gateWarningCount} gate warning(s) (GATE above)` : ""}${sizeWarningCount ? `, ${sizeWarningCount} size warning(s) (SIZE above)` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
+    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}${markingWarningCount ? `, ${markingWarningCount} marking warning(s) (MARKING above)` : ""}${gateWarningCount ? `, ${gateWarningCount} gate warning(s) (GATE above)` : ""}${sizeWarningCount ? `, ${sizeWarningCount} size warning(s) (SIZE above)` : ""}${characterWarningCount ? `, ${characterWarningCount} character warning(s) (CHARACTER above)` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
 );
 // An invalid bundle is skipped (never shipped) and reported. `--strict` (used by `npm run content:check`
 // and by authors) turns problems into a failing exit code; the app build keeps publishing the valid bundles.

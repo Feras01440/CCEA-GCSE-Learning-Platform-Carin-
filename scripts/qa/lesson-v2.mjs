@@ -69,6 +69,22 @@
  *               shape rules the renderer needs are refused by the build, content-lint.ts). WARNINGS (the
  *               list with --see or --depth) until --see-fatal. The depth row "see it" counts the sections
  *               that end in a gate and hold a See it before it, and the minute model counts 15 s a step.
+ *   minutes     the pack's hero.minutes against the minutes the app prints for the lesson (src/lib/slides/minutes.ts
+ *               lessonMinutesFor, Read: the hero line, the track and the Contents), read through
+ *               scripts/qa/lesson-model.mjs. REPORT ONLY (the lead's ruling of 29 Sep 2026, 18:00): the content build
+ *               ships the model's number in the hero (src/lib/build/hero-minutes.ts), so the line counts the authored
+ *               numbers the build replaces; --minutes (or --depth) lists them. The depth report's minutes are the
+ *               model's too (Read, Slides, and the later stages at its rates); lesson-v2's own estimate was retired
+ *               on 29 Sep 2026. The fatal hero check (a minute estimate of at least 5) still reads the pack's number.
+ *   recall      a prompt the note wires (a `prompt` block) that the lesson leaves out, with the reason
+ *               src/lib/slides/recall.ts gives (recallFit: an explanation, a list, two things at once, a picture, an
+ *               answer over 12 words), or because the bundle does not ship it, or because two lighter ones are kept
+ *               (shownPrompts, THE rule for Read and Slides). A prompts WARNING (the list with --prompts) until
+ *               --prompts-fatal, except a prompt that fits and loses to two lighter ones (listed only: the "wires more
+ *               than two" warning carries it); the migrated notes (with a See it) that keep no recall card are listed,
+ *               report only.
+ *   figures     the figure-label floor (12.5 px on a phone) and the prose-as-picture check read the note's figures and
+ *               the bundle's, withdrawn items left out (shingles-allow.mjs withoutWithdrawn; 29 Sep 2026).
  *
  * Per-unit defaults (scripts/qa/lesson-v2.fatal.json): a unit may make the teach, prompts, withdrawn or see
  * warnings breaches by default, as its migration to v3 lands ({ "fm1": { "teach": true, … } }); a unit with
@@ -88,6 +104,7 @@
  *                 video, option by its place, answer printed in the See it, See it block problems), then one
  *                 readiness line per topic: "ready" or the reasons it is not (src/lib/slides/readiness.ts)
  * --see-fatal     count those as breaches rather than warnings
+ * --minutes       print every note whose authored hero.minutes differs from the app's minute model (the build ships the model's)
  * --json          print the findings as JSON for an author's generator (the depth rows under `depth`,
  *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`,
  *                 the v3 structure findings under `see`, the per-unit lists under `unitLists`)
@@ -99,6 +116,8 @@ import { SEE_HEADING, describeFailure, inlineMaths, teachShowCheck } from "./tea
 import { ANSWER_TARGET, ANSWER_WORDS, QUESTION_WORDS, WIRED_MAX, promptFindings, promptTargets } from "./prompt-few.mjs";
 import { withdrawnFindings } from "./withdrawn.mjs";
 import { EXPLAIN_MAX, markCodes, seeItFindings } from "./see-it.mjs";
+import { heroMinutesFinding, recallFindings } from "./lesson-model.mjs";
+import { withoutWithdrawn } from "./shingles-allow.mjs";
 
 // The app's own TypeScript rules, read as the build reads them (through tsx, so `node scripts/qa/lesson-v2.mjs` keeps
 // working): the lesson readiness rule (src/lib/slides/readiness.ts lessonReadiness, the one the build writes into the
@@ -111,6 +130,12 @@ const { lessonReadiness } = await import("../../src/lib/slides/readiness.ts");
 const { positionalWording } = await import("../../src/lib/gate-order.ts");
 // the build's size rule (the lead's item 16), read from the build's own lint so the two never differ
 const { sizeWarnings, SIZE_LIMITS_KB } = await import("../../src/components/items/content-lint.ts");
+// the app's minute model and recall-card rule (the lead's items e and f, 29 Sep 2026): the minutes the hero line prints
+// (src/lib/slides/minutes.ts lessonMinutesFor, and the after-lesson stage minutes the topic page prints) and the prompts a
+// lesson keeps (src/lib/slides/recall.ts), read through scripts/qa/lesson-model.mjs
+const minutesModel = await import("../../src/lib/slides/minutes.ts");
+const recallModel = await import("../../src/lib/slides/recall.ts");
+const { hasSeeBlock } = await import("../../src/lib/slides/readiness.ts");
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
@@ -125,6 +150,7 @@ const withdrawnReport = argv.includes("--withdrawn");
 const withdrawnFatal = argv.includes("--withdrawn-fatal");
 const seeReport = argv.includes("--see");
 const seeFatal = argv.includes("--see-fatal");
+const minutesReport = argv.includes("--minutes");
 const units = argv.flatMap((a, i) => (a === "--unit" ? [String(argv[i + 1] || "").toLowerCase()] : []));
 
 const ROOT = path.resolve("packs");
@@ -310,6 +336,13 @@ const FLOOR = {
 // item's `verification` ref (worked examples, questions) or by `itemId` (diagnostics, find-the-mistake,
 // prompts); no log, or a status outside this set, is a draft the app never ships.
 const SHIPPABLE = new Set(["verified", "published"]);
+/** A bundle's items of one kind that ship, by that rule (the app's minute model and recall rule are priced on these). */
+const shippedOf = (bundle, key) =>
+  (bundle?.[key] ?? []).filter((it) => {
+    const logs = bundle.verification ?? [];
+    const log = it.verification ? logs.find((l) => l.id === it.verification) : logs.find((l) => l.itemId === it.id);
+    return SHIPPABLE.has(log?.status);
+  });
 const bandOf = (difficulty) => (difficulty <= 2 ? "L" : difficulty === 3 ? "S" : difficulty === 4 ? "H4" : "H5");
 
 // Roles are authored on heading blocks (`role`). A note written before the standard has none, so
@@ -410,8 +443,11 @@ function mathsIssues(strings) {
 
 const short = (s, n = 48) => (s.length > n ? `${s.slice(0, n)}…` : s);
 
-/** The depth measures for one note and its bundle, against the band's floor; `see` is the note's seeItFindings. */
-function depthOf(blocks, bundle, see) {
+/**
+ * The depth measures for one note and its bundle, against the band's floor; `see` is the note's seeItFindings, `model` its
+ * lessonMinutesFor result (src/lib/slides/minutes.ts) and `keptRecall` the recall cards its lesson keeps (recall.ts).
+ */
+function depthOf(blocks, bundle, see, model, keptRecall) {
   if (!bundle?.topic) return null;
   const band = bandOf(Number(bundle.topic.difficulty) || 3);
   const floor = FLOOR[band];
@@ -483,19 +519,24 @@ function depthOf(blocks, bundle, see) {
   const pMarks = practice.reduce((a, q) => a + q.totalMarks, 0);
   const eMarks = exam.reduce((a, q) => a + q.totalMarks, 0);
 
-  // minutes by the app's model (lesson-plan.ts): the learning pass, and the exam-style set sat apart. A See it is
-  // 15 seconds a step (the teach-first case §8.3; lesson-plan.ts is owed the same term).
+  // minutes by the app's own model (src/lib/slides/minutes.ts; the lead's item e, 29 Sep 2026): the lesson as the hero
+  // line prints it (Read) and as Slides prints it, then the topic page's later stages at the model's own rates (a worked
+  // example 2 minutes, a check item 1, a practice or exam mark 1.2, a find-the-mistake item 2, and a prompt the lesson
+  // leaves out 1, as "Say it from memory"), with the exam-style set sat apart. lesson-v2's own estimate (words ÷ 180,
+  // 40 s a gate, 15 s a See it step, 20 s a card) is gone: the lint prints the numbers she sees.
   const seeSteps = see?.seeSteps ?? 0;
-  const noteMinutes = Math.max(1, Math.round(wordCount / 180 + (gates * 40) / 60 + (seeSteps * 15) / 60));
+  const noteMinutes = model.read.minutes;
+  const stage = (n, minutesFor) => (n > 0 ? minutesFor(n) : 0);
+  const loosePrompts = Math.max(0, prompts.length - (keptRecall ?? 0));
   const learnMinutes =
     noteMinutes +
-    workedExamples.length * 2 +
-    Math.min(4, dxItems) +
-    Math.round(pMarks * 1.2) +
-    Math.max(0, dxItems - 4) +
-    findTheMistake.length * 2 +
-    Math.max(0, prompts.length - embedded);
-  const sitMinutes = Math.round(eMarks * 1.2);
+    stage(workedExamples.length, minutesModel.minutesForExamples) +
+    stage(Math.min(4, dxItems), minutesModel.minutesForCheckItems) +
+    stage(pMarks, minutesModel.minutesForMarks) +
+    stage(Math.max(0, dxItems - 4), minutesModel.minutesForCheckItems) +
+    stage(findTheMistake.length, minutesModel.minutesForMistakes) +
+    stage(loosePrompts, minutesModel.minutesForCheckItems);
+  const sitMinutes = stage(eMarks, minutesModel.minutesForMarks);
   const topicMinutes = learnMinutes + sitMinutes;
 
   // structure floor: the countable measures
@@ -596,7 +637,7 @@ function depthOf(blocks, bundle, see) {
   }
   maxCards = Math.max(maxCards, cardsSinceGate);
   const closingCards = blocks.slice(bodyEnd).filter((b) => b.type === "p" || b.type === "h").length;
-  const slidesMinutes = Math.max(1, Math.round(((cards + closingCards) * 20 + gates * 40 + seeSteps * 15) / 60));
+  const slidesMinutes = model.slides.minutes;
   const slides = [];
   if (overCard.length) slides.push(`${overCard.length} block(s) over ${CARD_WORDS} words (one idea per card): ${overCard.slice(0, 2).map((b) => `"${short(String(b.md), 40)}"`).join(", ")}`);
   if (longTitles.length) slides.push(`${longTitles.length} heading(s) over ${TITLE_WORDS} words: ${longTitles.slice(0, 2).map((b) => `"${short(String(b.text), 40)}"`).join(", ")}`);
@@ -607,13 +648,17 @@ function depthOf(blocks, bundle, see) {
 
   // figures: note figures and the bundle's own SVGs
   const noteFigures = blocks.map((b, i) => ({ where: `note#${i}`, svg: b.type === "figure" && b.svg ? b.svg : null })).filter((f) => f.svg);
+  // Withdrawn items are not measured (the lead's item g, 29 Sep 2026): a withdrawn item stays byte-identical in the pack
+  // by rule and never ships, so a label-size line against its figure asks for an edit that must not be made. The rule is
+  // shingles-allow.mjs withoutWithdrawn, as figure-leaks and shingles read it.
+  const live = withoutWithdrawn(bundle);
   const bundleFigures = [];
-  for (const q of bundle.questions) for (const f of q.figures ?? []) if (f.kind === "svg") bundleFigures.push({ where: q.id, svg: decodeFigure(f.src) });
-  for (const we of bundle.workedExamples) {
+  for (const q of live.questions ?? []) for (const f of q.figures ?? []) if (f.kind === "svg") bundleFigures.push({ where: q.id, svg: decodeFigure(f.src) });
+  for (const we of live.workedExamples ?? []) {
     if (we.figure?.kind === "svg") bundleFigures.push({ where: we.id, svg: decodeFigure(we.figure.src) });
     if (we.twin?.figure?.kind === "svg") bundleFigures.push({ where: `${we.id} twin`, svg: decodeFigure(we.twin.figure.src) });
   }
-  for (const d of bundle.diagnostics) for (const it of d.items) if (it.figure?.kind === "svg") bundleFigures.push({ where: `${d.id}/${it.id}`, svg: decodeFigure(it.figure.src) });
+  for (const d of live.diagnostics ?? []) for (const it of d.items ?? []) if (it.figure?.kind === "svg") bundleFigures.push({ where: `${d.id}/${it.id}`, svg: decodeFigure(it.figure.src) });
   const measured = [...noteFigures, ...bundleFigures].map((f) => ({ where: f.where, ...svgLabels(f.svg) }));
   const withText = measured.filter((f) => f.at358 !== null);
   const small = withText.filter((f) => f.at358 < LABEL_FLOOR_PX);
@@ -757,10 +802,20 @@ function checkNote(file, orphans) {
   const readiness = bundle ? lessonReadiness({ note: bundle.note, noteBlocks: blocks, verification: bundle.verification }) : lessonReadiness(null);
   // sizes over the build's limits (content-lint.ts sizeWarnings): a warning line each, printed under the summary
   const sizes = sizeWarnings(bundle, blocks, `${unit}/${slug}`);
+  // the app's minute model and recall rule, priced on what ships (the build's rule), as the topic page prices them
+  const shippedPrompts = bundle ? shippedOf(bundle, "prompts") : [];
+  const model = minutesModel.lessonMinutesFor({ blocks, workedExamples: bundle ? shippedOf(bundle, "workedExamples") : [], prompts: shippedPrompts, topicId: bundle?.topic?.id ?? null });
+  // the pack's hero.minutes against the model's Read minutes: report only, since the build ships the model's number
+  // (src/lib/build/hero-minutes.ts; the lead's ruling, 29 Sep 2026, 18:00)
+  const heroMinutes = heroMinutesFinding(blocks, model, minutesModel);
+  // a wired prompt the lesson leaves out, with recall.ts's reason: a prompts warning (lesson-model.mjs). One that fits but
+  // loses to two lighter ones is listed, never warned: the "wires more than two" warning already carries it.
+  const recall = recallFindings(blocks, { shipped: shippedPrompts, all: bundle?.prompts ?? [], logs: bundle?.verification ?? [] }, recallModel);
+  for (const f of recall.leftOut) if (f.kind !== "over") say.push({ check: "prompts", detail: f.detail, few: true });
   for (const f of see.findings) say.push({ check: "see", detail: f.detail, v3: true });
 
   // the depth floor: warnings unless --depth-fatal
-  const depth = bundle ? depthOf(blocks, bundle, see) : null;
+  const depth = bundle ? depthOf(blocks, bundle, see, model, recall.kept.length) : null;
   if (depth) {
     for (const r of [...depth.rows, ...depth.sectionRows]) if (!r.ok) say.push({ check: "depth", detail: `${r.name} ${r.value} (floor ${r.floor})${r.note ? ` — ${r.note}` : ""}`, depth: true });
     for (const s of [...depth.slides, ...depth.figures, ...depth.maths]) say.push({ check: "depth", detail: s, depth: true });
@@ -805,6 +860,10 @@ function checkNote(file, orphans) {
     see,
     readiness,
     sizes,
+    heroMinutes,
+    minutes: { read: model.read.minutes, slides: model.slides.minutes, untimedVideos: model.untimedVideos },
+    recall,
+    migrated: hasSeeBlock(blocks),
     fatal,
   };
 }
@@ -880,6 +939,15 @@ const firstOk = notes.filter((n) => n.see.firstCheck === true).length;
 const seeFindingsAll = seeKinds.reduce((a, k) => a + seeCount[k], 0);
 const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation and ${seeCount["explain-blocks"]} with more than three explanation blocks; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) or sim(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by its place; ${seeCount["answer-shown"]} Your turn(s) whose answer its See it prints; ${seeCount.reteach} over 60 words; ${seeCount.twin} twin(s) repeating their gate; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
 
+// hero.minutes against the app's minute model (the lead's item e), and the wired prompts the lesson leaves out (item f)
+const minutesOff = notes.filter((n) => n.heroMinutes);
+const minutesLine = `minutes: ${minutesOff.length} of ${notes.length} notes' authored hero.minutes differ from the model (src/lib/slides/minutes.ts lessonMinutesFor, Read); the build ships the model's number (src/lib/build/hero-minutes.ts); report only${minutesReport || depthReport || !minutesOff.length ? "" : "; run --minutes for the list"}.`;
+const leftOut = notes.flatMap((n) => n.recall.leftOut.map((f) => ({ ...f, unit: n.unit, slug: n.slug })));
+const leftOutKinds = Object.fromEntries(["unfit", "unshipped", "over"].map((k) => [k, leftOut.filter((f) => f.kind === k).length]));
+const migratedNotes = notes.filter((n) => n.migrated);
+const noRecall = migratedNotes.filter((n) => n.recall.kept.length === 0);
+const recallLine = `recall cards: ${leftOut.length} wired prompt(s) in ${new Set(leftOut.map((f) => `${f.unit}/${f.slug}`)).size} note(s) are left out of the lesson (src/lib/slides/recall.ts): ${leftOutKinds.unfit} fail recallFit and ${leftOutKinds.unshipped} do not ship${promptsFatal ? "" : " (prompts warnings; --prompts-fatal makes them breaches)"}; report only: ${leftOutKinds.over} fit but lose to two lighter ones (the "wire more than 2" count above carries them), and ${noRecall.length} of ${migratedNotes.length} migrated notes (with a See it) keep no recall card${promptsReport || !(leftOut.length || noRecall.length) ? "" : "; run --prompts for the list"}.`;
+
 // the per-topic lists of units migrating to v3 (lesson-v2.fatal.json "list": true), printed until their defaults are on
 const listUnits = [...new Set(notes.map((n) => n.unit))].filter((u) => unitFlag(u, "list"));
 const unitLists = Object.fromEntries(
@@ -891,7 +959,9 @@ const unitLists = Object.fromEntries(
         slug: n.slug,
         gates: n.teach.gates,
         teachFailing: n.teach.failures.length,
-        prompts: n.prompts.length,
+        // the prompts family as the unit's "prompts" flag would count it: prompt-few's findings and the wired prompts the
+        // lesson leaves out (unfit or unshipped)
+        prompts: n.prompts.length + n.recall.leftOut.filter((f) => f.kind !== "over").length,
         withdrawnProblems: n.withdrawn.problems.length,
         gatesAfterSee: n.see.gatesAfterSee,
         seeBlocks: n.see.seeBlocks,
@@ -929,6 +999,10 @@ if (asJson) {
         seeSummary: { gates: seeGates, gatesAfterSee: seeAfter, seeBlocks: seeBlocksAll, notesWithSee, firstCheckOk: firstOk, notes: notes.length, ready: readyNotes.length, ...seeCount },
         readiness: notes.map((n) => ({ unit: n.unit, slug: n.slug, ready: n.readiness.ready, via: n.readiness.via, reasons: n.readiness.reasons })),
         sizes: notes.flatMap((n) => n.sizes),
+        minutes: notes.map((n) => ({ unit: n.unit, slug: n.slug, ...n.minutes, stated: n.heroMinutes?.stated ?? null, work: n.heroMinutes?.work ?? null, finding: n.heroMinutes?.detail ?? null })),
+        minutesSummary: { notes: notes.length, differ: minutesOff.length, shipped: "model" },
+        recall: notes.filter((n) => n.recall.wired.length || n.migrated).map((n) => ({ unit: n.unit, slug: n.slug, migrated: n.migrated, wired: n.recall.wired, kept: n.recall.kept, leftOut: n.recall.leftOut })),
+        recallSummary: { leftOut: leftOut.length, ...leftOutKinds, migrated: migratedNotes.length, migratedWithNoRecall: noRecall.length },
         unitLists,
         withdrawn: wdNotes.map((n) => ({ unit: n.unit, slug: n.slug, file: n.file, records: n.withdrawn.records, problems: n.withdrawn.problems })),
         withdrawnSummary: { records: wdRecords, topics: wdNotes.length, problems: wdProblems },
@@ -953,7 +1027,7 @@ if (asJson) {
       const shortRows = [...d.rows, ...d.sectionRows].filter((r) => !r.ok);
       const status = d.structureOk && d.sectionsOk ? "meets the floor" : `${shortRows.length} short`;
       console.log(
-        `\n${n.unit}/${n.slug}  ${d.band} (hardness ${d.hardness}, difficulty ${d.difficulty}) · ${status} · ${d.labelled ? "roles labelled" : "sections unlabelled"} · note ${d.minutes.note} min, learn ${d.minutes.learn} + sit ${d.minutes.sit} = about ${d.minutes.topic} min, slides ${d.minutes.cards} cards ≈ ${d.minutes.slides} min${d.drafts ? ` · drafts not counted: ${d.drafts}` : ""}`,
+        `\n${n.unit}/${n.slug}  ${d.band} (hardness ${d.hardness}, difficulty ${d.difficulty}) · ${status} · ${d.labelled ? "roles labelled" : "sections unlabelled"} · Read ${d.minutes.note} min, Slides ${d.minutes.slides} min (src/lib/slides/minutes.ts), learn ${d.minutes.learn} + sit ${d.minutes.sit} = about ${d.minutes.topic} min${d.drafts ? ` · drafts not counted: ${d.drafts}` : ""}`,
       );
       for (const r of d.rows) console.log(`  ${r.ok ? "ok   " : "short"} ${r.name}: ${r.value} (floor ${r.floor})${r.note ? ` — ${r.note}` : ""}`);
       for (const r of d.sectionRows) console.log(`  ${r.ok ? "ok   " : "short"} ${r.name}: ${r.value} (floor ${r.floor})${r.note ? ` — ${r.note}` : ""}`);
@@ -964,6 +1038,8 @@ if (asJson) {
       console.log(`  ${t.failures.length ? "short" : "ok   "} teach → show → check: ${t.gates - t.failures.length} of ${t.gates} gates after their section explains and shows the idea (longest run between gates ${d.minutes.longestRun} cards, reported, never gated; See it steps ${d.minutes.seeSteps} at 15 s)`);
       for (const f of t.failures) console.log(`  teach    ${describeFailure(f)}`);
       for (const f of n.prompts) console.log(`  prompts  ${f.detail}`);
+      for (const f of n.recall.leftOut) console.log(`  prompts  ${f.detail}`);
+      if (n.heroMinutes) console.log(`  minutes  ${n.heroMinutes.detail}`);
       for (const f of n.see.findings) console.log(`  see      ${f.detail}`);
     }
     console.log(`\nper band: ${perBand.filter((p) => p.notes).map((p) => `${p.band}: ${p.notes} notes, structure floor ${p.structure}, section floor ${p.sections}, both ${p.both}, labelled ${p.labelled}`).join(" | ")}`);
@@ -975,15 +1051,24 @@ if (asJson) {
       for (const f of n.teach.failures) console.log(`  ${describeFailure(f)}`);
     }
   }
-  if (promptsReport && (promptNotes.length || overTarget)) {
+  if (promptsReport && (promptNotes.length || overTarget || leftOut.length)) {
     console.log(
       `\nretrieval prompts — few, optional and short (the owner's verdict of 24 Sep 2026 and his answer 3 of 27 Sep): at most ${WIRED_MAX} wired in a note, no answer over ${ANSWER_WORDS} words or written as a numbered list, no wired question over ${QUESTION_WORDS} words; answers over the ${ANSWER_TARGET}-word target are listed as "target", for information:`,
     );
-    for (const n of notes.filter((x) => x.prompts.length || x.targets.length)) {
+    for (const n of notes.filter((x) => x.prompts.length || x.targets.length || x.recall.leftOut.length)) {
       console.log(`\n${n.unit}/${n.slug}`);
       for (const f of n.prompts) console.log(`  ${f.detail}${(f.kind === "long" || f.kind === "numbered") && !f.wired ? " (not wired; the review queue asks it)" : ""}`);
+      for (const f of n.recall.leftOut) console.log(`  ${f.detail}${f.kind === "over" ? " (report only)" : ""}`);
       for (const tg of n.targets) console.log(`  target: prompt ${tg.id} expects ${tg.words} words (about ${ANSWER_TARGET} is the target)${tg.wired ? ", wired" : ""}`);
     }
+  }
+  if (promptsReport && noRecall.length) {
+    console.log(`\nmigrated notes (with a See it) that keep no recall card (report only: a note may wire none, 27 Sep 2026; src/lib/slides/recall.ts shownPrompts):`);
+    for (const n of noRecall) console.log(`  ${`${n.unit}/${n.slug}`.padEnd(58)} ${n.recall.wired.length ? `wires ${n.recall.wired.length}, keeps none` : "wires none"}`);
+  }
+  if (minutesReport && minutesOff.length) {
+    console.log(`\nminutes — the pack's hero.minutes against the app's minute model (src/lib/slides/minutes.ts lessonMinutesFor, Read); the build ships the model's number, report only:`);
+    for (const n of minutesOff) console.log(`  ${`${n.unit}/${n.slug}`.padEnd(58)} ${n.heroMinutes.detail}`);
   }
   if (seeReport && seeNotes.length) {
     console.log(`\nsee it (v3) — explain → See it → Your turn (the teach-first case, approved 27 Sep 2026; shapes in docs/plan/review/2026-09-27-see-it-block-shape.md):`);
@@ -1033,6 +1118,8 @@ if (asJson) {
   console.log(promptsLine);
   console.log(withdrawnLine);
   console.log(seeLine);
+  console.log(minutesLine);
+  console.log(recallLine);
   console.log(`readiness: ${readyNotes.length} of ${notes.length} topic(s) ready for Slides and Read v2 (src/lib/slides/readiness.ts)${seeReport ? "" : "; run --see for the reasons, topic by topic"}.`);
   const sizeLines = notes.flatMap((n) => n.sizes);
   console.log(`size: ${sizeLines.length} item(s) over the limits (a question, worked example or See it ${SIZE_LIMITS_KB.item} KB, a note ${SIZE_LIMITS_KB.note} KB, a bundle ${SIZE_LIMITS_KB.bundle} KB; warnings)${sizeLines.length ? ":" : "."}`);

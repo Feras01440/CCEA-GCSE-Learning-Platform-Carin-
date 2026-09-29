@@ -74,3 +74,80 @@ describe("figure-leaks: exemptions whose target has gone", () => {
     expect(ALLOWED.has("q.science.b1.b1-respiratory-surfaces-breathing.0003#main")).toBe(false);
   });
 });
+
+/**
+ * Withdrawn items are not read (the lead, 29 Sep 2026): a withdrawn item stays in the pack byte-identical by rule and never
+ * ships, so a LEAK, WE-LEAK or review line against it asks an author to edit a copy that must not change (B2's restores
+ * brought back old figures that were then reported). The rule is shingles-allow.mjs withoutWithdrawn's, used as it is: an
+ * id in a withdrawn record, a diagnostic item as "<set id>#<item id>", or an item whose own log says "withdrawn".
+ */
+describe("figure-leaks: withdrawn items are not read", () => {
+  const where = { subject: "science", unit: "b2", slug: "x" };
+  const leakyQ = (id: string, verification?: string): Json => ({
+    id,
+    ...(verification ? { verification } : {}),
+    figures: [{ kind: "svg", src: svg("nucleus"), alt: "A cell." }],
+    parts: [{ id: "a", stem: "Name the structure that holds the DNA.", answer: { kind: "text", accepted: ["nucleus"], keyWords: [], listingRule: false } }],
+  });
+  const record = (id: string, kind: string) => ({ id, kind, replacedBy: null, reason: "Reissued.", on: "2026-09-29T10:00:00Z" });
+  const sweep = (b: Json) => sweepBundle(b, where) as { leaks: Array<{ item: string }>; weLeaks: unknown[]; reviews: unknown[]; targets: Set<string>; withdrawn: number };
+
+  it("reads a live question and names its leak", () => {
+    expect(sweep({ questions: [leakyQ("q.x.0001")] }).leaks.map((r) => r.item)).toEqual(["q.x.0001"]);
+  });
+
+  it("skips a question a withdrawn record names, and counts it as not read", () => {
+    const r = sweep({ questions: [leakyQ("q.x.0001"), leakyQ("q.x.0002")], verification: [{ id: "v.note", status: "verified", withdrawn: [record("q.x.0001", "question")] }] });
+    expect(r.leaks.map((x) => x.item)).toEqual(["q.x.0002"]);
+    expect([...r.targets]).toEqual(["q.x.0002#a"]);
+    expect(r.withdrawn).toBe(1);
+  });
+
+  it("skips a question whose own log says withdrawn, with no record", () => {
+    const r = sweep({ questions: [leakyQ("q.x.0001", "v.q1")], verification: [{ id: "v.q1", itemId: "q.x.0001", status: "withdrawn" }] });
+    expect(r.leaks).toEqual([]);
+    expect(r.withdrawn).toBe(1);
+  });
+
+  it("skips a diagnostic item withdrawn as set#item and still reads its neighbour", () => {
+    const item = (id: string) => ({ id, stem: "Which structure holds the DNA?", figure: { kind: "svg", src: svg("nucleus"), alt: "A cell." }, options: [{ text: "nucleus", correct: true }, { text: "ribosome", correct: false }] });
+    const r = sweep({ diagnostics: [{ id: "dx.x.pre", items: [item("d1"), item("d2")] }], verification: [{ id: "v.dx", itemId: "dx.x.pre", status: "verified", withdrawn: [record("dx.x.pre#d1", "diagnostic")] }] });
+    expect(r.leaks.map((x) => x.item)).toEqual(["d2"]);
+    expect(r.withdrawn).toBe(1);
+  });
+
+  it("skips a withdrawn worked example's figures", () => {
+    const we = { id: "we.x.01", stem: "Name it.", steps: [], finalAnswer: "nucleus", twin: { stem: "Name the structure.", figure: { kind: "svg", src: svg("nucleus"), alt: "A cell." }, answer: { kind: "text", accepted: ["nucleus"], keyWords: [], listingRule: false } } };
+    expect(sweep({ workedExamples: [we] }).leaks.length).toBe(1);
+    const r = sweep({ workedExamples: [we], verification: [{ id: "v.note", status: "verified", withdrawn: [record("we.x.01", "workedExample")] }] });
+    expect([r.leaks, r.weLeaks, r.reviews]).toEqual([[], [], []]);
+    expect(r.withdrawn).toBe(1);
+  });
+
+  it("reads a draft (drafts are what an author checks before filing)", () => {
+    const r = sweep({ questions: [leakyQ("q.x.0001", "v.q1")], verification: [{ id: "v.q1", itemId: "q.x.0001", status: "draft" }] });
+    expect(r.leaks.map((x) => x.item)).toEqual(["q.x.0001"]);
+    expect(r.withdrawn).toBe(0);
+  });
+});
+
+/**
+ * A key-word entry written with bars ("narrowed|narrow|blocked") is one idea in several spellings, as the engine reads it
+ * (text-marking.ts markText splits every entry at "|"); read whole, it was one phrase no figure ever prints, so a figure
+ * naming "narrowed" beside it was never checked (29 Sep 2026: 202 such entries in B2 and C2).
+ */
+describe("figure-leaks: a key-word entry written with bars is read spelling by spelling", () => {
+  it("finds a figure that prints one spelling of the entry", () => {
+    const b = {
+      questions: [
+        {
+          id: "q.science.b2.x.0004",
+          figures: [{ kind: "svg", src: svg("narrowed"), alt: "An artery in cross-section." }],
+          parts: [{ id: "a", stem: "Name the change to the artery shown.", answer: { kind: "text", accepted: [], keyWords: [{ any: ["narrowed|narrow|blocked"], marks: 1 }], listingRule: false } }],
+        },
+      ],
+    };
+    const r = sweepBundle(b, { subject: "science", unit: "b2", slug: "x" }) as { leaks: Array<{ phrase: string; source: string }> };
+    expect(r.leaks.map((x) => [x.phrase, x.source])).toEqual([["narrowed", "keyWord:0"]]);
+  });
+});

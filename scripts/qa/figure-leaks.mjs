@@ -49,6 +49,13 @@
  * (figureForMode in the renderer; weFigureFor mirrors it), so that is the figure compared; the full example's
  * annotated figure is compared with nothing, because the full example hides nothing.
  *
+ * Withdrawn items are not read (the lead, 29 Sep 2026), in every tier (LEAK, WE-LEAK, REVIEW, ALLOWED): a withdrawn
+ * item stays in the pack byte-identical by rule and never ships, so a line against it asks an author to edit a copy
+ * that must not change (B2's restores brought old figures back into withdrawn items, and they were reported). The rule
+ * is shingles-allow.mjs withoutWithdrawn, imported, not copied: an id in a withdrawn record (a diagnostic item as
+ * "<set id>#<item id>"), or an item whose own log says "withdrawn". Drafts are still read. The count of items not read
+ * is printed per unit and in the summary; an ALLOWED entry whose item is withdrawn is listed with the stale ones.
+ *
  * Usage:
  *   node scripts/qa/figure-leaks.mjs                  every subject, every unit
  *   node scripts/qa/figure-leaks.mjs --unit b1        one unit (repeatable)
@@ -61,6 +68,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { hiddenSteps, weFigureFor } from "./we-hidden-steps.mjs";
+import { withoutWithdrawn } from "./shingles-allow.mjs";
 
 /** Run as a script (the CLI below) or imported for its pure sweep (src/lib/build/we-figure-leaks.test.ts). */
 const isMain = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
@@ -316,7 +324,9 @@ function answerPhrases(answer) {
   // group has handed over the whole part, while one that satisfies one group of three has supplied
   // a term of an explanation the learner still has to make.
   objects(answer.keyWords).forEach((g, i) => {
-    for (const w of strings(g.any)) add(`keyWord:${i}`, w);
+    // An entry written "cheap|less expensive" is one idea in several spellings, as the engine reads it (text-marking.ts
+    // markText splits every entry at "|"): each spelling is a phrase of its own (29 Sep 2026; 202 entries in B2 and C2).
+    for (const w of strings(g.any)) for (const k of w.split("|")) add(`keyWord:${i}`, k);
   });
   for (const t of objects(answer.targets)) for (const a of strings(t.accepted)) add(`label:${t.id}`, a);
   for (const o of objects(answer.options)) if (o.correct === true) add("mcqCorrect", o.text);
@@ -716,14 +726,25 @@ function sweepWorkedExample(acc, we, meta) {
   return figures;
 }
 
+/** How many items (questions, worked examples, find-the-mistake items, prompts, diagnostic items) `kept` leaves out of `b`. */
+function itemsLeftOut(b, kept) {
+  const n = (x, key) => objects(x?.[key]).length;
+  const dx = (x) => objects(x?.diagnostics).reduce((a, d) => a + objects(d.items).length, 0);
+  return ["questions", "workedExamples", "findTheMistake", "prompts"].reduce((a, k) => a + n(b, k) - n(kept, k), 0) + dx(b) - dx(kept);
+}
+
 /**
- * Sweep one bundle. Pure apart from what it returns: { figures, leaks, weLeaks, reviews, allowed } (weLeaks: a worked example's figure printing what a faded or the problem mode hides).
- * @param {object} b  a parsed bundle.json
+ * Sweep one bundle. Pure apart from what it returns: { figures, leaks, weLeaks, reviews, allowed, targets, withdrawn }
+ * (weLeaks: a worked example's figure printing what a faded or the problem mode hides; withdrawn: the items not read
+ * because they are withdrawn, shingles-allow.mjs withoutWithdrawn).
+ * @param {object} bundle  a parsed bundle.json
  * @param {{ subject: string, unit: string, slug: string }} where
  */
-export function sweepBundle(b, { subject, unit, slug }) {
+export function sweepBundle(bundle, { subject, unit, slug }) {
   const acc = { leaks: [], weLeaks: [], reviews: [], allowed: [], targets: new Set() };
   let figures = 0;
+  const b = withoutWithdrawn(bundle) ?? {};
+  const withdrawn = itemsLeftOut(bundle, b);
 
   for (const q of objects(b.questions)) {
     const figs = [...objects(q.figures), ...objects(q.parts).flatMap((p) => objects(p.figures))];
@@ -780,7 +801,7 @@ export function sweepBundle(b, { subject, unit, slug }) {
     check(acc, { figs: [p.image], phrases, stem: p.prompt, answerKind: "text", meta: { subject, unit, slug, item: p.id, part: "-", kind: "retrieval prompt" } });
   }
 
-  return { figures, ...acc };
+  return { figures, ...acc, withdrawn };
 }
 
 // ---------------------------------------------------------------------------
@@ -833,6 +854,7 @@ for (const subject of fs.readdirSync(PACKS)) {
     const beforeAllowed = allowed.length;
     let bundles = 0;
     let figures = 0;
+    let withdrawn = 0;
     for (const slug of fs.readdirSync(unitDir)) {
       const file = path.join(unitDir, slug, "bundle.json");
       if (!fs.existsSync(file)) continue;
@@ -846,13 +868,14 @@ for (const subject of fs.readdirSync(PACKS)) {
       }
       const r = sweepBundle(b, { subject, unit, slug });
       figures += r.figures;
+      withdrawn += r.withdrawn;
       leaks.push(...r.leaks);
       weLeaks.push(...r.weLeaks);
       reviews.push(...r.reviews);
       allowed.push(...r.allowed);
       for (const t of r.targets) targets.add(t);
     }
-    perUnit.push({ subject, unit, bundles, figures, leaks: leaks.length - before, weLeaks: new Set(weLeaks.slice(beforeWe).map((r) => `${r.item}#${r.part}`)).size, reviews: reviews.length - beforeReview, allowed: allowed.length - beforeAllowed });
+    perUnit.push({ subject, unit, bundles, figures, leaks: leaks.length - before, weLeaks: new Set(weLeaks.slice(beforeWe).map((r) => `${r.item}#${r.part}`)).size, reviews: reviews.length - beforeReview, allowed: allowed.length - beforeAllowed, withdrawn });
   }
 }
 
@@ -919,8 +942,9 @@ if (!quiet && reviews.length) {
 
 console.log("");
 for (const u of perUnit) {
-  console.log(`${u.subject}/${u.unit}: ${u.bundles} bundle(s), ${u.figures} figure(s) checked, ${u.leaks} leak(s), ${u.weLeaks} worked-example step(s) printed, ${u.allowed} allowed, ${u.reviews} review line(s)`);
+  console.log(`${u.subject}/${u.unit}: ${u.bundles} bundle(s), ${u.figures} figure(s) checked, ${u.leaks} leak(s), ${u.weLeaks} worked-example step(s) printed, ${u.allowed} allowed, ${u.reviews} review line(s)${u.withdrawn ? `, ${u.withdrawn} withdrawn item(s) not read` : ""}`);
 }
+const notRead = perUnit.reduce((n, u) => n + u.withdrawn, 0);
 const weParts = new Set(weLeaks.map((r) => `${r.item}#${r.part}`)).size;
 const weFigures = new Set(weLeaks.map((r) => `${r.subject}/${r.unit}/${r.slug}/${r.figure}`)).size;
 const weItems = new Set(weLeaks.map((r) => r.item)).size;
@@ -933,17 +957,18 @@ console.log(
     : `figure-leaks: ${leaks.length} leak(s) in ${partsLeaking} part(s) across ${figuresLeaking} figure(s) — each one prints an answer its own part asks for`,
 );
 console.log(weLine);
+console.log(`withdrawn items are not read: ${notRead} (they stay in the pack byte-identical by rule and never ship; shingles-allow.mjs withoutWithdrawn)`);
 
 // An exemption whose part, item or figure has gone is dead config: say so (only on a full run, where every
 // target has been visited).
 const stale = units.length || subjects.length ? [] : staleAllowances(targets);
 if (stale.length) {
-  console.log(`\nALLOWED entries whose target no longer exists (remove them from ALLOWED in scripts/qa/figure-leaks.mjs):`);
+  console.log(`\nALLOWED entries whose target no longer exists or is withdrawn (remove them from ALLOWED in scripts/qa/figure-leaks.mjs):`);
   for (const k of stale) console.log(`  ${k}`);
 }
 
 if (jsonOut) {
-  fs.writeFileSync(jsonOut, `${JSON.stringify({ perUnit, leaks, weLeaks, allowed, reviews, staleAllowances: stale }, null, 2)}\n`);
+  fs.writeFileSync(jsonOut, `${JSON.stringify({ perUnit, leaks, weLeaks, allowed, reviews, staleAllowances: stale, withdrawnNotRead: notRead }, null, 2)}\n`);
   console.log(`findings → ${jsonOut}`);
 }
 

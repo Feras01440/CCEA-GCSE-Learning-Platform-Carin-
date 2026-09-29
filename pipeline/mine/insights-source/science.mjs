@@ -21,6 +21,26 @@ const S = (series, unit, q) => `ccea-cer:science:${series}:${unit}:Q${q}`;
 
 export const insights = [
   // ------------------------------------------------------------------ Biology B1
+  // Split from ins.science.u7.analysing on 29 Sep 2026 (the lead's item h2): the Summer 2025 Unit 7 Booklet B Biology
+  // Foundation Q1 asked B1 microscopy (the slide and the coverslip, the eyepiece lens, a lens's magnification) beside one
+  // analysing step (a ratio of two measured diameters). The microscopy half belongs to the topic that teaches it; the
+  // analysing card keeps the ratio. Both cite the same report block, each for its own part.
+  {
+    id: "ins.science.b1.cells-and-microscopy",
+    topic: "science.b1.cells-and-microscopy",
+    specRefs: ["DA-B1-1.1.1"],
+    findings: [
+      {
+        source: S("2025-summer", "U7BBioF", 1),
+        asked: "Name the slide and the coverslip of a prepared cell and the eyepiece lens of a light microscope, then find one lens's magnification from the total.",
+        wentWrong: "Few could name the slide and the coverslip, and fewer the eyepiece lens; the magnification was often right, but a good number took 10 away from 100 where 100 had to be divided by 10.",
+        rule: "Total magnification = eyepiece magnification x objective magnification, so one lens's magnification is the total divided by the other's.",
+        misconceptions: ["sci.practical.magnification-subtracted", "sci.practical.apparatus-names-unknown"],
+      },
+    ],
+    ruleToRemember: "Know the parts by name (slide, coverslip, stage, objective lens, eyepiece lens) and multiply the two lens magnifications for the total; to find one lens from the total, divide by the other.",
+  },
+
   {
     id: "ins.science.b1.nitrogen-cycle",
     topic: "science.b1.nitrogen-cycle",
@@ -987,11 +1007,12 @@ export const insights = [
         misconceptions: ["sci.practical.points-joined-not-best-fit", "sci.practical.scale-inappropriate", "sci.practical.axis-unit-omitted"],
       },
       {
+        // The ratio part of this block only; its microscopy parts are on ins.science.b1.cells-and-microscopy (29 Sep 2026).
         source: S("2025-summer", "U7BBioF", 1),
-        asked: "Measure a cell and its nucleus, give their ratio, name microscope parts, calculate a magnification.",
-        wentWrong: "Measuring was fine but many gave the ratio the wrong way round; coverslip, slide and eyepiece lens were rarely named; the magnification of 100 divided by 10 was often done as 100 minus 10.",
-        rule: "Ratio in the order the question states; total magnification = eyepiece x objective.",
-        misconceptions: ["sci.practical.ratio-inverted", "sci.practical.magnification-subtracted", "sci.practical.apparatus-names-unknown"],
+        asked: "Measure a drawn cell and its nucleus against a scale, then give the ratio of the two diameters.",
+        wentWrong: "The measuring was mostly right, but fewer gave the ratio correctly: many wrote it the wrong way round.",
+        rule: "Write a ratio in the order the question names the two quantities.",
+        misconceptions: ["sci.practical.ratio-inverted"],
       },
       {
         source: S("2025-summer", "U7BPhysH", 3),

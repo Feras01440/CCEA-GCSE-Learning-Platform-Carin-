@@ -116,6 +116,10 @@ const misconceptions = [
   MX("fm.logs.power-as-multiplier-inside", "Brings a coefficient down as a multiplier of the argument, writing n log a as log of n times a instead of log of a to the power n", ["FM1-LOG-02"], "concept", [S("2024-summer", "FM1", 6), S("2025-summer", "FM1", 9)], "Summer 2024 Q6(a) reports the power rule half-applied when 3 log 2x was written as a single logarithm; Summer 2025 Q9(a) reports coefficients mishandled in the same step."),
   MX("fm.logs.gradient-intercept-swapped", "Reads the intercept of the log-log line as the power and the gradient as the constant, so the two answers change places", ["FM1-LOG-02"], "concept", [S("2025-summer", "FM1", 10), S("2022-summer", "FM1", 12)], "Summer 2025 Q10(ii) reports the two constants being swapped; Summer 2022 Q12 reports the gradient being read for the wrong constant."),
   MX("fm.logs.rounded-too-early", "Rounds the gradient or an intercept before it is used, so the constant that follows is wrong in the figures the answer line asks for", ["FM1-LOG-02"], "accuracy", [S("2025-summer", "FM1", 10), S("2024-summer", "FM1", 12)], "Summer 2025 Q10 reports values given to two decimal places where three were demanded; Summer 2024 Q12 reports the final mark lost to rounding."),
+  // Summer 2024 FM1 Q12(iii) (the pipeline agent, 29 Sep 2026, from the report block and the scheme): the formula gave
+  // V = 14.155 for a power that must exceed 1000 W, so the scheme's answer is 15 V; the report says most lost the last
+  // mark by rounding down instead of reading the context. Not rounded-too-early, which rounds a constant before it is used.
+  M("fm.logs.rounded-down-against-context", "Rounds a threshold answer by the usual rule, 14.16 down to 14, when the context needs the next whole number up, so the value given no longer does what the question asks (a power that must exceed a limit needs the voltage above the one found)", ["FM1-LOG-02"], "concept"),
   MX("fm.logs.root-not-brought-down", "Drops a root inside a logarithm instead of bringing it down as a coefficient of one half, so log of the square root of y expands to log y rather than to half log y", ["FM1-LOG-02"], "accuracy", [S("2025-summer", "FM1", 9)], "Summer 2025 Q9(a) reports constants and roots combined wrongly inside a single logarithm; a root left inside when the expression is expanded is that slip read the other way. No other registry entry covers a fractional index discarded, as distinct from a coefficient not raised."),
   MX("fm.logs.terms-not-collected", "Expands both sides of an indicial equation correctly and then moves a term across without changing its sign, so the x terms never gather on one side", ["FM1-LOG-03"], "method", [S("2022-summer", "FM1", 5), S("2023-summer", "FM1", 7)], "Summer 2022 Q5(b) reports errors moving the x terms to one side; Summer 2023 Q7(b) reports errors in rearranging."),
 
@@ -632,7 +636,7 @@ const insights = [
         asked: "Log-log graph with a contextual final part.",
         wentWrong: "Rounding, plotting and labelling again; some inverted the gradient or used the wrong equation for k; the final mark was lost by rounding down when the context required rounding up.",
         rule: "Round the final answer according to the context, not automatically down.",
-        misconceptions: ["fm.logs.decimal-places-instruction-ignored", "fm.logs.gradient-inverted"],
+        misconceptions: ["fm.logs.decimal-places-instruction-ignored", "fm.logs.gradient-inverted", "fm.logs.rounded-down-against-context"],
       },
       {
         source: S("2025-summer", "FM1", 10),

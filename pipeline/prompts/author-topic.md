@@ -169,7 +169,7 @@ A conversion pass over an existing note (template v2 applied after the fact) may
 
 ## Hero block (first block of every note)
 
-The first block of note.blocks.json is `{ "type": "hero", "lede": "<the hook, ≤ 60 words, plain English, no tariff, series or examiner verdict>", "can": ["<three lines starting with a verb: what she can do by the end>", "…", "…"], "minutes": <the note's reading-and-checks time only: its words at 180 a minute plus 40 seconds per gate and 15 seconds per See it step, not the examples, practice or exam-style work; the app computes and shows this figure itself and uses yours only when a note cannot be measured> }`. The topic page reads it for the opening screen (title, lede, the three lines, the note's first figure, the estimate, the two buttons); the lesson renderer ignores it. The hook paragraph that follows may repeat the lede's idea in fuller words but must not be identical.
+The first block of note.blocks.json is `{ "type": "hero", "lede": "<the hook, ≤ 60 words, plain English, no tariff, series or examiner verdict>", "can": ["<three lines starting with a verb: what she can do by the end>", "…", "…"], "minutes": <the lesson's own time by the app's minute model, src/lib/slides/minutes.ts (its words and headings at 180 a minute, 40 seconds a gate, 15 seconds a See it step, 20 seconds a figure, photo or sim in the lesson but not the hero's, a timed video its own length, 30 seconds a recall card the lesson keeps), rounded once to the nearest minute; not the examples, practice or exam-style work. The app computes and shows this figure itself and uses yours only when a note cannot be measured, and since 29 Sep 2026 the content build writes the model's number into the shipped hero itself (the pack's number is kept only for a note the model cannot measure), so yours need not be exact: `node scripts/qa/lesson-v2.mjs --minutes` shows the model's number beside yours. It must still be at least 5 (the hero check)> }`. The topic page reads it for the opening screen (title, lede, the three lines, the note's first figure, the estimate, the two buttons); the lesson renderer ignores it. The hook paragraph that follows may repeat the lede's idea in fuller words but must not be identical.
 
 ## Chemistry notation and units
 
@@ -241,6 +241,8 @@ A reject list catches only the exact spellings it names, and one copied onto eve
 ## Phrases match word for word
 
 A multi-word key word matches word for word; the trailing-s tolerance applies only to the phrase's last word ("rabbit number" does not earn "rabbits number"; write the form the answer uses). Under listingRule true, an answer whose comma- or "and"-separated segments are all four words or fewer is treated as a list, so a model answer that is really a prose pair must either be longer than that or the part must set listingRule false.
+
+A key-word entry may hold one idea in several spellings joined by `|` ("cheap|less expensive|costs less"): the engine splits every entry at the bar and pays the idea once, so "cheap and less expensive" never earns two groups of "give two advantages" (split into separate entries, it would). Two rules (the build warns MARKING on each, 29 Sep 2026): a `|` means nothing in an accepted answer, a reject word, an indicative point's key word or a prompt's key word (they are compared whole), so write those spellings as entries of their own; and never bar a key word that is maths ("P(A|B)", "|x|"), because the pieces are read as spellings of their own. Keep the entries in the order that reads best: how the engine displays a barred entry in her feedback is the engine's to fix, never a reason to reorder a pack.
 
 ## The cited scheme decides the marking (the Fable judge's rulings, 27 Sep 2026)
 
@@ -348,7 +350,7 @@ After trying the Slides way the owner ruled that the prompts she meets in a less
 
 ### Minutes
 
-The app's own minute model (src/components/topic/lesson-plan.ts: 180 words a minute, 40 seconds a gate, 15 seconds a See it step (27 Sep 2026; the lint counts it now, the app's model follows), 2 minutes a worked example, 1 minute a check item, 1.2 minutes a mark, 2 minutes a find-the-mistake) gives what the standard implies. The hero's `minutes` is the note's own figure by that model, never a rounder number:
+The app's own minute model (src/lib/slides/minutes.ts, which the topic page, Slides and lesson-v2 all read since 29 Sep 2026: 180 words a minute, 40 seconds a gate, 15 seconds a See it step, 20 seconds a figure in the lesson, a timed video's own length, 30 seconds a recall card; then 2 minutes a worked example, 1 minute a check item, 1.2 minutes a mark, 2 minutes a find-the-mistake) gives what the standard implies. The build ships the hero's `minutes` as the note's own figure by that model (`lesson-v2.mjs --minutes` prints it beside the pack's):
 
 | | L | S | H4 | H5 |
 |---|---|---|---|---|

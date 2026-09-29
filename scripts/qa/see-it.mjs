@@ -34,9 +34,11 @@
  *                   "option B", "the one above"), read by the app's own src/lib/gate-order.ts positionalWording, which
  *                   the caller passes as `positional` (none passed, none read): such a gate is shown in its written
  *                   order, so its answer stays where it was written.
- *   answer-shown    a Your turn's answer is printed in a See it of its own section shown before it (a whole line, a
- *                   side of an equation, the final answer; words as whole words), so she can copy it: it re-asks on
- *                   new numbers, as a twin does (the lead, 27 Sep 2026).
+ *   answer-shown    a Your turn's answer is printed in a See it of its own section shown before it (in a working line,
+ *                   the final answer or a reason; a number as a whole result: a line, a side of an equation, the final
+ *                   answer, a value ending a sentence; words as whole words, not in a sentence that names another
+ *                   option), so she can copy it: it re-asks on new numbers, as a twin does (the lead, 27 Sep 2026; the
+ *                   line drawn against the Slides candidates on 29 Sep, above answerShownIn).
  *   reteach         a gate's explanation, or its twin's, runs past RETEACH_WORDS words: a miss re-teaches in at most
  *                   60 (the case §6.3), a fraction or a formula counting as one word.
  *   twin            a gate's twin repeats the gate's prompt or answer: a twin is the same structure on new numbers,
@@ -97,7 +99,70 @@ const PINNED_TWIN = "that is true only in the order the twin was written; name t
  * does). Compared after normalising case, spaces, LaTeX delimiters ($, $$, \( \), \[ \]) and trailing punctuation. A
  * number answer counts only as a whole result (a whole line, one side of an equation, or the final answer), so the 5 of
  * "(x + 5)" is not the answer 5; any other answer counts wherever it stands, between non-alphanumeric neighbours.
+ *
+ * The line drawn on 29 Sep 2026 (the lead's item c), from the Slides candidates (src/lib/slides/cards.ts
+ * seeAnswerPrinted, which looks in the stem, every working line and reason and the answer line, a number as any number
+ * of its own and a word inside any word) read one by one against their See its, 42 gates in the 92 migrated notes:
+ *  - The reasons are read as well as the working and the final answer: five copyable answers stood only in a reason
+ *    (m8/pythagoras-3d g20 "so use the cosine rule" for the same triangle ACF; fm3/line-of-best-fit g3 "Line A passes this
+ *    check" on the same garden graph; b2/blood-and-vessels g1 "Not oxygen, which rides in the red cells" for "Which is
+ *    NOT transported by the plasma?"; fm1/expand-three-brackets g2 "six in all"; fm2/equilibrium g1 "the resultant is
+ *    zero"). The stem is not read: it is the See it's question, and its words are the question's vocabulary (five
+ *    candidates stood only in a stem and were fine: "a maximum or a minimum", "on, inside or outside the circle", "true,
+ *    false, or not possible to tell", "the recurring decimal", "the umbilical cord is squeezed"; one was not, b2
+ *    natural-selection g8's "could become extinct", left to its author).
+ *  - A number, or a number word (zero to twenty, as the engine reads "two" as 2), counts as a whole result: a whole line,
+ *    a side of an equation, the final answer, or a value stated at the end of a sentence ("its gradient is 0", "the
+ *    resultant is zero", "six in all"). Never a given, a coefficient, a label or a step on the way ("6 s later", "(x + 4)",
+ *    "Box 2:", "$(-2)^{2}$ is $4$, positive", "3x = 66 and x = 22": sixteen candidates of that kind were fine).
+ *  - A word answer counts as a whole word, and also without its leading article ("a catalyst" in "so P is the
+ *    catalyst"); a charge written in TeX is the charge ("2e^-" is the accepted "2e-"). It does not count in a sentence
+ *    (between . ; : ! ?) that also names another option of a choice gate: that sentence states a rule or a contrast
+ *    ("anticlockwise makes a north pole, clockwise a south pole", p2/magnetism g3, whose See it worked the other way
+ *    round). And a choice gate's answer in a reason does not count when the See it's own result (its final answer, else
+ *    its last working line) names another of the gate's options and not this one, unless the gate asks for an exception
+ *    (NOT, except, never): the See it answered a case with another answer, and its reason only teaches the contrast
+ *    (c2/homologous-series g13: pentane "is a liquid", its reason "above it, the solid has gone", the gate's answer solid).
  */
+const NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+const NUMBER_WORD = new RegExp(`\\b(${NUMBER_WORDS.join("|")})\\b`, "gi");
+/** Number words as digits, and a charge written in TeX or with superscripts as the plain sign ("2e^-", "2e^{-}", "2e⁻" are "2e-"). */
+const plain = (s) =>
+  String(s ?? "")
+    .replace(NUMBER_WORD, (w) => String(NUMBER_WORDS.indexOf(w.toLowerCase())))
+    .replace(/\^\{?([+-])\}?/g, "$1")
+    .replace(/⁻/g, "-")
+    .replace(/⁺/g, "+");
+const ARTICLE = /^(?:a|an|the)\s+(?=\S{3})/i;
+/** The sentences of a text, split at . ! ? (before a space or the end), ; and : outside maths. */
+function sentences(text) {
+  const s = String(text ?? "");
+  const out = [];
+  let cur = "";
+  let inMaths = false;
+  for (let i = 0; i < s.length; i += 1) {
+    const ch = s[i];
+    if (ch === "$") inMaths = !inMaths;
+    const stop = !inMaths && (ch === ";" || ch === ":" || ch === "\n" || (/[.!?]/.test(ch) && (i + 1 >= s.length || /\s/.test(s[i + 1]))));
+    if (stop) {
+      if (cur.trim()) out.push(cur.trim());
+      cur = "";
+    } else cur += ch;
+  }
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
+/** A value stated as a result at the end of a sentence: "is 0", "are 6 m/s", "equals 12", "six in all" (digits by then). */
+const RESULT_AT_END = /(?:\b(?:is|are|was|were|equals|gives|makes|leaves|becomes)\s+|[=:]\s*)(-?\d+(?:\.\d+)?)(?:\s?(?:°\s?C|°|%|m\/s²|m\/s\^2|m\/s|km\/h|cm³|cm²|dm³|m³|m²|mm|cm|km|kg|mg|kJ|kW|kPa|Pa|Hz|mol|ms|min|hours?|minutes?|seconds?|metres?|degrees?|units?|Ω|[smgJWNVAK]))?$|(-?\d+(?:\.\d+)?)\s+(?:in all|in total|altogether)$/i;
+function numberShown(a, text) {
+  const t = plain(text);
+  if (normalised(t) === a) return true;
+  if (t.split(RELATION).some((side) => normalised(side) === a)) return true;
+  return sentences(t).some((c) => {
+    const m = RESULT_AT_END.exec(c.replace(/\$/g, " ").replace(/\s+/g, " ").trim().replace(/[.!?]+$/, ""));
+    return m !== null && normalised(m[1] ?? m[2]) === a;
+  });
+}
 // Maths is compared with its spaces taken out ("(x + 3)(x - 3)" is "(x+3)(x-3)"); words keep one space between them, so a
 // phrase is found only as whole words ("difference of two squares", not inside another word).
 const normalised = (s, words = false) =>
@@ -110,30 +175,59 @@ const normalised = (s, words = false) =>
 const NUMBER = /^[-−]?\d+(?:\.\d+)?$/;
 const RELATION = /=|≈|→|⇒|\\approx|\\to|\\rightarrow|\\implies/;
 // Words, not maths: a phrase of two words or more, or one word of two letters or more with no maths in it (the lead's item
-// 19: a one-word blank, "digests", is found as a whole word in the See it, never inside "indigestion").
-const WORDY = /[a-z]{2,}\s+[a-z]{2,}|^\s*[a-z][a-z'-]+\s*$/i;
+// 19: a one-word blank, "digests", is found as a whole word in the See it, never inside "indigestion"); or a phrase of
+// words alone, whatever their length ("Line A", "a catalyst": 29 Sep 2026, squeezed together "linea" was never a word).
+const WORDY = /[a-z]{2,}\s+[a-z]{2,}|^\s*[a-z][a-z'-]+\s*$|^\s*[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*)+\s*$/i;
 function printedIn(answer, text) {
-  const words = WORDY.test(String(answer ?? "").replace(/\$[^$]*\$/g, " "));
-  const a = normalised(answer, words);
-  const t = normalised(text, words);
-  if (!a || !t) return false;
+  const ans = plain(answer);
+  const words = WORDY.test(ans.replace(/\$[^$]*\$/g, " "));
+  const a = normalised(ans, words);
+  if (!a || !normalised(text)) return false;
+  if (NUMBER.test(a)) return numberShown(a, text);
+  const t = normalised(plain(text), words);
   if (t === a) return true;
-  if (NUMBER.test(a)) return String(text ?? "").split(RELATION).some((side) => normalised(side) === a);
   const esc = a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // not inside a longer number or word: "4 m/s" is not in "8.4 m/s" (fm2/average-speed-and-velocity g12, 27 Sep 2026)
   return new RegExp(`(?<![a-z0-9.])${esc}(?![a-z0-9])`).test(t);
 }
-/** Where a See it prints a gate's answer: "step 2", "the final answer", or null. */
+/**
+ * An answer or an option as it may be printed: as written, and without its leading article ("a catalyst" as "catalyst"),
+ * when what is left is a word, never a number ("A one", an option lettered A, is not the number 1).
+ */
+function namedIn(answer, text) {
+  const t = String(answer ?? "").trim();
+  const bare = t.replace(ARTICLE, "");
+  return printedIn(t, text) || (bare !== t && !NUMBER.test(normalised(plain(bare))) && printedIn(bare, text));
+}
+/** A gate that asks for the one left out ("Which of these is NOT …", "all except …"). */
+const EXCEPTION = /\b(?:not|except|never)\b/i;
+/** Where a See it prints a gate's answer: "step 2", "the final answer", "step 3's reason", or null. */
 function answerShownIn(gate, see, bundle) {
   const we = typeof see.workedExample === "string" ? (bundle?.workedExamples ?? []).find((w) => w.id === see.workedExample) : null;
   const steps = we ? (we.steps ?? []) : Array.isArray(see.steps) ? see.steps : [];
   const finalAnswer = we ? we.finalAnswer : see.finalAnswer;
-  const alternatives = gate.kind === "blank" ? String(gate.answer ?? "").split(" | ") : [String(gate.answer ?? "")];
-  for (const alt of alternatives.map((s) => s.trim()).filter(Boolean)) {
-    const k = steps.findIndex((s) => printedIn(alt, s?.working));
+  const choice = gate.kind === "choice";
+  const answer = String(gate.answer ?? "").trim();
+  const others = choice ? (Array.isArray(gate.options) ? gate.options : []).map((o) => String(o ?? "").trim()).filter((o) => o && o !== answer) : [];
+  // a number is a whole result wherever it stands; a word counts in a sentence that names no other option (a sentence
+  // naming two options states a rule or a contrast between them)
+  const shownIn = (alt, text) => (NUMBER.test(normalised(plain(alt))) ? printedIn(alt, text) : sentences(text).some((c) => namedIn(alt, c) && !others.some((o) => namedIn(o, c))));
+  // the See it's own result names another option and not this one: it worked a case with another answer, so a reason
+  // that names this one teaches the contrast (unless the gate asks for the one left out)
+  const result = finalAnswer || steps[steps.length - 1]?.working || "";
+  const otherCase = choice && !EXCEPTION.test(String(gate.prompt ?? "")) && others.some((o) => namedIn(o, result)) && !namedIn(answer, result);
+  // every alternative of a typed gate ("backwards | back"; a number gate's "10 | 10.0"), as the app reads them
+  const alternatives = (choice ? [answer] : answer.split("|")).map((s) => s.trim()).filter(Boolean);
+  for (const alt of alternatives) {
+    const k = steps.findIndex((s) => shownIn(alt, s?.working));
     if (k >= 0) return { answer: alt, where: `step ${k + 1}` };
-    if (printedIn(alt, finalAnswer)) return { answer: alt, where: "the final answer" };
+    if (shownIn(alt, finalAnswer)) return { answer: alt, where: "the final answer" };
   }
+  if (!otherCase)
+    for (const alt of alternatives) {
+      const k = steps.findIndex((s) => shownIn(alt, s?.decision));
+      if (k >= 0) return { answer: alt, where: `step ${k + 1}'s reason` };
+    }
   return null;
 }
 
