@@ -116,7 +116,7 @@
         "Label the axes log x and log y before plotting",
         "Plot and circle each point, then rule a straight line through them",
         "Read the gradient from two points far apart on the line, the right way up",
-        "Read the intercept as log k and un-log it to find k",
+        "Find k from a reading put into y = kxⁿ, or from the intercept, un-logged",
         "Write the finished relationship in the form the question named",
         "Predict from the relationship using the measurement itself, and check the prediction lies inside the data range",
         "Round a contextual answer the way the situation demands"
@@ -128,16 +128,18 @@
         "Log values given to two decimal places where three are demanded (Summer 2022 FM1 Q12, Summer 2025 FM1 Q10)",
         "Axes unlabelled, or the log of one variable plotted on the wrong axis (Summer 2019 FM1 Q10, Summer 2022 FM1 Q12, Summer 2025 FM1 Q10)",
         "An inappropriate scale, chosen from the raw data rather than the log values, so the points bunch (Summer 2018 FM1 Q11)",
-        "Points plotted but not circled, or the line not ruled (Summer 2019 FM1 Q10, Summer 2022 FM1 Q12)",
+        "Points not marked with a small circle, so it is unclear where they were plotted (Summer 2019 FM1 Q10)",
         "Substituting log values into the power law itself instead of the measurement (Summer 2018 FM1 Q11)",
         "A prediction outside the range of the plotted data accepted without question (Summer 2019 FM1 Q10, Summer 2023 FM1 Q13)",
         "The two constants written on each other's answer lines (Summer 2025 FM1 Q10)",
-        "A contextual answer rounded down when the situation needs it rounded up (Summer 2024 FM1 Q12)"
+        "A contextual answer rounded down when the situation needs it rounded up (Summer 2024 FM1 Q12)",
+        "Going back through the log equation to find k, when one reading put into y = kxⁿ needs a single division (Summer 2024 FM1 Q12, Summer 2025 FM1 Q10)",
+        "The assumption asked for misread: it is that the relationship still holds beyond the readings (Summer 2019 FM1 Q10)"
       ]
     },
     "verification": "ver.note.fm.u1.log-log-graphs",
-    "version": 1,
-    "updated": "2026-09-20"
+    "version": 2,
+    "updated": "2026-09-29"
   },
   "workedExamples": [
     {
@@ -248,6 +250,263 @@
         }
       ],
       "verification": "ver.we.fm.u1.log-log-graphs.01",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u1.log-log-graphs.02",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "The readings $m = 5$, $S = 2.68$ and $m = 20$, $S = 1.34$ lie on a straight log-log line, where $S = km^{n}$. On the graph they are the points $(0.699, 0.428)$ and $(1.301, 0.127)$.\nFind $n$ and $k$, and write down the relationship between $S$ and $m$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "Up: $0.127 - 0.428 = -0.301$. Across: $1.301 - 0.699 = 0.602$. So $n = \\dfrac{-0.301}{0.602} = -0.5$",
+          "decision": "The change in $\\log S$ goes on top. The line falls, so the power is negative.",
+          "earns": [
+            "M1",
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": -0.5,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "$2.68 = k \\times 5^{-0.5}$",
+          "decision": "A reading goes into $S = km^{n}$ itself, as the mark schemes do: one division from here.",
+          "earns": [
+            "M1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "2.68=k\\times5^{-0.5}",
+            "equivalence": "equivalent",
+            "variables": [
+              "k"
+            ]
+          },
+          "whyMenu": {
+            "options": [
+              "Because one reading in $S = km^{n}$ gives $k$ with a single division, as the mark schemes do it",
+              "Because the log line cannot give $k$ at all",
+              "Because $k$ is the gradient of the line"
+            ],
+            "correct": 0,
+            "explain": "Either route reaches $k$, but a reading in the relationship itself is one division; going back through the log equation is longer and easier to slip in."
+          }
+        },
+        {
+          "n": 3,
+          "working": "$k = 2.68 \\times 5^{0.5} = 5.993$, so $k = 6.0$",
+          "decision": "Dividing by $5^{-0.5}$ is multiplying by $5^{0.5}$. Then one decimal place.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 6,
+            "tolerance": {
+              "type": "dp",
+              "places": 1
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "$S = 6.0m^{-0.5}$",
+          "decision": "Both constants in the relationship, in the form the question named.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "S=6m^{-0.5}",
+            "equivalence": "equivalent",
+            "variables": [
+              "S",
+              "m"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "$n = -0.5$, $k = 6.0$ and $S = 6.0m^{-0.5}$",
+      "twin": {
+        "stem": "The readings $p = 2$, $R = 28$ and $p = 5$, $R = 175$ lie on a straight log-log line of gradient $2$, where $R = kp^{n}$.\nFind $k$.",
+        "answer": {
+          "kind": "numeric",
+          "value": 7,
+          "tolerance": {
+            "type": "dp",
+            "places": 1
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "fraction"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.log-log-graphs.02",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u1.log-log-graphs.03",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "A log-log graph gives the rate $R$ of a reaction as $R = 3.0M^{0.75}$, for masses $M$ from $5$ to $40$ grams.\n(a) Find $R$ when $M = 10$.\n(b) Find the mass for which $R = 24$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$R = 3.0 \\times 10^{0.75} = 16.9$",
+          "decision": "The mass itself goes in, never its logarithm; $10$ lies inside $5$ to $40$.",
+          "earns": [
+            "M1",
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 16.9,
+            "tolerance": {
+              "type": "dp",
+              "places": 1
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "$3.0M^{0.75} = 24$, so $M^{0.75} = 8$",
+          "decision": "Now R is the known value: divide by 3.0 to leave the power on its own.",
+          "earns": [
+            "M1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "M^{0.75}=8",
+            "equivalence": "equivalent",
+            "variables": [
+              "M"
+            ]
+          },
+          "whyMenu": {
+            "options": [
+              "Because $R$ is given, so the relationship is solved for $M$ rather than evaluated",
+              "Because $M$ must be found from the gradient",
+              "Because $\\log 24$ goes into the relationship"
+            ],
+            "correct": 0,
+            "explain": "Part (b) gives the output and asks for the input, so the relationship becomes an equation to solve: divide by the constant, then undo the power."
+          }
+        },
+        {
+          "n": 3,
+          "working": "$M = 8^{\\frac{1}{0.75}} = 16$",
+          "decision": "The power $\\frac{1}{0.75}$ undoes $0.75$. $16$ grams lies inside the readings.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 16,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "(a) $R = 16.9$ (b) $M = 16$ grams",
+      "twin": {
+        "stem": "A log-log graph gives $P = 2.0d^{1.5}$, for $d$ from $2$ to $20$.\nFind $d$ when $P = 54$.",
+        "answer": {
+          "kind": "numeric",
+          "value": 9,
+          "tolerance": {
+            "type": "exact"
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "fraction"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.log-log-graphs.03",
       "version": 1
     }
   ],
@@ -509,105 +768,6 @@
   ],
   "questions": [
     {
-      "id": "q.fm.u1.log-log-graphs.0001",
-      "topic": "fm.u1.log-log-graphs",
-      "specRefs": [
-        "FM1-LOG-02"
-      ],
-      "paper": {
-        "unit": "FM1",
-        "calculator": true,
-        "resources": [
-          "Scientific calculator",
-          "Formula sheet printed on page 2 of the question-and-answer booklet"
-        ]
-      },
-      "tier": "untiered",
-      "style": "practice",
-      "difficulty": 2,
-      "ao": [
-        "AO1",
-        "AO2"
-      ],
-      "commandWords": [
-        "Complete"
-      ],
-      "emphasis": [],
-      "context": {
-        "setting": "The two missing logarithms of a weir table, the part every log-log question opens with",
-        "original": true
-      },
-      "figures": [
-        {
-          "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 560 142' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The weir table with two of the log F values left blank'><title>The weir table with two of the log F values left blank</title><rect x='10' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='55' y='31.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>Depth h (cm)</text><rect x='100' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='145' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1</text><rect x='190' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='235' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>4</text><rect x='280' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='325' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>9</text><rect x='370' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='415' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>16</text><rect x='460' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='505' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>25</text><rect x='10' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='61.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>Flow F (l/s)</text><rect x='100' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>4</text><rect x='190' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>32</text><rect x='280' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='325' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>108</text><rect x='370' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>256</text><rect x='460' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>500</text><rect x='10' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='91.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>log h</text><rect x='100' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.000</text><rect x='190' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.602</text><rect x='280' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='325' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.954</text><rect x='370' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.204</text><rect x='460' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.398</text><rect x='10' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='121.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>log F</text><rect x='100' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.602</text><rect x='190' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.505</text><rect x='280' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><path d='M 299.8 122.4 L 350.2 122.4' stroke='currentColor' stroke-width='1' fill='none' stroke-opacity='0.5'/><rect x='370' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2.408</text><rect x='460' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><path d='M 479.8 122.4 L 530.2 122.4' stroke='currentColor' stroke-width='1' fill='none' stroke-opacity='0.5'/></svg>",
-          "alt": "A table of depth, flow, log h and log F for five weir readings, with two of the log F values left blank."
-        }
-      ],
-      "parts": [
-        {
-          "id": "main",
-          "stem": "The table shows five depths $h$ and flows $F$ measured at a weir, with most of the logarithms already worked out.\nFill in the two values missing from the $\\log F$ row, each correct to three decimal places.",
-          "marks": 2,
-          "answer": {
-            "kind": "table",
-            "cells": [
-              {
-                "row": 3,
-                "col": 3,
-                "value": 2.033,
-                "tolerance": {
-                  "type": "absolute",
-                  "value": 0.0005
-                }
-              },
-              {
-                "row": 3,
-                "col": 5,
-                "value": 2.699,
-                "tolerance": {
-                  "type": "absolute",
-                  "value": 0.0005
-                }
-              }
-            ]
-          },
-          "scheme": [
-            {
-              "id": "MW1",
-              "code": "MW",
-              "marks": 1,
-              "for": "$2.033$"
-            },
-            {
-              "id": "W1",
-              "code": "W",
-              "marks": 1,
-              "for": "$2.699$"
-            }
-          ],
-          "hints": [
-            "Use the log key on your calculator, which works to base $10$.",
-            "Three decimal places throughout."
-          ],
-          "workedSolution": "$\\log 108 = 2.033$ and $\\log 500 = 2.699$, both to three decimal places.",
-          "commonErrors": [],
-          "requiresWorking": false
-        }
-      ],
-      "totalMarks": 2,
-      "timeAllowanceSec": 144,
-      "skeleton": "(main)find2",
-      "examinerSources": [
-        "ccea-cer:further-maths:2018-summer:FM1:Q11",
-        "ccea-cer:further-maths:2022-summer:FM1:Q12",
-        "ccea-cer:further-maths:2025-summer:FM1:Q10"
-      ],
-      "solutionProgram": "main: $\\log 108 = 2.033$ and $\\log 500 = 2.699$, both to three decimal places.",
-      "verification": "ver.q.fm.u1.log-log-graphs.0001",
-      "version": 1
-    },
-    {
       "id": "q.fm.u1.log-log-graphs.0002",
       "topic": "fm.u1.log-log-graphs",
       "specRefs": [
@@ -699,6 +859,105 @@
       "version": 1
     },
     {
+      "id": "q.fm.u1.log-log-graphs.0001",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Complete"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "The two missing logarithms of a weir table, the part every log-log question opens with",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 136' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of depth, flow, log h and log F for five weir readings, with two of the log F values left blank.'><title>A table of depth, flow, log h and log F for five weir readings, with two of the log F values left blank.</title><rect x='2' y='8' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Depth h (cm)</text><rect x='123' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><rect x='178' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><rect x='233' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>9</text><rect x='288' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><rect x='343' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>25</text><rect x='2' y='38' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Flow F (l/s)</text><rect x='123' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><rect x='178' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>32</text><rect x='233' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>108</text><rect x='288' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>256</text><rect x='343' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>500</text><rect x='2' y='68' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>log h</text><rect x='123' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.000</text><rect x='178' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.602</text><rect x='233' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.954</text><rect x='288' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.204</text><rect x='343' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.398</text><rect x='2' y='98' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>log F</text><rect x='123' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.602</text><rect x='178' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.505</text><rect x='233' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='288' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2.408</text><rect x='343' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/></svg>",
+          "alt": "A table of depth, flow, log h and log F for five weir readings, with two of the log F values left blank."
+        }
+      ],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "The table shows five depths $h$ and flows $F$ measured at a weir, with most of the logarithms already worked out.\nFill in the two values missing from the $\\log F$ row, each correct to three decimal places.",
+          "marks": 2,
+          "answer": {
+            "kind": "table",
+            "cells": [
+              {
+                "row": 3,
+                "col": 3,
+                "value": 2.033,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              },
+              {
+                "row": 3,
+                "col": 5,
+                "value": 2.699,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              }
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$2.033$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$2.699$"
+            }
+          ],
+          "hints": [
+            "Use the log key on your calculator, which works to base $10$.",
+            "Three decimal places throughout."
+          ],
+          "workedSolution": "$\\log 108 = 2.033$ and $\\log 500 = 2.699$, both to three decimal places.",
+          "commonErrors": [],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 2,
+      "timeAllowanceSec": 144,
+      "skeleton": "(main)find2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2018-summer:FM1:Q11",
+        "ccea-cer:further-maths:2022-summer:FM1:Q12",
+        "ccea-cer:further-maths:2025-summer:FM1:Q10"
+      ],
+      "solutionProgram": "main: $\\log 108 = 2.033$ and $\\log 500 = 2.699$, both to three decimal places.",
+      "verification": "ver.q.fm.u1.log-log-graphs.0001",
+      "version": 1
+    },
+    {
       "id": "q.fm.u1.log-log-graphs.0003",
       "topic": "fm.u1.log-log-graphs",
       "specRefs": [
@@ -730,8 +989,8 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 560 280' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The log-log line with a dashed right-angled triangle drawn between its two end points, the horizontal leg and the vertical leg each labelled with their measured change, and the intercept marked log k'><title>The log-log line with a dashed right-angled triangle drawn between its two end points, the horizontal leg and the vertical leg each labelled with their measured change, and the intercept marked log k</title><rect x='30' y='30' width='500' height='220' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.03'/><path d='M 68 216 L 518 216' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 68 48 L 68 216' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 68 182.5 L 469.8 66' stroke='currentColor' stroke-width='1.8' fill='none'/><circle cx='68' cy='182.5' r='2.4' fill='currentColor'/><circle cx='68' cy='182.5' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='241' cy='132.4' r='2.4' fill='currentColor'/><circle cx='241' cy='132.4' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='342.2' cy='103' r='2.4' fill='currentColor'/><circle cx='342.2' cy='103' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='414' cy='82.2' r='2.4' fill='currentColor'/><circle cx='414' cy='82.2' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='469.8' cy='66' r='2.4' fill='currentColor'/><circle cx='469.8' cy='66' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><path d='M 68 182.5 L 469.8 182.5 L 469.8 66' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='268.9' y='197.5' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>1.398</text><text x='485.8' y='124.3' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>2.097</text><path d='M 62 182.5 L 74 182.5' stroke='currentColor' stroke-width='1.6' fill='none'/><text x='80' y='175.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='start'>log k</text><text x='280' y='242' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>log h</text><text x='42' y='48' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>log F</text><text x='280' y='24' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>two points far apart, on the line</text><text x='280' y='268' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the rise goes on top, the run underneath</text></svg>",
-          "alt": "A log-log line with a dashed right-angled triangle drawn between its two end points, each leg labelled with its change."
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 226' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A straight log-log line on axes named log h across and log F up, through the points (0, 0.602) and (1.398, 2.699), with a dashed right-angled triangle between them whose legs are named across and up.'><title>A straight log-log line on axes named log h across and log F up, through the points (0, 0.602) and (1.398, 2.699), with a dashed right-angled triangle between them whose legs are named across and up.</title><path d='M 48 204 L 358 204' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 358 204 L 352.6 206.6 L 352.6 201.4 Z' fill='currentColor' stroke='none'/><path d='M 48 204 L 48 24' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 48 24 L 50.6 29.4 L 45.4 29.4 Z' fill='currentColor' stroke='none'/><text x='358' y='195' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>log h</text><text x='54' y='22' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>log F</text><line x1='48' y1='169.9' x2='338' y2='46.6' stroke='currentColor' stroke-width='1.8'/><circle cx='48' cy='169.9' r='4.5' fill='currentColor'/><circle cx='327.6' cy='51.1' r='4.5' fill='currentColor'/><line x1='48' y1='169.9' x2='327.6' y2='169.9' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><line x1='327.6' y1='169.9' x2='327.6' y2='51.1' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><text x='58' y='191.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>(0, 0.602)</text><text x='317.6' y='47.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>(1.398, 2.699)</text><text x='187.8' y='189.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>across</text><text x='335.6' y='110.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>up</text></svg>",
+          "alt": "A straight log-log line through (0, 0.602) and (1.398, 2.699), on axes named log h and log F, with a dashed right-angled triangle between the two points, its legs named across and up."
         }
       ],
       "parts": [
@@ -1319,6 +1578,126 @@
       "version": 1
     },
     {
+      "id": "q.fm.u1.log-log-graphs.0011",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO3"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "A print shop's cost model for posters",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "The cost $C$ pounds of printing $n$ copies of a poster is modelled by $C = 2.5n^{0.6}$.\nFind the least number of copies for which the cost is more than £50.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 148,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "$2.5n^{0.6} = 50$, so $n^{0.6} = 20$"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "$n = 20^{\\frac{1}{0.6}} = 147.4$",
+              "dependsOn": [
+                "M1"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$148$, the next whole number up",
+              "dependsOn": [
+                "M2"
+              ]
+            }
+          ],
+          "hints": [
+            "Set the cost equal to 50 and divide by 2.5.",
+            "Undo the power $0.6$ with the power $\\frac{1}{0.6}$.",
+            "Copies come whole: which way must the answer be rounded?"
+          ],
+          "workedSolution": "$2.5n^{0.6} = 50$, so $n^{0.6} = 20$ and $n = 20^{\\frac{1}{0.6}} = 147.4$.\nAt $n = 147$ the cost is £49.93, still not more than £50, so the least number of copies is $148$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.logs.rounded-too-early",
+              "pattern": {
+                "kind": "numeric",
+                "value": 147,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "The working is right, but 147 copies cost £49.93, not more than £50. The least whole number past 147.4 is 148: round up here.",
+              "marksTypicallyEarned": 2,
+              "source": "ccea-cer:further-maths:2024-summer:FM1:Q12"
+            },
+            {
+              "misconception": "fm.qin.context-not-applied",
+              "pattern": {
+                "kind": "numeric",
+                "value": 147.4,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.05
+                }
+              },
+              "feedback": "That is where the cost reaches £50 exactly, and copies come whole. The least whole number of copies past it is 148.",
+              "marksTypicallyEarned": 2
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(main)find3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM1:Q12"
+      ],
+      "verification": "ver.q.fm.u1.log-log-graphs.0011",
+      "version": 1
+    },
+    {
       "id": "q.fm.u1.log-log-graphs.0009",
       "topic": "fm.u1.log-log-graphs",
       "specRefs": [
@@ -1740,7 +2119,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 560 142' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of diameter, price, log d and log P for five circular tabletops, with two values left blank'><title>A table of diameter, price, log d and log P for five circular tabletops, with two values left blank</title><rect x='10' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='55' y='31.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>Diameter d (cm)</text><rect x='100' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='145' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2</text><rect x='190' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='235' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>4</text><rect x='280' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='325' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>6</text><rect x='370' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='415' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>8</text><rect x='460' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='505' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>10</text><rect x='10' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='61.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>Price P (pounds)</text><rect x='100' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>20</text><rect x='190' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>80</text><rect x='280' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='325' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>180</text><rect x='370' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>320</text><rect x='460' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>500</text><rect x='10' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='91.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>log d</text><rect x='100' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.301</text><rect x='190' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.602</text><rect x='280' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><path d='M 299.8 92.4 L 350.2 92.4' stroke='currentColor' stroke-width='1' fill='none' stroke-opacity='0.5'/><rect x='370' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.903</text><rect x='460' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.000</text><rect x='10' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='121.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>log P</text><rect x='100' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.301</text><rect x='190' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.903</text><rect x='280' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><path d='M 299.8 122.4 L 350.2 122.4' stroke='currentColor' stroke-width='1' fill='none' stroke-opacity='0.5'/><rect x='370' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2.505</text><rect x='460' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2.699</text></svg>",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 136' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of diameter, price, log d and log P for five circular tabletops, with one log d value and one log P value left blank.'><title>A table of diameter, price, log d and log P for five circular tabletops, with one log d value and one log P value left blank.</title><rect x='2' y='8' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Diameter d (cm)</text><rect x='123' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><rect x='178' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><rect x='233' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><rect x='288' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>8</text><rect x='343' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><rect x='2' y='38' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Price P (£)</text><rect x='123' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><rect x='178' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>80</text><rect x='233' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>180</text><rect x='288' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>320</text><rect x='343' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>500</text><rect x='2' y='68' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>log d</text><rect x='123' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.301</text><rect x='178' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.602</text><rect x='233' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='288' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.903</text><rect x='343' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.000</text><rect x='2' y='98' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>log P</text><rect x='123' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.301</text><rect x='178' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.903</text><rect x='233' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='288' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2.505</text><rect x='343' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2.699</text></svg>",
           "alt": "A table of diameter, price, log d and log P for five circular tabletops, with one log d value and one log P value left blank."
         }
       ],
@@ -1971,6 +2350,571 @@
       "solutionProgram": "a: $\\log 6 = 0.778$ and $\\log 180 = 2.255$, each to three decimal places. || b: The gradient is $\\frac{2.699 - 1.301}{1 - 0.301} = \\frac{1.398}{0.699} = 2$. So $n = 2$. || c: The intercept is $\\log k = 0.699$, so $k = 10^{0.699} = 5.0$ to one decimal place. || d: $P = 5.0 \\times 7^{2} = 5.0 \\times 49 = 245$ pounds. The diameter $7$ cm sits inside the range $2$ cm to $10$ cm, so the prediction is safe.",
       "verification": "ver.q.fm.u1.log-log-graphs.0010",
       "version": 1
+    },
+    {
+      "id": "q.fm.u1.log-log-graphs.0012",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "exam-style",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Complete",
+        "Plot",
+        "Find",
+        "Write down",
+        "Identify"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "Hours taken to build garden sheds of different floor areas",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 136' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of five sheds with rows for floor area A in square metres, hours H, and log A, and a row for log H left blank.'><title>A table of five sheds with rows for floor area A in square metres, hours H, and log A, and a row for log H left blank.</title><rect x='2' y='8' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Area A (m²)</text><rect x='123' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><rect x='178' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><rect x='233' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><rect x='288' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><rect x='343' y='8' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>15</text><rect x='2' y='38' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Hours H</text><rect x='123' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6.60</text><rect x='178' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>17.4</text><rect x='233' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>30.7</text><rect x='288' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>62.8</text><rect x='343' y='38' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='58' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>111</text><rect x='2' y='68' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>log A</text><rect x='123' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='150.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.301</text><rect x='178' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='205.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.602</text><rect x='233' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='260.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.778</text><rect x='288' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='315.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.000</text><rect x='343' y='68' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><text x='370.5' y='88' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.176</text><rect x='2' y='98' width='121' height='30' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='1'/><text x='62.5' y='118' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>log H</text><rect x='123' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='178' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='233' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='288' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/><rect x='343' y='98' width='55' height='30' fill='none' stroke='currentColor' stroke-width='1'/></svg>",
+          "alt": "A table of five sheds with rows for floor area A in square metres (2, 4, 6, 10, 15), hours H (6.60, 17.4, 30.7, 62.8, 111) and log A, and a blank row for log H."
+        }
+      ],
+      "parts": [
+        {
+          "id": "a",
+          "stem": "A builder records the hours $H$ taken to build garden sheds of floor area $A$ square metres. The table shows five sheds, with the values of $\\log A$.\nIt is believed that $H = kA^{n}$, where $k$ and $n$ are constants.\nComplete the $\\log H$ row of the table, giving each value correct to three decimal places.",
+          "marks": 2,
+          "answer": {
+            "kind": "table",
+            "cells": [
+              {
+                "row": 3,
+                "col": 1,
+                "value": 0.82,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              },
+              {
+                "row": 3,
+                "col": 2,
+                "value": 1.241,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              },
+              {
+                "row": 3,
+                "col": 3,
+                "value": 1.487,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              },
+              {
+                "row": 3,
+                "col": 4,
+                "value": 1.798,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              },
+              {
+                "row": 3,
+                "col": 5,
+                "value": 2.045,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.0005
+                }
+              }
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "the five values of $\\log H$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "all five correct to three decimal places",
+              "dependsOn": [
+                "MW1"
+              ]
+            }
+          ],
+          "hints": [
+            "The log key on the calculator is base 10.",
+            "Three decimal places for every entry, a final zero included."
+          ],
+          "workedSolution": "Taking logarithms of each number of hours gives 0.820, 1.241, 1.487, 1.798, 2.045, each to three decimal places.",
+          "commonErrors": [
+            {
+              "misconception": "fm.logs.decimal-places-instruction-ignored",
+              "pattern": {
+                "kind": "text",
+                "regex": "^0\\.82, 1\\.24, 1\\.49, 1\\.80?, 2\\.05$"
+              },
+              "feedback": "The values are right to two places, and the question asked for three: 0.820, 1.241, 1.487, 1.798 and 2.045. The accuracy mark needs every entry to three decimal places.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2025-summer:FM1:Q10"
+            }
+          ],
+          "requiresWorking": false
+        },
+        {
+          "id": "b",
+          "stem": "Plot $\\log H$ against $\\log A$ and draw the straight line through your points.\nLabel the axes $\\log A$ and $\\log H$.",
+          "marks": 3,
+          "answer": {
+            "kind": "graph",
+            "expect": {
+              "plot": "points-line",
+              "points": [
+                [
+                  0.301,
+                  0.82
+                ],
+                [
+                  0.602,
+                  1.241
+                ],
+                [
+                  0.778,
+                  1.487
+                ],
+                [
+                  1,
+                  1.798
+                ],
+                [
+                  1.176,
+                  2.045
+                ]
+              ],
+              "lineThrough": [
+                [
+                  0.301,
+                  0.82
+                ],
+                [
+                  1.176,
+                  2.045
+                ]
+              ],
+              "lineRequired": true,
+              "tolerance": {
+                "type": "absolute",
+                "value": 0.02
+              }
+            }
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "a scale chosen from the range of the logarithm values, with both axes labelled"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "all five points plotted and circled"
+            },
+            {
+              "id": "W2",
+              "code": "W",
+              "marks": 1,
+              "for": "a ruled straight line through the points",
+              "dependsOn": [
+                "W1"
+              ]
+            }
+          ],
+          "hints": [
+            "Name both axes before plotting anything.",
+            "Take the scales from the logarithms, not from $A$ and $H$."
+          ],
+          "workedSolution": "The five points are (0.301, 0.820), (0.602, 1.241), (0.778, 1.487), (1.000, 1.798), (1.176, 2.045).\nThey lie on a straight line through $(0.301, 0.820)$ and $(1.176, 2.045)$.",
+          "commonErrors": [],
+          "requiresWorking": false,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value"
+          }
+        },
+        {
+          "id": "c",
+          "stem": "Using your graph, find the value of $n$.",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 1.4,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "a gradient from two points far apart on the line, such as $\\frac{2.045 - 0.820}{1.176 - 0.301}$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$1.4$",
+              "dependsOn": [
+                "M1"
+              ],
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Take two points far apart on your line.",
+            "The change in $\\log H$ goes on top, and the gradient is $n$."
+          ],
+          "workedSolution": "Using the end points of the line, the gradient is $\\dfrac{2.045 - 0.820}{1.176 - 0.301} = \\dfrac{1.225}{0.875} = 1.4$.\nComparing $\\log H = n \\log A + \\log k$ with $y = mx + c$, $n = 1.4$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.logs.gradient-inverted",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.714,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That is the fraction upside down, the change in $\\log A$ over the change in $\\log H$. The change in $\\log H$ goes on top, which gives $1.4$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2024-summer:FM1:Q12"
+            },
+            {
+              "misconception": "fm.logs.gradient-intercept-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.398,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That is where the line meets the vertical axis, which is $\\log k$. The power is the gradient, $1.4$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2025-summer:FM1:Q10"
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "b",
+            "rule": "use-candidate-diagram"
+          }
+        },
+        {
+          "id": "d",
+          "stem": "Using your value of $n$, find the value of $k$. Give your answer correct to one decimal place.",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 2.5,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.1
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "a reading put into $H = kA^{n}$, such as $111 = k \\times 15^{1.4}$, or $k = 10^{c}$ from the intercept"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$2.5$",
+              "dependsOn": [
+                "M1"
+              ],
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Put one reading, such as $A = 15$, $H = 111$, into $H = kA^{n}$.",
+            "Or un-log the intercept: the line meets the axis at log k, not k."
+          ],
+          "workedSolution": "$111 = k \\times 15^{1.4}$, so $k = \\dfrac{111}{15^{1.4}} = 2.5$ to one decimal place.\nThe intercept, $0.398$, gives the same: $k = 10^{0.398} = 2.5$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.logs.log-a-given-as-a",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.398,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That is the intercept, which is $\\log k$. Un-log it, $k = 10^{0.398} = 2.5$, or put a reading into $H = kA^{n}$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM1:Q10"
+            },
+            {
+              "misconception": "fm.logs.log-values-in-original-equation",
+              "pattern": {
+                "kind": "numeric",
+                "value": 1.798,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That came from putting log values into $H = kA^{n}$. The relationship takes the readings themselves: $111 = k \\times 15^{1.4}$ gives $k = 2.5$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2018-summer:FM1:Q11"
+            },
+            {
+              "misconception": "fm.logs.gradient-intercept-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 1.4,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That is the gradient, which is the power $n$. The constant comes from a reading or from the intercept, and is $2.5$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2025-summer:FM1:Q10"
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "c",
+            "rule": "use-candidate-value",
+            "relation": "111 / 15^x"
+          }
+        },
+        {
+          "id": "e",
+          "stem": "Write down the relationship between $H$ and $A$.",
+          "marks": 1,
+          "answer": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$H = 2.5A^{1.4}$",
+                "correct": true,
+                "feedback": "The power from the gradient and the constant from a reading or the un-logged intercept."
+              },
+              {
+                "id": "b",
+                "text": "$\\log H = 1.4 \\log A + 0.398$",
+                "correct": false,
+                "misconception": "fm.logs.log-values-in-original-equation",
+                "feedback": "That is the line you drew. The question asks for the relationship between H and A themselves."
+              },
+              {
+                "id": "c",
+                "text": "$H = 0.398A^{1.4}$",
+                "correct": false,
+                "misconception": "fm.logs.log-a-given-as-a",
+                "feedback": "The intercept has gone in without being un-logged: $k = 10^{0.398} = 2.5$."
+              },
+              {
+                "id": "d",
+                "text": "$H = 1.4A^{2.5}$",
+                "correct": false,
+                "misconception": "fm.logs.gradient-intercept-swapped",
+                "feedback": "The two constants have changed places. The gradient is the power."
+              }
+            ]
+          },
+          "scheme": [
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$H = 2.5A^{1.4}$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Put your two constants into the form the question named."
+          ],
+          "workedSolution": "With $n = 1.4$ and $k = 2.5$, the relationship is $H = 2.5A^{1.4}$.",
+          "commonErrors": [],
+          "requiresWorking": false,
+          "followThrough": {
+            "fromPart": "d",
+            "rule": "use-candidate-value"
+          }
+        },
+        {
+          "id": "f",
+          "stem": "A second builder joins any shed that is expected to take more than $200$ hours.\nUsing $H = 2.5A^{1.4}$, find the smallest whole-number floor area that needs a second builder.",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 23,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "$2.5A^{1.4} = 200$, so $A = 80^{\\frac{1}{1.4}} = 22.9$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$23$, rounded up",
+              "dependsOn": [
+                "M1"
+              ]
+            }
+          ],
+          "hints": [
+            "Set the hours equal to 200, divide by 2.5, then undo the power.",
+            "A floor area of 22 m² would still take under 200 hours: which way do you round?"
+          ],
+          "workedSolution": "$2.5A^{1.4} = 200$, so $A^{1.4} = 80$ and $A = 80^{\\frac{1}{1.4}} = 22.9$.\nAt $A = 22$ the time is still under 200 hours, so the smallest whole-number area is $23$ m².",
+          "commonErrors": [
+            {
+              "misconception": "fm.logs.rounded-too-early",
+              "pattern": {
+                "kind": "numeric",
+                "value": 22,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "The working is right, but a 22 m² shed takes under 200 hours, so it needs no second builder. The smallest whole area past 22.9 is 23: round up here.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2024-summer:FM1:Q12"
+            },
+            {
+              "misconception": "fm.qin.context-not-applied",
+              "pattern": {
+                "kind": "numeric",
+                "value": 22.9,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.05
+                }
+              },
+              "feedback": "That is where the time reaches 200 hours exactly, and the question asks for a whole-number area. The next whole number past it is 23.",
+              "marksTypicallyEarned": 1
+            }
+          ],
+          "requiresWorking": true,
+          "noFollowThrough": "No follow-through from parts (c) and (d): this part prints H = 2.5A^1.4 in its stem, so every answer starts from the same relationship."
+        },
+        {
+          "id": "g",
+          "stem": "Identify the assumption your answer to part (f) rests on.",
+          "marks": 1,
+          "answer": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "That $H = 2.5A^{1.4}$ still holds for floor areas beyond $15$ m², the largest in the table",
+                "correct": true,
+                "feedback": "The answer, 23 m², lies beyond every shed measured, so it rests on the model holding there."
+              },
+              {
+                "id": "b",
+                "text": "That the floor area must be a whole number",
+                "correct": false,
+                "misconception": "fm.logs.result-outside-data-range-unnoticed",
+                "feedback": "That was part of the question, not an assumption. The answer, 23 m², lies beyond the largest shed measured, 15 m², so it rests on the model holding there."
+              },
+              {
+                "id": "c",
+                "text": "That the logarithms were given to three decimal places",
+                "correct": false,
+                "misconception": "fm.logs.result-outside-data-range-unnoticed",
+                "feedback": "That is an instruction, not an assumption. The answer lies beyond the readings, so it assumes the relationship still holds past 15 m²."
+              }
+            ]
+          },
+          "scheme": [
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "the relationship holds beyond the range of the readings"
+            }
+          ],
+          "hints": [
+            "Compare your answer to part (f) with the largest area in the table."
+          ],
+          "workedSolution": "23 m² is larger than every area in the table, the largest being 15 m², so the answer assumes that H = 2.5A^1.4 still holds beyond the readings.",
+          "commonErrors": [],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 13,
+      "timeAllowanceSec": 936,
+      "skeleton": "(a)complete2|(b)plot3|(c)find2|(d)find2|(e)write-down1|(f)find2|(g)identify1",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM1:Q10",
+        "ccea-cer:further-maths:2024-summer:FM1:Q12",
+        "ccea-cer:further-maths:2025-summer:FM1:Q10"
+      ],
+      "verification": "ver.q.fm.u1.log-log-graphs.0012",
+      "version": 1
     }
   ],
   "findTheMistake": [
@@ -2001,6 +2945,30 @@
       ],
       "feedback": "The comparison and the gradient are both right, so the method marks stand and the rest is marked on her own value. The fix is one extra line, written every time: the intercept is log k, so k is ten to that power. Examiners have named this step in three separate series, which is why it is worth a line of its own.",
       "source": "ccea-cer:further-maths:2018-summer:FM1:Q11"
+    },
+    {
+      "id": "ftm.fm.u1.log-log-graphs.02",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "stem": "Ciarán's log-log line for $y = kx^{n}$ passes through $(0.2, 0.8)$ and $(0.7, 2.3)$. His working for $n$:",
+      "studentWorking": [
+        "n = (0.7 - 0.2) / (2.3 - 0.8)",
+        "n = 0.5 / 1.5",
+        "n = 0.333"
+      ],
+      "mistakeLine": 1,
+      "misconception": "fm.logs.gradient-inverted",
+      "whatWentWrong": "Line 1 is upside down: it divides the change in log x by the change in log y. The gradient is the change in log y over the change in log x, 1.5 ÷ 0.5 = 3. His 0.333 is the reciprocal of the power, and lines 2 and 3 carry the slip through.",
+      "correction": [
+        "n = (2.3 - 0.8) / (0.7 - 0.2)",
+        "n = 1.5 / 0.5",
+        "n = 3"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Say it before you divide: up over across, the log of the output on top. The 2022, 2024 and 2025 reports each name the inverted gradient.",
+      "source": "ccea-cer:further-maths:2022-summer:FM1:Q12"
     }
   ],
   "prompts": [
@@ -2121,6 +3089,36 @@
         "FM1-LOG-02"
       ],
       "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.log-log-graphs.08",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "kind": "qa",
+      "prompt": "A log-log line meets the vertical axis at $c$. What is $k$?",
+      "answer": "Ten to the power of $c$, since the intercept is $\\log k$, not $k$.",
+      "keyWords": [
+        "power"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.fm.u1.log-log-graphs.09",
+      "topic": "fm.u1.log-log-graphs",
+      "specRefs": [
+        "FM1-LOG-02"
+      ],
+      "kind": "qa",
+      "prompt": "When can a prediction from the relationship be trusted?",
+      "answer": "When its input lies inside the range of the readings.",
+      "keyWords": [
+        "range"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 3
     }
   ],
   "insight": {
@@ -2267,10 +3265,78 @@
           "detail": "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line and holds no prose words, checked by lintTree before the files were written. Six inline SVG figures, all computed from the two data sets, and one embeddable video from data/links/media-map.json followed immediately by a gate. The closing panel is a pointer of under 80 words followed by the prompts.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026, Lesson structure v3 (the teach-first case approved by the owner, with his eight answers): eight teaching sections (idea, six variants, twists) on the note's own pendulum data, each explain -> See it -> Your turn; the first check, g2, follows the first See it; g2 keeps its id, kind and answer with its prompt rewritten; every explanation re-teaches, points at a step of its See it and names no option by position; every gate has a twin on new numbers; k is taught both from a reading in the relationship (the 2022 and 2024 schemes' route, the 2025 report's advice) and from the intercept, un-logged; two short prompts wired (rp.01, rp.08), both passing recallFit.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Every logarithm computed from the printed reading and rounded by the generator; every gradient, constant, prediction, limit and rounding asserted before writing; every gate option and twin checked against the computation.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "isomorph",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Two-way overlap scan (fm1-migration-0/overlap.mjs): no reading, line or relationship the note, a gate, a twin or a worked example works is asked by a later question, post diagnostic, find-the-mistake item or shipped prompt; the pre set, asked before the lesson, is not a later item.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g2",
+          "reason": "An interface warm-up ('One tap to begin') asked before anything was shown; the owner's answer 8 of 27 Sep makes the first check a real one after the first See it, which g2 now is.",
+          "on": "2026-09-29T14:45:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "Its answer, log 108 = 2.033, is practice questions 0001 and 0002's own, on the weir; g8 asks a table entry on a new reading.",
+          "on": "2026-09-29T14:45:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g9",
+          "reason": "It asked what the axes of a panel above it should be called, on the weir's h and F, a check that leaned on a figure; g9 asks which plot gives a straight line with gradient n, standing on its own.",
+          "on": "2026-09-29T14:45:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "Its answer, 2.097 ÷ 1.398 = 1.5, is practice question 0003's own gradient on the weir; g10 asks a gradient on a new line.",
+          "on": "2026-09-29T14:45:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "Its intercept, 0.699 giving k = 5.0, is exam question 0010(c)'s own line; g12 un-logs a new intercept.",
+          "on": "2026-09-29T14:45:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "It used the weir's F = 4.0h^1.5, which practice questions 0005 to 0008 ask; g13 predicts from a new relationship.",
+          "on": "2026-09-29T14:45:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.log-log-graphs.01",
@@ -2324,10 +3390,27 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks; no figure prints the value its own part asks for.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): It worked the weir, F = 4.0h^1.5 from the points (0, 0.602) and (1.398, 2.699), whose gradient, intercept and relationship practice questions 0003, 0004 and 0005 then ask, and its twin was question 0010(c)'s own line; we.02 finds n and k on new readings, with k from a reading as the schemes do, and we.03 uses a relationship forwards and backwards. Replaced by we.fm.u1.log-log-graphs.02.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u1.log-log-graphs.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u1.log-log-graphs.02",
+          "reason": "It worked the weir, F = 4.0h^1.5 from the points (0, 0.602) and (1.398, 2.699), whose gradient, intercept and relationship practice questions 0003, 0004 and 0005 then ask, and its twin was question 0010(c)'s own line; we.02 finds n and k on new readings, with k from a reading as the schemes do, and we.03 uses a relationship forwards and backwards.",
+          "on": "2026-09-29T14:45:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.log-log-graphs.0001",
@@ -2380,6 +3463,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks; no figure prints the value its own part asks for.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the figure redrawn in place for a phone (the table was drawn 560 units wide with 10.5-unit labels, 6.7 px on a phone; now 400 wide with 14-unit labels, the same cells and the same two blanks); the stem, answer, scheme and common errors unchanged.",
+          "at": "2026-09-29T14:45:00Z",
           "by": "claude"
         }
       ],
@@ -2494,6 +3585,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks; no figure prints the value its own part asks for.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the figure redrawn in place for a phone (its labels were 6.7 px on a phone, and its triangle printed the rise 2.097 and the run 1.398, the working the M1 mark is for; the new figure names the legs across and up and prints only the two points the stem gives); the stem, answer, scheme and common errors unchanged.",
+          "at": "2026-09-29T14:45:00Z",
           "by": "claude"
         }
       ],
@@ -2837,10 +3936,27 @@
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks; no figure prints the value its own part asks for.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): The weir's exam question: its table, its gradient 1.5, its intercept 0.602 with k = 4.0 and its relationship F = 4.0h^1.5 are the answers practice questions 0001 to 0005 had already asked on the same numbers, so the exam-style item replayed the ladder; q0012 asks the same shape on new data, with the least whole value and its assumption from Summer 2024. Replaced by q.fm.u1.log-log-graphs.0012.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u1.log-log-graphs.0009",
+          "kind": "question",
+          "replacedBy": "q.fm.u1.log-log-graphs.0012",
+          "reason": "The weir's exam question: its table, its gradient 1.5, its intercept 0.602 with k = 4.0 and its relationship F = 4.0h^1.5 are the answers practice questions 0001 to 0005 had already asked on the same numbers, so the exam-style item replayed the ladder; q0012 asks the same shape on new data, with the least whole value and its assumption from Summer 2024.",
+          "on": "2026-09-29T14:45:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.log-log-graphs.0010",
@@ -2893,6 +4009,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired and prose-free; British English; no exclamation marks; no figure prints the value its own part asks for.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "29 Sep 2026: the figure redrawn in place for a phone (the table was drawn 560 units wide with 10.5-unit labels, 6.7 px on a phone; now 400 wide with 14-unit labels, the same cells and the same two blanks); the stem, answer, scheme and common errors unchanged.",
+          "at": "2026-09-29T14:45:00Z",
           "by": "claude"
         }
       ],
@@ -3124,10 +4248,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): A calculation on practice question 0004's own numbers (an intercept of 0.602 giving k = 4.0), so the recall card asked a later question; rp.08 asks the same fact, un-log the intercept, with no numbers. Replaced by rp.fm.u1.log-log-graphs.08.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.log-log-graphs.03",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.log-log-graphs.08",
+          "reason": "A calculation on practice question 0004's own numbers (an intercept of 0.602 giving k = 4.0), so the recall card asked a later question; rp.08 asks the same fact, un-log the intercept, with no numbers.",
+          "on": "2026-09-29T14:45:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.log-log-graphs.04",
@@ -3223,10 +4364,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 29 Sep 2026 (FM1 migration, group 0): A 26-word answer, over the 25-word cap for a recall card; rp.09 asks where a trusted prediction lies in a 10-word answer. Replaced by rp.fm.u1.log-log-graphs.09.",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.log-log-graphs.06",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.log-log-graphs.09",
+          "reason": "A 26-word answer, over the 25-word cap for a recall card; rp.09 asks where a trusted prediction lies in a 10-word answer.",
+          "on": "2026-09-29T14:45:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.log-log-graphs.07",
@@ -3260,6 +4418,514 @@
       ],
       "status": "verified",
       "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.log-log-graphs.02",
+      "itemId": "we.fm.u1.log-log-graphs.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-LOG-02 (log-log graphs: y = kxⁿ as a straight line, k and n from the graph, using the relationship)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "The FM1 formula sheet gives aˣ = n ⇒ x = logₐ n; log y = n log x + log k is must-know",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Complete / Plot / Find / Write down / Identify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "log 5 = 0.699, log 2.68 = 0.428, log 20 = 1.301, log 1.34 = 0.127; gradient −0.301 ÷ 0.602 = −0.5; k = 2.68 × 5^0.5 = 5.993 → 6.0; S = 6.0m^−0.5 returns 2.68 and 1.34 at m = 5 and 20; twin k = 28 ÷ 2² = 7.0, and 7 × 5² = 175",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "k from a reading in the original equation, as the Summer 2022 and 2024 schemes do and the Summer 2025 report recommends; a negative power as in Summer 2018 Q11; every step carries an input spec marked through markAnswer",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q11, 2019 Q10, 2021 Q13, 2022 Q12, 2023 Q13, 2024 Q12 and 2025 Q10 with the 2022 and 2024 schemes and the reports; new data and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.log-log-graphs.03",
+      "itemId": "we.fm.u1.log-log-graphs.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-LOG-02 (log-log graphs: y = kxⁿ as a straight line, k and n from the graph, using the relationship)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "The FM1 formula sheet gives aˣ = n ⇒ x = logₐ n; log y = n log x + log k is must-know",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Complete / Plot / Find / Write down / Identify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "3.0 × 10^0.75 = 16.87 → 16.9; 3.0M^0.75 = 24 gives M^0.75 = 8 and M = 8^(4/3) = 16; twin 2.0d^1.5 = 54 gives d = 27^(2/3) = 9",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "A prediction then the input from a given output, the Summer 2022 Q12 and 2023 Q13 shape; both inputs inside the stated range",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q11, 2019 Q10, 2021 Q13, 2022 Q12, 2023 Q13, 2024 Q12 and 2025 Q10 with the 2022 and 2024 schemes and the reports; new data and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.log-log-graphs.02",
+      "itemId": "ftm.fm.u1.log-log-graphs.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-LOG-02 (log-log graphs: y = kxⁿ as a straight line, k and n from the graph, using the relationship)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "The FM1 formula sheet gives aˣ = n ⇒ x = logₐ n; log y = n log x + log k is must-know",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Complete / Plot / Find / Write down / Identify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "(2.3 − 0.8) ÷ (0.7 − 0.2) = 1.5 ÷ 0.5 = 3; the inverted fraction gives 0.5 ÷ 1.5 = 0.333",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Summer 2022 Q12 report: some used the inverse of the gradient; the same slip is in the 2023, 2024 and 2025 reports",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q11, 2019 Q10, 2021 Q13, 2022 Q12, 2023 Q13, 2024 Q12 and 2025 Q10 with the 2022 and 2024 schemes and the reports; new data and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.log-log-graphs.0011",
+      "itemId": "q.fm.u1.log-log-graphs.0011",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-LOG-02 (log-log graphs: y = kxⁿ as a straight line, k and n from the graph, using the relationship)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "The FM1 formula sheet gives aˣ = n ⇒ x = logₐ n; log y = n log x + log k is must-know",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Complete / Plot / Find / Write down / Identify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "3 marks (M1 M2 W1): the equation, undoing the power, the whole number rounded up",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "2.5n^0.6 = 50 gives n = 20^(1/0.6) = 147.4; at n = 147 the cost is £49.93, at 148 it is over £50, so 148; both common errors executed as their routes",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Summer 2024 Q12 report: the majority lost the last mark by rounding down against the context; Summer 2018 Q11 asked a least whole value too",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q11, 2019 Q10, 2021 Q13, 2022 Q12, 2023 Q13, 2024 Q12 and 2025 Q10 with the 2022 and 2024 schemes and the reports; new data and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.log-log-graphs.0012",
+      "itemId": "q.fm.u1.log-log-graphs.0012",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-LOG-02 (log-log graphs: y = kxⁿ as a straight line, k and n from the graph, using the relationship)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "The FM1 formula sheet gives aˣ = n ⇒ x = logₐ n; log y = n log x + log k is must-know",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Complete / Plot / Find / Write down / Identify, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "13 marks over seven parts (2 + 3 + 2 + 2 + 1 + 2 + 1), the Summer 2024 Q12 shape (table, plot, n, k, then a least whole value and its assumption)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "H = 2.5A^1.4 printed to three significant figures at A = 2, 4, 6, 10, 15; every log value computed from the printed reading; every point within 0.003 of the line; gradient 1.225 ÷ 0.875 = 1.4; k = 111 ÷ 15^1.4 = 2.5 = 10^0.398; 80^(1/1.4) = 22.9, and 23 is the least whole area past 200 hours; every common error executed as its route",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Replaces q0009, the weir's exam question, every part of which practice questions 0001 to 0006 had already asked on the same numbers. Summer 2019 Q10 (log a handed in; the assumption), Summer 2024 Q12 (inverted gradient; rounded down against the context; k by a reading in the original equation, as its scheme does), Summer 2025 Q10 (two decimal places; constants swapped)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q11, 2019 Q10, 2021 Q13, 2022 Q12, 2023 Q13, 2024 Q12 and 2025 Q10 with the 2022 and 2024 schemes and the reports; new data and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.log-log-graphs.08",
+      "itemId": "rp.fm.u1.log-log-graphs.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "FM1-LOG-02; one fact she needs on the paper, answered in at most 12 words (recallFit, src/lib/slides/recall.ts), no series or examiner's finding in it",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (the intercept handed in as k, Summer 2018, 2019 and 2022; a prediction outside the readings, Summer 2019 and 2023) as one short fact",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; its key word appears in its own answer (keywordsPresent probed)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.log-log-graphs.09",
+      "itemId": "rp.fm.u1.log-log-graphs.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "FM1-LOG-02; one fact she needs on the paper, answered in at most 12 words (recallFit, src/lib/slides/recall.ts), no series or examiner's finding in it",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (the intercept handed in as k, Summer 2018, 2019 and 2022; a prediction outside the readings, Summer 2019 and 2023) as one short fact",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (29 Sep FM1 migration, group 0: fm1-migration-0/log-log-graphs.mjs, every logarithm, gradient, constant, prediction and rounding computed and asserted in the generator; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by FORK_SP/fm1-migration-0/ts/probe-log-log-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; its key word appears in its own answer (keywordsPresent probed)",
+          "at": "2026-09-29T14:45:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    }
+  ],
+  "sets": [
+    {
+      "id": "set.fm.u1.log-log-graphs.ladder",
+      "topic": "fm.u1.log-log-graphs",
+      "kind": "interleaved",
+      "title": "Log-log graphs: the table, the line, the constants, then using them",
+      "subject": "further-maths",
+      "units": [
+        "FM1"
+      ],
+      "itemIds": [
+        "q.fm.u1.log-log-graphs.0002",
+        "q.fm.u1.log-log-graphs.0001",
+        "q.fm.u1.log-log-graphs.0003",
+        "q.fm.u1.log-log-graphs.0004",
+        "rp.fm.u1.log-log-graphs.01",
+        "q.fm.u1.log-log-graphs.0005",
+        "ftm.fm.u1.log-log-graphs.01",
+        "q.fm.u1.log-log-graphs.0006",
+        "q.fm.u1.log-log-graphs.0007",
+        "q.fm.u1.log-log-graphs.0008",
+        "q.fm.u1.log-log-graphs.0011"
+      ],
+      "showTopicLabels": false,
+      "version": 1
+    },
+    {
+      "id": "set.fm.u1.log-log-graphs.mixed",
+      "topic": "fm.u1.log-log-graphs",
+      "kind": "mixed",
+      "title": "Log-log graphs, mixed: read the part, then choose the step",
+      "subject": "further-maths",
+      "units": [
+        "FM1"
+      ],
+      "itemIds": [
+        "q.fm.u1.log-log-graphs.0010",
+        "ftm.fm.u1.log-log-graphs.02",
+        "q.fm.u1.log-log-graphs.0012",
+        "rp.fm.u1.log-log-graphs.07"
+      ],
+      "showTopicLabels": false,
+      "version": 1
     }
   ]
 }

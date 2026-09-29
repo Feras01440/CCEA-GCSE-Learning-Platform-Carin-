@@ -1,206 +1,582 @@
 [
   {
     "type": "hero",
-    "lede": "Some relationships are curves, and a curve is hard to read. Take logarithms of both measurements and the curve straightens out, because a power law becomes a straight line in log form. A straight line holds only two numbers, and those two numbers are the answer.",
+    "lede": "Some measurements follow a power law, $y = kx^{n}$. Plotted as they come they curve, and a curve hides $k$ and $n$. Plot their logarithms instead and the points fall on a straight line: its gradient is $n$, and $k$ comes from one reading or from where the line meets the axis.",
     "can": [
-      "Turn a power law into the straight line log y = n log x + log k",
-      "Complete a table of logarithms to three decimal places and plot the log-log graph",
-      "Read the power from the gradient and the constant from the intercept, un-logging it"
+      "Turn $y = kx^{n}$ into the straight line $\\log y = n \\log x + \\log k$.",
+      "Complete a log table to three decimal places and plot the line.",
+      "Find $n$ from the gradient and $k$ from a reading, then use the relationship."
     ],
     "minutes": 15
   },
   {
     "type": "h",
-    "text": "Make it straight, then read it"
+    "text": "A power law becomes a straight line",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "Water over a notch in a dam follows a rule $F = k h^{n}$, where $h$ is the depth and $F$ the flow. Five depths give a curve, and a curve will not tell you $k$ or $n$.\nSo change the axes on purpose: plot $\\log F$ against $\\log h$ and the points fall on a straight line, which holds only a gradient and an intercept."
+    "md": "A pendulum's swing time $T$ seconds was measured at four lengths $L$ metres. Plotted as they come, the readings curve. The rule behind them is a power law, $T = kL^{n}$, and a curve will not tell you $k$ or $n$. Plot $\\log T$ against $\\log L$ instead, and the same readings fall on a straight line."
   },
   {
     "type": "figure",
-    "alt": "Two panels: the measured flow against depth curving upwards on the left, and the same data plotted as log F against log h lying on a straight line on the right.",
-    "svg": "<svg viewBox='0 0 590 272' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two panels: on the left the measured data curving upwards, on the right the same data plotted as log F against log h, lying on a straight line with its intercept marked log k'><title>Two panels: on the left the measured data curving upwards, on the right the same data plotted as log F against log h, lying on a straight line with its intercept marked log k</title><rect x='16' y='26' width='250' height='210' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.03'/><path d='M 54 202 L 254 202' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 54 44 L 54 202' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 54 202 L 55.7 201.9 L 57.3 201.6 L 59 201.3 L 60.7 201 L 62.3 200.6 L 64 200.1 L 65.7 199.6 L 67.3 199.1 L 69 198.6 L 70.7 198 L 72.3 197.4 L 74 196.7 L 75.7 196 L 77.3 195.3 L 79 194.6 L 80.7 193.9 L 82.3 193.1 L 84 192.3 L 85.7 191.5 L 87.3 190.6 L 89 189.8 L 90.7 188.9 L 92.3 188 L 94 187 L 95.7 186.1 L 97.3 185.1 L 99 184.2 L 100.7 183.2 L 102.3 182.1 L 104 181.1 L 105.7 180 L 107.3 179 L 109 177.9 L 110.7 176.8 L 112.3 175.7 L 114 174.5 L 115.7 173.4 L 117.3 172.2 L 119 171 L 120.7 169.8 L 122.3 168.6 L 124 167.4 L 125.7 166.1 L 127.3 164.9 L 129 163.6 L 130.7 162.3 L 132.3 161 L 134 159.7 L 135.7 158.4 L 137.3 157 L 139 155.7 L 140.7 154.3 L 142.3 152.9 L 144 151.5 L 145.7 150.1 L 147.3 148.7 L 149 147.3 L 150.7 145.8 L 152.3 144.4 L 154 142.9 L 155.7 141.4 L 157.3 139.9 L 159 138.4 L 160.7 136.9 L 162.3 135.3 L 164 133.8 L 165.7 132.2 L 167.3 130.7 L 169 129.1 L 170.7 127.5 L 172.3 125.9 L 174 124.3 L 175.7 122.7 L 177.3 121 L 179 119.4 L 180.7 117.7 L 182.3 116.1 L 184 114.4 L 185.7 112.7 L 187.3 111 L 189 109.3 L 190.7 107.5 L 192.3 105.8 L 194 104.1 L 195.7 102.3 L 197.3 100.6 L 199 98.8 L 200.7 97 L 202.3 95.2 L 204 93.4 L 205.7 91.6 L 207.3 89.8 L 209 87.9 L 210.7 86.1 L 212.3 84.2 L 214 82.4 L 215.7 80.5 L 217.3 78.6 L 219 76.7 L 220.7 74.8 L 222.3 72.9 L 224 71 L 225.7 69 L 227.3 67.1 L 229 65.1 L 230.7 63.2 L 232.3 61.2 L 234 59.2 L 235.7 57.2 L 237.3 55.2 L 239 53.2 L 240.7 51.2 L 242.3 49.2 L 244 47.2 L 245.7 45.1' stroke='currentColor' stroke-width='1.8' fill='none' stroke-dasharray='7 4'/><circle cx='61.1' cy='200.9' r='2.4' fill='currentColor'/><circle cx='82.6' cy='193' r='2.4' fill='currentColor'/><circle cx='118.3' cy='171.5' r='2.4' fill='currentColor'/><circle cx='168.3' cy='129.8' r='2.4' fill='currentColor'/><circle cx='232.6' cy='60.9' r='2.4' fill='currentColor'/><text x='141' y='228' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>h</text><text x='28' y='44' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>F</text><text x='141' y='20' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>the data as measured</text><path d='M 274 130 L 316 130 M 306 123 L 316 130 L 306 137' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='295' y='116' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>take logs</text><text x='295' y='152' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>of both</text><rect x='324' y='26' width='250' height='210' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.03'/><path d='M 362 202 L 562 202' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 362 44 L 362 202' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 362 170.5 L 540.6 60.9' stroke='currentColor' stroke-width='1.8' fill='none'/><circle cx='362' cy='170.5' r='2.4' fill='currentColor'/><circle cx='362' cy='170.5' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='438.9' cy='123.3' r='2.4' fill='currentColor'/><circle cx='438.9' cy='123.3' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='483.9' cy='95.7' r='2.4' fill='currentColor'/><circle cx='483.9' cy='95.7' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='515.8' cy='76.1' r='2.4' fill='currentColor'/><circle cx='515.8' cy='76.1' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='540.6' cy='60.9' r='2.4' fill='currentColor'/><circle cx='540.6' cy='60.9' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><path d='M 356 170.5 L 368 170.5' stroke='currentColor' stroke-width='1.6' fill='none'/><text x='374' y='163.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='start'>log k</text><text x='449' y='228' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>log h</text><text x='336' y='44' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>log F</text><text x='449' y='20' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>the same data, straightened</text><text x='295' y='260' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>a straight line holds just two numbers: a gradient and an intercept</text></svg>",
-    "caption": "The same five measurements, twice: as they come, and after logarithms."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to begin. In the two panels above, what has been plotted on the axes of the right-hand panel?",
-    "options": [
-      "$\\log F$ against $\\log h$",
-      "$F$ against $h$",
-      "$F$ against $\\log h$"
-    ],
-    "answer": "$\\log F$ against $\\log h$",
-    "explain": "Both measurements are replaced by their logarithms. Taking the logarithm of only one of them would not straighten a power law."
-  },
-  {
-    "type": "h",
-    "text": "1. Three lines of algebra, and it is a straight line"
-  },
-  {
-    "type": "p",
-    "md": "Start from $F = k h^{n}$ and take logarithms of both sides. The product law splits the right-hand side, then the power law brings $n$ down in front.\nWhat is left is $\\log F = n \\log h + \\log k$. Set that beside $y = mx + c$: the gradient is $n$ and the intercept is $\\log k$. Every question on this topic is those two matches, used twice."
-  },
-  {
-    "type": "figure",
-    "alt": "Four lines of algebra turning the power law into log F equals n log h plus log k, set beside y equals mx plus c, with arrows joining the gradient to n and the intercept to log k.",
-    "svg": "<svg viewBox='0 0 560 208' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four lines of algebra turning the power law into log F equals n log h plus log k, set beside y equals m x plus c with arrows joining the gradient to n and the intercept to log k'><title>Four lines of algebra turning the power law into log F equals n log h plus log k, set beside y equals m x plus c with arrows joining the gradient to n and the intercept to log k</title><text x='30' y='34' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>F = kh^n</text><text x='30' y='68' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>log F = log(kh^n)</text><text x='30' y='102' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>log F = log k + log h^n</text><text x='30' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>log F = n log h + log k</text><text x='300' y='34' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>start from the power law</text><text x='300' y='68' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>take logs of both sides</text><text x='300' y='102' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>the product law splits it</text><text x='300' y='136' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>the power law brings n down</text><rect x='20' y='120' width='260' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.08'/><text x='30' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>y = m x + c</text><path d='M 118 150 L 60 176 M 60 176 L 72 172 M 60 176 L 64 166' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 150 L 128 176 M 128 176 L 140 172 M 128 176 L 132 166' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='300' y='186' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>gradient is n, intercept is log k</text></svg>",
-    "caption": "Three uses of the log laws, and the power law is a straight line."
+    "alt": "Left: four readings of T against L on a rising curve. Right, after an arrow labelled logs: log T against log L, the same four on a straight line.",
+    "svg": "<svg viewBox='0 0 400 188' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two panels. Left: four readings of T against L lying on a rising curve. Right, after an arrow labelled logs: the same four readings plotted as log T against log L, lying on a straight line.'><title>Two panels. Left: four readings of T against L lying on a rising curve. Right, after an arrow labelled logs: the same four readings plotted as log T against log L, lying on a straight line.</title><path d='M 30 170 L 180 170' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 180 170 L 174.6 172.6 L 174.6 167.4 Z' fill='currentColor' stroke='none'/><path d='M 30 170 L 30 20' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 30 20 L 32.6 25.4 L 27.4 25.4 Z' fill='currentColor' stroke='none'/><text x='180' y='161' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>L</text><text x='36' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>T</text><path d='M 33.1 152.1 L 36.5 144.2 L 39.8 138.3 L 43.1 133.2 L 46.5 128.8 L 49.8 124.8 L 53.2 121.2 L 56.5 117.8 L 59.9 114.6 L 63.2 111.6 L 66.6 108.7 L 69.9 105.9 L 73.2 103.3 L 76.6 100.8 L 79.9 98.3 L 83.3 96 L 86.6 93.7 L 90 91.5 L 93.3 89.3 L 96.7 87.2 L 100 85.1 L 103.3 83.1 L 106.7 81.2 L 110 79.3 L 113.4 77.4 L 116.7 75.6 L 120.1 73.8 L 123.4 72 L 126.8 70.2 L 130.1 68.5 L 133.4 66.8 L 136.8 65.2 L 140.1 63.6 L 143.5 62 L 146.8 60.4 L 150.2 58.8 L 153.5 57.3 L 156.9 55.8 L 160.2 54.3 L 163.5 52.8 L 166.9 51.3' fill='none' stroke='currentColor' stroke-width='1.8'/><circle cx='61.1' cy='113.4' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='76.7' cy='100.7' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='107.8' cy='80.6' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='154.4' cy='56.9' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 230 170 L 380 170' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 380 170 L 374.6 172.6 L 374.6 167.4 Z' fill='currentColor' stroke='none'/><path d='M 230 170 L 230 20' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 230 20 L 232.6 25.4 L 227.4 25.4 Z' fill='currentColor' stroke='none'/><text x='380' y='161' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>log L</text><text x='236' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>log T</text><line x1='238.8' y1='148.7' x2='366.5' y2='46.5' stroke='currentColor' stroke-width='1.8'/><circle cx='247.7' cy='141.6' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='278.5' cy='116.9' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='317.3' cy='85.9' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='353' cy='57.3' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 178 100 L 222 100' fill='none' stroke='currentColor' stroke-width='1.5'/><path d='M 222 100 L 215.7 103 L 215.7 97 Z' fill='currentColor' stroke='none'/><text x='200' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>logs</text></svg>",
+    "caption": "The same four readings, as measured and after logarithms."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why the intercept is not k",
-    "md": "The derivation put $\\log k$ where $c$ sits, not $k$. So the number read off the vertical axis is the logarithm of the constant, and it still has to be un-logged. Keep that as a step of its own."
+    "title": "Why logarithms straighten a power law",
+    "md": "A power law multiplies $k$ by $L$ raised to a power. Logarithms turn multiplying into adding and a power into a multiplier, and a multiple plus a constant is exactly what a straight line, $y = mx + c$, is."
+  },
+  {
+    "type": "see",
+    "stem": "Show that any power law, $y = ax^{b}$, gives a straight line when $\\log y$ is plotted against $\\log x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log y = \\log(ax^{b})$",
+        "decision": "Take logarithms of both sides; the two sides stay equal.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\log y = \\log a + \\log x^{b}$",
+        "decision": "The product law: the logarithm of a product is a sum of logarithms."
+      },
+      {
+        "n": 3,
+        "working": "$\\log y = \\log a + b \\log x$",
+        "decision": "The power law brings the index down in front."
+      },
+      {
+        "n": 4,
+        "working": "$\\log y = b \\log x + \\log a$",
+        "decision": "Reordered to sit beside $y = mx + c$: $\\log y$ up, $\\log x$ across, the power $b$ as the gradient.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "proof"
   },
   {
     "type": "gate",
     "id": "g2",
     "kind": "choice",
-    "prompt": "Comparing $\\log F = n \\log h + \\log k$ with $y = mx + c$, what does the gradient of the log-log line give you?",
+    "prompt": "The pendulum's rule $T = kL^{n}$ gives the line $\\log T = n \\log L + \\log k$. Which constant does its gradient give?",
     "options": [
       "$n$",
       "$k$",
       "$\\log k$"
     ],
     "answer": "$n$",
-    "explain": "The gradient sits where $m$ sits, and that is $n$. The intercept sits where $c$ sits, and that is $\\log k$."
+    "explain": "In step 4 of See it the power multiplies the log of the input, just as $m$ multiplies $x$, so the gradient is the power: here $n$. The intercept, where $c$ sits, is $\\log k$; $k$ itself is on neither axis.",
+    "twin": {
+      "prompt": "The rule $V = qr^{p}$ gives the line $\\log V = p \\log r + \\log q$. What does the intercept on the vertical axis give?",
+      "options": [
+        "$\\log q$",
+        "$q$",
+        "$p$"
+      ],
+      "answer": "$\\log q$",
+      "explain": "The intercept sits where $c$ sits, and there the line holds $\\log q$, not $q$. The power $p$ multiplies $\\log r$, so it is the gradient.",
+      "optionNotes": [
+        {
+          "option": "$q$",
+          "why": "The intercept is $\\log q$; $q$ is found by un-logging it.",
+          "misconception": "fm.logs.log-a-given-as-a"
+        },
+        {
+          "option": "$p$",
+          "why": "$p$ multiplies $\\log r$, so it is the gradient, not the intercept.",
+          "misconception": "fm.logs.gradient-intercept-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$k$",
+        "why": "$k$ is not on the graph: the intercept is its logarithm, and the gradient is the power.",
+        "misconception": "fm.logs.gradient-intercept-swapped"
+      },
+      {
+        "option": "$\\log k$",
+        "why": "$\\log k$ sits where $c$ sits: it is the intercept, not the gradient.",
+        "misconception": "fm.logs.gradient-intercept-swapped"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "2. The table, to three decimal places"
+    "text": "The table, to three decimal places",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The paper gives the measurements and asks you to add two rows of logarithms. Work to **three decimal places** every time: two places is a mark thrown away, and the examiners name it almost every year.\nHere are five depths and flows from the weir, with both rows of logarithms filled in."
+    "md": "The paper prints the readings and asks for rows of logarithms. Give every entry to three decimal places, even one that ends in zero: $0.650$, not $0.65$. Two places costs the accuracy mark, and the reports name it in 2019, 2022, 2023, 2024 and 2025."
   },
   {
-    "type": "figure",
-    "alt": "A table with rows for depth h, flow F, log h and log F, the logarithm rows given to three decimal places.",
-    "svg": "<svg viewBox='0 0 560 142' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The table for the weir data with the depth, the flow and both rows of logarithms to three decimal places'><title>The table for the weir data with the depth, the flow and both rows of logarithms to three decimal places</title><rect x='10' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='55' y='31.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>Depth h (cm)</text><rect x='100' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='145' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1</text><rect x='190' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='235' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>4</text><rect x='280' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='325' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>9</text><rect x='370' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='415' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>16</text><rect x='460' y='12' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0.07'/><text x='505' y='31.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>25</text><rect x='10' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='61.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>Flow F (l/s)</text><rect x='100' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>4</text><rect x='190' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>32</text><rect x='280' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='325' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>108</text><rect x='370' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>256</text><rect x='460' y='42' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='61.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>500</text><rect x='10' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='91.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>log h</text><rect x='100' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.000</text><rect x='190' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.602</text><rect x='280' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='325' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.954</text><rect x='370' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.204</text><rect x='460' y='72' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='91.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.398</text><rect x='10' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='55' y='121.8' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>log F</text><rect x='100' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='145' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>0.602</text><rect x='190' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='235' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1.505</text><rect x='280' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='325' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2.033</text><rect x='370' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='415' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2.408</text><rect x='460' y='102' width='90' height='30' stroke='currentColor' stroke-width='0.9' fill='currentColor' fill-opacity='0'/><text x='505' y='121.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2.699</text></svg>",
-    "caption": "Both rows to three decimal places, which is what the answer line is marked against."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "number",
-    "prompt": "In the weir table above, one flow is $F = 108$ litres per second. What is $\\log F$ for that reading, to three decimal places?",
-    "answer": "2.033",
-    "explain": "$\\log 108 = 2.033$. Writing $2.03$ instead would lose the accuracy mark that the three decimal places carry."
-  },
-  {
-    "type": "h",
-    "text": "3. Plotting, and where the marks leak"
-  },
-  {
-    "type": "p",
-    "md": "Label the axes $\\log h$ and $\\log F$ before you plot anything: the labels are worth a mark on their own. Choose the scale from the range of the **logarithm** values, not the raw data, or the points bunch into a corner.\nPlot each point and circle it, then lay a ruled line through them. Circled points, labelled axes and a ruled line are three separate places examiners take marks off."
-  },
-  {
-    "type": "figure",
-    "alt": "Two small log-log panels, one with its axes named h and F instead of log h and log F, the other with the gradient triangle drawn the wrong way up.",
-    "svg": "<svg viewBox='0 0 590 234' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two small log-log panels, each with one fault: the first has its axes named h and F instead of log h and log F, the second has the gradient triangle drawn with its legs the wrong way up'><title>Two small log-log panels, each with one fault: the first has its axes named h and F instead of log h and log F, the second has the gradient triangle drawn with its legs the wrong way up</title><rect x='16' y='30' width='250' height='168' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.03'/><path d='M 54 164 L 254 164' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 54 48 L 54 164' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 54 140.9 L 232.6 60.4' stroke='currentColor' stroke-width='1.8' fill='none'/><circle cx='54' cy='140.9' r='2.4' fill='currentColor'/><circle cx='54' cy='140.9' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='130.9' cy='106.2' r='2.4' fill='currentColor'/><circle cx='130.9' cy='106.2' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='175.9' cy='86' r='2.4' fill='currentColor'/><circle cx='175.9' cy='86' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='207.8' cy='71.6' r='2.4' fill='currentColor'/><circle cx='207.8' cy='71.6' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='232.6' cy='60.4' r='2.4' fill='currentColor'/><circle cx='232.6' cy='60.4' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><text x='141' y='190' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>h</text><text x='28' y='48' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>F</text><text x='141' y='24' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>axes named after the raw data</text><rect x='324' y='30' width='250' height='168' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.03'/><path d='M 362 164 L 562 164' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 362 48 L 362 164' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 362 140.9 L 540.6 60.4' stroke='currentColor' stroke-width='1.8' fill='none'/><circle cx='362' cy='140.9' r='2.4' fill='currentColor'/><circle cx='362' cy='140.9' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='438.9' cy='106.2' r='2.4' fill='currentColor'/><circle cx='438.9' cy='106.2' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='483.9' cy='86' r='2.4' fill='currentColor'/><circle cx='483.9' cy='86' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='515.8' cy='71.6' r='2.4' fill='currentColor'/><circle cx='515.8' cy='71.6' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='540.6' cy='60.4' r='2.4' fill='currentColor'/><circle cx='540.6' cy='60.4' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><path d='M 362 60.4 L 540.6 60.4 L 540.6 140.9' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='451.3' y='75.4' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>1.398</text><text x='556.6' y='100.7' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>-2.097</text><text x='449' y='190' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>log h</text><text x='336' y='48' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>log F</text><text x='449' y='24' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>the triangle read upside down</text><text x='295' y='220' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>two panels, one thing wrong in each</text></svg>",
-    "caption": "Two panels, one fault each. Both faults are named in the reports almost every year."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "choice",
-    "prompt": "In the left-hand panel above, the axes are named $h$ and $F$. What should they be named?",
-    "options": [
-      "$\\log h$ and $\\log F$",
-      "$h$ and $\\log F$",
-      "$n$ and $k$"
+    "type": "see",
+    "stem": "Complete the log rows for the pendulum: $L = 2, 3, 5, 8$ and $T = 2.83, 3.46, 4.47, 5.66$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log L$: $0.301$, $0.477$, $0.699$, $0.903$",
+        "decision": "The log key is base 10. Round each value to three decimal places."
+      },
+      {
+        "n": 2,
+        "working": "$\\log 2.83 = 0.45179\\ldots$, so $0.452$",
+        "decision": "The fourth decimal, 7, rounds the third up.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\log T$: $0.452$, $0.539$, $0.650$, $0.753$",
+        "decision": "Three places for every entry, a final zero included.",
+        "earns": [
+          "W1"
+        ]
+      }
     ],
-    "answer": "$\\log h$ and $\\log F$",
-    "explain": "The numbers being plotted are logarithms, so the axes carry those names. Unlabelled or wrongly labelled axes lose a mark before any reading is taken."
-  },
-  {
-    "type": "h",
-    "text": "4. The gradient gives the power"
-  },
-  {
-    "type": "p",
-    "md": "Pick two points that are far apart and sit exactly on your line, then write the fraction the right way up: the change in $\\log F$ on top, the change in $\\log h$ underneath.\nFar apart matters, because a short triangle turns a small reading error into a large gradient error. Check the sign as you go: if $\\log F$ rises as $\\log h$ rises, $n$ is positive."
-  },
-  {
-    "type": "figure",
-    "alt": "The log-log line with a dashed right-angled triangle between its end points, the horizontal and vertical legs labelled with their changes, and the intercept marked log k.",
-    "svg": "<svg viewBox='0 0 560 280' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The log-log line with a dashed right-angled triangle drawn between its two end points, the horizontal leg and the vertical leg each labelled with their measured change, and the intercept marked log k'><title>The log-log line with a dashed right-angled triangle drawn between its two end points, the horizontal leg and the vertical leg each labelled with their measured change, and the intercept marked log k</title><rect x='30' y='30' width='500' height='220' stroke='currentColor' stroke-width='1' fill='currentColor' fill-opacity='0.03'/><path d='M 68 216 L 518 216' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 68 48 L 68 216' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 68 182.5 L 469.8 66' stroke='currentColor' stroke-width='1.8' fill='none'/><circle cx='68' cy='182.5' r='2.4' fill='currentColor'/><circle cx='68' cy='182.5' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='241' cy='132.4' r='2.4' fill='currentColor'/><circle cx='241' cy='132.4' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='342.2' cy='103' r='2.4' fill='currentColor'/><circle cx='342.2' cy='103' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='414' cy='82.2' r='2.4' fill='currentColor'/><circle cx='414' cy='82.2' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><circle cx='469.8' cy='66' r='2.4' fill='currentColor'/><circle cx='469.8' cy='66' r='5.4' fill='none' stroke='currentColor' stroke-width='1'/><path d='M 68 182.5 L 469.8 182.5 L 469.8 66' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='268.9' y='197.5' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>1.398</text><text x='485.8' y='124.3' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>2.097</text><path d='M 62 182.5 L 74 182.5' stroke='currentColor' stroke-width='1.6' fill='none'/><text x='80' y='175.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='start'>log k</text><text x='280' y='242' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>log h</text><text x='42' y='48' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>log F</text><text x='280' y='24' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>two points far apart, on the line</text><text x='280' y='268' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the rise goes on top, the run underneath</text></svg>",
-    "caption": "Rise over run, in logarithm units: $\\frac{2.097}{1.398} = 1.5$."
+    "kind": "data"
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g8",
     "kind": "number",
-    "prompt": "On the log-log line shown above, the triangle has a vertical change of $2.097$ and a horizontal change of $1.398$. What is the gradient, and so the value of $n$?",
-    "answer": "1.5",
-    "explain": "$\\frac{2.097}{1.398} = 1.5$. Dividing the other way round would give $0.667$, which is the reciprocal and not the power."
+    "prompt": "What goes in the $\\log T$ row for a reading of $T = 150$, to three decimal places?",
+    "answer": "2.176",
+    "explain": "As step 2 of See it: $\\log 150 = 2.17609\\ldots$, and the fourth decimal, 0, leaves $2.176$. Writing $2.18$ gives two places, which costs the accuracy mark.",
+    "twin": {
+      "prompt": "What goes in the $\\log T$ row for a reading of $T = 72$, to three decimal places?",
+      "answer": "1.857",
+      "explain": "$\\log 72 = 1.85733\\ldots$, so the entry is $1.857$."
+    }
   },
   {
     "type": "h",
-    "text": "5. The intercept gives log k, so un-log it"
+    "text": "Plotting: named axes, circled points, one line",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Read where the line meets the vertical axis. For the weir line that is $0.602$, and the derivation says that number is $\\log k$, not $k$.\nUn-log it as its own step: $k = 10^{0.602} = 4.0$. Then write the relationship with your own numbers in it, $F = 4.0 h^{1.5}$, not as a log equation."
+    "md": "Name the axes $\\log L$ and $\\log T$ before plotting: the labels carry a mark. Take each scale from the logarithms, not the readings, or the points bunch together, as many did in 2018. Circle each point so it can be seen, then rule one straight line through them."
+  },
+  {
+    "type": "figure",
+    "alt": "Axes named log L, from 0.2 to 1.0, and log T, from 0.4 to 0.8, with four circled points and a ruled straight line through them.",
+    "svg": "<svg viewBox='0 0 400 246' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A graph with the horizontal axis named log L, scaled from 0.2 to 1.0, and the vertical axis named log T, scaled from 0.4 to 0.8. Four points are circled and a ruled straight line passes through them.'><title>A graph with the horizontal axis named log L, scaled from 0.2 to 1.0, and the vertical axis named log T, scaled from 0.4 to 0.8. Four points are circled and a ruled straight line passes through them.</title><path d='M 56 210 L 366 210' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 366 210 L 360.6 212.6 L 360.6 207.4 Z' fill='currentColor' stroke='none'/><path d='M 56 210 L 56 20' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 56 20 L 58.6 25.4 L 53.4 25.4 Z' fill='currentColor' stroke='none'/><text x='366' y='201' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>log L</text><text x='62' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>log T</text><line x1='56' y1='210' x2='56' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='56' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.2</text><line x1='131' y1='210' x2='131' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='131' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.4</text><line x1='206' y1='210' x2='206' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='206' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.6</text><line x1='281' y1='210' x2='281' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='281' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.8</text><line x1='356' y1='210' x2='356' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='356' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.0</text><line x1='50' y1='210' x2='56' y2='210' stroke='currentColor' stroke-width='1.2'/><text x='44' y='215' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.4</text><line x1='50' y1='165' x2='56' y2='165' stroke='currentColor' stroke-width='1.2'/><text x='44' y='170' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.5</text><line x1='50' y1='120' x2='56' y2='120' stroke='currentColor' stroke-width='1.2'/><text x='44' y='125' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.6</text><line x1='50' y1='75' x2='56' y2='75' stroke='currentColor' stroke-width='1.2'/><text x='44' y='80' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.7</text><line x1='50' y1='30' x2='56' y2='30' stroke='currentColor' stroke-width='1.2'/><text x='44' y='35' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.8</text><line x1='74.8' y1='198.3' x2='348.5' y2='34' stroke='currentColor' stroke-width='1.8'/><circle cx='93.9' cy='186.8' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='159.9' cy='147.2' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='243.1' cy='97.3' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='319.7' cy='51.3' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/></svg>",
+    "caption": "Named axes, scales from the logarithms, circled points, one ruled line."
+  },
+  {
+    "type": "see",
+    "stem": "Plot the pendulum's log values and draw the line.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Across: $\\log L$ from $0.2$ to $1.0$. Up: $\\log T$ from $0.4$ to $0.8$",
+        "decision": "Both axes named, each scale chosen from the spread of the logarithms.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$(0.301, 0.452)$, $(0.477, 0.539)$, $(0.699, 0.650)$, $(0.903, 0.753)$, each circled",
+        "decision": "$\\log L$ first in each pair, since it runs across.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "One ruled straight line through the points",
+        "decision": "A line of best fit: it may miss a point slightly, but it never zigzags.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "process"
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "It is believed that $P = kV^{n}$. Which plot is a straight line whose gradient is $n$?",
+    "options": [
+      "$\\log P$ up, $\\log V$ across",
+      "$P$ up, $V$ across",
+      "$\\log V$ up, $\\log P$ across"
+    ],
+    "answer": "$\\log P$ up, $\\log V$ across",
+    "explain": "As step 1 of See it named them: the logarithm of the output goes up and of the input across, giving $\\log P = n \\log V + \\log k$ with gradient $n$. Plain $P$ against $V$ curves, and swapped axes give a gradient of $\\frac{1}{n}$.",
+    "twin": {
+      "prompt": "It is believed that $R = aM^{b}$. Which plot is a straight line whose gradient is $b$?",
+      "options": [
+        "$\\log R$ up, $\\log M$ across",
+        "$R$ up, $M$ across",
+        "$\\log M$ up, $\\log R$ across"
+      ],
+      "answer": "$\\log R$ up, $\\log M$ across",
+      "explain": "$\\log R = b \\log M + \\log a$, so $\\log R$ goes up and $\\log M$ across. $R$ against $M$ curves, and swapped axes give a gradient of $\\frac{1}{b}$.",
+      "optionNotes": [
+        {
+          "option": "$R$ up, $M$ across",
+          "why": "$R$ against $M$ curves; only the logarithms give a straight line."
+        },
+        {
+          "option": "$\\log M$ up, $\\log R$ across",
+          "why": "Swapped axes give a gradient of $\\frac{1}{b}$, not $b$.",
+          "misconception": "fm.logs.gradient-inverted"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$P$ up, $V$ across",
+        "why": "Plain $P$ against $V$ curves unless $n = 1$; only the logarithms straighten it."
+      },
+      {
+        "option": "$\\log V$ up, $\\log P$ across",
+        "why": "With the axes swapped the line's gradient is $\\frac{1}{n}$, not $n$.",
+        "misconception": "fm.logs.gradient-inverted"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "The gradient gives the power",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Pick two points far apart on your ruled line and write the fraction the right way up: the change in $\\log T$ on top, the change in $\\log L$ underneath. Far apart keeps a small misreading from moving the gradient much. The inverted fraction is named in four reports running, 2022 to 2025."
+  },
+  {
+    "type": "figure",
+    "alt": "The log-log line with a dashed right-angled triangle from (0.301, 0.452) to (0.903, 0.753): across 0.602, up 0.301.",
+    "svg": "<svg viewBox='0 0 400 226' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The log-log line with a dashed right-angled triangle from the point (0.301, 0.452) to the point (0.903, 0.753): the horizontal leg is labelled across 0.602 and the vertical leg up 0.301.'><title>The log-log line with a dashed right-angled triangle from the point (0.301, 0.452) to the point (0.903, 0.753): the horizontal leg is labelled across 0.602 and the vertical leg up 0.301.</title><path d='M 56 210 L 366 210' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 366 210 L 360.6 212.6 L 360.6 207.4 Z' fill='currentColor' stroke='none'/><path d='M 56 210 L 56 20' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 56 20 L 58.6 25.4 L 53.4 25.4 Z' fill='currentColor' stroke='none'/><text x='366' y='201' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>log L</text><text x='62' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>log T</text><line x1='74.8' y1='164.6' x2='348.5' y2='33.2' stroke='currentColor' stroke-width='1.8'/><circle cx='93.9' cy='155.3' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='319.6' cy='46.9' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><line x1='93.9' y1='155.3' x2='319.6' y2='155.3' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><line x1='319.6' y1='155.3' x2='319.6' y2='46.9' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><text x='206.75' y='177.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>across 0.602</text><text x='327.6' y='99.10000000000001' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>up</text><text x='327.6' y='117.10000000000001' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>0.301</text></svg>",
+    "caption": "Up over across, in logarithm units."
+  },
+  {
+    "type": "see",
+    "stem": "Find $n$ for the pendulum from the points $(0.301, 0.452)$ and $(0.903, 0.753)$ on its line.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Up: $0.753 - 0.452 = 0.301$",
+        "decision": "The change in $\\log T$, the vertical change."
+      },
+      {
+        "n": 2,
+        "working": "Across: $0.903 - 0.301 = 0.602$",
+        "decision": "The change in $\\log L$, the horizontal change."
+      },
+      {
+        "n": 3,
+        "working": "$n = \\dfrac{0.301}{0.602} = 0.5$",
+        "decision": "Up over across. A rising line gives a positive power.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "A log-log line passes through $(0.2, 1.1)$ and $(0.8, 2.9)$. What is its gradient, the power $n$?",
+    "answer": "3",
+    "explain": "Up over across, as step 3 of See it: $\\dfrac{2.9 - 1.1}{0.8 - 0.2} = \\dfrac{1.8}{0.6} = 3$. The fraction the other way up gives $0.333$, the reciprocal of the power.",
+    "twin": {
+      "prompt": "A log-log line passes through $(0.1, 0.9)$ and $(0.9, 0.5)$. What is its gradient, the power $n$?",
+      "answer": "-0.5",
+      "explain": "$\\dfrac{0.5 - 0.9}{0.9 - 0.1} = \\dfrac{-0.4}{0.8} = -0.5$. The line falls, so the power is negative."
+    }
+  },
+  {
+    "type": "h",
+    "text": "k from a reading, as the schemes do",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "With $n$ found, put one reading into the relationship itself and divide: $k = T \\div L^{n}$. The 2022 and 2024 mark schemes find the constant this way, and the 2025 report calls going back through the log equation unnecessary and harder. Use a reading that sits on your line."
+  },
+  {
+    "type": "see",
+    "stem": "Find $k$ for the pendulum, using $n = 0.5$ and the reading $L = 8$, $T = 5.66$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$5.66 = k \\times 8^{0.5}$",
+        "decision": "The reading goes into $T = kL^{n}$, the relationship itself.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$k = \\dfrac{5.66}{8^{0.5}} = \\dfrac{5.66}{2.828} = 2.001$",
+        "decision": "Divide by $8^{0.5}$ to leave $k$ on its own."
+      },
+      {
+        "n": 3,
+        "working": "$k = 2.0$, so $T = 2.0L^{0.5}$",
+        "decision": "Round as the question asks, then write the relationship with both constants in.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "number",
+    "prompt": "A relationship $y = kx^{n}$ has $n = 1.5$, and the reading $x = 4$, $y = 24$ lies on its line. What is $k$?",
+    "answer": "3",
+    "explain": "As steps 1 and 2 of See it: $24 = k \\times 4^{1.5} = 8k$, so $k = 24 \\div 8 = 3$. The reading goes into $y = kx^{n}$, not into the log line.",
+    "twin": {
+      "prompt": "A relationship $y = kx^{n}$ has $n = 2$, and the reading $x = 3$, $y = 54$ lies on its line. What is $k$?",
+      "answer": "6",
+      "explain": "$54 = k \\times 3^{2} = 9k$, so $k = 54 \\div 9 = 6$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Or read the intercept, and un-log it",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "If your $\\log L$ axis starts at $0$, the line meets the vertical axis at $\\log k$, the $c$ of $y = mx + c$. That number is the logarithm of $k$, so un-log it: $k = 10^{c}$. Handing in the intercept itself is the slip the 2018, 2019 and 2022 reports name."
+  },
+  {
+    "type": "figure",
+    "alt": "The log-log line on axes starting at log L = 0, through four circled points and extended back to meet the vertical axis at 0.301.",
+    "svg": "<svg viewBox='0 0 400 246' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The log-log line drawn on axes starting at log L = 0, ruled through four circled points and extended back to the vertical axis, which it meets at 0.301, marked with a dot.'><title>The log-log line drawn on axes starting at log L = 0, ruled through four circled points and extended back to the vertical axis, which it meets at 0.301, marked with a dot.</title><path d='M 56 210 L 366 210' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 366 210 L 360.6 212.6 L 360.6 207.4 Z' fill='currentColor' stroke='none'/><path d='M 56 210 L 56 20' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 56 20 L 58.6 25.4 L 53.4 25.4 Z' fill='currentColor' stroke='none'/><text x='366' y='201' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>log L</text><text x='62' y='18' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>log T</text><line x1='56' y1='210' x2='56' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='56' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.0</text><line x1='116' y1='210' x2='116' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='116' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.2</text><line x1='176' y1='210' x2='176' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='176' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.4</text><line x1='236' y1='210' x2='236' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='236' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.6</text><line x1='296' y1='210' x2='296' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='296' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0.8</text><line x1='356' y1='210' x2='356' y2='216' stroke='currentColor' stroke-width='1.2'/><text x='356' y='234' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1.0</text><line x1='50' y1='210' x2='56' y2='210' stroke='currentColor' stroke-width='1.2'/><text x='44' y='215' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.2</text><line x1='50' y1='150' x2='56' y2='150' stroke='currentColor' stroke-width='1.2'/><text x='44' y='155' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.4</text><line x1='50' y1='90' x2='56' y2='90' stroke='currentColor' stroke-width='1.2'/><text x='44' y='95' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.6</text><line x1='50' y1='30' x2='56' y2='30' stroke='currentColor' stroke-width='1.2'/><text x='44' y='35' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0.8</text><line x1='56' y1='179.7' x2='350' y2='32.7' stroke='currentColor' stroke-width='1.8'/><circle cx='146.3' cy='134.5' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='199.1' cy='108.1' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='265.7' cy='74.8' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='326.9' cy='44.2' r='5' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='56' cy='179.7' r='4.5' fill='currentColor'/><text x='68' y='203.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>meets the axis at 0.301</text></svg>",
+    "caption": "Extended back to log L = 0, the line meets the axis at log k."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "Summer 2018, Unit 1, Question 11",
-    "md": "Nearly everybody took logarithms and found the gradient. The constant was the step that failed: a large group handed in the intercept itself, so what reached the answer line was its logarithm rather than the constant.",
-    "source": "ccea-cer:further-maths:2018-summer:FM1:Q11"
+    "title": "What Summer 2019 found",
+    "md": "Summer 2019 Q10: the power came readily from the gradient, but several then could not find the constant $a$, and handed in $\\log a$ in its place."
+  },
+  {
+    "type": "see",
+    "stem": "The pendulum's line, extended back to $\\log L = 0$, meets the vertical axis at $0.301$. Find $k$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log k = 0.301$",
+        "decision": "The intercept holds $\\log k$: name it before using it.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$k = 10^{0.301} = 2.0$",
+        "decision": "Un-log it: ten to the power of the intercept. The same k as the reading gave.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g12",
     "kind": "number",
-    "prompt": "A log-log line meets the vertical axis at $\\log k = 0.699$. What is $k$, correct to one decimal place?",
-    "answer": "5.0",
-    "explain": "$k = 10^{0.699} = 5.0$. Handing in $0.699$ would be the logarithm of the constant, which is the most repeated slip on this topic."
+    "prompt": "A log-log line meets the vertical axis, where $\\log x = 0$, at $0.903$. What is $k$, to one decimal place?",
+    "answer": "8.0",
+    "explain": "As step 2 of See it: $k = 10^{0.903} = 7.998$, which is $8.0$. Handing in $0.903$ would give $\\log k$, not $k$.",
+    "twin": {
+      "prompt": "A log-log line meets the vertical axis, where $\\log x = 0$, at $0.477$. What is $k$, to one decimal place?",
+      "answer": "3.0",
+      "explain": "$k = 10^{0.477} = 2.999$, which is $3.0$."
+    }
   },
   {
     "type": "h",
-    "text": "6. Using the relationship, and checking it"
+    "text": "Using the relationship, inside the readings",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "With $F = 4.0 h^{1.5}$ you can predict. At $h = 12.25$ cm the flow is $4.0 \\times 12.25^{1.5} = 171.5$ litres per second. Put the depth in, not its logarithm.\nThen check the range. The line was fitted to depths from $1$ to $25$ cm, so $12.25$ is safe. A prediction far outside that is a guess, and a wild answer usually means a slip earlier."
+    "md": "With $T = 2.0L^{0.5}$ you can predict. Put the length itself in, never its logarithm: the 2018 report saw log values put into the power law. Then check the input sits inside the readings, $L = 2$ to $8$. Outside them the line was never tested, and a wild answer means a slip earlier."
+  },
+  {
+    "type": "see",
+    "stem": "Use $T = 2.0L^{0.5}$ to find $T$ when $L = 6$, and say whether to trust it.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$T = 2.0 \\times 6^{0.5}$",
+        "decision": "The length itself goes in.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$T = 4.90$",
+        "decision": "Three significant figures, like the readings.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$L = 6$ lies between $2$ and $8$",
+        "decision": "Inside the readings, so this is a reading of the line, not a guess."
+      }
+    ],
+    "kind": "calculation"
   },
   {
     "type": "video",
     "videoId": "KvipqSYQrmA",
     "title": "log/log Graphs - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "This technique is set by almost no other board, so there is little video to choose from; this one runs the whole method once, end to end."
+    "why": "The whole method once more, table to prediction, beside our own steps above."
   },
   {
     "type": "gate",
-    "id": "g7",
+    "id": "g13",
     "kind": "number",
-    "prompt": "Using $F = 4.0 h^{1.5}$ for the weir, what is the flow when the depth is $h = 7$ cm? Give your answer correct to one decimal place.",
-    "answer": "74.1",
-    "explain": "$4.0 \\times 7^{1.5} = 74.1$. The depth goes in, never its logarithm."
+    "prompt": "Using $P = 3.0V^{1.2}$, find $P$ when $V = 5$, to one decimal place.",
+    "answer": "20.7",
+    "explain": "As steps 1 and 2 of See it: $3.0 \\times 5^{1.2} = 3.0 \\times 6.899 = 20.7$. The value of $V$ goes in, not $\\log 5$.",
+    "twin": {
+      "prompt": "Using $R = 6.0m^{0.4}$, find $R$ when $m = 9$, to one decimal place.",
+      "answer": "14.4",
+      "explain": "$6.0 \\times 9^{0.4} = 6.0 \\times 2.408 = 14.4$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "How the paper twists it",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "Derive $\\log y = n \\log x + \\log k$ from $y = kx^{n}$ in three lines.\nComplete a table of logarithms to three decimal places.\nPlot $\\log y$ against $\\log x$ with labelled axes, circled points and a ruled line.\nRead $n$ from the gradient, rise over run, and $\\log k$ from the intercept.\nUn-log the intercept, predict, and check the prediction sits inside the data."
+    "md": "The last parts vary. Some give the output and ask for the input (2022, 2023). Some ask for the least whole value past a limit, rounded up whatever the decimal, and for the assumption behind it (2018, 2024); in 2024 most lost that mark by rounding down. Some ask you to show the relationship fails at a value (2021, 2025)."
+  },
+  {
+    "type": "see",
+    "stem": "Find the shortest whole length $L$ for which the pendulum's $T$ is more than $9$ seconds.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$2.0L^{0.5} > 9$, so $L^{0.5} > 4.5$",
+        "decision": "Set the relationship past the limit and divide by k.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$L > 4.5^{2} = 20.25$",
+        "decision": "Undo the power 0.5 by squaring.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$L = 21$",
+        "decision": "Round up: at $L = 20$, $T = 8.94$, still under 9.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "Assumption: $T = 2.0L^{0.5}$ still holds beyond $L = 8$",
+        "decision": "21 lies outside the readings, so the answer rests on the model reaching that far.",
+        "earns": [
+          "M1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "choice",
+    "prompt": "Solving $5.0V^{0.6} > 25$ gives $V > 14.62$. What is the least whole value of $V$?",
+    "options": [
+      "$15$",
+      "$14$",
+      "$14.62$"
+    ],
+    "answer": "$15$",
+    "explain": "As step 3 of See it: the least whole number past $14.62$ is $15$, rounded up whatever the decimal. At $V = 14$, $5.0 \\times 14^{0.6} = 24.4$, still under 25.",
+    "twin": {
+      "prompt": "Solving $4.0W^{0.7} > 20$ gives $W > 9.97$. What is the least whole value of $W$?",
+      "options": [
+        "$10$",
+        "$9$",
+        "$9.97$"
+      ],
+      "answer": "$10$",
+      "explain": "Round up past $9.97$ to $10$: at $W = 9$, $4.0 \\times 9^{0.7} = 18.6$, still under 20.",
+      "optionNotes": [
+        {
+          "option": "$9$",
+          "why": "$9$ falls short: $4.0 \\times 9^{0.7}$ is $18.6$, under 20."
+        },
+        {
+          "option": "$9.97$",
+          "why": "A whole value is asked for, so $9.97$ is rounded up."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$14$",
+        "why": "$14$ falls short: $5.0 \\times 14^{0.6}$ is $24.4$, under 25."
+      },
+      {
+        "option": "$14.62$",
+        "why": "A whole value is asked for, so $14.62$ is rounded up."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "One long question, once a paper, about ten marks, in the same order every year: table, plot and line, the two constants, the relationship, a prediction. The first mark is the table to three decimal places; the last is the un-logged constant or a checked prediction. Stuck? Write $\\log y = n \\log x + \\log k$ beside $y = mx + c$ and read off which is which."
+    "md": "$\\log y = n \\log x + \\log k$: gradient $n$, intercept $\\log k$.\nLog tables to three decimal places; named axes, circled points, one ruled line.\nn is up over across, from two points far apart.\nk from a reading in $y = kx^{n}$, or ten to the power of the intercept.\nPredict with the measurement itself; round up where needed; name the assumption."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "One long question late in Unit 1, 11 to 15 marks since 2018, in the same order: the table to three decimal places, the labelled plot and line, $n$ and $k$, then a prediction, an input or a least whole value. Later marks follow through from your own graph. Stuck: write $\\log y = n \\log x + \\log k$ beside $y = mx + c$."
   },
   {
     "type": "prompt",
@@ -208,14 +584,6 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.log-log-graphs.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.log-log-graphs.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.log-log-graphs.06"
+    "promptId": "rp.fm.u1.log-log-graphs.08"
   }
 ]
