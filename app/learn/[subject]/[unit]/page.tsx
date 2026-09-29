@@ -40,7 +40,7 @@ export default async function UnitPage({ params }: { params: Promise<{ subject: 
   const rows: UnitTopicRow[] = topics.map((t) => {
     const s = shippedOf(t);
     const notes = [
-      strandVaries && t.strand ? t.strand : "",
+      strandVaries && t.strand && !t.title.toLowerCase().startsWith(t.strand.toLowerCase()) ? t.strand : "",
       tierVaries ? TIER_NOTE[t.tier] : "",
       calcVaries && t.calculator === "non-calc" ? "non-calculator" : "",
       !s ? "No lesson here yet" : !s.hasNote ? "Questions, no lesson yet" : "",

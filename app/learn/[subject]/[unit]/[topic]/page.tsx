@@ -40,7 +40,7 @@ export function generateStaticParams() {
  * thing she reads, so it is prerendered with the page instead of waiting for the client fetch
  * that fills in the lesson below it.
  */
-function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; prompts: RetrievalPrompt[]; findings: number; workedExamples: WorkedExample[] } {
+function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; prompts: RetrievalPrompt[]; findings: number; workedExamples: WorkedExample[]; practicals: string[] | null } {
   try {
     const file = path.join(process.cwd(), "public", "content", subject, `${topicId}.json`);
     const b = JSON.parse(fs.readFileSync(file, "utf8")) as {
@@ -48,10 +48,13 @@ function shippedFor(subject: string, topicId: string): { noteBlocks: unknown[]; 
       prompts?: RetrievalPrompt[] | null;
       insight?: { findings?: unknown[] } | null;
       workedExamples?: WorkedExample[] | null;
+      topic?: { practicals?: string[] | null } | null;
     };
-    return { noteBlocks: b.noteBlocks ?? [], prompts: b.prompts ?? [], findings: b.insight?.findings?.length ?? 0, workedExamples: b.workedExamples ?? [] };
+    // The bundle's own practicals (the ones this topic teaches), not the taxonomy's list of every practical practised:
+    // u7-carrying-out's hero listed 18 "Prescribed Practical" facts from the latter (Unit 7 agent, 29 Sep 2026).
+    return { noteBlocks: b.noteBlocks ?? [], prompts: b.prompts ?? [], findings: b.insight?.findings?.length ?? 0, workedExamples: b.workedExamples ?? [], practicals: b.topic?.practicals ?? null };
   } catch {
-    return { noteBlocks: [], prompts: [], findings: 0, workedExamples: [] };
+    return { noteBlocks: [], prompts: [], findings: 0, workedExamples: [], practicals: null };
   }
 }
 
@@ -136,7 +139,7 @@ export default async function TopicPage({ params }: { params: Promise<{ subject:
         findings={shippedFile.findings}
         checks={noteGateIds(blocks).length}
         workedExamples={shipped.counts.we}
-        practicals={t.practicals}
+        practicals={shippedFile.practicals ?? t.practicals}
         // Named beside Read's numbers on the promise line, and "Start the slides · 23 cards" on the button.
         slides={deck ? { cards: deck.cards, minutes: deck.minutes } : undefined}
       />

@@ -47,6 +47,11 @@ export interface StatementInfo {
   text: string;
   tier: Tier;
   note?: string;
+  /**
+   * The list a statement introduces, in the specification's words: "use the following apparatus correctly, skilfully and
+   * safely:" is followed by seventeen kinds of apparatus. Present only when the specification prints a list.
+   */
+  bullets?: string[];
 }
 
 export interface ExternalLink {
@@ -103,6 +108,89 @@ export const SUBJECTS: SubjectInfo[] = [
 export function subjectInfo(id: string): SubjectInfo | undefined {
   return SUBJECTS.find((s) => s.id === id);
 }
+
+/* ---------------- the science catalogue, read from the specification's own shape ---------------- */
+
+/** A specification outcome as the science file holds it; `id` is null where the specification prints no number. */
+export interface SpecOutcome {
+  id: string | null;
+  text: string;
+  tier: string;
+  kind?: string;
+  bullets?: Array<{ text: string; tier?: string }>;
+}
+
+/** The science specification file's shape (data/spec/double-award-science.json), as far as the catalogue reads it. */
+export interface SpecShape {
+  units: Array<{ code: string; sections: Array<{ title: string; topics: Array<{ outcomes: SpecOutcome[] }> }> }>;
+}
+
+/**
+ * A science catalogue entry (data/spec/double-award-science-topics.json), in either of its two shapes: a unit topic,
+ * which names its outcomes by the specification's own numbers (`outcomeIds`, "2.3.8"), or a skills topic, which is a
+ * whole section of a unit whose skills the specification prints without numbers, so the catalogue names them by place
+ * (`skillIds`, "U7.1.1": the unit's first section, its first skill) and copies their words beside them (`skills`).
+ */
+export interface CatalogueEntry {
+  slug: string;
+  unit: string;
+  title: string;
+  sectionTitle: string;
+  difficulty: number;
+  prerequisites: string[];
+  examinerEvidence: Array<{ series: string; unit?: string; note: string }>;
+  tier?: string;
+  outcomeIds?: string[];
+  outcomeTiers?: Record<string, string>;
+  skillIds?: string[];
+  skills?: Array<{ id: string; text: string; bullets?: string[] }>;
+  mustRecall?: string[];
+  keywords?: string[];
+  practicals?: string[];
+  practicalsPractised?: string[];
+  phet?: Array<{ name: string; url: string }>;
+  video?: Array<{ channel: string; url: string; note?: string }>;
+  bitesize?: string | null;
+}
+
+/**
+ * The catalogue's code for a specification unit. The specification numbers a unit that belongs to no single discipline
+ * ("7"); the catalogue, the bundles and the routes write it with a U ("U7"), as src/lib/content/ids.ts reads it. A unit
+ * with a discipline letter ("B1", "P2") keeps its code.
+ */
+export function catalogueUnitCode(specCode: string): string {
+  return /^\d+$/.test(specCode) ? `U${specCode}` : specCode;
+}
+
+/** An outcome's key by the specification's own number. */
+const byNumber = (unit: string, id: string): string => `${unit}:${id}`;
+/** An unnumbered outcome's key by its place: its section, and its order among that section's unnumbered outcomes. */
+const byPlace = (unit: string, section: number, n: number): string => `${unit}#${section}.${n}`;
+
+/**
+ * Every outcome of a specification, keyed so a catalogue entry can find it: by the specification's own number where it
+ * prints one ("P2:2.3.8"), and by place where it prints none ("U7#1.1"). Places count from 1 within each section, across
+ * the section's topics in document order, as src/lib/content/ids.ts numbers the DA-U7-<area>-<n> refs.
+ */
+export function indexSpecOutcomes(spec: SpecShape): ReadonlyMap<string, SpecOutcome> {
+  const index = new Map<string, SpecOutcome>();
+  for (const unit of spec.units) {
+    const code = catalogueUnitCode(unit.code);
+    unit.sections.forEach((section, s) => {
+      let n = 0;
+      for (const topic of section.topics) {
+        for (const outcome of topic.outcomes) {
+          index.set(outcome.id ? byNumber(code, outcome.id) : byPlace(code, s + 1, ++n), outcome);
+        }
+      }
+    });
+  }
+  return index;
+}
+
+const SCIENCE_OUTCOMES = indexSpecOutcomes(sciSpec as unknown as SpecShape);
+/** Every science catalogue entry: the unit topics, then the skills topics, which the catalogue file keeps in `unit7`. */
+const SCIENCE_CATALOGUE = [...sciTopics.topics, ...sciTopics.unit7] as unknown as readonly CatalogueEntry[];
 
 /* ---------------- units ---------------- */
 
@@ -164,7 +252,7 @@ export function unitsFor(subject: Subject): UnitInfo[] {
     calculator: "Calculator allowed",
     prerequisiteUnits: code.endsWith("2") ? [code[0] + "1"] : [],
     note: code === "U7" ? "Booklet A 7.5% · Booklet B 17.5%" : `${m.discipline} · Foundation and Higher`,
-    topicCount: code === "U7" ? sciTopics.unit7.length : sciTopics.topics.filter((t) => t.unit === code).length,
+    topicCount: SCIENCE_CATALOGUE.filter((t) => t.unit === code).length,
   }));
 }
 
@@ -177,17 +265,27 @@ export function unitInfo(subject: Subject, code: string): UnitInfo | undefined {
 const mathsStatements = new Map(maths.statements.map((s) => [s.id, s]));
 const fmStatements = new Map(fm.statements.map((s) => [s.id, s]));
 
-type SciOutcome = { id: string | null; text: string; tier: string; kind?: string };
-const sciOutcomes = new Map<string, SciOutcome>();
-for (const unit of sciSpec.units as Array<{ code: string; sections: Array<{ topics: Array<{ outcomes: SciOutcome[] }> }> }>) {
-  const code = unit.code === "7" ? "U7" : unit.code;
-  for (const section of unit.sections) {
-    for (const t of section.topics) {
-      for (const o of t.outcomes) {
-        if (o.id) sciOutcomes.set(`${code}:${o.id}`, o);
-      }
-    }
-  }
+/**
+ * The outcome a catalogue id names: a specification number ("2.3.8"), or a place written with its unit ("U7.1.1", the
+ * unit's first section, its first unnumbered skill).
+ */
+function outcomeFor(outcomes: ReadonlyMap<string, SpecOutcome>, unit: string, id: string): SpecOutcome | undefined {
+  const numbered = outcomes.get(byNumber(unit, id));
+  if (numbered) return numbered;
+  if (!id.startsWith(`${unit}.`)) return undefined;
+  const place = id.slice(unit.length + 1).split(".");
+  return place.length === 2 && place.every((p) => /^\d+$/.test(p)) ? outcomes.get(byPlace(unit, Number(place[0]), Number(place[1]))) : undefined;
+}
+
+/** A science statement's tier as the catalogue or the specification marks it; unmarked means both tiers sit it. */
+function scienceTier(value: string | undefined): Tier {
+  return value === "H" || value === "mixed" ? value : "F";
+}
+
+/** The tier a topic's statements add up to: all Foundation text, all Higher, or some of each. */
+function tierOf(statements: readonly StatementInfo[]): Tier {
+  if (statements.length > 0 && statements.every((s) => s.tier === "H")) return "H";
+  return statements.every((s) => s.tier === "F") ? "F" : "mixed";
 }
 
 /* ---------------- topics ---------------- */
@@ -245,58 +343,52 @@ function fmTopic(t: (typeof fm)["topics"][number]): TopicInfo {
   };
 }
 
-type SciTopic = (typeof sciTopics)["topics"][number];
-function sciTopic(t: SciTopic): TopicInfo {
+/**
+ * A science topic from its catalogue entry, in either shape (CatalogueEntry), read the same way: each statement's words,
+ * tier and list from the specification, found by number or by place; the difficulty, strand, prerequisites, examiners'
+ * evidence, recall lines, keywords, practicals and reading links from the entry itself. Nothing here knows a unit: a
+ * new practical unit, or a new subject in this file's shape, is a data addition.
+ *
+ * A statement the specification has lost falls back to the entry's own copy of its words, and to its id only as a last
+ * resort (taxonomy.test.ts keeps that out of every real topic). A number is shown with its unit ("P2-2.3.8"); a place is
+ * already written with its unit and is shown as the catalogue writes it ("U7.1.1").
+ */
+export function scienceTopicFrom(entry: CatalogueEntry, outcomes: ReadonlyMap<string, SpecOutcome>): TopicInfo {
+  const unit = entry.unit;
+  const own = new Map((entry.skills ?? []).map((s) => [s.id, s]));
+  const statements = (entry.outcomeIds ?? entry.skillIds ?? []).map((id): StatementInfo => {
+    const outcome = outcomeFor(outcomes, unit, id);
+    const copy = own.get(id);
+    const bullets = outcome ? (outcome.bullets ?? []).map((b) => b.text) : (copy?.bullets ?? []);
+    return {
+      id: id.startsWith(`${unit}.`) ? id : `${unit}-${id}`,
+      text: outcome?.text ?? copy?.text ?? id,
+      tier: scienceTier(entry.outcomeTiers?.[id] ?? outcome?.tier),
+      ...(bullets.length > 0 ? { bullets } : {}),
+    };
+  });
   const links: ExternalLink[] = [];
-  for (const p of (t as { phet?: Array<{ name: string; url: string }> }).phet ?? []) links.push({ kind: "phet", label: `PhET: ${p.name}`, url: p.url });
-  for (const v of (t as { video?: Array<{ channel: string; url: string; note?: string }> }).video ?? [])
-    links.push({ kind: "youtube", label: v.channel, url: v.url, note: v.note });
-  const b = (t as { bitesize?: string | null }).bitesize;
-  if (b) links.push({ kind: "bitesize", label: "BBC Bitesize (CCEA)", url: b });
+  for (const p of entry.phet ?? []) links.push({ kind: "phet", label: `PhET: ${p.name}`, url: p.url });
+  for (const v of entry.video ?? []) links.push({ kind: "youtube", label: v.channel, url: v.url, note: v.note });
+  if (entry.bitesize) links.push({ kind: "bitesize", label: "BBC Bitesize (CCEA)", url: entry.bitesize });
   return {
     subject: "science",
-    unit: t.unit,
-    slug: t.slug,
-    title: t.title,
-    tier: t.tier as Tier,
-    strand: t.sectionTitle,
-    difficulty: t.difficulty,
+    unit,
+    slug: entry.slug,
+    title: entry.title,
+    tier: entry.tier === "F" || entry.tier === "H" || entry.tier === "mixed" ? entry.tier : tierOf(statements),
+    strand: entry.sectionTitle,
+    difficulty: entry.difficulty,
     calculator: null,
-    statements: t.outcomeIds.map((id) => {
-      const o = sciOutcomes.get(`${t.unit}:${id}`);
-      const tier = ((t.outcomeTiers as unknown as Record<string, string>)[id] ?? o?.tier ?? "F") as Tier;
-      return { id: `${t.unit}-${id}`, text: o?.text ?? id, tier };
-    }),
-    prerequisites: t.prerequisites,
-    examinedIn: [t.unit],
-    examinerEvidence: t.examinerEvidence.map((e) => ({ series: e.series, unit: e.unit, note: e.note })),
-    mustMemorise: (t as { mustRecall?: string[] }).mustRecall ?? [],
+    statements,
+    prerequisites: entry.prerequisites,
+    examinedIn: [unit],
+    examinerEvidence: entry.examinerEvidence.map((e) => ({ series: e.series, unit: e.unit, note: e.note })),
+    mustMemorise: entry.mustRecall ?? [],
     onFormulaSheet: [],
-    keywords: t.keywords ?? [],
+    keywords: entry.keywords ?? [],
     links,
-    practicals: t.practicals ?? [],
-  };
-}
-
-function unit7Topic(g: (typeof sciTopics)["unit7"][number]): TopicInfo {
-  return {
-    subject: "science",
-    unit: "U7",
-    slug: g.slug,
-    title: g.title,
-    tier: "mixed",
-    strand: "Practical skills",
-    difficulty: 4,
-    calculator: null,
-    statements: (g as { skillIds?: string[] }).skillIds?.map((id) => ({ id, text: id, tier: "mixed" as Tier })) ?? [],
-    prerequisites: [],
-    examinedIn: ["U7"],
-    examinerEvidence: [],
-    mustMemorise: [],
-    onFormulaSheet: [],
-    keywords: [],
-    links: [],
-    practicals: (g as { practicalsPractised?: string[] }).practicalsPractised ?? [],
+    practicals: entry.practicals ?? entry.practicalsPractised ?? [],
   };
 }
 
@@ -315,12 +407,11 @@ export function topicsFor(subject: Subject, unit: string): TopicInfo[] {
       .sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug))
       .map(fmTopic);
   }
-  if (unit === "U7") return sciTopics.unit7.map(unit7Topic);
+  // A unit the catalogue gives no teaching order keeps the catalogue's own order (the sort is stable).
   const order = (sciTopics.unitOrder as Record<string, string[]>)[unit] ?? [];
-  return sciTopics.topics
-    .filter((t) => t.unit === unit)
+  return SCIENCE_CATALOGUE.filter((t) => t.unit === unit)
     .sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug))
-    .map(sciTopic);
+    .map((t) => scienceTopicFrom(t, SCIENCE_OUTCOMES));
 }
 
 export function topicInfo(subject: Subject, unit: string, slug: string): TopicInfo | undefined {

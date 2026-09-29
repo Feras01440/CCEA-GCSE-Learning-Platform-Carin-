@@ -7,6 +7,7 @@ import { clsx } from "clsx";
 import type { FigureSpec } from "@/lib/content/schema";
 import { GeneratedFigure } from "@/components/figures/generated";
 import { decodeSvgDataUri, sanitizeInlineSvg, svgViewBoxWidth } from "@/lib/ux/svg";
+import { ApparatusFigure } from "@/components/figures/ApparatusFigure";
 import { MdInlines } from "./Markdown";
 import { parseInline } from "./md";
 
@@ -46,7 +47,7 @@ export function Figure({ spec, caption }: { spec: FigureSpec; caption?: string }
       return <p className="my-3 rounded-[var(--radius-sm)] bg-surface-2 px-3 py-2 text-meta text-ink-2">Figure: generated {spec.generator}.</p>;
     }
     case "apparatus":
-      return <p className="my-3 rounded-[var(--radius-sm)] bg-surface-2 px-3 py-2 text-meta text-ink-2">Apparatus: {spec.parts.join(", ")}.</p>;
+      return <ApparatusFigure spec={spec} caption={caption} />;
     case "jsxgraph":
     case "mafs":
       return <p className="my-3 rounded-[var(--radius-sm)] bg-surface-2 px-3 py-2 text-meta text-ink-2">Interactive figure.</p>;
