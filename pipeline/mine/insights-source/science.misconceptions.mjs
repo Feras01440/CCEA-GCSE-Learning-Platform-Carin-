@@ -406,9 +406,6 @@ export const misconceptions = [
   MX("sci.cancer.malignant-not-identified", "Does not identify a tumour as malignant from a diagram that shows it without a capsule and spreading into a blood vessel, or calls such a tumour benign", ["DA-B2-2.6.14"], "concept", [C("2024-summer", "B2F", 9), C("2024-summer", "B2H", 4)], "Summer 2024 B2 Foundation Q9(b) and Higher Q4(b): only better candidates identified the tumour as malignant because it was spreading into the blood vessels and was not encapsulated."),
   // heart attacks and strokes (DA-B2-2.6.11): B2 batch E, 29 Sep 2026
   MX("sci.cvd.blockage-consequences-missing", "Says a blood vessel is blocked and stops there, without the consequences that earn the marks: less blood flow, less oxygen and glucose reaching the cells, less respiration, and the cells dying", ["DA-B2-2.6.11"], "presentation", [C("2025-summer", "B2F", 3)], "Summer 2025 B2 Foundation Q3(a)(ii): many just referred to a blockage in the blood vessel but did not go on to give any of its consequences."),
-  // heart attacks and strokes (DA-B2-2.6.11, 2.6.12): B2 batch E, 29 Sep 2026; teaching evidence, no report finding
-  M("sci.cvd.heart-attack-as-heart-stopping", "Describes a heart attack as the heart stopping, or ends the chain there, instead of heart muscle cells dying because a coronary artery is blocked (the scheme's chain ends with the cells dying; the heart often keeps beating)", ["DA-B2-2.6.11"], "concept"),
-  M("sci.cvd.drug-actions-swapped", "Gives statins the action of aspirin or aspirin the action of statins: says statins thin the blood or stop clots, or that aspirin lowers cholesterol", ["DA-B2-2.6.12"], "concept"),
 
   // --- chemistry ---
   M("sci.formulae.diatomic-forgotten", "Writes H, O, N or Cl as single atoms in formulae or equations", ["DA-C1-1.5.2"], "concept"),
