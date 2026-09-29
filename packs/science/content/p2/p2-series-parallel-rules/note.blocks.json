@@ -7,7 +7,7 @@
       "Use the series rules and the parallel rules to find any missing meter reading",
       "Share a current between two unequal parallel branches"
     ],
-    "minutes": 14
+    "minutes": 18
   },
   {
     "type": "p",
@@ -26,11 +26,35 @@
   },
   {
     "type": "p",
-    "md": "Follow the route from the cell back to the cell. One route through every component in turn is **series**; a route that splits at a **junction** into branches and joins again is **parallel**."
+    "md": "Follow the route from the cell back to the cell. One route through every component in turn is **series**; a route that splits at a **junction** into branches and joins again is **parallel**. Judge by the route, not by how the circuit is laid out on the page."
   },
   {
-    "type": "p",
-    "md": "**On the figure.**\n1. The top arrows pass both lamps in turn: series.\n2. The bottom arrows split at a junction dot, one path per lamp, and meet again: parallel.\nJudge by the route, not the layout."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Circuit X: from the cell the wire passes lamp P, then lamp Q, then returns. Circuit Y: from the cell the wire reaches a junction, lamp P on one path and lamp Q on the other, and the paths meet again before the cell. Which is series and which is parallel? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Circuit X: one route, through P and then Q, so X is series.",
+        "decision": "No junction: the charge has no choice of path.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Circuit Y: at the junction the route divides, one lamp on each path, and the paths rejoin, so Y is parallel.",
+        "decision": "A junction and two paths that meet again: branches.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "A switch added to either would not change which kind it is.",
+        "decision": "The near-miss: what sits on a route never changes the route."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -43,7 +67,37 @@
       "neither, because the circuit contains a switch"
     ],
     "answer": "parallel: the route splits at a junction and joins again",
-    "explain": "Follow the route the way the arrows do on the figure. Here it reaches a junction and splits, one lamp on each path, then joins again: that is parallel. In series there would be one path through both lamps in turn, with no choice. A switch does not change the kind of circuit; it only opens or closes the route it sits in. The answer is parallel."
+    "explain": "As in step 2 of the See it, a route that reaches a junction, divides with one lamp on each path, and meets again is parallel. Series would be one path through both lamps in turn. A switch only opens or closes the route it sits in; it never changes the kind of circuit.",
+    "optionNotes": [
+      {
+        "option": "series: there is one route round the loop",
+        "why": "Series has no junction: every charge passes both lamps. Here the route divides, so the charge takes one lamp or the other."
+      },
+      {
+        "option": "neither, because the circuit contains a switch",
+        "why": "A switch opens or closes a route; it does not decide the kind of circuit. The junction does."
+      }
+    ],
+    "twin": {
+      "prompt": "A cell and two lamps are joined so that the only way round passes the first lamp and then the second. Which kind of circuit is this?",
+      "options": [
+        "series: there is one route round the loop",
+        "parallel: the route splits at a junction",
+        "neither, because the lamps are different"
+      ],
+      "answer": "series: there is one route round the loop",
+      "explain": "One way round, through each lamp in turn, with no junction: that is series.",
+      "optionNotes": [
+        {
+          "option": "parallel: the route splits at a junction",
+          "why": "There is no junction here: the only way round passes both lamps in turn."
+        },
+        {
+          "option": "neither, because the lamps are different",
+          "why": "What the components are does not matter; the route decides, and here it is one loop."
+        }
+      ]
+    }
   },
   {
     "type": "h",
@@ -67,16 +121,40 @@
     "md": "Current is the charge passing a point each second. Charge cannot pile up in a wire or vanish inside a component, so whatever flows into a component flows out of it."
   },
   {
-    "type": "p",
-    "md": "**Read the figure.**\n1. Before the 12 Ω resistor the ammeter reads 0.30 A.\n2. Between the resistors it reads 0.30 A.\n3. After the 18 Ω resistor it reads 0.30 A.\nOne reading in a series loop tells you them all."
+    "type": "see",
+    "kind": "data",
+    "stem": "A cell drives a current round a lamp and a buzzer in series. The ammeter before the lamp reads 0.07 A. What do an ammeter between the lamp and the buzzer, and one after the buzzer, read? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Between the lamp and the buzzer: 0.07 A.",
+        "decision": "One loop: the same charge passes every point each second.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "After the buzzer: 0.07 A.",
+        "decision": "Each component takes energy from the charge, never charge from the current.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g2",
+    "id": "g12",
     "kind": "number",
-    "prompt": "In a series circuit one ammeter sits just before a lamp and another just after it. The first reads 0.15 A. What does the second read, in amps?",
-    "answer": "0.15",
-    "explain": "A series circuit is one loop, and a lamp takes energy from the charge, not charge from the current. So the same current flows in and out of the lamp, just as the three ammeters on the figure all read the same. The second ammeter reads 0.15 A."
+    "prompt": "In a series circuit an ammeter just before a heater reads 0.24 A. What does an ammeter just after the heater read, in amps?",
+    "answer": "0.24 | 0.24 A",
+    "explain": "As in steps 1 and 2 of the See it, a series circuit is one loop and the heater takes energy, not charge. So the same current flows in and out: the ammeter after the heater reads 0.24 A too.",
+    "twin": {
+      "prompt": "A series loop has three lamps. An ammeter next to the first lamp reads 0.45 A. What does an ammeter next to the third lamp read, in amps?",
+      "answer": "0.45 | 0.45 A",
+      "explain": "One loop, one current: every ammeter in it reads 0.45 A."
+    }
   },
   {
     "type": "h",
@@ -94,16 +172,40 @@
     "md": "Voltage measures the energy each unit of charge carries. The supply gives the charge its energy once, and the components in the loop take that energy in turn. So **in series, the voltages across the components add up to the supply voltage**: the supply is shared out, and the larger resistance takes the larger share."
   },
   {
-    "type": "p",
-    "md": "**Read the figure.** Across the 12 Ω resistor 3.6 V; across the 18 Ω resistor 5.4 V. Add them: 3.6 + 5.4 = 9.0 V, the supply. So a missing voltage is the supply take away the readings you already have."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 5.0 V battery drives a lamp and a motor in series. The voltmeter across the lamp reads 1.8 V. What does a voltmeter across the motor read? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "In series the voltages across the components add up to the supply.",
+        "decision": "The supply is shared along the loop.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$5.0 - 1.8 = 3.2$ V",
+        "decision": "The missing reading is the supply take away the one you have.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g3",
     "kind": "number",
-    "prompt": "Two components are in series with a 4.5 V supply. The voltmeter across the first component reads 1.5 V. What does a voltmeter across the second component read, in volts?",
+    "prompt": "Two components are in series with a 4.0 V supply. The voltmeter across the first component reads 1.0 V. What does a voltmeter across the second component read, in volts?",
     "answer": "3",
-    "explain": "In series the supply is shared out along the loop, so the two readings must add up to the supply, as 3.6 V and 5.4 V did on the figure. The second reading is 4.5 − 1.5 = 3.0 V. Giving it the whole 4.5 V would be the parallel rule used on a series circuit."
+    "explain": "As in step 2 of the See it, the missing reading is the supply take away the one you have: 4.0 − 1.0 = 3.0 V. Giving the whole 4.0 V would be the parallel rule used on a series circuit.",
+    "twin": {
+      "prompt": "Three components are in series with a 9.0 V supply. The voltmeters across the first two read 2.2 V and 3.5 V. What does a voltmeter across the third read, in volts?",
+      "answer": "3.3 | 3.3 V",
+      "explain": "The three readings add up to the supply: 9.0 − 2.2 − 3.5 = 3.3 V."
+    }
   },
   {
     "type": "h",
@@ -121,8 +223,25 @@
     "md": "Each branch of a parallel circuit is joined straight across the supply, one end to each terminal. So **in parallel, the voltage across every branch is the supply voltage**, whatever is on the branch. That is why every lamp in a house has the full mains voltage across it, however many others are switched on."
   },
   {
-    "type": "p",
-    "md": "**Read the figure.**\n1. A 6.0 V supply feeds a 20 Ω branch and a 30 Ω branch.\n2. The voltmeter across each branch reads 6.0 V.\nDifferent resistances, the same voltage: nothing is shared out between branches."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A 9.0 V battery feeds three branches in parallel: a lamp, a resistor and a small motor. What voltage is across each branch? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Each branch has one end on each terminal of the battery.",
+        "decision": "Nothing else stands between a branch and the supply."
+      },
+      {
+        "n": 2,
+        "working": "So the lamp, the resistor and the motor each have 9.0 V across them.",
+        "decision": "Different components, the same voltage: nothing is shared out between branches.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -130,7 +249,12 @@
     "kind": "number",
     "prompt": "Three lamps are connected in parallel across a 3 V battery, each lamp on its own branch. What is the voltage across each lamp, in volts?",
     "answer": "3",
-    "explain": "Each branch is joined straight across the battery, so each lamp has the whole battery voltage across it, just as both voltmeters on the figure read the supply. Sharing the voltage belongs to series circuits; dividing by 3 would use that rule here. Each lamp has 3 V."
+    "explain": "As in steps 1 and 2 of the See it, each branch is joined straight across the battery, so each lamp has the whole 3 V across it. Sharing the voltage belongs to series circuits; dividing by 3 would use that rule here.",
+    "twin": {
+      "prompt": "Two lamps are connected in parallel across a 1.5 V cell, each on its own branch. What is the voltage across each lamp, in volts?",
+      "answer": "1.5 | 1.5 V",
+      "explain": "Each branch is joined straight across the cell, so each lamp has the full 1.5 V."
+    }
   },
   {
     "type": "h",
@@ -148,66 +272,101 @@
     "md": "At a junction the charge divides between the branches, but none of it is lost and none is stored. What flows in equals what flows out. So **in parallel, the current in the main line is the sum of the branch currents**, and where the branches meet again their currents add back together."
   },
   {
-    "type": "p",
-    "md": "**Read the figure.** 0.50 A arrives at the junction; 0.30 A takes the upper branch and 0.20 A the lower. Add the branches: 0.30 + 0.20 = 0.50 A. So a missing branch current is the main-line current take away the branches you know."
-  },
-  {
-    "type": "gate",
-    "id": "g5",
-    "kind": "number",
-    "prompt": "A current of 1.0 A flows into a junction and splits between two branches. One branch carries 0.6 A. What current flows in the other branch, in amps?",
-    "answer": "0.4",
-    "explain": "A junction stores nothing, so the two branch currents must add back up to the 1.0 A that arrived, as the two branches on the figure add up to the main line. The other branch carries 1.0 − 0.6 = 0.4 A."
-  },
-  {
-    "type": "h",
-    "text": "6. See the current split and join",
-    "role": "see"
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A current of 0.65 A arrives at a junction, and the upper branch carries 0.38 A. What does the lower branch carry, and what flows on where the branches join again? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Lower branch: $0.65 - 0.38 = 0.27$ A",
+        "decision": "Nothing is lost at a junction, so the branches share what arrived.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "After they join: $0.38 + 0.27 = 0.65$ A",
+        "decision": "The branch currents add back together.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "JhBrAmQYr2g",
     "title": "Current in parallel circuits",
     "channel": "Freesciencelessons",
-    "why": "A three-minute lesson on what a parallel circuit is and how the current behaves as it splits into the branches and joins again."
-  },
-  {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "Watch with your own paper in mind",
-    "md": "The video is made for another exam board, and its circuits may be drawn a little differently. The rule it teaches is the one in section 5. If you hear **potential difference**, CCEA says **voltage**; the two mean the same, and on your paper you write voltage."
+    "why": "A three-minute lesson on the current splitting into branches and joining again. It is made for another board and may draw circuits a little differently; its potential difference is CCEA's voltage."
   },
   {
     "type": "gate",
-    "id": "g6",
-    "kind": "choice",
-    "prompt": "A current of 0.9 A reaches a junction and splits between two branches. Which statement is true?",
-    "options": [
-      "the two branch currents add up to 0.9 A",
-      "each branch carries 0.9 A",
-      "some of the 0.9 A is used up at the junction"
-    ],
-    "answer": "the two branch currents add up to 0.9 A",
-    "explain": "Charge is neither made nor lost at a junction: it only divides. So the currents leaving along the branches add up to the current that arrived, 0.9 A in all. Each branch carrying the full 0.9 A would need charge to be created, and a junction using some up would need it to vanish."
+    "id": "g5",
+    "kind": "number",
+    "prompt": "A current of 1.5 A flows into a junction and splits between two branches. One branch carries 1.1 A. What current flows in the other branch, in amps?",
+    "answer": "0.4",
+    "explain": "As in step 1 of the See it, a junction stores nothing, so the two branches share what arrived: 1.5 − 1.1 = 0.4 A.",
+    "twin": {
+      "prompt": "Two branch currents of 0.28 A and 0.52 A join again. What current flows on in the main line, in amps?",
+      "answer": "0.8 | 0.8 A",
+      "explain": "Where branches join, their currents add: 0.28 + 0.52 = 0.80 A."
+    }
   },
   {
     "type": "h",
-    "text": "7. See it done: the missing readings",
-    "role": "see"
+    "text": "6. Six readings, two given",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "The paper's favourite shape puts a battery across two equal resistors in parallel, with an ammeter in the main line, one on each branch, and a voltmeter across the battery and across each branch. Fill in every voltage first, then the currents."
   },
   {
     "type": "figure",
-    "alt": "A battery with voltmeter V1 across it and ammeter A1 in the main line, feeding two equal resistors in parallel; each branch has an ammeter, A2 and A3, and a voltmeter, V2 and V3. A3 reads 0.30 A and V3 reads 4.5 V.",
-    "svg": "<svg viewBox=\"0 0 400 414\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"p2spmsg\"><title id=\"p2spmsg\">A battery with voltmeter V1 across it and ammeter A1 in the main line, feeding two equal resistors in parallel; each branch has its own ammeter, A2 and A3, and a voltmeter across its resistor, V2 and V3</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M50 110 L50 320\"/><path d=\"M350 110 L350 151\"/><path d=\"M350 179 L350 220\"/><path d=\"M350 220 L350 320\"/><path d=\"M50 110 L156 110\"/><path d=\"M184 110 L350 110\"/><path d=\"M50 220 L138 220\"/><path d=\"M182 220 L266 220\"/><path d=\"M294 220 L350 220\"/><path d=\"M50 320 L138 320\"/><path d=\"M182 320 L266 320\"/><path d=\"M294 320 L350 320\"/><path d=\"M156 93 L156 127\" stroke-width=\"1.8\"/><path d=\"M164 102 L164 118\" stroke-width=\"4.2\"/><path d=\"M164 110 L176 110\" stroke-dasharray=\"2.4 2\"/><path d=\"M176 93 L176 127\" stroke-width=\"1.8\"/><path d=\"M184 102 L184 118\" stroke-width=\"4.2\"/><path d=\"M138 211 H182 V229 H138 Z\"/><path d=\"M266 220 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><path d=\"M138 311 H182 V329 H138 Z\"/><path d=\"M266 320 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><g transform=\"rotate(90 350 165)\"><path d=\"M336 165 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/></g><path d=\"M120 110 L120 58\"/><path d=\"M220 110 L220 58\"/><path d=\"M120 58 L156 58\"/><path d=\"M184 58 L220 58\"/><path d=\"M156 58 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><path d=\"M116 220 L116 174\"/><path d=\"M204 220 L204 174\"/><path d=\"M116 174 L146 174\"/><path d=\"M174 174 L204 174\"/><path d=\"M146 174 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><path d=\"M116 320 L116 366\"/><path d=\"M204 320 L204 366\"/><path d=\"M116 366 L146 366\"/><path d=\"M174 366 L204 366\"/><path d=\"M146 366 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M46.4 220 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M346.4 220 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M116.6 110 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M216.6 110 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M112.6 220 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M200.6 220 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M112.6 320 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M200.6 320 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"280\" y=\"225\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">A</text><text x=\"280\" y=\"325\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">A</text><text x=\"350\" y=\"170\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">A</text><text x=\"170\" y=\"63\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">V</text><text x=\"160\" y=\"179\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">V</text><text x=\"160\" y=\"371\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">V</text><text x=\"170\" y=\"36\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">V1</text><text x=\"328\" y=\"171\" text-anchor=\"end\" font-size=\"16\" font-weight=\"600\">A1</text><text x=\"280\" y=\"198\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">A2</text><text x=\"280\" y=\"298\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">A3 = 0.30 A</text><text x=\"160\" y=\"152\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">V2</text><text x=\"160\" y=\"404\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">V3 = 4.5 V</text></g></svg>",
-    "caption": "The paper's favourite shape: six meter readings, two given, four to find from the rules alone."
+    "alt": "A battery with voltmeter V1 across it and ammeter A1 in the main line, feeding two equal resistors in parallel; each branch has an ammeter, A2 and A3, and a voltmeter across its resistor, V2 and V3.",
+    "svg": "<svg viewBox=\"0 0 400 414\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"spV3meters\"><title id=\"spV3meters\">A battery with voltmeter V1 across it and ammeter A1 in the main line, feeding two equal resistors in parallel; each branch has its own ammeter, A2 and A3, and a voltmeter across its resistor, V2 and V3</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M50 110 L50 320\"/><path d=\"M350 110 L350 151\"/><path d=\"M350 179 L350 220\"/><path d=\"M350 220 L350 320\"/><path d=\"M50 110 L156 110\"/><path d=\"M184 110 L350 110\"/><path d=\"M50 220 L138 220\"/><path d=\"M182 220 L266 220\"/><path d=\"M294 220 L350 220\"/><path d=\"M50 320 L138 320\"/><path d=\"M182 320 L266 320\"/><path d=\"M294 320 L350 320\"/><path d=\"M156 93 L156 127\" stroke-width=\"1.8\"/><path d=\"M164 102 L164 118\" stroke-width=\"4.2\"/><path d=\"M164 110 L176 110\" stroke-dasharray=\"2.4 2\"/><path d=\"M176 93 L176 127\" stroke-width=\"1.8\"/><path d=\"M184 102 L184 118\" stroke-width=\"4.2\"/><path d=\"M138 211 H182 V229 H138 Z\"/><path d=\"M266 220 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><path d=\"M138 311 H182 V329 H138 Z\"/><path d=\"M266 320 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><g transform=\"rotate(90 350 165)\"><path d=\"M336 165 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/></g><path d=\"M120 110 L120 58\"/><path d=\"M220 110 L220 58\"/><path d=\"M120 58 L156 58\"/><path d=\"M184 58 L220 58\"/><path d=\"M156 58 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><path d=\"M116 220 L116 174\"/><path d=\"M204 220 L204 174\"/><path d=\"M116 174 L146 174\"/><path d=\"M174 174 L204 174\"/><path d=\"M146 174 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/><path d=\"M116 320 L116 366\"/><path d=\"M204 320 L204 366\"/><path d=\"M116 366 L146 366\"/><path d=\"M174 366 L204 366\"/><path d=\"M146 366 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 Z\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M46.4 220 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M346.4 220 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M116.6 110 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M216.6 110 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M112.6 220 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M200.6 220 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M112.6 320 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M200.6 320 a3.4 3.4 0 1 0 6.8 0 a3.4 3.4 0 1 0 -6.8 0 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"280\" y=\"225\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">A</text><text x=\"280\" y=\"325\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">A</text><text x=\"350\" y=\"170\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">A</text><text x=\"170\" y=\"63\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">V</text><text x=\"160\" y=\"179\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">V</text><text x=\"160\" y=\"371\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"600\">V</text><text x=\"170\" y=\"36\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">V1</text><text x=\"328\" y=\"171\" text-anchor=\"end\" font-size=\"16\" font-weight=\"600\">A1</text><text x=\"280\" y=\"198\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">A2</text><text x=\"280\" y=\"298\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">A3</text><text x=\"160\" y=\"152\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">V2</text><text x=\"160\" y=\"404\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">V3</text></g></svg>",
+    "caption": "Two readings given: the other four come from the rules alone."
   },
   {
-    "type": "p",
-    "md": "**The question.** A battery drives two equal resistors in parallel. A3 reads 0.30 A and V3 reads 4.5 V. Find A1, A2, V1 and V2."
-  },
-  {
-    "type": "p",
-    "md": "**Step 1.** V2 is across a branch, so it reads the supply voltage, the same as V3: 4.5 V.\n**Step 2.** V1 is across the battery itself: 4.5 V again.\n**Step 3.** Equal resistors with equal voltages carry equal currents, so A2 = 0.30 A.\n**Step 4.** A1 is in the main line, so it carries both: 0.30 + 0.30 = 0.60 A."
+    "type": "see",
+    "kind": "data",
+    "stem": "In the circuit shown, A3 reads 0.45 A and V3 reads 7.5 V. Find V2, V1, A2 and A1. [4]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "V2 = 7.5 V",
+        "decision": "V2 is across a branch, so it reads the supply voltage, the same as V3.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "V1 = 7.5 V",
+        "decision": "V1 is across the battery itself: the supply voltage again.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "A2 = 0.45 A",
+        "decision": "Equal resistors with equal voltages carry equal currents.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "A1 $= 0.45 + 0.45 = 0.90$ A",
+        "decision": "A1 is in the main line, so it carries both branches.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -215,12 +374,44 @@
     "kind": "number",
     "prompt": "In the circuit shown, the battery is changed and ammeter A1 in the main line now reads 0.8 A. The two resistors are still equal. What does ammeter A2 on one branch read, in amps?",
     "answer": "0.4",
-    "explain": "A1 feeds both branches. Equal resistors with the same voltage across them take equal shares, so each branch carries half the main-line current, the way 0.60 A on the figure was two lots of 0.30 A. A2 reads 0.8 ÷ 2 = 0.4 A."
+    "explain": "As in steps 3 and 4 of the See it, A1 feeds both branches, and equal resistors with the same voltage take equal shares. So each branch carries half the main-line current: A2 reads 0.8 ÷ 2 = 0.4 A.",
+    "twin": {
+      "prompt": "In the same circuit a different battery makes A1 read 1.3 A. The resistors are still equal. What does A3 read, in amps?",
+      "answer": "0.65 | 0.65 A",
+      "explain": "Equal branches share the main-line current equally: 1.3 ÷ 2 = 0.65 A."
+    }
   },
   {
     "type": "h",
-    "text": "8. Build it and watch the charge",
-    "role": "see"
+    "text": "7. Take a lamp out",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Each branch is its own route from one terminal to the other. Take a lamp out of one branch and only that branch breaks: every other branch still has the full supply voltage, so its lamp is just as bright. The main-line current falls, because the charge has one route fewer."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Four identical lamps are in parallel across a battery, and the main-line ammeter reads 1.80 A. One lamp is unscrewed. What happens to the other three lamps, and to the main-line reading? [2]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "The other three stay exactly as bright.",
+        "decision": "Each of their branches still has the full battery voltage.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Each branch carried $1.80 \\div 4 = 0.45$ A, so the main line now carries $3 \\times 0.45 = 1.35$ A.",
+        "decision": "One branch fewer, so one share fewer in the main line.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "sim",
@@ -229,28 +420,54 @@
     "title": "PhET: Circuit Construction Kit: DC",
     "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)",
     "licence": "CC BY-NC 4.0",
-    "task": "Build a battery with two light bulbs in parallel, one bulb on each branch. Put an ammeter in the main line and one on each branch and read all three: the main line should be the two branches added. Then remove one bulb and watch the other bulb and the main-line reading."
-  },
-  {
-    "type": "p",
-    "md": "The bulb that is left shines exactly as before, because its branch still has the full battery voltage across it. The main-line reading drops to that one branch's current, because the charge now has one route instead of two. Both are the parallel rules of sections 4 and 5, seen happening."
+    "task": "Build a battery with two light bulbs in parallel, one bulb on each branch. Put an ammeter in the main line and read it. Then remove one bulb: watch the other bulb, and the main-line reading."
   },
   {
     "type": "gate",
-    "id": "g8",
+    "id": "g14",
     "kind": "choice",
-    "prompt": "Two identical lamps are connected in parallel across a battery. One lamp is unscrewed from its holder. What happens to the other lamp?",
+    "prompt": "Two identical lamps are in parallel across a battery, and the main-line ammeter reads 1.0 A. One lamp is unscrewed. What does the main-line ammeter read now?",
     "options": [
-      "it stays as bright, because its branch still has the full battery voltage",
-      "it goes dimmer, because it now has to share the current",
-      "it goes out, because the circuit has been broken"
+      "0.5 A",
+      "1.0 A",
+      "2.0 A"
     ],
-    "answer": "it stays as bright, because its branch still has the full battery voltage",
-    "explain": "Each branch is its own route from one terminal of the battery to the other. Unscrewing one lamp breaks only that branch; the other branch still has the full battery voltage across it, so its lamp is exactly as bright. Only the main-line current falls."
+    "answer": "0.5 A",
+    "explain": "As in step 2 of the See it, each branch carried an equal share, here 1.0 ÷ 2. With one branch gone, the main line carries only the one share left, half of what it carried. The other lamp stays just as bright.",
+    "optionNotes": [
+      {
+        "option": "1.0 A",
+        "why": "The remaining lamp is unchanged, so it can seem nothing changes; but the main line now carries only its branch."
+      },
+      {
+        "option": "2.0 A",
+        "why": "Nothing doubles: the remaining branch still carries its own share, and the main line loses the other share."
+      }
+    ],
+    "twin": {
+      "prompt": "Three identical lamps are in parallel, and the main-line ammeter reads 1.5 A. One lamp is unscrewed. What does the main-line ammeter read now?",
+      "options": [
+        "1.0 A",
+        "1.5 A",
+        "0.5 A"
+      ],
+      "answer": "1.0 A",
+      "explain": "Each branch carried 1.5 ÷ 3 = 0.5 A; two branches are left, so the main line carries 1.0 A.",
+      "optionNotes": [
+        {
+          "option": "1.5 A",
+          "why": "The main line carries the sum of the branches, and one branch has gone."
+        },
+        {
+          "option": "0.5 A",
+          "why": "That is one branch's share; two branches are still working."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "9. Exam twists",
+    "text": "8. Exam twists",
     "role": "twists"
   },
   {
@@ -261,15 +478,39 @@
   },
   {
     "type": "p",
-    "md": "**Six meter readings, two given.** Summer 2019 Higher and Summer 2026 Foundation: two equal resistors in parallel. Every voltmeter reads the supply; the branches share the current equally."
+    "md": "**Six readings, two given.** Summer 2019 Higher and Summer 2026 Foundation: two equal resistors in parallel. Every voltmeter reads the supply; the branches share the current equally."
   },
   {
     "type": "p",
-    "md": "**Ammeters either side of the branches** (Summer 2022, both tiers). Worked on the figure with A1 reading 0.8 A:\n1. A2 and A3 each take a share: 0.8 ÷ 2 = 0.4 A.\n2. The shares join again, so A4 reads 0.4 + 0.4 = 0.8 A, the same as A1."
+    "md": "**Ammeters either side of the branches** (Summer 2022, both tiers). The main-line ammeter after the branches reads the same as the one before them."
   },
   {
     "type": "p",
     "md": "**A resistor feeding an equal pair.** Summer 2021 Foundation gave one branch current in milliamps. The other branch matches it and the single resistor carries both. Convert to amps only for V = I R."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "In the figure the two resistors are equal, and A1 reads 2.2 A. Find A2, A3 and A4. [3]",
+    "steps": [
+      {
+        "n": 1,
+        "working": "A2 = A3 $= 2.2 \\div 2 = 1.1$ A",
+        "decision": "Equal branches share the main-line current equally.",
+        "earns": [
+          "P1",
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "A4 $= 1.1 + 1.1 = 2.2$ A",
+        "decision": "The shares join again, so A4 matches A1.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -282,26 +523,48 @@
       "1.2 A"
     ],
     "answer": "0.6 A",
-    "explain": "A4 is in the main line after the two branches have joined again, so it carries the whole current. The 0.3 A in each branch adds back to 0.6 A, exactly what A1 read before the split. Only the branch ammeters A2 and A3 read 0.3 A, and nothing in the circuit doubles a current."
+    "explain": "As in step 2 of the See it, A4 is in the main line after the branches have joined, so it carries the whole current again, the same as A1: 0.6 A. Only the branch ammeters read half of it, and nothing in the circuit doubles a current.",
+    "optionNotes": [
+      {
+        "option": "0.3 A",
+        "why": "That is one branch's share. A4 sits after the branches have joined, where the shares add back together.",
+        "misconception": "sci.circuits.current-split-equally"
+      },
+      {
+        "option": "1.2 A",
+        "why": "The branches do not add to more than arrived: A4 carries exactly what A1 carries."
+      }
+    ],
+    "twin": {
+      "prompt": "In the same circuit a different supply makes A1 read 2.6 A, with the resistors still equal. What does A4 read?",
+      "options": [
+        "2.6 A",
+        "1.3 A",
+        "5.2 A"
+      ],
+      "answer": "2.6 A",
+      "explain": "A4 is in the main line after the branches join again, so it reads the same as A1: 2.6 A.",
+      "optionNotes": [
+        {
+          "option": "1.3 A",
+          "why": "That is a branch current. After the join, the branches add back to 2.6 A.",
+          "misconception": "sci.circuits.current-split-equally"
+        },
+        {
+          "option": "5.2 A",
+          "why": "Nothing doubles: what leaves the branches is what entered them."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "10. Going further: unequal branches",
+    "text": "Going further: unequal branches",
     "role": "further"
-  },
-  {
-    "type": "figure",
-    "alt": "A 4.0 V supply across a 10 ohm resistor and a 20 ohm resistor in parallel, carrying 0.40 A and 0.20 A.",
-    "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"p2spun\"><title id=\"p2spun\">A 4.0 V supply across a 10 ohm resistor and a 20 ohm resistor in parallel, carrying 0.40 A and 0.20 A</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M50 70 L50 250\"/><path d=\"M350 70 L350 250\"/><path d=\"M50 70 L196 70\"/><path d=\"M204 70 L350 70\"/><path d=\"M50 160 L178 160\"/><path d=\"M222 160 L350 160\"/><path d=\"M50 250 L178 250\"/><path d=\"M222 250 L350 250\"/><path d=\"M196 53 L196 87\" stroke-width=\"1.8\"/><path d=\"M204 62 L204 78\" stroke-width=\"4.2\"/><path d=\"M178 151 H222 V169 H178 Z\"/><path d=\"M178 241 H222 V259 H178 Z\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M46.4 160 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M346.4 160 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M306 160 L294 165 L294 155 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M306 250 L294 255 L294 245 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"200\" y=\"46\" text-anchor=\"middle\" font-size=\"15\">supply 4.0 V</text><text x=\"200\" y=\"140\" text-anchor=\"middle\" font-size=\"15\">10 Ω</text><text x=\"200\" y=\"230\" text-anchor=\"middle\" font-size=\"15\">20 Ω</text><text x=\"300\" y=\"192\" text-anchor=\"middle\" font-size=\"15\">0.40 A</text><text x=\"300\" y=\"282\" text-anchor=\"middle\" font-size=\"15\">0.20 A</text></g></svg>",
-    "caption": "Two branches, the same voltage, different resistances: twice the resistance carries half the current."
   },
   {
     "type": "p",
     "md": "Unequal branches do not split the current in half. Each branch still has the full supply voltage, so its current is that voltage divided by its own resistance, $I = V \\div R$ (from V = I R). Twice the resistance takes half the current."
-  },
-  {
-    "type": "p",
-    "md": "**Read the figure.** 10 Ω branch: 4.0 ÷ 10 = 0.40 A. 20 Ω branch: 4.0 ÷ 20 = 0.20 A. Main line: 0.40 + 0.20 = 0.60 A."
   },
   {
     "type": "callout",
@@ -311,39 +574,111 @@
     "source": "ccea-cer:science:2023-summer:P2H:Q6"
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 2.7 V supply drives a 9 Ω and a 18 Ω resistor in parallel. Find the current in each resistor and in the main line. [3]",
+    "figure": {
+      "kind": "svg",
+      "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"spV3unequal\"><title id=\"spV3unequal\">A 2.7 V supply across a 9 ohm resistor and an 18 ohm resistor in parallel, carrying 0.30 A and 0.15 A</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M50 70 L50 250\"/><path d=\"M350 70 L350 250\"/><path d=\"M50 70 L196 70\"/><path d=\"M204 70 L350 70\"/><path d=\"M50 160 L178 160\"/><path d=\"M222 160 L350 160\"/><path d=\"M50 250 L178 250\"/><path d=\"M222 250 L350 250\"/><path d=\"M196 53 L196 87\" stroke-width=\"1.8\"/><path d=\"M204 62 L204 78\" stroke-width=\"4.2\"/><path d=\"M178 151 H222 V169 H178 Z\"/><path d=\"M178 241 H222 V259 H178 Z\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M46.4 160 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M346.4 160 a3.6 3.6 0 1 0 7.2 0 a3.6 3.6 0 1 0 -7.2 0 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M306 160 L294 165 L294 155 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M306 250 L294 255 L294 245 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"200\" y=\"46\" text-anchor=\"middle\" font-size=\"15\">supply 2.7 V</text><text x=\"200\" y=\"140\" text-anchor=\"middle\" font-size=\"15\">9 Ω</text><text x=\"200\" y=\"230\" text-anchor=\"middle\" font-size=\"15\">18 Ω</text><text x=\"300\" y=\"192\" text-anchor=\"middle\" font-size=\"15\">0.30 A</text><text x=\"300\" y=\"282\" text-anchor=\"middle\" font-size=\"15\">0.15 A</text></g></svg>",
+      "alt": "A 2.7 volt supply across a 9 ohm and a 18 ohm resistor in parallel, carrying 0.30 A and 0.15 A."
+    },
+    "steps": [
+      {
+        "n": 1,
+        "working": "9 Ω: $I = 2.7 \\div 9 = 0.30$ A",
+        "decision": "Each branch has the whole supply voltage.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "18 Ω: $I = 2.7 \\div 18 = 0.15$ A",
+        "decision": "Twice the resistance, half the current.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Main line: $0.30 + 0.15 = 0.45$ A",
+        "decision": "The branch currents add.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g10",
     "kind": "number",
-    "prompt": "A 4.5 V supply drives a 9 Ω resistor and an 18 Ω resistor connected in parallel. What current flows in the 18 Ω resistor, in amps?",
+    "prompt": "A 2.0 V supply drives a 4 Ω resistor and an 8 Ω resistor connected in parallel. What current flows in the 8 Ω resistor, in amps?",
     "answer": "0.25",
-    "explain": "Each branch has the whole 4.5 V across it, so each takes the voltage divided by its own resistance, as the two branches on the figure did. The 18 Ω branch takes 4.5 ÷ 18 = 0.25 A; the 9 Ω branch takes twice as much, 0.50 A."
+    "explain": "As in step 2 of the See it, each branch has the whole supply voltage, so the 8 Ω branch takes 2.0 ÷ 8 = 0.25 A. The 4 Ω branch takes twice as much, 0.50 A.",
+    "twin": {
+      "prompt": "A 1.5 V cell drives a 3 Ω resistor and a 5 Ω resistor connected in parallel. What current flows in the 3 Ω resistor, in amps?",
+      "answer": "0.5 | 0.5 A",
+      "explain": "The 3 Ω branch has the whole 1.5 V: I = 1.5 ÷ 3 = 0.50 A."
+    }
   },
   {
     "type": "h",
-    "text": "11. Going further: only the total current given",
+    "text": "Going further: only the total current given",
     "role": "further"
   },
   {
-    "type": "figure",
-    "alt": "A current of 0.90 A splits between a 10 ohm and a 20 ohm resistor in parallel: 0.60 A and 0.30 A, which join again to 0.90 A.",
-    "svg": "<svg viewBox=\"0 0 400 262\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"p2spsh\"><title id=\"p2spsh\">A current of 0.90 A splits between a 10 ohm and a 20 ohm resistor in parallel: 0.60 A and 0.30 A, which join again to 0.90 A</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M20 150 L110 150\"/><path d=\"M110 86 L110 214\"/><path d=\"M320 86 L320 214\"/><path d=\"M320 150 L390 150\"/><path d=\"M110 86 L193 86\"/><path d=\"M237 86 L320 86\"/><path d=\"M110 214 L193 214\"/><path d=\"M237 214 L320 214\"/><path d=\"M193 77 H237 V95 H193 Z\"/><path d=\"M193 205 H237 V223 H193 Z\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M106 150 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M316 150 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M66.5 150 L53.5 155.5 L53.5 144.5 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M291 86 L279 91 L279 81 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M291 214 L279 219 L279 209 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M366.5 150 L353.5 155.5 L353.5 144.5 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"60\" y=\"134\" text-anchor=\"middle\" font-size=\"15\">0.90 A</text><text x=\"215\" y=\"66\" text-anchor=\"middle\" font-size=\"15\">10 Ω</text><text x=\"215\" y=\"248\" text-anchor=\"middle\" font-size=\"15\">20 Ω</text><text x=\"285\" y=\"118\" text-anchor=\"middle\" font-size=\"15\">0.60 A</text><text x=\"285\" y=\"196\" text-anchor=\"middle\" font-size=\"15\">0.30 A</text><text x=\"360\" y=\"134\" text-anchor=\"middle\" font-size=\"15\">0.90 A</text></g></svg>",
-    "caption": "No voltage given: the smaller resistance takes the larger share, and the shares add up to the total."
+    "type": "p",
+    "md": "The Higher paper often gives only the current arriving at the branches, not the voltage (Summer 2021 and Summer 2023). The two branches still have the same voltage across them, so the smaller resistance takes the larger share. With one resistance twice the other, the currents are in the ratio 2 : 1: split the total into three equal shares."
   },
   {
-    "type": "p",
-    "md": "The Higher paper often gives only the current arriving at the branches, not the voltage (Summer 2021 and Summer 2023). The two branches still have the same voltage across them, so the smaller resistance takes the larger share. With one resistance twice the other, the currents are in the ratio 2 : 1, so split the total into three equal shares."
-  },
-  {
-    "type": "p",
-    "md": "**Read the figure.** Step 1: one share is 0.90 ÷ 3 = 0.30 A. Step 2: the 20 Ω branch takes one share, 0.30 A. Step 3: the 10 Ω branch takes two shares, 0.60 A. Check: 0.60 + 0.30 = 0.90 A."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A current of 1.50 A arrives at a 55 Ω and a 110 Ω resistor in parallel. Find the current in each. [3]",
+    "figure": {
+      "kind": "svg",
+      "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 262\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"spV3share\"><title id=\"spV3share\">A current of 1.50 A splits between a 55 ohm and a 110 ohm resistor in parallel: 1.00 A and 0.50 A, which join again to 1.50 A</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M20 150 L110 150\"/><path d=\"M110 86 L110 214\"/><path d=\"M320 86 L320 214\"/><path d=\"M320 150 L390 150\"/><path d=\"M110 86 L193 86\"/><path d=\"M237 86 L320 86\"/><path d=\"M110 214 L193 214\"/><path d=\"M237 214 L320 214\"/><path d=\"M193 77 H237 V95 H193 Z\"/><path d=\"M193 205 H237 V223 H193 Z\"/></g><g fill=\"currentColor\" stroke=\"none\"><path d=\"M106 150 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M316 150 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M66.5 150 L53.5 155.5 L53.5 144.5 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M291 86 L279 91 L279 81 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M291 214 L279 219 L279 209 Z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M366.5 150 L353.5 155.5 L353.5 144.5 Z\" fill=\"currentColor\" stroke=\"none\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"60\" y=\"134\" text-anchor=\"middle\" font-size=\"15\">1.50 A</text><text x=\"215\" y=\"66\" text-anchor=\"middle\" font-size=\"15\">55 Ω</text><text x=\"215\" y=\"248\" text-anchor=\"middle\" font-size=\"15\">110 Ω</text><text x=\"285\" y=\"118\" text-anchor=\"middle\" font-size=\"15\">1.00 A</text><text x=\"285\" y=\"196\" text-anchor=\"middle\" font-size=\"15\">0.50 A</text><text x=\"360\" y=\"134\" text-anchor=\"middle\" font-size=\"15\">1.50 A</text></g></svg>",
+      "alt": "A current of 1.50 A splits between a 55 ohm and a 110 ohm resistor in parallel: 1.00 A and 0.50 A."
+    },
+    "steps": [
+      {
+        "n": 1,
+        "working": "55 Ω is half of 110 Ω, so the currents are 2 : 1.",
+        "decision": "Same voltage, half the resistance, twice the current.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "One share: $1.50 \\div 3 = 0.50$ A",
+        "decision": "Three shares in all.",
+        "earns": [
+          "P1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "110 Ω: 0.50 A; 55 Ω: 1.00 A.",
+        "decision": "Check: they add back to the total.",
+        "earns": [
+          "P1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g11",
     "kind": "number",
-    "prompt": "A current of 1.2 A arrives at a 20 Ω resistor and a 40 Ω resistor connected in parallel. What current flows in the 20 Ω resistor, in amps?",
+    "prompt": "A current of 1.0 A arrives at a 22 Ω resistor and an 88 Ω resistor connected in parallel. What current flows in the 22 Ω resistor, in amps?",
     "answer": "0.8",
-    "explain": "Both resistors have the same voltage across them, so the 20 Ω one, with half the resistance, takes twice the current of the other. Split 1.2 A into three shares of 0.4 A: the 20 Ω resistor takes two shares, 0.8 A, and the other takes one, 0.4 A."
+    "explain": "As in steps 1 to 3 of the See it, both resistors have the same voltage, so the 22 Ω one, a quarter of 88 Ω, takes four times the current. Split 1.0 A into five equal shares: the 22 Ω resistor takes four of them.",
+    "twin": {
+      "prompt": "A current of 2.1 A arrives at a 5 Ω resistor and a 10 Ω resistor connected in parallel. What current flows in the 10 Ω resistor, in amps?",
+      "answer": "0.7 | 0.7 A",
+      "explain": "The 5 Ω resistor takes twice the 10 Ω one's current: three shares of 0.7 A, one for the 10 Ω resistor."
+    }
   },
   {
     "type": "h",
@@ -352,7 +687,7 @@
   },
   {
     "type": "p",
-    "md": "Trace the route to tell series from parallel.\nSeries: one current everywhere; the voltages add up to the supply.\nParallel: the supply voltage on every branch; the branch currents add up to the main line.\nFill in a grid of missing meter readings, voltages first.\nShare a current between unequal branches: twice the resistance, half the current."
+    "md": "Trace the route to tell series from parallel.\nSeries: one current everywhere; the voltages add up to the supply.\nParallel: the supply voltage on every branch; the branch currents add up to the main line.\nFill in a grid of missing ammeter and voltmeter readings, voltages first.\nShare a current between unequal branches: twice the resistance, half the current."
   },
   {
     "type": "h",
