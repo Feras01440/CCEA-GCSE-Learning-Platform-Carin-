@@ -1,284 +1,1001 @@
 [
   {
     "type": "hero",
-    "lede": "Differentiating takes a curve and hands back its gradient. Integration runs the film backwards: from the gradient to the curve. One thing is lost on the way, the height the curve started at, and that is what the constant of integration is for.",
+    "lede": "Differentiating takes a curve to its gradient function. Integrating runs the other way: from the gradient function back to the curve. One thing is lost on the way down, the height of the curve, and the constant of integration holds its place until a point gives it back.",
     "can": [
-      "Integrate any sum of whole-number powers of x, raising the power and dividing by the new one",
-      "Explain why every indefinite integral ends with + c, and never leave it out",
-      "Use a point on the curve to find c and write the curve as one equation"
+      "Integrate sums of powers of x, negative powers included, raising and dividing.",
+      "Write + c on every indefinite integral, and say why it is there.",
+      "Use a point on the curve to find c and give the curve as one equation."
     ],
-    "minutes": 20
+    "minutes": 23
   },
   {
     "type": "h",
-    "text": "Running the film backwards"
-  },
-  {
-    "type": "p",
-    "md": "You already know how to go from a curve to its gradient. Going the other way is just as useful: a question can tell you how steep something is everywhere and ask what it actually is.\nThat reverse journey is integration, and almost all of it is the differentiation rule read from right to left."
+    "text": "Integration runs differentiation backwards",
+    "role": "idea"
   },
   {
     "type": "figure",
-    "alt": "A three-row card showing a curve, its derivative and the journey back to the curve with a constant added",
-    "svg": "<svg viewBox='0 0 560 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='the two directions of the calculus you know'><title>the two directions of the calculus you know</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>the two directions of the calculus you know</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>y = 2x^3 + 5x</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>differentiate: multiply by the power, step it down</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>dy/dx = 6x^2 + 5</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>integrate: raise the power, divide by the new one</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>and back to y = 2x^3 + 5x + c</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the constant is the price of going backwards</text><text x='280' y='158' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>each move undoes the other, except for what the constant remembers</text></svg>",
-    "caption": "Down the card is differentiation. Up the card is integration."
+    "alt": "Two small graphs: the curve y = x cubed − 4x on top and its gradient function dy/dx = 3x squared − 4 underneath; a downward arrow labelled differentiate and an upward arrow labelled integrate join them",
+    "svg": "<svg viewBox=\"0 0 400 330\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Two small graphs: the curve y = x cubed − 4x on top and its gradient function dy/dx = 3x squared − 4 underneath; a downward arrow labelled differentiate and an upward arrow labelled integrate join them\"><title>Two small graphs: the curve y = x cubed − 4x on top and its gradient function dy/dx = 3x squared − 4 underneath; a downward arrow labelled differentiate and an upward arrow labelled integrate join them</title><line x1=\"40\" y1=\"75\" x2=\"260\" y2=\"75\" stroke=\"currentColor\" stroke-width=\"1\"/><line x1=\"150\" y1=\"130\" x2=\"150\" y2=\"20\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M48.5 121.5 L50.6 114.4 L52.7 107.6 L54.8 101.3 L56.9 95.3 L59.0 89.7 L61.2 84.5 L63.3 79.6 L65.4 75.0 L67.5 70.8 L69.6 66.8 L71.7 63.2 L73.8 60.0 L76.0 57.0 L78.1 54.2 L80.2 51.8 L82.3 49.7 L84.4 47.8 L86.5 46.1 L88.7 44.7 L90.8 43.6 L92.9 42.7 L95.0 42.0 L97.1 41.5 L99.2 41.2 L101.3 41.1 L103.5 41.2 L105.6 41.5 L107.7 42.0 L109.8 42.6 L111.9 43.4 L114.0 44.4 L116.2 45.4 L118.3 46.6 L120.4 48.0 L122.5 49.4 L124.6 51.0 L126.7 52.6 L128.8 54.4 L131.0 56.2 L133.1 58.1 L135.2 60.1 L137.3 62.1 L139.4 64.2 L141.5 66.3 L143.7 68.4 L145.8 70.6 L147.9 72.8 L150.0 75.0 L152.1 77.2 L154.2 79.4 L156.3 81.6 L158.5 83.7 L160.6 85.8 L162.7 87.9 L164.8 89.9 L166.9 91.9 L169.0 93.8 L171.2 95.6 L173.3 97.4 L175.4 99.0 L177.5 100.6 L179.6 102.0 L181.7 103.4 L183.8 104.6 L186.0 105.6 L188.1 106.6 L190.2 107.4 L192.3 108.0 L194.4 108.5 L196.5 108.8 L198.7 108.9 L200.8 108.8 L202.9 108.5 L205.0 108.0 L207.1 107.3 L209.2 106.4 L211.3 105.3 L213.5 103.9 L215.6 102.2 L217.7 100.3 L219.8 98.2 L221.9 95.8 L224.0 93.0 L226.2 90.0 L228.3 86.8 L230.4 83.2 L232.5 79.2 L234.6 75.0 L236.7 70.4 L238.8 65.5 L241.0 60.3 L243.1 54.7 L245.2 48.7 L247.3 42.4 L249.4 35.6 L251.5 28.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"270\" y=\"60\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">y = x³ − 4x</text><line x1=\"40\" y1=\"270.7142857142857\" x2=\"260\" y2=\"270.7142857142857\" stroke=\"currentColor\" stroke-width=\"1\"/><line x1=\"150\" y1=\"310\" x2=\"150\" y2=\"200\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M67.5 212.5 L69.6 217.1 L71.7 221.5 L73.8 225.8 L76.0 230.0 L78.1 234.0 L80.2 238.0 L82.3 241.8 L84.4 245.5 L86.5 249.1 L88.7 252.6 L90.8 255.9 L92.9 259.2 L95.0 262.3 L97.1 265.3 L99.2 268.2 L101.3 271.0 L103.5 273.6 L105.6 276.2 L107.7 278.6 L109.8 280.9 L111.9 283.1 L114.0 285.1 L116.2 287.1 L118.3 288.9 L120.4 290.6 L122.5 292.2 L124.6 293.7 L126.7 295.0 L128.8 296.3 L131.0 297.4 L133.1 298.4 L135.2 299.3 L137.3 300.0 L139.4 300.7 L141.5 301.2 L143.7 301.6 L145.8 301.9 L147.9 302.1 L150.0 302.1 L152.1 302.1 L154.2 301.9 L156.3 301.6 L158.5 301.2 L160.6 300.7 L162.7 300.0 L164.8 299.3 L166.9 298.4 L169.0 297.4 L171.2 296.3 L173.3 295.0 L175.4 293.7 L177.5 292.2 L179.6 290.6 L181.7 288.9 L183.8 287.1 L186.0 285.1 L188.1 283.0 L190.2 280.9 L192.3 278.6 L194.4 276.2 L196.5 273.6 L198.7 271.0 L200.8 268.2 L202.9 265.3 L205.0 262.3 L207.1 259.2 L209.2 255.9 L211.3 252.6 L213.5 249.1 L215.6 245.5 L217.7 241.8 L219.8 238.0 L221.9 234.0 L224.0 230.0 L226.2 225.8 L228.3 221.5 L230.4 217.0 L232.5 212.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"270\" y=\"250\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">dy/dx = 3x² − 4</text><line x1=\"130\" y1=\"140\" x2=\"130\" y2=\"190\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M123 182 L130 190 L137 182\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"122\" y=\"170\" font-size=\"15\" text-anchor=\"end\" font-family=\"inherit\" fill=\"currentColor\">differentiate</text><line x1=\"170\" y1=\"190\" x2=\"170\" y2=\"140\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M163 148 L170 140 L177 148\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"178\" y=\"170\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">integrate</text></svg>",
+    "caption": "Differentiating goes down from the curve to its gradient function; integrating comes back up."
+  },
+  {
+    "type": "p",
+    "md": "In the drawing, $y = x^{3} - 4x$ differentiates to $3x^{2} - 4$. Integration is the journey back up: given the gradient function, find the curve. Each term is reversed on its own, by asking what differentiates to it."
+  },
+  {
+    "type": "p",
+    "md": "That gives a check on every answer in this topic: differentiate what you wrote, and you should land exactly on what you were given. It takes seconds, and it catches a coefficient left undivided or a sign that slipped."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Find an expression whose derivative is $3x^{2} - 4$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$x^{3}$ differentiates to $3x^{2}$",
+        "decision": "Look for the power that comes down as a 3: it was x³."
+      },
+      {
+        "n": 2,
+        "working": "$-4x$ differentiates to $-4$",
+        "decision": "A term in x differentiates to its coefficient, so −4 came from −4x."
+      },
+      {
+        "n": 3,
+        "working": "$x^{3}-4x$",
+        "decision": "Put the pieces back together. Any constant could be added too, which the next section is about."
+      }
+    ],
+    "finalAnswer": "$x^{3}-4x$, plus any constant"
   },
   {
     "type": "gate",
-    "id": "g1",
+    "id": "g9",
     "kind": "choice",
-    "prompt": "One tap to begin. If $\\frac{dy}{dx}$ is given and $y$ is wanted, which way are you going?",
+    "prompt": "Which expression has derivative $15x^{2} + 4$?",
     "options": [
-      "Backwards, so integrate",
-      "Forwards, so differentiate",
-      "Neither: substitute a value"
+      "$5x^{3}+4x$",
+      "$15x^{3}+4x$",
+      "$30x$"
     ],
-    "answer": "Backwards, so integrate",
-    "explain": "The gradient function is the finished product of differentiating, so recovering $y$ means undoing it."
+    "answer": "$5x^{3}+4x$",
+    "explain": "Reverse each term, as $3x^{2}$ came from $x^{3}$ in the drawing: $15x^{2}$ comes from $5x^{3}$, because differentiating $5x^{3}$ gives $3 \\times 5x^{2}$. The 4 comes from $4x$. So $5x^{3} + 4x$; differentiate it to check.",
+    "optionNotes": [
+      {
+        "option": "$15x^{3}+4x$",
+        "why": "Differentiating $15x^{3}$ gives $45x^{2}$, three times too much, because the 15 was not divided by the new power 3.",
+        "misconception": "fm.int.coefficient-not-divided"
+      },
+      {
+        "option": "$30x$",
+        "why": "That differentiates the gradient function again, which goes further down, not back up.",
+        "misconception": "fm.int.differentiated-instead"
+      }
+    ],
+    "twin": {
+      "prompt": "Which expression has derivative $20x^{3} - 6$?",
+      "options": [
+        "$5x^{4}-6x$",
+        "$20x^{4}-6x$",
+        "$60x^{2}$"
+      ],
+      "answer": "$5x^{4}-6x$",
+      "explain": "$5x^{4}$ differentiates to $20x^{3}$ and $-6x$ to $-6$, so $5x^{4} - 6x$.",
+      "optionNotes": [
+        {
+          "option": "$20x^{4}-6x$",
+          "why": "Its derivative is 80x³ − 6, four times too big in the first term.",
+          "misconception": "fm.int.coefficient-not-divided"
+        },
+        {
+          "option": "$60x^{2}$",
+          "why": "That differentiates again instead of going back.",
+          "misconception": "fm.int.differentiated-instead"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "1. Raise the power, divide by the new one"
-  },
-  {
-    "type": "p",
-    "md": "The Unit 1 formula sheet prints the rule as $\\int ax^{n}\\,dx = \\frac{ax^{n+1}}{n+1} + c$ for $n \\neq -1$.\nRead it as two moves, the opposite way round from differentiating. **Raise** the power by one. Then **divide** by that new power. Each term is done on its own, as before."
+    "text": "Why every answer ends in + c",
+    "role": "why"
   },
   {
     "type": "figure",
-    "alt": "A four-row card giving the integration rule: raise the power, divide by the new power, add c, and turn a constant k into kx",
-    "svg": "<svg viewBox='0 0 560 200' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='the rule, and it is on the formula sheet'><title>the rule, and it is on the formula sheet</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>the rule, and it is on the formula sheet</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>raise the power by one</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>x^2 becomes x^3</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>divide by that new power</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>6x^2 becomes 6x^3 / 3 = 2x^3</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>add c</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>every indefinite integral ends with + c</text><rect x='14' y='136' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='154' font-family='inherit' font-size='13' fill='currentColor'>a constant term k</text><text x='532' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>becomes kx, because k is kx^0</text><text x='280' y='188' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the excluded case is n = -1, which this specification never asks for</text></svg>",
-    "caption": "Raise, divide, add $c$. The excluded case $n = -1$ never appears on this specification."
+    "alt": "Four U-shaped curves y = x squared − 2x + k, identical in shape and stacked one above another, the top one ending at +5 and the bottom one at −3; a caption says each has dy/dx = 2x − 2",
+    "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Four U-shaped curves y = x squared − 2x + k, identical in shape and stacked one above another, the top one ending at +5 and the bottom one at −3; a caption says each has dy/dx = 2x − 2\"><title>Four U-shaped curves y = x squared − 2x + k, identical in shape and stacked one above another, the top one ending at +5 and the bottom one at −3; a caption says each has dy/dx = 2x − 2</title><line x1=\"40\" y1=\"180.71428571428572\" x2=\"370\" y2=\"180.71428571428572\" stroke=\"currentColor\" stroke-width=\"1\"/><line x1=\"139\" y1=\"270\" x2=\"139\" y2=\"20\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M59.8 165.7 L63.1 169.6 L66.4 173.4 L69.7 177.1 L73.0 180.7 L76.3 184.2 L79.6 187.7 L82.9 191.0 L86.2 194.3 L89.5 197.5 L92.8 200.5 L96.1 203.5 L99.4 206.4 L102.7 209.2 L106.0 212.0 L109.3 214.6 L112.6 217.1 L115.9 219.6 L119.2 222.0 L122.5 224.2 L125.8 226.4 L129.1 228.5 L132.4 230.5 L135.7 232.5 L139.0 234.3 L142.3 236.0 L145.6 237.7 L148.9 239.2 L152.2 240.7 L155.5 242.1 L158.8 243.4 L162.1 244.6 L165.4 245.7 L168.7 246.7 L172.0 247.7 L175.3 248.5 L178.6 249.3 L181.9 250.0 L185.2 250.5 L188.5 251.0 L191.8 251.4 L195.1 251.7 L198.4 252.0 L201.7 252.1 L205.0 252.1 L208.3 252.1 L211.6 252.0 L214.9 251.7 L218.2 251.4 L221.5 251.0 L224.8 250.5 L228.1 250.0 L231.4 249.3 L234.7 248.5 L238.0 247.7 L241.3 246.7 L244.6 245.7 L247.9 244.6 L251.2 243.4 L254.5 242.1 L257.8 240.7 L261.1 239.2 L264.4 237.7 L267.7 236.0 L271.0 234.3 L274.3 232.5 L277.6 230.5 L280.9 228.5 L284.2 226.4 L287.5 224.2 L290.8 222.0 L294.1 219.6 L297.4 217.1 L300.7 214.6 L304.0 212.0 L307.3 209.2 L310.6 206.4 L313.9 203.5 L317.2 200.5 L320.5 197.5 L323.8 194.3 L327.1 191.0 L330.4 187.7 L333.7 184.2 L337.0 180.7 L340.3 177.1 L343.6 173.4 L346.9 169.6 L350.2 165.7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><path d=\"M59.8 112.1 L63.1 116.0 L66.4 119.8 L69.7 123.5 L73.0 127.1 L76.3 130.7 L79.6 134.1 L82.9 137.5 L86.2 140.7 L89.5 143.9 L92.8 147.0 L96.1 150.0 L99.4 152.9 L102.7 155.7 L106.0 158.4 L109.3 161.0 L112.6 163.6 L115.9 166.0 L119.2 168.4 L122.5 170.7 L125.8 172.9 L129.1 175.0 L132.4 177.0 L135.7 178.9 L139.0 180.7 L142.3 182.5 L145.6 184.1 L148.9 185.7 L152.2 187.1 L155.5 188.5 L158.8 189.8 L162.1 191.0 L165.4 192.1 L168.7 193.2 L172.0 194.1 L175.3 195.0 L178.6 195.7 L181.9 196.4 L185.2 197.0 L188.5 197.5 L191.8 197.9 L195.1 198.2 L198.4 198.4 L201.7 198.5 L205.0 198.6 L208.3 198.5 L211.6 198.4 L214.9 198.2 L218.2 197.9 L221.5 197.5 L224.8 197.0 L228.1 196.4 L231.4 195.7 L234.7 195.0 L238.0 194.1 L241.3 193.2 L244.6 192.1 L247.9 191.0 L251.2 189.8 L254.5 188.5 L257.8 187.1 L261.1 185.7 L264.4 184.1 L267.7 182.5 L271.0 180.7 L274.3 178.9 L277.6 177.0 L280.9 175.0 L284.2 172.9 L287.5 170.7 L290.8 168.4 L294.1 166.0 L297.4 163.6 L300.7 161.0 L304.0 158.4 L307.3 155.7 L310.6 152.9 L313.9 150.0 L317.2 147.0 L320.5 143.9 L323.8 140.7 L327.1 137.5 L330.4 134.1 L333.7 130.7 L337.0 127.1 L340.3 123.5 L343.6 119.8 L346.9 116.0 L350.2 112.1\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\"/><path d=\"M59.8 76.4 L63.1 80.3 L66.4 84.1 L69.7 87.8 L73.0 91.4 L76.3 95.0 L79.6 98.4 L82.9 101.7 L86.2 105.0 L89.5 108.2 L92.8 111.3 L96.1 114.2 L99.4 117.1 L102.7 120.0 L106.0 122.7 L109.3 125.3 L112.6 127.9 L115.9 130.3 L119.2 132.7 L122.5 135.0 L125.8 137.1 L129.1 139.2 L132.4 141.3 L135.7 143.2 L139.0 145.0 L142.3 146.7 L145.6 148.4 L148.9 150.0 L152.2 151.4 L155.5 152.8 L158.8 154.1 L162.1 155.3 L165.4 156.4 L168.7 157.5 L172.0 158.4 L175.3 159.2 L178.6 160.0 L181.9 160.7 L185.2 161.3 L188.5 161.7 L191.8 162.1 L195.1 162.5 L198.4 162.7 L201.7 162.8 L205.0 162.9 L208.3 162.8 L211.6 162.7 L214.9 162.5 L218.2 162.1 L221.5 161.7 L224.8 161.3 L228.1 160.7 L231.4 160.0 L234.7 159.2 L238.0 158.4 L241.3 157.5 L244.6 156.4 L247.9 155.3 L251.2 154.1 L254.5 152.8 L257.8 151.4 L261.1 150.0 L264.4 148.4 L267.7 146.7 L271.0 145.0 L274.3 143.2 L277.6 141.2 L280.9 139.2 L284.2 137.1 L287.5 135.0 L290.8 132.7 L294.1 130.3 L297.4 127.9 L300.7 125.3 L304.0 122.7 L307.3 120.0 L310.6 117.1 L313.9 114.2 L317.2 111.3 L320.5 108.2 L323.8 105.0 L327.1 101.7 L330.4 98.4 L333.7 95.0 L337.0 91.4 L340.3 87.8 L343.6 84.1 L346.9 80.3 L350.2 76.4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><path d=\"M59.8 22.9 L63.1 26.7 L66.4 30.5 L69.7 34.2 L73.0 37.9 L76.3 41.4 L79.6 44.8 L82.9 48.2 L86.2 51.4 L89.5 54.6 L92.8 57.7 L96.1 60.7 L99.4 63.6 L102.7 66.4 L106.0 69.1 L109.3 71.7 L112.6 74.3 L115.9 76.7 L119.2 79.1 L122.5 81.4 L125.8 83.6 L129.1 85.7 L132.4 87.7 L135.7 89.6 L139.0 91.4 L142.3 93.2 L145.6 94.8 L148.9 96.4 L152.2 97.9 L155.5 99.2 L158.8 100.5 L162.1 101.7 L165.4 102.9 L168.7 103.9 L172.0 104.8 L175.3 105.7 L178.6 106.4 L181.9 107.1 L185.2 107.7 L188.5 108.2 L191.8 108.6 L195.1 108.9 L198.4 109.1 L201.7 109.2 L205.0 109.3 L208.3 109.2 L211.6 109.1 L214.9 108.9 L218.2 108.6 L221.5 108.2 L224.8 107.7 L228.1 107.1 L231.4 106.4 L234.7 105.7 L238.0 104.8 L241.3 103.9 L244.6 102.9 L247.9 101.7 L251.2 100.5 L254.5 99.2 L257.8 97.9 L261.1 96.4 L264.4 94.8 L267.7 93.2 L271.0 91.4 L274.3 89.6 L277.6 87.7 L280.9 85.7 L284.2 83.6 L287.5 81.4 L290.8 79.1 L294.1 76.7 L297.4 74.3 L300.7 71.7 L304.0 69.1 L307.3 66.4 L310.6 63.6 L313.9 60.7 L317.2 57.7 L320.5 54.6 L323.8 51.4 L327.1 48.2 L330.4 44.8 L333.7 41.4 L337.0 37.9 L340.3 34.2 L343.6 30.5 L346.9 26.7 L350.2 22.9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"354.20000000000005\" y=\"27.85714285714283\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">+5</text><text x=\"354.20000000000005\" y=\"170.7142857142857\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">−3</text><text x=\"205\" y=\"264.2857142857143\" font-size=\"15\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">each: dy/dx = 2x − 2</text></svg>",
+    "caption": "Four curves, one shape: each has gradient function 2x − 2, whatever number is added."
+  },
+  {
+    "type": "p",
+    "md": "A constant differentiates to zero, so every curve in the drawing, $y = x^{2} - 2x + k$ for any number $k$, has the same gradient function $2x - 2$. Going back up, the gradient function cannot tell you which of them you started from."
+  },
+  {
+    "type": "p",
+    "md": "So the answer is written with a letter for the height that was lost: $\\int (2x - 2)\\,dx = x^{2} - 2x + c$. The Summer 2022 and 2019 reports both found the constant left out; it is a mark on its own."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Show that $y = x^{2} - 2x + 5$ and $y = x^{2} - 2x - 3$ have the same gradient function, and write down $\\int (2x - 2)\\,dx$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{d}{dx}(x^{2}-2x+5)=2x-2$",
+        "decision": "The 5 is a constant, so it contributes nothing to the gradient."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{d}{dx}(x^{2}-2x-3)=2x-2$",
+        "decision": "The same for −3: the two curves differ only in height."
+      },
+      {
+        "n": 3,
+        "working": "$\\int (2x-2)\\,dx=x^{2}-2x+c$",
+        "decision": "Integrating cannot recover the height, so c stands for it.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ],
+    "finalAnswer": "$x^{2}-2x+c$"
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Two curves are $y = 4x^{2} + 1$ and $y = 4x^{2} - 5$. Which statement is true?",
+    "options": [
+      "They have the same gradient function",
+      "Their gradient functions differ by 6",
+      "Only one of them can be differentiated"
+    ],
+    "answer": "They have the same gradient function",
+    "explain": "A constant differentiates to zero, so both give $\\frac{dy}{dx} = 8x$: the curves are the same shape at different heights, like the stacked curves in the drawing. That is why integrating $8x$ gives $4x^{2} + c$, with $c$ for the height.",
+    "optionNotes": [
+      {
+        "option": "Their gradient functions differ by 6",
+        "why": "The curves differ by 6 in height, but a constant differentiates to zero, so both gradients are 8x."
+      },
+      {
+        "option": "Only one of them can be differentiated",
+        "why": "Both differentiate; the constants simply vanish, leaving 8x each time."
+      }
+    ],
+    "twin": {
+      "prompt": "Two curves are $y = x^{3} + 7$ and $y = x^{3} - 2$. Which statement is true?",
+      "options": [
+        "Both differentiate to $3x^{2}$",
+        "They differentiate to $3x^{2} + 7$ and $3x^{2} - 2$",
+        "They differentiate to $7$ and $-2$"
+      ],
+      "answer": "Both differentiate to $3x^{2}$",
+      "explain": "Each constant differentiates to 0, so both give $3x^{2}$.",
+      "optionNotes": [
+        {
+          "option": "They differentiate to $3x^{2} + 7$ and $3x^{2} - 2$",
+          "why": "The constants do not survive differentiating; each gives 0."
+        },
+        {
+          "option": "They differentiate to $7$ and $-2$",
+          "why": "The $x^{3}$ term gives $3x^{2}$, and the constants give 0."
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "Where the rule comes from",
+    "role": "derivation"
+  },
+  {
+    "type": "p",
+    "md": "The Unit 1 formula sheet prints $\\int ax^{n}\\,dx = \\frac{ax^{n+1}}{n+1} + c$. You can prove it by running differentiation on the answer: the power $n + 1$ comes down and cancels the $n + 1$ underneath. Read it as two moves: raise the power by one, then divide by the new power."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why dividing is the right move",
-    "md": "Differentiating $x^{3}$ brings a $3$ out in front. So if you start from $x^{2}$ and raise the power to get $x^{3}$, you have gained a factor of $3$ that was never there. Dividing by the new power cancels it exactly, which is why the two moves undo one another."
+    "title": "Why n cannot be −1",
+    "md": "The rule divides by $n + 1$, which is zero when $n = -1$. So $\\int \\frac{1}{x}\\,dx$ needs a function this course does not meet, and FM1-INT-02 leaves it out: you will never be asked for it."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Show that $\\frac{ax^{n+1}}{n+1}$ differentiates to $ax^{n}$, then use the rule to find $\\int 20x^{4}\\,dx$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{a}{n+1}x^{n+1} \\to \\frac{a}{n+1}(n+1)x^{n}$",
+        "decision": "Differentiate: the power n + 1 comes down in front and drops by one."
+      },
+      {
+        "n": 2,
+        "working": "$=ax^{n}$",
+        "decision": "The n + 1 on top cancels the n + 1 underneath, as long as it is not zero."
+      },
+      {
+        "n": 3,
+        "working": "$\\int 20x^{4}\\,dx=\\frac{20x^{5}}{5}+c$",
+        "decision": "Raise the power from 4 to 5, then divide by the new power, 5.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$=4x^{5}+c$",
+        "decision": "Simplify; check: $4x^{5}$ differentiates to $20x^{4}$."
+      }
+    ],
+    "finalAnswer": "$4x^{5}+c$"
   },
   {
     "type": "gate",
-    "id": "g2",
-    "kind": "blank",
-    "prompt": "Integrate $8x^{3}$. Raising the power gives $x^{4}$, and dividing $8$ by $4$ gives ___ $x^{4}$",
-    "answer": "2",
-    "explain": "The new power is $4$, and $8 \\div 4 = 2$, so the term integrates to $2x^{4}$. Dividing by the old power of $3$ is the commonest slip on this line."
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "Find $\\int 14x^{6}\\,dx$.",
+    "options": [
+      "$2x^{7}+c$",
+      "$14x^{7}+c$",
+      "$\\frac{7}{3}x^{7}+c$"
+    ],
+    "answer": "$2x^{7}+c$",
+    "explain": "Raise the power from 6 to 7, then divide by the new power, as $20x^{4}$ became $\\frac{20x^{5}}{5}$: $\\frac{14x^{7}}{7} = 2x^{7}$, plus $c$. Check by differentiating: $7 \\times 2x^{6} = 14x^{6}$.",
+    "optionNotes": [
+      {
+        "option": "$14x^{7}+c$",
+        "why": "The power was raised, but the coefficient was never divided by the new power.",
+        "misconception": "fm.int.coefficient-not-divided"
+      },
+      {
+        "option": "$\\frac{7}{3}x^{7}+c$",
+        "why": "This divides by the old power, 6; the rule divides by the new one, 7.",
+        "misconception": "fm.int.divided-by-original-power"
+      }
+    ],
+    "twin": {
+      "prompt": "Find $\\int 18x^{5}\\,dx$.",
+      "options": [
+        "$3x^{6}+c$",
+        "$18x^{6}+c$",
+        "$\\frac{18}{5}x^{6}+c$"
+      ],
+      "answer": "$3x^{6}+c$",
+      "explain": "The power rises to 6 and $18 \\div 6 = 3$: $3x^{6} + c$.",
+      "optionNotes": [
+        {
+          "option": "$18x^{6}+c$",
+          "why": "The 18 still has to be divided by the new power, 6.",
+          "misconception": "fm.int.coefficient-not-divided"
+        },
+        {
+          "option": "$\\frac{18}{5}x^{6}+c$",
+          "why": "Divided by the old power, 5, instead of the new one.",
+          "misconception": "fm.int.divided-by-original-power"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "2. Where the constant comes from"
+    "text": "Term by term, the constant included",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Differentiating throws information away. The curves $y = x^{2} - 4x$, $y = x^{2} - 4x + 3$ and $y = x^{2} - 4x - 3$ all have the same gradient function, because a constant contributes nothing to a gradient.\nGoing backwards you cannot tell which one you started from, so the answer is written with a letter standing for the height that was lost: $+ c$."
+    "md": "A sum is integrated one term at a time, each by the same two moves. A number on its own is $kx^{0}$, so it rises to $kx^{1}$: a constant $k$ becomes $kx$. Mark schemes give a mark for each integrated term and one more for the $+ c$."
   },
   {
-    "type": "figure",
-    "alt": "Four identical curves stacked above one another, each a vertical shift of the next, sharing the same gradient at every value of x",
-    "svg": "<svg viewBox='0 0 560 340' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four curves of the same shape stacked above one another, each a vertical shift of the next, all with the same gradient at any given x'><title>Four curves of the same shape stacked above one another, each a vertical shift of the next, all with the same gradient at any given x</title><path d='M 72.8 22 L 72.8 300 M 144.9 22 L 144.9 300 M 216.9 22 L 216.9 300 M 289 22 L 289 300 M 361.1 22 L 361.1 300 M 433.1 22 L 433.1 300 M 505.2 22 L 505.2 300 M 44 300 L 534 300 M 44 270.7 L 534 270.7 M 44 241.5 L 534 241.5 M 44 212.2 L 534 212.2 M 44 182.9 L 534 182.9 M 44 153.7 L 534 153.7 M 44 124.4 L 534 124.4 M 44 95.2 L 534 95.2 M 44 65.9 L 534 65.9 M 44 36.6 L 534 36.6' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 44 182.9 L 534 182.9' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 144.9 22 L 144.9 300' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 72.8 178.9 L 72.8 186.9 M 216.9 178.9 L 216.9 186.9 M 289 178.9 L 289 186.9 M 361.1 178.9 L 361.1 186.9 M 433.1 178.9 L 433.1 186.9 M 505.2 178.9 L 505.2 186.9 M 140.9 300 L 148.9 300 M 140.9 270.7 L 148.9 270.7 M 140.9 241.5 L 148.9 241.5 M 140.9 212.2 L 148.9 212.2 M 140.9 153.7 L 148.9 153.7 M 140.9 124.4 L 148.9 124.4 M 140.9 95.2 L 148.9 95.2 M 140.9 65.9 L 148.9 65.9 M 140.9 36.6 L 148.9 36.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='72.8' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-1</text><text x='216.9' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><text x='289' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><text x='361.1' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><text x='433.1' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><text x='505.2' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>5</text><text x='137.9' y='304' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-8</text><text x='137.9' y='274.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-6</text><text x='137.9' y='245.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><text x='137.9' y='216.2' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><text x='137.9' y='157.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><text x='137.9' y='128.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><text x='137.9' y='99.2' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><text x='137.9' y='69.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='137.9' y='40.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>10</text><text x='137.9' y='199.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 44 116.2 L 51 125.8 L 58 135 L 65 144 L 72 152.7 L 79 161.1 L 86 169.2 L 93 177.1 L 100 184.7 L 107 192 L 114 199.1 L 121 205.8 L 128 212.3 L 135 218.5 L 142 224.5 L 149 230.1 L 156 235.5 L 163 240.6 L 170 245.5 L 177 250 L 184 254.3 L 191 258.3 L 198 262 L 205 265.5 L 212 268.7 L 219 271.6 L 226 274.2 L 233 276.5 L 240 278.6 L 247 280.4 L 254 281.9 L 261 283.2 L 268 284.1 L 275 284.8 L 282 285.2 L 289 285.4 L 296 285.2 L 303 284.8 L 310 284.1 L 317 283.2 L 324 281.9 L 331 280.4 L 338 278.6 L 345 276.5 L 352 274.2 L 359 271.6 L 366 268.7 L 373 265.5 L 380 262 L 387 258.3 L 394 254.3 L 401 250 L 408 245.5 L 415 240.6 L 422 235.5 L 429 230.1 L 436 224.5 L 443 218.5 L 450 212.3 L 457 205.8 L 464 199.1 L 471 192 L 478 184.7 L 485 177.1 L 492 169.2 L 499 161.1 L 506 152.7 L 513 144 L 520 135 L 527 125.8 L 534 116.2' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 44 72.3 L 51 81.9 L 58 91.1 L 65 100.1 L 72 108.8 L 79 117.2 L 86 125.4 L 93 133.2 L 100 140.8 L 107 148.1 L 114 155.2 L 121 161.9 L 128 168.4 L 135 174.6 L 142 180.6 L 149 186.2 L 156 191.6 L 163 196.7 L 170 201.6 L 177 206.1 L 184 210.4 L 191 214.4 L 198 218.1 L 205 221.6 L 212 224.8 L 219 227.7 L 226 230.3 L 233 232.6 L 240 234.7 L 247 236.5 L 254 238 L 261 239.3 L 268 240.2 L 275 240.9 L 282 241.3 L 289 241.5 L 296 241.3 L 303 240.9 L 310 240.2 L 317 239.3 L 324 238 L 331 236.5 L 338 234.7 L 345 232.6 L 352 230.3 L 359 227.7 L 366 224.8 L 373 221.6 L 380 218.1 L 387 214.4 L 394 210.4 L 401 206.1 L 408 201.6 L 415 196.7 L 422 191.6 L 429 186.2 L 436 180.6 L 443 174.6 L 450 168.4 L 457 161.9 L 464 155.2 L 471 148.1 L 478 140.8 L 485 133.2 L 492 125.4 L 499 117.2 L 506 108.8 L 513 100.1 L 520 91.1 L 527 81.9 L 534 72.3' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 44 28.4 L 51 38 L 58 47.2 L 65 56.2 L 72 64.9 L 79 73.3 L 86 81.5 L 93 89.3 L 100 96.9 L 107 104.2 L 114 111.3 L 121 118 L 128 124.5 L 135 130.8 L 142 136.7 L 149 142.3 L 156 147.7 L 163 152.8 L 170 157.7 L 177 162.2 L 184 166.5 L 191 170.5 L 198 174.2 L 205 177.7 L 212 180.9 L 219 183.8 L 226 186.4 L 233 188.7 L 240 190.8 L 247 192.6 L 254 194.1 L 261 195.4 L 268 196.3 L 275 197 L 282 197.4 L 289 197.6 L 296 197.4 L 303 197 L 310 196.3 L 317 195.4 L 324 194.1 L 331 192.6 L 338 190.8 L 345 188.7 L 352 186.4 L 359 183.8 L 366 180.9 L 373 177.7 L 380 174.2 L 387 170.5 L 394 166.5 L 401 162.2 L 408 157.7 L 415 152.8 L 422 147.7 L 429 142.3 L 436 136.7 L 443 130.8 L 450 124.5 L 457 118 L 464 111.3 L 471 104.2 L 478 96.9 L 485 89.3 L 492 81.5 L 499 73.3 L 506 64.9 L 513 56.2 L 520 47.2 L 527 38 L 534 28.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 79 29.4 L 86 37.6 L 93 45.4 L 100 53 L 107 60.3 L 114 67.4 L 121 74.2 L 128 80.6 L 135 86.9 L 142 92.8 L 149 98.5 L 156 103.8 L 163 108.9 L 170 113.8 L 177 118.3 L 184 122.6 L 191 126.6 L 198 130.3 L 205 133.8 L 212 137 L 219 139.9 L 226 142.5 L 233 144.8 L 240 146.9 L 247 148.7 L 254 150.2 L 261 151.5 L 268 152.4 L 275 153.1 L 282 153.5 L 289 153.7 L 296 153.5 L 303 153.1 L 310 152.4 L 317 151.5 L 324 150.2 L 331 148.7 L 338 146.9 L 345 144.8 L 352 142.5 L 359 139.9 L 366 137 L 373 133.8 L 380 130.3 L 387 126.6 L 394 122.6 L 401 118.3 L 408 113.8 L 415 108.9 L 422 103.8 L 429 98.5 L 436 92.8 L 443 86.9 L 450 80.6 L 457 74.2 L 464 67.4 L 471 60.3 L 478 53 L 485 45.4 L 492 37.6 L 499 29.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='505.2' y='153.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>c = -3</text><text x='505.2' y='109.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>c = 0</text><text x='505.2' y='65.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>c = 3</text><text x='505.2' y='22' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>c = 6</text><text x='534' y='174.9' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='152.9' y='32' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='289' y='332' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>same gradient everywhere, different heights</text></svg>",
-    "caption": "One gradient function, a whole family of curves. Only $c$ tells them apart."
-  },
-  {
-    "type": "gate",
-    "id": "g2a",
-    "kind": "choice",
-    "prompt": "The four curves in the picture share one gradient function. What is different about them?",
-    "options": [
-      "Their heights",
-      "Their shapes",
-      "Their gradients at $x = 3$"
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\int \\left(9x^{2} + 4x - 7\\right) dx$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$9x^{2} \\to 3x^{3}$",
+        "decision": "Raise the power to 3 and divide 9 by 3.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$4x \\to 2x^{2}$",
+        "decision": "4x is 4x¹: raise to x² and divide 4 by 2.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$-7 \\to -7x$",
+        "decision": "The constant is −7x⁰, so it becomes −7x.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$3x^{3}+2x^{2}-7x+c$",
+        "decision": "Collect the terms and add the constant of integration.",
+        "earns": [
+          "MW1"
+        ]
+      }
     ],
-    "answer": "Their heights",
-    "explain": "A constant lifts a curve without tilting it anywhere, so every one of them has the same steepness at any value of $x$ you pick."
-  },
-  {
-    "type": "callout",
-    "kind": "examiner",
-    "title": "The mark that goes most often",
-    "md": "Across Summer 2019, 2022, 2023, 2024 and 2025 the same note appears in the Chief Examiner's report: candidates integrate correctly and omit the constant, or find it and never write it into the equation. It is one character, and it is a mark in nearly every integration question on the paper.",
-    "source": "ccea-cer:further-maths:2023-summer:FM1:Q2"
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "choice",
-    "prompt": "Why does an indefinite integral end with $+ c$?",
-    "options": [
-      "Because a constant differentiates to zero, so its value cannot be recovered",
-      "Because the answer is only an estimate",
-      "Because $c$ is always zero and is written out of habit"
-    ],
-    "answer": "Because a constant differentiates to zero, so its value cannot be recovered",
-    "explain": "Every member of the family has the same derivative, so the gradient function cannot say which curve it came from. The letter holds that place open."
-  },
-  {
-    "type": "h",
-    "text": "3. A full integration, term by term"
-  },
-  {
-    "type": "p",
-    "md": "Take $\\int \\left(6x^{2} - 4x + 5\\right) dx$.\n**First term.** $6x^{2}$: raise to $x^{3}$, divide $6$ by $3$, giving $2x^{3}$.\n**Second term.** $-4x$ is $-4x^{1}$: raise to $x^{2}$, divide $-4$ by $2$, giving $-2x^{2}$.\n**Third term.** $5$ is $5x^{0}$: raise to $x^{1}$, divide $5$ by $1$, giving $5x$.\n**Finish.** $\\int \\left(6x^{2} - 4x + 5\\right) dx = 2x^{3} - 2x^{2} + 5x + c$."
+    "finalAnswer": "$3x^{3}+2x^{2}-7x+c$"
   },
   {
     "type": "video",
     "videoId": "D78fDp2OAVk",
     "title": "Introduction to Integration for GCSE Further Maths",
     "channel": "corbettmaths",
-    "why": "The same rule at a slower pace, with more short examples than there is room for here."
+    "why": "More term-by-term integrals at writing speed. Pause before each term and say its answer first."
   },
   {
     "type": "gate",
-    "id": "g4",
-    "kind": "blank",
-    "prompt": "In that integral the term $5$ became $5x$. What does a constant $k$ always integrate to? Write your answer in terms of $k$ and $x$.",
-    "answer": "kx | k x | kx + c",
-    "explain": "A constant is $kx^{0}$. Raising the power gives $kx^{1}$ and dividing by $1$ changes nothing, so it becomes $kx$."
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "Find $\\int \\left(12x^{3} - 6x + 2\\right) dx$.",
+    "options": [
+      "$3x^{4}-3x^{2}+2x+c$",
+      "$3x^{4}-3x^{2}+c$",
+      "$3x^{4}-3x^{2}+2x$"
+    ],
+    "answer": "$3x^{4}-3x^{2}+2x+c$",
+    "explain": "Each term on its own: $12x^{3}$ gives $3x^{4}$, $-6x$ gives $-3x^{2}$, and the constant 2 gives $2x$, just as $-7$ became $-7x$. Then add $c$: $3x^{4} - 3x^{2} + 2x + c$.",
+    "optionNotes": [
+      {
+        "option": "$3x^{4}-3x^{2}+c$",
+        "why": "The constant 2 has vanished, but it integrates to 2x, since its derivative has to come back to 2."
+      },
+      {
+        "option": "$3x^{4}-3x^{2}+2x$",
+        "why": "Every term is right, and the constant of integration is missing.",
+        "misconception": "fm.int.constant-omitted"
+      }
+    ],
+    "twin": {
+      "prompt": "Find $\\int \\left(6x^{5} + 8x - 3\\right) dx$.",
+      "options": [
+        "$x^{6}+4x^{2}-3x+c$",
+        "$x^{6}+4x^{2}+c$",
+        "$x^{6}+4x^{2}-3x$"
+      ],
+      "answer": "$x^{6}+4x^{2}-3x+c$",
+      "explain": "$6x^{5} \\to x^{6}$, $8x \\to 4x^{2}$, $-3 \\to -3x$, then $+ c$.",
+      "optionNotes": [
+        {
+          "option": "$x^{6}+4x^{2}+c$",
+          "why": "The −3 integrates to −3x; it does not disappear."
+        },
+        {
+          "option": "$x^{6}+4x^{2}-3x$",
+          "why": "The + c is missing.",
+          "misconception": "fm.int.constant-omitted"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "4. Negative powers"
-  },
-  {
-    "type": "p",
-    "md": "A term under a line has to be rewritten with a negative index first, exactly as it is for differentiating.\nThe difference is the direction: here the index goes **up**. So $\\frac{12}{x^{3}} = 12x^{-3}$ raises to $x^{-2}$, and dividing $12$ by $-2$ gives $-6x^{-2}$, which is $-\\frac{6}{x^{2}}$."
+    "text": "Negative powers",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "A four-row card taking 12 over x cubed through the rewrite, the raised index, the division by minus 2 and the answer written back over the line",
-    "svg": "<svg viewBox='0 0 560 200' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='negative powers, one step at a time'><title>negative powers, one step at a time</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>negative powers, one step at a time</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>12/x^3 is 12x^-3</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>rewrite before you integrate</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>raise the index: -3 becomes -2</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the index always goes UP by one here</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>divide by -2</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>12x^-2 / -2 = -6x^-2</text><rect x='14' y='136' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='154' font-family='inherit' font-size='13' fill='currentColor'>write it back over the line</text><text x='532' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>-6/x^2</text><text x='280' y='188' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>dividing by a negative new power is where the sign is won or lost</text></svg>",
-    "caption": "The new power can be negative, and dividing by it changes the sign."
-  },
-  {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "The one power that is excluded",
-    "md": "The rule needs $n \\neq -1$, because raising $-1$ gives $0$ and dividing by zero is meaningless. That integral is not on this specification, so you will never be asked for $\\int \\frac{1}{x}\\,dx$. Fractional indices are excluded across the whole unit too.",
-    "source": "CCEA GCSE Further Mathematics specification, statement FM1-INT-02 and its Teacher Guidance"
-  },
-  {
-    "type": "gate",
-    "id": "g5",
-    "kind": "blank",
-    "prompt": "Integrate $6x^{-3}$. The index rises to $-2$ and you divide by $-2$, giving ___ $x^{-2}$",
-    "answer": "-3",
-    "explain": "$6 \\div -2 = -3$, so the term becomes $-3x^{-2}$, which is $-\\frac{3}{x^{2}}$. The sign comes from the new power being negative."
-  },
-  {
-    "type": "h",
-    "text": "5. One point picks one curve"
+    "alt": "A number line of indices from −5 to 1; a solid arc from −4 up to −3 is labelled integrate, plus 1; a dashed arc from −4 down to −5 is labelled differentiate, minus 1; above −4 the term 15x to the power −4",
+    "svg": "<svg viewBox=\"0 0 400 220\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"A number line of indices from −5 to 1; a solid arc from −4 up to −3 is labelled integrate, plus 1; a dashed arc from −4 down to −5 is labelled differentiate, minus 1; above −4 the term 15x to the power −4\"><title>A number line of indices from −5 to 1; a solid arc from −4 up to −3 is labelled integrate, plus 1; a dashed arc from −4 down to −5 is labelled differentiate, minus 1; above −4 the term 15x to the power −4</title><line x1=\"25\" y1=\"110\" x2=\"375\" y2=\"110\" stroke=\"currentColor\" stroke-width=\"1.4\"/><line x1=\"35\" y1=\"104\" x2=\"35\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"35\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">−5</text><line x1=\"90\" y1=\"104\" x2=\"90\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"90\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">−4</text><line x1=\"145\" y1=\"104\" x2=\"145\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"145\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">−3</text><line x1=\"200\" y1=\"104\" x2=\"200\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"200\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">−2</text><line x1=\"255\" y1=\"104\" x2=\"255\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"255\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">−1</text><line x1=\"310\" y1=\"104\" x2=\"310\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"310\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">0</text><line x1=\"365\" y1=\"104\" x2=\"365\" y2=\"116\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"365\" y=\"138\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">1</text><path d=\"M90 96 Q117.5 50 145 96\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M136 88 L145 96 L144 84\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"117.5\" y=\"44\" font-size=\"15\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">integrate: +1</text><path d=\"M90 154 Q62.5 194 35 154\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\"/><text x=\"72.5\" y=\"210\" font-size=\"15\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">differentiate: −1</text><text x=\"90\" y=\"20\" font-size=\"16\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">15x⁻⁴</text></svg>",
+    "caption": "Integrating moves the index up by one: from −4 to −3, not down to −5."
   },
   {
     "type": "p",
-    "md": "Most exam questions do not stop at $+ c$. They give you a point the curve passes through, which is enough to pin down which member of the family it is.\nFor $\\frac{dy}{dx} = 3x^{2} - 10x + 4$ the integral is $y = x^{3} - 5x^{2} + 4x + c$. Substituting $x = 3$ and $y = 1$ gives $-6 + c = 1$, so $c = 7$."
+    "md": "A term under a line is rewritten with a negative index first: $\\frac{15}{x^{4}} = 15x^{-4}$. The index rises by one, from $-4$ to $-3$ as in the drawing, and you divide by the new index, $-3$. Dividing by a negative number changes the sign. In Summer 2022 the term under a line came second, and the report found the errors there."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\int \\frac{15}{x^{4}}\\,dx$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$15x^{-4}$",
+        "decision": "Bring the power up from under the line; its sign changes.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{15x^{-3}}{-3}=-5x^{-3}$",
+        "decision": "The index rises from −4 to −3; divide 15 by the new index, −3.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$-\\frac{5}{x^{3}}+c$",
+        "decision": "Put the power back under the line if you like, and add c.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "finalAnswer": "$-\\frac{5}{x^{3}}+c$"
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "choice",
+    "prompt": "Find $\\int \\frac{20}{x^{5}}\\,dx$.",
+    "options": [
+      "$-\\frac{5}{x^{4}}+c$",
+      "$-\\frac{4}{x^{4}}+c$",
+      "$\\frac{5}{x^{4}}+c$"
+    ],
+    "answer": "$-\\frac{5}{x^{4}}+c$",
+    "explain": "Write $20x^{-5}$. The index rises from $-5$ to $-4$, as $-4$ rose to $-3$ on the number line, and 20 is divided by $-4$: $-5x^{-4}$, which is $-\\frac{5}{x^{4}}$, plus $c$. Dividing by the negative index is what makes it negative.",
+    "optionNotes": [
+      {
+        "option": "$-\\frac{4}{x^{4}}+c$",
+        "why": "This divides 20 by the old index, −5; the rule divides by the new index, −4.",
+        "misconception": "fm.int.divided-by-original-power"
+      },
+      {
+        "option": "$\\frac{5}{x^{4}}+c$",
+        "why": "The new index is negative, so dividing by it makes the coefficient negative."
+      }
+    ],
+    "twin": {
+      "prompt": "Find $\\int \\frac{18}{x^{4}}\\,dx$.",
+      "options": [
+        "$-\\frac{6}{x^{3}}+c$",
+        "$-\\frac{9}{2x^{3}}+c$",
+        "$\\frac{6}{x^{3}}+c$"
+      ],
+      "answer": "$-\\frac{6}{x^{3}}+c$",
+      "explain": "$18x^{-4} \\to \\frac{18x^{-3}}{-3} = -6x^{-3}$, so $-\\frac{6}{x^{3}} + c$.",
+      "optionNotes": [
+        {
+          "option": "$-\\frac{9}{2x^{3}}+c$",
+          "why": "Divided by the old index, −4, instead of the new one, −3.",
+          "misconception": "fm.int.divided-by-original-power"
+        },
+        {
+          "option": "$\\frac{6}{x^{3}}+c$",
+          "why": "Dividing by −3 makes the term negative."
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "A point on the curve fixes c",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "A single curve through the point (3, 1)",
-    "svg": "<svg viewBox='0 0 560 340' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The single curve y = x^3 - 5x^2 + 4x + 7 passing through the point (3, 1)'><title>The single curve y = x^3 - 5x^2 + 4x + 7 passing through the point (3, 1)</title><path d='M 59.3 22 L 59.3 300 M 135.9 22 L 135.9 300 M 212.4 22 L 212.4 300 M 289 22 L 289 300 M 365.6 22 L 365.6 300 M 442.1 22 L 442.1 300 M 518.7 22 L 518.7 300 M 44 300 L 534 300 M 44 272.2 L 534 272.2 M 44 244.4 L 534 244.4 M 44 216.6 L 534 216.6 M 44 188.8 L 534 188.8 M 44 161 L 534 161 M 44 133.2 L 534 133.2 M 44 105.4 L 534 105.4 M 44 77.6 L 534 77.6 M 44 49.8 L 534 49.8 M 44 22 L 534 22' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 44 216.6 L 534 216.6' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 135.9 22 L 135.9 300' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 59.3 212.6 L 59.3 220.6 M 212.4 212.6 L 212.4 220.6 M 289 212.6 L 289 220.6 M 365.6 212.6 L 365.6 220.6 M 442.1 212.6 L 442.1 220.6 M 518.7 212.6 L 518.7 220.6 M 131.9 300 L 139.9 300 M 131.9 272.2 L 139.9 272.2 M 131.9 244.4 L 139.9 244.4 M 131.9 188.8 L 139.9 188.8 M 131.9 161 L 139.9 161 M 131.9 133.2 L 139.9 133.2 M 131.9 105.4 L 139.9 105.4 M 131.9 77.6 L 139.9 77.6 M 131.9 49.8 L 139.9 49.8 M 131.9 22 L 139.9 22' stroke='currentColor' stroke-width='1' fill='none'/><text x='59.3' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-1</text><text x='212.4' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><text x='289' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><text x='365.6' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><text x='442.1' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><text x='518.7' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>5</text><text x='128.9' y='304' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-6</text><text x='128.9' y='276.2' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><text x='128.9' y='248.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><text x='128.9' y='192.8' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><text x='128.9' y='165' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><text x='128.9' y='137.2' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><text x='128.9' y='109.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='128.9' y='81.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>10</text><text x='128.9' y='53.8' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>12</text><text x='128.9' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>14</text><text x='128.9' y='233.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 46.9 299.7 L 49.8 289.5 L 52.6 279.7 L 55.5 270.2 L 58.4 261.1 L 61.3 252.3 L 64.2 243.7 L 67.1 235.5 L 69.9 227.6 L 72.8 220 L 75.7 212.7 L 78.6 205.6 L 81.5 198.9 L 84.4 192.4 L 87.2 186.2 L 90.1 180.3 L 93 174.7 L 95.9 169.3 L 98.8 164.2 L 101.6 159.3 L 104.5 154.7 L 107.4 150.3 L 110.3 146.2 L 113.2 142.3 L 116.1 138.6 L 118.9 135.1 L 121.8 131.9 L 124.7 128.9 L 127.6 126.1 L 130.5 123.6 L 133.4 121.2 L 136.2 119 L 139.1 117.1 L 142 115.3 L 144.9 113.7 L 147.8 112.3 L 150.6 111.1 L 153.5 110 L 156.4 109.1 L 159.3 108.4 L 162.2 107.8 L 165.1 107.4 L 167.9 107.2 L 170.8 107.1 L 173.7 107.1 L 176.6 107.3 L 179.5 107.6 L 182.4 108.1 L 185.2 108.6 L 188.1 109.3 L 191 110.1 L 193.9 111 L 196.8 112 L 199.6 113.2 L 202.5 114.4 L 205.4 115.7 L 208.3 117.1 L 211.2 118.6 L 214.1 120.2 L 216.9 121.8 L 219.8 123.6 L 222.7 125.4 L 225.6 127.2 L 228.5 129.1 L 231.4 131.1 L 234.2 133.1 L 237.1 135.2 L 240 137.3 L 242.9 139.4 L 245.8 141.6 L 248.6 143.8 L 251.5 146 L 254.4 148.2 L 257.3 150.5 L 260.2 152.7 L 263.1 155 L 265.9 157.3 L 268.8 159.5 L 271.7 161.8 L 274.6 164 L 277.5 166.3 L 280.4 168.5 L 283.2 170.6 L 286.1 172.8 L 289 174.9 L 291.9 177 L 294.8 179 L 297.6 181 L 300.5 182.9 L 303.4 184.8 L 306.3 186.6 L 309.2 188.3 L 312.1 190 L 314.9 191.6 L 317.8 193.1 L 320.7 194.6 L 323.6 195.9 L 326.5 197.2 L 329.4 198.3 L 332.2 199.4 L 335.1 200.3 L 338 201.1 L 340.9 201.9 L 343.8 202.5 L 346.6 203 L 349.5 203.3 L 352.4 203.5 L 355.3 203.6 L 358.2 203.5 L 361.1 203.3 L 363.9 203 L 366.8 202.5 L 369.7 201.8 L 372.6 200.9 L 375.5 199.9 L 378.4 198.8 L 381.2 197.4 L 384.1 195.9 L 387 194.1 L 389.9 192.2 L 392.8 190.1 L 395.6 187.8 L 398.5 185.3 L 401.4 182.6 L 404.3 179.6 L 407.2 176.5 L 410.1 173.1 L 412.9 169.5 L 415.8 165.7 L 418.7 161.6 L 421.6 157.3 L 424.5 152.8 L 427.4 148 L 430.2 142.9 L 433.1 137.6 L 436 132 L 438.9 126.2 L 441.8 120.1 L 444.6 113.7 L 447.5 107 L 450.4 100.1 L 453.3 92.9 L 456.2 85.3 L 459.1 77.5 L 461.9 69.4 L 464.8 60.9 L 467.7 52.2 L 470.6 43.1 L 473.5 33.7 L 476.4 24' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='365.6' cy='202.7' r='3.4' fill='currentColor'/><text x='373.6' y='192.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(3, 1)</text><text x='534' y='208.6' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='143.9' y='32' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='289' y='332' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>one point picks one curve out of the family</text></svg>",
-    "caption": "The point $(3, 1)$ selects one curve, and its equation is $y = x^{3} - 5x^{2} + 4x + 7$."
-  },
-  {
-    "type": "gate",
-    "id": "g5a",
-    "kind": "number",
-    "prompt": "How many points on the curve are needed to fix the value of $c$?",
-    "answer": "1",
-    "explain": "One point gives one equation, and there is one unknown, so one point is exactly enough."
+    "alt": "Several dashed curves from the same family, one above another, and one solid curve that passes through the marked point (1, 8)",
+    "svg": "<svg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Several dashed curves from the same family, one above another, and one solid curve that passes through the marked point (1, 8)\"><title>Several dashed curves from the same family, one above another, and one solid curve that passes through the marked point (1, 8)</title><line x1=\"40\" y1=\"186.66666666666666\" x2=\"370\" y2=\"186.66666666666666\" stroke=\"currentColor\" stroke-width=\"1\"/><line x1=\"139\" y1=\"270\" x2=\"139\" y2=\"20\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M48.2 324.3 L51.5 321.8 L54.8 319.4 L58.1 317.0 L61.5 314.8 L64.8 312.6 L68.1 310.5 L71.4 308.5 L74.7 306.6 L78.0 304.8 L81.3 303.0 L84.6 301.4 L87.9 299.7 L91.2 298.2 L94.5 296.7 L97.8 295.2 L101.1 293.8 L104.4 292.5 L107.7 291.2 L111.0 289.9 L114.3 288.7 L117.6 287.5 L120.9 286.4 L124.2 285.2 L127.5 284.1 L130.8 283.1 L134.1 282.0 L137.4 280.9 L140.7 279.9 L144.0 278.9 L147.3 277.8 L150.6 276.8 L153.9 275.8 L157.2 274.7 L160.5 273.7 L163.8 272.6 L167.1 271.5 L170.4 270.4 L173.7 269.3 L177.0 268.1 L180.3 266.9 L183.6 265.7 L186.9 264.4 L190.2 263.1 L193.5 261.7 L196.8 260.3 L200.1 258.9 L203.4 257.4 L206.7 255.8 L210.0 254.1 L213.3 252.4 L216.6 250.7 L219.9 248.8 L223.2 246.9 L226.5 244.9 L229.8 242.8 L233.1 240.6 L236.4 238.3 L239.7 236.0 L243.0 233.5 L246.3 230.9 L249.6 228.3 L252.9 225.5 L256.2 222.6 L259.5 219.6 L262.8 216.5 L266.1 213.2 L269.4 209.8 L272.7 206.3 L276.0 202.7 L279.3 198.9 L282.6 195.0 L285.9 190.9 L289.2 186.7 L292.5 182.3 L295.8 177.8 L299.1 173.1 L302.4 168.3 L305.7 163.3 L309.0 158.1 L312.3 152.8 L315.6 147.3 L318.9 141.6 L322.2 135.7 L325.5 129.7 L328.8 123.4 L332.1 117.0 L335.4 110.3 L338.7 103.5 L342.0 96.4 L345.3 89.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"6 4\"/><path d=\"M48.2 199.3 L51.5 196.8 L54.8 194.4 L58.1 192.0 L61.5 189.8 L64.8 187.6 L68.1 185.5 L71.4 183.5 L74.7 181.6 L78.0 179.8 L81.3 178.0 L84.6 176.4 L87.9 174.7 L91.2 173.2 L94.5 171.7 L97.8 170.2 L101.1 168.8 L104.4 167.5 L107.7 166.2 L111.0 164.9 L114.3 163.7 L117.6 162.5 L120.9 161.4 L124.2 160.2 L127.5 159.1 L130.8 158.1 L134.1 157.0 L137.4 155.9 L140.7 154.9 L144.0 153.9 L147.3 152.8 L150.6 151.8 L153.9 150.8 L157.2 149.7 L160.5 148.7 L163.8 147.6 L167.1 146.5 L170.4 145.4 L173.7 144.3 L177.0 143.1 L180.3 141.9 L183.6 140.7 L186.9 139.4 L190.2 138.1 L193.5 136.7 L196.8 135.3 L200.1 133.9 L203.4 132.4 L206.7 130.8 L210.0 129.1 L213.3 127.4 L216.6 125.7 L219.9 123.8 L223.2 121.9 L226.5 119.9 L229.8 117.8 L233.1 115.6 L236.4 113.3 L239.7 111.0 L243.0 108.5 L246.3 105.9 L249.6 103.3 L252.9 100.5 L256.2 97.6 L259.5 94.6 L262.8 91.5 L266.1 88.2 L269.4 84.8 L272.7 81.3 L276.0 77.7 L279.3 73.9 L282.6 70.0 L285.9 65.9 L289.2 61.7 L292.5 57.3 L295.8 52.8 L299.1 48.1 L302.4 43.3 L305.7 38.3 L309.0 33.1 L312.3 27.8 L315.6 22.3 L318.9 16.6 L322.2 10.7 L325.5 4.7 L328.8 -1.6 L332.1 -8.0 L335.4 -14.7 L338.7 -21.5 L342.0 -28.6 L345.3 -35.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"6 4\"/><path d=\"M48.2 157.7 L51.5 155.1 L54.8 152.7 L58.1 150.4 L61.5 148.1 L64.8 145.9 L68.1 143.9 L71.4 141.9 L74.7 140.0 L78.0 138.1 L81.3 136.4 L84.6 134.7 L87.9 133.1 L91.2 131.5 L94.5 130.0 L97.8 128.6 L101.1 127.2 L104.4 125.8 L107.7 124.5 L111.0 123.3 L114.3 122.0 L117.6 120.9 L120.9 119.7 L124.2 118.6 L127.5 117.5 L130.8 116.4 L134.1 115.3 L137.4 114.3 L140.7 113.2 L144.0 112.2 L147.3 111.2 L150.6 110.1 L153.9 109.1 L157.2 108.0 L160.5 107.0 L163.8 105.9 L167.1 104.8 L170.4 103.7 L173.7 102.6 L177.0 101.4 L180.3 100.2 L183.6 99.0 L186.9 97.7 L190.2 96.4 L193.5 95.1 L196.8 93.7 L200.1 92.2 L203.4 90.7 L206.7 89.1 L210.0 87.5 L213.3 85.8 L216.6 84.0 L219.9 82.2 L223.2 80.2 L226.5 78.2 L229.8 76.1 L233.1 73.9 L236.4 71.7 L239.7 69.3 L243.0 66.8 L246.3 64.3 L249.6 61.6 L252.9 58.8 L256.2 55.9 L259.5 52.9 L262.8 49.8 L266.1 46.5 L269.4 43.2 L272.7 39.6 L276.0 36.0 L279.3 32.2 L282.6 28.3 L285.9 24.2 L289.2 20.0 L292.5 15.7 L295.8 11.2 L299.1 6.5 L302.4 1.6 L305.7 -3.4 L309.0 -8.5 L312.3 -13.9 L315.6 -19.4 L318.9 -25.1 L322.2 -31.0 L325.5 -37.0 L328.8 -43.3 L332.1 -49.7 L335.4 -56.4 L338.7 -63.2 L342.0 -70.2 L345.3 -77.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"6 4\"/><path d=\"M48.2 261.8 L51.5 259.3 L54.8 256.9 L58.1 254.5 L61.5 252.3 L64.8 250.1 L68.1 248.0 L71.4 246.0 L74.7 244.1 L78.0 242.3 L81.3 240.5 L84.6 238.9 L87.9 237.2 L91.2 235.7 L94.5 234.2 L97.8 232.7 L101.1 231.3 L104.4 230.0 L107.7 228.7 L111.0 227.4 L114.3 226.2 L117.6 225.0 L120.9 223.9 L124.2 222.7 L127.5 221.6 L130.8 220.6 L134.1 219.5 L137.4 218.4 L140.7 217.4 L144.0 216.4 L147.3 215.3 L150.6 214.3 L153.9 213.3 L157.2 212.2 L160.5 211.2 L163.8 210.1 L167.1 209.0 L170.4 207.9 L173.7 206.8 L177.0 205.6 L180.3 204.4 L183.6 203.2 L186.9 201.9 L190.2 200.6 L193.5 199.2 L196.8 197.8 L200.1 196.4 L203.4 194.9 L206.7 193.3 L210.0 191.6 L213.3 189.9 L216.6 188.2 L219.9 186.3 L223.2 184.4 L226.5 182.4 L229.8 180.3 L233.1 178.1 L236.4 175.8 L239.7 173.5 L243.0 171.0 L246.3 168.4 L249.6 165.8 L252.9 163.0 L256.2 160.1 L259.5 157.1 L262.8 154.0 L266.1 150.7 L269.4 147.3 L272.7 143.8 L276.0 140.2 L279.3 136.4 L282.6 132.5 L285.9 128.4 L289.2 124.2 L292.5 119.8 L295.8 115.3 L299.1 110.6 L302.4 105.8 L305.7 100.8 L309.0 95.6 L312.3 90.3 L315.6 84.8 L318.9 79.1 L322.2 73.2 L325.5 67.2 L328.8 60.9 L332.1 54.5 L335.4 47.8 L338.7 41.0 L342.0 33.9 L345.3 26.7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.3\"/><circle cx=\"304.0\" cy=\"103.3\" r=\"5\" fill=\"currentColor\"/><text x=\"292\" y=\"97.33333333333333\" font-size=\"15\" text-anchor=\"end\" font-family=\"inherit\" fill=\"currentColor\">(1, 8)</text><line x1=\"304\" y1=\"182.66666666666666\" x2=\"304\" y2=\"190.66666666666666\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"304\" y=\"206.66666666666666\" font-size=\"15\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">1</text></svg>",
+    "caption": "One family of curves; only one of them passes through (1, 8)."
   },
   {
     "type": "p",
-    "md": "Write the finished curve as a single equation: $y = x^{3} - 5x^{2} + 4x + 7$.\nLeaving $c$ on a line of its own, or writing the answer as $y = x^{3} - 5x^{2} + 4x + c$ with $c$ named underneath, loses the last mark. The examiners want one equation."
+    "md": "Most questions give a point the curve passes through. Integrate first, with $+ c$; then substitute the point into the integrated expression and solve for $c$. In the drawing only one member of the family goes through $(1, 8)$, and that is the curve wanted. The point never goes into $\\frac{dy}{dx}$, which knows nothing about height."
   },
   {
-    "type": "gate",
-    "id": "g6",
-    "kind": "number",
-    "prompt": "A curve has $y = 3x^{2} + c$ and passes through $(2, 20)$. What is $c$?",
-    "answer": "8",
-    "explain": "Substituting gives $3 \\times 4 + c = 20$, so $12 + c = 20$ and $c = 8$. The point goes into the integrated curve, never into the gradient function."
-  },
-  {
-    "type": "h",
-    "text": "6. The word that catches people out"
-  },
-  {
-    "type": "p",
-    "md": "A stem that says *the gradient function of a curve is* $\\frac{dy}{dx} = \\ldots$ is asking you to go **backwards**. The word gradient is not an instruction to differentiate; the differentiating has already been done for you.\nThe examiners record this every year. In Summer 2025 the word sent a large number of candidates straight into differentiating, and others tried $y = mx + c$ as though the curve were a straight line."
-  },
-  {
-    "type": "callout",
-    "kind": "why",
-    "title": "How to tell which direction you are in",
-    "md": "Look at what the question hands you. If it gives you $y$ and wants steepness, differentiate. If it gives you $\\frac{dy}{dx}$ and wants $y$, integrate. The word gradient can sit in either sentence, so it decides nothing on its own."
-  },
-  {
-    "type": "gate",
-    "id": "g7",
-    "kind": "choice",
-    "prompt": "A question reads: the gradient function of a curve is $\\frac{dy}{dx} = 6x - 1$, and the curve passes through $(1, 4)$. Find the equation of the curve. What is the first move?",
-    "options": [
-      "Integrate $6x - 1$",
-      "Differentiate $6x - 1$",
-      "Substitute $x = 1$ into $6x - 1$"
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A curve has $\\frac{dy}{dx} = 21x^{2} - 2x + 5$ and passes through $(1, 8)$. Find $y$ in terms of $x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y=7x^{3}-x^{2}+5x+c$",
+        "decision": "Integrate each term and add c.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$7-1+5+c=8$",
+        "decision": "Substitute x = 1 and y = 8 into the integrated expression.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$c=-3$",
+        "decision": "Solve for c.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$y=7x^{3}-x^{2}+5x-3$",
+        "decision": "Write the number in place of c: one equation.",
+        "earns": [
+          "W1"
+        ]
+      }
     ],
-    "answer": "Integrate $6x - 1$",
-    "explain": "The gradient function is already the derivative, so the curve is found by integrating. Substituting comes afterwards, to find $c$."
-  },
-  {
-    "type": "h",
-    "text": "7. Presenting the answer"
-  },
-  {
-    "type": "p",
-    "md": "Three small habits carry marks. Drop the integral sign as soon as you have integrated: writing $\\int$ in front of the answer says the work is not finished. Keep $+ c$ until the point is used, and then replace it with its number. And simplify as you go, so $\\frac{6x^{3}}{3}$ is written $2x^{3}$ rather than left standing.\nFinally, give the answer as the question asks: *express $y$ in terms of $x$* wants one equation beginning $y =$."
+    "finalAnswer": "$y=7x^{3}-x^{2}+5x-3$"
   },
   {
     "type": "gate",
-    "id": "g8",
+    "id": "g14",
     "kind": "choice",
-    "prompt": "Which is the finished answer for a curve with $\\frac{dy}{dx} = 4x - 9$ through $(3, 2)$?",
+    "prompt": "A curve is $y = x^{3} + 5x + c$ and passes through $(2, 7)$. What is $c$?",
     "options": [
-      "$y = 2x^{2} - 9x + 11$",
-      "$y = 2x^{2} - 9x + c$",
-      "$\\int \\left(4x - 9\\right) dx = 2x^{2} - 9x$"
+      "$-11$",
+      "$-10$",
+      "$7$"
     ],
-    "answer": "$y = 2x^{2} - 9x + 11$",
-    "explain": "Integrating gives $y = 2x^{2} - 9x + c$, and the point makes $c = 11$. The finished answer is one equation with the number in place of the letter."
+    "answer": "$-11$",
+    "explain": "Substitute the point into the curve itself, as $(1, 8)$ went into $7x^{3} - x^{2} + 5x + c$: $8 + 10 + c = 7$, so $c = -11$. The gradient function would give a different number, because it knows nothing about height.",
+    "optionNotes": [
+      {
+        "option": "$-10$",
+        "why": "That comes from putting $x = 2$ into $\\frac{dy}{dx} = 3x^{2} + 5$, which gives 17; the point belongs in the curve's equation.",
+        "misconception": "fm.int.point-substituted-into-gradient"
+      },
+      {
+        "option": "$7$",
+        "why": "7 is the $y$-value of the point; $c$ is what makes the whole expression equal 7 at $x = 2$."
+      }
+    ],
+    "twin": {
+      "prompt": "A curve is $y = 2x^{3} - x + c$ and passes through $(-1, 4)$. What is $c$?",
+      "options": [
+        "$5$",
+        "$-1$",
+        "$4$"
+      ],
+      "answer": "$5$",
+      "explain": "$2(-1)^{3} - (-1) + c = 4$, so $-2 + 1 + c = 4$ and $c = 5$.",
+      "optionNotes": [
+        {
+          "option": "$-1$",
+          "why": "That used $\\frac{dy}{dx} = 6x^{2} - 1$, which is 5 at $x = -1$.",
+          "misconception": "fm.int.point-substituted-into-gradient"
+        },
+        {
+          "option": "$4$",
+          "why": "4 is the y-value, not the constant."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "Gradient function given: integrate",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A curve rising steeply through the marked point (1, 6), with a dashed straight line touching it there; the line is labelled y = mx + c, a line, not the curve",
+    "svg": "<svg viewBox=\"0 0 400 270\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"A curve rising steeply through the marked point (1, 6), with a dashed straight line touching it there; the line is labelled y = mx + c, a line, not the curve\"><title>A curve rising steeply through the marked point (1, 6), with a dashed straight line touching it there; the line is labelled y = mx + c, a line, not the curve</title><line x1=\"40\" y1=\"224.44444444444443\" x2=\"370\" y2=\"224.44444444444443\" stroke=\"currentColor\" stroke-width=\"1\"/><line x1=\"65.38461538461539\" y1=\"250\" x2=\"65.38461538461539\" y2=\"20\" stroke=\"currentColor\" stroke-width=\"1\"/><path d=\"M122.5 218.5 L125.0 212.8 L127.6 207.6 L130.1 203.0 L132.7 198.9 L135.2 195.1 L137.7 191.6 L140.3 188.4 L142.8 185.4 L145.3 182.6 L147.9 180.0 L150.4 177.5 L153.0 175.2 L155.5 173.0 L158.0 170.9 L160.6 168.9 L163.1 167.0 L165.7 165.1 L168.2 163.3 L170.7 161.5 L173.3 159.8 L175.8 158.1 L178.3 156.4 L180.9 154.8 L183.4 153.2 L186.0 151.6 L188.5 150.1 L191.0 148.5 L193.6 147.0 L196.1 145.5 L198.7 144.0 L201.2 142.5 L203.7 140.9 L206.3 139.4 L208.8 137.9 L211.3 136.4 L213.9 134.9 L216.4 133.4 L219.0 131.9 L221.5 130.3 L224.0 128.8 L226.6 127.3 L229.1 125.7 L231.7 124.1 L234.2 122.6 L236.7 121.0 L239.3 119.4 L241.8 117.8 L244.3 116.2 L246.9 114.5 L249.4 112.9 L252.0 111.2 L254.5 109.6 L257.0 107.9 L259.6 106.2 L262.1 104.5 L264.7 102.7 L267.2 101.0 L269.7 99.2 L272.3 97.5 L274.8 95.7 L277.3 93.9 L279.9 92.0 L282.4 90.2 L285.0 88.3 L287.5 86.5 L290.0 84.6 L292.6 82.7 L295.1 80.7 L297.7 78.8 L300.2 76.8 L302.7 74.8 L305.3 72.8 L307.8 70.8 L310.3 68.8 L312.9 66.7 L315.4 64.7 L318.0 62.6 L320.5 60.5 L323.0 58.3 L325.6 56.2 L328.1 54.0 L330.7 51.9 L333.2 49.6 L335.7 47.4 L338.3 45.2 L340.8 42.9 L343.3 40.7 L345.9 38.4 L348.4 36.0 L351.0 33.7 L353.5 31.4 L356.0 29.0\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\"/><path d=\"M78.1 216.8 L344.6 55.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"6 4\"/><circle cx=\"192.3\" cy=\"147.8\" r=\"5\" fill=\"currentColor\"/><text x=\"204.3076923076923\" y=\"165.77777777777777\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">(1, 6)</text><text x=\"239.4230769230769\" y=\"99.22222222222221\" font-size=\"15\" text-anchor=\"end\" font-family=\"inherit\" fill=\"currentColor\">the curve</text><text x=\"109.8076923076923\" y=\"239.77777777777777\" font-size=\"15\" text-anchor=\"start\" font-family=\"inherit\" fill=\"currentColor\">y = mx + c: a line, not the curve</text></svg>",
+    "caption": "The dashed line has the curve's gradient only at (1, 6): it is a tangent, not the curve."
   },
   {
     "type": "p",
-    "md": "Integrate a sum of whole-number powers of $x$ by raising each power and dividing by the new one.\nTurn a constant term $k$ into $kx$.\nRewrite $\\frac{a}{x^{n}}$ as $ax^{-n}$ and integrate it, keeping the sign the new power gives.\nSay why $+ c$ belongs on every indefinite integral.\nUse a point on the curve to find $c$ and present the curve as a single equation."
+    "md": "A stem that says the gradient function of a curve is $\\frac{dy}{dx} = \\ldots$ and asks for the equation of the curve wants you to integrate: the differentiating has already been done. In Summer 2025 the word gradient led many to differentiate, and some wrote $y = mx + c$ with the gradient at one point, which is the dashed tangent in the drawing, not the curve."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The gradient function of a curve is $\\frac{dy}{dx} = 4x + \\frac{2}{x^{3}}$, and the curve passes through $(1, 6)$. Find the equation of the curve.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y=\\int\\left(4x+2x^{-3}\\right)dx$",
+        "decision": "The gradient function is given and the curve is wanted, so integrate.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$y=2x^{2}-x^{-2}+c$",
+        "decision": "4x gives 2x²; 2x⁻³ rises to x⁻² and 2 ÷ (−2) = −1.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$2-1+c=6$, so $c=5$",
+        "decision": "Substitute (1, 6) into the integrated expression.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$y=2x^{2}-\\frac{1}{x^{2}}+5$",
+        "decision": "One equation, with the number in place of c.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "finalAnswer": "$y=2x^{2}-\\frac{1}{x^{2}}+5$"
+  },
+  {
+    "type": "gate",
+    "id": "g15",
+    "kind": "choice",
+    "prompt": "The gradient function of a curve is $\\frac{dy}{dx} = 10x - 3$, and the curve passes through $(3, 40)$. Find the equation of the curve.",
+    "options": [
+      "$y=5x^{2}-3x+4$",
+      "$y=27x-41$",
+      "$y=10$"
+    ],
+    "answer": "$y=5x^{2}-3x+4$",
+    "explain": "The gradient function is already a derivative, so integrate: $y = 5x^{2} - 3x + c$. Then the point: $45 - 9 + c = 40$, so $c = 4$. A line $y = mx + c$ matches the gradient at one point only, like the dashed tangent in the drawing.",
+    "optionNotes": [
+      {
+        "option": "$y=27x-41$",
+        "why": "This is the straight line through $(3, 40)$ with gradient 27, the tangent there, not the curve.",
+        "misconception": "fm.int.gradient-word-triggers-differentiation"
+      },
+      {
+        "option": "$y=10$",
+        "why": "Differentiating 10x − 3 gives 10, the second derivative, not the curve.",
+        "misconception": "fm.int.differentiated-instead"
+      }
+    ],
+    "twin": {
+      "prompt": "The gradient function of a curve is $\\frac{dy}{dx} = 6x + 5$, and the curve passes through $(2, 3)$. Find the equation of the curve.",
+      "options": [
+        "$y=3x^{2}+5x-19$",
+        "$y=17x-31$",
+        "$y=6$"
+      ],
+      "answer": "$y=3x^{2}+5x-19$",
+      "explain": "$y = 3x^{2} + 5x + c$, and $12 + 10 + c = 3$ gives $c = -19$.",
+      "optionNotes": [
+        {
+          "option": "$y=17x-31$",
+          "why": "That is the tangent at (2, 3), a straight line.",
+          "misconception": "fm.int.gradient-word-triggers-differentiation"
+        },
+        {
+          "option": "$y=6$",
+          "why": "That differentiates again.",
+          "misconception": "fm.int.differentiated-instead"
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "See it done: a five-mark curve",
+    "role": "see"
   },
   {
     "type": "p",
-    "md": "The wordings are *find* the integral and *express $y$ in terms of $x$, given that $y$ takes a stated value at a stated $x$*. The first mark is for one term integrated correctly, so start writing even if a term defeats you. The last mark is for $c$ evaluated and written inside one finished equation."
+    "md": "Here is the whole of a question at exam length, the Summer 2023 and 2024 shape, with the mark each line earns. On the 2023 scheme each integrated term and the $+ c$ earned a mark, and the substitution the last."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A curve has $\\frac{dy}{dx} = 15x^{2} - \\frac{2}{x^{2}} + 2$, and $y = 27$ when $x = 2$. Find $y$ in terms of $x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx}=15x^{2}-2x^{-2}+2$",
+        "decision": "Rewrite the fraction with a negative index first."
+      },
+      {
+        "n": 2,
+        "working": "$y=5x^{3}+2x^{-1}+2x+c$",
+        "decision": "−2x⁻² rises to x⁻¹, and −2 ÷ (−1) = +2.",
+        "earns": [
+          "MW1",
+          "MW1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$40+1+4+c=27$",
+        "decision": "Substitute x = 2 and y = 27: 5 × 8, 2 ÷ 2 and 2 × 2.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$y=5x^{3}+\\frac{2}{x}+2x-18$",
+        "decision": "c = −18, written into the one equation.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "finalAnswer": "$y=5x^{3}+\\frac{2}{x}+2x-18$"
+  },
+  {
+    "type": "video",
+    "videoId": "aTu6DIXIUHI",
+    "title": "Integration - Finding the Equation of a Curve - GCSE Further Maths",
+    "channel": "corbettmaths",
+    "why": "More curves found from a gradient function and a point. Pause after the integration and find c yourself."
+  },
+  {
+    "type": "gate",
+    "id": "g16",
+    "kind": "choice",
+    "prompt": "A curve has $\\frac{dy}{dx} = 6x - \\frac{7}{x^{2}}$ and passes through $(1, 9)$. Find $y$ in terms of $x$.",
+    "options": [
+      "$y=3x^{2}+\\frac{7}{x}-1$",
+      "$y=3x^{2}-\\frac{7}{x}+13$",
+      "$y=3x^{2}+\\frac{7}{x}+c$"
+    ],
+    "answer": "$y=3x^{2}+\\frac{7}{x}-1$",
+    "explain": "Write $-7x^{-2}$; it rises to $x^{-1}$ and $-7 \\div (-1) = 7$, as $-2x^{-2}$ became $+2x^{-1}$ above. So $y = 3x^{2} + \\frac{7}{x} + c$, and $3 + 7 + c = 9$ gives $c = -1$.",
+    "optionNotes": [
+      {
+        "option": "$y=3x^{2}-\\frac{7}{x}+13$",
+        "why": "$-7x^{-2}$ rises to $x^{-1}$, and $-7 \\div (-1) = +7$: the sign flipped back to plus."
+      },
+      {
+        "option": "$y=3x^{2}+\\frac{7}{x}+c$",
+        "why": "The point is there to fix c, so the finished curve has a number in its place.",
+        "misconception": "fm.int.constant-omitted"
+      }
+    ],
+    "twin": {
+      "prompt": "A curve has $\\frac{dy}{dx} = 8x - \\frac{6}{x^{2}}$ and passes through $(1, 1)$. Find $y$ in terms of $x$.",
+      "options": [
+        "$y=4x^{2}+\\frac{6}{x}-9$",
+        "$y=4x^{2}-\\frac{6}{x}+3$",
+        "$y=4x^{2}+\\frac{6}{x}+c$"
+      ],
+      "answer": "$y=4x^{2}+\\frac{6}{x}-9$",
+      "explain": "$y = 4x^{2} + \\frac{6}{x} + c$, and $4 + 6 + c = 1$ gives $c = -9$.",
+      "optionNotes": [
+        {
+          "option": "$y=4x^{2}-\\frac{6}{x}+3$",
+          "why": "Dividing −6 by −1 gives +6, so the term is +6/x."
+        },
+        {
+          "option": "$y=4x^{2}+\\frac{6}{x}+c$",
+          "why": "c still has to be found from the point.",
+          "misconception": "fm.int.constant-omitted"
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Powers under a line.** (2019, 2021, 2022, 2026) The plain integral mixes positive powers with a power under a line, sometimes with a fraction in front, as 2019's $\\frac{3}{4x^{2}}$. Rewrite before integrating; the 2019 and 2022 reports both found slips in the second term."
+  },
+  {
+    "type": "p",
+    "md": "**A point, then one equation.** (2023, 2024, 2025) The curve through a point earns four or five marks. In 2023 some treated 2 and 7 as limits and a few found the second derivative, and in 2023 and 2024 the constant was often missing or left unfound."
+  },
+  {
+    "type": "p",
+    "md": "**Both directions.** (2024) One gradient function: differentiate it for $\\frac{d^{2}y}{dx^{2}}$, then find $y$, where many did not see that integration was needed. **The word gradient.** (2025) Many differentiated, and some left $c$ standing apart from the equation."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $\\int \\left(\\frac{5}{2x^{3}} - 4x^{3}\\right) dx$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{5}{2}x^{-3}-4x^{3}$",
+        "decision": "The 2 stays underneath with the 5; only x³ comes up as x⁻³.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{5}{2} \\times \\frac{x^{-2}}{-2}=-\\frac{5}{4}x^{-2}$",
+        "decision": "Raise the index −3 to −2 and divide by −2.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$-4x^{3} \\to -x^{4}$",
+        "decision": "Raise to 4 and divide −4 by 4.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$-\\frac{5}{4x^{2}}-x^{4}+c$",
+        "decision": "Collect, and add c.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ],
+    "finalAnswer": "$-\\frac{5}{4x^{2}}-x^{4}+c$"
+  },
+  {
+    "type": "gate",
+    "id": "g17",
+    "kind": "choice",
+    "prompt": "Find $\\int \\frac{3}{2x^{2}}\\,dx$.",
+    "options": [
+      "$-\\frac{3}{2x}+c$",
+      "$\\frac{3}{2x}+c$",
+      "$-\\frac{3}{x}+c$"
+    ],
+    "answer": "$-\\frac{3}{2x}+c$",
+    "explain": "Only $x^{2}$ comes up: $\\frac{3}{2}x^{-2}$, as $\\frac{5}{2}x^{-3}$ kept its 2 above. The index rises to $-1$ and $\\frac{3}{2} \\div (-1) = -\\frac{3}{2}$, so $-\\frac{3}{2}x^{-1}$, which is $-\\frac{3}{2x}$, plus $c$.",
+    "optionNotes": [
+      {
+        "option": "$\\frac{3}{2x}+c$",
+        "why": "Dividing by the new index, −1, makes the term negative."
+      },
+      {
+        "option": "$-\\frac{3}{x}+c$",
+        "why": "The 2 under the 3 belongs to the coefficient $\\frac{3}{2}$, and it stays."
+      }
+    ],
+    "twin": {
+      "prompt": "Find $\\int \\frac{5}{3x^{2}}\\,dx$.",
+      "options": [
+        "$-\\frac{5}{3x}+c$",
+        "$\\frac{5}{3x}+c$",
+        "$-\\frac{5}{x}+c$"
+      ],
+      "answer": "$-\\frac{5}{3x}+c$",
+      "explain": "$\\frac{5}{3}x^{-2} \\to -\\frac{5}{3}x^{-1} = -\\frac{5}{3x}$, plus $c$.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{5}{3x}+c$",
+          "why": "The new index is −1, so the sign changes."
+        },
+        {
+          "option": "$-\\frac{5}{x}+c$",
+          "why": "The 3 underneath is part of the coefficient and stays."
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "Going further: both directions at once",
+    "role": "further"
+  },
+  {
+    "type": "p",
+    "md": "Summer 2024 Q1 gave one gradient function and asked for two things: the second derivative for 2 marks, then the curve through a point for 5. Differentiate it for the first, integrate it for the second. The same rewritten expression serves both, but the moves go opposite ways: differentiating lowers each power, integrating raises it. Decide the direction from what each part asks for."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A curve has $\\frac{dy}{dx} = 6x^{2} + \\frac{5}{x^{2}}$ and passes through $(1, 3)$. Find $\\frac{d^{2}y}{dx^{2}}$, then find $y$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx}=6x^{2}+5x^{-2}$",
+        "decision": "One rewrite serves both parts."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{d^{2}y}{dx^{2}}=12x-10x^{-3}$",
+        "decision": "Differentiate: bring each power down and lower it.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$y=2x^{3}-5x^{-1}+c$",
+        "decision": "Integrate: raise each power and divide by the new one.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$2-5+c=3$, so $y=2x^{3}-\\frac{5}{x}+6$",
+        "decision": "The point fixes c = 6.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ],
+    "finalAnswer": "$\\frac{d^{2}y}{dx^{2}}=12x-\\frac{10}{x^{3}}$ and $y=2x^{3}-\\frac{5}{x}+6$"
+  },
+  {
+    "type": "gate",
+    "id": "g18",
+    "kind": "choice",
+    "prompt": "A curve has $\\frac{dy}{dx} = 3x^{2} - 2x$. Which is $\\frac{d^{2}y}{dx^{2}}$?",
+    "options": [
+      "$6x-2$",
+      "$x^{3}-x^{2}$",
+      "$6x$"
+    ],
+    "answer": "$6x-2$",
+    "explain": "The second derivative differentiates the gradient function, lowering each power as $6x^{2}$ became $12x$: $3x^{2}$ gives $6x$ and $-2x$ gives $-2$. Integrating would go the other way, to $y$.",
+    "optionNotes": [
+      {
+        "option": "$x^{3}-x^{2}$",
+        "why": "That integrates, which finds y; the second derivative differentiates again."
+      },
+      {
+        "option": "$6x$",
+        "why": "The −2x term differentiates to −2, which has been left out.",
+        "misconception": "fm.calc.linear-term-derivative-omitted"
+      }
+    ],
+    "twin": {
+      "prompt": "A curve has $\\frac{dy}{dx} = 4x^{3} + 5x$. Which is $\\frac{d^{2}y}{dx^{2}}$?",
+      "options": [
+        "$12x^{2}+5$",
+        "$x^{4}+\\frac{5}{2}x^{2}$",
+        "$12x^{2}$"
+      ],
+      "answer": "$12x^{2}+5$",
+      "explain": "Differentiate each term: $4x^{3} \\to 12x^{2}$ and $5x \\to 5$.",
+      "optionNotes": [
+        {
+          "option": "$x^{4}+\\frac{5}{2}x^{2}$",
+          "why": "That integrates instead of differentiating."
+        },
+        {
+          "option": "$12x^{2}$",
+          "why": "The 5x term gives 5, which is missing.",
+          "misconception": "fm.calc.linear-term-derivative-omitted"
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "Integrate each term: raise the power by one, divide by the new power.\nTurn a constant $k$ into $kx$, and rewrite $\\frac{a}{x^{n}}$ as $ax^{-n}$ first.\nWrite $+ c$ on every indefinite integral: the height is lost when differentiating.\nPut a given point into the integrated expression, never into dy/dx.\nGive the curve as one equation, with c's value in place."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "An early question on every FM1 paper from 2018 to 2026: a plain integral for 3 to 5 marks, or the curve through a point for 4 or 5 (2023 to 2025), in 2024 after a 2-mark second derivative. Each integrated term earns a mark, as does the $+ c$; the last marks are for substituting the point and giving one equation."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.integration-as-inverse.01"
+    "promptId": "rp.fm.u1.integration-as-inverse.10"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.integration-as-inverse.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.integration-as-inverse.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.integration-as-inverse.06"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.integration-as-inverse.08"
+    "promptId": "rp.fm.u1.integration-as-inverse.11"
   }
 ]
