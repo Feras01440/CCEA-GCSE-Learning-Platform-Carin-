@@ -59,6 +59,7 @@ import { REACTIONS } from "@/components/slides/enrich";
 import { enrichmentFor } from "@/lib/slides/enrichment";
 import { recordRecallGrade } from "@/lib/slides/returns";
 import { gateOutcomes, type GateOutcome } from "@/lib/slides/outcomes";
+import { shownPrompts } from "@/lib/slides/recall";
 
 interface Props {
   subject: Subject;
@@ -275,17 +276,20 @@ function planFor(bundle: ShippedBundle, displayTitle: string | undefined, refere
   const { check, recheck } = selectCheckItems(bundle.diagnostics);
   const practice = bundle.questions.filter((q) => q.style === "practice");
   const exam = bundle.questions.filter((q) => q.style === "exam-style");
-  const notePromptIds = new Set(((bundle.noteBlocks ?? []) as NoteBlock[]).filter((b) => b.type === "prompt").map((b) => (b as { promptId: string }).promptId));
-  const loosePrompts = bundle.prompts.filter((p) => !notePromptIds.has(p.id));
+  // The prompts the lesson asks inside itself: the ones Slides keeps as its recall cards (the lead's ruling, 29 Sep 2026:
+  // one rule, src/lib/slides/recall.ts shownPrompts). A placed prompt the rule leaves out (a list, an explanation, an
+  // essay) waits with the topic's other prompts under "Say it from memory", never lost and never inside the lesson.
+  const shownPromptIds = new Set<string>(shownPrompts(bundle.noteBlocks ?? [], bundle.prompts).map((p) => p.id));
+  const loosePrompts = bundle.prompts.filter((p) => !shownPromptIds.has(p.id));
   const promptById = new Map<string, RetrievalPrompt>(bundle.prompts.map((p) => [p.id, p]));
 
   const blocks = (bundle.noteBlocks ?? []) as NoteBlock[];
   // A See it that names a worked example is priced by that example's steps (lesson-plan.ts seeSeconds).
   const steps = seeStepsOf(bundle.workedExamples);
-  const hero = heroDataFor(blocks, steps);
+  const hero = heroDataFor(blocks, steps, bundle.prompts);
   // The note's first figure moves into the hero (in Read v2, the drawing Slides registers for it takes its place there).
   const noteBlocks = lessonBlocks(blocks, hero.lede);
-  const noteSections = lessonSections(blocks, hero.lede, steps);
+  const noteSections = lessonSections(blocks, hero.lede, steps, bundle.prompts);
   const lessonMinutes = noteSections.reduce((n, s) => n + s.minutes, 0);
   const firstHeading = noteBlocks.find((b) => b.type === "h") as { text: string } | undefined;
   const hideFirstHeading = Boolean(displayTitle && firstHeading && sameTitle(displayTitle, headingText(firstHeading.text)));
@@ -317,7 +321,7 @@ function planFor(bundle: ShippedBundle, displayTitle: string | undefined, refere
     hasExamStage && { id: "sheet", label: "In the exam", minutes: minutes.sheet },
   ].filter((s): s is SpineStage => Boolean(s));
 
-  return { check, recheck, practice, exam, loosePrompts, promptById, noteBlocks, noteSections, lessonMinutes, hideFirstHeading, minutes, hasExamStage, stages, note };
+  return { check, recheck, practice, exam, loosePrompts, promptById, shownPromptIds, noteBlocks, noteSections, lessonMinutes, hideFirstHeading, minutes, hasExamStage, stages, note };
 }
 
 type Plan = ReturnType<typeof planFor>;
@@ -581,7 +585,7 @@ function ClassicContent({ subject, unit, slug, topicId, displayTitle, seeIt, ref
                 await recordAttempt({ item: { ...item, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct, answerRaw: answer, misconceptionTags });
               }}
               renderPrompt={(id) => {
-                const p = plan.promptById.get(id);
+                const p = plan.shownPromptIds.has(id) ? plan.promptById.get(id) : undefined;
                 return p ? <InlinePrompt prompt={p} mode="inline" onGrade={onPrompt(p)} /> : null;
               }}
             />
@@ -700,7 +704,7 @@ function ReadV2Content({ subject, unit, slug, topicId, displayTitle, seeIt, refe
                 await recordAttempt({ item: { ...item, id: `${topicId}#gate:${id}` }, itemKind: "practice", correct, answerRaw: answer, misconceptionTags });
               }}
               renderPrompt={(id) => {
-                const p = plan.promptById.get(id);
+                const p = plan.shownPromptIds.has(id) ? plan.promptById.get(id) : undefined;
                 return p ? <InlinePrompt prompt={p} mode="inline" onGrade={onPrompt(p)} /> : null;
               }}
               paced={{

@@ -41,8 +41,10 @@ import { useExamPlan } from "@/lib/plan/store";
 import { answeredGateIds } from "@/lib/session/flow";
 import { recordAttempt, touchSession } from "@/lib/session/record";
 import { deckMinutes, deckStats, promiseLine, splitSentences, withRetries, type Card, type Deck, type GateCard, type SeeCard } from "@/lib/slides/cards";
-import { enrichmentFor } from "@/lib/slides/enrichment";
+import { enrichmentFor, recapGlyphsFor } from "@/lib/slides/enrichment";
 import { nextRun, readPosition, withKnownFigures, writePosition, type StepResult } from "@/lib/slides/position";
+import { minutesLeft, pausePoints, placeWords, resumeIndex } from "@/lib/slides/pause";
+import { readSlidesPlace, writeSlidesPlace } from "@/lib/slides/place";
 import { answerNote, canSkipSee, gateNote, gatePhase, primaryFor, seeProgress, unlockedFor, type Action, type CardState } from "@/lib/slides/run";
 import { misconceptionTags, twinGate, twinOptions } from "@/lib/slides/see";
 import { swipeDirection } from "@/lib/slides/gesture";
@@ -140,6 +142,8 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const [answeredBefore, setAnsweredBefore] = useState<Set<string> | null>(null);
   const [startedAt] = useState(() => Date.now());
   const [restored, setRestored] = useState(false);
+  // Her last "Pause here" and the card it kept, until she moves on from that card (src/lib/slides/place.ts).
+  const pausedRef = useRef<{ at: string; key: string } | null>(null);
   // Writes to the device still in flight (a Your turn's attempt, a recall grade): the close waits for them before it
   // reads what returns, so it counts the card graded a moment before it appeared.
   const [writing, setWriting] = useState(0);
@@ -201,7 +205,12 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
       setSeenBefore(pos.seenBefore);
       const expanded = withRetries(deck.cards, pos.missed);
       const byKey = pos.key ? expanded.findIndex((c) => c.key === pos.key) : -1;
-      setIndex(byKey >= 0 ? byKey : Math.min(pos.at, expanded.length - 1));
+      const at = byKey >= 0 ? byKey : Math.min(pos.at, expanded.length - 1);
+      // Never onto a Your turn she has not answered: its See it opens instead, the tap before it (src/lib/slides/pause.ts).
+      setIndex(resumeIndex(expanded, at, (id) => pos.answers[id] !== undefined));
+      // Her last "Pause here" holds while she has not moved on from the card it kept.
+      const keptPlace = readSlidesPlace(topicId);
+      pausedRef.current = keptPlace?.pausedAt && keptPlace.pausedKey ? { at: keptPlace.pausedAt, key: keptPlace.pausedKey } : null;
     } else if (pos?.done) {
       const fresh = nextRun(pos);
       writePosition(topicId, fresh);
@@ -216,7 +225,28 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   useEffect(() => {
     if (!restored) return;
     writePosition(topicId, { at: index, key: card.key, done: isLast, missed, answers, checked, graded, typed, skipped, figures, steps, typedSteps, shown, seen, seenBefore });
-  }, [answers, card.key, checked, figures, graded, index, isLast, missed, restored, seen, seenBefore, shown, skipped, steps, topicId, typed, typedSteps]);
+    // What Today says of this deck (src/lib/slides/place.ts): the section that opens here and the minutes left.
+    const kept = pausedRef.current && pausedRef.current.key === card.key ? pausedRef.current : null;
+    pausedRef.current = kept;
+    const words = placeWords(cards, index);
+    writeSlidesPlace({
+      v: 1,
+      topicId,
+      subject,
+      unit,
+      slug,
+      title: displayTitle,
+      key: card.key,
+      next: words.next,
+      done: words.done,
+      total: words.total,
+      minutesLeft: minutesLeft(cards, index),
+      finished: isLast,
+      updatedAt: new Date().toISOString(),
+      pausedAt: kept?.at ?? null,
+      pausedKey: kept?.key ?? null,
+    });
+  }, [answers, card.key, cards, checked, displayTitle, figures, graded, index, isLast, missed, restored, seen, seenBefore, shown, skipped, slug, steps, subject, topicId, typed, typedSteps, unit]);
 
   // When the current recall card would come back under each grade, computed once at the moment she shows the answer,
   // and the moment itself: the tap records the grade at that same moment, so the day stored is the day printed
@@ -309,6 +339,36 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     recallSkipped: isSkipped,
   };
   const unlocked = unlockedFor(card, cardState);
+
+  // "Pause here" (the owner, 29 Sep 2026: Read has it, and Slides dropped it): at a stop (src/lib/slides/pause.ts), once
+  // its Your turn is answered (after the re-teach and the answer on a miss), beside Continue. Her own act keeps the card
+  // after the stop as her place, as Read's Pause here keeps hers, and Today names the section and the minutes left.
+  const stops = useMemo(() => pausePoints(cards), [cards]);
+  const stop = unlocked ? (stops.find((p) => p.after === card.key) ?? null) : null;
+  const pauseHere = () => {
+    if (!stop) return;
+    const now = new Date().toISOString();
+    pausedRef.current = { at: now, key: stop.resume };
+    const words = placeWords(cards, stop.resumeAt);
+    writePosition(topicId, { at: stop.resumeAt, key: stop.resume, done: false, missed, answers, checked, graded, typed, skipped, figures, steps, typedSteps, shown, seen, seenBefore });
+    writeSlidesPlace({
+      v: 1,
+      topicId,
+      subject,
+      unit,
+      slug,
+      title: displayTitle,
+      key: stop.resume,
+      next: words.next,
+      done: words.done,
+      total: words.total,
+      minutesLeft: minutesLeft(cards, stop.resumeAt),
+      finished: false,
+      updatedAt: now,
+      pausedAt: now,
+      pausedKey: stop.resume,
+    });
+  };
 
   // A See it seen to its end is remembered for this run, and for the next visit's "Skip to your turn".
   useEffect(() => {
@@ -579,7 +639,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
           onFigure: (s) => setFigures((f) => ({ ...f, [card.key]: s })),
         });
       case "recap":
-        return recapParts(card, enrichment?.recapGlyphs ?? null, retriesNote);
+        return recapParts(card, recapGlyphsFor(card.lines, enrichment), retriesNote);
       case "pointer":
         return pointerParts(card);
       case "recall":
@@ -678,6 +738,12 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
         <Caption className="text-center lg:text-left">Again is honest, not a penalty: the card comes back sooner.</Caption>
         {skipButton}
       </div>
+    ) : stop ? (
+      // To Today, as Read's Pause here goes: the place is kept before the link is followed.
+      <Link href="/" className={quietLink} onClick={pauseHere} data-pause>
+        Pause here
+        <span className="sr-only">{`. Your place is kept; the slides open at ${placeWords(cards, stop.resumeAt).next} next time.`}</span>
+      </Link>
     ) : (
       skipButton
     );

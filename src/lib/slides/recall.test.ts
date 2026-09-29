@@ -2,10 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { RetrievalPrompt } from "@/lib/content/schema";
-import { RECALL_MAX, RECALL_WORDS, answerWords, chooseRecall, expectedAnswer, recallFit } from "./recall";
+import { deckFor } from "./deck";
+import { lessonMinutesFor } from "./minutes";
+import { packTopics, trialDir } from "./packs-corpus.test-helper";
+import { hasSeeBlock } from "./readiness";
+import { RECALL_MAX, RECALL_WORDS, answerWords, chooseRecall, expectedAnswer, placedPrompts, recallFit, shownPrompts } from "./recall";
 
 const ROOT = path.resolve(__dirname, "../../..");
-const TRIAL = path.join(ROOT, "packs", "further-maths", "content", "fm1", "algebraic-fractions-simplify");
 const readJson = (file: string) => JSON.parse(fs.readFileSync(file, "utf8"));
 
 /** The prompts a note places in its lesson, in the note's order, resolved from its bundle. */
@@ -20,19 +23,23 @@ const prompt = (over: Partial<RetrievalPrompt>): RetrievalPrompt =>
   ({ id: "rp.x.01", topic: "x", specRefs: [], kind: "qa", prompt: "What is it?", answer: "It.", keyWords: [], examUnit: "FM1", difficultyPrior: 3, ...over }) as RetrievalPrompt;
 
 describe("the trial topic's recall cards (the owner: 'it doesn't have to be always four … like writing an essay')", () => {
+  // The note on disk (packs/, or SLIDES_TRIAL_DIR: packs-corpus.test-helper.ts): which prompts it places is the content
+  // session's to choose; that they are few and light is the design, and holds on every version it commits.
   it("keeps every prompt the note places when it places at most two, each light, in the note's order", () => {
-    const wired = placed(TRIAL);
+    const wired = placed(trialDir());
+    // At most two (the owner's answer 3), each light: the content session wires short prompts only.
     expect(wired.length).toBeLessThanOrEqual(RECALL_MAX);
     for (const p of wired) expect(recallFit(p), p.id).toMatchObject({ ok: true, reasons: [] });
     expect(chooseRecall(wired)).toEqual(wired);
-    // The trial's design since the teach-first rewrite of 25 Sep: the content session wires two short prompts only.
-    expect(wired.map((p) => p.id.split(".").pop())).toEqual(["02", "08"]);
   });
 
-  it("expects a breath of an answer from each: a² − b² as its brackets, and 'the numbers'", () => {
-    const [squares, numbers] = placed(TRIAL);
-    expect(recallFit(squares)).toMatchObject({ ok: true, expected: "$(a+b)(a-b)$", words: 1 });
-    expect(recallFit(numbers)).toMatchObject({ ok: true, expected: "The numbers", words: 2 });
+  it("expects a breath of an answer from each: a value or a few words, the model answer's explanation set aside", () => {
+    for (const p of placed(trialDir())) {
+      const fit = recallFit(p);
+      expect(fit.expected.trim().length, p.id).toBeGreaterThan(0);
+      expect(fit.words, p.id).toBeLessThanOrEqual(RECALL_WORDS);
+      expect(fit.expected, p.id).toBe(expectedAnswer(p.answer));
+    }
   });
 
   it("would still drop the two the old note placed and the owner found an essay: the three moves (a list), and factor against term (an explanation, two questions)", () => {
@@ -162,5 +169,29 @@ describe("every published lesson", () => {
     const light = [1, 2, 3, 4].map((n) => prompt({ id: `rp.x.0${n}`, answer: "x".repeat(n) }));
     expect(chooseRecall(light)).toHaveLength(2);
     expect(chooseRecall(light, 0)).toEqual([]);
+  });
+});
+
+describe("the prompts a lesson asks, the same in both ways (the lead's ruling, 29 Sep 2026: Read shows only the prompts Slides keeps)", () => {
+  const migrated = packTopics().filter((t) => hasSeeBlock(t.blocks));
+
+  it("Read asks inside the lesson exactly the prompts Slides deals as its recall cards, on every migrated note", () => {
+    expect(migrated.length).toBeGreaterThan(30);
+    let left = 0;
+    for (const t of migrated) {
+      const slides = deckFor(t.topicId, t.blocks, t.bundle.prompts, t.bundle.workedExamples).cards.flatMap((c) => (c.kind === "recall" ? [c.prompt.id] : []));
+      // What TopicContent's renderPrompt draws: shownPrompts, the one rule.
+      const read = shownPrompts(t.blocks, t.bundle.prompts).map((p) => p.id);
+      expect(read, t.file).toEqual(slides);
+      left += placedPrompts(t.blocks, t.bundle.prompts).length - read.length;
+    }
+    console.log(`[recall] ${migrated.length} migrated notes: Read and Slides ask the same prompts; ${left} placed prompts wait under "Say it from memory"`);
+  });
+
+  it("prices Read's lesson with the same prompts, so the two ways' minutes differ only by the figures she acts on", () => {
+    for (const t of migrated) {
+      const m = lessonMinutesFor({ blocks: t.blocks, workedExamples: t.bundle.workedExamples, prompts: t.bundle.prompts, topicId: t.topicId });
+      expect(m.read.minutes + m.slides.figuresToActOn, t.file).toBe(m.slides.minutes);
+    }
   });
 });

@@ -57,7 +57,7 @@ import type { RetrievalPrompt } from "@/lib/content/schema";
 import type { Card } from "./cards";
 import { enrichmentFor } from "./enrichment";
 import { closingRoleOf, ledeOf, lessonBlocks } from "./lesson-blocks";
-import { chooseRecall } from "./recall";
+import { chooseRecall, shownPrompts } from "./recall";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // The constants (each explained in the header above)
@@ -175,11 +175,17 @@ export interface PriceContext {
 }
 
 /**
- * Read's pricing: a See it by `steps`; a placed prompt when the bundle's `prompts` hold it (InlinePrompt draws nothing
- * for one it does not), or every placed prompt when the prompts are not given.
+ * Read's pricing: a See it by `steps`; a placed prompt when the lesson asks it. Given the lesson with the bundle's
+ * `prompts`, that is the ones Slides keeps (recall.ts shownPrompts: the lead's ruling of 29 Sep 2026, Read shows only
+ * the prompts Slides keeps); given the prompts alone, any the bundle holds (InlinePrompt draws nothing for one it does
+ * not); given neither, every placed prompt.
  */
-export function readPricing(steps?: SeeSteps, prompts?: readonly { id: string }[] | null): PriceContext {
-  const held = prompts ? new Set(prompts.map((p) => p.id)) : null;
+export function readPricing(steps?: SeeSteps, prompts?: readonly RetrievalPrompt[] | null, lesson?: readonly unknown[] | null): PriceContext {
+  if (prompts && lesson) {
+    const shown = new Set<string>(shownPrompts(lesson, prompts).map((p) => p.id));
+    return { steps, prompt: (id) => shown.has(id) };
+  }
+  const held = prompts ? new Set<string>(prompts.map((p) => p.id)) : null;
   return { steps, prompt: held ? (id) => held.has(id) : undefined };
 }
 
@@ -472,7 +478,7 @@ export function lessonMinutesFor(note: NoteInput): NoteMinutes {
   const steps = note.steps ?? seeStepsOf(note.workedExamples);
   const held = note.prompts ? new Map<string, RetrievalPrompt>(note.prompts.map((p) => [p.id, p])) : null;
 
-  const readParts = lessonParts(lesson, readPricing(steps, note.prompts));
+  const readParts = lessonParts(lesson, readPricing(steps, note.prompts, lesson));
   // The recall cards Slides keeps: of the placed prompts the bundle holds, in the note's order, recall.ts's choice (the
   // deck's own reading, cards.ts buildDeck).
   const placed = lesson.flatMap((b) => {

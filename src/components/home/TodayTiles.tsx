@@ -21,7 +21,9 @@ import { CairnStack } from "@/components/ux/CairnStack";
 import { CardSkeleton, Loading } from "@/components/ux/Skeleton";
 import { btnPrimary } from "@/components/items/ui";
 import { useSettledReviews } from "@/lib/review/resolve";
-import { READ_LAST_KEY, lastReadLesson, type ReadResume } from "@/components/topic/read-place";
+import { READ_LAST_KEY } from "@/components/topic/read-place";
+import { lastLesson, type LastLesson } from "@/components/topic/last-lesson";
+import { SLIDES_LAST_KEY } from "@/lib/slides/place";
 import { aboutMinutes, pausedRow, tonightHeadline, tonightSentence } from "./tonight-copy";
 
 /**
@@ -142,28 +144,29 @@ export function TodayTiles() {
   const giftNoteOnScreen = false;
 
   /**
-   * The Read lesson she paused and has not finished, from the read-flow agent's record on this device
-   * (src/components/topic/read-place.ts, lastReadLesson): the tile offers the way back to it, and Rowan, the evening she
-   * paused, says the section is done (the trial audit's READ-12: Today used to say nothing of the lesson). Read on the
-   * device once, after mount (the record is in localStorage), and again if another tab changes it.
+   * The lesson she paused and has not finished, in Read or in Slides, from the one record Today reads
+   * (src/components/topic/last-lesson.ts, lastLesson): the tile offers the way back to it, naming the section that opens
+   * next and the minutes left, and Rowan, the evening she paused, says the section is done (the trial audit's READ-12;
+   * the owner, 29 Sep 2026: Slides keeps a stopping point too). Read on the device once, after mount (the records are in
+   * localStorage), and again if another tab changes them.
    */
-  const [paused, setPaused] = useState<{ resume: ReadResume | null; read: boolean }>({ resume: null, read: false });
+  const [paused, setPaused] = useState<{ resume: LastLesson | null; read: boolean }>({ resume: null, read: false });
   useEffect(() => {
-    const read = () => setPaused({ resume: lastReadLesson(), read: true });
+    const read = () => setPaused({ resume: lastLesson(), read: true });
     read();
     const onStorage = (e: StorageEvent) => {
-      if (e.key === null || e.key === READ_LAST_KEY || e.key.startsWith("cairn.read.place.")) read();
+      if (e.key === null || e.key === READ_LAST_KEY || e.key === SLIDES_LAST_KEY || e.key.startsWith("cairn.read.place.") || e.key.startsWith("cairn.slides.place.")) read();
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
   const pausedLesson = paused.resume
     ? {
-        title: paused.resume.place.title,
+        title: paused.resume.title,
         done: paused.resume.done,
-        open: paused.resume.place.open,
-        total: paused.resume.place.total,
-        pausedToday: paused.resume.pausedLast && !!paused.resume.place.pausedAt && todayISO(new Date(paused.resume.place.pausedAt)) === today,
+        open: paused.resume.open,
+        total: paused.resume.total,
+        pausedToday: paused.resume.pausedLast && !!paused.resume.pausedAt && todayISO(new Date(paused.resume.pausedAt)) === today,
       }
     : null;
 
@@ -215,7 +218,7 @@ export function TodayTiles() {
   const sentence = tonightSentence({ due: due ?? 0, gentle, late: companion ? companion.flags.isLate : lateNow(new Date()), paused: pausedLesson !== null });
   const learnHref = nextStep?.href ?? "/learn/";
   // The way back to a paused lesson: the tile's one button when nothing is due, a quiet link under Start otherwise.
-  const pausedWay = paused.resume && pausedLesson ? { ...pausedRow(pausedLesson), href: paused.resume.href } : null;
+  const pausedWay = paused.resume && pausedLesson ? { ...pausedRow({ ...pausedLesson, next: paused.resume.next, minutesLeft: paused.resume.minutesLeft }), href: paused.resume.href } : null;
   const week = sessionsThisWeek ?? 0;
   const soon = papers.slice(0, 3);
 

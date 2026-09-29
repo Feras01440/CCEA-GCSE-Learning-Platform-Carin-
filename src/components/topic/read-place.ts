@@ -45,12 +45,19 @@ export interface ReadPlace {
   updatedAt: string;
   /** Her last "Pause here" in this lesson (ISO 8601), or null. */
   pausedAt: string | null;
+  /**
+   * Minutes left from the section she is in to the lesson's end, as the lesson prices its sections (lesson-plan.ts
+   * LessonSection.minutes): what Today says beside the section (src/components/topic/last-lesson.ts). Absent on a place
+   * kept before it was, or written from sections that carry no minutes.
+   */
+  minutesLeft?: number;
 }
 
-/** A section as the place needs it: its title and its checks (lesson-plan.ts LessonSection fits). */
+/** A section as the place needs it: its title, its checks, and its minutes when known (lesson-plan.ts LessonSection fits). */
 export interface PlaceSection {
   title: string;
   gateIds: readonly string[];
+  minutes?: number;
 }
 
 /** What a new record is told about the lesson it belongs to. */
@@ -73,6 +80,11 @@ export interface Resume {
 
 const clamp = (n: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, n));
 const titleAt = (sections: readonly PlaceSection[], open: number): string => sections[open - 1]?.title ?? "";
+/** The minutes from section `open` to the end, when every section says its own; nothing otherwise. */
+const minutesFrom = (sections: readonly PlaceSection[], open: number): { minutesLeft?: number } =>
+  sections.length > 0 && sections.every((s) => typeof s.minutes === "number")
+    ? { minutesLeft: sections.slice(Math.max(0, open - 1)).reduce((n, s) => n + (s.minutes ?? 0), 0) }
+    : {};
 
 /** The section (1-based) holding the first check she has not answered, or null when every check is answered. */
 export function frontierOf(sections: readonly PlaceSection[], answered: Iterable<string>): number | null {
@@ -130,14 +142,14 @@ export function resumeState({
 
 /** A new record for a lesson: section 1, nothing finished, never paused. */
 export function newPlace(meta: PlaceMeta, sections: readonly PlaceSection[], now: Date): ReadPlace {
-  return { v: 1, ...meta, total: sections.length, open: 1, openTitle: titleAt(sections, 1), finished: false, updatedAt: now.toISOString(), pausedAt: null };
+  return { v: 1, ...meta, total: sections.length, open: 1, openTitle: titleAt(sections, 1), finished: false, updatedAt: now.toISOString(), pausedAt: null, ...minutesFrom(sections, 1) };
 }
 
 /** The place moved to `open` (clamped), with the note's current length and that section's title. */
 function at(place: ReadPlace, sections: readonly PlaceSection[], open: number, now: Date): ReadPlace {
   const total = sections.length;
   const next = total > 0 ? clamp(open, 1, total) : place.open;
-  return { ...place, total, open: next, openTitle: titleAt(sections, next) || place.openTitle, updatedAt: now.toISOString() };
+  return { ...place, total, open: next, openTitle: titleAt(sections, next) || place.openTitle, updatedAt: now.toISOString(), ...minutesFrom(sections, next) };
 }
 
 /** She answered a check or read on: the same section, the time moved on (the lesson she last worked in). */
@@ -241,6 +253,7 @@ function parsePlace(raw: string | null): ReadPlace | null {
       finished: v.finished === true,
       updatedAt: v.updatedAt as string,
       pausedAt: typeof v.pausedAt === "string" ? v.pausedAt : null,
+      ...(typeof v.minutesLeft === "number" && Number.isFinite(v.minutesLeft) && v.minutesLeft >= 0 ? { minutesLeft: Math.floor(v.minutesLeft) } : {}),
     };
   } catch {
     return null;

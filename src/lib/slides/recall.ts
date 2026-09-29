@@ -180,3 +180,23 @@ export function chooseRecall(placed: readonly RetrievalPrompt[], max = RECALL_MA
   const chosen = [...fits].sort((a, b) => a.fit.words - b.fit.words || a.i - b.i).slice(0, Math.max(0, max));
   return chosen.sort((a, b) => a.i - b.i).map((x) => x.p);
 }
+
+/** The prompts a note places in its lesson (its `prompt` blocks, in its order) that the bundle holds. */
+export function placedPrompts(blocks: readonly unknown[] | null | undefined, prompts: readonly RetrievalPrompt[]): RetrievalPrompt[] {
+  const byId = new Map<string, RetrievalPrompt>(prompts.map((p) => [p.id, p]));
+  return (blocks ?? []).flatMap((b) => {
+    const block = typeof b === "object" && b !== null ? (b as { type?: unknown; promptId?: unknown }) : null;
+    const p = block?.type === "prompt" && typeof block.promptId === "string" ? byId.get(block.promptId) : undefined;
+    return p ? [p] : [];
+  });
+}
+
+/**
+ * THE rule for the prompts a lesson asks inside itself, in both ways (the lead's ruling, 29 Sep 2026: Read shows only
+ * the prompts Slides keeps): of the prompts the note places, the light ones `chooseRecall` keeps. Slides deals them as
+ * its recall cards; Read draws them where the note places them; a placed prompt left out waits with the topic's other
+ * prompts ("Say it from memory"), never inside the lesson.
+ */
+export function shownPrompts(blocks: readonly unknown[] | null | undefined, prompts: readonly RetrievalPrompt[]): RetrievalPrompt[] {
+  return chooseRecall(placedPrompts(blocks, prompts));
+}

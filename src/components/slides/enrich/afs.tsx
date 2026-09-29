@@ -19,7 +19,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { clsx } from "clsx";
-import { BOTTOM, EMPTY_TAP, RESULT, SHARED, TOP, checkTap, pillReading, productForm, rightLine, substituteFor, tapGroupLabel, tapPair, type PillId, type PillSpec, type TapState } from "./afs-model";
+import { BOTTOM, EMPTY_TAP, RESULT, SHARED, SUBSTITUTE, SUBSTITUTED, TOP, checkTap, pillReading, productForm, rightLine, substituteFor, tapGroupLabel, tapPair, type PillId, type PillSpec, type TapState } from "./afs-model";
 
 const MATHS = "var(--serif-lesson)";
 const UI = "var(--font-inter), ui-sans-serif, system-ui, sans-serif";
@@ -324,27 +324,27 @@ export function Substitute({ hers, correct }: { hers: string; correct: boolean }
     <svg
       viewBox="0 0 340 132"
       role="img"
-      aria-label={`Put x = 1 into both: the fraction (1 + 4) over 1 is 5, but ${label} is ${value}. Not the same.`}
+      aria-label={`Put x = ${SUBSTITUTE.x} into both: the fraction (${SUBSTITUTED.top}) over ${SUBSTITUTED.bottom} is ${SUBSTITUTE.value}, but ${label} is ${value}. Not the same.`}
       className="block h-auto w-full max-w-[356px]"
       data-reaction="afs.substitute"
     >
       <text x={20} y={22} fontSize={15} fill="var(--ink-2)" fontFamily={UI} fontWeight={500}>
-        Put x = 1 into both:
+        Put x = {SUBSTITUTE.x} into both:
       </text>
       <g>
         <text x={58} y={54} fontSize={20} textAnchor="middle" fill="var(--ink)" fontFamily={MATHS}>
-          1 + 4
+          {SUBSTITUTED.top}
         </text>
         <Vinculum x1={34} x2={82} y={62} />
         <text x={58} y={86} fontSize={20} textAnchor="middle" fill="var(--ink)" fontFamily={MATHS}>
-          1
+          {SUBSTITUTED.bottom}
         </text>
         <text x={96} y={70} fontSize={20} fill="var(--ink)" fontFamily={MATHS}>
           =
         </text>
         <rect x={116} y={46} width={48} height={38} rx={10} fill="var(--ok-wash)" stroke="var(--ok)" strokeWidth={2} />
         <text x={140} y={73} fontSize={22} textAnchor="middle" fill="var(--ok)" fontWeight={600} fontFamily={MATHS}>
-          5
+          {SUBSTITUTE.value}
         </text>
         <text x={140} y={108} fontSize={15} textAnchor="middle" fill="var(--ink-2)" fontFamily={UI} data-label="fraction">
           the fraction
@@ -371,10 +371,10 @@ export function Substitute({ hers, correct }: { hers: string; correct: boolean }
 }
 
 /* ------------------------------------------------------------------------------------------------------------ */
-/* Recap glyphs, one a line of "You can now": factorise, cancel, finish on the numbers and any lone x, and turn a     */
-/* division into a multiplication.                                                                                  */
+/* Recap glyphs, one a line of "You can now", each found by its line's words (recapGlyphsFor): factorise, cancel,     */
+/* finish on the numbers and any lone x, turn a division into a multiplication, and the number first (64 − x²).      */
 
-export const RECAP_GLYPHS = ["factorise", "cancel", "numbers", "divide"] as const;
+export const RECAP_GLYPHS = ["factorise", "cancel", "numbers", "divide", "reverse"] as const;
 export type RecapGlyphKind = (typeof RECAP_GLYPHS)[number];
 export const isRecapGlyph = (kind: string): kind is RecapGlyphKind => (RECAP_GLYPHS as readonly string[]).includes(kind);
 
@@ -410,6 +410,17 @@ export function RecapGlyph({ kind, size = 44 }: { kind: RecapGlyphKind; size?: n
         <circle cx={11} cy={27.5} r={1.8} fill="var(--ink)" />
         <path d="M19.5 22 L26.5 22 M23.5 18.8 L26.8 22 L23.5 25.2" fill="none" stroke="var(--ink-2)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
         <path d="M31 17 L39 27 M39 17 L31 27" stroke="var(--accent)" strokeWidth={2.2} strokeLinecap="round" />
+      </svg>
+    );
+  if (kind === "reverse")
+    // "Read the newest shapes the other way round": 64 − x² is (8 − x)(8 + x), the number first in each bracket, the 8
+    // in the accent because it is what she writes first (the v3 note's fifth line of "You can now").
+    return (
+      <svg {...box}>
+        <rect x={1} y={1} width={42} height={42} rx={10} fill="var(--tint-wash)" />
+        <text x={22} y={27} textAnchor="middle" fontSize={15} fontWeight={600} fill="var(--ink)" fontFamily={MATHS}>
+          (<tspan fill="var(--accent)">8</tspan>−x)
+        </text>
       </svg>
     );
   // "Finish on the numbers and any lone x": 2x over 4x is only 1 over 2 (the note's "a 2 over a 4, or an x over an x").

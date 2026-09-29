@@ -114,8 +114,9 @@ export default async function TopicPage({ params }: { params: Promise<{ subject:
     const blocks = shippedFile.noteBlocks;
     // A See it that names a worked example is priced by its steps, in Read (here) as in the deck (below).
     const steps = seeStepsOf(shippedFile.workedExamples);
-    const hero = heroDataFor(blocks, steps);
-    const sections = lessonSections(blocks, hero.lede, steps);
+    // Priced with the prompts the lesson asks (the ones Slides keeps: recall.ts shownPrompts), as TopicContent prices it.
+    const hero = heroDataFor(blocks, steps, shippedFile.prompts);
+    const sections = lessonSections(blocks, hero.lede, steps, shippedFile.prompts);
     const firstHeading = (blocks.find((b) => (b as { type?: string }).type === "h") as { text?: string } | undefined)?.text ?? null;
     const shownTitle = displayTitle(t.title, firstHeading, hero.short);
     // A topic with Slides: the deck's own numbers, the ones its title card and its Start button print (src/lib/slides).

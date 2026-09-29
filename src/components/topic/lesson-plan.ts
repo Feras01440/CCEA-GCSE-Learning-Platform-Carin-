@@ -307,7 +307,8 @@ export function heroDataFor(blocks: readonly unknown[] | null | undefined, steps
 
 /** The lesson's minutes as the track and the Contents print them: what its sections' labels add up to. */
 export function lessonMinutes(blocks: readonly unknown[] | null | undefined, lede?: string, steps?: SeeSteps, prompts?: readonly RetrievalPrompt[] | null): number {
-  return lessonTotal(lessonParts(lessonBlocks(blocks ?? [], lede), readPricing(steps, prompts)));
+  const lesson = lessonBlocks(blocks ?? [], lede);
+  return lessonTotal(lessonParts(lesson, readPricing(steps, prompts, lesson)));
 }
 
 /** Every gate in the note, in order. */
@@ -422,7 +423,8 @@ export function lessonSections(
   steps?: SeeSteps,
   prompts?: readonly RetrievalPrompt[] | null,
 ): LessonSection[] {
-  const parts = lessonParts(lessonBlocks(blocks ?? [], lede), readPricing(steps, prompts));
+  const lesson = lessonBlocks(blocks ?? [], lede);
+  const parts = lessonParts(lesson, readPricing(steps, prompts, lesson));
   const shares = partShares(parts);
   return parts.map((p, i) => ({
     n: i + 1,

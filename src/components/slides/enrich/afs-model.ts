@@ -143,6 +143,19 @@ export function rightLine(): string {
 }
 
 /**
+ * g2's test, as its explanation words it: put x = 1 into (x + 4)/x, which gives 5. The drawing prints these numbers and
+ * nothing else, and afs-model.test.ts reads g2 from the note on disk: if its question or its explanation ever tests
+ * another fraction or another value, that test fails before the picture can contradict the words beside it.
+ */
+export const SUBSTITUTE = { x: 1, top: "x + 4", bottom: "x", value: 5 } as const;
+
+/** The fraction with the value put in, as the drawing writes it: 1 + 4 over 1. */
+export const SUBSTITUTED = {
+  top: SUBSTITUTE.top.replace(/x/g, String(SUBSTITUTE.x)),
+  bottom: SUBSTITUTE.bottom.replace(/x/g, String(SUBSTITUTE.x)),
+} as const;
+
+/**
  * The consequence drawn for gate g2 ("What cancels in this fraction? (x + 4)/x"): put x = 1 into the fraction (5) and
  * into the cancelled version she chose, as the gate's explanation does. "The x, leaving 4" gives 4; "The x and the 4"
  * leaves nothing but 1. On the right answer the drawing shows the tempting route (the x struck, leaving 4) as the reason

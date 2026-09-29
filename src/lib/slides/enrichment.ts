@@ -13,8 +13,11 @@ export interface SlidesEnrichmentSpec extends SlidesEnrichment {
   illustrations?: Record<string, string>;
   /** Gate ids whose verdict draws a consequence, by the id the component registry knows. */
   reactions?: Record<string, string>;
-  /** Recap glyph ids by line index. */
-  recapGlyphs?: string[];
+  /**
+   * The recap's glyphs, each by the words its line opens with (lower case), never by the line's place: a line the note
+   * adds, drops or reorders can then never be drawn with another line's picture (recapGlyphsFor).
+   */
+  recapGlyphs?: Array<{ opens: string; glyph: string }>;
 }
 
 export const ENRICHMENT: Record<string, SlidesEnrichmentSpec> = {
@@ -31,12 +34,32 @@ export const ENRICHMENT: Record<string, SlidesEnrichmentSpec> = {
     },
     // g2's explanation tests the cancel with x = 1 (5 against her 4 or 1): the consequence draws that test.
     reactions: { g2: "afs.substitute" },
-    // One glyph a line of "You can now", in the note's order: factorise; cancel only factors; finish on the numbers and
-    // any lone x; turn a division into a multiplication.
-    recapGlyphs: ["factorise", "cancel", "numbers", "divide"],
+    // One glyph a line of "You can now", each found by what its line says: factorise both lines; cancel only factors;
+    // finish on the numbers and any lone x; turn a division into a multiplication; read the newest shapes the other way
+    // round, the number first (the v3 note's fifth line, 29 Sep 2026).
+    recapGlyphs: [
+      { opens: "factorise both lines", glyph: "factorise" },
+      { opens: "cancel only factors", glyph: "cancel" },
+      { opens: "finish on the numbers", glyph: "numbers" },
+      { opens: "turn a division into a multiplication", glyph: "divide" },
+      { opens: "read the newest shapes", glyph: "reverse" },
+    ],
   },
 };
 
 export function enrichmentFor(topicId: string): SlidesEnrichmentSpec | null {
   return ENRICHMENT[topicId] ?? null;
+}
+
+/**
+ * The glyph for each line of a recap, found by what the line says (its opening words, as the enrichment lists them),
+ * never by where it stands, so a picture can never sit beside another line's words (the owner: no contradiction between
+ * a picture and its prose). All or nothing: when any line has no glyph of its own, none is drawn and every line keeps
+ * the plain marker, so the list reads as one kind of list. Null when the topic registers no glyphs.
+ */
+export function recapGlyphsFor(lines: readonly string[], spec: SlidesEnrichmentSpec | null): string[] | null {
+  const table = spec?.recapGlyphs ?? [];
+  if (table.length === 0 || lines.length === 0) return null;
+  const glyphs = lines.map((line) => table.find((g) => line.trim().toLowerCase().startsWith(g.opens))?.glyph ?? null);
+  return glyphs.every((g): g is string => g !== null) ? glyphs : null;
 }

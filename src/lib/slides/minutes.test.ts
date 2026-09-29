@@ -40,6 +40,7 @@ import {
   type PartCost,
 } from "./minutes";
 import { packTopics } from "./packs-corpus.test-helper";
+import { shownPrompts } from "./recall";
 import { SEE_FIXTURE_BLOCKS, SEE_FIXTURE_PROMPTS, SEE_FIXTURE_WORKED_EXAMPLE } from "./see-fixture";
 
 const words = (n: number) => Array.from({ length: n }, () => "word").join(" ");
@@ -50,7 +51,7 @@ const gate = (id: string) => ({ type: "gate", id, kind: "choice", prompt: "Which
 const WE = { id: "we.fm.u1.minutes-fixture.01", stem: "Simplify $\\frac{x^{2}-9}{x+3}$.", steps: steps(3), finalAnswer: "$x-3$" } as unknown as WorkedExample;
 /** Two light recall prompts (a formula, a key phrase): both become recall cards, as the teach-first fixture's do. */
 const PROMPTS = SEE_FIXTURE_PROMPTS as unknown as RetrievalPrompt[];
-/** A prompt that asks for an explanation: Read shows it; Slides keeps no such card (recall.ts). */
+/** A prompt that asks for an explanation: neither way asks it inside the lesson (recall.ts shownPrompts; the lead's ruling, 29 Sep 2026). */
 const HEAVY = {
   id: "rp.fm.u1.minutes-fixture.09",
   topic: "fm.u1.minutes-fixture",
@@ -209,17 +210,18 @@ describe("the one difference allowed between the two ways: what one shows and th
     expect(deck.stats.minutes).toBe(13);
   });
 
-  it("prices a prompt Read shows and Slides leaves out (not light) in Read only: 30 s in its part, nothing else", () => {
+  it("prices a placed prompt the rule leaves out (not light) in neither way: the lesson does not ask it (the lead's ruling, 29 Sep 2026)", () => {
     const note = [...NOTE, { type: "prompt", promptId: HEAVY.id }];
     const est = estimate(note, [...PROMPTS, HEAVY]);
-    const last = est.read.parts.length - 1;
     est.read.parts.forEach((r, i) => {
       const s = est.slides.parts[i]!;
       expect(r.words, r.heading).toBe(s.words);
-      expect(r.seconds - s.seconds, r.heading).toBe(i === last ? RECALL_SECONDS : 0);
+      expect(r.seconds, r.heading).toBe(s.seconds);
     });
-    // 128 460 + 5 400 units = 12.39 minutes in Read; Slides keeps the two light cards: 11.89. Both round to 12.
+    // Read asks the two light prompts Slides keeps, and prices those: 11.89 minutes in both ways, 12 printed. (Before the
+    // ruling Read showed the heavy one too: 12.39.) The heavy one waits under "Say it from memory" (TopicContent).
     expect([est.read.minutes, est.slides.minutes]).toEqual([12, 12]);
+    expect(est.read.minutes).toBe(estimate(NOTE, PROMPTS).read.minutes);
     const deck = deckOf(note, [...PROMPTS, HEAVY]);
     expect(deck.stats.recall).toBe(2);
     expect(deck.stats.minutes).toBe(est.slides.minutes);
@@ -357,28 +359,23 @@ describe("every note in packs/: the app's numbers are the module's, and Read and
     }
   });
 
-  it("differs between Read and Slides only by the figures to act on and the prompts Slides does not keep", () => {
+  it("differs between Read and Slides only by the figures to act on: Read asks the prompts Slides keeps (the lead's ruling, 29 Sep 2026)", () => {
     let differ = 0;
     const why: string[] = [];
     for (const t of topics) {
       const { read, slides } = t.est;
       const lesson = lessonBlocks<unknown>(t.blocks, ledeOf(t.blocks));
-      const held = new Set<string>(t.prompts.map((p) => p.id));
-      const placed = lesson.filter((b) => (b as { type?: string }).type === "prompt" && held.has((b as { promptId: string }).promptId)).length;
-      const kept = buildDeck(t.blocks, t.prompts).stats.recall;
-      let leftOut = 0;
+      // The prompts each way asks inside the lesson are the same (recall.ts shownPrompts), so every part costs the same.
+      expect(shownPrompts(lesson, t.prompts).length, t.file).toBe(buildDeck(t.blocks, t.prompts).stats.recall);
       read.parts.forEach((r, i) => {
         const s = slides.parts[i]!;
         expect(r.words, `${t.file} part ${i + 1}`).toBe(s.words);
-        const gap = r.seconds - s.seconds;
-        expect(gap >= 0 && gap % RECALL_SECONDS === 0, `${t.file} part ${i + 1}: ${gap} s`).toBe(true);
-        leftOut += gap / RECALL_SECONDS;
+        expect(r.seconds, `${t.file} part ${i + 1}`).toBe(s.seconds);
       });
-      expect(leftOut, t.file).toBe(placed - kept);
       if (read.minutes !== slides.minutes) {
         differ += 1;
-        why.push(`${t.file}: Read ${read.minutes}, Slides ${slides.minutes} (${slides.figuresToActOn} to act on, ${leftOut} prompt(s) Slides leaves out)`);
-        expect(leftOut > 0 || slides.figuresToActOn > 0, t.file).toBe(true);
+        why.push(`${t.file}: Read ${read.minutes}, Slides ${slides.minutes} (${slides.figuresToActOn} to act on)`);
+        expect(slides.figuresToActOn > 0, t.file).toBe(true);
       }
     }
     console.log(`[minutes] ${topics.length} notes; Read and Slides differ on ${differ}:${why.length ? `\n  ${why.join("\n  ")}` : " none"}`);

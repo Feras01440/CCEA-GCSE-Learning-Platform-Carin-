@@ -5,6 +5,7 @@ import { gateOptions, markGate, type GateBlock } from "@/components/items/gates"
 import { heroDataFor, lessonBlocks } from "@/components/topic/lesson-plan";
 import type { RetrievalPrompt } from "@/lib/content/schema";
 import { deckFor } from "@/lib/slides/deck";
+import { trialNote } from "@/lib/slides/packs-corpus.test-helper";
 import { deckGateOrders, deckGatePlacements, optionTex, positionalSentences, positionalWording, retryOrder, shownOptions } from "./gate-order";
 
 const ROOT = path.resolve(__dirname, "../..");
@@ -40,20 +41,20 @@ const NOTES: Note[] = (() => {
 const choiceGates = (blocks: readonly unknown[]): GateBlock[] =>
   blocks.filter((b): b is GateBlock => (b as GateBlock).type === "gate" && (b as GateBlock).kind === "choice" && ((b as GateBlock).options?.length ?? 0) >= 2);
 
-const TRIAL = NOTES.find((n) => n.topicId === "fm.u1.algebraic-fractions-simplify")!;
+/** The trial's note as it is on disk (packs/, or SLIDES_TRIAL_DIR): its gates are read from it, never typed here. */
+const TRIAL = { blocks: trialNote().blocks };
 
 describe("the trial topic: the owner's finding that the right answer was nearly always A", () => {
   it("spreads its right answers over A, B and C as evenly as its gates allow, with no place three gates running", () => {
     const placed = deckGatePlacements(TRIAL.blocks);
-    // Every choice gate of the note, in the note's order (eight since the teach-first rewrite of 25 Sep).
+    // Every choice gate of the note, in the note's order (eleven in the v3 note of 29 Sep, eight in the v2 one).
     expect([...placed.keys()]).toEqual(choiceGates(TRIAL.blocks).map((g) => g.id));
-    expect([...placed.keys()]).toEqual(["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"]);
     const at = [...placed.values()].map((p) => p.answerAt);
     const counts = [0, 1, 2].map((p) => at.filter((a) => a === p).length);
-    // Nothing is held in place (below), so the places differ by one at most: 3, 3, 2 for eight gates.
+    // Nothing is held in place (below), so the places differ by one at most: 4, 4, 3 for eleven gates.
     expect(Math.max(...counts) - Math.min(...counts), `answers at ${at.map((a) => "ABC"[a]).join("")}`).toBeLessThanOrEqual(1);
     // The seeded shuffle alone had put five of the seven at A and none at C (build 7, measured 24 Sep 23:59).
-    expect(counts[0]).toBeLessThan(5);
+    expect(counts[0]).toBeLessThanOrEqual(Math.ceil(at.length / 3));
     for (let i = 2; i < at.length; i += 1) expect(at[i] === at[i - 1] && at[i] === at[i - 2], `three at ${"ABC"[at[i]]} ending at gate ${i + 1}`).toBe(false);
   });
 
@@ -64,7 +65,7 @@ describe("the trial topic: the owner's finding that the right answer was nearly 
       expect(placed.get(g.id)?.pinned, g.id).toBe(named);
       if (named) expect(placed.get(g.id)?.order, g.id).toEqual(g.options);
     }
-    // The content session reworded g4's and g5's "the second option … the third …" (audit LD-01): all eight take part.
+    // The content session reworded every "the second option … the third …" (audit LD-01): every gate takes part.
     expect([...placed.values()].filter((p) => p.pinned)).toEqual([]);
   });
 });
@@ -221,7 +222,7 @@ describe("how an option's maths is set, in Slides and in Read (audit LD-16)", ()
     expect(optionTex("$\\frac{x+2}{x-2}$")).toBe("$\\dfrac{x+2}{x-2}$");
     expect(optionTex("$\\frac{(x+7)(x+2)}{(x+7)(x-2)}$")).toBe("$\\dfrac{(x+7)(x+2)}{(x+7)(x-2)}$");
     expect(optionTex("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words")).toBe("$\\dfrac{1}{2}$ and $\\tfrac{1}{2}$ and plain words");
-    // Every fraction option of the trial (g4's three, g10's two): set at text size, nothing else changed, marked as authored.
+    // Every fraction option of the trial's gates: set at text size, nothing else changed, marked as authored.
     const fractions = choiceGates(TRIAL.blocks).flatMap((g) => g.options!.filter((o) => o.includes("\\frac{")).map((o) => [g, o] as const));
     expect(fractions.length).toBeGreaterThanOrEqual(3);
     for (const [g, opt] of fractions) {

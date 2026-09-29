@@ -158,7 +158,9 @@ test.describe("Today", () => {
     });
     await page.reload();
     const tonight = tile(page, "Tonight");
-    await expect(tonight.locator("[data-paused-lesson]")).toHaveText(/Simplifying algebraic fractions · section 4 of 9 next/);
+    // The row names the section by its title (src/components/topic/last-lesson.ts, the one record Today reads for Read and
+    // Slides, 29 Sep 2026), with the minutes left when the place carries them (this seeded place, an older one, does not).
+    await expect(tonight.locator("[data-paused-lesson]")).toHaveText(/Simplifying algebraic fractions · Fully means fully next/);
     // Nothing is back on a new device, so the way back is the one accented action, and it lands on her section.
     const back = tonight.getByRole("link", { name: /^Carry on/ });
     await expect(back).toHaveAttribute("href", "/learn/further-maths/FM1/algebraic-fractions-simplify/#resume");

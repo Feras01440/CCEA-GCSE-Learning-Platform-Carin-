@@ -61,6 +61,10 @@ export interface PausedLesson {
   /** The section it opens at. */
   open: number;
   total: number;
+  /** That section by its title, when the lesson's record knows it (src/components/topic/last-lesson.ts): said in place of its number. */
+  next?: string;
+  /** The minutes left, when known: said after it, so she can plan her stop (never a card number). */
+  minutesLeft?: number | null;
 }
 
 /**
@@ -69,5 +73,7 @@ export interface PausedLesson {
  * is done (lines.ts today.paused-done), so the two never say the same thing.
  */
 export function pausedRow(p: PausedLesson): { label: string; action: string } {
-  return { label: `${p.title} · section ${p.open} of ${p.total} next`, action: "Carry on" };
+  const where = p.next ? `${p.next} next` : `section ${p.open} of ${p.total} next`;
+  const left = p.minutesLeft && p.minutesLeft > 0 ? ` · about ${p.minutesLeft} minute${p.minutesLeft === 1 ? "" : "s"} left` : "";
+  return { label: `${p.title} · ${where}${left}`, action: "Carry on" };
 }

@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { enrichmentFor } from "@/lib/slides/enrichment";
+import { enrichmentFor, recapGlyphsFor } from "@/lib/slides/enrichment";
 import { FigCancel, RECAP_GLYPHS, RecapGlyph, Substitute, TapToCancel, isRecapGlyph } from "./afs";
 import { PILLS, RESULT, SHARED } from "./afs-model";
 import { INTERACTIONS } from "./index";
@@ -78,10 +78,12 @@ describe("the g2 consequence and the recap glyphs", () => {
     }
   });
 
-  it("has a drawn glyph for every line of the trial's recap, and draws each one", () => {
-    const kinds = enrichmentFor("fm.u1.algebraic-fractions-simplify")?.recapGlyphs ?? [];
-    expect(kinds).toEqual(["factorise", "cancel", "numbers", "divide"]);
-    for (const kind of kinds) expect(isRecapGlyph(kind), kind).toBe(true);
+  it("has a drawn glyph for each line the trial's recap can say, found by its words, and draws each one", () => {
+    const spec = enrichmentFor("fm.u1.algebraic-fractions-simplify");
+    const table = spec?.recapGlyphs ?? [];
+    for (const { glyph } of table) expect(isRecapGlyph(glyph), glyph).toBe(true);
+    // The table names every drawn glyph, and draws none it does not name. (cards.test.ts checks the note's own lines.)
+    expect(new Set(table.map((g) => g.glyph))).toEqual(new Set(RECAP_GLYPHS));
     for (const kind of RECAP_GLYPHS) {
       const markup = renderToStaticMarkup(createElement(RecapGlyph, { kind }));
       expect(markup, kind).toContain(`data-glyph="${kind}"`);
@@ -92,5 +94,13 @@ describe("the g2 consequence and the recap glyphs", () => {
     const numbers = renderToStaticMarkup(createElement(RecapGlyph, { kind: "numbers" }));
     expect(numbers).toContain(">2x</text>");
     expect(numbers).toContain(">4x</text>");
+    // "Read the newest shapes the other way round": the number first, in the accent.
+    const reverse = renderToStaticMarkup(createElement(RecapGlyph, { kind: "reverse" }));
+    expect(reverse).toContain(">8</tspan>");
+    // A line's glyph is found by its words, never its place; and if one line has none, no line has one.
+    expect(recapGlyphsFor(["Factorise both lines fully.", "Cancel only factors, never terms."], spec)).toEqual(["factorise", "cancel"]);
+    expect(recapGlyphsFor(["Cancel only factors, never terms.", "Factorise both lines fully."], spec)).toEqual(["cancel", "factorise"]);
+    expect(recapGlyphsFor(["Factorise both lines fully.", "Something the table does not know."], spec)).toBeNull();
+    expect(recapGlyphsFor(["Factorise both lines fully."], null)).toBeNull();
   });
 });

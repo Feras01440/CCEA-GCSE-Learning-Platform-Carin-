@@ -466,6 +466,7 @@ export function recapParts(card: RecapCard, glyphs: string[] | null, retriesNote
   };
 }
 
+/** The pointer: what the paper does with the lesson, in its recess, and the note's drawing of it beside it (the marks a scheme gives) when the note has one. */
 export function pointerParts(card: PointerCard): CardParts {
   return {
     eyebrow: "Before the paper",
@@ -475,7 +476,7 @@ export function pointerParts(card: PointerCard): CardParts {
         <Prose md={card.md} size="explain" />
       </Recess>
     ),
-    right: null,
+    right: card.figure?.svg ? <Illustrated id={null} figure={card.figure} caption={card.figure.caption ?? null} /> : null,
   };
 }
 

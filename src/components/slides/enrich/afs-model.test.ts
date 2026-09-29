@@ -1,7 +1,6 @@
-import fs from "node:fs";
-import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { BOTTOM, EMPTY_TAP, PILLS, RESULT, SHARED, TOP, checkTap, pillReading, productForm, rightLine, substituteFor, tapGroupLabel, tapPair, type PillId, type TapState } from "./afs-model";
+import { trialNote } from "@/lib/slides/packs-corpus.test-helper";
+import { BOTTOM, EMPTY_TAP, PILLS, RESULT, SHARED, SUBSTITUTE, SUBSTITUTED, TOP, checkTap, pillReading, productForm, rightLine, substituteFor, tapGroupLabel, tapPair, type PillId, type TapState } from "./afs-model";
 
 const pair = (state: TapState, a: PillId, b: PillId) => tapPair(state, a, b);
 const ALL = PILLS.map((p) => p.id);
@@ -125,13 +124,8 @@ function pillOfText(id: PillId): string {
  * must be the note's example: if the content changes the example, this fails before a picture can contradict its words.
  */
 describe("the drawing is the note's own example (the owner rejects any contradiction between a picture and its prose)", () => {
-  const ROOT = path.resolve(__dirname, "../../../..");
-  const note = JSON.parse(fs.readFileSync(path.join(ROOT, "packs/further-maths/content/fm1/algebraic-fractions-simplify/note.blocks.json"), "utf8")) as Array<{
-    type: string;
-    alt?: string;
-    caption?: string;
-    svg?: string;
-  }>;
+  // The note on disk, whatever version the content session has committed (packs/, or SLIDES_TRIAL_DIR).
+  const note = trialNote().blocks as Array<{ type: string; alt?: string; caption?: string; svg?: string }>;
   const hero = note.find((b) => b.type === "figure")!;
 
   it("says what the hero figure's caption and description say: the 3 and (x + 7) divide out, leaving x over 2(x − 7)", () => {
@@ -159,24 +153,33 @@ describe("the g2 consequence: x = 1 in the fraction and in her cancelled version
     expect(substituteFor(hers, correct)).toEqual(shown);
   });
 
+  // g2 as the note on disk has it (packs/, or SLIDES_TRIAL_DIR): the drawing's numbers are checked against its words.
+  const g2 = (trialNote().blocks as Array<{ type: string; id?: string; prompt?: string; options?: string[]; answer?: string; explain?: string; optionNotes?: Array<{ option: string; why: string }> }>).find(
+    (b) => b.type === "gate" && b.id === "g2",
+  )!;
+
   it("knows every option g2 carries in the note, so her own value is drawn, never a stand-in", () => {
-    const ROOT = path.resolve(__dirname, "../../../..");
-    const note = JSON.parse(fs.readFileSync(path.join(ROOT, "packs/further-maths/content/fm1/algebraic-fractions-simplify/note.blocks.json"), "utf8")) as Array<{
-      type: string;
-      id?: string;
-      prompt?: string;
-      options?: string[];
-      answer?: string;
-      explain?: string;
-    }>;
-    const g2 = note.find((b) => b.type === "gate" && b.id === "g2")!;
     for (const opt of g2.options!) {
       const right = opt === g2.answer;
       expect(substituteFor(opt, right).label, opt).toBe(right ? "the cancelled version" : "your cancelled version");
     }
-    // The picture is the explanation's own test: put x = 1 in, and the fraction is 5.
-    expect(g2.explain).toMatch(/\$x\s*=\s*1\$/);
-    expect(g2.explain).toMatch(/\$5\$/);
-    expect(g2.prompt).toMatch(/\\dfrac\{x\+4\}\{x\}/);
+  });
+
+  it("draws the note's own test: the question's fraction, put the explanation's x in, gives the explanation's value", () => {
+    // The question's fraction is the drawing's, (x + 4) over x.
+    const frac = /\\d?frac\{([^{}]+)\}\{([^{}]+)\}/.exec(g2.prompt!)!;
+    expect([frac[1], frac[2]]).toEqual([SUBSTITUTE.top, SUBSTITUTE.bottom].map((s) => s.replace(/\s+/g, "")));
+    // At the drawing's x it is the drawing's value (a linear top and bottom, read as the note writes them).
+    const at = (e: string) => Number(Function("x", `return ${e.replace(/(\d)x/g, "$1*x")};`)(SUBSTITUTE.x));
+    expect(at(frac[1]) / at(frac[2])).toBe(SUBSTITUTE.value);
+    expect(SUBSTITUTED).toEqual({ top: `${SUBSTITUTE.x} + 4`, bottom: `${SUBSTITUTE.x}` });
+    // The explanation tests that x and names that value, with or without the maths dollars.
+    expect(g2.explain).toMatch(new RegExp(`\\$x\\s*=\\s*${SUBSTITUTE.x}\\$`));
+    expect(g2.explain).toMatch(new RegExp(`(^|[^\\d])${SUBSTITUTE.value}([^\\d]|$)`));
+    // Where the note says why a wrong option is wrong, it names the fraction's value and the value the drawing gives hers.
+    for (const n of g2.optionNotes ?? []) {
+      expect(n.why, n.option).toMatch(new RegExp(`(^|[^\\d])${SUBSTITUTE.value}([^\\d]|$)`));
+      expect(n.why, n.option).toMatch(new RegExp(`(^|[^\\d])${substituteFor(n.option, false).value}([^\\d]|$)`));
+    }
   });
 });

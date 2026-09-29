@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { markGate, type GateBlock, type SeeBlock } from "@/components/items/gates";
 import { markAnswer } from "@/components/items/mark";
@@ -7,14 +5,12 @@ import type { AnswerSpec, WorkedExample } from "@/lib/content/schema";
 import { SEE_KINDS } from "@/lib/content/schema";
 import { buildDeck } from "./cards";
 import { diagnosisFor, lineAbout, misconceptionTags, optionNoteFor, resolveSee, seeShowsAnswer, stepPointer, stepPointers, twinGate, twinOptions, typedStep } from "./see";
+import { trialNote } from "./packs-corpus.test-helper";
 import { SEE_FIXTURE_BLOCKS, SEE_FIXTURE_WE_ID, SEE_FIXTURE_WORKED_EXAMPLE } from "./see-fixture";
 import { spokenTex, spokenText } from "./text";
 
-const ROOT = path.resolve(__dirname, "../../..");
-const trialGate = (id: string): GateBlock => {
-  const blocks = JSON.parse(fs.readFileSync(path.join(ROOT, "packs/further-maths/content/fm1/algebraic-fractions-simplify/note.blocks.json"), "utf8")) as GateBlock[];
-  return blocks.find((b) => b.type === "gate" && b.id === id)!;
-};
+/** The trial's gates as its note on disk has them (packs/, or SLIDES_TRIAL_DIR: packs-corpus.test-helper.ts). */
+const trialGates = (): GateBlock[] => (trialNote().blocks as GateBlock[]).filter((b) => b.type === "gate");
 const fixtureBlock = <T>(pred: (b: Record<string, unknown>) => boolean) => (SEE_FIXTURE_BLOCKS as Array<Record<string, unknown>>).find(pred) as T;
 const WES = [SEE_FIXTURE_WORKED_EXAMPLE as unknown as WorkedExample];
 
@@ -96,12 +92,16 @@ describe("the re-teach and the answer", () => {
   });
 
   it("names her option with the explanation's own sentence about it, found by its formula", () => {
-    // The trial's g12 and g10, as the note has them.
-    expect(diagnosisFor(trialGate("g12").explain, "$(x+9)^{2}$")).toMatch(/^\$\(x\+9\)\^\{2\}\$ gives/);
-    expect(diagnosisFor(trialGate("g10").explain, "No — it becomes $\\frac{14}{7x-63}$")).toBe("Multiplying the bracket out to $\\frac{14}{7x-63}$ only hides that factor.");
+    // The trial's g12, g10 and g2 as its v3 note words them (29 Sep 2026): the heuristic's test data, kept here so a
+    // later edit of the note cannot change what this test means.
+    const g12 = "Eighty-one is $9^{2}$, so $x^{2}-81$ is a square minus a square, as in step 1 of the See it: one bracket takes $+9$, the other $-9$, and the middle terms cancel. $(x+9)^{2}$ gives $x^{2}+18x+81$, and $(x+81)(x-1)$ gives $x^{2}+80x-81$. So it is $(x+9)(x-9)$.";
+    const g10 = "Look at the numbers, as step 4 of the See it did: 14 and 7 share a factor of 7, so dividing both by 7 gives $\\frac{2}{x-9}$. Multiplying the bracket out to $\\frac{14}{7x-63}$ only hides that factor. So no: it becomes $\\frac{2}{x-9}$.";
+    const g2 = "Cancelling divides a whole line, so only a factor can go. In $\\frac{x+4}{x}$ the $x$ on top is added to the 4, a term, as in step 2 of the See it, and no 4 sits underneath. Test it as step 3 did: at $x=1$ the fraction is 5, not 4 or 1. So nothing cancels.";
+    expect(diagnosisFor(g12, "$(x+9)^{2}$")).toMatch(/^\$\(x\+9\)\^\{2\}\$ gives/);
+    expect(diagnosisFor(g10, "No — it becomes $\\frac{14}{7x-63}$")).toBe("Multiplying the bracket out to $\\frac{14}{7x-63}$ only hides that factor.");
     // A formula of a letter or a digit names nothing, and a word as short as "Yes" is not searched for.
-    expect(diagnosisFor(trialGate("g2").explain, "The $x$, leaving $4$")).toBeNull();
-    expect(diagnosisFor(trialGate("g10").explain, "Yes")).toBeNull();
+    expect(diagnosisFor(g2, "The $x$, leaving $4$")).toBeNull();
+    expect(diagnosisFor(g10, "Yes")).toBeNull();
   });
 });
 
@@ -196,7 +196,7 @@ describe("maths read aloud (an option's or a question's accessible name)", () =>
     expect(spokenText("No — it becomes $\\frac{2}{x-9}$")).toBe("No — it becomes 2 over (x − 9)");
     expect(spokenText("$(x+9)(x-9)$")).toBe("(x + 9)(x − 9)");
     expect(spokenText("**Simplify fully** $x^{2}$")).toBe("Simplify fully x squared");
-    // Every option of every trial gate has a name with something in it.
-    for (const id of ["g2", "g12", "g9", "g13", "g4", "g10", "g11", "g8"]) for (const o of trialGate(id).options ?? []) expect(spokenText(o).trim().length, `${id}: ${o}`).toBeGreaterThan(0);
+    // Every option of every trial gate and of every twin has a name with something in it (the note on disk, whatever its version).
+    for (const g of trialGates()) for (const o of [...(g.options ?? []), ...(g.twin?.options ?? [])]) expect(spokenText(o).trim().length, `${g.id}: ${o}`).toBeGreaterThan(0);
   });
 });
