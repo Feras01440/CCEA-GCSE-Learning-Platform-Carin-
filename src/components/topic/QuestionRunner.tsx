@@ -195,7 +195,12 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
     // at the part's tariff.
     const evidence = !marked.correct && working.trim() ? markWorking(workingToLines(working), part.scheme, part.workedSolution) : null;
     // A wrong answer never collects every mark from its working (ladderTotal; trial audit MK-04).
-    const total = ladderTotal(marked, evidence ? evidence.marks : null, part.marks);
+    // A show-that's answer box restating the printed target earns nothing; her working earns, all of it when it reaches
+    // every point of the scheme (ruling 3).
+    const total =
+      marked.workingOnly && evidence && evidence.available > 0 && evidence.marks >= evidence.available
+        ? part.marks
+        : ladderTotal(marked, evidence ? evidence.marks : null, part.marks);
     const r = total > marked.marksAwarded ? { ...marked, marksAwarded: total } : marked;
     setSeen(evidence?.earned ?? []);
     setResult(r);

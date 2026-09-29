@@ -1152,12 +1152,22 @@ function looseUnitKey(unit: string): string {
     .replace(/^\/\s*/, "1/");
 }
 
+/** Words that deny, bound or hedge the value after them: never a label to strip. */
+const VALUE_WORDS =
+  /(?:^|(?<![\d)])\s|[(,:=])(?:not|no|never|below|under|over|above|more than|less than|greater than|fewer than|at least|at most|up to|exceeds?|except)\s+[-+−£$€]?\d/i;
+
 function parseNumericInner(input: string): ParsedNumber | null {
   if (typeof input !== "string") return null;
   const raw = input;
   if (input.length > MAX_INPUT_LENGTH) return null;
   let s = normaliseInput(input);
   if (s === "") return null;
+  // A sign written as a word is the sign ("minus 6.5 °C" is −6.5 °C), and a word that denies or bounds the value ("not
+  // 450 C", "below 6.5", "over 6.5", "more than 3") makes it no value at all: the verifier, 29 Sep 2026, found each
+  // stripped as a label and paid. "3 over 4" is a fraction's over, not a bound; "about 13" is the value (its probe).
+  s = s.replace(/(^|[\s(=:,])(?:minus|negative)\s+(?=\d)/gi, "$1-").replace(/(^|[\s(=:,])(?:plus|positive)\s+(?=\d)/gi, "$1+");
+  // Only where no working follows: "More than 60 g: 80 - 65 = 15 eggs" bounds a label, not the answer.
+  if (!/[=≈]/.test(s) && VALUE_WORDS.test(s)) return null;
   s = stripPrefixes(s);
   if (s === "") return null;
   {
@@ -1192,6 +1202,16 @@ function parseNumericInner(input: string): ParsedNumber | null {
         if (clauses.length === 1) s = clauses[0]!;
       }
       let last = (clauses[clauses.length - 1] ?? "").replace(/\.\s*$/, "").trim();
+      // Two bare values one after the other ("4500 C, so 450") are two answers, not working and its result, unless the
+      // second is the first rounded or restated ("34.8496 cm, so 34.8 cm", "-3 m/s², so the deceleration is 3 m/s²",
+      // "18.6510, so 18 glasses").
+      // A last clause that names what it states ("so the missing index is 8") is the answer after its working, and read.
+      const bare = (c: string) => /^\s*[-−+]?\d[\d.,]*\s*[A-Za-zΩµ°%/²³]{0,6}\s*$/.test(c);
+      if (clauses.length >= 2 && /\d/.test(last) && !/[=≈]/.test(s) && bare(last) && clauses.slice(0, -1).every(bare)) {
+        const value = (t: string) => Number((/[-−+]?\d+(?:\.\d+)?/.exec(t.replace(/,(?=\d{3})/g, ""))?.[0] ?? "NaN").replace("−", "-"));
+        const [a, b] = [Math.abs(value(clauses[clauses.length - 2]!)), Math.abs(value(last))];
+        if (!(Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= Math.max(1, 0.01 * a))) return null;
+      }
       if (clauses.length >= 2 && /\d/.test(last)) {
         last = dropReason(last.replace(/^(?:so|therefore|hence|thus)\s+/i, ""));
         last = last.replace(/^(?:[A-Za-z' ]{1,60}?\s)?(?:is|are|was|equals)\s+(?=[-+−£$€(\\]?[\d\\(-])/i, "");
@@ -1204,8 +1224,26 @@ function parseNumericInner(input: string): ParsedNumber | null {
     if (bracket && /\d/.test(bracket[1]!)) {
       const inner = bracket[2]!.trim();
       if (!/\d/.test(inner) && knownUnit(inner)) s = `${bracket[1]} ${inner}`;
-      // A restatement ("(80 minutes)") after a value with its unit, or a remark ("(to the nearest cm)") comes off.
-      else if (/\d/.test(inner) ? /\d\s*[A-Za-zµΩ°%£]/.test(bracket[1]!) : /\s[a-z]+\s/i.test(` ${inner} `) && inner.split(/\s+/).length >= 2) s = bracket[1]!;
+      // A restatement ("(80 minutes)") after a value with its unit comes off only when it says the same value; a wrong
+      // one ("4800 seconds (8 minutes)") is two answers (the verifier, 29 Sep 2026). A remark ("(to the nearest cm)")
+      // comes off.
+      else if (/\d/.test(inner)) {
+        if (/\d\s*[A-Za-zµΩ°%£]/.test(bracket[1]!)) {
+          const outer = parseNumeric(bracket[1]!);
+          const again = parseNumeric(inner);
+          // An inner part that is not a value ("(exactly 90π)", "(2 d.p.)") is a remark and comes off.
+          const same = (() => {
+            if (!outer || !again) return true;
+            if (outer.unit === again.unit || !again.unit) return nearlyEqual(outer.value, again.value, 1e-6);
+            const a = UNIT_TABLE[normaliseUnit(outer.unit) ?? ""];
+            const b = UNIT_TABLE[normaliseUnit(again.unit) ?? ""];
+            if (!a || !b || a.dim !== b.dim) return false;
+            return nearlyEqual((outer.value * a.factor[0]) / a.factor[1], (again.value * b.factor[0]) / b.factor[1], 1e-6);
+          })();
+          if (!same) return null;
+          s = bracket[1]!;
+        }
+      } else if (/\s[a-z]+\s/i.test(` ${inner} `) && inner.split(/\s+/).length >= 2) s = bracket[1]!;
     }
     s = s.replace(/^(?:a|an|the)\s+(?=[-+£$€]?\d)/i, "");
     const hm = /^(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h)\s*(?:and\s+)?(\d+(?:\.\d+)?)\s*(?:minutes?|mins?|min)$/i.exec(s);
@@ -2088,7 +2126,9 @@ function diagnoseWrongValue(
     const close = T !== 0 && Math.abs(aVal - T) <= 0.1 * Math.abs(T);
     const roundsToTarget =
       close &&
-      ((dpGiven !== null && dpGiven >= 1 && nearlyEqual(roundDp(T, dpGiven), aVal, 1e-9)) ||
+      // A whole number counts where the stem instructs places ("8" for 7.9 to 1 d.p. is rounded to fewer places, not a
+      // coincidence; the verifier, 29 Sep 2026).
+      ((dpGiven !== null && (dpGiven >= 1 || (requiredDp !== undefined && dpGiven < requiredDp)) && nearlyEqual(roundDp(T, dpGiven), aVal, 1e-9)) ||
         (sfForm && sfGiven !== null && sfGiven >= 2 && nearlyEqual(roundSf(T, sfGiven), aVal, 1e-9) && !nearlyEqual(T, aVal, 1e-9)));
     if (roundsToTarget) {
       if (requiredDp !== undefined) {

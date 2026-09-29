@@ -1433,7 +1433,7 @@ export function stepLineMatches(typed: string, working: string, opts: { pieces?:
   }
   // The step's equation rearranged or worked ("600 = 500a" for "5600 − 5000 = 500a"; "40 cos 30 − 12 = 5a" for
   // "34.64 − 12 = 5a"): one unknown, the same root, and not yet solved (the solved value is the next step's).
-  if (sameRootEquation(typed, working)) return LINE;
+  if (sameRootEquation(typed, working, before)) return LINE;
   return NONE;
 }
 
@@ -1471,45 +1471,33 @@ function holdsFor(statement: string, last: string): boolean {
   return statementsHold(statement) && /\d/.test(statement) && !/[A-Za-z]/.test(asTyped(statement).replace(/(?:sin|cos|tan)/g, ""));
 }
 
-/** The one unknown of an equation ("a", "R_C"), when it has exactly one besides the trigonometric functions. */
-function onlyUnknown(equation: string): string | null {
-  const t = asTyped(plainText(equation)).replace(/\\[A-Za-z]+/g, " ").replace(/(?:arcsin|arccos|arctan|sin|cos|tan)/g, " ");
-  const symbols = [...new Set(t.match(/[A-Za-zθα-ω](?:_\{?[A-Za-z0-9]+\}?)?/g) ?? [])];
-  return symbols.length === 1 ? symbols[0]! : null;
-}
-
-/** The root of a linear equation in its one unknown, or null (not linear, no root, or unreadable). */
-function linearRoot(equation: string, symbol: string): number | null {
-  const at = (x: number) => {
-    const s = substituted(equation, symbol, x);
-    return s ? s.left - s.right : null;
-  };
-  const [f0, f1, f2] = [at(0), at(1), at(2)];
-  if (f0 === null || f1 === null || f2 === null) return null;
-  const slope = f1 - f0;
-  if (Math.abs(slope) < 1e-12 || Math.abs(f2 - (f0 + 2 * slope)) > 1e-6 * Math.max(1, Math.abs(f0), Math.abs(slope))) return null;
-  return -f0 / slope;
-}
-
-/** Her equation and one of the step's have the same one unknown and the same root, and hers is not yet solved. */
-function sameRootEquation(typed: string, working: string): boolean {
+/** Her equation is the step's with its arithmetic done, side for side, and not yet solved. */
+function sameRootEquation(typed: string, working: string, before: readonly string[] = []): boolean {
+  // The step's own equation with its arithmetic done, side for side ("600 = 500a" for "5600 − 5000 = 500a", "40 cos 30 −
+  // 12 = 5a" for "34.64 − 12 = 5a"): each side the same as the step's, or both numbers of the same value. Another
+  // equation with the same root is not this step (the verifier, 29 Sep 2026: an earlier step's line, the question's
+  // equation and the next step's line all matched by root), and nor is a line an earlier step states.
   const mine = asTyped(plainText(typed)).trim();
   if ((mine.match(/[=≈]/g) ?? []).length !== 1 || solvedFor(mine) !== null) return false;
-  const symbol = onlyUnknown(mine);
-  if (symbol === null) return false;
-  // The unknown alone on a side ("Q = 19 + 8√3") is a result, judged as one (and never a restated earlier result).
-  if (mine.split(/[=≈]/).some((side) => side.trim() === symbol)) return false;
-  const root = linearRoot(mine, symbol);
-  if (root === null) return false;
-  const refs = [...working.split("\n"), ...[...working.matchAll(/\$([^$]+)\$/g)].map((m) => m[1]!)]
-    .map((l) => asTyped(plainText(l)).replace(/^[^=:]{1,60}:\s*/, "").trim())
-    .filter((l) => (l.match(/[=≈]/g) ?? []).length === 1 && solvedFor(l) === null);
-  return refs.some((ref) => {
-    const theirs = onlyUnknown(ref);
-    if (theirs === null || theirs.replace(/[_{}]/g, "") !== symbol.replace(/[_{}]/g, "")) return false;
-    const r = linearRoot(ref, theirs);
-    return r !== null && Math.abs(r - root) <= 0.005 * Math.max(1, Math.abs(r));
-  });
+  // A symbol alone on a side ("Q = 19 + 8√3") is a result, judged as one (and never a restated earlier result).
+  if (mine.split(/[=≈]/).some((s) => /^\s*[A-Za-zθα-ω](?:_\{?[A-Za-z0-9]+\}?)?\s*$/.test(s))) return false;
+  const tidy =(x: string) => x.replace(/\s+/g, "").replace(/[×·]/g, "*").replace(/\\times/g, "*");
+  const side = (a: string, b: string) => {
+    if (tidy(a) === tidy(b)) return true;
+    const [va, vb] = [evaluateWithTrig(dropUnit(a)), evaluateWithTrig(dropUnit(b))];
+    return va !== null && vb !== null && sidesAgree(va, vb, a, b);
+  };
+  const equationsOf = (text: string) =>
+    [...text.split("\n"), ...[...text.matchAll(/\$([^$]+)\$/g)].map((m) => m[1]!)]
+      .map((l) => asTyped(plainText(l)).replace(/^[^=:]{1,60}:\s*/, "").trim())
+      .filter((l) => (l.match(/[=≈]/g) ?? []).length === 1 && solvedFor(l) === null);
+  const [ml, mr] = mine.split(/[=≈]/) as [string, string];
+  const same = (ref: string) => {
+    const [rl, rr] = ref.split(/[=≈]/) as [string, string];
+    return (side(ml, rl) && side(mr, rr)) || (side(ml, rr) && side(mr, rl));
+  };
+  if (before.flatMap(equationsOf).some((ref) => tidy(ref) === tidy(mine))) return false;
+  return equationsOf(working).some(same);
 }
 
 function stepLineMatchesOnce(typed: string, working: string, opts: { pieces?: boolean; before?: readonly string[] } = {}): FixMatch {

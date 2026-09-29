@@ -840,15 +840,18 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
     marksTypicallyEarned: 0,
   };
   const prompt = String.raw`Simplify fully $\dfrac{2x^{2}+2x-12}{x^{2}+6x+9}$`;
+  // The lead's rules of 29 Sep 2026 (the verifier's D, then F): the question typed back earns 0 whatever a common
+  // error pays, and the common error still names the misconception (its tag and feedback): diagnosis is not marks.
   test("fm1 algebraic-fractions-simplify .0009: the question typed back earns 0 and names the error", () => {
-    const r = markAnswer("(2x^2+2x-12)/(x^2+6x+9)", q9, { marks: 4, commonErrors: [given], prompt });
+    const r = markAnswer("(2x^2+2x-12)/(x^2+6x+9)", q9, { marks: 4, commonErrors: [{ ...given, marksTypicallyEarned: 1 }], prompt });
     expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["fm.algfrac.not-factorised-first"] });
     expect(r.explanation).toMatch(/expression you were given/);
   });
-  test("an uncancelled line with no named error earns 0, and the feedback says the form was the task", () => {
+  // Ruling 1 as changed (27 Sep) and the lead's floor (29 Sep): an equivalent answer shows the method, never 0.
+  test("an uncancelled line with no named error and no scheme earns the floor, and the feedback says the form was the task", () => {
     const r = markAnswer("2(x+3)(x-2)/(x+3)^2", q9, { marks: 4, commonErrors: [given], prompt });
-    expect(r.marksAwarded).toBe(0);
-    expect(r.explanation).toMatch(/value is right.*asks for/i);
+    expect(r.marksAwarded).toBe(1);
+    expect(r.explanation).toMatch(/form the question asks for/i);
   });
   test("the answer in the required form is still every mark", () => {
     expect(markAnswer("2(x-2)/(x+3)", q9, { marks: 4, commonErrors: [given], prompt })).toMatchObject({ correct: true, marksAwarded: 4 });
@@ -903,7 +906,8 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
   test("an algebraic part whose stem is not a form task keeps marks − 1", () => {
     const spec: AnswerSpec = { kind: "algebraic", latex: "\\log 8x^3", equivalence: "equivalent", variables: ["x"], form: "single-log-expanded" };
     expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Use the laws of logarithms on your answer to part (a)." }).marksAwarded).toBe(2);
-    expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(0);
+    // The form task with the equivalent expression in another form: the floor, never 0 (the lead, 29 Sep 2026).
+    expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(1);
   });
 });
 
@@ -1088,5 +1092,119 @@ describe("the question typed back on a form task earns 0", () => {
     const q = String.raw`Write $\dfrac{4x + 1}{5} + \dfrac{x - 2}{10}$ as a single fraction.`;
     expect(markAnswer("(4x + 1)/5 + (x - 2)/10", single, { marks: 2, prompt: q }).marksAwarded).toBe(0);
     expect(markAnswer("9x/10", single, { marks: 2, prompt: q })).toMatchObject({ correct: true, marksAwarded: 2 });
+  });
+});
+
+// The verifier's C, D and E (29 Sep 2026).
+describe("show-that targets, the question typed back, and a decimal for a fraction", () => {
+  test("C: a show-that's printed target alone earns 0, numeric or algebraic; a value it does not print is marked", () => {
+    const vp: AnswerSpec = { kind: "numeric", value: 25, tolerance: { type: "exact" }, unit: "cm", unitRequired: false, acceptForms: ["decimal"] };
+    const p = "$V$ is the vertex and $O$ is the centre of the base.\nShow that the slant height $VP$ is 25 cm.";
+    for (const typed of ["25", "VP = 25 cm"]) expect(markAnswer(typed, vp, { marks: 2, prompt: p }), typed).toMatchObject({ correct: false, marksAwarded: 0, workingOnly: true });
+    expect(markAnswer("√(20² + 15²) = 25", vp, { marks: 2, prompt: p }).marksAwarded).toBe(2);
+    const r: AnswerSpec = { kind: "numeric", value: 3 * Math.SQRT2, tolerance: { type: "absolute", value: 0.005 }, unit: "cm", unitRequired: false, acceptForms: ["surd"] };
+    expect(markAnswer("3√2", r, { marks: 2, prompt: String.raw`A circle has area $18\pi$ cm². Show that the radius of the circle is $3\sqrt{2}$ cm.` }).marksAwarded).toBe(0);
+    const id = { kind: "algebraic", latex: "28x + 49", equivalence: "equivalent", variables: ["x"] } as AnswerSpec;
+    expect(markAnswer("28x + 49", id, { marks: 3, prompt: "Show that $(2x + 7)^2 - 4x^2 = 28x + 49$." }).marksAwarded).toBe(0);
+    const area: AnswerSpec = { kind: "numeric", value: 91, tolerance: { type: "exact" }, unit: "m²", unitRequired: false, acceptForms: ["decimal"] };
+    expect(markAnswer("91", area, { marks: 3, prompt: "Show that the area can be written as $(x + 3)(x - 3)$ square metres, and work out that area when $x = 10$." }).marksAwarded).toBe(3);
+  });
+  test("D: the question typed back earns 0 on any part, and a sum still to do earns only its working", () => {
+    const n: AnswerSpec = { kind: "numeric", value: 6600, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] };
+    const p = "Use the difference of two squares to work out $83^2 - 17^2$.";
+    expect(markAnswer("83^2 - 17^2", n, { marks: 2, prompt: p }).marksAwarded).toBe(0);
+    expect(markAnswer("83² − 17²", n, { marks: 2, prompt: p }).marksAwarded).toBe(0);
+    expect(markAnswer("(83 + 17)(83 - 17)", n, { marks: 2, prompt: p })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("6600", n, { marks: 2, prompt: p })).toMatchObject({ correct: true, marksAwarded: 2 });
+    const integral = { kind: "algebraic", latex: "2k + 12", equivalence: "equivalent", variables: ["k"] } as AnswerSpec;
+    expect(markAnswer(String.raw`\int_{0}^{2} (k + 6x)\,dx`, integral, { marks: 2, prompt: String.raw`Find $\int_{0}^{2} (k + 6x)\,dx$ in terms of $k$.` }).marksAwarded).toBe(0);
+    const power = { kind: "algebraic", latex: "y^{-5}", equivalence: "identical", variables: ["y"] } as AnswerSpec;
+    expect(markAnswer("1/y^5", power, { marks: 1, prompt: String.raw`Write $\dfrac{1}{y^{5}}$ as a single power of $y$.` }).marksAwarded).toBe(0);
+  });
+  test("E: a calculator decimal where a fraction in lowest terms is asked earns only the ladder", () => {
+    const spec: AnswerSpec = { kind: "numeric", value: 1 / 6, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["fraction"], mustBeSimplified: true };
+    const scheme = [
+      { id: "m1", code: "M", marks: 1, for: "$10x - x$ used for the first decimal, or $1/9$ seen" },
+      { id: "a1", code: "A", marks: 1, for: String.raw`$0.\dot{1} = 1/9$ (oe)` },
+      { id: "m2", code: "MA", marks: 1, for: String.raw`$0.0\dot{5} = 1/18$ (oe)` },
+      { id: "a2", code: "A", marks: 1, for: "1/6" },
+    ];
+    const prompt = String.raw`Work out the value of $0.\dot{1} + 0.0\dot{5}$.` + "\n\nGive your answer as a fraction in its lowest terms.";
+    expect(markAnswer("0.1666666667", spec, { marks: 4, prompt, scheme }).marksAwarded).toBe(0);
+    expect(markAnswer("1/6", spec, { marks: 4, prompt, scheme })).toMatchObject({ correct: true, marksAwarded: 4 });
+    const third: AnswerSpec = { kind: "numeric", value: 1 / 3, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["fraction"], mustBeSimplified: true };
+    const s2 = [
+      { id: "m", code: "M", marks: 1, for: "$x = 0.33333333...$ with $10x = 3.3333333...$, or $3/9$ seen" },
+      { id: "a", code: "A", marks: 1, for: "1/3" },
+    ];
+    const p2 = String.raw`Change the recurring decimal $0.\dot{3}$ to a fraction in its simplest form.`;
+    expect(markAnswer("3/9", third, { marks: 2, prompt: p2, scheme: s2 }).marksAwarded).toBe(1);
+    expect(markAnswer("0.333333333333", third, { marks: 2, prompt: p2, scheme: s2 }).marksAwarded).toBe(0);
+  });
+});
+
+// The lead's F, H and I (29 Sep 2026).
+describe("common errors on copied questions, verifications and text parts", () => {
+  test("F: the copied question earns 0 and still names its error", () => {
+    const spec = { kind: "algebraic", latex: String.raw`\frac{5}{x-4}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
+    const given: CommonError = { misconception: "fm.algfrac.not-factorised-first", pattern: { kind: "algebraic", latex: String.raw`\frac{5x+20}{x^{2}-16}` }, feedback: "That is the expression you were given.", marksTypicallyEarned: 1 } as CommonError;
+    const r = markAnswer("(5x+20)/(x^2-16)", spec, { marks: 2, commonErrors: [given], prompt: String.raw`Simplify fully $\dfrac{5x+20}{x^{2}-16}$` });
+    expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["fm.algfrac.not-factorised-first"] });
+  });
+  test("H: a show-that verified by substitution earns the common error's 2 of 3; the bare target 0", () => {
+    const spec = { kind: "text", accepted: ["Taking up as positive, 7020 - 10M = 0.8M, so 7020 = 10.8M and M = 650."], keyWords: [{ any: ["7020 - 10m"], marks: 1 }, { any: ["10.8m"], marks: 1 }, { any: ["m = 650"], marks: 1 }], listingRule: false } as AnswerSpec;
+    const verify: CommonError = { misconception: "fm.show-that.verify-by-substitution", pattern: { kind: "text", regex: String.raw`650\s*[×x*]\s*10\.8` }, feedback: "Verification, not a derivation.", marksTypicallyEarned: 2 } as CommonError;
+    const prompt = "The lift accelerates upwards at 0.8 m/s².\n\nShow that $M = 650$.";
+    expect(markAnswer("M = 650 because 650 × 10.8 = 7020", spec, { marks: 3, commonErrors: [verify], prompt }).marksAwarded).toBe(2);
+    expect(markAnswer("650", spec, { marks: 3, commonErrors: [verify], prompt }).marksAwarded).toBe(0);
+  });
+  test("H: a common error naming the value decides over the fewer-places reading", () => {
+    const spec: AnswerSpec = { kind: "numeric", value: 6.09, tolerance: { type: "dp", places: 2 }, unit: "m/s", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    const mean: CommonError = { misconception: "fm.kin.average-speed-formula", pattern: { kind: "numeric", value: 6, tolerance: { type: "absolute", value: 0.005 } }, feedback: "That is the mean of the two velocities.", marksTypicallyEarned: 0 } as CommonError;
+    expect(markAnswer("6", spec, { marks: 2, commonErrors: [mean], prompt: "Calculate the average speed. Give your answer to 2 decimal places." }).marksAwarded).toBe(0);
+  });
+  test("I: a text part's common error never raises the key words' award", () => {
+    const spec = { kind: "text", accepted: ["electrons collide with the ions of the metal"], keyWords: [{ any: ["electrons"], marks: 1 }, { any: ["collide", "collisions"], marks: 1 }, { any: ["ions", "atoms"], marks: 1 }], listingRule: false } as AnswerSpec;
+    const partner: CommonError = { misconception: "sci.circuits.wrong-particle", pattern: { kind: "text", regex: String.raw`\b(protons?|neutrons?|nucle(us|i))\b` }, feedback: "Electrons collide with the metal's ions, not its protons.", marksTypicallyEarned: 2 } as CommonError;
+    const r = markAnswer("protons and neutrons", spec, { marks: 3, commonErrors: [partner], prompt: "Which two kinds of particle produce this energy, and how?" });
+    expect(r.marksAwarded).toBe(0);
+    expect(r.tags).toEqual(["sci.circuits.wrong-particle"]);
+  });
+});
+
+// The floor of 1 for an equivalent answer on a form task yields to a common error that names the answer (the guard,
+// 29 Sep 2026: "x²/x − 4" equals x − 4 but is the cancel-terms error, which the scheme pays 0).
+describe("the form-task floor yields to a named common error", () => {
+  test("x²/x − 4 for (x² − 16)/(x + 4) earns the error's 0; x/3 − 2 for (x − 6)/3 earns the floor", () => {
+    const spec = { kind: "algebraic", latex: "x - 4", equivalence: "simplifiedOnly", variables: ["x"] } as AnswerSpec;
+    const cancel: CommonError = { misconception: "maths.alg-fractions.cancel-terms-not-factors", pattern: { kind: "algebraic", latex: String.raw`\frac{x^2}{x} - 4` }, feedback: "Only whole factors cancel.", marksTypicallyEarned: 0 } as CommonError;
+    const r = markAnswer(String.raw`\frac{x^2}{x} - 4`, spec, { marks: 2, commonErrors: [cancel], prompt: String.raw`Hence simplify $\dfrac{x^2 - 16}{x + 4}$.` });
+    expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["maths.alg-fractions.cancel-terms-not-factors"] });
+    const third = { kind: "algebraic", latex: String.raw`\frac{x-6}{3}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
+    expect(markAnswer("x/3 - 2", third, { marks: 2, prompt: String.raw`Simplify fully $\dfrac{x^{2}-36}{3x+18}$` })).toMatchObject({ correct: false, marksAwarded: 1 });
+  });
+});
+
+// The lead's D addendum (29 Sep 2026, the FM1 group 0 author): the question typed back is 0 before the ladder and before
+// any form-task credit, however the division is written and when the stem labels the expression ("f(x) = …").
+describe("the question typed back, in any spelling, before any form-task credit", () => {
+  test("a division typed back with ÷, / or \\div", () => {
+    const spec = { kind: "algebraic", latex: "2(x-9)", equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
+    const prompt = "Simplify fully\n" + String.raw`$\left(\dfrac{x}{3} - \dfrac{27}{x}\right) \div \dfrac{x+9}{6x}$`;
+    for (const typed of ["(x/3 - 27/x) ÷ (x+9)/(6x)", "(x/3 - 27/x) / ((x+9)/(6x))", String.raw`\left(\dfrac{x}{3} - \dfrac{27}{x}\right) \div \dfrac{x+9}{6x}`]) {
+      expect(markAnswer(typed, spec, { marks: 4, prompt }).marksAwarded, typed).toBe(0);
+    }
+    expect(markAnswer("2x - 18", spec, { marks: 4, prompt })).toMatchObject({ correct: true, marksAwarded: 4 });
+  });
+  test("a labelled expression typed back: f(x) = x² − 5x + 11 for completing the square", () => {
+    const spec = { kind: "algebraic", latex: String.raw`(x - \frac{5}{2})^{2} + \frac{19}{4}`, equivalence: "equivalent", variables: ["x"], form: "completed-square" } as AnswerSpec;
+    const prompt = String.raw`The function $f$ is given by $f(x) = x^{2} - 5x + 11$.` + "\nBy completing the square, express $f(x)$ as $(x + a)^{2} + b$.";
+    expect(markAnswer("x^2-5x+11", spec, { marks: 2, prompt }).marksAwarded).toBe(0);
+    expect(markAnswer("(x - 5/2)^2 + 19/4", spec, { marks: 2, prompt })).toMatchObject({ correct: true, marksAwarded: 2 });
+  });
+  test("a display-maths stem keeps its model answer (S44): '3' is not the question typed back", () => {
+    const spec = { kind: "algebraic", latex: "3", equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
+    const prompt = "Simplify fully\n" + String.raw`$$\left(\dfrac{x}{x+1} - \dfrac{x-4}{x+2}\right) \div \dfrac{5x+4}{3x^{2}+9x+6}$$`;
+    expect(markAnswer("3", spec, { marks: 7, prompt })).toMatchObject({ correct: true, marksAwarded: 7 });
   });
 });

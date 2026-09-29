@@ -1,13 +1,27 @@
-# Key-word marker versus each part's own worked solution — 2026-09-27 15:15
+# Key-word marker versus each part's own worked solution — 2026-09-29 14:41
 
-Every text part of 2+ marks (643 across the packs) was marked with its own workedSolution as the answer. 643 earn full marks; 0 earn some; 0 earn none. Fix rule (pipeline/prompts/author-topic.md): every key-word group must include the phrasing the worked solution uses, and "explain" groups accept the reasoning words as well as the number. Rerun: `npx tsx scripts/qa/text-parts-vs-solutions.mts`.
+Every text part of 2+ marks (844 across the packs) was marked with its own workedSolution as the answer. 830 earn full marks; 12 earn some; 2 earn none. Fix rule (pipeline/prompts/author-topic.md): every key-word group must include the phrasing the worked solution uses, and "explain" groups accept the reasoning words as well as the number. Rerun: `npx tsx scripts/qa/text-parts-vs-solutions.mts`.
 
-## Zero marks (0)
-
-| Bundle | Item | Part | Earned | Key-word groups | Marker said | Worked solution (start) |
-|---|---|---|---|---|---|---|
-
-## Partial marks (0)
+## Zero marks (2)
 
 | Bundle | Item | Part | Earned | Key-word groups | Marker said | Worked solution (start) |
 |---|---|---|---|---|---|---|
+| maths/content/m8/inverse-proportion | 0021 | a | 0/2 | [3 × 15 = 45 / 3*15 = 45 / 3x15=45 / …] [k = 45 / constant is 45 / constant 45 / …] | The mark for "k = 45" depends on "3 × 15 = 45", which is not there yet. | $3 \times 15 = 45$, $5 \times 9 = 45$ and $9 \times 5 = 45$. Every product $pq$ is 45, so $q = \dfrac{45}{p}$ and the constant is 45. |
+| maths/content/m8/inverse-proportion | 0020 | a | 0/2 | [6 = k/3 / k/3 = 6 / 3 × 6 / …] [k = 18 / 3 × 6 = 18 / 3*6 = 18 / …] | The marking points are not there yet. Expected: 6 = k/3, k = 18. | $y = \dfrac{k}{x}$. Substituting $x = 3$ and $y = 6$: $6 = \dfrac{k}{3}$, so $k = 3 \times 6 = 18$ and therefore $y = \dfrac{18}{x}$. |
+
+## Partial marks (12)
+
+| Bundle | Item | Part | Earned | Key-word groups | Marker said | Worked solution (start) |
+|---|---|---|---|---|---|---|
+| maths/content/m4/circle-theorems | 0021 | main | 1/2 | [67] [opposite angles of a cyclic quadrilateral add up to 180 / opposite angles of a cyclic quadrilateral add to 180 / opposite angles of a cyclic quadrilateral sum to 180 / …] | 1 of 2: still missing opposite angles of a cyclic quadrilateral add up to 180. | ABCD is a cyclic quadrilateral, and angle DAB and angle BCD are opposite angles, so they add up to 180°. $x = 180 - 113 = 67$. |
+| maths/content/m4/circle-theorems | 0023 | main | 2/3 | [radii / radius / isosceles] [63] [is twice the angle at the circumference / is twice angle at the circumference / is twice the angle at circumference / …] | 2 of 3: still missing is twice the angle at the circumference. | OA = OB because they are radii of the same circle, so triangle OAB is isosceles and angle OBA = 27°. The angles of the triangle add up to 180°, so angle AOB = 1 |
+| maths/content/m4/circle-theorems | 0024 | b | 1/2 | [112] [opposite angles of a cyclic quadrilateral add up to 180 / opposite angles of a cyclic quadrilateral add to 180 / opposite angles of a cyclic quadrilateral sum to 180 / …] | 1 of 2: still missing opposite angles of a cyclic quadrilateral add up to 180. | A, P, B and R lie on the circle in that order, so APBR is a cyclic quadrilateral and angle APB and angle ARB are opposite angles. They add up to 180°, so angle  |
+| maths/content/m4/circle-theorems | 0025 | a | 1/2 | [64] [opposite angles of a cyclic quadrilateral add up to 180 / opposite angles of a cyclic quadrilateral add to 180 / opposite angles of a cyclic quadrilateral sum to 180 / …] | 1 of 2: still missing opposite angles of a cyclic quadrilateral add up to 180. | ABCD is a cyclic quadrilateral, and angle ABC and angle ADC are opposite angles, so they add up to 180°. Angle ADC = 180 − 116 = 64°. |
+| maths/content/m4/circle-theorems | 0026 | a | 1/2 | [96] [opposite angles of a cyclic quadrilateral add up to 180 / opposite angles of a cyclic quadrilateral add to 180 / opposite angles of a cyclic quadrilateral sum to 180 / …] | 1 of 2: still missing opposite angles of a cyclic quadrilateral add up to 180. | ABCD is a cyclic quadrilateral, so its opposite angles add up to 180°. Angle ADC = 180 − 84 = 96°. |
+| maths/content/m4/circle-theorems | 0027 | b | 2/3 | [radii / radius / isosceles / …] [51.6 / 51.57] [is twice the angle at the circumference / is twice angle at the circumference / is twice the angle at circumference / …] | 2 of 3: still missing is twice the angle at the circumference. | In triangle OMA, $\sin(\text{angle } OAB) = 4.6 \div 7.4$, so angle OAB = 38.43°. OA = OB because they are radii of the same circle, so triangle OAB is isoscele |
+| maths/content/m4/circle-theorems | 0030 | a | 1/2 | [76] [opposite angles of a cyclic quadrilateral add up to 180 / opposite angles of a cyclic quadrilateral add to 180 / opposite angles of a cyclic quadrilateral sum to 180 / …] | 1 of 2: still missing opposite angles of a cyclic quadrilateral add up to 180. | ABCD is a cyclic quadrilateral and angles BAD and BCD are opposite angles, so they add up to 180°: angle BCD = 180 − 104 = 76°. |
+| maths/content/m8/enlargements-with-negative-scale-factors | 0014 | main | 2/3 | [enlargement / enlarge / enlarged] [scale factor -1/2 / -1/2 / -0.5 / …] [centre (0, 2) / (0, 2) / 0, 2] | 2 of 3: still missing scale factor -1/2. | The joins of matching corners cross at $(0, 2)$. From there, $(4, 4)$ is 4 right and 2 up and its image $(-2, 1)$ is 2 left and 1 down: half as far, on the othe |
+| maths/content/m8/pythagoras-and-trigonometry-in-3d | 0018 | a | 1/2 | [20² + 21² / 20²+21² / 20^2 + 21^2 / …] [√841 / √ 841 / √(841) / …] | 1 of 2: still missing √841. | $VO$ is perpendicular to the base, so triangle $VOP$ is right-angled at $O$ with the slant height as its hypotenuse: $VP^2 = 20^2 + 21^2 = 400 + 441 = 841$, so  |
+| maths/content/m8/pythagoras-and-trigonometry-in-3d | 0020 | a | 1/2 | [16² + 30² / 16²+30² / 16^2 + 30^2 / …] [√1156 / √ 1156 / √(1156) / …] | 1 of 2: still missing √1156. | $AC^2 = 16^2 + 30^2 = 256 + 900 = 1156$, so $AC = \sqrt{1156} = 34$ cm. |
+| maths/content/m8/pythagoras-and-trigonometry-in-3d | 0022 | a | 1/2 | [20² + 15² / 20²+15² / 20^2 + 15^2 / …] [√625 / √ 625 / √(625) / …] | 1 of 2: still missing √625. | $AC^2 = 20^2 + 15^2 = 400 + 225 = 625$, so $AC = \sqrt{625} = 25$ cm. |
+| maths/content/m8/pythagoras-and-trigonometry-in-3d | 0023 | a | 2/3 | [288 / 12² + 12² / 12²+12² / …] [484 − 288 / 484 - 288 / 484-288 / …] [√196 / √ 196 / √(196) / …] | 2 of 3: still missing √196. | $M$ is the centre, so $AM$ is half a diagonal: $AM^2 = 12^2 + 12^2 = 288$. In triangle $AMV$, right-angled at $M$, $VM^2 = VA^2 - AM^2 = 484 - 288 = 196$, so $V |

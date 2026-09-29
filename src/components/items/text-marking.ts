@@ -316,7 +316,11 @@ export interface TextMarkResult {
 }
 
 /** Words that negate what follows them in their clause. */
-const NEGATION = /^(?:not|no|never|none|nor|neither|without|non|cannot)$/;
+// Prevent, stop, avoid and reduce deny what follows as "not" does ("to prevent contamination", "to stop contamination";
+// the B2 E author, 29 Sep 2026).
+const NEGATION = /^(?:not|no|never|none|nor|neither|without|non|cannot|prevents?|prevented|preventing|stops?|stopped|stopping|avoids?|avoided|avoiding|reduces?|reduced|reducing)$/;
+/** A verb's own negation inside a key word: such a key is the negation itself. */
+const VERB_NEGATION = /^(?:not|cannot|never|prevents?|prevented|preventing|stops?|stopped|stopping|avoids?|avoided|avoiding|reduces?|reduced|reducing)$/;
 
 /** The clauses of an answer: a negation governs only its own clause ("it is not continuous, so it is discontinuous"). */
 function clausesOf(raw: string): string[] {
@@ -346,7 +350,36 @@ function governedAt(words: readonly string[], at: number): boolean {
     const w = words[j]!;
     if (NEGATION_ENDS.test(w)) return false;
     if (PREPOSITION.test(w) && DETERMINER.test(words[j + 1] ?? "")) return false;
-    if (NEGATION.test(w)) return true;
+    if (NEGATION.test(w)) {
+      // A negated negator is a positive ("it does not reduce contamination" says contamination is not reduced; the B2 E
+      // author, 29 Sep 2026): a "not", "never" or "no" just before it, a helping verb between them, undoes it.
+      const before = words.slice(Math.max(0, j - 3), j).filter((x) => !/^(?:do|does|did|will|would|could|can|should|may|might|to|be)$/.test(x));
+      if (before.length > 0 && /^(?:not|never|no|cannot)$/.test(before[before.length - 1]!) && !/^(?:not|never|no|cannot|non|none|nor|neither|without)$/.test(w)) return false;
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * The model negates the key word itself, not a word before it: the negation is next to the key with only an article, a
+ * copula or an adverb between ("are not complementary", "is not a fair comparison", "no enzyme"). "To avoid growing
+ * pathogens" negates the growing, and names the pathogens as the harm: a plain "pathogens could grow" is no contradiction.
+ */
+function negatesKeyItself(raw: string, key: string): boolean {
+  const k = normaliseText(key);
+  const first = k.split(" ")[0] ?? "";
+  for (const clause of clausesOf(raw)) {
+    const c = normaliseText(clause);
+    if (!phraseIn(c, k)) continue;
+    const words = c.split(" ");
+    const at = words.findIndex((w) => w === first || w.startsWith(first.slice(0, Math.max(3, first.length - 2))));
+    if (at < 0) continue;
+    for (let j = at - 1; j >= 0; j--) {
+      const w = words[j]!;
+      if (NEGATION.test(w)) return true;
+      if (!/^(?:a|an|the|be|been|being|is|are|was|were|very|fully|quite|so|as|any|at|all|of|longer)$/.test(w)) break;
+    }
   }
   return false;
 }
@@ -365,8 +398,23 @@ function negatedIn(raw: string, key: string): boolean {
   // A key word that holds a verb's negation is that negation itself, and starts its own verb phrase ("cannot
   // photosynthesise" in "without light the leaf cannot photosynthesise"): an earlier negation does not undo it. A
   // negated noun ("non resistant bacteria survived") can still sit inside another negation ("none of the …").
-  if (kWords.some((w) => /^(?:not|cannot|never)$/.test(w))) return false;
-  const startsKey = (w: string) => (first.length >= 5 ? w.startsWith(stem) : w === first || w === `${first}s`);
+  // Unless her "not" denies it in turn ("it does not reduce contamination" against the key "reduce contamination"; the
+  // B2 E author's E-NEG-DOUBLE, 29 Sep 2026).
+  if (kWords.some((w) => VERB_NEGATION.test(w))) {
+    let seen = false;
+    for (const clause of clausesOf(raw)) {
+      const words = normaliseText(clause).split(" ");
+      const at = words.findIndex((w, p) => (w === first || w.startsWith(stem)) && phraseIn(words.slice(p, p + kWords.length).join(" "), k));
+      if (at < 0) continue;
+      seen = true;
+      const before = words.slice(Math.max(0, at - 3), at).filter((x) => !/^(?:do|does|did|will|would|could|can|should|may|might|to|be|it|this|that)$/.test(x));
+      if (!(before.length > 0 && /^(?:not|never|no|cannot)$/.test(before[before.length - 1]!))) return false;
+    }
+    return seen;
+  }
+  // The key's first word in any of its forms, at any length ("kill" in "killed", "kills"; the B2 E author, 29 Sep 2026:
+  // a short first word had to match exactly).
+  const startsKey = (w: string) => w === first || (w.startsWith(stem) && INFLECTIONS.has(w.slice(stem.length))) || (w.length > stem.length + 1 && w.startsWith(`${stem}${stem.slice(-1)}`) && INFLECTIONS.has(w.slice(stem.length + 1)));
   let found = false;
   for (const clause of clausesOf(raw)) {
     const c = normaliseText(clause);
@@ -376,10 +424,34 @@ function negatedIn(raw: string, key: string): boolean {
     // Every place the key word starts in the clause; where none can be pinned (an algebraic key), its first word.
     let starts = words.map((_, p) => p).filter((p) => startsKey(words[p]!) && phraseIn(words.slice(p, p + kWords.length).join(" "), k));
     if (starts.length === 0) starts = words.map((_, p) => p).filter((p) => startsKey(words[p]!)).slice(0, 1);
-    if (starts.length === 0) starts = [words.length];
+    // A key that cannot be pinned in the clause is not read as negated: the clause's end would count the key's own
+    // words ("non" in "kill the non resistant") as a negation of it.
+    if (starts.length === 0) return false;
     if (starts.some((at) => !governedAt(words, at))) return false;
   }
   return found;
+}
+
+/** Words too common to name a subject. */
+const NOT_A_SUBJECT = new Set(["this", "that", "they", "them", "their", "there", "these", "those", "with", "from", "have", "been", "were", "what", "when", "which", "also", "only", "then", "than", "into", "each", "very", "more", "most", "some", "such", "will", "would", "could", "should", "does", "done", "make", "made", "because", "cannot"]);
+
+/**
+ * The words naming what a key word is said of, in the clauses that hold it: the content words before the key (four
+ * letters or more, cut to their first four), negation words aside. "The shapes of B and C are not complementary" gives
+ * {shap}; "the comparison is fair" gives {comp}.
+ */
+function subjectBefore(raw: string, key: string): Set<string> {
+  const k = normaliseText(key);
+  const first = k.split(" ")[0] ?? "";
+  const out = new Set<string>();
+  for (const clause of clausesOf(raw)) {
+    const c = normaliseText(clause);
+    if (!phraseIn(c, k)) continue;
+    const words = c.split(" ");
+    const at = words.findIndex((w) => w === first || w.startsWith(first.slice(0, Math.max(3, first.length - 2))));
+    for (const w of words.slice(0, at < 0 ? words.length : at)) if (w.length >= 4 && !NEGATION.test(w) && !NOT_A_SUBJECT.has(w)) out.add(w.slice(0, 4));
+  }
+  return out;
 }
 
 export interface MarkTextOptions {
@@ -429,13 +501,50 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   // A group's key word is in a piece of the answer as written or, for a hydrocarbon's condensed formula, from either end,
   // and not only inside a negation. An entry written "cheaper|costs less" is one idea in several spellings.
   const model = [...spec.accepted, ...(opts.model ?? [])];
-  const negationIsThePoint = (k: string) => model.some((m) => negatedIn(m, k));
+  // Her negated key word earns where any model text negates it ("cannot deliver oxygen"). Her un-negated key word
+  // contradicts the point only where every model text that says it negates it: one accepted answer's "no air can get
+  // in" beside a worked solution's "keeps air away" leaves "air" a plain key word.
+  const negationWaived = (k: string) => model.some((m) => negatedIn(m, k));
+  // And only about the same subject: the model's "the number who became ill is not a fair comparison" says nothing
+  // against her "a percentage lets you compare fairly" (the B2 E author, 29 Sep 2026); "the shapes … are not
+  // complementary" does contradict her "their shape is complementary". A bare key word ("complementary") has no subject
+  // of its own and meets the model's.
+  const negationIsThePoint = (k: string, text?: string) => {
+    const saying = model.filter((m) => phraseIn(normaliseText(m), normaliseText(k)));
+    if (saying.length === 0 || !saying.every((m) => negatedIn(m, k) && negatesKeyItself(m, k))) return false;
+    if (text === undefined) return true;
+    const hers = subjectBefore(text, k);
+    if (hers.size === 0) return true;
+    return saying.some((m) => [...subjectBefore(m, k)].some((w) => hers.has(w)));
+  };
+  // A group whose point is a harm avoided or a thing reduced waives her negation for every one of its words: the model
+  // negates one of them ("to avoid growing pathogens" waives "to stop harmful bacteria growing"), or one of its own
+  // entries is itself a negation or a reduction ("cannot carry oxygen", "carry less oxygen" waive "stops … carrying
+  // oxygen"; the B2 E author and the C2 D author, 29 Sep 2026).
+  // An entry's own negation waives only a key about the same thing ("cannot carry oxygen" for "carrying oxygen", never
+  // "antibiotics do not work" for "resistant": "they are not resistant" is the opposite of the point).
+  const stems = (t: string) => normaliseText(t).split(" ").filter((w) => w.length >= 4 && !NEGATION.test(w)).map((w) => w.slice(0, 4));
+  const groupWaived = (g: TextSpec["keyWords"][number], k: string) => {
+    const entries = g.any.flatMap((entry) => entry.split("|"));
+    if (entries.some((e) => negationWaived(e))) return true;
+    const mine = stems(k);
+    return entries.some((e) => {
+      const words = normaliseText(e).split(" ");
+      if (!words.some((w) => NEGATION.test(w) || w === "less" || w === "fewer")) return false;
+      const theirs = stems(e);
+      return mine.length > 0 && mine.every((s) => theirs.includes(s));
+    });
+  };
   const hits = (text: string, g: TextSpec["keyWords"][number]) => {
     const norm = normaliseText(text);
+    const waivedFor = (k: string) => groupWaived(g, k);
     return g.any.filter((entry) =>
       entry
         .split("|")
-        .some((k) => (phraseIn(norm, normaliseText(k)) && (!negatedIn(text, k) || negationIsThePoint(k))) || hydrocarbonIn(text, k)),
+        // Where the model negates the key word, the negation is the point both ways: her negated key earns, and her
+        // un-negated one does not ("complementary" where the model says "not complementary"; the verifier, 29 Sep 2026).
+        // A key that is itself a reduction ("reduce contamination") is never waived: her "not" before it is a denial.
+        .some((k) => (phraseIn(norm, normaliseText(k)) && (negationIsThePoint(k, text) ? negatedIn(text, k) : !negatedIn(text, k) || (!normaliseText(k).split(" ").some((w) => VERB_NEGATION.test(w)) && waivedFor(k)))) || hydrocarbonIn(text, k)),
     );
   };
   const rejectHits = (text: string, r: string) => phraseIn(normaliseText(text), normaliseText(r), REJECT_INFLECTIONS) && !negatedIn(text, r);
@@ -488,7 +597,13 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
       .find((k) => !sameIdea(k));
     const bad = (g.reject ?? []).filter((r) => rejectHits(raw, r));
     rejected.push(...bad);
-    if (hit !== undefined && bad.length === 0 && !cancelled.has(i)) {
+    // A key word the model negates, written by her without the negation, contradicts the point: the group is not paid
+    // by another of its words ("their shape is complementary" where the model says "not complementary" earned the group
+    // through "shape"; the verifier, 29 Sep 2026).
+    const contradicted = g.any.some((entry) =>
+      entry.split("|").some((k) => negationIsThePoint(k, raw) && phraseIn(normaliseText(raw), normaliseText(k)) && !negatedIn(raw, k)),
+    );
+    if (hit !== undefined && bad.length === 0 && !cancelled.has(i) && !contradicted) {
       used.add(hit);
       matchedGroups.push(i);
       marks += g.marks;

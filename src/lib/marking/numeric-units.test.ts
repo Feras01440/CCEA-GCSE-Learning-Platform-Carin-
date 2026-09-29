@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { checkNumeric, normaliseUnit, type NumericSpec } from "./numeric";
+import { checkNumeric, normaliseUnit, parseNumeric, type NumericSpec } from "./numeric";
 
 // P2D-R1 (24 Sep 2026): the coulomb. CCEA P2 2.3.6 (Q = I × t) awards the unit as "C"; before this the
 // engine could not read "36 C" at all, so a right charge answer written as the schemes write it scored 0.
@@ -313,5 +313,32 @@ describe("labels, solved equations, directions and units as written", () => {
   });
   test("two symbols' values stay a pair", () => {
     expect(checkNumeric("a = 6, b = 6", { value: 6 }).correct).toBe(false);
+  });
+});
+
+// The verifier's A (29 Sep 2026): a sign or denial word before a number was stripped as a label and the value paid.
+describe("sign words are signs; denying or bounding words are no value", () => {
+  test.each([
+    ["minus 6.5 °C", -6.5],
+    ["negative 6.5", -6.5],
+    ["minus 184 kJ", -184],
+  ])("%s reads as %d", (typed, value) => {
+    expect(parseNumeric(typed)?.value).toBe(value);
+  });
+  test.each(["not 6.5", "below 6.5", "over 6.5", "more than 6.5", "less than 6.5", "not 450 C", "it is not 6.5"])("%s is no value", (typed) => {
+    expect(parseNumeric(typed)).toBeNull();
+  });
+  test("a restatement in brackets must say the same value", () => {
+    expect(parseNumeric("4800 seconds (8 minutes)")).toBeNull();
+    expect(parseNumeric("4800 seconds (80 minutes)")?.value).toBe(4800);
+    expect(parseNumeric("450 (C)")?.unit).toBe("C");
+  });
+  test("two bare values in a row are two answers", () => {
+    expect(parseNumeric("4500 C, so 450")).toBeNull();
+    expect(parseNumeric("x = 10: 13 × 7 = 91")?.value).toBe(91);
+  });
+  test("about and roughly stay the value (the verifier's probe)", () => {
+    expect(parseNumeric("about 450 C")?.value).toBe(450);
+    expect(parseNumeric("roughly 6.5")?.value).toBe(6.5);
   });
 });

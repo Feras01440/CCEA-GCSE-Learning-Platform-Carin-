@@ -506,3 +506,81 @@ describe("a second value beside the right one cancels its point", () => {
     expect(markText("7020 - 10M = 0.8M, so 10.8M = 7020 and M = 650", s).marksAwarded).toBe(3);
   });
 });
+
+// Two rules the verifier found with no test that could fail (29 Sep 2026).
+describe("the model's negation, and reject words' endings", () => {
+  const s: TextSpec = {
+    kind: "text",
+    accepted: ["their shapes are not complementary to the active site so they cannot fit into it"],
+    keyWords: [
+      { any: ["shape", "complementary"], marks: 1 },
+      { any: ["active site"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  test("her negated key word earns where the model negates it; her un-negated one contradicts the point", () => {
+    expect(markText("their shapes are not complementary to the active site so they cannot fit", s).marksAwarded).toBe(2);
+    expect(markText("their shape is complementary to the active site so they fit", s).marksAwarded).toBe(1);
+  });
+  test("a reject word takes its verb endings, not a derived word", () => {
+    const iso: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["share an atomic number"], marks: 1, reject: ["an atom"] }], listingRule: false };
+    expect(markText("atoms that share an atomic number", iso).marksAwarded).toBe(1);
+    const conducts: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["copper conducts"], marks: 1, reject: ["rubber conducts"] }], listingRule: false };
+    expect(markText("copper conducts and rubber conducted", conducts).marksAwarded).toBe(0);
+  });
+});
+
+// The lead's G (29 Sep 2026, from the B2 E author): a model negating a key word about another subject must not make her
+// plain use of it a contradiction; prevent, stop, avoid and reduce are negators; a short first word is pinned in any of
+// its forms, and a key that cannot be pinned is not read as negated by its own "non".
+describe("the model's negation is the point only about the same subject", () => {
+  const fair: TextSpec = { kind: "text", accepted: ["different numbers of people ate each food, so a percentage puts every food on the same scale"], keyWords: [{ any: ["different numbers", "fair", "fairly", "same scale"], marks: 1 }], listingRule: false };
+  const model = ["Different numbers of people ate each food, so the number who became ill is not a fair comparison; a percentage puts every food on the same scale."];
+  test.each(["so the comparison is fair", "a percentage lets you compare fairly"])("b2-health .0023(c): %s", (answer) => {
+    expect(markText(answer, fair, { model }).marksAwarded).toBe(1);
+  });
+  test("prevent and stop deny what follows (we.02 twin)", () => {
+    const twin: TextSpec = { kind: "text", accepted: ["to kill microorganisms at the neck so they do not contaminate the culture"], keyWords: [{ any: ["kill", "contaminate", "contamination"], marks: 1 }], listingRule: false };
+    for (const answer of ["to prevent contamination of the culture", "to stop contamination", "so they do not contaminate the culture"]) expect(markText(answer, twin).marksAwarded, answer).toBe(1);
+    expect(markText("to contaminate the culture", twin).marksAwarded).toBe(0);
+  });
+  test("a short first word in another form, and the key's own non, do not read as a negation", () => {
+    const kill: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["kill the non resistant"], marks: 1 }], listingRule: false };
+    const m = ["The antibiotic killed the non-resistant bacteria."];
+    expect(markText("the antibiotic kills the non-resistant ones", kill, { model: m }).marksAwarded).toBe(1);
+    expect(markText("the antibiotic killed the non-resistant bacteria", kill, { model: m }).marksAwarded).toBe(1);
+  });
+});
+
+// The lead's G addendum (29 Sep 2026, the B2 E and C2 D authors): a negated negator is a positive; a model that avoids a
+// harm names it without making her plain mention a contradiction; a group whose point is a reduction waives her
+// negation for every one of its words.
+describe("negators, double negation and harms avoided", () => {
+  test("E-NEG-DOUBLE: 'does not reduce contamination' is not the key 'reduce contamination'", () => {
+    const s: TextSpec = { kind: "text", accepted: ["hot air rises and carries microorganisms away, which reduces contamination"], keyWords: [{ any: ["reduce contamination", "rising hot air"], marks: 1 }], listingRule: false };
+    expect(markText("it does not reduce contamination", s).marksAwarded).toBe(0);
+    expect(markText("it reduces contamination", s).marksAwarded).toBe(1);
+  });
+  test("E-NEG-POINT: 'to avoid growing pathogens' names the harm; her plain or negated mention earns", () => {
+    const s: TextSpec = { kind: "text", accepted: ["to avoid growing pathogens, the bacteria that cause disease in humans"], keyWords: [{ any: ["pathogen", "harmful bacteria", "disease-causing"], marks: 1 }], listingRule: false };
+    const model = ["To avoid growing pathogens: bacteria that cause disease in humans are adapted to body temperature, 37 °C."];
+    for (const answer of ["so that pathogens do not grow", "to stop harmful bacteria growing", "pathogens could grow", "because pathogens grow best at body temperature"]) {
+      expect(markText(answer, s, { model }).marksAwarded, answer).toBe(1);
+    }
+  });
+  test("a group whose own entry is a reduction waives her negation ('stops … carrying oxygen')", () => {
+    const s: TextSpec = { kind: "text", accepted: ["it combines with haemoglobin in the blood, so the blood can carry less oxygen"], keyWords: [{ any: ["haemoglobin"], marks: 1 }, { any: ["carry less oxygen", "carrying oxygen", "cannot carry oxygen"], marks: 1 }], listingRule: false };
+    expect(markText("It stops red blood cells carrying oxygen", s).marksAwarded).toBe(1);
+  });
+});
+
+// A negated entry waives only a key about the same thing (the verifier's probe, 29 Sep 2026: "they are not resistant"
+// was paid through the group's "antibiotics do not work").
+describe("a negated entry waives her negation only for the same idea", () => {
+  test("'not resistant' is not the point 'resistant'; 'not killed by antibiotics' is", () => {
+    const s: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["resistant", "antibiotics do not work", "not killed by antibiotics"], marks: 1 }, { any: ["spread"], marks: 1 }], listingRule: false };
+    expect(markText("they are not resistant and they spread easily", s).marksAwarded).toBe(1);
+    expect(markText("they are resistant and they spread easily", s).marksAwarded).toBe(2);
+    expect(markText("they are not killed by antibiotics and they spread easily", s).marksAwarded).toBe(2);
+  });
+});

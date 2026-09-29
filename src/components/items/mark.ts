@@ -50,6 +50,11 @@ export interface MarkResult {
    */
   decision?: "qwc-band";
   /**
+   * A "show that" answer box restating the printed target: the box earns nothing and her working decides. The runner pays
+   * the ladder over her working, every mark when it reaches every point (ruling 3; the verifier, 29 Sep 2026).
+   */
+  workingOnly?: boolean;
+  /**
    * For an answer marked target by target (a label part): the ids of the targets she has not got, in the spec's
    * order. The shared-out award cannot say which one was missed, and the re-teach panel must name that one's mark
    * point, not the last point of the scheme (engine item 7, 23 Sep 2026).
@@ -90,6 +95,10 @@ function mathsSpelling(s: string): string {
     .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
     .replace(/\\(?:times|cdot)/g, "*")
     .replace(/[×·]/g, "*")
+    // A division however it is written: "÷", "\div" and "/" are one sign here.
+    .replace(/\\div/g, "/")
+    .replace(/÷/g, "/")
+    .replace(/\\,|\\ /g, "")
     .replace(/[−–]/g, "-")
     .replace(/²/g, "^2")
     .replace(/³/g, "^3")
@@ -108,16 +117,113 @@ function sameExpression(point: string, raw: string): boolean {
 }
 
 /** Her answer is an expression the stem itself prints: the question typed back, no step taken. */
-function copiesTheQuestion(raw: string, prompt: string | undefined): boolean {
+function copiesTheQuestion(raw: string, prompt: string | undefined, numbers = true): boolean {
   if (!prompt) return false;
-  const hers = mathsSpelling(raw);
+  const hers = mathsSpelling(raw.replace(/^\s*(?:[A-Za-z][\w{}]*(?:\([^()]*\))?\s*=\s*)/, ""));
   if (hers.length === 0) return false;
-  // A number the stem gives, typed back ("550" for "Write 550 as a product of its prime factors").
-  if (/^\d+(?:\.\d+)?$/.test(hers) && new RegExp(`(?<![\\d.])${hers.replace(".", "\\.")}(?![\\d.])`).test(prompt.replace(/\$[^$]*\$/g, " "))) return true;
-  return [...prompt.matchAll(/\$([^$]+)\$/g)].some((m) => {
-    const theirs = mathsSpelling(m[1]!);
-    return theirs === hers || theirs.replace(/[()]/g, "") === hers.replace(/[()]/g, "");
+  // The stem's maths, display ($$…$$) and inline ($…$) alike (S44: "$$" read as an empty inline span left a display
+  // stem's numbers in its prose, and a right answer equal to one of them was read as the question typed back).
+  const MATHS = /\$\$([\s\S]+?)\$\$|\$([^$]+)\$/g;
+  // A number the stem gives in its words, typed back ("550" for "Write 550 as a product of its prime factors"): on a
+  // form task only.
+  if (numbers && /^\d+(?:\.\d+)?$/.test(hers) && new RegExp(`(?<![\\d.])${hers.replace(".", "\\.")}(?![\\d.])`).test(prompt.replace(MATHS, " "))) return true;
+  // An expression, integral or equation the stem prints, unchanged. A lone number or symbol is not "the question".
+  return [...prompt.matchAll(MATHS)].some((m) => {
+    const theirs = mathsSpelling(m[1] ?? m[2] ?? "");
+    if (!/[+\-*/^√]|\\(?:int|frac|sqrt|div|log|ln|sin|cos|tan)/.test(theirs)) return false;
+    // The whole piece, or a side of a labelled one ("$f(x) = x^{2} - 5x + 11$" typed back as "x^2-5x+11").
+    const sides = theirs.split("=").filter((x) => /[+\-*/^√]|\\/.test(x));
+    return [theirs, ...(sides.length > 1 || theirs.includes("=") ? sides : [])].some(
+      (t) => t === hers || t.replace(/[()]/g, "") === hers.replace(/[()]/g, ""),
+    );
   });
+}
+
+/**
+ * The stem prints the part's answer: a number in its words or maths within 0.5 % of the value ("12.7 cm, correct to 3
+ * significant figures" for 12.689; "$3\sqrt{2}$"), or a maths piece the algebraic spec accepts. A show-that part may also
+ * ask for a value it does not print ("… and work out that area when x = 10"), which is marked as an answer.
+ */
+function printsTheValue(prompt: string | undefined, spec: AnswerSpec): boolean {
+  if (!prompt) return false;
+  const MATHS = /\$\$([\s\S]+?)\$\$|\$([^$]+)\$/g;
+  const pieces = [...prompt.matchAll(MATHS)].map((m) => m[1] ?? m[2] ?? "");
+  if (spec.kind === "numeric") {
+    const prose = prompt.replace(MATHS, " ").match(/[-−]?\d+(?:\.\d+)?/g) ?? [];
+    const typed = (p: string) =>
+      p
+        .replace(/\^\{?\\circ\}?|°/g, "")
+        .replace(/\\sqrt\{([^{}]*)\}/g, "√($1)")
+        .replace(/\\pi\b/g, "π")
+        .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)")
+        .replace(/\\(?:times|cdot)/g, "×")
+        .replace(/[{}]/g, "");
+    const candidates = [...prose, ...pieces.map((p) => typed(p).split("=").pop() ?? "")];
+    return candidates.some((c) => {
+      const v = parseNumeric(c)?.value;
+      return v !== undefined && Math.abs(v - spec.value) <= Math.max(1e-9, 0.005 * Math.abs(spec.value));
+    });
+  }
+  if (spec.kind === "algebraic") {
+    return pieces.some((p) => {
+      const sides = p.split("=");
+      return [p, sides[sides.length - 1] ?? p].some((t) => {
+        try {
+          return /[A-Za-z0-9]/.test(t) && checkAlgebraic(t, toAlgebraSpec(spec)).correct;
+        } catch {
+          return false;
+        }
+      });
+    });
+  }
+  return false;
+}
+
+/** A "show that" part: the stem prints the answer, and the working is what earns (ruling 3). */
+function isShowThat(prompt: string | undefined): boolean {
+  return prompt !== undefined && /\bshow that\b/i.test(prompt);
+}
+
+/**
+ * Her answer box holds working, not only a restated result: an equals sign with something done before it ("√(20² +
+ * 15²) = 25"), or a chain. "VP = 25 cm" and "AC = 13" are a label and the printed value.
+ */
+function showsWorking(raw: string): boolean {
+  const sides = raw.split(/[=≈]/);
+  if (sides.length > 2) return true;
+  if (sides.length < 2) return false;
+  const left = sides[0]!.trim();
+  return !/^[A-Za-zθα-ω][A-Za-z0-9_{}()' ]*$/.test(left) && /[\d(]|[+\-−×*/÷^√]/.test(left);
+}
+
+/**
+ * The printed target of a "show that" restated in the answer box (the verifier, 29 Sep 2026: "25", "VP = 25 cm", "3√2",
+ * "28x + 49" each earned full marks): 0 for the box. `workingOnly` tells the runner that her working decides: the ladder
+ * over her lines pays the marks, all of them when it reaches every point.
+ */
+function showThatTarget(marks: number, expected: string): MarkResult {
+  return {
+    correct: false,
+    marksAwarded: 0,
+    marksAvailable: marks,
+    expected,
+    explanation: "A show-that question prints its answer: the marks are for the working that reaches it. Write your working.",
+    workingOnly: true,
+  };
+}
+
+/**
+ * A numeric answer still to be worked out: an operation between numbers ("(83 + 17)(83 − 17)", "100 × 66") that is not a
+ * form an answer is given in (standard form, a fraction, a surd, π).
+ */
+function unevaluated(raw: string, form: string | undefined): boolean {
+  if (form && !["integer", "decimal"].includes(form)) return false;
+  const body = raw.replace(/^\s*[A-Za-zθα-ω][\w{}]*\s*=\s*/, "").trim();
+  if (/[=≈]/.test(body)) return false;
+  if (/^\s*[-−]?\d+(?:\.\d+)?\s*[×x*]\s*10\s*\^/.test(body)) return false;
+  // Only a line that is nothing but the sum (and perhaps a unit): words or a remark mean the value was read from it.
+  if (!/^[\d\s.,+\-−×x*÷/^()²³√]+(?:\s*[A-Za-zΩµ°%²³/]{1,6})?$/.test(body)) return false;
+  return /[\d)²³]\s*[+\-−×x*÷^]\s*[\d(]|\)\s*\(\s*[-−\d]|\d\s*\(\s*[-−\d]/.test(body.replace(/^\s*[-−]/, ""));
 }
 
 /**
@@ -130,7 +236,10 @@ function copiesTheQuestion(raw: string, prompt: string | undefined): boolean {
 function formTaskAward(raw: string, feedback: string, marks: number, expected: string, opts: MarkOptions, spec: AnswerSpec): MarkResult {
   const copied = copiesTheQuestion(raw, opts.prompt);
   let ladder = 0;
-  if (!copied && opts.scheme && opts.scheme.length > 0) {
+  // A bare decimal shows no step ("0.333333333333" for "change 0.3̇ to a fraction" is the question's own value, which a
+  // scheme line "x = 0.333…" would otherwise read as its first step).
+  const bareDecimal = /^\s*[-−]?\d+(?:\.\d+)?\s*$/.test(raw);
+  if (!copied && !bareDecimal && opts.scheme && opts.scheme.length > 0) {
     const ws = opts.workedSolution ?? "";
     // Her one line may show several points at once (both lines of a fraction factorised): each point reads its own copy.
     const w = markWorking(opts.scheme.map(() => raw), opts.scheme, ws);
@@ -146,7 +255,15 @@ function formTaskAward(raw: string, feedback: string, marks: number, expected: s
       if (!earned.has(s.id) && s.evidence.some((e) => sameExpression(e, raw))) ladder += s.marks;
     }
   }
-  const award = Math.max(0, Math.min(marks - 1, ladder));
+  // An equivalent expression that is not in the form asked ("x/3 − 2" for (x − 6)/3) shows the method: never 0 on a
+  // multi-mark part (the lead, 29 Sep 2026). A bare decimal shows none.
+  // A common error that names her answer decides over the floor: "x²/x − 4" is equal to x − 4, but its error (terms
+  // cancelled, not factors) earns 0 by the scheme; the ladder can still pay what it reads.
+  const named = (opts.commonErrors ?? []).some((e) =>
+    matchesCommonError(raw, e, undefined, spec.kind === "algebraic" ? spec.variables : undefined, spec.kind === "algebraic" ? spec.latex : undefined),
+  );
+  const floor = !copied && !bareDecimal && !named && spec.kind === "algebraic" && marks > 1 ? 1 : 0;
+  const award = Math.max(floor, Math.min(marks - 1, ladder));
   const base: MarkResult = {
     correct: false,
     marksAwarded: award,
@@ -488,9 +605,33 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
     return { correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: "Type an answer first." };
   }
 
+  // The question typed back (the stem's own expression, integral or equation, unchanged) takes no step and earns
+  // nothing on any part, form task or not (the verifier, 29 Sep 2026: "83² − 17²" for "work out 83² − 17²", an integral
+  // typed back, "(p + q)^7" for its expansion). A matching common error still names the misconception, its tag and its
+  // feedback, but never its marks: diagnosis is separate from marks (the lead's F, 29 Sep 2026). A bare number from the
+  // stem counts only on a form task ("550" for its prime factors): a number the stem gives is often the right answer.
+  // The number rule reads only a real form task's stem: "show your working" and "show that" are not ("Calculate the mean
+  // … Show your working out" answered 6, one of the data values, is the right mean).
+  const conversion = opts.prompt !== undefined && isFormTask(opts.prompt.replace(/\bshow that\b[^.?!]*|\bshow (?:all )?(?:your|clear) working(?: out)?\b/gi, " "), spec);
+  if ((spec.kind === "numeric" || spec.kind === "algebraic") && copiesTheQuestion(trimmed, opts.prompt, conversion)) {
+    const base: MarkResult = { correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: "That is the question as it is printed: no step has been taken yet." };
+    const named = withCommonError(base, trimmed, opts, undefined, undefined, spec.kind === "algebraic" ? spec.variables : undefined, spec.kind === "algebraic" ? spec.latex : undefined);
+    // On a show-that part the printed target is what she typed back: her working decides (showThatTarget).
+    return { ...named, marksAwarded: 0, ...(isShowThat(opts.prompt) ? { workingOnly: true } : {}) };
+  }
+
   switch (spec.kind) {
     case "numeric": {
       const v = checkNumeric(trimmed, { ...toNumericSpec(spec, { accuracyInstructed: instructsAccuracy(opts.prompt) }), variables: variableLetters(opts.prompt) });
+      if (v.correct && isShowThat(opts.prompt) && !showsWorking(trimmed) && printsTheValue(opts.prompt, spec)) return showThatTarget(marks, expected);
+      // A "work out" answered with the sum still to do ("(83 + 17)(83 − 17)" for 6600): working, not the answer. The
+      // ladder pays what it shows, never the answer's mark (the verifier, 29 Sep 2026; M4 scheme: MA1 for the form, A1
+      // for 6600).
+      if (v.correct && unevaluated(trimmed, v.parsed?.form)) {
+        const ladder = opts.scheme && opts.scheme.length > 0 ? markWorking(opts.scheme.map(() => trimmed), opts.scheme, opts.workedSolution ?? "").marks : marks - 1;
+        const award = Math.max(0, Math.min(marks - 1, ladder));
+        return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${trimmed} is right, but it is a calculation still to do: work it out to finish. ${award} of ${marks}.` };
+      }
       // A right value whose required unit is missing or wrong keeps every mark but the unit's, the answer's last; so
       // does a right value in another form, unless the form is the task (MK-01 ruling), where it earns nothing.
       const unitOnly = !v.correct && v.valueRight === true && marks > 1;
@@ -502,11 +643,27 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       if (!v.correct && v.formOnly === true && !formTask && !instructsForm(opts.prompt) && !instructsAccuracy(opts.prompt)) {
         return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Correct." };
       }
+      // A form task on a number ("Change 0.3̇ to a fraction in its simplest form") pays the steps its answer shows, as
+      // for an expression ("3/9" is the scheme's "3/9 seen", M1; the verifier, 29 Sep 2026: it had no ladder).
+      if (formTask) return formTaskAward(trimmed, v.feedback, marks, expected, opts, spec);
+      // A decimal where the stem instructs an exact form ("Give your answer as a fraction in its lowest terms"): a
+      // calculator's decimal shows no method, so with a scheme only the ladder pays ("0.1666666667" for 1/6 earns what
+      // its line shows; the verifier's E, 29 Sep 2026). An exact form where decimals are asked keeps marks − 1.
+      // Only for a fraction: the decimal is the value unconverted. "113.1" for 36π shows the evaluation, and keeps marks − 1.
+      const asksFraction = spec.acceptForms.some((f) => f === "fraction" || f === "mixed") && !spec.acceptForms.some((f) => f === "pi" || f === "surd");
+      if (!v.correct && v.formOnly === true && asksFraction && instructsForm(opts.prompt) && opts.scheme && opts.scheme.length > 0 && ["decimal", "integer"].includes(v.parsed?.form ?? "")) {
+        return formTaskAward(trimmed, v.feedback, marks, expected, opts, spec);
+      }
       const formOnly = !v.correct && v.formOnly === true && !formTask && marks > 1;
       // The right value short of the instructed accuracy (rounded to fewer places or figures than asked, or an exact form
       // where a decimal is asked): every mark but the accuracy mark. A dropped final zero and more places than asked are
       // right (CCEA's guidance; the lead's reversal of 27 Sep 2026), with the write-it-this-way reminder as words only.
       if (!v.correct && v.accuracyOnly === true && !formTask) {
+        // A common error that names this value as another mistake decides instead ("6" for 6.09 is the mean of the two
+        // velocities, marked 0, not 6.09 rounded; the lead's H, 29 Sep 2026).
+        if ((opts.commonErrors ?? []).some((e) => matchesCommonError(trimmed, e))) {
+          return withCommonError({ correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: v.feedback }, trimmed, opts);
+        }
         const award = Math.max(0, marks - 1);
         const lost = award === 0 ? `0 of ${marks}: the accuracy mark is lost.` : `${award} of ${marks}: only the accuracy mark is lost.`;
         const r: MarkResult = { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${v.feedback} ${lost}` };
@@ -568,14 +725,10 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
         const base: MarkResult = { correct: p.correct, marksAwarded: p.correct ? marks : 0, marksAvailable: marks, expected, explanation: p.feedback };
         return p.correct ? base : withCommonError(base, trimmed, opts, undefined, names);
       }
-      // The question typed back on a form task takes no step, however the spec's equivalence reads it (the pipeline
-      // agent's check, 27 Sep 2026: "Simplify fully" with the fraction typed back was paid 3/3 under "equivalent").
-      if (isFormTask(opts.prompt, spec) && copiesTheQuestion(trimmed, opts.prompt)) {
-        return formTaskAward(trimmed, "That is the expression the question gives.", marks, expected, opts, spec);
-      }
       // Where x is not one of the answer's letters, an x between numbers is the times sign ("2 x 5^2 x 11").
       const read = spec.variables.includes("x") ? trimmed : trimmed.replace(/(?<=[\d)²³])\s*x\s*(?=[\d(])/g, " × ");
       const v = checkAlgebraic(read, toAlgebraSpec(spec));
+      if (v.correct && isShowThat(opts.prompt) && !showsWorking(trimmed) && printsTheValue(opts.prompt, spec)) return showThatTarget(marks, expected);
       // The right expression in the wrong form (unsimplified, not yet a single log, not factorised) keeps every mark
       // but the last on a multi-mark part: the scheme's final mark is the form, the earlier ones the working.
       // Not where the form IS the task (MK-01 ruling, 25 Sep 2026: "simplify fully" with the question typed back was
@@ -654,11 +807,13 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       }
       const base: MarkResult = { correct: v.correct, marksAwarded: awarded, marksAvailable: marks, expected, explanation };
       if (v.correct) return base;
-      // The key-word marks already are the scheme's partial credit, so a matched common error supplies the
-      // diagnosis and the tag but never raises the marks to its "typically earned" figure: an answer that
-      // contains only the misconception must not be paid for it.
+      // A matched common error supplies the diagnosis and the tag but never raises the key words' award (the lead's I,
+      // 29 Sep 2026: "protons and neutrons" was paid 2/3 by an error written for "electrons collide with the protons").
+      // The one exception is a show-that verified by substitution: the scheme pays the check its method marks, which the
+      // error names, never the last mark (the lead's H; CCEA FM2 2021 MS caps verification at 2 of 3).
       const diagnosed = withCommonError(base, trimmed, opts);
-      return { ...diagnosed, marksAwarded: base.marksAwarded };
+      const verified = isShowThat(opts.prompt) && diagnosed.marksAwarded > base.marksAwarded;
+      return { ...diagnosed, marksAwarded: verified ? Math.min(diagnosed.marksAwarded, marks - 1) : base.marksAwarded };
     }
     case "text-long": {
       // A banded answer: the engine gathers evidence (which indicative points have a key word present)

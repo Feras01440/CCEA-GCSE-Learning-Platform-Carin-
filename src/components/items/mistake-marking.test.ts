@@ -699,3 +699,23 @@ describe("evaluateWithTrig and statementsHold", () => {
     expect(statementsHold("30 + 24 cos 50 - 10 = 35.43")).toBe(true);
   });
 });
+
+// The verifier's B (29 Sep 2026): any equation in one unknown with the same root matched a later step, so an earlier
+// step's line, the question's equation and the next step's line were all confirmed. The step's own equation with its
+// arithmetic done, side for side, still matches.
+describe("a step's equation is its own transformation, not any equation with the same root", () => {
+  const step2 = "Multiply every term by 12: $6(x + 4) + 4(x - 1) = 60$";
+  const step4 = "$10x = 40$, so $x = 4$";
+  test("an earlier step's line or the question's equation is not the solving step", () => {
+    expect(stepLineMatches("6(x + 4) + 4(x - 1) = 60", step4, { pieces: true, before: [step2] }).match).toBe(false);
+    expect(stepLineMatches("(x + 4)/2 + (x - 1)/3 = 5", step4, { pieces: true, before: [step2] }).match).toBe(false);
+    expect(stepLineMatches("10x = 40", step4, { pieces: true, before: [step2] }).match).toBe(true);
+  });
+  test("recurring decimals: 100x = 45.4545… is not the subtraction step 99x = 45", () => {
+    expect(stepLineMatches("100x = 45.45454545...", "Subtract: $99x = 45$", { pieces: true, before: ["$x = 0.454545...$", "$100x = 45.454545...$"] }).match).toBe(false);
+  });
+  test("the step's own equation with its arithmetic done still matches, either way round", () => {
+    expect(stepLineMatches("600 = 500a", "Taking up as positive: $5600 - 5000 = 500a$", { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("500a = 600", "Taking up as positive: $5600 - 5000 = 500a$", { pieces: true }).match).toBe(true);
+  });
+});
