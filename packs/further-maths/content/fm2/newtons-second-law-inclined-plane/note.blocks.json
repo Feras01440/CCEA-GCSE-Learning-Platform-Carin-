@@ -7,20 +7,11 @@
       "Decide which component takes the sine, from the shape of the problem rather than a mnemonic",
       "Write the equation of motion for a body going up a slope and for the same body coming down"
     ],
-    "minutes": 18
+    "minutes": 26
   },
   {
     "type": "h",
-    "text": "Why a slope is harder than a floor",
-    "role": "idea"
-  },
-  {
-    "type": "p",
-    "md": "On level ground the weight and the surface's push simply cancel. Tilt the surface and part of the weight starts pulling the body along the slope."
-  },
-  {
-    "type": "h",
-    "text": "1. Turn the axes onto the slope",
+    "text": "Turn the axes onto the slope",
     "role": "idea"
   },
   {
@@ -31,11 +22,29 @@
   },
   {
     "type": "p",
-    "md": "Instead of horizontal and vertical, use **along the plane** and **perpendicular to it**. The friction and any applied force already lie along the plane, and the normal reaction across it, so each goes into its equation whole."
+    "md": "Instead of horizontal and vertical, use **along the plane** and **perpendicular to it**. Friction and any applied force already lie along the plane, and the normal reaction lies across it, so each goes into its equation whole. Only a force pointing along neither axis has to be split."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a 1.5 kg block held still by friction. Its weight, $1.5 \\times 10 = 15$ N, points straight down, along neither axis, so it is the one force split in two."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A 1.5 kg block is held still on a rough slope by friction. Sort its three forces onto the two axes.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Friction: along the plane",
+        "decision": "It acts along the surface of the slope, so it already lies on the first axis."
+      },
+      {
+        "n": 2,
+        "working": "Normal reaction $R$: perpendicular to the plane",
+        "decision": "The surface pushes out at right angles to itself: the second axis."
+      },
+      {
+        "n": 3,
+        "working": "$mg = 1.5 \\times 10 = 15$ N, straight down",
+        "decision": "Vertical lies along neither axis, so this force is split into a part along the plane and a part across it."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -48,11 +57,43 @@
       "The friction"
     ],
     "answer": "The weight",
-    "explain": "With the axes turned onto the slope, the friction lies along one axis and the normal reaction along the other, as the picture shows. The weight points straight down, along neither, so the weight is the one to resolve."
+    "explain": "As step 3 of See it found, the weight points straight down, along neither axis, so it is the one force to resolve. Friction already lies along the plane and the normal reaction across it, so both go in whole.",
+    "twin": {
+      "prompt": "A rope parallel to the plane pulls a crate up a slope. Which force goes into the along-slope equation without being resolved?",
+      "options": [
+        "The rope's pull",
+        "The weight",
+        "The normal reaction"
+      ],
+      "answer": "The rope's pull",
+      "explain": "The rope lies along the plane, so its pull goes in as it stands. The weight has to be resolved first, and the normal reaction has no part along the slope at all.",
+      "optionNotes": [
+        {
+          "option": "The weight",
+          "why": "The weight points straight down, along neither axis, so only its part along the slope goes into that equation.",
+          "misconception": "fm.forces.force-left-unresolved"
+        },
+        {
+          "option": "The normal reaction",
+          "why": "The reaction is at right angles to the slope, so it belongs in the perpendicular equation and has no part along the slope."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The normal reaction",
+        "why": "It already lies at right angles to the plane, on the second axis, so it goes into the perpendicular equation whole.",
+        "misconception": "fm.forces.reaction-not-perpendicular"
+      },
+      {
+        "option": "The friction",
+        "why": "It acts along the surface of the slope, on the first axis, so it goes into the along-slope equation as it stands."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "2. Where the sine and cosine come from",
+    "text": "Where the sine and cosine come from",
     "role": "derivation"
   },
   {
@@ -66,20 +107,49 @@
     "md": "The plane is at $\\alpha$ to the horizontal, so the line perpendicular to it is at $\\alpha$ to the vertical: turning both lines through $90°$ keeps the angle between them. The weight is vertical, so it makes the angle $\\alpha$ with the perpendicular. In the right-angled triangle it builds, the side next to $\\alpha$ is $mg\\cos\\alpha$, into the slope, and the side opposite is $mg\\sin\\alpha$, along it."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a 9 kg box on a 25° slope, weight $90$ N.\n**Along the slope:** $90\\sin 25° = 38.04$ N, the side opposite $\\alpha$.\n**Into the slope:** $90\\cos 25° = 81.57$ N, the side next to it."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 7 kg box rests on a 25° slope. Find the two parts of the box's weight: along the slope and into it.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight $= 7 \\times 10 = 70$ N",
+        "decision": "The force to split, in newtons."
+      },
+      {
+        "n": 2,
+        "working": "Along the slope: $70\\sin 25° = 29.58$ N",
+        "decision": "Opposite the angle in the weight's triangle, so the sine.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Into the slope: $70\\cos 25° = 63.44$ N",
+        "decision": "Next to the angle, so the cosine.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g15",
     "kind": "number",
-    "prompt": "A body of weight 90 N rests on a slope at 40°. What is the component of its weight along the slope, in newtons, to 2 decimal places?",
+    "prompt": "A body of weight 90 N sits on a 40° slope. What is the weight's part along the slope, in newtons, to 2 decimal places?",
     "answer": "57.85",
-    "explain": "Along the slope is the side opposite $\\alpha$ in the weight's triangle, so it takes the sine, as the 9 kg box above did: $90\\sin 40° = 57.85$ N. The cosine gives 68.94 N, the part pressing into the slope."
+    "explain": "Along the slope is the side opposite $\\alpha$, so it takes the sine, as step 2 of See it did: $90\\sin 40° = 57.85$ N. The cosine gives 68.94 N, the part pressing into the slope.",
+    "twin": {
+      "prompt": "A crate of weight 130 N sits on a 35° slope. What is the part of its weight pressing into the slope, in newtons, to 2 decimal places?",
+      "answer": "106.49",
+      "explain": "Into the slope is the side next to the angle, so the cosine: $130\\cos 35° = 106.49$ N."
+    }
   },
   {
     "type": "h",
-    "text": "3. Why the flat-slope check never fails",
+    "text": "Why the flat-slope check never fails",
     "role": "why"
   },
   {
@@ -90,7 +160,37 @@
     "type": "callout",
     "kind": "why",
     "title": "Why the check is worth more than the rule",
-    "md": "A remembered rule is the first thing to go under pressure, and this is the most repeated slip on the topic. The flat-slope test rebuilds both components from something you cannot forget: a flat floor holds a body up and lets it slide nowhere."
+    "md": "A remembered rule is the first thing to go under pressure, and this is the most repeated slip on the topic: Summer 2019 Q6 and Summer 2025 Q6 both report sine and cosine swapped. The flat-slope test rebuilds both parts from something you cannot forget: a flat floor holds a body up and lets it slide nowhere."
+  },
+  {
+    "type": "see",
+    "kind": "process",
+    "stem": "A student writes the part of a 50 N weight along a 15° slope as $50\\cos 15°$. Check it before using it.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Let the slope go flat: $\\alpha \\to 0°$",
+        "decision": "An extreme case settles the choice before any arithmetic."
+      },
+      {
+        "n": 2,
+        "working": "$50\\cos 0° = 50$ N along a flat floor",
+        "decision": "A flat floor cannot drag a body along it with its whole weight, so the cosine fails."
+      },
+      {
+        "n": 3,
+        "working": "$50\\sin 0° = 0$",
+        "decision": "Nothing drives a body along a flat floor, so the sine passes."
+      },
+      {
+        "n": 4,
+        "working": "Along the slope: $50\\sin 15° = 12.94$ N",
+        "decision": "The checked function, used at the real angle.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -103,32 +203,135 @@
       "Neither: both parts shrink"
     ],
     "answer": "The part along the slope",
-    "explain": "Run the flat-slope check the other way: as the slope steepens towards $90°$, $\\sin\\alpha$ grows towards 1 and $\\cos\\alpha$ shrinks towards 0. So the part along the slope becomes nearly the whole weight: the body is nearly falling freely, and the surface barely touches it."
+    "explain": "Run the See it check at the other extreme: as $\\alpha$ nears $90°$, $\\sin\\alpha$ nears 1 and $\\cos\\alpha$ nears 0. So the part along the slope becomes nearly the whole weight: the body is almost falling freely, and the surface barely touches it.",
+    "twin": {
+      "prompt": "A slope is made flatter, from 60° to 30°. What happens to the part of the weight pressing into the slope?",
+      "options": [
+        "It gets larger",
+        "It gets smaller",
+        "It stays the same"
+      ],
+      "answer": "It gets larger",
+      "explain": "Flatter moves towards the flat floor, where the surface takes the whole weight. The part into the slope is $mg\\cos\\alpha$, and $\\cos 30° = 0.87$ is larger than $\\cos 60° = 0.5$.",
+      "optionNotes": [
+        {
+          "option": "It gets smaller",
+          "why": "Flatter moves towards the flat floor, where the surface takes the whole weight, so the part pressing into the slope grows.",
+          "misconception": "fm.forces.sin-cos-swapped"
+        },
+        {
+          "option": "It stays the same",
+          "why": "The part into the slope is $mg\\cos\\alpha$, which changes with the angle, so tilting the slope changes it."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The part into the slope",
+        "why": "That part shrinks as the slope steepens, because $\\cos\\alpha$ falls towards 0; it is the flat-floor case where it is nearly the whole weight.",
+        "misconception": "fm.forces.sin-cos-swapped"
+      },
+      {
+        "option": "Neither: both parts shrink",
+        "why": "The two parts always rebuild the whole weight, so as one shrinks the other grows towards the full weight."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Across the slope, the forces balance",
+    "role": "idea"
   },
   {
     "type": "p",
     "md": "A body accelerating on a slope is not in equilibrium, but it is not far off. Perpendicular to the plane the forces always balance, because nothing sinks into the surface or lifts off it, so $R = mg\\cos\\alpha$. Along the plane there is a resultant, and that is where the acceleration comes from."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a 3 kg block slides down a 30° slope against 3 N of friction. **Across:** $30\\cos 30° = 25.98$ N into the slope, so $R = 25.98$ N and those forces balance. **Along:** $30\\sin 30° - 3 = 12$ N is left over, so $12 = 3a$ and $a = 4$ m/s²."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 2 kg block slides down a 40° slope against 5 N of friction. Find the normal reaction and the acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Across: $20\\cos 40° = 15.32$ N into the slope",
+        "decision": "The weight's part pressing into the surface."
+      },
+      {
+        "n": 2,
+        "working": "$R = 15.32$ N",
+        "decision": "Nothing moves across the slope, so the reaction balances that part exactly.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Along: $20\\sin 40° - 5 = 7.86$ N",
+        "decision": "Down the slope positive, friction against the slide: a force is left over.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$7.86 = 2a$, so $a = 3.93$ m/s²",
+        "decision": "The left-over force is what accelerates the block.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g7",
     "kind": "choice",
-    "prompt": "A body is accelerating down a rough slope. Which statement is true?",
+    "prompt": "A sledge speeds up as it slides down a rough slope. What is true of the forces on it?",
     "options": [
       "The perpendicular forces balance but the along-slope forces do not",
       "All the forces balance",
       "The along-slope forces balance but the perpendicular ones do not"
     ],
     "answer": "The perpendicular forces balance but the along-slope forces do not",
-    "explain": "The body does not sink into the slope or lift off it, so across the slope the forces balance and $R = mg\\cos\\alpha$. Along the slope it is speeding up, so there is a resultant there; if everything balanced there would be no acceleration."
+    "explain": "Across the slope nothing sinks in or lifts off, so the forces balance, as $R = 15.32$ N did in See it. Along the slope a force is left over, which is why the body speeds up; if everything balanced it would not accelerate.",
+    "twin": {
+      "prompt": "A block moves down a rough slope at a steady speed. What is true of the forces on it?",
+      "options": [
+        "The forces balance along and across the slope",
+        "Only the perpendicular forces balance",
+        "Only the along-slope forces balance"
+      ],
+      "answer": "The forces balance along and across the slope",
+      "explain": "Constant speed means no acceleration, so there is no resultant along the slope either: the weight's part along it equals the friction. Across the slope the forces balance as always.",
+      "optionNotes": [
+        {
+          "option": "Only the perpendicular forces balance",
+          "why": "That is true of a body speeding up; at a constant speed there is no acceleration, so the along-slope forces balance too.",
+          "misconception": "fm.forces.equilibrium-assumed-when-accelerating"
+        },
+        {
+          "option": "Only the along-slope forces balance",
+          "why": "Nothing ever sinks into the slope or lifts off it, so the perpendicular forces always balance as well."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "All the forces balance",
+        "why": "If every force balanced there would be no resultant, but the body is speeding up, so something is left over along the slope.",
+        "misconception": "fm.forces.equilibrium-assumed-when-accelerating"
+      },
+      {
+        "option": "The along-slope forces balance but the perpendicular ones do not",
+        "why": "It is the other way round: nothing moves into or out of the surface, while along it the body speeds up.",
+        "misconception": "fm.forces.equilibrium-assumed-when-accelerating"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "4. The two things CCEA fixes for you",
+    "text": "The two things CCEA fixes for you",
     "role": "idea"
   },
   {
@@ -139,28 +342,88 @@
   },
   {
     "type": "p",
-    "md": "Two restrictions make this topic smaller than it looks on other boards. An applied force **always acts parallel to the plane**, so it never needs resolving, and friction is always **given as a value**: $F = \\mu R$ is not on this specification. The normal reaction still belongs on every diagram."
+    "md": "Two restrictions make this topic smaller than it looks on other boards. An applied force **always acts parallel to the plane**, so it never needs resolving. Friction is **given**, as a value or as so many newtons per kilogram: $F = \\mu R$ is not on this specification. The normal reaction still belongs on every diagram."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a 2 kg box is pulled up a 20° slope by 30 N parallel to it, against 4 N of friction. The pull and the friction go in as they stand; only the weight is resolved, $20\\sin 20° = 6.84$ N down the slope. The resultant up it is $30 - 6.84 - 4 = 19.16$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 13 kg box is pulled up a 15° slope by 60 N parallel to it, against 8 N of friction. Find the resultant up the slope.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Pull: 60 N along the plane, in as it stands",
+        "decision": "It already lies along the slope, so it needs no resolving."
+      },
+      {
+        "n": 2,
+        "working": "Friction: 8 N down the slope",
+        "decision": "Given as a value, and the box moves up, so it acts down."
+      },
+      {
+        "n": 3,
+        "working": "Weight's part down the slope: $130\\sin 15° = 33.65$ N",
+        "decision": "The weight is the only force resolved.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "Resultant up the slope: $60 - 33.65 - 8 = 18.35$ N",
+        "decision": "Up positive: the pull minus both forces against it.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g3",
     "kind": "choice",
-    "prompt": "On a CCEA inclined-plane question, in which direction does an externally applied force act?",
+    "prompt": "A CCEA slope question adds a push or a pull on the body. How is it directed?",
     "options": [
       "Parallel to the plane",
       "Horizontally",
       "At whatever angle the question chooses"
     ],
     "answer": "Parallel to the plane",
-    "explain": "The Teacher Guidance restricts it in terms: any push or pull on a CCEA slope acts parallel to the plane, as P does in the picture. That is why the weight is the only force you ever resolve here."
+    "explain": "The Teacher Guidance fixes it: any push or pull on a CCEA slope acts parallel to the plane, like the 60 N pull in See it. That is why the weight is the only force you ever resolve here.",
+    "twin": {
+      "prompt": "On a CCEA slope question, how is the friction on the body given?",
+      "options": [
+        "As a value, or per kilogram of mass",
+        "As μR, from the normal reaction",
+        "Never: you work it out from the angle"
+      ],
+      "answer": "As a value, or per kilogram of mass",
+      "explain": "CCEA gives the friction, as a number of newtons or as so many newtons per kilogram. $F = \\mu R$ is not on this specification, and the angle fixes only the weight's parts.",
+      "optionNotes": [
+        {
+          "option": "As μR, from the normal reaction",
+          "why": "$F = \\mu R$ is A-level mechanics and is not on this specification; CCEA gives the friction to you."
+        },
+        {
+          "option": "Never: you work it out from the angle",
+          "why": "The angle fixes the weight's two parts, not the friction, which the question gives as a value or per kilogram."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Horizontally",
+        "why": "A horizontal push would need resolving on a slope, and CCEA rules that out: every applied force on its slopes acts along the plane.",
+        "misconception": "fm.forces.force-left-unresolved"
+      },
+      {
+        "option": "At whatever angle the question chooses",
+        "why": "Other boards set pulls at an angle to the plane, but CCEA's Teacher Guidance keeps every applied force parallel to it."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "5. Sliding down",
+    "text": "Sliding down",
     "role": "variant"
   },
   {
@@ -171,19 +434,64 @@
   },
   {
     "type": "p",
-    "md": "**A 12 kg box sliding down a 25° slope against 20 N of friction.**\n**Perpendicular:** $R = 120\\cos 25°$, so $R = 108.76$ N.\n**Along, down positive:** $120\\sin 25° = 50.71$ N pulls it down; friction opposes with 20 N.\n**So:** $50.71 - 20 = 12a$, giving $a = 2.56$ m/s²."
+    "md": "Sliding down, the weight's part along the slope drives the body and friction opposes it. Take down the slope as positive, so the acceleration comes out positive, and find $R$ first if it is asked."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 12 kg box slides down a 25° slope against 20 N of friction. Find the normal reaction and the acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Across: $R = 120\\cos 25° = 108.76$ N",
+        "decision": "Perpendicular balance gives the reaction.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Along, down positive: $120\\sin 25° = 50.71$ N",
+        "decision": "The part of the weight that drives the slide.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$50.71 - 20 = 12a$",
+        "decision": "Friction opposes the motion, so it comes off.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$a = 2.56$ m/s²",
+        "decision": "Positive, so the box speeds up down the slope.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g4",
     "kind": "number",
-    "prompt": "A 7 kg crate slides down a 30° slope against 14 N of friction. What is its acceleration, in m/s²? Take $g = 10$ m/s².",
+    "prompt": "Take $g = 10$ m/s². A 17 kg crate slides down a 30° slope against 34 N of friction. What is its acceleration, in m/s²?",
     "answer": "3",
-    "explain": "Sliding down, the weight's part along the slope drives and friction opposes, as for the 12 kg box above. Here $70\\sin 30° = 35$ N, so $35 - 14 = 7a$ and $a = 3$ m/s²."
+    "explain": "Sliding down, the weight's part drives and friction opposes, as in step 3 of See it: $170\\sin 30° = 85$ N, so $85 - 34 = 17a$ and $a = 3$ m/s².",
+    "twin": {
+      "prompt": "Take $g = 10$ m/s². A 16 kg sack slides down a 20° slope against 20 N of friction. What is its acceleration, in m/s², to 2 decimal places?",
+      "answer": "2.17",
+      "explain": "$160\\sin 20° = 54.72$ N drives it and the friction opposes: $54.72 - 20 = 16a$, so $a = 2.17$ m/s²."
+    }
   },
   {
     "type": "h",
-    "text": "6. Pushed up the slope",
+    "text": "Pushed up the slope",
     "role": "variant"
   },
   {
@@ -197,20 +505,52 @@
     "md": "The push is parallel to the plane, so only the weight needs resolving. The block moves up, so friction and the weight's part along the slope both act down it, against the push."
   },
   {
-    "type": "p",
-    "md": "**Along, up positive:** $70 - 80\\sin 25° - 12 = 8a$\n**So:** $70 - 33.81 - 12 = 8a$, giving $a = 3.02$ m/s²."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 8 kg block is pushed up a 25° slope by 70 N parallel to it, against 12 N of friction. Find its acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight's part down the slope: $80\\sin 25° = 33.81$ N",
+        "decision": "Resolve the weight only.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Up positive: $70 - 33.81 - 12 = 8a$",
+        "decision": "Both forces against the push are subtracted.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$24.19 = 8a$, so $a = 3.02$ m/s²",
+        "decision": "Positive, so it speeds up the slope.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g9",
     "kind": "number",
-    "prompt": "A 4 kg block is pulled up a slope at 20° to the horizontal by a 40 N force parallel to the plane, against 6 N of friction. What is its acceleration, in m/s², to 2 decimal places? Take $g = 10$ m/s².",
+    "prompt": "Take $g = 10$ m/s². A 9 kg block is pulled up a 15° slope by 80 N parallel to it, against 11 N of friction. What is its acceleration, in m/s², to 2 decimal places?",
     "answer": "5.08",
-    "explain": "Going up, the weight's part and the friction both act against the pull, as for the block above. Only the weight is resolved: it is $4 \\times 10 = 40$ N, and its part down the slope is $40\\sin 20° = 13.68$ N. So $40 - 13.68 - 6 = 4a$ and $a = 5.08$ m/s²."
+    "explain": "Going up, the weight's part and the friction both act against the pull, as in step 2 of See it. The weight is $90$ N, its part down the slope $90\\sin 15° = 23.29$ N, so $80 - 23.29 - 11 = 9a$ and $a = 5.08$ m/s².",
+    "twin": {
+      "prompt": "Take $g = 10$ m/s². An 11 kg trunk is pulled up an 18° slope by 90 N parallel to it, against 10 N of friction. What is its acceleration, in m/s², to 2 decimal places?",
+      "answer": "4.18",
+      "explain": "$110\\sin 18° = 33.99$ N and the friction both oppose the pull: $90 - 33.99 - 10 = 11a$, so $a = 4.18$ m/s²."
+    }
   },
   {
     "type": "h",
-    "text": "7. Friction turns round",
+    "text": "Friction turns round",
     "role": "variant"
   },
   {
@@ -221,33 +561,44 @@
   },
   {
     "type": "p",
-    "md": "Friction opposes the motion, so it points up the slope when the body slides down and down the slope when the body moves up. Nothing else on the diagram changes. That is why a body always slows harder going up than it speeds up coming down: going up, the weight's part and friction add."
+    "md": "Friction opposes the motion, so it points up the slope when the body slides down and down the slope when the body moves up. Nothing else on the diagram changes. Going up, the weight's part and friction add, so a body always slows harder going up than it speeds up coming down."
   },
   {
     "type": "p",
-    "md": "**Shown:** say the weight's part along the slope is 10 N and friction is 4 N. Sliding down, $10 - 4 = 6$ N drives the body; moving up, $10 + 4 = 14$ N slows it."
+    "md": "Summer 2019 Q6 compared exactly this: work each acceleration in its own direction of travel, so both come out positive, and only then compare sizes."
   },
   {
-    "type": "gate",
-    "id": "g5",
-    "kind": "choice",
-    "prompt": "The same block on the same rough slope is released to slide down, and then projected up. Which is larger in size?",
-    "options": [
-      "The deceleration going up",
-      "The acceleration coming down",
-      "They are equal"
-    ],
-    "answer": "The deceleration going up",
-    "explain": "Look at the two pictures: only friction turns round. Going up, the weight's part and friction both point down the slope and add; coming down, friction works against the weight's part. So the deceleration going up is the larger."
-  },
-  {
-    "type": "h",
-    "text": "8. See it done: both ways",
-    "role": "see"
-  },
-  {
-    "type": "p",
-    "md": "**A 6 kg block on a 35° slope, with 10 N of friction either way.** Its weight's part along the slope is $60\\sin 35° = 34.41$ N.\n**Down the slope:** $34.41 - 10 = 6a$, so $a = 4.07$ m/s².\n**Up the slope:** $34.41 + 10 = 6a$, so the deceleration is $7.40$ m/s².\nTake the resultant in the direction of travel each time, and both come out as positive sizes."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 6 kg block is on a 35° slope, with 10 N of friction whichever way it moves. Find its acceleration sliding down and its deceleration moving up.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight's part: $60\\sin 35° = 34.41$ N down the slope",
+        "decision": "The same in both directions of travel: work it out once.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Sliding down: $34.41 - 10 = 6a$, so $a = 4.07$ m/s²",
+        "decision": "Friction points up the slope, against the slide.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Moving up: $34.41 + 10 = 6a$, so the deceleration is $7.40$ m/s²",
+        "decision": "Friction turns round and joins the weight's part.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
@@ -258,15 +609,67 @@
   },
   {
     "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "One block, one rough slope: it is released to slide down, then projected up it. Which is larger in size?",
+    "options": [
+      "The deceleration going up",
+      "The acceleration coming down",
+      "They are equal"
+    ],
+    "answer": "The deceleration going up",
+    "explain": "Only friction turns round. Going up, it joins the weight's part, as in step 3 of See it: 7.40 m/s² against 4.07 m/s² coming down. So the deceleration going up is the larger.",
+    "twin": {
+      "prompt": "A block projected up a rough slope slows at 7 m/s². Sliding back down, how does its acceleration compare?",
+      "options": [
+        "Less than 7 m/s²",
+        "More than 7 m/s²",
+        "Exactly 7 m/s²"
+      ],
+      "answer": "Less than 7 m/s²",
+      "explain": "Going up, the friction and the weight's part add. Coming down, the friction works against the weight's part, so less is left over and the acceleration is smaller.",
+      "optionNotes": [
+        {
+          "option": "More than 7 m/s²",
+          "why": "Going up, friction and the weight's part add; coming down, friction opposes the weight's part, so less is left over.",
+          "misconception": "fm.forces.friction-direction"
+        },
+        {
+          "option": "Exactly 7 m/s²",
+          "why": "That needs the same resultant both ways, but friction turns round, so the two resultants differ.",
+          "misconception": "fm.forces.friction-direction"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The acceleration coming down",
+        "why": "Coming down, friction works against the weight's part, so less is left over than going up, where the two add.",
+        "misconception": "fm.forces.friction-direction"
+      },
+      {
+        "option": "They are equal",
+        "why": "Only the friction turns round, and that changes the resultant: going up the two forces add, coming down they partly cancel.",
+        "misconception": "fm.forces.friction-direction"
+      }
+    ]
+  },
+  {
+    "type": "gate",
     "id": "g6",
     "kind": "number",
-    "prompt": "A 5 kg body is projected up a 30° slope against 10 N of friction. What is its deceleration, in m/s²? Take $g = 10$ m/s².",
+    "prompt": "Take $g = 10$ m/s². A 19 kg body is projected up a 30° slope against 38 N of friction. What is its deceleration, in m/s²?",
     "answer": "7",
-    "explain": "Going up, the friction adds to the weight's part, as in the \"up the slope\" line above: $50\\sin 30° = 25$ N, so $25 + 10 = 5a$ and the deceleration is 7 m/s²."
+    "explain": "Going up, friction joins the weight's part, as in step 3 of See it: $190\\sin 30° = 95$ N, so $95 + 38 = 19a$ and the deceleration is 7 m/s².",
+    "twin": {
+      "prompt": "Take $g = 10$ m/s². A 6 kg body is projected up a 25° slope against 9 N of friction. What is its deceleration, in m/s², to 2 decimal places?",
+      "answer": "5.73",
+      "explain": "Both act down the slope: $60\\sin 25° + 9 = 34.36$ N, so the deceleration is $34.36 \\div 6 = 5.73$ m/s²."
+    }
   },
   {
     "type": "h",
-    "text": "9. Projected up, then stopping",
+    "text": "Projected up, then stopping",
     "role": "variant"
   },
   {
@@ -277,11 +680,46 @@
   },
   {
     "type": "p",
-    "md": "A block sent up a slope has no push. The weight's part along the slope and the friction both act down it, so the block decelerates, and a constant-acceleration formula then says how far it goes before it stops."
+    "md": "A block sent up a slope has no push. The weight's part along the slope and the friction both act down it, so the block decelerates. A constant-acceleration formula then says how far it goes; a stopping distance given first hands you the deceleration instead (2021)."
   },
   {
-    "type": "p",
-    "md": "**Against the motion:** $60\\sin 22° + 15$, which is 37.48 N.\n**Deceleration:** $37.48 = 6a$, so $a = 6.25$ m/s².\n**Distance to stop from 9 m/s:** $0 = 9^2 - 2 \\times 6.25 \\times s$, so $s = 6.48$ m."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 6 kg block is sent up a 22° slope at 9 m/s against 15 N of friction. How far does it travel before it stops?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Against the motion: $60\\sin 22° + 15 = 37.48$ N",
+        "decision": "Both forces point down the slope.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$37.48 = 6a$, so the deceleration is $6.25$ m/s²",
+        "decision": "Divide by the mass.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$0 = 9^2 - 2 \\times 6.25 \\times s$",
+        "decision": "It stops, so $v = 0$; it is slowing, so the $2as$ term is taken off.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$s = 6.48$ m",
+        "decision": "Solve for the distance.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -289,11 +727,16 @@
     "kind": "number",
     "prompt": "A block moving up a slope at 6 m/s decelerates at 4 m/s². How far up the slope does it travel before it stops, in metres?",
     "answer": "4.5",
-    "explain": "It stops, so $v = 0$, and a deceleration of 4 means $a = -4$, as in the stopping line above: $v^2 = u^2 + 2as$ gives $0 = 6^2 - 2 \\times 4 \\times s$, so $8s = 36$ and $s = 4.5$ m."
+    "explain": "It stops, so $v = 0$, and a deceleration of 4 means $a = -4$, as the stopping line of See it did: $0 = 6^2 - 2 \\times 4 \\times s$, so $s = 36 \\div 8 = 4.5$ m.",
+    "twin": {
+      "prompt": "A block moving up a slope at 8 m/s decelerates at 5 m/s². How far does it travel before it stops, in metres?",
+      "answer": "6.4",
+      "explain": "$0 = 8^2 - 2 \\times 5 \\times s$, so $10s = 64$ and $s = 6.4$ m."
+    }
   },
   {
     "type": "h",
-    "text": "10. Exam twists",
+    "text": "Exam twist: mark the forces",
     "role": "twists"
   },
   {
@@ -304,32 +747,119 @@
   },
   {
     "type": "p",
-    "md": "**Mark the forces** (2021, 2024, 2025). Three arrows: the weight straight down, the reaction at right angles to the slope, and friction against the motion. $mg\\sin\\alpha$ is part of the weight, not a fourth force: for an 11 kg box on a 25° slope the weight is $11 \\times 10 = 110$ N, drawn once, and $110\\sin 25° = 46.49$ N is found from that arrow, never drawn as another."
+    "md": "**Mark the forces** (2021, 2024, 2025). Three arrows: the weight straight down, the reaction at right angles to the slope, and friction against the motion. $mg\\sin\\alpha$ is part of the weight, not a fourth force; the 2024 report saw that extra arrow down the slope often."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "An 11 kg box slides down a rough 25° slope. Mark its forces, then find the pull along the slope.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weight: $11 \\times 10 = 110$ N, straight down",
+        "decision": "Drawn once, from the centre of the box."
+      },
+      {
+        "n": 2,
+        "working": "Reaction $R$: at right angles to the slope",
+        "decision": "The surface pushes out, never along."
+      },
+      {
+        "n": 3,
+        "working": "Friction: up the slope",
+        "decision": "It opposes the slide."
+      },
+      {
+        "n": 4,
+        "working": "$110\\sin 25° = 46.49$ N, down the slope",
+        "decision": "Found from the weight arrow, never drawn as another force."
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g14",
     "kind": "choice",
-    "prompt": "A box slides down a rough slope. A student marks four forces on it: the weight straight down, the normal reaction, friction up the slope, and a force pulling it down the slope. Which arrow should not be there?",
+    "prompt": "A crate slides down a rough slope. A student marks four forces on it: the weight straight down, the normal reaction, friction up the slope, and a force pulling it down the slope. Which arrow should not be there?",
     "options": [
       "The force down the slope",
       "The normal reaction",
       "The friction up the slope"
     ],
     "answer": "The force down the slope",
-    "explain": "The picture above has three forces and no more. The pull down the slope is the weight's own component, and the weight is already drawn, so drawing it again counts it twice. The 2024 report saw that extra arrow often, and an extra force costs the diagram mark."
+    "explain": "The See it drew three forces and no more. The pull down the slope is the weight's own component, and the weight is already drawn, so drawing it again counts it twice. The 2024 report saw that extra arrow often, and an extra force costs the diagram mark.",
+    "twin": {
+      "prompt": "A force parallel to a rough slope pushes a crate up it. How many forces go on its diagram?",
+      "options": [
+        "Four",
+        "Three",
+        "Five"
+      ],
+      "answer": "Four",
+      "explain": "The weight, the normal reaction, friction down the slope and the push itself. The weight's part along the slope is not a fifth force; it is already inside the weight arrow.",
+      "optionNotes": [
+        {
+          "option": "Three",
+          "why": "The push is a fourth force, beside the weight, the normal reaction and the friction down the slope."
+        },
+        {
+          "option": "Five",
+          "why": "The weight's part along the slope is not a separate force; drawing it as well counts the weight twice.",
+          "misconception": "fm.forces.extra-forces-added"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The normal reaction",
+        "why": "The surface pushes on the crate at right angles to the slope, so the reaction is a real force and belongs on the diagram.",
+        "misconception": "fm.forces.normal-reaction-omitted"
+      },
+      {
+        "option": "The friction up the slope",
+        "why": "The slope is rough and the crate slides down, so friction acts up the slope and must be drawn."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Exam twist: a value to show",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "**Kinematics at either end** (2021, 2024, 2025). A stopping distance may come first, giving the deceleration before any force (2021), or a speed or distance may come last, from your acceleration. First line: decide which way round."
+    "md": "**A value to show** (2021, 2024). A deceleration or a friction force is printed for you to show. The equation goes in with the letter still in it; the value must come out, not go in. The 2024 report saw many put the printed value into an equation instead."
   },
   {
-    "type": "p",
-    "md": "**A value to show** (2021, 2024). A deceleration or a friction force is printed for you to show. The equation goes in with the letter in it; the value must come out, not go in."
-  },
-  {
-    "type": "p",
-    "md": "**Shown:** a 6 kg box moving up a 20° slope against 9 N; show the deceleration is 5 to the nearest whole number.\n**Up positive:** $-60\\sin 20° - 9 = 6a$\n**So:** $-29.52 = 6a$, $a = -4.92$: a deceleration of 5, the printed value last."
+    "type": "see",
+    "kind": "proof",
+    "stem": "A 8 kg box moves up a 20° slope against 12 N of friction. Show that its deceleration is 5 m/s², to the nearest whole number.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Up positive: $-80\\sin 20° - 12 = 8a$",
+        "decision": "The equation with $a$ still in it: both forces act down the slope.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$-39.36 = 8a$",
+        "decision": "Collect the numbers on one side.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$a = -4.92$: a deceleration of 4.92, which is 5 to the nearest whole number",
+        "decision": "The printed value comes out last.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -342,40 +872,132 @@
       "Quote v = u + at with a = 4"
     ],
     "answer": "Form the equation of motion and solve it for a",
-    "explain": "A show-that is marked on the method: the equation formed with $a$ still in it, then solved, so the printed value comes out last, as the 6 kg box above reached 5. The 2024 report saw many put the given value into an equation instead; only the full method earned full marks."
+    "explain": "A show-that is marked on the method: the equation formed with $a$ still in it, then solved, so the printed value comes out last, as on the last line of See it. The 2024 report saw many put the given value into an equation instead; only the full method earned full marks.",
+    "twin": {
+      "prompt": "A part says: show that the friction on the sledge is 18 N. Which working earns full marks?",
+      "options": [
+        "Resolve, form the equation with F in it, and solve for F",
+        "Put F = 18 into the equation and check both sides agree",
+        "State F = 18 N on the force diagram"
+      ],
+      "answer": "Resolve, form the equation with F in it, and solve for F",
+      "explain": "The marks are for the derivation: the equation with the letter in it, then its solution. Checking the printed value is verification, capped below full marks.",
+      "optionNotes": [
+        {
+          "option": "Put F = 18 into the equation and check both sides agree",
+          "why": "That verifies the printed value instead of deriving it, which CCEA caps below full marks.",
+          "misconception": "fm.show-that.verify-by-substitution"
+        },
+        {
+          "option": "State F = 18 N on the force diagram",
+          "why": "The printed value earns nothing on its own: the marks are for the equation and its solution.",
+          "misconception": "fm.show-that.steps-missing"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Put a = 4 into the equation and check that it balances",
+        "why": "That checks the printed value rather than deriving it, which CCEA caps below full marks.",
+        "misconception": "fm.show-that.verify-by-substitution"
+      },
+      {
+        "option": "Quote v = u + at with a = 4",
+        "why": "It starts from the printed value, so it shows nothing: the deceleration has to come out of the forces.",
+        "misconception": "fm.show-that.given-value-used-early"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Exam twist: friction per kilogram",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "**The return journey** (2021, 2024). After stopping, the block slides back down and friction turns round. First line: a new equation, down the slope positive."
+    "md": "**Friction per kilogram** (2025). The friction is given in newtons per kilogram of mass. First line: multiply by the body's own mass before it goes into the equation. It is a one-line conversion, and it carries its own mark."
   },
   {
-    "type": "p",
-    "md": "**Friction per kilogram** (2025). The friction is given in newtons per kilogram of mass. First line: multiply by the body's own mass before it goes into the equation."
-  },
-  {
-    "type": "p",
-    "md": "**Shown:** 2 N per kg on a 9 kg box sliding down a 30° slope.\n**Friction:** $2 \\times 9 = 18$ N\n**Equation:** $45 - 18 = 9a$, so $a = 3$ m/s²."
-  },
-  {
-    "type": "p",
-    "md": "**Which option wins** (2019). Two ways to move one block are compared, say sliding down or pulled up. First line: each acceleration in its own direction of travel; then compare sizes."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 18 kg box slides down a 25° slope, and the friction is 3 N per kg of mass. Find its acceleration.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Friction: $3 \\times 18 = 54$ N",
+        "decision": "Per kilogram, so multiply by the body's own mass.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$180\\sin 25° - 54 = 18a$",
+        "decision": "Down positive; the friction opposes the slide.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$22.07 = 18a$, so $a = 1.23$ m/s²",
+        "decision": "Divide by the mass.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g12",
     "kind": "choice",
-    "prompt": "A 7 kg box slides down a rough slope, and the friction is given as 3 N per kg of mass. What goes into the equation of motion for the friction?",
+    "prompt": "A 7 kg box is sliding down a rough slope, with friction of 3 N per kg of mass. What goes into the equation of motion for the friction?",
     "options": [
       "21 N",
       "3 N",
       "70 N"
     ],
     "answer": "21 N",
-    "explain": "Per kilogram means every kilogram of the box is resisted by 3 N, so multiply by its own mass, as the 9 kg box above did: $3 \\times 7 = 21$ N."
+    "explain": "Per kilogram means each of the box's 7 kg is resisted by 3 N, so multiply by its own mass, as step 1 of See it did: $3 \\times 7 = 21$ N.",
+    "twin": {
+      "prompt": "A 12 kg sledge meets friction of 1.5 N per kg of mass. What friction force goes into its equation?",
+      "options": [
+        "18 N",
+        "1.5 N",
+        "120 N"
+      ],
+      "answer": "18 N",
+      "explain": "$1.5 \\times 12 = 18$ N: every one of its 12 kilograms is resisted by 1.5 N.",
+      "optionNotes": [
+        {
+          "option": "1.5 N",
+          "why": "That is the friction on one kilogram only; multiply by the sledge's 12 kg.",
+          "misconception": "fm.new.friction-per-kg-not-converted"
+        },
+        {
+          "option": "120 N",
+          "why": "120 N is the sledge's weight; per kilogram means multiply by the mass, 12, not by the weight.",
+          "misconception": "fm.connected.mass-force-confused"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "3 N",
+        "why": "That is the friction on one kilogram only; the box has 7 of them, so multiply by 7.",
+        "misconception": "fm.new.friction-per-kg-not-converted"
+      },
+      {
+        "option": "70 N",
+        "why": "70 N is the box's weight, $7 \\times 10$; the friction per kilogram multiplies the mass, not $g$.",
+        "misconception": "fm.connected.mass-force-confused"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "11. Going further: up, stop and back",
+    "text": "Going further: up, stop and back",
     "role": "further"
   },
   {
@@ -389,22 +1011,65 @@
     "md": "The hardest shape so far (2021) runs the whole trip: up, stop, and back to the start. Here a 5 kg block leaves $A$ at 6 m/s up a 20° slope and stops at $B$, 3.6 m further up."
   },
   {
-    "type": "p",
-    "md": "**Deceleration from the trip up:** $0 = 6^2 - 2a \\times 3.6$, so $a = 5$ m/s².\n**Friction:** $50\\sin 20° + F = 5 \\times 5$, so $F = 7.90$ N.\n**Back down, friction up:** $17.10 - 7.90 = 5a$, so $a = 1.84$ m/s².\n**Speed back at A:** $v^2 = 2 \\times 1.84 \\times 3.6$, so $v = 3.64$ m/s."
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where the specification stops",
+    "md": "Friction as $F = \\mu R$, a force at an angle to the plane, and two connected bodies on a slope are A-level mechanics. CCEA's slopes carry one body, with any push parallel to the plane and the friction given."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A 5 kg block leaves $A$ at 6 m/s up a 20° slope, stops at $B$ after 3.6 m, then slides back. Find its speed back at $A$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Trip up: $0 = 6^2 - 2a \\times 3.6$, so $a = 5$ m/s²",
+        "decision": "The stopping distance gives the deceleration before any force.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Friction: $50\\sin 20° + F = 5 \\times 5$, so $F = 7.90$ N",
+        "decision": "Going up, the weight's part and friction both slow it.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Back down: $17.10 - 7.90 = 5a$, so $a = 1.84$ m/s²",
+        "decision": "A new equation: friction has turned round to act up the slope.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "At $A$: $v^2 = 2 \\times 1.84 \\times 3.6$, so $v = 3.64$ m/s",
+        "decision": "From rest at $B$, over the same distance.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
     "id": "g13",
     "kind": "number",
-    "prompt": "After stopping, a 4 kg block slides back down a 30° slope against 6 N of friction. What is its acceleration, in m/s²? Take $g = 10$ m/s².",
+    "prompt": "Take $g = 10$ m/s². After stopping, a 22 kg block slides back down a 30° slope against 33 N of friction. What is its acceleration, in m/s²?",
     "answer": "3.5",
-    "explain": "On the way back down, friction turns round to act up the slope, as in the picture above, while the weight's part still acts down it: $40\\sin 30° = 20$ N, so $20 - 6 = 4a$ and $a = 3.5$ m/s²."
-  },
-  {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "Where the specification stops",
-    "md": "Friction as $F = \\mu R$, a force at an angle to the plane, and two connected bodies on a slope are A-level mechanics. CCEA's slopes carry one body, with any push parallel to the plane and the friction given."
+    "explain": "On the way back down, friction turns round to act up the slope, as in step 3 of See it, while the weight's part still acts down it: $220\\sin 30° = 110$ N, so $110 - 33 = 22a$ and $a = 3.5$ m/s².",
+    "twin": {
+      "prompt": "Take $g = 10$ m/s². A 24 kg block that has stopped on a 30° slope slides back down against 48 N of friction. What is its acceleration, in m/s²?",
+      "answer": "3",
+      "explain": "Friction now acts up the slope: $240\\sin 30° - 48 = 24a$, so $72 = 24a$ and $a = 3$ m/s²."
+    }
   },
   {
     "type": "h",
@@ -413,7 +1078,7 @@
   },
   {
     "type": "p",
-    "md": "Rotate the axes onto the slope and resolve the weight: $mg\\sin\\alpha$ along, $mg\\cos\\alpha$ across.\nRebuild which part takes the sine from the flat-slope test.\nFind $R$ from perpendicular balance, and the acceleration along the plane.\nWrite the equation for each direction of travel, with friction turned round.\nSpot the twists: the diagram, kinematics at either end, a value to show, the return trip, friction per kilogram."
+    "md": "Rotate the axes onto the slope and resolve the weight: $mg\\sin\\alpha$ along, $mg\\cos\\alpha$ across.\nRebuild which part takes the sine from the flat-slope test.\nFind $R$ from perpendicular balance, and the acceleration along the plane.\nWrite the equation for each direction of travel, with friction turned round.\nSpot the twists: the diagram, a value to show, friction per kilogram, the return trip."
   },
   {
     "type": "h",
@@ -426,10 +1091,10 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.02"
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.14"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.13"
+    "promptId": "rp.fm.u2.newtons-second-law-inclined-plane.15"
   }
 ]
