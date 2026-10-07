@@ -1,263 +1,983 @@
 [
   {
     "type": "hero",
-    "lede": "A fence of fixed length can enclose many different rectangles, and one of them is the biggest. Optimisation is how you find it: turn the situation into one equation in one letter, differentiate, and read off where the gradient is zero.",
+    "lede": "Many questions ask for the best value of something: the largest area a fence can hold, the least fencing a fixed area needs, the busiest place for a shop. Calculus finds it exactly: write the quantity in one letter, differentiate, and find where the gradient is zero.",
     "can": [
-      "Turn a constraint from a diagram or a sentence into an expression in a single letter",
-      "Differentiate that expression, solve dy/dx = 0 and confirm a maximum or a minimum",
-      "Finish with the quantity the question actually asked for, in its own units"
+      "Turn a constraint from a diagram or a sentence into an expression in one letter.",
+      "Differentiate, solve for a zero gradient and show a maximum or minimum with the second derivative.",
+      "Finish with the quantity the question asked for, rounded as it says, with its unit."
     ],
-    "minutes": 22
+    "minutes": 24
   },
   {
     "type": "h",
-    "text": "The biggest rectangle a fence can hold"
+    "text": "Best values sit where the gradient is zero",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "Give someone forty-eight metres of edging and ask them to enclose the largest bed they can against a wall. Long and thin wastes the depth; short and deep wastes the width. Somewhere between the two is the best answer, and calculus finds it exactly."
+    "md": "Picture the graph of the quantity you want to make as large, or as small, as possible. At its highest or lowest point the curve is momentarily flat, so its gradient is zero. Calculus finds that point exactly: differentiate, set the derivative equal to zero, and solve."
   },
   {
     "type": "figure",
-    "alt": "A rectangular garden bed against a wall, with two sides of 12 metres and one side of 24 metres",
-    "svg": "<svg viewBox='0 0 520 250' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A rectangular garden bed against a wall: two sides of 12 metres and one of 24 metres, enclosing 288 square metres'><title>A rectangular garden bed against a wall: two sides of 12 metres and one of 24 metres, enclosing 288 square metres</title><path d='M 124 70 L 406 70' stroke='currentColor' stroke-width='4' fill='none' stroke-linecap='round'/><path d='M 140 70 L 140 190 L 390 190 L 390 70' fill='currentColor' fill-opacity='0.08' stroke='currentColor' stroke-width='2' stroke-linejoin='round'/><text x='265' y='58' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>the wall costs nothing to fence</text><text x='265' y='212' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>24 m, the side facing the wall</text><text x='130' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='end'>12 m</text><text x='400' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>12 m</text><text x='265' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>area 288 m²</text><text x='260' y='240' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>48 m of edging covers three sides only</text></svg>",
-    "caption": "Three sides fenced, one side free. The wall is the whole reason $x$ and $y$ are not equal."
+    "alt": "The curve A = 32x − 2x² rising to a level top at (8, 128) and falling back to zero at x = 16.",
+    "svg": "<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve A = 32x − 2x² rising from 0, levelling off at its highest point (8, 128), where a dashed level line touches it, and falling back to 0 at x = 16.'><title>The curve A = 32x − 2x² rising from 0, levelling off at its highest point (8, 128), where a dashed level line touches it, and falling back to 0 at x = 16.</title><path d='M 50 204 L 358 204' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 358 204 L 351 200 L 351 208 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 50 204 L 50 26' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 50 26 L 46 33 L 54 33 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='358' y='196' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>x</text><text x='58' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>A</text><path d='M 50 204 L 54.8 194.2 L 59.7 184.7 L 64.5 175.5 L 69.4 166.6 L 74.2 158.1 L 79.1 150 L 83.9 142.1 L 88.8 134.6 L 93.6 127.5 L 98.5 120.6 L 103.3 114.1 L 108.2 108 L 113 102.1 L 117.9 96.6 L 122.7 91.4 L 127.6 86.6 L 132.4 82.1 L 137.3 77.9 L 142.1 74.1 L 147 70.6 L 151.8 67.4 L 156.7 64.6 L 161.5 62.1 L 166.4 59.9 L 171.2 58.1 L 176.1 56.6 L 180.9 55.4 L 185.8 54.6 L 190.6 54.1 L 195.5 53.9 L 200.3 54.1 L 205.2 54.6 L 210 55.4 L 214.8 56.6 L 219.7 58.1 L 224.5 59.9 L 229.4 62.1 L 234.2 64.6 L 239.1 67.4 L 243.9 70.6 L 248.8 74.1 L 253.6 77.9 L 258.5 82.1 L 263.3 86.6 L 268.2 91.4 L 273 96.6 L 277.9 102.1 L 282.7 108 L 287.6 114.1 L 292.4 120.6 L 297.3 127.5 L 302.1 134.6 L 307 142.1 L 311.8 150 L 316.7 158.1 L 321.5 166.6 L 326.4 175.5 L 331.2 184.7 L 336.1 194.2 L 340.9 204' fill='none' stroke='currentColor' stroke-width='1.8'/><line x1='150' y1='53.9' x2='240.9' y2='53.9' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='195.5' cy='53.9' r='4.5' fill='currentColor'/><text x='195.5' y='41.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>flat at the top</text><line x1='195.5' y1='59.9' x2='195.5' y2='204' stroke='currentColor' stroke-width='1' stroke-dasharray='5 4'/><text x='195.5' y='222' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>8</text><text x='44' y='58.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>128</text></svg>",
+    "caption": "At its highest point the curve is flat: the gradient there is zero."
   },
   {
-    "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to begin. In the picture, how many sides are made of edging?",
-    "options": [
-      "Three",
-      "Four",
-      "Two"
+    "type": "see",
+    "stem": "A pen's area is $A = 32x - 2x^{2}$ m², for $0 < x < 16$. Find the value of $x$ that makes $A$ greatest, and that area.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dA}{dx} = 32 - 4x$",
+        "decision": "Differentiate each term.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$32 - 4x = 0$, so $x = 8$",
+        "decision": "The greatest area sits where the gradient is zero.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$A = 32(8) - 2(8)^{2} = 128$ m²",
+        "decision": "Put the value of $x$ back into $A$ for the area itself.",
+        "earns": [
+          "W1"
+        ]
+      }
     ],
-    "answer": "Three",
-    "explain": "The wall takes the fourth side, so the edging has to cover the two ends and the front only. That single fact is the constraint."
-  },
-  {
-    "type": "h",
-    "text": "1. The same five steps every time"
-  },
-  {
-    "type": "p",
-    "md": "These questions look different from each other and are not. Every one of them gives you two letters and a sentence that ties them together, and asks for the largest or smallest value of something.\nThe sentence is the **constraint**. Use it to replace one letter, differentiate what is left, and the rest follows."
-  },
-  {
-    "type": "figure",
-    "alt": "A five-row card listing the steps of an optimisation question",
-    "svg": "<svg viewBox='0 0 560 230' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='every optimisation question runs on the same five steps'><title>every optimisation question runs on the same five steps</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>every optimisation question runs on the same five steps</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>1  read the constraint</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the sentence that ties the two letters together</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>2  one letter only</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>substitute the constraint into the quantity</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>3  differentiate and solve</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>set the derivative to zero</text><rect x='14' y='136' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='154' font-family='inherit' font-size='13' fill='currentColor'>4  confirm which it is</text><text x='532' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the sign of the second derivative</text><rect x='14' y='166' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='184' font-family='inherit' font-size='13' fill='currentColor'>5  answer the question</text><text x='532' y='184' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>substitute back, with units</text><text x='280' y='218' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>step 5 is the one candidates leave out most often</text></svg>",
-    "caption": "Write these five down the margin before you start, and tick them off."
+    "kind": "calculation"
   },
   {
     "type": "gate",
-    "id": "g2",
-    "kind": "choice",
-    "prompt": "Which step do the examiners report as the one most often missing?",
-    "options": [
-      "Substituting back to find the quantity the question asked for",
-      "Differentiating the expression",
-      "Reading the constraint"
-    ],
-    "answer": "Substituting back to find the quantity the question asked for",
-    "explain": "Candidates solve for $x$ and stop there. In Summer 2022 a question wanted a length of $60$ mm and a great many answers gave the value of $x$ instead."
-  },
-  {
-    "type": "h",
-    "text": "2. Reading the constraint"
-  },
-  {
-    "type": "p",
-    "md": "The edging runs along two ends and the front, so $2x + y = 48$, which rearranges to $y = 48 - 2x$.\nThe quantity to make large is the area, $A = xy$. Replacing $y$ gives $A = x(48 - 2x) = -2x^{2} + 48x$, which is now a function of one letter and can be differentiated."
-  },
-  {
-    "type": "callout",
-    "kind": "why",
-    "title": "Why one letter and not two",
-    "md": "Differentiation asks how one quantity changes as another changes. With $x$ and $y$ both free there is no single thing to change. The constraint removes that freedom: choose $x$ and $y$ is decided, so the area depends on $x$ alone and the gradient means something."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "blank",
-    "prompt": "A rectangle of area $54$ m² has width $x$ and height $y$. Write $y$ in terms of $x$: $y = $ ___",
-    "answer": "54/x | 54x^-1 | 54x^{-1}",
-    "explain": "From $xy = 54$, dividing both sides by $x$ gives $y = \\frac{54}{x}$. That fraction is what turns the problem into one letter."
-  },
-  {
-    "type": "h",
-    "text": "3. The garden bed, worked in full"
-  },
-  {
-    "type": "p",
-    "md": "**Constraint.** $2x + y = 48$, so $y = 48 - 2x$.\n**One letter.** $A = x(48 - 2x) = -2x^{2} + 48x$.\n**Differentiate.** $\\frac{dA}{dx} = -4x + 48$.\n**Solve.** $-4x + 48 = 0$ gives $x = 12$.\n**Confirm.** $\\frac{d^{2}A}{dx^{2}} = -4$, which is negative, so this is a maximum.\n**Answer.** $y = 24$ m and the greatest area is $288$ m²."
-  },
-  {
-    "type": "figure",
-    "alt": "A graph of the bed's area against x, peaking at 288 square metres when x is 12",
-    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The area of the garden bed plotted against x: it rises to 288 square metres at x = 12 and falls away on both sides'><title>The area of the garden bed plotted against x: it rises to 288 square metres at x = 12 and falls away on both sides</title><path d='M 44 22 L 44 290 M 81.7 22 L 81.7 290 M 119.4 22 L 119.4 290 M 157.1 22 L 157.1 290 M 194.8 22 L 194.8 290 M 232.5 22 L 232.5 290 M 270.2 22 L 270.2 290 M 307.8 22 L 307.8 290 M 345.5 22 L 345.5 290 M 383.2 22 L 383.2 290 M 420.9 22 L 420.9 290 M 458.6 22 L 458.6 290 M 496.3 22 L 496.3 290 M 534 22 L 534 290 M 44 290 L 534 290 M 44 256.5 L 534 256.5 M 44 223 L 534 223 M 44 189.5 L 534 189.5 M 44 156 L 534 156 M 44 122.5 L 534 122.5 M 44 89 L 534 89 M 44 55.5 L 534 55.5 M 44 22 L 534 22' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 44 290 L 534 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 44 22 L 44 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 81.7 286 L 81.7 294 M 119.4 286 L 119.4 294 M 157.1 286 L 157.1 294 M 194.8 286 L 194.8 294 M 232.5 286 L 232.5 294 M 270.2 286 L 270.2 294 M 307.8 286 L 307.8 294 M 345.5 286 L 345.5 294 M 383.2 286 L 383.2 294 M 420.9 286 L 420.9 294 M 458.6 286 L 458.6 294 M 496.3 286 L 496.3 294 M 534 286 L 534 294 M 40 256.5 L 48 256.5 M 40 223 L 48 223 M 40 189.5 L 48 189.5 M 40 156 L 48 156 M 40 122.5 L 48 122.5 M 40 89 L 48 89 M 40 55.5 L 48 55.5 M 40 22 L 48 22' stroke='currentColor' stroke-width='1' fill='none'/><text x='81.7' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><text x='119.4' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><text x='157.1' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>6</text><text x='194.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>8</text><text x='232.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>10</text><text x='270.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>12</text><text x='307.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>14</text><text x='345.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>16</text><text x='383.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>18</text><text x='420.9' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>20</text><text x='458.6' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>22</text><text x='496.3' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>24</text><text x='534' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>26</text><text x='37' y='260.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>40</text><text x='37' y='227' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>80</text><text x='37' y='193.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>120</text><text x='37' y='160' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>160</text><text x='37' y='126.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>200</text><text x='37' y='93' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>240</text><text x='37' y='59.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>280</text><text x='37' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>320</text><text x='37' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 44.2 289.6 L 46.8 284 L 49.5 278.4 L 52.2 272.9 L 54.8 267.5 L 57.5 262.1 L 60.1 256.8 L 62.8 251.6 L 65.5 246.4 L 68.1 241.3 L 70.8 236.3 L 73.4 231.3 L 76.1 226.4 L 78.8 221.5 L 81.4 216.8 L 84.1 212.1 L 86.7 207.4 L 89.4 202.9 L 92.1 198.4 L 94.7 193.9 L 97.4 189.6 L 100 185.3 L 102.7 181 L 105.4 176.9 L 108 172.8 L 110.7 168.7 L 113.3 164.8 L 116 160.9 L 118.7 157 L 121.3 153.3 L 124 149.6 L 126.6 145.9 L 129.3 142.4 L 132 138.9 L 134.6 135.4 L 137.3 132.1 L 139.9 128.8 L 142.6 125.5 L 145.3 122.4 L 147.9 119.3 L 150.6 116.2 L 153.2 113.3 L 155.9 110.4 L 158.5 107.5 L 161.2 104.8 L 163.9 102.1 L 166.5 99.4 L 169.2 96.9 L 171.8 94.4 L 174.5 91.9 L 177.2 89.6 L 179.8 87.3 L 182.5 85 L 185.1 82.9 L 187.8 80.8 L 190.5 78.7 L 193.1 76.8 L 195.8 74.9 L 198.4 73.1 L 201.1 71.3 L 203.8 69.6 L 206.4 68 L 209.1 66.4 L 211.7 64.9 L 214.4 63.5 L 217.1 62.1 L 219.7 60.8 L 222.4 59.6 L 225 58.4 L 227.7 57.3 L 230.4 56.3 L 233 55.3 L 235.7 54.4 L 238.3 53.6 L 241 52.8 L 243.7 52.1 L 246.3 51.5 L 249 50.9 L 251.6 50.4 L 254.3 50 L 257 49.6 L 259.6 49.3 L 262.3 49.1 L 264.9 48.9 L 267.6 48.8 L 270.2 48.8 L 272.9 48.8 L 275.6 48.9 L 278.2 49.1 L 280.9 49.3 L 283.5 49.6 L 286.2 50 L 288.9 50.5 L 291.5 51 L 294.2 51.5 L 296.8 52.2 L 299.5 52.9 L 302.2 53.6 L 304.8 54.5 L 307.5 55.4 L 310.1 56.3 L 312.8 57.4 L 315.5 58.5 L 318.1 59.7 L 320.8 60.9 L 323.4 62.2 L 326.1 63.6 L 328.8 65 L 331.4 66.5 L 334.1 68.1 L 336.7 69.7 L 339.4 71.4 L 342.1 73.2 L 344.7 75 L 347.4 76.9 L 350 78.9 L 352.7 80.9 L 355.4 83 L 358 85.2 L 360.7 87.4 L 363.3 89.7 L 366 92.1 L 368.7 94.6 L 371.3 97.1 L 374 99.6 L 376.6 102.3 L 379.3 105 L 381.9 107.7 L 384.6 110.6 L 387.3 113.5 L 389.9 116.5 L 392.6 119.5 L 395.2 122.6 L 397.9 125.8 L 400.6 129 L 403.2 132.3 L 405.9 135.7 L 408.5 139.1 L 411.2 142.6 L 413.9 146.2 L 416.5 149.8 L 419.2 153.5 L 421.8 157.3 L 424.5 161.1 L 427.2 165.1 L 429.8 169 L 432.5 173.1 L 435.1 177.2 L 437.8 181.3 L 440.5 185.6 L 443.1 189.9 L 445.8 194.3 L 448.4 198.7 L 451.1 203.2 L 453.8 207.8 L 456.4 212.4 L 459.1 217.1 L 461.7 221.9 L 464.4 226.7 L 467.1 231.6 L 469.7 236.6 L 472.4 241.6 L 475 246.8 L 477.7 251.9 L 480.4 257.2 L 483 262.5 L 485.7 267.8 L 488.3 273.3 L 491 278.8 L 493.6 284.4 L 496.3 290' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 270.2 290 L 270.2 48.8' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><circle cx='270.2' cy='48.8' r='3.4' fill='currentColor'/><text x='278.2' y='38.8' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(12, 288)</text><text x='534' y='282' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x (m)</text><text x='52' y='32' font-family='inherit' font-size='12' fill='currentColor'>A (m²)</text><text x='289' y='322' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the peak is where the gradient is zero</text></svg>",
-    "caption": "Every width is possible. The area peaks at $x = 12$ and falls away on both sides."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
+    "id": "g9",
     "kind": "number",
-    "prompt": "For that bed, $\\frac{dA}{dx} = -4x + 48$. At what value of $x$ is the area greatest?",
-    "answer": "12",
-    "explain": "Set the derivative to zero: $48 = 4x$, so $x = 12$. The gradient of the area is zero exactly at the peak."
+    "prompt": "A quantity is $Q = 60x - 3x^{2}$. At what value of $x$ is $Q$ greatest?",
+    "answer": "10",
+    "explain": "As step 2 of See it: $\\frac{dQ}{dx} = 60 - 6x$, which is zero when $x = 10$. The greatest value sits where the gradient is zero.",
+    "twin": {
+      "prompt": "A quantity is $Q = 28x - 2x^{2}$. At what value of $x$ is $Q$ greatest?",
+      "answer": "7",
+      "explain": "$\\frac{dQ}{dx} = 28 - 4x = 0$ when $x = 7$."
+    }
   },
   {
     "type": "h",
-    "text": "4. Confirming which kind of turning point it is"
+    "text": "Why the gradient is zero there",
+    "role": "why"
   },
   {
     "type": "p",
-    "md": "The question is never satisfied by finding a stationary value. It has to be shown to be the maximum or the minimum, and the second derivative is the evidence the scheme wants.\nSubstitute your value of $x$, write the number down, and say what its sign means. A sentence with no number attached earns nothing."
+    "md": "Just before a peak the quantity is still rising, so its gradient is positive; just after, it is falling, so its gradient is negative. To pass from positive to negative the gradient must be zero at the peak itself. A dip is the same story the other way round: negative, then zero, then positive."
   },
   {
     "type": "figure",
-    "alt": "A three-row card: a positive second derivative is a minimum, a negative one is a maximum, and the number itself must be shown",
-    "svg": "<svg viewBox='0 0 560 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='which way does the second derivative point'><title>which way does the second derivative point</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>which way does the second derivative point</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>d²y/dx² is positive</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the gradient is climbing through zero: a minimum</text><rect x='14' y='76' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='94' font-family='inherit' font-size='13' fill='currentColor'>d²y/dx² is negative</text><text x='532' y='94' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the gradient is falling through zero: a maximum</text><rect x='14' y='106' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='124' font-family='inherit' font-size='13' fill='currentColor'>you must show the number</text><text x='532' y='124' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>a bare word earns nothing</text><text x='280' y='158' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>substitute your value of x and write the sign down</text></svg>",
-    "caption": "The sign is the argument, and the number is the evidence."
+    "alt": "The curve A = 32x − 2x² with dashed tangents: gradient 16 at x = 4, 0 at the top, x = 8, and −16 at x = 12.",
+    "svg": "<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve A = 32x − 2x² with three dashed tangents: at x = 4 the gradient is 16, at the top, x = 8, it is 0, and at x = 12 it is −16.'><title>The curve A = 32x − 2x² with three dashed tangents: at x = 4 the gradient is 16, at the top, x = 8, it is 0, and at x = 12 it is −16.</title><path d='M 50 204 L 358 204' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 358 204 L 351 200 L 351 208 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 50 204 L 50 26' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 50 26 L 46 33 L 54 33 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='358' y='196' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>x</text><text x='58' y='28' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>A</text><path d='M 50 204 L 54.8 194.2 L 59.7 184.7 L 64.5 175.5 L 69.4 166.6 L 74.2 158.1 L 79.1 150 L 83.9 142.1 L 88.8 134.6 L 93.6 127.5 L 98.5 120.6 L 103.3 114.1 L 108.2 108 L 113 102.1 L 117.9 96.6 L 122.7 91.4 L 127.6 86.6 L 132.4 82.1 L 137.3 77.9 L 142.1 74.1 L 147 70.6 L 151.8 67.4 L 156.7 64.6 L 161.5 62.1 L 166.4 59.9 L 171.2 58.1 L 176.1 56.6 L 180.9 55.4 L 185.8 54.6 L 190.6 54.1 L 195.5 53.9 L 200.3 54.1 L 205.2 54.6 L 210 55.4 L 214.8 56.6 L 219.7 58.1 L 224.5 59.9 L 229.4 62.1 L 234.2 64.6 L 239.1 67.4 L 243.9 70.6 L 248.8 74.1 L 253.6 77.9 L 258.5 82.1 L 263.3 86.6 L 268.2 91.4 L 273 96.6 L 277.9 102.1 L 282.7 108 L 287.6 114.1 L 292.4 120.6 L 297.3 127.5 L 302.1 134.6 L 307 142.1 L 311.8 150 L 316.7 158.1 L 321.5 166.6 L 326.4 175.5 L 331.2 184.7 L 336.1 194.2 L 340.9 204' fill='none' stroke='currentColor' stroke-width='1.8'/><line x1='99.1' y1='115.8' x2='146.4' y2='67.1' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='122.7' cy='91.4' r='4.5' fill='currentColor'/><text x='108.7' y='95.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>gradient 16</text><line x1='171.8' y1='53.9' x2='219.1' y2='53.9' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='195.5' cy='53.9' r='4.5' fill='currentColor'/><text x='195.5' y='41.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>gradient 0</text><line x1='244.5' y1='67.1' x2='291.8' y2='115.8' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='268.2' cy='91.4' r='4.5' fill='currentColor'/><text x='282.2' y='95.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>gradient −16</text></svg>",
+    "caption": "Rising, flat, falling: the gradient goes from positive through zero to negative."
+  },
+  {
+    "type": "see",
+    "stem": "For $A = 32x - 2x^{2}$, read $\\frac{dA}{dx} = 32 - 4x$ either side of $x = 8$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "At $x = 4$: $\\frac{dA}{dx} = 16$",
+        "decision": "Positive: the area is still rising."
+      },
+      {
+        "n": 2,
+        "working": "At $x = 8$: $\\frac{dA}{dx} = 0$",
+        "decision": "Zero: the curve is level."
+      },
+      {
+        "n": 3,
+        "working": "At $x = 12$: $\\frac{dA}{dx} = -16$",
+        "decision": "Negative: the area is falling, so the level point at $x = 8$ was a peak."
+      }
+    ],
+    "kind": "explanation"
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g10",
     "kind": "choice",
-    "prompt": "The bed has $\\frac{d^{2}A}{dx^{2}} = -4$. What does that show?",
+    "prompt": "A quantity's gradient is negative just before $x = 4$, zero at $x = 4$ and positive just after. What happens at $x = 4$?",
     "options": [
-      "That $x = 12$ gives the greatest area",
-      "That $x = 12$ gives the smallest area",
-      "Nothing, because the second derivative has no $x$ in it"
+      "The quantity is least",
+      "The quantity is greatest",
+      "The quantity is zero"
     ],
-    "answer": "That $x = 12$ gives the greatest area",
-    "explain": "A negative second derivative means the gradient is falling through zero, which is a peak. A constant second derivative is perfectly usable evidence; its sign is all that is being asked for."
+    "answer": "The quantity is least",
+    "explain": "As See it read the signs: falling, then level, then rising is a dip, so the quantity is least at x = 4. Rising, level, falling would be a peak. A zero gradient says the curve is flat there, not that the quantity is zero.",
+    "twin": {
+      "prompt": "A quantity's gradient is positive just before $x = 3$, zero at $x = 3$ and negative just after. What happens at $x = 3$?",
+      "options": [
+        "The quantity is greatest",
+        "The quantity is least",
+        "The gradient is greatest"
+      ],
+      "answer": "The quantity is greatest",
+      "explain": "Rising, then level, then falling is a peak, so the quantity is greatest at x = 3.",
+      "optionNotes": [
+        {
+          "option": "The quantity is least",
+          "why": "Least would be falling, level, then rising; here it rises first.",
+          "misconception": "fm.calc.second-derivative-sign-misread"
+        },
+        {
+          "option": "The gradient is greatest",
+          "why": "The gradient is zero here, its least size in either direction, not its greatest."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The quantity is greatest",
+        "why": "Greatest would be rising, level, then falling; here it falls first.",
+        "misconception": "fm.calc.second-derivative-sign-misread"
+      },
+      {
+        "option": "The quantity is zero",
+        "why": "A zero gradient means the curve is flat there, not that the quantity is zero."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "5. Finish with what was asked"
+    "text": "Why a negative second derivative means maximum",
+    "role": "derivation"
   },
   {
     "type": "p",
-    "md": "Read the last line of the question again before you write anything down. It may want the area, the perimeter, the cost, or the length of one side, and the value of $x$ you solved for is often none of those.\nHere the question asked for the greatest area, so $x = 12$ goes back into $A$ to give $288$ m². Carry the unit with it."
+    "md": "The second derivative is the gradient of the gradient. If it is negative at a stationary point, the gradient is decreasing there, so it passes from positive, through zero, to negative: rising, level, falling, a maximum. Positive works the other way, a minimum. Using calculus, the scheme wants this shown: write the second derivative's value at your x and read its sign; a word with no number earns nothing."
+  },
+  {
+    "type": "see",
+    "stem": "Show that the stationary point of $A = 32x - 2x^{2}$ at $x = 8$ is a maximum, and why the test works.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dA}{dx} = 0$ at $x = 8$",
+        "decision": "Stationary: the gradient is zero there."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{d^{2}A}{dx^{2}} = -4 < 0$",
+        "decision": "The gradient of the gradient is negative, so the gradient is decreasing.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{dA}{dx}$ passes from positive, through $0$, to negative",
+        "decision": "A decreasing gradient can only cross zero going downwards."
+      },
+      {
+        "n": 4,
+        "working": "Rising, level, falling: $x = 8$ gives a maximum",
+        "decision": "The value, then its sign, then the word.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "proof"
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "A cost $C$ is stationary at $x = 5$, and $\\frac{d^{2}C}{dx^{2}} = \\frac{250}{x^{3}}$. What does the second derivative show?",
+    "options": [
+      "A minimum: its value 2 is positive",
+      "A maximum: its value 2 is positive",
+      "A minimum, with no value needed"
+    ],
+    "answer": "A minimum: its value 2 is positive",
+    "explain": "As step 2 of See it: put the value of $x$ in, $\\frac{250}{125} = 2$, and read the sign. Positive means the gradient is rising through zero, a minimum. The scheme pays for the number with its sign, not the word alone.",
+    "twin": {
+      "prompt": "A profit $P$ is stationary at $x = 10$, and $\\frac{d^{2}P}{dx^{2}} = -\\frac{400}{x^{3}}$. What does the second derivative show?",
+      "options": [
+        "A maximum: its value −0.4 is negative",
+        "A minimum: its value −0.4 is negative",
+        "A maximum, with no value needed"
+      ],
+      "answer": "A maximum: its value −0.4 is negative",
+      "explain": "$-\\frac{400}{1000} = -0.4$, which is negative, so the gradient is falling through zero: a maximum.",
+      "optionNotes": [
+        {
+          "option": "A minimum: its value −0.4 is negative",
+          "why": "Negative means the gradient is falling through zero, a maximum.",
+          "misconception": "fm.calc.second-derivative-sign-misread"
+        },
+        {
+          "option": "A maximum, with no value needed",
+          "why": "Write the value with its sign; the word alone earns nothing.",
+          "misconception": "fm.optim.nature-not-shown"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "A maximum: its value 2 is positive",
+        "why": "The sign is read the other way: positive means the gradient is rising through zero, a minimum.",
+        "misconception": "fm.calc.second-derivative-sign-misread"
+      },
+      {
+        "option": "A minimum, with no value needed",
+        "why": "The scheme pays for the value with its sign; the word alone earns nothing.",
+        "misconception": "fm.optim.nature-not-shown"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Reading the constraint",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Most questions give two letters and one fact that ties them: a fixed length of fencing or a fixed area. That fact is the constraint. Read it off the diagram, counting every side that is fenced and none that a wall or a river provides, then rearrange for one letter."
+  },
+  {
+    "type": "figure",
+    "alt": "Three equal pens against a wall: two ends and two dividers, each x, and a front of y.",
+    "svg": "<svg viewBox='0 0 400 190' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Three equal pens side by side against a wall: the two ends and the two dividers are each x long, and the fenced front, opposite the wall, is y long.'><title>Three equal pens side by side against a wall: the two ends and the two dividers are each x long, and the fenced front, opposite the wall, is y long.</title><line x1='30' y1='46' x2='370' y2='46' stroke='currentColor' stroke-width='3'/><line x1='36' y1='46' x2='46' y2='36' stroke='currentColor' stroke-width='1'/><line x1='58' y1='46' x2='68' y2='36' stroke='currentColor' stroke-width='1'/><line x1='80' y1='46' x2='90' y2='36' stroke='currentColor' stroke-width='1'/><line x1='102' y1='46' x2='112' y2='36' stroke='currentColor' stroke-width='1'/><line x1='124' y1='46' x2='134' y2='36' stroke='currentColor' stroke-width='1'/><line x1='146' y1='46' x2='156' y2='36' stroke='currentColor' stroke-width='1'/><line x1='168' y1='46' x2='178' y2='36' stroke='currentColor' stroke-width='1'/><line x1='190' y1='46' x2='200' y2='36' stroke='currentColor' stroke-width='1'/><line x1='212' y1='46' x2='222' y2='36' stroke='currentColor' stroke-width='1'/><line x1='234' y1='46' x2='244' y2='36' stroke='currentColor' stroke-width='1'/><line x1='256' y1='46' x2='266' y2='36' stroke='currentColor' stroke-width='1'/><line x1='278' y1='46' x2='288' y2='36' stroke='currentColor' stroke-width='1'/><line x1='300' y1='46' x2='310' y2='36' stroke='currentColor' stroke-width='1'/><line x1='322' y1='46' x2='332' y2='36' stroke='currentColor' stroke-width='1'/><line x1='344' y1='46' x2='354' y2='36' stroke='currentColor' stroke-width='1'/><line x1='366' y1='46' x2='376' y2='36' stroke='currentColor' stroke-width='1'/><text x='200' y='30' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>wall</text><path d='M 50 46 L 50 156 L 350 156 L 350 46' fill='none' stroke='currentColor' stroke-width='1.8'/><line x1='150' y1='46' x2='150' y2='156' stroke='currentColor' stroke-width='1.8'/><line x1='250' y1='46' x2='250' y2='156' stroke='currentColor' stroke-width='1.8'/><text x='60' y='106' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-style='italic'>x</text><text x='160' y='106' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-style='italic'>x</text><text x='260' y='106' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-style='italic'>x</text><text x='360' y='106' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-style='italic'>x</text><text x='200' y='180' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-style='italic'>y</text></svg>",
+    "caption": "Count the fences: four of length x and one of length y; the wall needs none."
+  },
+  {
+    "type": "see",
+    "stem": "Three equal pens are built against a wall with $120$ m of fencing: the two ends and the two dividers are each $x$ m, and the front is $y$ m. Write $y$ in terms of $x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Fenced: $x + x + x + x + y$",
+        "decision": "Count every fence on the picture: two ends, two dividers and one front."
+      },
+      {
+        "n": 2,
+        "working": "$4x + y = 120$",
+        "decision": "The fencing used is the fencing available.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$y = 120 - 4x$",
+        "decision": "Rearrange for $y$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "process"
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "A yard against a wall is fenced on its other three sides with $80$ m of fencing; the two ends are each $x$ m and the front is $y$ m. Which is $y$?",
+    "options": [
+      "$y = 80 - 2x$",
+      "$y = 40 - x$",
+      "$y = 80 - x$"
+    ],
+    "answer": "$y = 80 - 2x$",
+    "explain": "Count the fences, as step 1 of See it did: two ends and one front, so $2x + y = 80$ and $y = 80 - 2x$. $40 - x$ fences the wall side too; $80 - x$ counts only one end.",
+    "twin": {
+      "prompt": "A rectangle with sides $x$ m and $y$ m is fenced on all four sides with $60$ m of fencing. Which is $y$?",
+      "options": [
+        "$y = 30 - x$",
+        "$y = 60 - 2x$",
+        "$y = 60 - x$"
+      ],
+      "answer": "$y = 30 - x$",
+      "explain": "Four sides: $2x + 2y = 60$, so $x + y = 30$ and $y = 30 - x$.",
+      "optionNotes": [
+        {
+          "option": "$y = 60 - 2x$",
+          "why": "Four sides make 2x + 2y, so y is 30 − x, not 60 − 2x.",
+          "misconception": "fm.optim.constraint-not-read-from-diagram"
+        },
+        {
+          "option": "$y = 60 - x$",
+          "why": "That counts one x and one y; four sides means two of each.",
+          "misconception": "fm.optim.constraint-not-read-from-diagram"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$y = 40 - x$",
+        "why": "That fences four sides, but the wall provides one of them.",
+        "misconception": "fm.optim.wall-side-fenced"
+      },
+      {
+        "option": "$y = 80 - x$",
+        "why": "That counts only one end; there are two ends of length x.",
+        "misconception": "fm.optim.constraint-not-read-from-diagram"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "A fixed length: the greatest area",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "With the constraint in hand, the method is the same five lines every time: the quantity in one letter, its derivative set to zero, the second derivative for the nature, then the quantity itself. Expand before differentiating: a product such as $x(120 - 4x)$ cannot be differentiated term by term as it stands."
+  },
+  {
+    "type": "see",
+    "stem": "For the three pens, $y = 120 - 4x$. Find the greatest total area, and show that it is a maximum.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$A = x(120 - 4x) = 120x - 4x^{2}$",
+        "decision": "Area in one letter, expanded.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{dA}{dx} = 120 - 8x = 0$, so $x = 15$",
+        "decision": "Gradient zero at the greatest area.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{d^{2}A}{dx^{2}} = -8 < 0$, a maximum",
+        "decision": "The number and its sign.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$A = 120(15) - 4(15)^{2} = 900$ m²",
+        "decision": "Substitute back: the area was asked for.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
   },
   {
     "type": "video",
     "videoId": "0LNa9xqi-Mo",
     "title": "Maximising Using Differentiation - GCSE Further Maths/AS-Level Maths Solution",
     "channel": "N.I. Maths Tutor",
-    "why": "A Northern Ireland teacher taking a maximising problem through the same five steps."
+    "why": "A Northern Ireland teacher taking a maximising problem through the same five lines, beside our own steps above."
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g13",
     "kind": "number",
-    "prompt": "The bed's greatest area comes from $A = -2x^{2} + 48x$ at $x = 12$. What is that area, in m²?",
-    "answer": "288",
-    "explain": "$48 \\times 12 - 2 \\times 12^{2} = 288$. Writing $12$ as the answer would be the value of $x$, which is a width, not an area."
+    "prompt": "A yard's area is $A = 80x - 2x^{2}$ m². What is the greatest area, in m²?",
+    "answer": "800",
+    "explain": "As steps 2 and 4 of See it: $\\frac{dA}{dx} = 80 - 4x = 0$ at $x = 20$, and $A = 80(20) - 2(20)^{2} = 800$. Writing $20$ would give the width, not the area.",
+    "twin": {
+      "prompt": "A field's area is $A = 90x - 3x^{2}$ m². What is the greatest area, in m²?",
+      "answer": "675",
+      "explain": "$\\frac{dA}{dx} = 90 - 6x = 0$ at $x = 15$, and $A = 1350 - 675 = 675$."
+    }
   },
   {
     "type": "h",
-    "text": "6. When the expression has a negative power"
+    "text": "A fixed area: the least length",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "A fixed **area** with a length to minimise produces a fraction. For a plot of $54$ m² fenced round the outside and once across the middle, the fencing is $L = 2x + 3y$ with $y = \\frac{54}{x}$, so $L = 2x + \\frac{162}{x}$.\nWrite the fraction as $162x^{-1}$ before differentiating: $\\frac{dL}{dx} = 2 - \\frac{162}{x^{2}}$."
+    "md": "When the area is fixed the constraint is a product, $xy = 200$, so $y = \\frac{200}{x}$, and the length to minimise gains a term in $\\frac{1}{x}$. Write it as a negative power before differentiating: $\\frac{400}{x} = 400x^{-1}$, whose derivative is $-400x^{-2}$. A plain $x$ differentiates to $1$, never to nothing."
+  },
+  {
+    "type": "callout",
+    "kind": "why",
+    "title": "Why the fraction becomes a power first",
+    "md": "The rule $nx^{n-1}$ speaks only about powers of $x$. Writing $\\frac{400}{x}$ as $400x^{-1}$ puts it in that form: multiply by the power $-1$ and step down to $-2$. Differentiating the top and bottom separately has no meaning."
   },
   {
     "type": "figure",
-    "alt": "A rectangular plot 9 metres by 6 metres with one fence across the middle",
-    "svg": "<svg viewBox='0 0 520 260' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A rectangular vegetable plot 9 metres by 6 metres with one extra fence across the middle, using 36 metres of fencing'><title>A rectangular vegetable plot 9 metres by 6 metres with one extra fence across the middle, using 36 metres of fencing</title><rect x='110' y='60' width='300' height='150' fill='currentColor' fill-opacity='0.07' stroke='currentColor' stroke-width='2'/><path d='M 260 60 L 260 210' stroke='currentColor' stroke-width='2' fill='none' stroke-dasharray='6 4' stroke-linecap='round'/><text x='260' y='46' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>9 m across</text><text x='100' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='end'>6 m</text><text x='268' y='135' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>the extra fence</text><text x='260' y='234' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>area 54 m², fencing 36 m</text></svg>",
-    "caption": "Two sides of $x$, two sides of $y$, and one more fence of $y$ across the middle."
+    "alt": "The curve L = x + 400/x falling to its lowest point (20, 40) and rising slowly after it.",
+    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve L = x + 400/x falling steeply, reaching its lowest point (20, 40), where a dashed level line touches it, and then rising slowly.'><title>The curve L = x + 400/x falling steeply, reaching its lowest point (20, 40), where a dashed level line touches it, and then rising slowly.</title><path d='M 50 200 L 358 200' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 358 200 L 351 196 L 351 204 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 50 200 L 50 22' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 50 22 L 46 29 L 54 29 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='358' y='192' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>x</text><text x='58' y='24' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>L</text><path d='M 79 62.7 L 82.3 74.2 L 85.6 83.3 L 88.8 90.7 L 92.1 96.7 L 95.4 101.7 L 98.6 105.8 L 101.9 109.3 L 105.2 112.2 L 108.4 114.6 L 111.7 116.7 L 115 118.4 L 118.2 119.8 L 121.5 121 L 124.8 121.9 L 128 122.7 L 131.3 123.3 L 134.6 123.8 L 137.8 124.1 L 141.1 124.3 L 144.4 124.4 L 147.6 124.4 L 150.9 124.4 L 154.2 124.2 L 157.4 124 L 160.7 123.8 L 164 123.4 L 167.2 123.1 L 170.5 122.6 L 173.8 122.1 L 177 121.6 L 180.3 121.1 L 183.5 120.5 L 186.8 119.9 L 190.1 119.2 L 193.3 118.5 L 196.6 117.8 L 199.9 117.1 L 203.1 116.3 L 206.4 115.6 L 209.7 114.8 L 212.9 114 L 216.2 113.1 L 219.5 112.3 L 222.7 111.4 L 226 110.5 L 229.3 109.6 L 232.5 108.7 L 235.8 107.8 L 239.1 106.9 L 242.3 105.9 L 245.6 105 L 248.9 104 L 252.1 103 L 255.4 102 L 258.7 101 L 261.9 100 L 265.2 99 L 268.5 98 L 271.7 97 L 275 95.9 L 278.3 94.9 L 281.5 93.8 L 284.8 92.8 L 288.1 91.7 L 291.3 90.6 L 294.6 89.6 L 297.9 88.5 L 301.1 87.4 L 304.4 86.3 L 307.7 85.2 L 310.9 84.1 L 314.2 83 L 317.5 81.9 L 320.7 80.8 L 324 79.7 L 327.3 78.6 L 330.5 77.5 L 333.8 76.3 L 337.1 75.2 L 340.3 74.1' fill='none' stroke='currentColor' stroke-width='1.8'/><line x1='112.9' y1='124.4' x2='180.6' y2='124.4' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='146.8' cy='124.4' r='4.5' fill='currentColor'/><line x1='146.8' y1='130.4' x2='146.8' y2='200' stroke='currentColor' stroke-width='1' stroke-dasharray='5 4'/><text x='146.8' y='218' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><text x='44' y='129.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>40</text><text x='146.8' y='112.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>least</text></svg>",
+    "caption": "A fixed area gives a dip: the fencing is least where the curve is level."
   },
   {
-    "type": "p",
-    "md": "Setting $2 - \\frac{162}{x^{2}} = 0$ gives $x^{2} = 81$, so $x = 9$ and $y = 6$.\nThe second derivative is $\\frac{d^{2}L}{dx^{2}} = \\frac{324}{x^{3}}$, which at $x = 9$ is $\\frac{4}{9}$: positive, so this is the least fencing, $36$ m."
-  },
-  {
-    "type": "figure",
-    "alt": "A graph of the fencing against x, dipping to 36 metres at x = 9",
-    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The total fencing plotted against x: it falls to a least value of 36 metres at x = 9 and rises again'><title>The total fencing plotted against x: it falls to a least value of 36 metres at x = 9 and rises again</title><path d='M 44 22 L 44 290 M 81.7 22 L 81.7 290 M 119.4 22 L 119.4 290 M 157.1 22 L 157.1 290 M 194.8 22 L 194.8 290 M 232.5 22 L 232.5 290 M 270.2 22 L 270.2 290 M 307.8 22 L 307.8 290 M 345.5 22 L 345.5 290 M 383.2 22 L 383.2 290 M 420.9 22 L 420.9 290 M 458.6 22 L 458.6 290 M 496.3 22 L 496.3 290 M 534 22 L 534 290 M 44 290 L 534 290 M 44 256.5 L 534 256.5 M 44 223 L 534 223 M 44 189.5 L 534 189.5 M 44 156 L 534 156 M 44 122.5 L 534 122.5 M 44 89 L 534 89 M 44 55.5 L 534 55.5 M 44 22 L 534 22' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 44 290 L 534 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 44 22 L 44 290' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 81.7 286 L 81.7 294 M 119.4 286 L 119.4 294 M 157.1 286 L 157.1 294 M 194.8 286 L 194.8 294 M 232.5 286 L 232.5 294 M 270.2 286 L 270.2 294 M 307.8 286 L 307.8 294 M 345.5 286 L 345.5 294 M 383.2 286 L 383.2 294 M 420.9 286 L 420.9 294 M 458.6 286 L 458.6 294 M 496.3 286 L 496.3 294 M 534 286 L 534 294 M 40 256.5 L 48 256.5 M 40 223 L 48 223 M 40 189.5 L 48 189.5 M 40 156 L 48 156 M 40 122.5 L 48 122.5 M 40 89 L 48 89 M 40 55.5 L 48 55.5 M 40 22 L 48 22' stroke='currentColor' stroke-width='1' fill='none'/><text x='81.7' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><text x='119.4' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><text x='157.1' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>6</text><text x='194.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>8</text><text x='232.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>10</text><text x='270.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>12</text><text x='307.8' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>14</text><text x='345.5' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>16</text><text x='383.2' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>18</text><text x='420.9' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>20</text><text x='458.6' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>22</text><text x='496.3' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>24</text><text x='534' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>26</text><text x='37' y='260.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>10</text><text x='37' y='227' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>20</text><text x='37' y='193.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>30</text><text x='37' y='160' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>40</text><text x='37' y='126.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>50</text><text x='37' y='93' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>60</text><text x='37' y='59.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>70</text><text x='37' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>80</text><text x='37' y='307' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 91.1 56.2 L 93.7 66.6 L 96.3 75.9 L 98.9 84.3 L 101.5 91.8 L 104.1 98.6 L 106.7 104.7 L 109.4 110.3 L 112 115.3 L 114.6 120 L 117.2 124.2 L 119.8 128.1 L 122.4 131.6 L 125 134.9 L 127.6 137.9 L 130.2 140.7 L 132.8 143.3 L 135.4 145.6 L 138 147.8 L 140.6 149.8 L 143.2 151.6 L 145.8 153.4 L 148.4 154.9 L 151 156.4 L 153.6 157.7 L 156.2 159 L 158.9 160.1 L 161.5 161.2 L 164.1 162.1 L 166.7 163 L 169.3 163.8 L 171.9 164.6 L 174.5 165.2 L 177.1 165.8 L 179.7 166.4 L 182.3 166.9 L 184.9 167.3 L 187.5 167.7 L 190.1 168.1 L 192.7 168.4 L 195.3 168.6 L 197.9 168.8 L 200.5 169 L 203.1 169.2 L 205.7 169.3 L 208.3 169.3 L 211 169.4 L 213.6 169.4 L 216.2 169.4 L 218.8 169.3 L 221.4 169.3 L 224 169.2 L 226.6 169.1 L 229.2 168.9 L 231.8 168.8 L 234.4 168.6 L 237 168.4 L 239.6 168.2 L 242.2 167.9 L 244.8 167.7 L 247.4 167.4 L 250 167.1 L 252.6 166.8 L 255.2 166.5 L 257.8 166.1 L 260.5 165.8 L 263.1 165.4 L 265.7 165.1 L 268.3 164.7 L 270.9 164.3 L 273.5 163.8 L 276.1 163.4 L 278.7 163 L 281.3 162.5 L 283.9 162.1 L 286.5 161.6 L 289.1 161.1 L 291.7 160.6 L 294.3 160.1 L 296.9 159.6 L 299.5 159.1 L 302.1 158.6 L 304.7 158.1 L 307.3 157.5 L 310 157 L 312.6 156.4 L 315.2 155.9 L 317.8 155.3 L 320.4 154.7 L 323 154.2 L 325.6 153.6 L 328.2 153 L 330.8 152.4 L 333.4 151.8 L 336 151.2 L 338.6 150.5 L 341.2 149.9 L 343.8 149.3 L 346.4 148.7 L 349 148 L 351.6 147.4 L 354.2 146.7 L 356.8 146.1 L 359.5 145.4 L 362.1 144.8 L 364.7 144.1 L 367.3 143.4 L 369.9 142.8 L 372.5 142.1 L 375.1 141.4 L 377.7 140.7 L 380.3 140 L 382.9 139.3 L 385.5 138.6 L 388.1 137.9 L 390.7 137.2 L 393.3 136.5 L 395.9 135.8 L 398.5 135.1 L 401.1 134.4 L 403.7 133.7 L 406.3 133 L 409 132.2 L 411.6 131.5 L 414.2 130.8 L 416.8 130 L 419.4 129.3 L 422 128.6 L 424.6 127.8 L 427.2 127.1 L 429.8 126.3 L 432.4 125.6 L 435 124.8 L 437.6 124.1 L 440.2 123.3 L 442.8 122.6 L 445.4 121.8 L 448 121 L 450.6 120.3 L 453.2 119.5 L 455.8 118.8 L 458.4 118 L 461.1 117.2 L 463.7 116.4 L 466.3 115.7 L 468.9 114.9 L 471.5 114.1 L 474.1 113.3 L 476.7 112.5 L 479.3 111.8 L 481.9 111 L 484.5 110.2 L 487.1 109.4 L 489.7 108.6 L 492.3 107.8 L 494.9 107 L 497.5 106.2 L 500.1 105.4 L 502.7 104.6 L 505.3 103.8 L 507.9 103 L 510.6 102.2 L 513.2 101.4 L 515.8 100.6 L 518.4 99.8 L 521 99 L 523.6 98.2 L 526.2 97.4 L 528.8 96.6 L 531.4 95.7 L 534 94.9' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 213.6 290 L 213.6 169.4' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><circle cx='213.6' cy='169.4' r='3.4' fill='currentColor'/><text x='221.6' y='159.4' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(9, 36)</text><text x='534' y='282' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x (m)</text><text x='52' y='32' font-family='inherit' font-size='12' fill='currentColor'>L (m)</text><text x='289' y='322' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>a dip, so the second derivative is positive here</text></svg>",
-    "caption": "A fixed area gives a dip rather than a peak: the fencing is least at $x = 9$."
-  },
-  {
-    "type": "gate",
-    "id": "g7",
-    "kind": "number",
-    "prompt": "Solve $2 - \\frac{162}{x^{2}} = 0$ for the positive value of $x$.",
-    "answer": "9",
-    "explain": "Rearranged, $\\frac{162}{x^{2}} = 2$, so $x^{2} = 81$ and $x = 9$. Stopping at $x^{2} = 81$ leaves the square root untaken."
-  },
-  {
-    "type": "h",
-    "text": "7. A show-that, then the answer"
-  },
-  {
-    "type": "p",
-    "md": "Many of these questions build the expression for you across two or three short parts, each worth one or two marks and each beginning with *show that*. Those parts pay for the lines of working, not for the printed result, so write every one.\nA notice has a printed area of $300$ cm², a margin of $3$ cm at each side and $4$ cm at the top and bottom. With $w$ the printed width, $h = \\frac{300}{w}$ and the whole notice measures $(w + 6)$ by $\\left(h + 8\\right)$."
-  },
-  {
-    "type": "figure",
-    "alt": "A notice with a printed rectangle of area 300 square centimetres and margins of 3 and 4 centimetres round it",
-    "svg": "<svg viewBox='0 0 520 300' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A notice: a printed rectangle of area 300 square centimetres with margins of 3 centimetres at each side and 4 centimetres at the top and bottom'><title>A notice: a printed rectangle of area 300 square centimetres with margins of 3 centimetres at each side and 4 centimetres at the top and bottom</title><rect x='116' y='18' width='278' height='224' fill='none' fill-opacity='0' stroke='currentColor' stroke-width='2'/><rect x='150' y='60' width='210' height='140' fill='currentColor' fill-opacity='0.09' stroke='currentColor' stroke-width='1.6'/><text x='255' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>printed area 300 cm²</text><text x='255' y='54' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>4 cm margin</text><text x='255' y='230' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>4 cm margin</text><text x='108' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='end'>3 cm</text><text x='402' y='130' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='start'>3 cm</text><text x='255' y='262' font-family='inherit' font-size='12.5' fill='currentColor' text-anchor='middle'>w is the width of the printed part only</text></svg>",
-    "caption": "The outer rectangle is wider by $6$ and taller by $8$."
-  },
-  {
-    "type": "gate",
-    "id": "g7a",
-    "kind": "choice",
-    "prompt": "The printed part is $w$ cm wide. How wide is the whole notice?",
-    "options": [
-      "$w + 6$",
-      "$w + 3$",
-      "$w$"
+    "type": "see",
+    "stem": "A rectangle of area $200$ m² has a hedge along one side and is fenced on the other three: the side opposite the hedge is $x$ m and the two ends are $y$ m. Find the least length of fencing.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = \\frac{200}{x}$, so $L = x + 2y = x + \\frac{400}{x}$",
+        "decision": "The area fixes $y$; then count the fenced sides.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$L = x + 400x^{-1}$, so $\\frac{dL}{dx} = 1 - 400x^{-2}$",
+        "decision": "The fraction as a power; the plain $x$ gives $1$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$1 - \\frac{400}{x^{2}} = 0$, so $x^{2} = 400$ and $x = 20$",
+        "decision": "A length is positive, so take the positive root.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\frac{d^{2}L}{dx^{2}} = \\frac{800}{x^{3}} = 0.1 > 0$, a minimum",
+        "decision": "Its value at $x = 20$, then its sign.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "$L = 20 + \\frac{400}{20} = 40$ m",
+        "decision": "Substitute back for the length asked.",
+        "earns": [
+          "W1"
+        ]
+      }
     ],
-    "answer": "$w + 6$",
-    "explain": "There is a margin of $3$ cm at each side, so two of them are added to the printed width. Adding only one is the slip that makes the whole answer plausible."
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "number",
+    "prompt": "A length is $L = 2x + \\frac{242}{x}$ for $x > 0$. At what value of $x$ is $L$ least?",
+    "answer": "11",
+    "explain": "As steps 2 and 3 of See it: $\\frac{dL}{dx} = 2 - 242x^{-2} = 0$, so $x^{2} = 121$ and $x = 11$, taking the positive root.",
+    "twin": {
+      "prompt": "A length is $L = 4x + \\frac{100}{x}$ for $x > 0$. At what value of $x$ is $L$ least?",
+      "answer": "5",
+      "explain": "$\\frac{dL}{dx} = 4 - 100x^{-2} = 0$, so $x^{2} = 25$ and $x = 5$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Building the expression: show that",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Multiplying out gives $A = 8w + 348 + \\frac{1800}{w}$, and $\\frac{dA}{dw} = 8 - \\frac{1800}{w^{2}}$.\nThat is zero when $w^{2} = 225$, so $w = 15$ cm, $h = 20$ cm, and the least total area is $588$ cm²."
+    "md": "Most papers build the expression in show-that parts first. Those parts pay for each line of working, never for the printed result, so write the measurements from the diagram, the equation they give, the substitution and the simplified result, each on its own line. Then use the printed result in the next part, even if you could not prove it."
+  },
+  {
+    "type": "figure",
+    "alt": "Three equal plots in a row, each x wide and y deep, with four fences of length y.",
+    "svg": "<svg viewBox='0 0 400 160' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A long rectangle split into three equal plots in a row; each plot is x wide along the top and y deep, so there are four fences of length y.'><title>A long rectangle split into three equal plots in a row; each plot is x wide along the top and y deep, so there are four fences of length y.</title><path d='M 50 30 L 350 30 L 350 140 L 50 140 Z' fill='none' stroke='currentColor' stroke-width='1.8'/><line x1='150' y1='30' x2='150' y2='140' stroke='currentColor' stroke-width='1.8'/><line x1='250' y1='30' x2='250' y2='140' stroke='currentColor' stroke-width='1.8'/><text x='100' y='22' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-style='italic'>x</text><text x='200' y='22' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-style='italic'>x</text><text x='300' y='22' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-style='italic'>x</text><text x='40' y='90' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end' font-style='italic'>y</text><text x='360' y='90' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start' font-style='italic'>y</text></svg>",
+    "caption": "Six widths along the top and bottom, and four depths."
+  },
+  {
+    "type": "see",
+    "stem": "Three equal plots in a row, each $x$ m wide and $y$ m deep, use $360$ m of fencing with shared sides. Show that $y = 90 - \\frac{3}{2}x$, then that the total area is $A = 270x - \\frac{9}{2}x^{2}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$6x + 4y = 360$",
+        "decision": "Top and bottom are three widths each; four depths stand at the ends and between the plots.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$4y = 360 - 6x$, so $y = 90 - \\frac{3}{2}x$",
+        "decision": "Rearrange, one line at a time.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$A = 3xy = 3x\\left(90 - \\frac{3}{2}x\\right)$",
+        "decision": "Three plots, each $x$ by $y$, then the printed $y$.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$A = 270x - \\frac{9}{2}x^{2}$",
+        "decision": "Expanded: the printed result is the last line, never the first.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "proof"
+  },
+  {
+    "type": "gate",
+    "id": "g15",
+    "kind": "choice",
+    "prompt": "Two equal plots side by side, each $x$ m wide and $y$ m deep, use $240$ m of fencing with a shared side. Which is the fencing equation?",
+    "options": [
+      "$4x + 3y = 240$",
+      "$4x + 4y = 240$",
+      "$2x + 3y = 240$"
+    ],
+    "answer": "$4x + 3y = 240$",
+    "explain": "Count as step 1 of See it did: two widths along the top and two along the bottom make $4x$, and three depths (two ends and the shared side) make $3y$. Four depths fences the shared side twice; $2x$ misses a row of widths.",
+    "twin": {
+      "prompt": "Four equal plots in a row, each $x$ m wide and $y$ m deep, use $400$ m of fencing with shared sides. Which is the fencing equation?",
+      "options": [
+        "$8x + 5y = 400$",
+        "$8x + 8y = 400$",
+        "$4x + 5y = 400$"
+      ],
+      "answer": "$8x + 5y = 400$",
+      "explain": "Four widths top and bottom make $8x$; five depths stand at the ends and between the plots, $5y$.",
+      "optionNotes": [
+        {
+          "option": "$8x + 8y = 400$",
+          "why": "That counts eight depths; there are five, at the ends and between the plots.",
+          "misconception": "fm.optim.constraint-not-read-from-diagram"
+        },
+        {
+          "option": "$4x + 5y = 400$",
+          "why": "Top and bottom each have four widths, so the widths make 8x.",
+          "misconception": "fm.optim.constraint-not-read-from-diagram"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$4x + 4y = 240$",
+        "why": "That counts the shared side twice; three depths are fenced, not four.",
+        "misconception": "fm.optim.constraint-not-read-from-diagram"
+      },
+      {
+        "option": "$2x + 3y = 240$",
+        "why": "That misses a row of widths: the top and the bottom each have two.",
+        "misconception": "fm.optim.constraint-not-read-from-diagram"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "A model you are given",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Some questions give the quantity as a formula in a context: a number of visitors, a cost, a population. The calculus is the same; the work is in the reading. Say what x stands for, check your value is sensible for it, and answer in the question's own terms: a distance, a time, a number of people."
+  },
+  {
+    "type": "figure",
+    "alt": "The model N = 1500 + 120x − 15x² for x from 0 to 10 km, peaking above x = 4.",
+    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The model N = 1500 + 120x − 15x² for x from 0 to 10 km: it rises to a peak above x = 4 and then falls.'><title>The model N = 1500 + 120x − 15x² for x from 0 to 10 km: it rises to a peak above x = 4 and then falls.</title><path d='M 62 200 L 360 200' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 360 200 L 353 196 L 353 204 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 62 200 L 62 22' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 62 22 L 58 29 L 66 29 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='360' y='192' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>x (km)</text><text x='70' y='24' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>N</text><path d='M 62 93.8 L 66.6 89.6 L 71.2 85.6 L 75.8 81.8 L 80.4 78.2 L 85 74.7 L 89.6 71.4 L 94.2 68.3 L 98.8 65.4 L 103.4 62.7 L 108 60.1 L 112.6 57.7 L 117.2 55.5 L 121.8 53.5 L 126.4 51.6 L 131 49.9 L 135.7 48.4 L 140.3 47.1 L 144.9 45.9 L 149.5 45 L 154.1 44.2 L 158.7 43.5 L 163.3 43.1 L 167.9 42.8 L 172.5 42.8 L 177.1 42.8 L 181.7 43.1 L 186.3 43.5 L 190.9 44.2 L 195.5 45 L 200.1 45.9 L 204.7 47.1 L 209.3 48.4 L 213.9 49.9 L 218.5 51.6 L 223.1 53.5 L 227.7 55.5 L 232.3 57.7 L 236.9 60.1 L 241.5 62.7 L 246.1 65.4 L 250.7 68.3 L 255.3 71.4 L 259.9 74.7 L 264.5 78.2 L 269.1 81.8 L 273.7 85.6 L 278.3 89.6 L 283 93.8 L 287.6 98.1 L 292.2 102.6 L 296.8 107.3 L 301.4 112.2 L 306 117.2 L 310.6 122.4 L 315.2 127.8 L 319.8 133.4 L 324.4 139.2 L 329 145.1 L 333.6 151.2 L 338.2 157.5' fill='none' stroke='currentColor' stroke-width='1.8'/><circle cx='172.5' cy='42.8' r='4.5' fill='currentColor'/><line x1='172.5' y1='48.8' x2='172.5' y2='200' stroke='currentColor' stroke-width='1' stroke-dasharray='5 4'/><text x='172.5' y='218' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='182.5' y='32.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>most visitors</text></svg>",
+    "caption": "The model peaks 4 km out; the question asks where, so the answer is a distance."
+  },
+  {
+    "type": "see",
+    "stem": "A shop's weekly visitors are modelled by $N = 1500 + 120x - 15x^{2}$, where $x$ km is its distance from a town centre, $0 \\le x \\le 10$. How far out should it be to have the most visitors?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dN}{dx} = 120 - 30x$",
+        "decision": "Differentiate the model as it stands.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$120 - 30x = 0$, so $x = 4$",
+        "decision": "The most visitors where the gradient is zero; 4 lies inside 0 to 10.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{d^{2}N}{dx^{2}} = -30 < 0$, a maximum",
+        "decision": "The second derivative names the peak.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$4$ km from the centre",
+        "decision": "The question asked where, so the answer is the distance, not $N$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g16",
+    "kind": "number",
+    "prompt": "Daily sales are modelled by $S = 400 + 36t - 3t^{2}$, where $t$ is the price in pounds. At what price are sales greatest?",
+    "answer": "6",
+    "explain": "As steps 1 and 2 of See it: $\\frac{dS}{dt} = 36 - 6t = 0$, so $t = 6$: a price of £6. The question asks for the price, not the number of sales.",
+    "twin": {
+      "prompt": "Daily sales are modelled by $S = 250 + 40t - 4t^{2}$, where $t$ is the price in pounds. At what price are sales greatest?",
+      "answer": "5",
+      "explain": "$\\frac{dS}{dt} = 40 - 8t = 0$, so $t = 5$: £5."
+    }
+  },
+  {
+    "type": "h",
+    "text": "When x is not a whole number",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Not every answer comes out whole. When $x^{2}$ lands on a number that is not a square, keep the exact root, such as $\\sqrt{60}$, in your working, and round only on the answer line, to the accuracy asked: the 2026 paper wanted x to two decimal places. Show the nature with the exact value, not the rounded one."
+  },
+  {
+    "type": "see",
+    "stem": "A length is $L = 3x + \\frac{180}{x}$ for $x > 0$. Find the value of $x$ that makes $L$ least, to two decimal places, showing that it is a minimum.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dL}{dx} = 3 - \\frac{180}{x^{2}}$",
+        "decision": "The fraction as a power, then the power rule.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$x^{2} = 60$, so $x = \\sqrt{60}$",
+        "decision": "Not a square: keep the root exact for now.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{d^{2}L}{dx^{2}} = \\frac{360}{x^{3}} > 0$ at $x = \\sqrt{60}$, a minimum",
+        "decision": "The exact value goes in; the sign does the work.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$x = 7.745\\ldots = 7.75$",
+        "decision": "Round once, at the end, to two decimal places.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g17",
+    "kind": "number",
+    "prompt": "A length is $L = 2x + \\frac{90}{x}$ for $x > 0$. At what value of $x$ is $L$ least? Give your answer correct to 2 decimal places.",
+    "answer": "6.71",
+    "explain": "As steps 1, 2 and 4 of See it: $2 - \\frac{90}{x^{2}} = 0$, so $x^{2} = 45$ and $x = \\sqrt{45} = 6.708\\ldots$, which is $6.71$ to two decimal places.",
+    "twin": {
+      "prompt": "A length is $L = 5x + \\frac{120}{x}$ for $x > 0$. At what value of $x$ is $L$ least? Give your answer correct to 2 decimal places.",
+      "answer": "4.90",
+      "explain": "$5 - \\frac{120}{x^{2}} = 0$, so $x^{2} = 24$ and $x = \\sqrt{24} = 4.898\\ldots$, which is $4.90$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Finish with what was asked",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Read the last line of the question again before you write the answer. It may want an area, a length, a cost, a number of visitors, or the dimensions of the shape; the value of x you solved for is often none of these. Substitute back, and give the quantity its unit."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "What Summer 2022 found",
+    "md": "Summer 2022 Q13: many of those who reached the right value of x handed it in as the answer, 30 mm, instead of putting it back into the expression for the length, which gave 60 mm."
+  },
+  {
+    "type": "see",
+    "stem": "For the three pens, $x = 15$ gives the greatest area. The question asks for the dimensions of the whole run of pens.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = 120 - 4(15) = 60$",
+        "decision": "The other side comes from the constraint."
+      },
+      {
+        "n": 2,
+        "working": "The run is $60$ m along the wall and $15$ m deep",
+        "decision": "Both dimensions, with units, as the question asked.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "explanation"
+  },
+  {
+    "type": "gate",
+    "id": "g2",
+    "kind": "choice",
+    "prompt": "Which step is the one most often missing from these answers?",
+    "options": [
+      "Substituting back to find the quantity the question asked for",
+      "Differentiating the expression",
+      "Reading the constraint"
+    ],
+    "answer": "Substituting back to find the quantity the question asked for",
+    "explain": "As See it did, the value of x goes back into the constraint or the expression to give what was asked. Most answers do differentiate and do read the constraint; the last line, the quantity itself, is the one that goes missing.",
+    "twin": {
+      "prompt": "A question asks for the least cost. You have found $x = 12$. What is left to do?",
+      "options": [
+        "Put $x = 12$ into the cost expression",
+        "Nothing: write $x = 12$",
+        "Differentiate the cost again"
+      ],
+      "answer": "Put $x = 12$ into the cost expression",
+      "explain": "The cost was asked for, so $x = 12$ goes back into the expression for the cost. Differentiating again shows the nature; it does not give the cost.",
+      "optionNotes": [
+        {
+          "option": "Nothing: write $x = 12$",
+          "why": "x is not the cost: the cost comes from putting x back.",
+          "misconception": "fm.optim.final-quantity-not-evaluated"
+        },
+        {
+          "option": "Differentiate the cost again",
+          "why": "The second derivative shows the nature; it does not give the cost.",
+          "misconception": "fm.optim.final-quantity-not-evaluated"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Differentiating the expression",
+        "why": "Most answers do differentiate; the step after the calculus is the one that goes missing."
+      },
+      {
+        "option": "Reading the constraint",
+        "why": "Most answers do read the constraint; the last line is the one that goes missing."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "How the paper twists it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Show-that parts first** (most years since 2018): each line earns a mark, and a printed result you could not prove is still yours to use in the next part (2024)."
+  },
+  {
+    "type": "p",
+    "md": "**Using calculus** in the stem: a table of values or a graph read by eye earns nothing, and in 2019 many left the last part blank, not seeing that it needed calculus."
+  },
+  {
+    "type": "p",
+    "md": "**The answer is not x** (2018, 2022): one paper asked where the store should be built, and some gave the number of shoppers; another asked for the length, and many gave x."
+  },
+  {
+    "type": "p",
+    "md": "**The nature from the second derivative**, not from a sketch (2019, 2023), and **an answer rounded as asked**, two decimal places in 2026."
+  },
+  {
+    "type": "see",
+    "stem": "Part (ii) asked you to show that $A = 96x - 4x^{2}$, and you could not. Part (iii) asks for the greatest area.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dA}{dx} = 96 - 8x = 0$, so $x = 12$",
+        "decision": "Start from the printed result: it is given, so use it.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{d^{2}A}{dx^{2}} = -8 < 0$, a maximum",
+        "decision": "The nature, with its number.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$A = 96(12) - 4(12)^{2} = 576$",
+        "decision": "The area, which is what part (iii) asked for.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g18",
+    "kind": "choice",
+    "prompt": "Part (ii) asks you to show that $A = 84x - 3x^{2}$, and you cannot. Part (iii) asks for the greatest area. What should you do?",
+    "options": [
+      "Use $A = 84x - 3x^{2}$ as printed and differentiate it",
+      "Leave part (iii) blank",
+      "Find the area from a table of values"
+    ],
+    "answer": "Use $A = 84x - 3x^{2}$ as printed and differentiate it",
+    "explain": "As step 1 of See it did: the printed result is given to you, so part (iii) starts from it and every one of its marks is still available. A table of values earns nothing where calculus is expected.",
+    "twin": {
+      "prompt": "Part (i) asks you to show that $y = 30 - 2x$, and you cannot. Part (ii) builds the area from it. What should you do?",
+      "options": [
+        "Use $y = 30 - 2x$ as printed in part (ii)",
+        "Stop, because part (ii) needs part (i)",
+        "Choose a value of $x$ and work out $y$"
+      ],
+      "answer": "Use $y = 30 - 2x$ as printed in part (ii)",
+      "explain": "A printed result is yours to use: part (ii) starts from it, whether or not you proved it.",
+      "optionNotes": [
+        {
+          "option": "Stop, because part (ii) needs part (i)",
+          "why": "Part (ii) may start from the printed y; nothing stops you."
+        },
+        {
+          "option": "Choose a value of $x$ and work out $y$",
+          "why": "Guessing a value of x is not a method; the printed y is yours to use."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Leave part (iii) blank",
+        "why": "Every mark of part (iii) is still available from the printed result."
+      },
+      {
+        "option": "Find the area from a table of values",
+        "why": "A table of values earns nothing where calculus is expected."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Going further: a model that turns twice",
+    "role": "further"
+  },
+  {
+    "type": "p",
+    "md": "A cubic model can rise, fall and rise again, so it has a maximum and a minimum. Find both from $\\frac{dP}{dt} = 0$, tell them apart with the second derivative, then answer in the story's terms: the population starts to fall after the maximum, and the minimum is the lowest it reaches before rising again."
+  },
+  {
+    "type": "figure",
+    "alt": "The model P = t³ − 15t² + 63t + 20 rising to a peak at t = 3, falling to its lowest at t = 7, then rising.",
+    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The population model P = t³ − 15t² + 63t + 20 for t from 0 to 10 months: it rises to a peak at t = 3, falls to its lowest at t = 7, then rises again.'><title>The population model P = t³ − 15t² + 63t + 20 for t from 0 to 10 months: it rises to a peak at t = 3, falls to its lowest at t = 7, then rises again.</title><path d='M 56 200 L 360 200' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 360 200 L 353 196 L 353 204 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 56 200 L 56 22' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 56 22 L 52 29 L 60 29 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='360' y='192' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>t (months)</text><text x='64' y='24' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>P</text><path d='M 56 181.1 L 59.5 173.9 L 63 167.1 L 66.6 160.7 L 70.1 154.8 L 73.6 149.2 L 77.1 144.1 L 80.7 139.3 L 84.2 134.8 L 87.7 130.8 L 91.2 127 L 94.8 123.6 L 98.3 120.5 L 101.8 117.8 L 105.3 115.3 L 108.9 113.1 L 112.4 111.2 L 115.9 109.6 L 119.4 108.2 L 123 107.1 L 126.5 106.1 L 130 105.5 L 133.5 105 L 137 104.7 L 140.6 104.6 L 144.1 104.7 L 147.6 105 L 151.1 105.4 L 154.7 105.9 L 158.2 106.6 L 161.7 107.4 L 165.2 108.3 L 168.8 109.3 L 172.3 110.4 L 175.8 111.6 L 179.3 112.9 L 182.9 114.2 L 186.4 115.5 L 189.9 116.9 L 193.4 118.3 L 197 119.7 L 200.5 121.1 L 204 122.5 L 207.5 123.9 L 211 125.3 L 214.6 126.6 L 218.1 127.8 L 221.6 129 L 225.1 130.1 L 228.7 131.1 L 232.2 132 L 235.7 132.9 L 239.2 133.5 L 242.8 134.1 L 246.3 134.5 L 249.8 134.7 L 253.3 134.8 L 256.9 134.7 L 260.4 134.5 L 263.9 134 L 267.4 133.3 L 271 132.4 L 274.5 131.2 L 278 129.9 L 281.5 128.2 L 285 126.3 L 288.6 124.1 L 292.1 121.7 L 295.6 118.9 L 299.1 115.8 L 302.7 112.4 L 306.2 108.7 L 309.7 104.6 L 313.2 100.2 L 316.8 95.4 L 320.3 90.2 L 323.8 84.7 L 327.3 78.7 L 330.9 72.3 L 334.4 65.6 L 337.9 58.3' fill='none' stroke='currentColor' stroke-width='1.8'/><circle cx='140.6' cy='104.6' r='4.5' fill='currentColor'/><circle cx='253.3' cy='134.8' r='4.5' fill='currentColor'/><text x='140.6' y='92.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>starts to fall</text><text x='253.3' y='156.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>least, then rises</text></svg>",
+    "caption": "A cubic model turns twice: a peak, then the lowest point before it climbs again."
   },
   {
     "type": "callout",
     "kind": "notonspec",
     "title": "Only flat contexts",
-    "md": "The Teacher Guidance is explicit that three-dimensional optimisation problems and problems involving $\\pi$ will not be asked, so every context you meet is a flat one: no boxes, no tanks, no circles.",
-    "source": "CCEA GCSE Further Mathematics specification, statement FM1-DIF-02 and its Teacher Guidance"
+    "md": "The Teacher Guidance rules out three-dimensional optimisation and problems involving $\\pi$, so every context on this paper is a flat one: no boxes, no tanks, no circles."
+  },
+  {
+    "type": "see",
+    "stem": "A population is modelled by $P = t^{3} - 15t^{2} + 63t + 20$, where $t$ is the time in months. When does it start to fall, and what is the least it falls to before rising again?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dP}{dt} = 3t^{2} - 30t + 63 = 3(t - 3)(t - 7)$",
+        "decision": "Differentiate, then factorise: the 3 comes out first.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$t = 3$ or $t = 7$",
+        "decision": "Two stationary times.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{d^{2}P}{dt^{2}} = 6t - 30$: $-12$ at $t = 3$, $12$ at $t = 7$",
+        "decision": "A maximum at 3 months, a minimum at 7.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "It starts to fall after $3$ months; the least is $P(7) = 69$",
+        "decision": "Answer in the story's terms: a time, then a population.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
   },
   {
     "type": "gate",
-    "id": "g8",
+    "id": "g19",
     "kind": "number",
-    "prompt": "The notice is smallest when $w = 15$ cm. What is its least total area, in cm²?",
-    "answer": "588",
-    "explain": "$A = 348 + 8 \\times 15 + \\frac{1800}{15} = 588$ cm², which is the $21$ cm by $28$ cm rectangle. The width alone is not an area."
+    "prompt": "A population is modelled by $P = t^{3} - 9t^{2} + 15t + 30$, $t$ in months. What is the least value $P$ falls to before rising again?",
+    "answer": "5",
+    "explain": "As steps 1 to 4 of See it: $\\frac{dP}{dt} = 3t^{2} - 18t + 15 = 3(t - 1)(t - 5)$; $\\frac{d^{2}P}{dt^{2}} = 6t - 18$ is positive at $t = 5$, so the least is $P(5) = 125 - 225 + 75 + 30 = 5$.",
+    "twin": {
+      "prompt": "A population is modelled by $P = t^{3} - 6t^{2} + 9t + 12$, $t$ in months. What is the least value $P$ falls to before rising again?",
+      "answer": "12",
+      "explain": "$\\frac{dP}{dt} = 3(t - 1)(t - 3)$, a minimum at $t = 3$, where $P = 27 - 54 + 27 + 12 = 12$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Read a constraint off a diagram or a sentence and write one letter in terms of the other.\nBuild the quantity to optimise as a function of a single letter and simplify it.\nDifferentiate, including a term with a negative power, and solve the derivative equal to zero.\nShow with the second derivative, and its number, which kind of turning point you have.\nSubstitute back and answer with the quantity asked for and its unit."
+    "md": "Read the constraint and write one letter in terms of the other.\nWrite the quantity in one letter, simplify, and differentiate, a fraction as a negative power.\nSolve the derivative equal to zero, taking the positive root for a length.\nShow the nature with the second derivative's value and sign.\nSubstitute back and answer with the quantity asked, rounded as asked, with its unit."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "The wording is *using calculus, find the value of $x$ which gives the maximum, showing that it is a maximum*, usually after one or two show-that parts. The first mark is for a correct derivative, so write it down even when the setting-up has defeated you. The last mark is for the quantity the question named, with its unit."
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.optimisation.01"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.optimisation.03"
+    "md": "The last or second-last question on Unit 1, 7 to 12 marks: show-that parts build the expression, then using calculus, find the value that gives the maximum, showing that it is a maximum, then often the quantity itself. Write the derivative even if the set-up beat you: it is the first calculus mark."
   },
   {
     "type": "prompt",
@@ -265,10 +985,6 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.optimisation.07"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.optimisation.08"
+    "promptId": "rp.fm.u1.optimisation.10"
   }
 ]
