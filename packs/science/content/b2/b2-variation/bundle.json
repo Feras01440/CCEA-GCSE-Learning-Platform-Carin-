@@ -2618,6 +2618,21 @@
       ],
       "examUnit": "B2",
       "difficultyPrior": 5
+    },
+    {
+      "id": "rp.science.b2.b2-variation.09",
+      "topic": "science.b2.b2-variation",
+      "specRefs": [
+        "DA-B2-2.5.1"
+      ],
+      "kind": "qa",
+      "prompt": "Which graph displays continuous variation?",
+      "answer": "A histogram, its bars touching.",
+      "keyWords": [
+        "histogram"
+      ],
+      "examUnit": "B2",
+      "difficultyPrior": 4
     }
   ],
   "verification": [
@@ -2715,6 +2730,13 @@
           "replacedBy": "g6",
           "reason": "It asked the same percentage question, on the same numbers, as the post-lesson diagnostic d5; g6 checks the same step on a class of its own.",
           "on": "2026-09-27T15:30:00Z"
+        },
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "Its answer, continuous, was printed in its own section's See it (step 3), so it could be copied; g8 asks her to classify two new characteristics together.",
+          "on": "2026-10-07T23:30:00Z"
         }
       ]
     },
@@ -4489,6 +4511,79 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the banned tokens (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; every figure carries alt text and uses no colour as its only signal; every figure passes the structure and geometry lints and was rendered and looked at; no question figure prints anything its own part asks for (scripts/qa/figure-leaks.mjs); no maths segment is opened without being closed in the same string.",
           "at": "2026-09-27T21:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.science.b2.b2-variation.09",
+      "itemId": "rp.science.b2.b2-variation.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) and published by pipeline/build-content.mts with zero problems.",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "B2 outcomes 2.5.1 and 2.5.2, both Foundation Tier, so every item is untiered. The examples are the specification's own (height and length; tongue rolling and hand dominance) plus blood group, which CCEA's schemes accept. Polygenic inheritance, types of mutation and their effects, and normal curves are outside this specification and are listed in notOnThisSpec rather than used.",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "waived",
+          "detail": "No formula sheet in science. Anything the learner must be able to compute is listed in the note as must-know.",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "State, Give, Name, Use, Calculate, Explain, Suggest and Complete, at the tariffs packs/science/exam-true/command-words.json gives (State/Give/Name [1], Calculate [1]-[2], Explain [1]-[2]).",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "Matches the real thing: CCEA set this material as one- and two-mark parts of Foundation questions in Summer 2019, 2021 and 2022, and one mark of a Higher question in 2023. Timings from packs/science/exam-true/tariffs.json (B2 Foundation 1.07 minutes per mark).",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "No Chief Examiner report from 2023 to 2025 names a failure on this topic, so no conceptual distractor carries a misconception tag. The two calculation slips tagged are the ones Summer 2025 B2 Foundation Q3 records (a percentage worked the wrong way round, and the other group's figure used), and the graph-choice slip is the one Summer 2023 Unit 7 Chemistry Q3 records (a bar graph drawn where the data needed a continuous scale).",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "No eight-word run in common with any CCEA paper, mark scheme or Chief Examiner report: checked with node scripts/qa/shingles.mjs --unit b2 against the whole corpus and with the batch shingle script against the B2 papers and schemes read for this batch (Summer 2019, 2021 and 2022 B2 Foundation, Summer 2023 B2 Higher). New classes, new counts, new contexts and new wording.",
+          "at": "2026-10-07T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (B2 batch D findings pass, 7 Oct 2026; scratchpad/probes/b2-d/fix-1007.mjs)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the banned tokens (the W-word for an incorrect answer, and the 9-1 grade label) do not occur; every figure carries alt text and uses no colour as its only signal; every figure passes the structure and geometry lints and was rendered and looked at; no question figure prints anything its own part asks for (scripts/qa/figure-leaks.mjs); no maths segment is opened without being closed in the same string.",
+          "at": "2026-10-07T23:30:00Z",
           "by": "claude"
         }
       ],
