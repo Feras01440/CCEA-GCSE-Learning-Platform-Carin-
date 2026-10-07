@@ -98,7 +98,9 @@
  * --teach-fatal   count such a gate as a breach rather than a warning
  * --prompts       print every note that wires more than two prompts and every over-long prompt answer
  * --prompts-fatal count those as breaches rather than warnings
- * --withdrawn     print every topic's withdraw-and-replace records and their problems (scripts/qa/withdrawn.mjs)
+ * --withdrawn     print every topic's withdraw-and-replace records and their problems (scripts/qa/withdrawn.mjs; a
+ *                 replacedBy chain is followed with the app's resolver, src/lib/review/withdrawn.ts resolveCardId, and
+ *                 must end in an item that ships)
  * --withdrawn-fatal count a withdrawn-record problem as a breach rather than a warning
  * --see           print every note's v3 structure findings (See it, first check, explanation length, Your turn,
  *                 video, option by its place, answer printed in the See it, See it block problems), then one
@@ -136,6 +138,9 @@ const { sizeWarnings, SIZE_LIMITS_KB } = await import("../../src/components/item
 const minutesModel = await import("../../src/lib/slides/minutes.ts");
 const recallModel = await import("../../src/lib/slides/recall.ts");
 const { hasSeeBlock } = await import("../../src/lib/slides/readiness.ts");
+// the app's own resolver of withdraw-and-replace chains (src/lib/review/withdrawn.ts resolveCardId, the one the review
+// inbox follows), so a replacedBy chain is judged as the app follows it (the lead's ruling, 7 Oct 2026)
+const { resolveCardId } = await import("../../src/lib/review/withdrawn.ts");
 
 const argv = process.argv.slice(2);
 const asJson = argv.includes("--json");
@@ -830,7 +835,7 @@ function checkNote(file, orphans) {
   for (const f of prompts) say.push({ check: "prompts", detail: f.detail, few: true });
 
   // withdraw-and-replace records (scripts/qa/withdrawn.mjs): warnings unless --withdrawn-fatal
-  const withdrawn = bundle ? withdrawnFindings(blocks, bundle) : { records: [], problems: [] };
+  const withdrawn = bundle ? withdrawnFindings(blocks, bundle, { resolve: resolveCardId }) : { records: [], problems: [] };
   for (const p of withdrawn.problems) say.push({ check: "withdrawn", detail: `${p.id}: ${p.problem} (log ${p.log})`, wd: true });
 
   // the answers over the 12-word target: a report line, never a warning
