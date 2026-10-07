@@ -3,11 +3,11 @@
     "type": "hero",
     "lede": "A tangent touches a curve and travels in exactly the direction the curve is going. A normal cuts across it at a right angle. Both are straight lines, so both have an equation, and the only new idea is where their gradients come from.",
     "can": [
-      "Find the equation of the tangent to a curve at a named point, in four steps",
-      "Turn a tangent gradient into a normal gradient by taking the negative reciprocal",
-      "Use a gradient the question gives you, instead of setting dy/dx to zero"
+      "Find the tangent and the normal to a curve at a named point.",
+      "Use a stated gradient, a parallel line or an unknown coefficient.",
+      "Find where a tangent meets the curve again, or meets a normal."
     ],
-    "minutes": 15
+    "minutes": 24
   },
   {
     "type": "h",
@@ -15,27 +15,86 @@
     "role": "idea"
   },
   {
-    "type": "p",
-    "md": "Rest a ruler against a curve so that it just touches: that is the **tangent**. Stand a second ruler upright against the first at the same place: that is the **normal**.\nBoth are ordinary straight lines with an equation $y = mx + c$. Everything in this topic is about finding their two numbers, $m$ and $c$."
+    "type": "figure",
+    "alt": "The curve y = x squared plus 2 with a solid line touching it at the point (1, 3), the tangent, and a dashed line crossing it there at right angles, the normal",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 320\" role=\"img\" aria-label=\"The curve y = x squared plus 2 with a solid line touching it at the point (1, 3), the tangent, and a dashed line crossing it there at right angles, the normal\" font-family=\"inherit\"><title>The curve y = x squared plus 2 with a solid line touching it at the point (1, 3), the tangent, and a dashed line crossing it there at right angles, the normal</title><line x1=\"84.92\" y1=\"275.08\" x2=\"315.08\" y2=\"275.08\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"309.08\" y=\"267.08\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">x</text><line x1=\"147.69\" y1=\"296\" x2=\"147.69\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"159.69\" y=\"38\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">y</text><path d=\"M84.92 97.23 L88.76 108.39 L92.59 118.84 L96.43 128.59 L100.27 137.64 L104.1 145.98 L107.94 153.62 L111.77 160.56 L115.61 166.79 L119.45 172.32 L123.28 177.15 L127.12 181.27 L130.95 184.69 L134.79 187.41 L138.63 189.42 L142.46 190.73 L146.3 191.34 L150.13 191.24 L153.97 190.44 L157.81 188.94 L161.64 186.74 L165.48 183.83 L169.31 180.21 L173.15 175.9 L176.98 170.88 L180.82 165.16 L184.66 158.73 L188.49 151.6 L192.33 143.77 L196.16 135.24 L200 126 L203.84 116.06 L207.67 105.41 L211.51 94.07 L215.34 82.02 L219.18 69.26 L223.02 55.8 L226.85 41.64 L230.69 26.78\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"116.31\" y1=\"296\" x2=\"252.31\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"84.92\" y1=\"97.23\" x2=\"315.08\" y2=\"212.31\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"6 4\"/><circle cx=\"189.54\" cy=\"149.54\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"159.54\" y=\"153.54\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">(1, 3)</text><text x=\"245.75\" y=\"67.11\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">tangent</text><text x=\"281.6\" y=\"217.57\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">normal</text></svg>",
+    "caption": "The tangent goes the way the curve goes at (1, 3); the normal crosses it at a right angle."
   },
   {
-    "type": "figure",
-    "alt": "A parabola drawn on axes with two dashed straight lines through the point (4, 3): one touching the curve, labelled tangent, and one crossing it at right angles, labelled normal.",
-    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A parabola with the tangent and the normal both drawn at the point (4, 3), meeting there at a right angle'><title>A parabola with the tangent and the normal both drawn at the point (4, 3), meeting there at a right angle</title><path d='M 71.3 24 L 71.3 268 M 119.5 24 L 119.5 268 M 167.8 24 L 167.8 268 M 216 24 L 216 268 M 264.2 24 L 264.2 268 M 312.5 24 L 312.5 268 M 360.7 24 L 360.7 268 M 52 268 L 380 268 M 52 230.5 L 380 230.5 M 52 192.9 L 380 192.9 M 52 155.4 L 380 155.4 M 52 117.8 L 380 117.8 M 52 80.3 L 380 80.3 M 52 42.8 L 380 42.8' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 230.5 L 380 230.5' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 24 L 52 268' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 71.3 226.5 L 71.3 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.3' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 119.5 226.5 L 119.5 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='119.5' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 167.8 226.5 L 167.8 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='167.8' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 216 226.5 L 216 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='216' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M 264.2 226.5 L 264.2 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='264.2' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><path d='M 312.5 226.5 L 312.5 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='312.5' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><path d='M 360.7 226.5 L 360.7 234.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='360.7' y='250.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>7</text><path d='M 48 268 L 56 268' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='273' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-2</text><path d='M 48 192.9 L 56 192.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='197.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><path d='M 48 155.4 L 56 155.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='160.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 48 117.8 L 56 117.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='122.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><path d='M 48 80.3 L 56 80.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='85.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><path d='M 48 42.8 L 56 42.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='47.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><text x='45' y='247.5' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 84.8 L 67.3 111.5 L 76.1 125.1 L 83.7 135.9 L 92.5 147.2 L 100.1 156 L 108.9 164.9 L 116.5 171.7 L 125.3 178.3 L 132.9 183.1 L 141.7 187.4 L 149.3 190.2 L 157 192 L 165.7 192.9 L 173.4 192.7 L 182.1 191.3 L 189.8 189 L 198.5 185.3 L 206.2 181 L 214.9 175 L 222.6 168.7 L 231.3 160.4 L 239 152 L 247.7 141.4 L 255.4 131 L 264.1 118 L 279.4 92.4 L 295.8 60.7 L 312.2 24.6' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 95.7 267.7 L 380 46.5' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><text x='336.6' y='72.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>tangent</text><path d='M 52 142.2 L 380 206.1' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><text x='360.7' y='194.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>normal</text><circle cx='216' cy='174.2' r='3.6' fill='currentColor'/><text x='226' y='194.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>(4, 3)</text><text x='380' y='222.5' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='59' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "The tangent goes the way the curve goes. The normal cuts across it at $90^{\\circ}$."
+    "type": "p",
+    "md": "Rest a ruler against a curve so that it just touches: that is the **tangent**. Stand a second ruler at a right angle to it at the same place: that is the **normal**. Both are straight lines, $y = mx + c$, so everything here is about finding their two numbers, $m$ and $c$."
+  },
+  {
+    "type": "p",
+    "md": "A line is the tangent at a point when it passes through that point **and** has the curve's gradient there, the value of $\\frac{dy}{dx}$."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Show that the line $y = 2x + 1$ is the tangent to $y = x^{2} + 2$ at the point $(1, 3)$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "At $x = 1$: the curve gives $1 + 2 = 3$ and the line gives $3$",
+        "decision": "Both pass through (1, 3), so they meet there."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{dy}{dx} = 2x$, which is $2$ at $x = 1$",
+        "decision": "The curve's gradient at the point is 2, the line's gradient too.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "So $y = 2x + 1$ is the tangent at $(1, 3)$",
+        "decision": "Same point, same gradient. The normal there has gradient $-\\frac{1}{2}$, at a right angle to it."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g1",
+    "id": "g14",
     "kind": "choice",
-    "prompt": "One tap to start. Which of the two lines in the picture just touches the curve?",
+    "prompt": "The line $y = 4x - 1$ meets the curve $y = x^{2} + 3$ at $(2, 7)$. Which statement is true?",
     "options": [
-      "The tangent",
-      "The normal",
-      "Both of them"
+      "It is the tangent there: both gradients are 4",
+      "It is the normal there",
+      "It crosses the curve there, with a different gradient"
     ],
-    "answer": "The tangent",
-    "explain": "The tangent touches and travels with the curve. The normal is at right angles to it, so it cuts straight through."
+    "answer": "It is the tangent there: both gradients are 4",
+    "explain": "Check both things, as in the See it: the line and the curve both give 7 at $x = 2$, and $\\frac{dy}{dx} = 2x$ is 4 there, the line's gradient. Same point and same gradient make it the tangent.",
+    "twin": {
+      "prompt": "The line $y = -2x - 3$ meets the curve $y = x^{2} - 2$ at $(-1, -1)$. Which statement is true?",
+      "options": [
+        "It is the tangent there: both gradients are −2",
+        "It is the normal there",
+        "It crosses the curve there, with a different gradient"
+      ],
+      "answer": "It is the tangent there: both gradients are −2",
+      "explain": "$\\frac{dy}{dx} = 2x$ is $-2$ at $x = -1$, and both give $-1$ there: the line is the tangent.",
+      "optionNotes": [
+        {
+          "option": "It is the normal there",
+          "why": "A normal's gradient would be $\\frac{1}{2}$; this line has the curve's own gradient."
+        },
+        {
+          "option": "It crosses the curve there, with a different gradient",
+          "why": "$\\frac{dy}{dx} = 2x$ is $-2$ at $x = -1$, the line's gradient."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "It is the normal there",
+        "why": "A normal's gradient would be $-\\frac{1}{4}$; this line's gradient, 4, matches the curve's."
+      },
+      {
+        "option": "It crosses the curve there, with a different gradient",
+        "why": "$\\frac{dy}{dx} = 2x$ is 4 at $x = 2$, the same as the line's gradient, so it touches."
+      }
+    ]
   },
   {
     "type": "h",
@@ -43,21 +102,81 @@
     "role": "why"
   },
   {
+    "type": "figure",
+    "alt": "The curve y = x squared plus 1 with two chords from the point (1, 2), one to x = 2 with gradient 3 and one to x = 1.5 with gradient 2.5, and the tangent at (1, 2) with gradient 2",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\" role=\"img\" aria-label=\"The curve y = x squared plus 1 with two chords from the point (1, 2), one to x = 2 with gradient 3 and one to x = 1.5 with gradient 2.5, and the tangent at (1, 2) with gradient 2\" font-family=\"inherit\"><title>The curve y = x squared plus 1 with two chords from the point (1, 2), one to x = 2 with gradient 3 and one to x = 1.5 with gradient 2.5, and the tangent at (1, 2) with gradient 2</title><line x1=\"24\" y1=\"276\" x2=\"376\" y2=\"276\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"370\" y=\"268\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">x</text><line x1=\"24\" y1=\"276\" x2=\"24\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"36\" y=\"38\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">y</text><path d=\"M24 240 L29.87 239.93 L35.73 239.73 L41.6 239.39 L47.47 238.92 L53.33 238.31 L59.2 237.57 L65.07 236.69 L70.93 235.67 L76.8 234.52 L82.67 233.24 L88.53 231.82 L94.4 230.27 L100.27 228.58 L106.13 226.75 L112 224.79 L117.87 222.69 L123.73 220.46 L129.6 218.1 L135.47 215.6 L141.33 212.96 L147.2 210.19 L153.07 207.28 L158.93 204.24 L164.8 201.06 L170.67 197.75 L176.53 194.3 L182.4 190.72 L188.27 187 L194.13 183.15 L200 179.16 L205.87 175.04 L211.73 170.78 L217.6 166.38 L223.47 161.85 L229.33 157.19 L235.2 152.39 L241.07 147.46 L246.93 142.39 L252.8 137.18 L258.67 131.84 L264.53 126.36 L270.4 120.75 L276.27 115.01 L282.13 109.13 L288 103.11 L293.87 96.96 L299.73 90.67 L305.6 84.25 L311.47 77.69 L317.33 71 L323.2 64.17 L329.07 57.21 L334.93 50.11 L340.8 42.88 L346.67 35.51 L352.53 28.01\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"159.38\" y1=\"204\" x2=\"294.77\" y2=\"96\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"/><line x1=\"159.38\" y1=\"204\" x2=\"227.08\" y2=\"159\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"2 3\"/><line x1=\"24\" y1=\"276\" x2=\"376\" y2=\"88.8\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"159.38\" cy=\"204\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><circle cx=\"294.77\" cy=\"96\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><circle cx=\"227.08\" cy=\"159\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"302.77\" y=\"100\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">gradient 3</text><text x=\"237.08\" y=\"177\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">gradient 2.5</text><text x=\"360.46\" y=\"126\" font-size=\"15\" text-anchor=\"end\" fill=\"currentColor\">tangent: 2</text></svg>",
+    "caption": "Chords from (1, 2) steepen less and less as the second point closes in: their gradients head for 2."
+  },
+  {
     "type": "p",
-    "md": "Zoom in on a smooth curve and it straightens out: close enough to any point, the curve and one straight line cannot be told apart. That line is the tangent.\nThe derivative measures how steep the curve is at every point, so at the point of contact the tangent's gradient is $\\frac{dy}{dx}$ there. That is the only reason calculus is needed at all."
+    "md": "A chord joins two points of a curve. Slide its second point towards the first and the chord turns, until it lies along the tangent. The derivative is the gradient those chords close in on, which is why $\\frac{dy}{dx}$ at a point is the tangent's gradient there."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "On $y = x^{2} + 1$, find the gradients of chords from $(1, 2)$, and compare them with $\\frac{dy}{dx}$ at $x = 1$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "To $x = 2$: $\\frac{5 - 2}{2 - 1} = 3$",
+        "decision": "Rise over run between the two points."
+      },
+      {
+        "n": 2,
+        "working": "To $x = 1.5$: $\\frac{3.25 - 2}{0.5} = 2.5$",
+        "decision": "A closer second point gives a gradient nearer the tangent's."
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{dy}{dx} = 2x = 2$ at $x = 1$",
+        "decision": "The chords close in on 2, the tangent's gradient."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g9",
+    "id": "g15",
     "kind": "choice",
-    "prompt": "Zoom in far enough at a point on a smooth curve and the curve looks like a straight line. Which straight line?",
+    "prompt": "On $y = x^{2} - 1$, chords from the point where $x = 3$ to $x = 3.1$ and to $x = 3.01$ have gradients 6.1 and 6.01. What is the gradient of the tangent at $x = 3$?",
     "options": [
-      "The tangent at that point",
-      "The normal at that point",
-      "The line from that point to the origin"
+      "$6$",
+      "$6.1$",
+      "$8$"
     ],
-    "answer": "The tangent at that point",
-    "explain": "Close up, the curve runs along its tangent, so the tangent's gradient is the curve's gradient there: $\\frac{dy}{dx}$ at that point."
+    "answer": "$6$",
+    "explain": "As in the See it, the chord gradients 6.1 and 6.01 close in on 6, and $\\frac{dy}{dx} = 2x$ gives exactly 6 at $x = 3$.",
+    "twin": {
+      "prompt": "On $y = x^{2} + 5$, chords from the point where $x = -2$ to $x = -1.9$ and to $x = -1.99$ have gradients $-3.9$ and $-3.99$. What is the gradient of the tangent at $x = -2$?",
+      "options": [
+        "$-4$",
+        "$-3.9$",
+        "$9$"
+      ],
+      "answer": "$-4$",
+      "explain": "The chords close in on $-4$, and $\\frac{dy}{dx} = 2x = -4$ at $x = -2$.",
+      "optionNotes": [
+        {
+          "option": "$-3.9$",
+          "why": "That is a chord; the chords close in on the tangent's gradient."
+        },
+        {
+          "option": "$9$",
+          "why": "9 is the height of the curve there, not its gradient.",
+          "misconception": "fm.calc.gradient-from-y-not-derivative"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$6.1$",
+        "why": "That is a chord, not the tangent; the chords close in on a value as the second point comes nearer."
+      },
+      {
+        "option": "$8$",
+        "why": "8 is the height of the curve at $x = 3$, not its gradient.",
+        "misconception": "fm.calc.gradient-from-y-not-derivative"
+      }
+    ]
   },
   {
     "type": "h",
@@ -66,107 +185,292 @@
   },
   {
     "type": "p",
-    "md": "To write $y - y_{1} = m(x - x_{1})$ you need a gradient and a point.\n**Differentiate**, because the derivative is the gradient rule.\n**Substitute** the $x$ of the point, to get $m$ there and nowhere else.\n**Find $y$ from the curve.**\n**Put all three into the line formula.**"
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "The curve is $y = x^{2} - 6x + 11$, so $\\frac{dy}{dx} = 2x - 6$. What is the gradient of the tangent at $x = 4$?",
-    "answer": "2",
-    "explain": "$2(4) - 6 = 2$. That number is the $m$ of the tangent, and everything else is built on it."
-  },
-  {
-    "type": "figure",
-    "alt": "The parabola with a dashed vertical line from the point (4, 3) down to the x-axis and a dashed horizontal line across to the y-axis, showing that the height 3 is read from the curve.",
-    "svg": "<svg viewBox='0 0 400 280' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The parabola with dashed lines from the point (4, 3) to each axis, showing where the coordinates come from'><title>The parabola with dashed lines from the point (4, 3) to each axis, showing where the coordinates come from</title><path d='M 71.3 24 L 71.3 248 M 119.5 24 L 119.5 248 M 167.8 24 L 167.8 248 M 216 24 L 216 248 M 264.2 24 L 264.2 248 M 312.5 24 L 312.5 248 M 360.7 24 L 360.7 248 M 52 229.3 L 380 229.3 M 52 192 L 380 192 M 52 154.7 L 380 154.7 M 52 117.3 L 380 117.3 M 52 80 L 380 80 M 52 42.7 L 380 42.7' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 229.3 L 380 229.3' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 24 L 52 248' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 71.3 225.3 L 71.3 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.3' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 119.5 225.3 L 119.5 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='119.5' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 167.8 225.3 L 167.8 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='167.8' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 216 225.3 L 216 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='216' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M 264.2 225.3 L 264.2 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='264.2' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><path d='M 312.5 225.3 L 312.5 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='312.5' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><path d='M 360.7 225.3 L 360.7 233.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='360.7' y='249.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>7</text><path d='M 48 192 L 56 192' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='197' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><path d='M 48 154.7 L 56 154.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='159.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 48 117.3 L 56 117.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='122.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><path d='M 48 80 L 56 80' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='85' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><path d='M 48 42.7 L 56 42.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='47.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><text x='45' y='246.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 173.3 L 380 173.3' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><text x='377' y='168.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>y = 3, from the curve</text><path d='M 52 84.5 L 68.4 112.8 L 77.1 126.1 L 84.8 136.8 L 100.1 155.3 L 108.9 164.2 L 116.5 170.9 L 125.3 177.5 L 132.9 182.3 L 141.7 186.5 L 149.3 189.3 L 157 191.1 L 165.7 192 L 173.4 191.7 L 182.1 190.3 L 189.8 188.1 L 198.5 184.4 L 206.2 180.2 L 214.9 174.2 L 222.6 167.9 L 231.3 159.6 L 239 151.3 L 247.7 140.7 L 255.4 130.4 L 264.1 117.5 L 279.4 92 L 295.8 60.5 L 312.2 24.6' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 216 173.3 L 216 229.3' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3' stroke-opacity='0.8' fill='none'/><circle cx='216' cy='173.3' r='3.6' fill='currentColor'/><text x='226' y='193.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>(4, 3)</text><text x='380' y='221.3' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='59' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "$x = 4$ goes into the curve, and $y = 3$ comes back out."
-  },
-  {
-    "type": "p",
-    "md": "The tangent and the curve share the point of contact, so its $y$ comes from the curve. Substituting into $\\frac{dy}{dx}$ gives the gradient a second time, not the height, and a straight line named in the question gives a third number again."
+    "md": "Four moves give the tangent at a named point. **Differentiate**, since $\\frac{dy}{dx}$ is the gradient rule. **Substitute** the point's $x$ into it for $m$. **Take $y$ from the curve**, not from $\\frac{dy}{dx}$. **Write** $y - y_{1} = m(x - x_{1})$ and tidy it."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why the point matters as much as the gradient",
-    "md": "A gradient alone names a whole family of parallel lines. The point is what picks one of them out, and $c$ is where that choice is recorded."
+    "title": "Why the point matters too",
+    "md": "A gradient alone names a whole family of parallel lines. The point of contact picks one of them out, and the constant c is where that choice is recorded."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the equation of the tangent to $y = x^{2} - 2x - 1$ at the point where $x = 3$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2x - 2$",
+        "decision": "This line earns the first mark on its own.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "At $x = 3$: $m = 2(3) - 2 = 4$",
+        "decision": "One number for the tangent's gradient.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "From the curve: $y = 9 - 6 - 1 = 2$, so the point is $(3, 2)$",
+        "decision": "The height comes from the curve.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$y - 2 = 4(x - 3)$, so $y = 4x - 10$",
+        "decision": "Check: at x = 3 the tangent gives 2, the height found.",
+        "earns": [
+          "W2"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "N_FM6aON2z8",
+    "title": "Equation of a Tangent to a Curve - Corbettmaths",
+    "channel": "corbettmaths",
+    "why": "More tangents at writing speed. Say each of the four moves before the video does."
   },
   {
     "type": "gate",
-    "id": "g3",
-    "kind": "number",
-    "prompt": "Same curve, $y = x^{2} - 6x + 11$. What is $y$ when $x = 4$?",
-    "answer": "3",
-    "explain": "$16 - 24 + 11 = 3$. Substituting 4 into the derivative instead would have given $2$, which is the gradient."
+    "id": "g16",
+    "kind": "choice",
+    "prompt": "Find the equation of the tangent to $y = x^{2} + 2x - 3$ at the point where $x = 1$.",
+    "options": [
+      "$y = 4x - 4$",
+      "$y = 0$",
+      "$y = 4x + 4$"
+    ],
+    "answer": "$y = 4x - 4$",
+    "explain": "Four moves as in the See it: $\\frac{dy}{dx} = 2x + 2$, so $m = 4$ at $x = 1$; the curve gives $y = 0$; then $y - 0 = 4(x - 1)$, which is $y = 4x - 4$.",
+    "twin": {
+      "prompt": "Find the equation of the tangent to $y = x^{2} + x - 2$ at the point where $x = 1$.",
+      "options": [
+        "$y = 3x - 3$",
+        "$y = 0$",
+        "$y = 3x + 3$"
+      ],
+      "answer": "$y = 3x - 3$",
+      "explain": "$\\frac{dy}{dx} = 2x + 1 = 3$ at $x = 1$, the point is $(1, 0)$, so $y = 3x - 3$.",
+      "optionNotes": [
+        {
+          "option": "$y = 0$",
+          "why": "That used the height, 0, as the gradient instead of dy/dx.",
+          "misconception": "fm.calc.gradient-from-y-not-derivative"
+        },
+        {
+          "option": "$y = 3x + 3$",
+          "why": "The constant's sign is turned over: $y = 3(x - 1)$ gives $-3$.",
+          "misconception": "fm.calc.tangent-constant-slip"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$y = 0$",
+        "why": "That used the height, 0, as the gradient. The gradient comes from $\\frac{dy}{dx} = 2x + 2$, which is 4 at $x = 1$.",
+        "misconception": "fm.calc.gradient-from-y-not-derivative"
+      },
+      {
+        "option": "$y = 4x + 4$",
+        "why": "The constant came out with its sign turned over: $y - 0 = 4(x - 1)$ gives $y = 4x - 4$.",
+        "misconception": "fm.calc.tangent-constant-slip"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "See it done: a tangent",
-    "role": "see"
-  },
-  {
-    "type": "figure",
-    "alt": "The parabola with its tangent drawn as a dashed line touching at the point (4, 3), the tangent labelled with its equation.",
-    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The worked example: the parabola with its tangent drawn at the point (4, 3) and the tangent&apos;s equation labelled'><title>The worked example: the parabola with its tangent drawn at the point (4, 3) and the tangent&apos;s equation labelled</title><path d='M 84.8 24 L 84.8 258 M 139.5 24 L 139.5 258 M 194.1 24 L 194.1 258 M 248.8 24 L 248.8 258 M 303.5 24 L 303.5 258 M 358.1 24 L 358.1 258 M 52 241.3 L 380 241.3 M 52 207.9 L 380 207.9 M 52 174.4 L 380 174.4 M 52 141 L 380 141 M 52 107.6 L 380 107.6 M 52 74.1 L 380 74.1 M 52 40.7 L 380 40.7' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 207.9 L 380 207.9' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 24 L 52 258' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 84.8 203.9 L 84.8 211.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='84.8' y='227.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 139.5 203.9 L 139.5 211.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='139.5' y='227.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 194.1 203.9 L 194.1 211.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='194.1' y='227.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M 248.8 203.9 L 248.8 211.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='248.8' y='227.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><path d='M 303.5 203.9 L 303.5 211.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='303.5' y='227.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><path d='M 358.1 203.9 L 358.1 211.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='358.1' y='227.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>7</text><path d='M 48 241.3 L 56 241.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='246.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-2</text><path d='M 48 174.4 L 56 174.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='179.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><path d='M 48 141 L 56 141' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='146' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 48 107.6 L 56 107.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='112.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><path d='M 48 74.1 L 56 74.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='79.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><path d='M 48 40.7 L 56 40.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='45.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><text x='45' y='224.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 131.6 L 67.3 145.3 L 75 151.2 L 83.7 157 L 99 165.3 L 107.8 168.8 L 115.4 171.2 L 123.1 172.9 L 130.7 174 L 138.4 174.4 L 146 174.2 L 153.7 173.3 L 162.4 171.5 L 170.1 169.2 L 177.7 166.2 L 193 158.4 L 208.3 147.9 L 223.7 134.8 L 240.1 117.8 L 256.5 97.9 L 271.8 76.5 L 288.2 50.8 L 303.5 24' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 52 244.6 L 380 44.1' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><text x='347.2' y='80.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>y=2x-5</text><circle cx='194.1' cy='157.7' r='3.6' fill='currentColor'/><text x='182.1' y='147.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>(4, 3)</text><text x='380' y='199.9' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='59' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "The finished tangent, $y = 2x - 5$, touching at $(4, 3)$."
-  },
-  {
-    "type": "p",
-    "md": "Find the equation of the tangent to $y = x^{2} - 6x + 11$ at the point where $x = 4$.\n**Step 1.** $\\frac{dy}{dx} = 2x - 6$.\n**Step 2.** At $x = 4$, $m = 2$.\n**Step 3.** From the curve, $y = 3$, so the point is $(4, 3)$.\n**Step 4.** $y - 3 = 2(x - 4)$, which tidies to $y = 2x - 5$."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "blank",
-    "prompt": "Finish step 4: $y - 3 = 2(x - 4)$ tidies to $y = 2x + \\square$. The missing constant is ___",
-    "answer": "-5",
-    "explain": "Expanding gives $y - 3 = 2x - 8$, so $y = 2x - 5$. Adding the 3 to the other side instead is the slip the examiners call the constant."
-  },
-  {
-    "type": "h",
-    "text": "The normal at a given point",
+    "text": "The normal: turn over, change sign",
     "role": "variant"
   },
   {
     "type": "p",
-    "md": "Perpendicular gradients multiply to $-1$, so the normal's gradient is $-\\frac{1}{m}$. Two moves again: **turn the fraction over**, then **change the sign**. Doing only one of them is the single commonest loss in this topic.\nA tangent gradient of $5$ gives a normal gradient of $-\\frac{1}{5}$; a tangent gradient of $-4$ gives $\\frac{1}{4}$, positive, because the sign changed."
+    "md": "The normal is at right angles to the tangent, and perpendicular gradients multiply to $-1$, so the normal's gradient is $-\\frac{1}{m}$. That is two moves: **turn the gradient over**, then **change its sign**. A tangent gradient of 4 gives $-\\frac{1}{4}$; one of $-2$ gives $\\frac{1}{2}$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the equation of the normal to $y = x^{2} + 3x$ at the point where $x = -1$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2x + 3$, so the tangent's gradient is $1$",
+        "decision": "Substitute x = −1 into the derivative.",
+        "earns": [
+          "MW1",
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Normal gradient: $-\\frac{1}{1} = -1$",
+        "decision": "Turn over, then change the sign.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "From the curve: $y = 1 - 3 = -2$, so the point is $(-1, -2)$",
+        "decision": "The tangent and the normal share this point."
+      },
+      {
+        "n": 4,
+        "working": "$y + 2 = -(x + 1)$, so $y = -x - 3$",
+        "decision": "Check: at $x = -1$ it gives $-2$.",
+        "earns": [
+          "W2"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g5",
-    "kind": "number",
-    "prompt": "The tangent to a curve at $A$ has gradient $5$. What is the gradient of the normal at $A$?",
-    "answer": "-0.2 | -1/5",
-    "explain": "Turn 5 over to get $\\frac{1}{5}$, then change the sign: $-\\frac{1}{5}$. Answering $-5$ means the sign changed but the fraction never turned over."
+    "id": "g17",
+    "kind": "choice",
+    "prompt": "The tangent to a curve at $C$ has gradient $-3$. What is the gradient of the normal at $C$?",
+    "options": [
+      "$\\frac{1}{3}$",
+      "$3$",
+      "$-\\frac{1}{3}$"
+    ],
+    "answer": "$\\frac{1}{3}$",
+    "explain": "Two moves, as in the See it: turn $-3$ over to get $-\\frac{1}{3}$, then change the sign to get $\\frac{1}{3}$. Check: $-3 \\times \\frac{1}{3} = -1$.",
+    "twin": {
+      "prompt": "The tangent to a curve at $D$ has gradient $\\frac{2}{5}$. What is the gradient of the normal at $D$?",
+      "options": [
+        "$-\\frac{5}{2}$",
+        "$-\\frac{2}{5}$",
+        "$\\frac{5}{2}$"
+      ],
+      "answer": "$-\\frac{5}{2}$",
+      "explain": "Turn $\\frac{2}{5}$ over to $\\frac{5}{2}$, then change the sign: $-\\frac{5}{2}$.",
+      "optionNotes": [
+        {
+          "option": "$-\\frac{2}{5}$",
+          "why": "The sign changed but the fraction was never turned over.",
+          "misconception": "fm.calc.normal-gradient-not-reciprocated"
+        },
+        {
+          "option": "$\\frac{5}{2}$",
+          "why": "Turned over, but the sign was never changed.",
+          "misconception": "fm.calc.normal-sign-not-flipped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$3$",
+        "why": "The sign changed, but the gradient was never turned over.",
+        "misconception": "fm.calc.normal-gradient-not-reciprocated"
+      },
+      {
+        "option": "$-\\frac{1}{3}$",
+        "why": "It was turned over, but its sign was never changed.",
+        "misconception": "fm.calc.normal-sign-not-flipped"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "See it done: a normal",
-    "role": "see"
-  },
-  {
-    "type": "figure",
-    "alt": "The curve y = 2x minus 3 over x drawn on axes with its normal at the point (1, minus 1) shown as a dashed line sloping gently downwards.",
-    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y = 2x - 3 over x with its normal drawn at the point (1, -1)'><title>The curve y = 2x - 3 over x with its normal drawn at the point (1, -1)</title><path d='M 114.5 24 L 114.5 258 M 192.6 24 L 192.6 258 M 270.7 24 L 270.7 258 M 348.8 24 L 348.8 258 M 52 258 L 380 258 M 52 224.6 L 380 224.6 M 52 191.1 L 380 191.1 M 52 157.7 L 380 157.7 M 52 124.3 L 380 124.3 M 52 90.9 L 380 90.9 M 52 57.4 L 380 57.4 M 52 24 L 380 24' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 157.7 L 380 157.7' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 24 L 52 258' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 114.5 153.7 L 114.5 161.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='114.5' y='177.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 192.6 153.7 L 192.6 161.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='192.6' y='177.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 270.7 153.7 L 270.7 161.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='270.7' y='177.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 348.8 153.7 L 348.8 161.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='348.8' y='177.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><path d='M 48 258 L 56 258' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='263' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-6</text><path d='M 48 224.6 L 56 224.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='229.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-4</text><path d='M 48 191.1 L 56 191.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='196.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-2</text><path d='M 48 124.3 L 56 124.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='129.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><path d='M 48 90.9 L 56 90.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='95.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 48 57.4 L 56 57.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><path d='M 48 24 L 56 24' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='29' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><text x='45' y='174.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 70.6 257.6 L 76.1 239.4 L 81.5 225.1 L 88.1 211.3 L 96.8 196.6 L 105.6 184.7 L 116.5 172.3 L 129.6 159.8 L 143.8 148.2 L 160.2 136.3 L 179.9 123.6 L 201.8 110.6 L 226.9 96.7 L 256.5 81.3 L 290.3 64.4 L 375.6 24' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 52 171.8 L 380 185.8' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><text x='286.3' y='197.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>y=-0.2x-0.8</text><circle cx='114.5' cy='174.4' r='3.6' fill='currentColor'/><text x='126.5' y='194.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>(1, -1)</text><text x='380' y='149.7' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='59' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "The normal at $(1, -1)$ is $y = -\\frac{1}{5}x - \\frac{4}{5}$."
+    "text": "A power of x underneath",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Find the equation of the normal to $y = 2x - \\frac{3}{x}$ at the point where $x = 1$.\n**Step 1.** $\\frac{dy}{dx} = 2 + \\frac{3}{x^{2}}$, so at $x = 1$ the tangent gradient is $5$.\n**Step 2.** The normal gradient is $-\\frac{1}{5}$.\n**Step 3.** From the curve, $y = -1$.\n**Step 4.** $y = -\\frac{1}{5}x - \\frac{4}{5}$."
+    "md": "The power rule only reaches powers of $x$, so a term such as $\\frac{18}{x}$ is rewritten as $18x^{-1}$ first. Its derivative is $-18x^{-2}$, and the minus in front of the original term turns that into $+\\frac{18}{x^{2}}$. The Summer 2019 report found many could not do this inside a normal question."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the equation of the tangent to $y = x - \\frac{18}{x}$ at the point where $x = 3$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = x - 18x^{-1}$",
+        "decision": "Rewrite the fraction as a power first."
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{dy}{dx} = 1 + 18x^{-2}$, so $m = 1 + 2 = 3$ at $x = 3$",
+        "decision": "$-18 \\times -1 = +18$, and $\\frac{18}{9} = 2$.",
+        "earns": [
+          "MW1",
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "From the curve: $y = 3 - 6 = -3$, so the point is $(3, -3)$",
+        "decision": "The height from the curve.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$y + 3 = 3(x - 3)$, so $y = 3x - 12$",
+        "decision": "Check: at x = 3 the line gives the height found from the curve.",
+        "earns": [
+          "W2"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g18",
     "kind": "choice",
-    "prompt": "The normal has gradient $-\\frac{1}{5}$ and passes through $(1, -1)$. Which equation is it?",
+    "prompt": "What is the gradient of the tangent to $y = x + \\frac{16}{x}$ at the point where $x = 2$?",
     "options": [
-      "$y = -\\frac{1}{5}x - \\frac{4}{5}$",
-      "$y = -\\frac{1}{5}x - \\frac{6}{5}$",
-      "$y = 5x - 6$"
+      "$-3$",
+      "$5$",
+      "$17$"
     ],
-    "answer": "$y = -\\frac{1}{5}x - \\frac{4}{5}$",
-    "explain": "Substituting gives $-1 = -\\frac{1}{5}(1) + c$, so $c = -\\frac{4}{5}$. The third option is the tangent, not the normal."
+    "answer": "$-3$",
+    "explain": "As in the See it, rewrite: $y = x + 16x^{-1}$, so $\\frac{dy}{dx} = 1 - 16x^{-2}$. At $x = 2$ that is $1 - 4 = -3$.",
+    "twin": {
+      "prompt": "What is the gradient of the tangent to $y = 2x + \\frac{27}{x}$ at the point where $x = 3$?",
+      "options": [
+        "$-1$",
+        "$5$",
+        "$29$"
+      ],
+      "answer": "$-1$",
+      "explain": "$\\frac{dy}{dx} = 2 - 27x^{-2}$, which is $2 - 3 = -1$ at $x = 3$.",
+      "optionNotes": [
+        {
+          "option": "$5$",
+          "why": "The derivative of $27x^{-1}$ is negative; the sign was lost.",
+          "misconception": "fm.calc.negative-power-differentiation"
+        },
+        {
+          "option": "$29$",
+          "why": "That treated $\\frac{27}{x}$ as $27x$.",
+          "misconception": "fm.calc.index-moved-to-numerator"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$5$",
+        "why": "The derivative of $16x^{-1}$ is $-16x^{-2}$, negative; the sign was lost.",
+        "misconception": "fm.calc.negative-power-differentiation"
+      },
+      {
+        "option": "$17$",
+        "why": "That treated $\\frac{16}{x}$ as $16x$. Rewrite it as $16x^{-1}$ first.",
+        "misconception": "fm.calc.index-moved-to-numerator"
+      }
+    ]
   },
   {
     "type": "h",
@@ -175,35 +479,96 @@
   },
   {
     "type": "figure",
-    "alt": "A curve with a dashed tangent drawn parallel to a second dashed straight line, the point of contact marked P.",
-    "svg": "<svg viewBox='0 0 400 290' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A curve with a tangent drawn parallel to a given straight line, both lines marked with the same gradient'><title>A curve with a tangent drawn parallel to a given straight line, both lines marked with the same gradient</title><path d='M 69.3 24 L 69.3 258 M 155.6 24 L 155.6 258 M 241.9 24 L 241.9 258 M 328.2 24 L 328.2 258 M 52 258 L 380 258 M 52 224.6 L 380 224.6 M 52 191.1 L 380 191.1 M 52 157.7 L 380 157.7 M 52 124.3 L 380 124.3 M 52 90.9 L 380 90.9 M 52 57.4 L 380 57.4 M 52 24 L 380 24' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 258 L 380 258' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 24 L 52 258' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 69.3 254 L 69.3 262' stroke='currentColor' stroke-width='1' fill='none'/><text x='69.3' y='275' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-4</text><path d='M 155.6 254 L 155.6 262' stroke='currentColor' stroke-width='1' fill='none'/><text x='155.6' y='275' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3</text><path d='M 241.9 254 L 241.9 262' stroke='currentColor' stroke-width='1' fill='none'/><text x='241.9' y='275' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-2</text><path d='M 328.2 254 L 328.2 262' stroke='currentColor' stroke-width='1' fill='none'/><text x='328.2' y='275' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><path d='M 48 224.6 L 56 224.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='229.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><path d='M 48 191.1 L 56 191.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='196.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 48 157.7 L 56 157.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='162.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><path d='M 48 124.3 L 56 124.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='129.3' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><path d='M 48 90.9 L 56 90.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='95.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><path d='M 48 57.4 L 56 57.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>12</text><path d='M 48 24 L 56 24' stroke='currentColor' stroke-width='1' fill='none'/><text x='44' y='29' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>14</text><text x='45' y='275' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 200.3 L 95.7 198.1 L 131.8 195.4 L 163.5 192 L 189.8 188.1 L 212.7 183.4 L 233.5 177.5 L 251 170.6 L 266.3 162.5 L 273.9 157.4 L 280.5 152.4 L 292.5 140.9 L 298 134.5 L 303.5 127.1 L 312.2 112.7 L 319.9 96.7 L 327.5 76.3 L 334.1 53.9 L 340.6 25.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 52 248 L 380 120.9' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><text x='86.5' y='226.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>tangent</text><path d='M 113.2 257.7 L 380 154.4' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.8'/><text x='310.9' y='197.1' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>parallel</text><circle cx='241.9' cy='174.4' r='3.6' fill='currentColor'/><text x='251.9' y='164.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>P</text><text x='380' y='250' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='59' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "Parallel lines share a gradient, so the given line's gradient becomes the value of $\\frac{dy}{dx}$."
+    "alt": "The curve y = x squared minus x plus 2 with its tangent at P(3, 8) drawn solid and the dashed line y = 5x minus 1 parallel to it",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\" role=\"img\" aria-label=\"The curve y = x squared minus x plus 2 with its tangent at P(3, 8) drawn solid and the dashed line y = 5x minus 1 parallel to it\" font-family=\"inherit\"><title>The curve y = x squared minus x plus 2 with its tangent at P(3, 8) drawn solid and the dashed line y = 5x minus 1 parallel to it</title><line x1=\"24\" y1=\"248\" x2=\"376\" y2=\"248\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"370\" y=\"240\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">x</text><line x1=\"88\" y1=\"276\" x2=\"88\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"100\" y=\"38\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">y</text><path d=\"M24 192 L29.87 195.73 L35.73 199.23 L41.6 202.49 L47.47 205.52 L53.33 208.31 L59.2 210.87 L65.07 213.19 L70.93 215.27 L76.8 217.12 L82.67 218.74 L88.53 220.12 L94.4 221.26 L100.27 222.17 L106.13 222.84 L112 223.28 L117.87 223.48 L123.73 223.45 L129.6 223.19 L135.47 222.68 L141.33 221.94 L147.2 220.97 L153.07 219.76 L158.93 218.32 L164.8 216.64 L170.67 214.73 L176.53 212.58 L182.4 210.19 L188.27 207.57 L194.13 204.72 L200 201.63 L205.87 198.3 L211.73 194.74 L217.6 190.94 L223.47 186.91 L229.33 182.64 L235.2 178.14 L241.07 173.4 L246.93 168.43 L252.8 163.22 L258.67 157.78 L264.53 152.1 L270.4 146.19 L276.27 140.04 L282.13 133.65 L288 127.03 L293.87 120.18 L299.73 113.09 L305.6 105.76 L311.47 98.2 L317.33 90.4 L323.2 82.37 L329.07 74.1 L334.93 65.6 L340.8 56.87 L346.67 47.89 L352.53 38.68 L358.4 29.24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"152\" y1=\"276\" x2=\"376\" y2=\"31\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"75.2\" y1=\"276\" x2=\"305.6\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"6 4\"/><circle cx=\"280\" cy=\"136\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"290\" y=\"154\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">P(3, 8)</text><text x=\"188.8\" y=\"139\" font-size=\"15\" text-anchor=\"end\" fill=\"currentColor\">y = 5x − 1</text></svg>",
+    "caption": "Parallel lines share a gradient, so the given line's 5 becomes the value of dy/dx."
   },
   {
     "type": "p",
-    "md": "Questions often give the gradient instead of the point. *Parallel to $y = 3x - 4$* means $\\frac{dy}{dx} = 3$. *The gradient of the normal is $\\frac{1}{2}$* means $\\frac{dy}{dx} = -2$.\nEither way you solve an equation rather than evaluate one, then find $y$ from the curve."
+    "md": "Often the question gives a gradient instead of a point. *Parallel to $y = 5x - 1$* means $\\frac{dy}{dx} = 5$. *The normal's gradient is $-\\frac{1}{4}$* means $\\frac{dy}{dx} = 4$. Either way you **solve** an equation for $x$, then take $y$ from the curve."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "Summer 2025, Unit 1, Question 13",
-    "md": "A frequent slip was solving $\\frac{dy}{dx} = 0$ instead of setting the derivative equal to the gradient the question stated; the report puts it down to habit. Read the question for the number $\\frac{dy}{dx}$ must equal.",
+    "title": "Equal to the gradient, not to 0",
+    "md": "In Summer 2025 the report found many set $\\frac{dy}{dx} = 0$ out of habit when the question had stated a gradient. Read the question for the number $\\frac{dy}{dx}$ must equal.",
     "source": "ccea-cer:further-maths:2025-summer:FM1:Q13"
   },
   {
-    "type": "video",
-    "videoId": "fPElVHyk_XI",
-    "title": "Differentiation Tangents and Normals - CCEA GCSE Further Mathematics",
-    "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher running the whole method against this specification, tangent then normal."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The tangent to $y = x^{2} - x + 2$ at $P$ is parallel to $y = 5x - 1$. Find the coordinates of $P$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2x - 1$",
+        "decision": "The gradient rule first.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2x - 1 = 5$, so $x = 3$",
+        "decision": "Parallel: equal gradients, so dy/dx equals 5.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$y = 9 - 3 + 2 = 8$, so $P$ is $(3, 8)$",
+        "decision": "The height from the curve.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g7",
-    "kind": "number",
-    "prompt": "The normal to a curve at $B$ has gradient $\\frac{1}{2}$. What is $\\frac{dy}{dx}$ at $B$?",
-    "answer": "-2",
-    "explain": "The tangent gradient is the negative reciprocal of the normal's: turn $\\frac{1}{2}$ over to get 2, then change the sign. Answering $\\frac{1}{2}$ or $-\\frac{1}{2}$ means one of the two moves was skipped."
+    "id": "g19",
+    "kind": "choice",
+    "prompt": "The normal to $y = x^{2} + 2x$ at $Q$ has gradient $-\\frac{1}{4}$. Which equation finds $Q$?",
+    "options": [
+      "$2x + 2 = 4$",
+      "$2x + 2 = -\\frac{1}{4}$",
+      "$2x + 2 = 0$"
+    ],
+    "answer": "$2x + 2 = 4$",
+    "explain": "As in the See it, turn the stated gradient into the tangent's: the negative reciprocal of $-\\frac{1}{4}$ is 4. So $\\frac{dy}{dx} = 2x + 2 = 4$, giving $x = 1$.",
+    "twin": {
+      "prompt": "The tangent to $y = x^{2} - 4x$ at $R$ is parallel to $y = -2x + 5$. Which equation finds $R$?",
+      "options": [
+        "$2x - 4 = -2$",
+        "$2x - 4 = \\frac{1}{2}$",
+        "$2x - 4 = 0$"
+      ],
+      "answer": "$2x - 4 = -2$",
+      "explain": "Parallel lines share a gradient, so $\\frac{dy}{dx} = 2x - 4 = -2$, giving $x = 1$.",
+      "optionNotes": [
+        {
+          "option": "$2x - 4 = \\frac{1}{2}$",
+          "why": "Parallel means the same gradient, not the perpendicular one."
+        },
+        {
+          "option": "$2x - 4 = 0$",
+          "why": "That is a horizontal tangent; here dy/dx equals −2.",
+          "misconception": "fm.calc.default-to-derivative-zero"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$2x + 2 = -\\frac{1}{4}$",
+        "why": "That is the normal's gradient. dy/dx is the tangent's, the negative reciprocal: 4."
+      },
+      {
+        "option": "$2x + 2 = 0$",
+        "why": "That would be a horizontal tangent; the question states a gradient.",
+        "misconception": "fm.calc.default-to-derivative-zero"
+      }
+    ]
   },
   {
     "type": "h",
@@ -212,15 +577,51 @@
   },
   {
     "type": "p",
-    "md": "Sometimes the curve carries a letter, and the gradient condition is what finds it. The tangent to $y = ax^{2} - 5x$ at $x = 2$ is parallel to $y = 7x + 1$.\n$\\frac{dy}{dx} = 2ax - 5$, which is $4a - 5$ at $x = 2$.\nParallel means equal gradients: $4a - 5 = 7$, so $a = 3$. Only then can the point and the tangent be found."
+    "md": "Sometimes the curve carries a letter, and a gradient condition finds it. Differentiate with the letter in, substitute the point's $x$, and set that equal to the stated gradient. Only then can the point and the tangent follow. Summer 2024 set this with a parallel line."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The tangent to $y = ax^{2} + 2x$ at the point where $x = 1$ has gradient 8. Find $a$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2ax + 2$",
+        "decision": "Differentiate as usual; a is a number you do not know yet.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "At $x = 1$: $2a + 2 = 8$",
+        "decision": "The gradient there equals the stated one.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$a = 3$",
+        "decision": "Solve the linear equation.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g10",
+    "id": "g20",
     "kind": "number",
-    "prompt": "The tangent to $y = ax^{2} + x$ at $x = 1$ has gradient $9$. What is $a$?",
-    "answer": "4",
-    "explain": "$\\frac{dy}{dx} = 2ax + 1$, which is $2a + 1$ at $x = 1$. Setting $2a + 1 = 9$ gives $a = 4$."
+    "prompt": "The tangent to $y = ax^{2} - x$ at the point where $x = 2$ is parallel to $y = 19x - 3$. Find $a$.",
+    "answer": "5",
+    "explain": "As in the See it: $\\frac{dy}{dx} = 2ax - 1$, which is $4a - 1$ at $x = 2$. Parallel means equal gradients, so $4a - 1 = 19$ and $a = 5$.",
+    "twin": {
+      "prompt": "The tangent to $y = ax^{3} + 1$ at the point where $x = 1$ has gradient 18. Find $a$.",
+      "answer": "6",
+      "explain": "$\\frac{dy}{dx} = 3ax^{2}$, which is $3a$ at $x = 1$, so $3a = 18$ and $a = 6$."
+    }
   },
   {
     "type": "h",
@@ -229,66 +630,244 @@
   },
   {
     "type": "figure",
-    "alt": "A cubic curve with a dashed tangent that touches it on the right and crosses it again on the left, the two points marked touches and crosses.",
-    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A cubic with the tangent drawn at x = 1, touching there and crossing the curve again further left'><title>A cubic with the tangent drawn at x = 1, touching there and crossing the curve again further left</title><path d='M 71.3 24 L 71.3 268 M 119.5 24 L 119.5 268 M 167.8 24 L 167.8 268 M 216 24 L 216 268 M 264.2 24 L 264.2 268 M 312.5 24 L 312.5 268 M 360.7 24 L 360.7 268 M 52 268 L 380 268 M 52 239 L 380 239 M 52 209.9 L 380 209.9 M 52 180.9 L 380 180.9 M 52 151.8 L 380 151.8 M 52 122.8 L 380 122.8 M 52 93.7 L 380 93.7 M 52 64.7 L 380 64.7 M 52 35.6 L 380 35.6' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 151.8 L 380 151.8' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 216 24 L 216 268' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 71.3 147.8 L 71.3 155.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.3' y='171.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3</text><path d='M 119.5 147.8 L 119.5 155.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='119.5' y='171.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-2</text><path d='M 167.8 147.8 L 167.8 155.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='167.8' y='171.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><path d='M 264.2 147.8 L 264.2 155.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='264.2' y='171.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 312.5 147.8 L 312.5 155.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='312.5' y='171.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 360.7 147.8 L 360.7 155.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='360.7' y='171.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 212 268 L 220 268' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='273' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-20</text><path d='M 212 239 L 220 239' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='244' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-15</text><path d='M 212 209.9 L 220 209.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='214.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-10</text><path d='M 212 180.9 L 220 180.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='185.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>-5</text><path d='M 212 122.8 L 220 122.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='127.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>5</text><path d='M 212 93.7 L 220 93.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='98.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>10</text><path d='M 212 64.7 L 220 64.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='69.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>15</text><path d='M 212 35.6 L 220 35.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='208' y='40.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>20</text><text x='209' y='168.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 143.1 L 59.7 123.7 L 68.4 104.9 L 76.1 91.4 L 84.8 79.1 L 93.5 69.9 L 102.3 63.6 L 106.7 61.4 L 111 60 L 115.4 59.1 L 120.9 58.9 L 125.3 59.3 L 130.7 60.7 L 136.2 62.8 L 141.7 65.6 L 152.6 73.4 L 164.6 84.6 L 175.5 96.8 L 188.7 113.4 L 236.8 181.4 L 247.7 196 L 257.5 208.1 L 268.5 220.2 L 279.4 230.3 L 289.3 237.3 L 298 241.8 L 304.6 243.9 L 310 244.7 L 315.5 244.6 L 321 243.7 L 326.4 241.7 L 331.9 238.7 L 337.4 234.7 L 341.7 230.6 L 347.2 224.5 L 351.6 218.8 L 361.4 202.8 L 371.3 182.5 L 380 160.5' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 88.1 24.8 L 312.2 267.7' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><circle cx='264.2' cy='215.7' r='3.6' fill='currentColor'/><text x='254.2' y='233.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>touches</text><circle cx='119.5' cy='58.9' r='3.6' fill='currentColor'/><text x='129.5' y='46.9' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>crosses</text><text x='380' y='143.8' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='223' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "The tangent at $(1, -11)$ meets the curve again at $(-2, 16)$."
+    "alt": "The cubic y = x cubed minus 5x with its tangent at (2, minus 2) drawn dashed; the tangent touches there and crosses the curve again at (minus 4, minus 44)",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\" role=\"img\" aria-label=\"The cubic y = x cubed minus 5x with its tangent at (2, minus 2) drawn dashed; the tangent touches there and crosses the curve again at (minus 4, minus 44)\" font-family=\"inherit\"><title>The cubic y = x cubed minus 5x with its tangent at (2, minus 2) drawn dashed; the tangent touches there and crosses the curve again at (minus 4, minus 44)</title><line x1=\"24\" y1=\"77.05\" x2=\"376\" y2=\"77.05\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"370\" y=\"69.05\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">x</text><line x1=\"231.59\" y1=\"276\" x2=\"231.59\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"243.59\" y=\"38\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">y</text><path d=\"M41.6 254.67 L47.47 234.61 L53.33 215.92 L59.2 198.55 L65.07 182.47 L70.93 167.63 L76.8 153.99 L82.67 141.5 L88.53 130.12 L94.4 119.81 L100.27 110.52 L106.13 102.2 L112 94.82 L117.87 88.34 L123.73 82.7 L129.6 77.86 L135.47 73.78 L141.33 70.42 L147.2 67.73 L153.07 65.67 L158.93 64.2 L164.8 63.26 L170.67 62.83 L176.53 62.85 L182.4 63.28 L188.27 64.07 L194.13 65.19 L200 66.58 L205.87 68.22 L211.73 70.04 L217.6 72.01 L223.47 74.09 L229.33 76.22 L235.2 78.38 L241.07 80.5 L246.93 82.56 L252.8 84.5 L258.67 86.28 L264.53 87.87 L270.4 89.2 L276.27 90.25 L282.13 90.96 L288 91.3 L293.87 91.22 L299.73 90.67 L305.6 89.62 L311.47 88.01 L317.33 85.81 L323.2 82.97 L329.07 79.45 L334.93 75.2 L340.8 70.18 L346.67 64.35 L352.53 57.66 L358.4 50.07 L364.27 41.53 L370.13 32.01\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"24\" y1=\"236.87\" x2=\"376\" y2=\"55.83\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"6 4\"/><circle cx=\"321.85\" cy=\"83.68\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><circle cx=\"51.08\" cy=\"222.95\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"329.85\" y=\"101.68\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">touches</text><text x=\"61.08\" y=\"226.95\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">crosses</text></svg>",
+    "caption": "A tangent to a cubic touches at one point and crosses at another."
   },
   {
     "type": "p",
-    "md": "A tangent to a cubic touches at one point and usually crosses somewhere else. To find where, set the tangent equal to the curve and solve.\nThe point of contact is always a **repeated** root, so if you know it you can divide it out twice, and what is left gives the other crossing straight away."
+    "md": "A tangent to a cubic usually crosses it somewhere else. Set the tangent equal to the curve and collect everything on one side. The point of contact is a **repeated** root, because the line touches there, so its bracket appears squared, and the bracket that is left gives the crossing."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The tangent to $y = x^{3} - 5x$ at $(2, -2)$ is $y = 7x - 16$. Find where it meets the curve again.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$x^{3} - 5x = 7x - 16$",
+        "decision": "Where they meet, the y values agree.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$x^{3} - 12x + 16 = 0$",
+        "decision": "Collect everything on one side."
+      },
+      {
+        "n": 3,
+        "working": "$(x - 2)^{2}(x + 4) = 0$",
+        "decision": "x = 2 is the touching point, a repeated root, so (x − 2)² is a factor.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$x = -4$, $y = -64 + 20 = -44$: the point $(-4, -44)$",
+        "decision": "The height from the curve.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g8",
-    "kind": "number",
-    "prompt": "Setting $x^{3} - 12x = -9x - 2$ gives $x^{3} - 3x + 2 = 0$, which factorises as $(x - 1)^{2}(x + 2) = 0$. At what value of $x$ does the tangent cross the curve?",
-    "answer": "-2",
-    "explain": "The repeated factor $(x - 1)^{2}$ is the touching point, so the crossing is at $x = -2$, where $y = 16$."
+    "id": "g21",
+    "kind": "choice",
+    "prompt": "Setting a tangent equal to its curve gives $(x - 3)^{2}(x + 6) = 0$. At what value of $x$ does the tangent cross the curve?",
+    "options": [
+      "$x = -6$",
+      "$x = 3$",
+      "$x = 6$"
+    ],
+    "answer": "$x = -6$",
+    "explain": "As in the See it, the repeated factor $(x - 3)^{2}$ is the point of contact. The bracket left over, $(x + 6)$, gives the crossing: $x = -6$.",
+    "twin": {
+      "prompt": "Setting a tangent equal to its curve gives $(x + 2)^{2}(x - 4) = 0$. At what value of $x$ does the tangent cross the curve?",
+      "options": [
+        "$x = 4$",
+        "$x = -2$",
+        "$x = -4$"
+      ],
+      "answer": "$x = 4$",
+      "explain": "The repeated factor $(x + 2)^{2}$ is the contact; $(x - 4)$ gives the crossing at $x = 4$.",
+      "optionNotes": [
+        {
+          "option": "$x = -2$",
+          "why": "The squared bracket is the touching point."
+        },
+        {
+          "option": "$x = -4$",
+          "why": "The bracket (x − 4) is zero at x = 4."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$x = 3$",
+        "why": "The squared bracket is the touching point, where the tangent was drawn."
+      },
+      {
+        "option": "$x = 6$",
+        "why": "The bracket (x + 6) is zero at x = −6, not 6."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "Exam twists",
+    "text": "How the paper sets it",
     "role": "twists"
   },
   {
     "type": "p",
-    "md": "**A gradient, not a point** (2018, 2022, 2024, 2025). Horizontal, parallel to a line, equal to a number, or a normal's gradient: each becomes an equation for $\\frac{dy}{dx}$. Solve it for $x$, then find $y$ from the curve."
+    "md": "**Horizontal.** (2018) A horizontal tangent means $\\frac{dy}{dx} = 0$; with a power of $x$ underneath, multiply through by that power to clear it. The report found few could rearrange the equation that followed."
   },
   {
     "type": "p",
-    "md": "**Two tangents compared** (2025, 2026). Parallel tangents at two points have equal gradients; perpendicular ones have gradients that multiply to $-1$. Work out both gradients before you compare them."
+    "md": "**A gradient, a line or a normal stated.** (2022, 2024, 2025) Each becomes an equation for $\\frac{dy}{dx}$. In 2022 few turned a normal gradient into the tangent's first."
   },
   {
     "type": "p",
-    "md": "**A power of $x$ underneath** (2019, 2026). Rewrite $\\frac{6}{x}$ as $6x^{-1}$ before differentiating; the power rule then gives $-6x^{-2}$."
+    "md": "**Two tangents compared.** (2025, 2026) Parallel tangents have equal gradients; perpendicular ones multiply to −1. Work out both gradients before comparing, and give coordinates if they are asked for."
+  },
+  {
+    "type": "p",
+    "md": "**Line set equal to curve.** (2024) Many set the given line equal to the curve instead of differentiating: a gradient condition needs $\\frac{dy}{dx}$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the point on $y = x + \\frac{9}{x}$, where $x > 0$, at which the tangent is horizontal.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 1 - 9x^{-2}$",
+        "decision": "Rewrite 9/x as a power, then differentiate.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$1 - \\frac{9}{x^{2}} = 0$, so $x^{2} = 9$",
+        "decision": "Horizontal: the gradient is 0. Multiply through by $x^{2}$.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$x = 3$ (as $x > 0$), $y = 3 + 3 = 6$: the point $(3, 6)$",
+        "decision": "The question rules out the negative root.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g11",
+    "id": "g22",
     "kind": "choice",
-    "prompt": "A question says that the tangent to a curve at $P$ is horizontal. Which equation do you solve first?",
+    "prompt": "The tangent to $y = x + \\frac{4}{x}$, where $x > 0$, is horizontal at $T$. Which equation finds $T$?",
     "options": [
-      "$\\frac{dy}{dx} = 0$",
-      "$y = 0$",
-      "$x = 0$"
+      "$1 - \\frac{4}{x^{2}} = 0$",
+      "$x + \\frac{4}{x} = 0$",
+      "$1 + \\frac{4}{x^{2}} = 0$"
     ],
-    "answer": "$\\frac{dy}{dx} = 0$",
-    "explain": "Horizontal means a gradient of zero, so the derivative is set equal to $0$ and solved for $x$. Then $y$ comes from the curve."
+    "answer": "$1 - \\frac{4}{x^{2}} = 0$",
+    "explain": "As in the See it: rewrite $\\frac{4}{x}$ as $4x^{-1}$, differentiate to $1 - 4x^{-2}$, and set it to 0 for a horizontal tangent. That gives $x = 2$.",
+    "twin": {
+      "prompt": "The tangent to $y = 2x + \\frac{18}{x}$, where $x > 0$, is horizontal at $U$. Which equation finds $U$?",
+      "options": [
+        "$2 - \\frac{18}{x^{2}} = 0$",
+        "$2x + \\frac{18}{x} = 0$",
+        "$2 + \\frac{18}{x^{2}} = 0$"
+      ],
+      "answer": "$2 - \\frac{18}{x^{2}} = 0$",
+      "explain": "$\\frac{dy}{dx} = 2 - 18x^{-2} = 0$ gives $x^{2} = 9$, so $x = 3$.",
+      "optionNotes": [
+        {
+          "option": "$2x + \\frac{18}{x} = 0$",
+          "why": "That sets the height to zero, not the gradient."
+        },
+        {
+          "option": "$2 + \\frac{18}{x^{2}} = 0$",
+          "why": "The sign of the negative power's derivative was lost.",
+          "misconception": "fm.calc.negative-power-differentiation"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$x + \\frac{4}{x} = 0$",
+        "why": "That sets the height to zero. Horizontal is about the gradient, so dy/dx is set to zero."
+      },
+      {
+        "option": "$1 + \\frac{4}{x^{2}} = 0$",
+        "why": "The derivative of $4x^{-1}$ is $-4x^{-2}$: the sign was lost.",
+        "misconception": "fm.calc.negative-power-differentiation"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "Going further: where a tangent meets a normal",
+    "text": "Going further: a tangent meets a normal",
     "role": "further"
   },
   {
     "type": "figure",
-    "alt": "The parabola y = x squared with the tangent at A, where x = 2, and the normal at B, where x = -1, drawn as dashed lines that cross at the point C.",
-    "svg": "<svg viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The parabola y = x squared with the tangent at A, where x = 2, and the normal at B, where x = -1, crossing at the point C'><title>The parabola y = x squared with the tangent at A, where x = 2, and the normal at B, where x = -1, crossing at the point C</title><path d='M 84.8 24 L 84.8 268 M 139.5 24 L 139.5 268 M 194.1 24 L 194.1 268 M 248.8 24 L 248.8 268 M 303.5 24 L 303.5 268 M 358.1 24 L 358.1 268 M 52 243.6 L 380 243.6 M 52 194.8 L 380 194.8 M 52 146 L 380 146 M 52 97.2 L 380 97.2 M 52 48.4 L 380 48.4' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 243.6 L 380 243.6' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 194.1 24 L 194.1 268' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 84.8 239.6 L 84.8 247.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='84.8' y='263.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-2</text><path d='M 139.5 239.6 L 139.5 247.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='139.5' y='263.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><path d='M 248.8 239.6 L 248.8 247.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='248.8' y='263.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><path d='M 303.5 239.6 L 303.5 247.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='303.5' y='263.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><path d='M 358.1 239.6 L 358.1 247.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='358.1' y='263.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><path d='M 190.1 194.8 L 198.1 194.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='186.1' y='199.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><path d='M 190.1 146 L 198.1 146' stroke='currentColor' stroke-width='1' fill='none'/><text x='186.1' y='151' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 190.1 97.2 L 198.1 97.2' stroke='currentColor' stroke-width='1' fill='none'/><text x='186.1' y='102.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6</text><path d='M 190.1 48.4 L 198.1 48.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='186.1' y='53.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>8</text><text x='187.1' y='260.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>0</text><path d='M 52 78.7 L 61.8 100.7 L 71.7 121.2 L 81.5 140.1 L 90.3 155.5 L 99 169.7 L 108.9 184.2 L 118.7 197.1 L 128.5 208.5 L 138.4 218.2 L 148.2 226.4 L 157 232.3 L 166.8 237.5 L 175.5 240.8 L 185.4 243 L 195.2 243.6 L 205.1 242.6 L 214.9 240.1 L 224.7 235.9 L 234.6 230.2 L 243.3 223.8 L 253.2 215.1 L 261.9 206.1 L 271.8 194.4 L 281.6 181.1 L 291.4 166.3 L 301.3 149.9 L 311.1 131.9 L 319.9 114.5 L 338.5 73.5 L 358.1 24' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 235.5 267.4 L 369.1 28.9' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><path d='M 52 238.7 L 369.1 168' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4'/><circle cx='303.5' cy='146' r='3.6' fill='currentColor'/><text x='313.5' y='150' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>A</text><circle cx='139.5' cy='219.2' r='3.6' fill='currentColor'/><text x='129.5' y='211.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>B</text><circle cx='280' cy='187.8' r='3.6' fill='currentColor'/><text x='270' y='179.8' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>C</text><text x='380' y='235.6' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='201.1' y='34' font-family='inherit' font-size='15' fill='currentColor'>y</text></svg>",
-    "caption": "The tangent at A and the normal at B are two different lines, and C is where they cross."
+    "alt": "The curve y = x squared minus 4x plus 5 with the tangent at A(3, 2) drawn solid and the normal at B(1, 2) drawn dashed; they cross at the point C",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 320\" role=\"img\" aria-label=\"The curve y = x squared minus 4x plus 5 with the tangent at A(3, 2) drawn solid and the normal at B(1, 2) drawn dashed; they cross at the point C\" font-family=\"inherit\"><title>The curve y = x squared minus 4x plus 5 with the tangent at A(3, 2) drawn solid and the normal at B(1, 2) drawn dashed; they cross at the point C</title><line x1=\"95.67\" y1=\"266.19\" x2=\"304.33\" y2=\"266.19\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"298.33\" y=\"258.19\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">x</text><line x1=\"118.03\" y1=\"296\" x2=\"118.03\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"1.1\"/><text x=\"130.03\" y=\"38\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">y</text><path d=\"M106.1 28.38 L109.58 44.19 L113.06 59.36 L116.54 73.87 L120.01 87.73 L123.49 100.95 L126.97 113.51 L130.45 125.43 L133.93 136.7 L137.4 147.32 L140.88 157.29 L144.36 166.61 L147.84 175.28 L151.31 183.3 L154.79 190.67 L158.27 197.39 L161.75 203.47 L165.22 208.89 L168.7 213.67 L172.18 217.8 L175.66 221.27 L179.13 224.1 L182.61 226.28 L186.09 227.81 L189.57 228.69 L193.04 228.92 L196.52 228.51 L200 227.44 L203.48 225.73 L206.96 223.36 L210.43 220.35 L213.91 216.68 L217.39 212.37 L220.87 207.41 L224.34 201.8 L227.82 195.54 L231.3 188.63 L234.78 181.07 L238.25 172.87 L241.73 164.01 L245.21 154.5 L248.69 144.35 L252.16 133.55 L255.64 122.09 L259.12 109.99 L262.6 97.24 L266.07 83.84 L269.55 69.79 L273.03 55.09 L276.51 39.74\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"177.64\" y1=\"296\" x2=\"304.33\" y2=\"42.63\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"95.67\" y1=\"221.48\" x2=\"304.33\" y2=\"117.15\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"6 4\"/><circle cx=\"229.81\" cy=\"191.67\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><circle cx=\"155.29\" cy=\"191.67\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><circle cx=\"254.65\" cy=\"141.99\" r=\"4\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"239.81\" y=\"209.67\" font-size=\"15\" text-anchor=\"start\" fill=\"currentColor\">A</text><text x=\"147.29\" y=\"211.67\" font-size=\"15\" text-anchor=\"end\" fill=\"currentColor\">B</text><text x=\"244.65\" y=\"133.99\" font-size=\"15\" text-anchor=\"end\" fill=\"currentColor\">C</text></svg>",
+    "caption": "Two lines from two points of one curve: C is where they cross."
   },
   {
     "type": "p",
-    "md": "The hardest shape asks for two lines from two different points, then where they cross. On $y = x^{2}$, the tangent at $A(2, 4)$ is $y = 4x - 4$ and the normal at $B(-1, 1)$ is $y = \\frac{1}{2}x + \\frac{3}{2}$.\nSetting them equal gives $\\frac{7}{2}x = \\frac{11}{2}$, so $x = \\frac{11}{7}$ exactly."
+    "md": "The longest shape asks for a tangent at one point, a normal at another, then where the two lines cross, often as an exact value. Each line is the usual method; the crossing is two straight lines set equal."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "On $y = x^{2} - 4x + 5$, find where the tangent at $A(3, 2)$ meets the normal at $B(1, 2)$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2x - 4$: the tangent at $A$ has $m = 2$, so $y = 2x - 4$",
+        "decision": "The four moves at A.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "At $B$, $\\frac{dy}{dx} = -2$, so the normal's gradient is $\\frac{1}{2}$",
+        "decision": "Turn over and change the sign.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "The normal: $y - 2 = \\frac{1}{2}(x - 1)$, so $y = \\frac{1}{2}x + \\frac{3}{2}$",
+        "decision": "Through B with its own gradient.",
+        "earns": [
+          "W2"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$2x - 4 = \\frac{1}{2}x + \\frac{3}{2}$, so $x = \\frac{11}{3}$",
+        "decision": "Set the lines equal: $\\frac{3}{2}x = \\frac{11}{2}$.",
+        "earns": [
+          "W3"
+        ]
+      }
+    ]
   },
   {
     "type": "callout",
@@ -298,47 +877,109 @@
   },
   {
     "type": "gate",
-    "id": "g12",
+    "id": "g23",
     "kind": "number",
-    "prompt": "The tangent $y = 2x + 1$ and the normal $y = -\\frac{1}{2}x + 6$ are drawn on the same axes. At what value of $x$ do they cross?",
-    "answer": "2",
-    "explain": "Setting them equal: $2x + 1 = -\\frac{1}{2}x + 6$, so $\\frac{5}{2}x = 5$ and $x = 2$."
+    "prompt": "The tangent $y = 3x - 2$ and the normal $y = -\\frac{1}{3}x + 8$ are drawn on the same axes. At what value of $x$ do they cross?",
+    "answer": "3",
+    "explain": "As in the See it, set the lines equal: $3x - 2 = -\\frac{1}{3}x + 8$, so $\\frac{10}{3}x = 10$ and $x = 3$.",
+    "twin": {
+      "prompt": "The tangent $y = 4x - 1$ and the normal $y = -\\frac{1}{4}x + 16$ are drawn on the same axes. At what value of $x$ do they cross?",
+      "answer": "4",
+      "explain": "$4x - 1 = -\\frac{1}{4}x + 16$, so $\\frac{17}{4}x = 17$ and $x = 4$."
+    }
   },
   {
     "type": "h",
-    "text": "Why perpendicular gradients multiply to −1",
+    "text": "Why a normal's gradient is −1/m",
     "role": "derivation"
   },
   {
     "type": "figure",
-    "alt": "A step of 1 across and m up drawn on the tangent, and the same step turned through a right angle on the normal, where it becomes m back and 1 up.",
-    "svg": "<svg viewBox='0 0 400 250' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A gradient step of 1 across and m up on the tangent, and the same step turned through a right angle on the normal: m back and 1 up'><title>A gradient step of 1 across and m up on the tangent, and the same step turned through a right angle on the normal: m back and 1 up</title><path d='M 182.5 231 L 270 56' stroke='currentColor' stroke-width='2' fill='none'/><path d='M 230 211 L 65 128.5' stroke='currentColor' stroke-width='2' fill='none'/><path d='M 200 196 L 250 196 L 250 96' stroke='currentColor' stroke-width='1.5' fill='none' stroke-dasharray='5 4'/><path d='M 200 196 L 200 146 L 100 146' stroke='currentColor' stroke-width='1.5' fill='none' stroke-dasharray='5 4'/><path d='M 205.4 185.3 L 194.6 179.9 L 189.3 190.6' stroke='currentColor' stroke-width='1.5' fill='none'/><text x='225' y='218' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='262' y='151' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>m</text><text x='190' y='176' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>1</text><text x='150' y='136' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>m</text><text x='262' y='60' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>tangent</text><text x='67' y='114.5' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>normal</text></svg>",
+    "alt": "A step 1 across and m up along the tangent, and the same step turned through a right angle along the normal, m back and 1 up",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 230\" role=\"img\" aria-label=\"A step 1 across and m up along the tangent, and the same step turned through a right angle along the normal, m back and 1 up\" font-family=\"inherit\"><title>A step 1 across and m up along the tangent, and the same step turned through a right angle along the normal, m back and 1 up</title><line x1=\"200\" y1=\"170\" x2=\"250\" y2=\"170\" stroke=\"currentColor\" stroke-width=\"1.4\"/><line x1=\"250\" y1=\"170\" x2=\"250\" y2=\"70\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M200 170 L250 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"200\" y1=\"170\" x2=\"100\" y2=\"170\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"/><line x1=\"100\" y1=\"170\" x2=\"100\" y2=\"120\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"/><path d=\"M200 170 L100 120\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-dasharray=\"6 4\"/><text x=\"225\" y=\"190\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"266\" y=\"124\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">m</text><text x=\"150\" y=\"190\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">m back</text><text x=\"84\" y=\"149\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"258\" y=\"60\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">tangent</text><text x=\"90\" y=\"108\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">normal</text></svg>",
     "caption": "Turn the tangent's step through a right angle and it becomes the normal's step."
   },
   {
     "type": "p",
-    "md": "Draw the tangent's gradient as a step: $1$ across and $m$ up. Turn that step through a right angle and it becomes $m$ back and $1$ up.\nSo the normal's gradient is $\\frac{1}{-m} = -\\frac{1}{m}$, and the two gradients multiply to $m \\times -\\frac{1}{m} = -1$. Every normal in this topic rests on that one turn."
+    "md": "Draw the tangent's gradient as a step: 1 across and $m$ up. Turn that step through a right angle and it becomes $m$ back and 1 up. A gradient is rise over run, so the turned step's gradient is $\\frac{1}{-m}$."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Show that a normal's gradient is $-\\frac{1}{m}$ when the tangent's is $m$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Tangent step: 1 across, m up",
+        "decision": "That is what a gradient of m means."
+      },
+      {
+        "n": 2,
+        "working": "Turned through a right angle: m back, 1 up",
+        "decision": "Across becomes up, and up becomes back."
+      },
+      {
+        "n": 3,
+        "working": "Normal gradient $= \\frac{1}{-m} = -\\frac{1}{m}$",
+        "decision": "Rise over run; and $m \\times -\\frac{1}{m} = -1$."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g13",
+    "id": "g24",
     "kind": "choice",
-    "prompt": "A step of $1$ across and $3$ up is turned through a right angle. What is the gradient of the turned step?",
+    "prompt": "A tangent's step is 1 across and 5 up. Turned through a right angle, what is the gradient of the step?",
     "options": [
-      "$-\\frac{1}{3}$",
-      "$-3$",
-      "$\\frac{1}{3}$"
+      "$-\\frac{1}{5}$",
+      "$-5$",
+      "$\\frac{1}{5}$"
     ],
-    "answer": "$-\\frac{1}{3}$",
-    "explain": "Turned, the step goes $3$ back and $1$ up, so its gradient is $\\frac{1}{-3} = -\\frac{1}{3}$: the negative reciprocal of $3$."
+    "answer": "$-\\frac{1}{5}$",
+    "explain": "As in the See it: turned, the step goes 5 back and 1 up, so its gradient is $\\frac{1}{-5} = -\\frac{1}{5}$.",
+    "twin": {
+      "prompt": "A tangent's step is 1 across and 2 down. Turned through a right angle, what is the gradient of the step?",
+      "options": [
+        "$\\frac{1}{2}$",
+        "$2$",
+        "$-\\frac{1}{2}$"
+      ],
+      "answer": "$\\frac{1}{2}$",
+      "explain": "The tangent's gradient is $-2$, so the turned step has gradient $-\\frac{1}{-2} = \\frac{1}{2}$.",
+      "optionNotes": [
+        {
+          "option": "$2$",
+          "why": "Only the sign changed; the gradient must turn over too.",
+          "misconception": "fm.calc.normal-gradient-not-reciprocated"
+        },
+        {
+          "option": "$-\\frac{1}{2}$",
+          "why": "Turned over, but the sign was not changed.",
+          "misconception": "fm.calc.normal-sign-not-flipped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$-5$",
+        "why": "Only the sign changed; turning the step also turns the gradient over.",
+        "misconception": "fm.calc.normal-gradient-not-reciprocated"
+      },
+      {
+        "option": "$\\frac{1}{5}$",
+        "why": "Turned over, but 5 back makes the run negative, so the sign changes too.",
+        "misconception": "fm.calc.normal-sign-not-flipped"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Build a tangent: differentiate, substitute, take $y$ from the curve, write the line.\nBuild a normal the same way with $-\\frac{1}{m}$: turned over, sign changed.\nTurn a stated gradient, a parallel line or a normal's gradient into an equation for $\\frac{dy}{dx}$.\nFind an unknown coefficient, or where a tangent meets the curve again.\nSpot the twists: horizontal, two tangents compared, a power of $x$ underneath."
+    "md": "Build a tangent: differentiate, substitute, take y from the curve, write the line.\nBuild a normal the same way with $-\\frac{1}{m}$: turned over, sign changed.\nTurn a stated gradient, a parallel line or a normal's gradient into an equation for $\\frac{dy}{dx}$.\nFind an unknown coefficient, or where a tangent meets the curve again.\nFind where a tangent and a normal cross by setting the two lines equal."
   },
   {
     "type": "h",
@@ -347,11 +988,7 @@
   },
   {
     "type": "p",
-    "md": "A late-paper discriminator: **7 marks** for a normal on its own, or **4 + 3 + 2** across a tangent, a normal and a gradient condition. The first mark is $\\frac{dy}{dx}$; a further mark is given just for writing the normal's gradient as the negative reciprocal of your own, even when that gradient is wrong, so write that line whatever else has happened. The last mark is the finished equation."
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.tangents-and-normals.01"
+    "md": "A late-paper discriminator: 7 marks for a normal on its own, or several parts across a tangent, a normal and a gradient condition. The first mark is $\\frac{dy}{dx}$; a mark is given for the normal's gradient as the negative reciprocal of your own tangent gradient, so write that line whatever has happened. The last mark is the finished equation."
   },
   {
     "type": "prompt",
@@ -360,17 +997,5 @@
   {
     "type": "prompt",
     "promptId": "rp.fm.u1.tangents-and-normals.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.tangents-and-normals.05"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.tangents-and-normals.07"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.tangents-and-normals.11"
   }
 ]
