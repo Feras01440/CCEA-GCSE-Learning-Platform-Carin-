@@ -4614,6 +4614,21 @@
         "twice"
       ],
       "examUnit": "B2"
+    },
+    {
+      "id": "rp.science.b2.b2-heart-double-circulation.13",
+      "topic": "science.b2.b2-heart-double-circulation",
+      "specRefs": [
+        "DA-B2-2.2.6"
+      ],
+      "kind": "formula",
+      "prompt": "Give the equation for cardiac output.",
+      "answer": "Cardiac output = stroke volume × heart rate.",
+      "keyWords": [
+        "stroke volume",
+        "heart rate"
+      ],
+      "examUnit": "B2"
     }
   ],
   "sets": [
@@ -4815,6 +4830,14 @@
           "result": "pass",
           "detail": "29 Sep 2026: the wired prompts are now rp.05 and rp.10, both light recalls that recallFit keeps (rp.08 asked for a list; it stays in the bundle for review).",
           "at": "2026-09-28T23:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3 migration of B2: scratchpad/probes/b2-abc scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "7 Oct 2026: prompt rp.07 (unwired) withdrawn for rp.13, the same equation with key words its own answer carries; the note is unchanged.",
+          "at": "2026-10-07T21:55:00Z",
           "by": "claude"
         }
       ],
@@ -7194,8 +7217,25 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-10-07T21:55:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the v3 migration: Its key word 'multiply' is not in its own answer, which writes the times sign, so the model answer would not show every key word found; rp.13 asks the same equation with key words its answer carries.",
+          "resolvedAt": "2026-10-07T21:55:00Z",
+          "resolution": "Replaced by rp.science.b2.b2-heart-double-circulation.13."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "rp.science.b2.b2-heart-double-circulation.07",
+          "kind": "prompt",
+          "replacedBy": "rp.science.b2.b2-heart-double-circulation.13",
+          "reason": "Its key word 'multiply' is not in its own answer, which writes the times sign, so the model answer would not show every key word found; rp.13 asks the same equation with key words its answer carries.",
+          "on": "2026-10-07T21:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.science.b2.b2-heart-double-circulation.08",
@@ -8069,6 +8109,23 @@
           "result": "pass",
           "detail": "A short recall: a 9-word question, a 13-word answer; its key word is in the answer.",
           "at": "2026-09-28T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.science.b2.b2-heart-double-circulation.13",
+      "itemId": "rp.science.b2.b2-heart-double-circulation.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration of B2: scratchpad/probes/b2-abc scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A short recall: a 6-word question, the equation as its answer; both key words are in the answer.",
+          "at": "2026-10-07T21:55:00Z",
           "by": "claude"
         }
       ],

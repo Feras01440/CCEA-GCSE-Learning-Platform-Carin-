@@ -3847,6 +3847,21 @@
         "oviducts"
       ],
       "examUnit": "B2"
+    },
+    {
+      "id": "rp.science.b2.b2-infertility-contraception.10",
+      "topic": "science.b2.b2-infertility-contraception",
+      "specRefs": [
+        "DA-B2-2.3.7"
+      ],
+      "kind": "qa",
+      "prompt": "What kind of reason counts as an ethical reason for not using contraception?",
+      "answer": "A religious or moral reason, not cost or side effects.",
+      "keyWords": [
+        "religious",
+        "moral"
+      ],
+      "examUnit": "B2"
     }
   ],
   "verification": [
@@ -3958,6 +3973,14 @@
           "detail": "29 Sep 2026: the wired prompts are now rp.08 and rp.09, both light recalls that recallFit keeps (rp.01 ran to 14 words, rp.02 asked for a list; both stay in the bundle for review).",
           "at": "2026-09-28T23:55:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3 migration of B2: scratchpad/probes/b2-abc scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "7 Oct 2026 (lesson-v2 --see: a twin repeating its gate's answer): gate g7 withdrawn for g13, the same condom check with a twin on female sterilisation (sperm reaching the ovum in the oviduct), every wrong option of gate and twin carrying a note.",
+          "at": "2026-10-07T21:55:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4004,6 +4027,13 @@
           "replacedBy": "g10",
           "reason": "It asked for an ethical reason, which question 0005(b) asks; the ethical point is taught in section 6, and g10 checks a cause of infertility.",
           "on": "2026-09-28T23:50:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "Its twin (a vasectomy) had the same answer as the gate (a condom): sperm being deposited in the vagina; g13 asks the same check with a twin on female sterilisation, which breaks another link.",
+          "on": "2026-10-07T21:55:00Z"
         }
       ]
     },
@@ -5519,8 +5549,25 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [
+        {
+          "at": "2026-10-07T21:55:00Z",
+          "by": "developer",
+          "text": "Withdrawn in the v3 migration: Its key word 'beliefs' is not in its own answer, which says 'believes', so a learner writing the model answer would not show the key word found; rp.10 keeps the idea in 10 words with key words its answer carries.",
+          "resolvedAt": "2026-10-07T21:55:00Z",
+          "resolution": "Replaced by rp.science.b2.b2-infertility-contraception.10."
+        }
+      ],
+      "withdrawn": [
+        {
+          "id": "rp.science.b2.b2-infertility-contraception.06",
+          "kind": "prompt",
+          "replacedBy": "rp.science.b2.b2-infertility-contraception.10",
+          "reason": "Its key word 'beliefs' is not in its own answer, which says 'believes', so a learner writing the model answer would not show the key word found; rp.10 keeps the idea in 10 words with key words its answer carries.",
+          "on": "2026-10-07T21:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.science.b2.b2-infertility-contraception.0009",
@@ -6232,6 +6279,23 @@
           "result": "pass",
           "detail": "A light recall card (recallFit, src/lib/slides/recall.ts): a 7-word question with one short answer (2 words), no list, no explanation; its key word is in the answer.",
           "at": "2026-09-28T23:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.science.b2.b2-infertility-contraception.10",
+      "itemId": "rp.science.b2.b2-infertility-contraception.10",
+      "version": 1,
+      "checks": [
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration of B2: scratchpad/probes/b2-abc scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A short recall: a 13-word question, a 10-word answer; both key words are in the answer.",
+          "at": "2026-10-07T21:55:00Z",
           "by": "claude"
         }
       ],
