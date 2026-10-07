@@ -1,169 +1,502 @@
 [
   {
     "type": "hero",
-    "lede": "There is no dividing by a matrix. What there is instead is an inverse: the matrix that undoes what the first one did, leaving everything where it started. For a two by two there is a short formula, it is not on your formula sheet, and the whole of it is three actions.",
+    "lede": "There is no dividing by a matrix. Instead there is an inverse: the matrix that undoes what the first one did. For a two by two matrix it takes one number and three actions, and none of it is printed on your formula sheet.",
     "can": [
-      "Work out the determinant of a two by two matrix, sign and all",
-      "Say when a matrix has no inverse, and name the matrix that does not",
-      "Build an inverse by swapping, negating and dividing, then check it"
+      "Work out a determinant, sign and all.",
+      "Build an inverse by swapping, negating and dividing, then check it.",
+      "Say when a matrix has no inverse, and name the matrix."
     ],
-    "minutes": 11
+    "minutes": 13
   },
   {
     "type": "h",
-    "text": "The matrix that undoes the other one"
-  },
-  {
-    "type": "p",
-    "md": "Multiply a number by $4$ and you undo it by multiplying by $\\frac{1}{4}$. Matrices have the same idea with a different name: the **inverse** of $A$, written $A^{-1}$, is the matrix for which $A^{-1}A$ and $AA^{-1}$ both give the identity.\nThe identity is the matrix with ones on the leading diagonal and zeros elsewhere. It is the matrix version of $1$: multiplying by it changes nothing."
+    "text": "The matrix that undoes another",
+    "role": "idea"
   },
   {
     "type": "figure",
-    "alt": "The inverse of A multiplied by A, giving the identity matrix with ones on the leading diagonal and zeros elsewhere.",
-    "svg": "<svg viewBox='0 0 478 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The inverse of A multiplied by A, giving the identity matrix with ones on the leading diagonal and zeros elsewhere'><title>The inverse of A multiplied by A, giving the identity matrix with ones on the leading diagonal and zeros elsewhere</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 119 42 L 128 42 L 128 110 L 119 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='50' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2/5</text><text x='102' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1/5</text><text x='50' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3/5</text><text x='102' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4/5</text><text x='76' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A inverse</text><text x='162' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>×</text><path d='M 189 42 L 180 42 L 180 110 L 189 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 275 42 L 284 42 L 284 110 L 275 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='206' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='258' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='206' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='258' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='232' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='318' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 345 42 L 336 42 L 336 110 L 345 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 431 42 L 440 42 L 440 110 L 431 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='362' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='414' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='362' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='414' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='239' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>twenty seconds, and it catches every sign slip</text></svg>",
-    "caption": "That is the definition: $A^{-1}A$ gives the identity."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to begin. In the multiplication shown above, what is the matrix on the right-hand side called?",
-    "options": [
-      "The identity",
-      "The determinant",
-      "The inverse"
-    ],
-    "answer": "The identity",
-    "explain": "Ones on the leading diagonal, zeros elsewhere: that is the identity, and reaching it is what proves the other matrix was the inverse."
-  },
-  {
-    "type": "h",
-    "text": "1. The determinant, on a line of its own"
+    "alt": "The matrix with rows 3, minus 1 and minus 5, 2 multiplied by the matrix with rows 2, 1 and 5, 3 gives the identity matrix with rows 1, 0 and 0, 1",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 420 150\" role=\"img\" aria-label=\"The matrix with rows 3, minus 1 and minus 5, 2 multiplied by the matrix with rows 2, 1 and 5, 3 gives the identity matrix with rows 1, 0 and 0, 1\" font-family=\"inherit\"><title>The matrix with rows 3, minus 1 and minus 5, 2 multiplied by the matrix with rows 2, 1 and 5, 3 gives the identity matrix with rows 1, 0 and 0, 1</title><path d=\"M19 30 L10 30 L10 106 L19 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M109 30 L118 30 L118 106 L109 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"41\" y=\"58\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">3</text><text x=\"87\" y=\"58\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">−1</text><text x=\"41\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">−5</text><text x=\"87\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">2</text><path d=\"M149 30 L140 30 L140 106 L149 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M239 30 L248 30 L248 106 L239 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"171\" y=\"58\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">2</text><text x=\"217\" y=\"58\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"171\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">5</text><text x=\"217\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">3</text><text x=\"282\" y=\"72\" font-size=\"24\" text-anchor=\"middle\" fill=\"currentColor\">=</text><path d=\"M309 30 L300 30 L300 106 L309 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M399 30 L408 30 L408 106 L399 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"331\" y=\"58\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"377\" y=\"58\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">0</text><text x=\"331\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">0</text><text x=\"377\" y=\"92\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"64\" y=\"132\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">the inverse</text><text x=\"194\" y=\"132\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">the matrix</text><text x=\"354\" y=\"132\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">the identity</text></svg>",
+    "caption": "An inverse multiplied by its matrix gives the identity."
   },
   {
     "type": "p",
-    "md": "Before anything else, work out the **determinant**: for the matrix $\\begin{pmatrix}a & b \\\\ c & d\\end{pmatrix}$ it is $ad - bc$.\nWrite it on its own line with its sign attached. That one habit is where this topic's marks live: the reports record slips in the arithmetic, and answers where a determinant of $-5$ became a reciprocal of $\\frac{1}{5}$."
-  },
-  {
-    "type": "figure",
-    "alt": "The determinant of matrix A worked out on its own line as ad minus bc, giving 5.",
-    "svg": "<svg viewBox='0 0 600 152' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The determinant of matrix A worked out on its own line as ad minus bc, giving 5'><title>The determinant of matrix A worked out on its own line as ad minus bc, giving 5</title><path d='M 37 36 L 28 36 L 28 104 L 37 104' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 107 36 L 116 36 L 116 104 L 107 104' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='50' y='56.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='94' y='56.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='50' y='90.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='94' y='90.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='72' y='27' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='136' y='70' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>det A = (4)(2) − (1)(3)</text><text x='136' y='96' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>= 5</text><text x='300' y='140' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>one line, before the matrix is touched at all</text></svg>",
-    "caption": "Leading diagonal times, take away the other diagonal times."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "For the matrix $N = \\begin{pmatrix}-3 & 2 \\\\ 4 & -1\\end{pmatrix}$, the determinant is $ad - bc$. What is $\\det N$?",
-    "answer": "-5",
-    "explain": "$(-3)(-1) - (2)(4) = -5$. Taking it the other way round would give $5$, with the sign wrong."
-  },
-  {
-    "type": "h",
-    "text": "2. When there is no inverse at all"
-  },
-  {
-    "type": "p",
-    "md": "The formula divides by the determinant, so if the determinant is zero there is nothing to divide by and **no inverse exists**. A matrix like that is called **singular**.\nWhen a question asks why an equation cannot be solved, say both halves: name the matrix, and give the reason. Examiners report answers that said the determinant was zero without making clear whose determinant it was."
-  },
-  {
-    "type": "figure",
-    "alt": "Matrix S with its determinant worked out as zero, the reciprocal struck through, and the sentence naming S as the matrix with no inverse.",
-    "svg": "<svg viewBox='0 0 600 176' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Matrix S with its determinant worked out as zero, the reciprocal struck through, and the sentence naming S as the matrix with no inverse'><title>Matrix S with its determinant worked out as zero, the reciprocal struck through, and the sentence naming S as the matrix with no inverse</title><path d='M 37 36 L 28 36 L 28 104 L 37 104' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 107 36 L 116 36 L 116 104 L 107 104' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='50' y='56.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='94' y='56.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><text x='50' y='90.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='94' y='90.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='72' y='27' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>S</text><text x='136' y='62' font-family='inherit' font-size='13.5' fill='currentColor' text-anchor='start'>det S = (3)(4) − (6)(2) = 0</text><text x='136' y='88' font-family='inherit' font-size='12' fill='currentColor' text-anchor='start'>1</text><path d='M 132 94 L 170 94' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='136' y='112' font-family='inherit' font-size='12' fill='currentColor' text-anchor='start'>0</text><path d='M 126 114 L 180 78' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='24' y='128' width='552' height='34' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.06'/><text x='300' y='150' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>det S = 0, so S has no inverse: S is singular</text></svg>",
-    "caption": "The sentence to write, with the matrix named."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "number",
-    "prompt": "A matrix has no inverse exactly when its determinant takes one particular value. What is that value?",
-    "answer": "0",
-    "explain": "Zero. The formula divides by the determinant, and nothing can be divided by zero, so a matrix with $\\det = 0$ is singular."
-  },
-  {
-    "type": "h",
-    "text": "3. Three actions, in order"
-  },
-  {
-    "type": "p",
-    "md": "With a determinant that is not zero, the inverse is built in three moves. **Swap** the leading diagonal, so $a$ and $d$ change places. **Negate** the other diagonal, so $b$ and $c$ change sign. **Divide** every entry by the determinant.\nDo them in that order and there is nothing to remember beyond the picture below."
-  },
-  {
-    "type": "figure",
-    "alt": "A lettered two by two matrix with three annotations: an arrow swapping a and d, minus badges on b and c, and a rule underneath labelled ad minus bc, with the finished inverse beside it.",
-    "svg": "<svg viewBox='0 0 600 226' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A lettered two by two matrix with three annotations: a dashed arrow swapping a and d on the leading diagonal, minus badges on b and c, and a rule underneath labelled ad minus bc, with the finished inverse drawn beside it'><title>A lettered two by two matrix with three annotations: a dashed arrow swapping a and d on the leading diagonal, minus badges on b and c, and a rule underneath labelled ad minus bc, with the finished inverse drawn beside it</title><path d='M 49 56 L 40 56 L 40 136 L 49 136' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 135 56 L 144 56 L 144 136 L 135 136' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='66' y='80.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>a</text><text x='118' y='80.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>b</text><text x='66' y='120.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>c</text><text x='118' y='120.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>d</text><path d='M 66 66 C 160 34 160 146 118 122' stroke='currentColor' stroke-width='1.2' fill='none' stroke-dasharray='5 4'/><text x='92' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>1  swap the leading diagonal</text><circle cx='137' cy='75.8' r='8' fill='none' stroke='currentColor' stroke-width='1'/><text x='137' y='79.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>−</text><circle cx='85' cy='115.8' r='8' fill='none' stroke='currentColor' stroke-width='1'/><text x='85' y='119.8' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>−</text><text x='92' y='158' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>2  change the signs on the other diagonal</text><path d='M 40 170 L 144 170' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='92' y='188' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>ad − bc</text><text x='92' y='208' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>3  divide by the determinant</text><path d='M 168 96 L 218 96 M 208 89 L 218 96 L 208 103' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='246' y='90' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>1</text><path d='M 218 96 L 274 96' stroke='currentColor' stroke-width='1.1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='246' y='114' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>(ad − bc)</text><path d='M 297 56 L 288 56 L 288 136 L 297 136' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 383 56 L 392 56 L 392 136 L 383 136' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='314' y='80.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>d</text><text x='366' y='80.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>−b</text><text x='314' y='120.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>−c</text><text x='366' y='120.8' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>a</text><text x='340' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>the inverse</text><text x='300' y='214' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>three actions, in that order, every time</text></svg>",
-    "caption": "Swap the leading diagonal, negate the other, divide by $ad - bc$."
+    "md": "Multiply a number by 4 and you undo it by multiplying by $\\frac{1}{4}$. A matrix is undone by its **inverse**, written $A^{-1}$: multiplied together, the two give the **identity**, the matrix with 1s on the leading diagonal and 0s elsewhere. Multiplying by the identity changes nothing, just as multiplying by 1 does."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why the formula is not on your sheet",
-    "md": "The Unit 1 formula sheet gives you the quadratic formula, differentiation, integration and the logarithm definition. It gives you nothing about matrices, so this one is recall. That is why it is worth holding as a picture of three actions rather than as a line of letters."
+    "title": "Why there is no dividing",
+    "md": "Matrix multiplication depends on the order, so a fraction bar could not say which side to divide on. The inverse does the undoing instead, and the way to test one is to multiply back and look for the identity."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Show that $\\begin{pmatrix}3 & -1 \\\\ -5 & 2\\end{pmatrix}$ is the inverse of $\\begin{pmatrix}2 & 1 \\\\ 5 & 3\\end{pmatrix}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Row 1 by column 1: $3 \\times 2 + (-1) \\times 5 = 1$",
+        "decision": "Each entry of the product is a row of the first matrix times a column of the second."
+      },
+      {
+        "n": 2,
+        "working": "Row 1 by column 2: $3 \\times 1 + (-1) \\times 3 = 0$",
+        "decision": "Off the leading diagonal, the products cancel."
+      },
+      {
+        "n": 3,
+        "working": "Row 2: $-5 \\times 2 + 2 \\times 5 = 0$ and $-5 \\times 1 + 2 \\times 3 = 1$",
+        "decision": "The second row finishes the pattern."
+      },
+      {
+        "n": 4,
+        "working": "The product is $\\begin{pmatrix}1 & 0 \\\\ 0 & 1\\end{pmatrix}$",
+        "decision": "Reaching the identity proves it is the inverse; the same multiplication checks any inverse you find."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g6",
     "kind": "choice",
-    "prompt": "In the three actions shown above, which pair of entries changes sign?",
+    "prompt": "Which matrix is the inverse of $P = \\begin{pmatrix}2 & 3 \\\\ 1 & 2\\end{pmatrix}$? Check by multiplying.",
     "options": [
-      "$b$ and $c$",
-      "$a$ and $d$",
-      "All four"
+      "$\\begin{pmatrix}2 & -3 \\\\ -1 & 2\\end{pmatrix}$",
+      "$\\begin{pmatrix}2 & 3 \\\\ 1 & 2\\end{pmatrix}$",
+      "$\\begin{pmatrix}-2 & -3 \\\\ -1 & -2\\end{pmatrix}$"
     ],
-    "answer": "$b$ and $c$",
-    "explain": "The leading diagonal $a$ and $d$ swap places and keep their signs; $b$ and $c$ stay where they are and change sign."
+    "answer": "$\\begin{pmatrix}2 & -3 \\\\ -1 & 2\\end{pmatrix}$",
+    "explain": "Multiply as in the See it. Row 1 of $\\begin{pmatrix}2 & -3 \\\\ -1 & 2\\end{pmatrix}$ by the columns of $P$ gives $4 - 3 = 1$ and $6 - 6 = 0$; row 2 gives 0 and 1. The product is the identity.",
+    "twin": {
+      "prompt": "Which matrix is the inverse of $\\begin{pmatrix}5 & 2 \\\\ 2 & 1\\end{pmatrix}$? Check by multiplying.",
+      "options": [
+        "$\\begin{pmatrix}1 & -2 \\\\ -2 & 5\\end{pmatrix}$",
+        "$\\begin{pmatrix}5 & 2 \\\\ 2 & 1\\end{pmatrix}$",
+        "$\\begin{pmatrix}-5 & -2 \\\\ -2 & -1\\end{pmatrix}$"
+      ],
+      "answer": "$\\begin{pmatrix}1 & -2 \\\\ -2 & 5\\end{pmatrix}$",
+      "explain": "Its rows times the columns give $5 - 4 = 1$, $2 - 2 = 0$, $-10 + 10 = 0$ and $-4 + 5 = 1$: the identity.",
+      "optionNotes": [
+        {
+          "option": "$\\begin{pmatrix}5 & 2 \\\\ 2 & 1\\end{pmatrix}$",
+          "why": "That is the matrix itself; squared, it gives 29 in the top-left corner, not 1."
+        },
+        {
+          "option": "$\\begin{pmatrix}-5 & -2 \\\\ -2 & -1\\end{pmatrix}$",
+          "why": "Changing every sign gives the negative of the matrix, which does not undo it."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\begin{pmatrix}2 & 3 \\\\ 1 & 2\\end{pmatrix}$",
+        "why": "That is P itself. Multiplying P by P gives 7 in the top-left corner, not the 1 of the identity."
+      },
+      {
+        "option": "$\\begin{pmatrix}-2 & -3 \\\\ -1 & -2\\end{pmatrix}$",
+        "why": "Changing every sign does not undo P: its first row times the first column of P gives −7, not 1."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "4. A worked inverse, and the check"
-  },
-  {
-    "type": "p",
-    "md": "Find $A^{-1}$ for $A = \\begin{pmatrix}4 & 1 \\\\ 3 & 2\\end{pmatrix}$.\n**Step 1.** $\\det A = (4)(2) - (1)(3) = 5$.\n**Step 2.** Swap and negate: $\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix}$.\n**Step 3.** Divide by $5$: $A^{-1} = \\frac{1}{5}\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix}$.\n**Step 4.** Check: $A^{-1}A$ gives the identity."
+    "text": "The determinant, sign and all",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "Matrix A turned into its inverse in two moves: swapped and negated, then every entry divided by the determinant.",
-    "svg": "<svg viewBox='0 0 466 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Matrix A turned into its inverse in two moves: the leading diagonal swapped and the other diagonal negated, then every entry divided by the determinant'><title>Matrix A turned into its inverse in two moves: the leading diagonal swapped and the other diagonal negated, then every entry divided by the determinant</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 115 42 L 124 42 L 124 110 L 115 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='49' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='99' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='49' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='99' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='74' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='158' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>→</text><path d='M 185 42 L 176 42 L 176 110 L 185 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 267 42 L 276 42 L 276 110 L 267 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='201' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='251' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1</text><text x='201' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3</text><text x='251' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='226' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>swapped and negated</text><text x='310' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>→</text><path d='M 337 42 L 328 42 L 328 110 L 337 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 419 42 L 428 42 L 428 110 L 419 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='353' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2/5</text><text x='403' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1/5</text><text x='353' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3/5</text><text x='403' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4/5</text><text x='378' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>divided by 5</text><text x='233' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>swap and negate, then divide by the determinant</text></svg>",
-    "caption": "Keep the $\\frac{1}{5}$ outside, or share it through every entry — but not half and half."
+    "alt": "The matrix with letters a, b, c, d; a solid line joins a to d, the leading diagonal, and a dashed line joins b to c, the other diagonal; underneath, det equals ad minus bc",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 170\" role=\"img\" aria-label=\"The matrix with letters a, b, c, d; a solid line joins a to d, the leading diagonal, and a dashed line joins b to c, the other diagonal; underneath, det equals ad minus bc\" font-family=\"inherit\"><title>The matrix with letters a, b, c, d; a solid line joins a to d, the leading diagonal, and a dashed line joins b to c, the other diagonal; underneath, det equals ad minus bc</title><path d=\"M49 30 L40 30 L40 106 L49 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M139 30 L148 30 L148 106 L139 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"71\" y=\"58.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">a</text><text x=\"117\" y=\"58.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">b</text><text x=\"71\" y=\"92.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">c</text><text x=\"117\" y=\"92.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">d</text><line x1=\"82\" y1=\"64\" x2=\"106\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"106\" y1=\"64\" x2=\"82\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"4 3\"/><text x=\"290\" y=\"58\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">leading diagonal: ad</text><text x=\"290\" y=\"90\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">other diagonal: bc</text><text x=\"200\" y=\"150\" font-size=\"20\" text-anchor=\"middle\" fill=\"currentColor\" font-weight=\"bold\">det = ad − bc</text></svg>",
+    "caption": "The leading diagonal's product, take away the other diagonal's."
   },
   {
-    "type": "callout",
-    "kind": "examiner",
-    "title": "Summer 2025, Unit 1, Question 5",
-    "md": "This part was very well answered. The few marks that went were signs: a determinant of $-26$ written as a reciprocal of $\\frac{1}{26}$. Work the determinant out on its own line, and write the reciprocal with brackets round it.",
-    "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+    "type": "p",
+    "md": "Every inverse starts with one number, the **determinant**. For $\\begin{pmatrix}a & b \\\\ c & d\\end{pmatrix}$ it is $ad - bc$: the leading diagonal's product, take away the other diagonal's. Write it on its own line with every product in brackets, so that a negative entry keeps its sign."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the determinant of $\\begin{pmatrix}5 & -2 \\\\ 3 & -4\\end{pmatrix}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$(5)(-4) - (-2)(3)$",
+        "decision": "The leading diagonal first, then take away the other diagonal, each product in brackets."
+      },
+      {
+        "n": 2,
+        "working": "$= -20 + 6$",
+        "decision": "Taking away $-6$ adds 6."
+      },
+      {
+        "n": 3,
+        "working": "$= -14$",
+        "decision": "The determinant is negative, and that sign has to survive into the inverse.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "T7cleO736w4",
+    "title": "The Determinant of a 2x2 Matrix - Corbettmaths",
+    "channel": "corbettmaths",
+    "why": "More determinants at writing speed. Say each product before the video does."
+  },
+  {
+    "type": "gate",
+    "id": "g7",
+    "kind": "number",
+    "prompt": "Find the determinant of $\\begin{pmatrix}-2 & 5 \\\\ 3 & -4\\end{pmatrix}$.",
+    "answer": "-7",
+    "explain": "As in the See it: $(-2)(-4) - (5)(3) = 8 - 15 = -7$. The two negatives on the leading diagonal multiply to a positive, and the answer keeps its minus sign.",
+    "twin": {
+      "prompt": "Find the determinant of $\\begin{pmatrix}6 & -1 \\\\ 4 & 2\\end{pmatrix}$.",
+      "answer": "16",
+      "explain": "$(6)(2) - (-1)(4) = 12 + 4 = 16$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Swap, negate, divide",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "The matrix a, b, c, d becomes d, minus b, minus c, a: a and d swap places, b and c change sign; then every entry is divided by ad minus bc",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 420 170\" role=\"img\" aria-label=\"The matrix a, b, c, d becomes d, minus b, minus c, a: a and d swap places, b and c change sign; then every entry is divided by ad minus bc\" font-family=\"inherit\"><title>The matrix a, b, c, d becomes d, minus b, minus c, a: a and d swap places, b and c change sign; then every entry is divided by ad minus bc</title><path d=\"M19 30 L10 30 L10 106 L19 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M109 30 L118 30 L118 106 L109 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"41\" y=\"58.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">a</text><text x=\"87\" y=\"58.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">b</text><text x=\"41\" y=\"92.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">c</text><text x=\"87\" y=\"92.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">d</text><path d=\"M259 30 L250 30 L250 106 L259 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M349 30 L358 30 L358 106 L349 106\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"281\" y=\"58.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">d</text><text x=\"327\" y=\"58.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">−b</text><text x=\"281\" y=\"92.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">−c</text><text x=\"327\" y=\"92.7\" font-size=\"22\" text-anchor=\"middle\" fill=\"currentColor\">a</text><path d=\"M130 60 L232 60 M232 60 L223 55 M232 60 L223 65\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"181\" y=\"50\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">swap a, d</text><text x=\"181\" y=\"84\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">negate b, c</text><text x=\"210\" y=\"146\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">then divide every entry by ad − bc</text></svg>",
+    "caption": "Swap the leading diagonal, negate the other, then divide by the determinant."
+  },
+  {
+    "type": "p",
+    "md": "With the determinant found, the inverse takes three actions in order. **Swap** the leading diagonal, so $a$ and $d$ change places. **Negate** the other diagonal, so $b$ and $c$ change sign. **Divide** every entry by the determinant; the factor may stay outside the brackets."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the inverse of $\\begin{pmatrix}5 & 3 \\\\ 2 & 2\\end{pmatrix}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\det = (5)(2) - (3)(2) = 4$",
+        "decision": "Determinant first, on its own line.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\begin{pmatrix}2 & -3 \\\\ -2 & 5\\end{pmatrix}$",
+        "decision": "Swap 5 and 2 on the leading diagonal; change the signs of 3 and 2."
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{1}{4}\\begin{pmatrix}2 & -3 \\\\ -2 & 5\\end{pmatrix}$",
+        "decision": "Divide every entry by 4; leaving $\\frac{1}{4}$ outside the brackets is accepted.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "jLTXaXNPgLo",
     "title": "Inverse of a 2x2 Matrix - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "The same three actions on several matrices. It will not tell you that CCEA gives you none of this on the formula sheet, which is the part to hold on to."
+    "why": "The same three actions on more matrices. Pause before the division and write the factor yourself."
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "Find the inverse of $\\begin{pmatrix}3 & 5 \\\\ 1 & 2\\end{pmatrix}$, whose determinant is 1.",
+    "options": [
+      "$\\begin{pmatrix}2 & -5 \\\\ -1 & 3\\end{pmatrix}$",
+      "$\\begin{pmatrix}3 & -5 \\\\ -1 & 2\\end{pmatrix}$",
+      "$\\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$"
+    ],
+    "answer": "$\\begin{pmatrix}2 & -5 \\\\ -1 & 3\\end{pmatrix}$",
+    "explain": "As in the See it: swap 3 and 2, change the signs of 5 and 1, then divide by the determinant, 1, which changes nothing. So the inverse is $\\begin{pmatrix}2 & -5 \\\\ -1 & 3\\end{pmatrix}$.",
+    "twin": {
+      "prompt": "Find the inverse of $\\begin{pmatrix}4 & 2 \\\\ 3 & 2\\end{pmatrix}$, whose determinant is 2.",
+      "options": [
+        "$\\frac{1}{2}\\begin{pmatrix}2 & -2 \\\\ -3 & 4\\end{pmatrix}$",
+        "$\\begin{pmatrix}2 & -2 \\\\ -3 & 4\\end{pmatrix}$",
+        "$\\frac{1}{2}\\begin{pmatrix}4 & -2 \\\\ -3 & 2\\end{pmatrix}$"
+      ],
+      "answer": "$\\frac{1}{2}\\begin{pmatrix}2 & -2 \\\\ -3 & 4\\end{pmatrix}$",
+      "explain": "Swap 4 and 2, change the signs of 2 and 3, then divide every entry by the determinant, 2.",
+      "optionNotes": [
+        {
+          "option": "$\\begin{pmatrix}2 & -2 \\\\ -3 & 4\\end{pmatrix}$",
+          "why": "Swapped and negated, then never divided by the determinant, 2.",
+          "misconception": "fm.matrix.inverse-not-divided-by-det"
+        },
+        {
+          "option": "$\\frac{1}{2}\\begin{pmatrix}4 & -2 \\\\ -3 & 2\\end{pmatrix}$",
+          "why": "The signs changed and the factor is right, but 4 and 2 never swapped.",
+          "misconception": "fm.matrix.adjugate-not-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\begin{pmatrix}3 & -5 \\\\ -1 & 2\\end{pmatrix}$",
+        "why": "The signs changed, but 3 and 2 on the leading diagonal never swapped places.",
+        "misconception": "fm.matrix.adjugate-not-swapped"
+      },
+      {
+        "option": "$\\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$",
+        "why": "The leading diagonal swapped, but 5 and 1 kept their signs; the other diagonal changes sign.",
+        "misconception": "fm.matrix.adjugate-not-negated"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "A negative determinant keeps its sign",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "When the determinant is negative, the factor in front is negative too: a determinant of $-10$ gives $\\frac{1}{-10}$. Drop that minus sign and every entry of the inverse changes sign, so the check by multiplying gives $-1$s where the 1s should be."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "One minus sign, four entries",
+    "md": "The Summer 2025 inverse was very well answered, and the slips the report named were reciprocals written without the minus sign of a negative determinant. Put the determinant in the factor in brackets, sign and all.",
+    "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the inverse of $\\begin{pmatrix}1 & 3 \\\\ 4 & 2\\end{pmatrix}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\det = (1)(2) - (3)(4) = -10$",
+        "decision": "The other diagonal's product is the larger, so the determinant is negative.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\begin{pmatrix}2 & -3 \\\\ -4 & 1\\end{pmatrix}$",
+        "decision": "Swap and negate exactly as before."
+      },
+      {
+        "n": 3,
+        "working": "$\\frac{1}{-10}\\begin{pmatrix}2 & -3 \\\\ -4 & 1\\end{pmatrix}$",
+        "decision": "The factor carries the determinant's minus sign.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "For $K = \\begin{pmatrix}2 & 4 \\\\ 2 & 1\\end{pmatrix}$, $\\det K = -6$. Which is $K^{-1}$?",
+    "options": [
+      "$\\frac{1}{-6}\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$",
+      "$\\frac{1}{6}\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$",
+      "$-6\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$"
+    ],
+    "answer": "$\\frac{1}{-6}\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$",
+    "explain": "As in the See it, the factor is one over the determinant with its sign, $\\frac{1}{-6}$. Swapping 2 and 1 and negating 4 and 2 gives $\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$.",
+    "twin": {
+      "prompt": "For $L = \\begin{pmatrix}3 & 2 \\\\ 5 & 1\\end{pmatrix}$, $\\det L = -7$. Which is $L^{-1}$?",
+      "options": [
+        "$\\frac{1}{-7}\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$",
+        "$\\frac{1}{7}\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$",
+        "$-7\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$"
+      ],
+      "answer": "$\\frac{1}{-7}\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$",
+      "explain": "The factor is $\\frac{1}{-7}$, sign kept; swapping 3 and 1 and negating 2 and 5 gives $\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$.",
+      "optionNotes": [
+        {
+          "option": "$\\frac{1}{7}\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$",
+          "why": "The determinant's minus sign is missing from the factor.",
+          "misconception": "fm.matrix.reciprocal-sign-dropped"
+        },
+        {
+          "option": "$-7\\begin{pmatrix}1 & -2 \\\\ -5 & 3\\end{pmatrix}$",
+          "why": "That multiplies by the determinant instead of dividing by it.",
+          "misconception": "fm.matrix.inverse-not-divided-by-det"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\frac{1}{6}\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$",
+        "why": "The minus sign of the determinant has gone from the factor, so every entry would come out with its sign turned over.",
+        "misconception": "fm.matrix.reciprocal-sign-dropped"
+      },
+      {
+        "option": "$-6\\begin{pmatrix}1 & -4 \\\\ -2 & 2\\end{pmatrix}$",
+        "why": "That multiplies by the determinant; the inverse divides by it, so the factor is its reciprocal.",
+        "misconception": "fm.matrix.inverse-not-divided-by-det"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "No inverse when the determinant is 0",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "The inverse divides by the determinant, and nothing can be divided by 0. So a matrix whose determinant is 0 has **no inverse**, and it is called **singular**. When a question asks why an equation cannot be solved, name the matrix as well as giving the reason."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Explain why $T = \\begin{pmatrix}4 & 6 \\\\ 2 & 3\\end{pmatrix}$ has no inverse.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\det T = (4)(3) - (6)(2) = 0$",
+        "decision": "Work the determinant out first.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\det T = 0$, so $T$ is singular and has no inverse",
+        "decision": "Name the matrix as well as the reason: the 2023 report found answers that never said which matrix it was.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Which answer explains why $V = \\begin{pmatrix}6 & 4 \\\\ 9 & 6\\end{pmatrix}$ has no inverse?",
+    "options": [
+      "$\\det V = 0$, so $V$ is singular and has no inverse",
+      "The determinant is 0",
+      "$\\det V = 72$, so $V$ has no inverse"
+    ],
+    "answer": "$\\det V = 0$, so $V$ is singular and has no inverse",
+    "explain": "As in the See it: $\\det V = (6)(6) - (4)(9) = 0$, so $V$ is singular. The answer names $V$ and gives the zero determinant as the reason.",
+    "twin": {
+      "prompt": "Which answer explains why $W = \\begin{pmatrix}10 & 5 \\\\ 4 & 2\\end{pmatrix}$ has no inverse?",
+      "options": [
+        "$\\det W = 0$, so $W$ is singular and has no inverse",
+        "The matrix has no inverse",
+        "$\\det W = 40$, so $W$ has no inverse"
+      ],
+      "answer": "$\\det W = 0$, so $W$ is singular and has no inverse",
+      "explain": "$\\det W = 20 - 20 = 0$, so $W$ has no inverse: name $W$ and give the zero determinant.",
+      "optionNotes": [
+        {
+          "option": "The matrix has no inverse",
+          "why": "That repeats the question without the reason or the name: give det W = 0 and name W.",
+          "misconception": "fm.matrix.singular-not-recognised"
+        },
+        {
+          "option": "$\\det W = 40$, so $W$ has no inverse",
+          "why": "The two products were added; subtracted they give 0.",
+          "misconception": "fm.matrix.determinant-products-added"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The determinant is 0",
+        "why": "True, but it never says which matrix: the full answer names V as the matrix with no inverse.",
+        "misconception": "fm.matrix.singular-not-recognised"
+      },
+      {
+        "option": "$\\det V = 72$, so $V$ has no inverse",
+        "why": "That adds the two products. The determinant subtracts them, $36 - 36 = 0$, and a non-zero determinant would mean an inverse exists.",
+        "misconception": "fm.matrix.determinant-products-added"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Part (i), then used.** (2024, 2025) The inverse is a 2-mark first part, and later parts multiply by it to solve an equation, so the marks that follow rest on it."
+  },
+  {
+    "type": "p",
+    "md": "**The first step of a matrix equation.** (2018, 2019, 2021, 2022, 2023, 2026) The inverse undoes the matrix in front of the unknown; in 2018 the matrix to invert was itself a difference of two matrices, worked out first."
+  },
+  {
+    "type": "p",
+    "md": "**A letter that makes it singular.** (2021) A matrix with a letter has no inverse for one value: set its determinant equal to 0 and solve. In 2023 an equation could not be solved because a named matrix was singular."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The matrix $\\begin{pmatrix}k & 3 \\\\ 8 & 6\\end{pmatrix}$ has no inverse. Find $k$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$6k - (3)(8) = 0$",
+        "decision": "No inverse means the determinant is 0: write it with the letter in.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$6k = 24$, so $k = 4$",
+        "decision": "Solve the linear equation.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g11",
     "kind": "number",
-    "prompt": "For $N = \\begin{pmatrix}-3 & 2 \\\\ 4 & -1\\end{pmatrix}$ the determinant is $-5$ and swapping and negating gives $\\begin{pmatrix}-1 & -2 \\\\ -4 & -3\\end{pmatrix}$. What is the entry in row 1, column 1 of $N^{-1}$?",
-    "answer": "1/5",
-    "explain": "Dividing $-1$ by $-5$ gives $1/5$. Dividing by $5$ instead, with the minus sign dropped, would give $-1/5$."
+    "prompt": "The matrix $\\begin{pmatrix}3 & k \\\\ 4 & 12\\end{pmatrix}$ has no inverse. Find $k$.",
+    "answer": "9",
+    "explain": "As in the See it, set the determinant to 0: $(3)(12) - 4k = 0$, so $36 = 4k$ and $k = 9$.",
+    "twin": {
+      "prompt": "The matrix $\\begin{pmatrix}5 & k \\\\ 2 & 4\\end{pmatrix}$ has no inverse. Find $k$.",
+      "answer": "10",
+      "explain": "$(5)(4) - 2k = 0$, so $20 = 2k$ and $k = 10$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Work out a determinant as $ad - bc$, on its own line, with its sign.\nSay that a matrix with a zero determinant is singular, and name it when you are asked why.\nBuild an inverse by swapping the leading diagonal, negating the other and dividing by the determinant.\nKeep the reciprocal of a negative determinant negative.\nCheck an inverse by multiplying back to the identity."
+    "md": "Work out a determinant as $ad - bc$, each product in brackets.\nBuild an inverse: swap, negate, then divide every entry by the determinant.\nKeep the minus sign of a negative determinant in the factor.\nSay that a matrix with determinant 0 is singular, and name it.\nCheck an inverse by multiplying back to the identity."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "\"Find the inverse\" is a reliable $2$ marks, almost always part (i) of a longer question whose later parts depend on it. The first mark is the determinant; the second is the arranged matrix with the reciprocal attached. Stuck? Write $\\det = ad - bc$ with the numbers in it. That line alone earns the first mark and tells you whether an inverse exists."
+    "md": "Finding an inverse is usually part (i) of a longer matrix question, worth 2 marks: one for the determinant, one for the finished inverse with its factor. Later parts use it, so check it by multiplying back. Stuck? Write $\\det = ad - bc$ with the numbers in: that line tells you whether an inverse exists."
   },
   {
     "type": "prompt",
@@ -171,14 +504,6 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-inverse-2x2.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-inverse-2x2.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-inverse-2x2.06"
+    "promptId": "rp.fm.u1.matrix-inverse-2x2.08"
   }
 ]

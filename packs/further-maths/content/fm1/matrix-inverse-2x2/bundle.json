@@ -21,9 +21,12 @@
     "examinerSources": [
       "ccea-cer:further-maths:2019-summer:FM1:Q5",
       "ccea-cer:further-maths:2023-summer:FM1:Q6",
-      "ccea-cer:further-maths:2025-summer:FM1:Q5"
+      "ccea-cer:further-maths:2025-summer:FM1:Q5",
+      "ccea-cer:further-maths:2018-summer:FM1:Q5",
+      "ccea-cer:further-maths:2022-summer:FM1:Q3",
+      "ccea-cer:further-maths:2024-summer:FM1:Q5"
     ],
-    "examWeightHint": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. The inverse is almost always part (i) of a two-part matrix question whose later part depends on it: Summer 2025 Q5(i) (2 marks, described as very well answered, with a few writing 1 over 26 where the determinant was minus 26), Summer 2019 Q5 (a few arithmetic slips in the determinant), Summer 2023 Q6(ii) (1 mark for explaining why an equation could not be solved, where the wording often failed to name the matrix). The Summer 2019 scheme gave two MW marks for the inverse, with follow-through into the part that uses it.",
+    "examWeightHint": "FM1 is a single 2-hour calculator paper of 100 marks, and a 2 × 2 inverse is needed every year, usually inside a longer matrix question. It is asked on its own as part (i) for 2 marks (Summer 2024 Q5(i), 2025 Q5(i)); it is the first step of solving a matrix equation (2018 Q5, 2019 Q5, 2021 Q10, 2022 Q3(b), 2023 Q6(i) and 2026 Q11, 4 to 7 marks), where in 2018 the matrix to invert was made first as a difference of two matrices; and the determinant alone answers a letter that makes a matrix singular (2021 Q6(ii), 2 marks) or why an equation cannot be solved (2023 Q6(ii), 1 mark). The Summer 2019 scheme gave MW1 MW1 for the inverse, and later parts follow through. Neither the determinant nor the inverse formula is printed in the paper.",
     "mustMemorise": [
       "det of a 2 × 2 with entries a, b, c, d is ad − bc",
       "The inverse is 1/(ad − bc) times the matrix with a and d swapped and b and c negated",
@@ -117,23 +120,24 @@
         "Divide every entry by the determinant, keeping the factor whole",
         "Write the reciprocal of a negative determinant with its minus sign",
         "Find the value of a letter that makes a matrix singular",
-        "Check an inverse by multiplying back to the identity"
+        "Check an inverse by multiplying back to the identity",
+        "Make the matrix to invert first when a question combines two matrices"
       ],
-      "howExamined": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. The inverse is almost always part (i) of a two-part matrix question, and the later part depends on it, so the marks there ride on this one: Summer 2025 Q5(i) (2 marks, very well answered), Summer 2019 Q5 (a few arithmetic slips in the determinant), Summer 2023 Q6(ii) (1 mark for explaining why an equation could not be solved). The Summer 2019 scheme gave two MW marks for the inverse, and later parts are marked on follow-through. Neither the determinant nor the inverse formula is given anywhere in the paper.",
+      "howExamined": "FM1 is a single 2-hour calculator paper of 100 marks, and a 2 × 2 inverse is needed every year, usually inside a longer matrix question. It is asked on its own as part (i) for 2 marks (Summer 2024 Q5(i), 2025 Q5(i)); it is the first step of solving a matrix equation (2018 Q5, 2019 Q5, 2021 Q10, 2022 Q3(b), 2023 Q6(i) and 2026 Q11, 4 to 7 marks), where in 2018 the matrix to invert was made first as a difference of two matrices; and the determinant alone answers a letter that makes a matrix singular (2021 Q6(ii), 2 marks) or why an equation cannot be solved (2023 Q6(ii), 1 mark). The Summer 2019 scheme gave MW1 MW1 for the inverse, and later parts follow through. Neither the determinant nor the inverse formula is printed in the paper.",
       "traps": [
-        "The reciprocal of a negative determinant written without its minus sign, as 1 over 26 where the determinant was minus 26 (Summer 2025 FM1 Q5)",
-        "Arithmetic slips in ad − bc, especially when entries are negative (Summer 2019 FM1 Q5)",
-        "Saying the determinant is zero without naming the matrix it belongs to (Summer 2023 FM1 Q6)",
-        "Negating the leading diagonal instead of the other one",
-        "Swapping the diagonal but leaving the signs of b and c unchanged",
-        "Handing in the swapped and negated matrix without dividing by the determinant",
-        "Dividing one entry by the determinant and leaving the other three",
-        "Writing decimals where the determinant does not divide nicely, instead of exact fractions"
+        "The reciprocal of a negative determinant written without its minus sign (Summer 2025 FM1 Q5).",
+        "Arithmetic slips in ad − bc, especially with negative entries (Summer 2019 FM1 Q5, Summer 2022 FM1 Q3, Summer 2023 FM1 Q6, Summer 2024 FM1 Q5).",
+        "Saying that a matrix has no inverse without naming which matrix (Summer 2023 FM1 Q6).",
+        "Multiplying the matrices in the other order when the inverse is used to solve an equation (Summer 2018 FM1 Q5).",
+        "Negating the leading diagonal instead of the other one.",
+        "Swapping the leading diagonal but leaving the signs of b and c unchanged.",
+        "Handing in the swapped and negated matrix without dividing by the determinant.",
+        "Dividing one entry by the determinant and leaving the other three."
       ]
     },
     "verification": "ver.note.fm.u1.matrix-inverse-2x2",
     "version": 1,
-    "updated": "2026-09-20"
+    "updated": "2026-10-07"
   },
   "workedExamples": [
     {
@@ -330,6 +334,336 @@
       ],
       "verification": "ver.we.fm.u1.matrix-inverse-2x2.02",
       "version": 1
+    },
+    {
+      "id": "we.fm.u1.matrix-inverse-2x2.03",
+      "topic": "fm.u1.matrix-inverse-2x2",
+      "specRefs": [
+        "FM1-MAT-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "The matrix $C = \\begin{pmatrix}6 & 4 \\\\ 1 & 2\\end{pmatrix}$.\nFind $C^{-1}$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$\\det C = (6)(2) - (4)(1) = 8$",
+          "decision": "On its own line, before the matrix is touched: it earns the first mark and says an inverse exists.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 8,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "Swap and negate: $\\begin{pmatrix}2 & -4 \\\\ -1 & 6\\end{pmatrix}$",
+          "decision": "6 and 2 on the leading diagonal swap places; 4 and 1 change sign.",
+          "whyMenu": {
+            "options": [
+              "The leading diagonal swaps and the other diagonal changes sign",
+              "Every entry changes sign",
+              "The rows swap over"
+            ],
+            "correct": 0,
+            "explain": "Only a and d move, and only b and c change sign; multiplying back by C then gives the determinant on the leading diagonal."
+          },
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "2",
+                "-4"
+              ],
+              [
+                "-1",
+                "6"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 3,
+          "working": "$$C^{-1} = \\frac{1}{8}\\begin{pmatrix}2 & -4 \\\\ -1 & 6\\end{pmatrix}$$",
+          "decision": "Divide every entry by the determinant; the factor may stay outside the brackets.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "1/4",
+                "-1/2"
+              ],
+              [
+                "-1/8",
+                "3/4"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 4,
+          "working": "Check: $C^{-1}C = \\begin{pmatrix}1 & 0 \\\\ 0 & 1\\end{pmatrix}$",
+          "decision": "Multiplying back gives the identity, so every sign and the factor are right.",
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        }
+      ],
+      "finalAnswer": "$$C^{-1} = \\frac{1}{8}\\begin{pmatrix}2 & -4 \\\\ -1 & 6\\end{pmatrix}$$",
+      "twin": {
+        "stem": "Find $D^{-1}$ for $D = \\begin{pmatrix}5 & 2 \\\\ 3 & 4\\end{pmatrix}$.",
+        "answer": {
+          "kind": "matrix",
+          "rows": 2,
+          "cols": 2,
+          "entries": [
+            [
+              "2/7",
+              "-1/7"
+            ],
+            [
+              "-3/14",
+              "5/14"
+            ]
+          ],
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.0005
+          }
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.matrix-inverse-2x2.03",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u1.matrix-inverse-2x2.04",
+      "topic": "fm.u1.matrix-inverse-2x2",
+      "specRefs": [
+        "FM1-MAT-02"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "The matrix $E = \\begin{pmatrix}4 & 7 \\\\ 2 & 3\\end{pmatrix}$.\nFind $E^{-1}$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$\\det E = (4)(3) - (7)(2) = -2$",
+          "decision": "The other diagonal's product is the larger, so the determinant is negative; keep the sign.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": -2,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "Swap and negate: $\\begin{pmatrix}3 & -7 \\\\ -2 & 4\\end{pmatrix}$",
+          "decision": "4 and 3 swap places; 7 and 2 change sign.",
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "3",
+                "-7"
+              ],
+              [
+                "-2",
+                "4"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 3,
+          "working": "$$E^{-1} = \\frac{1}{-2}\\begin{pmatrix}3 & -7 \\\\ -2 & 4\\end{pmatrix}$$",
+          "decision": "The factor carries the determinant's minus sign, which reaches all four entries.",
+          "whyMenu": {
+            "options": [
+              "Dividing by a negative determinant changes the sign of every entry",
+              "The minus sign only affects the first entry",
+              "The sign of the determinant can be ignored"
+            ],
+            "correct": 0,
+            "explain": "The factor $\\frac{1}{-2}$ multiplies every entry, so each one changes sign; dropping it would give the negative of the inverse."
+          },
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "-3/2",
+                "7/2"
+              ],
+              [
+                "1",
+                "-2"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 4,
+          "working": "Check: $E^{-1}E = \\begin{pmatrix}1 & 0 \\\\ 0 & 1\\end{pmatrix}$",
+          "decision": "With the sign kept, multiplying back gives the identity; a dropped sign would give −1s.",
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        }
+      ],
+      "finalAnswer": "$$E^{-1} = \\frac{1}{-2}\\begin{pmatrix}3 & -7 \\\\ -2 & 4\\end{pmatrix}$$",
+      "twin": {
+        "stem": "Find $F^{-1}$ for $F = \\begin{pmatrix}2 & 5 \\\\ 3 & 4\\end{pmatrix}$.",
+        "answer": {
+          "kind": "matrix",
+          "rows": 2,
+          "cols": 2,
+          "entries": [
+            [
+              "-4/7",
+              "5/7"
+            ],
+            [
+              "3/7",
+              "-2/7"
+            ]
+          ],
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.0005
+          }
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.matrix-inverse-2x2.04",
+      "version": 1
     }
   ],
   "diagnostics": [
@@ -436,32 +770,32 @@
       "when": "post",
       "items": [
         {
-          "id": "d1",
-          "stem": "What is $\\det A$ for $A = \\begin{pmatrix}4 & 1 \\\\ 3 & 2\\end{pmatrix}$?",
+          "id": "d6",
+          "stem": "What is the determinant of $\\begin{pmatrix}3 & 2 \\\\ 4 & 5\\end{pmatrix}$?",
           "skill": "The determinant",
           "options": [
             {
               "id": "a",
-              "text": "$5$",
+              "text": "$7$",
               "correct": true,
-              "feedback": "$ad - bc$, with the leading diagonal first."
+              "feedback": "$ad - bc = (3)(5) - (2)(4) = 15 - 8 = 7$."
             },
             {
               "id": "b",
-              "text": "$-5$",
+              "text": "$-7$",
               "correct": false,
               "misconception": "fm.matrix.determinant-sign-reversed",
-              "feedback": "That is $bc - ad$, taken the other way round."
+              "feedback": "That is bc − ad, the subtraction taken the other way round."
             },
             {
               "id": "c",
-              "text": "$11$",
+              "text": "$23$",
               "correct": false,
               "misconception": "fm.matrix.determinant-products-added",
-              "feedback": "That is $ad + bc$, with the two products added. The determinant subtracts them: $8 - 3 = 5$."
+              "feedback": "That adds the two products. The determinant subtracts them: $15 - 8 = 7$."
             }
           ],
-          "secondsExpected": 25,
+          "secondsExpected": 30,
           "confidence": true,
           "hypercorrectionQueue": true
         },
@@ -496,39 +830,32 @@
           "hypercorrectionQueue": true
         },
         {
-          "id": "d3",
-          "stem": "Which of these is $A^{-1}$ for $A = \\begin{pmatrix}4 & 1 \\\\ 3 & 2\\end{pmatrix}$, where $\\det A = 5$?",
+          "id": "d7",
+          "stem": "Which is the inverse of $\\begin{pmatrix}5 & 1 \\\\ 4 & 1\\end{pmatrix}$, whose determinant is 1?",
           "skill": "The three actions",
           "options": [
             {
               "id": "a",
-              "text": "$\\begin{pmatrix}\\frac{2}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{5} & \\frac{4}{5}\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}1 & -1 \\\\ -4 & 5\\end{pmatrix}$",
               "correct": true,
-              "feedback": "Swapped, negated and then divided by $5$."
+              "feedback": "5 and 1 swap on the leading diagonal, 1 and 4 change sign, and dividing by 1 changes nothing."
             },
             {
               "id": "b",
-              "text": "$\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}5 & -1 \\\\ -4 & 1\\end{pmatrix}$",
               "correct": false,
-              "feedback": "Swapped and negated, and then never divided by the determinant.",
-              "misconception": "fm.matrix.inverse-not-divided-by-det"
+              "misconception": "fm.matrix.adjugate-not-swapped",
+              "feedback": "The signs changed but the leading diagonal never swapped."
             },
             {
               "id": "c",
-              "text": "$\\begin{pmatrix}\\frac{4}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{5} & \\frac{2}{5}\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}1 & 1 \\\\ 4 & 5\\end{pmatrix}$",
               "correct": false,
-              "feedback": "The signs changed but the leading diagonal never swapped.",
-              "misconception": "fm.matrix.adjugate-not-swapped"
-            },
-            {
-              "id": "d",
-              "text": "$\\begin{pmatrix}\\frac{2}{5} & -1 \\\\ -3 & 4\\end{pmatrix}$",
-              "correct": false,
-              "feedback": "Only the first entry was divided by the determinant; the other three were left as they were.",
-              "misconception": "fm.matrix.det-factor-on-one-entry-only"
+              "misconception": "fm.matrix.adjugate-not-negated",
+              "feedback": "The leading diagonal swapped, but the other diagonal kept its signs."
             }
           ],
-          "secondsExpected": 40,
+          "secondsExpected": 30,
           "confidence": true,
           "hypercorrectionQueue": true
         },
@@ -588,6 +915,83 @@
             }
           ],
           "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.matrix-inverse-2x2.post.withdrawn",
+      "topic": "fm.u1.matrix-inverse-2x2",
+      "specRefs": [
+        "FM1-MAT-02"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "d1",
+          "stem": "What is $\\det A$ for $A = \\begin{pmatrix}4 & 1 \\\\ 3 & 2\\end{pmatrix}$?",
+          "skill": "The determinant",
+          "options": [
+            {
+              "id": "a",
+              "text": "$5$",
+              "correct": true,
+              "feedback": "$ad - bc$, with the leading diagonal first."
+            },
+            {
+              "id": "b",
+              "text": "$-5$",
+              "correct": false,
+              "misconception": "fm.matrix.determinant-sign-reversed",
+              "feedback": "That is $bc - ad$, taken the other way round."
+            },
+            {
+              "id": "c",
+              "text": "$11$",
+              "correct": false,
+              "misconception": "fm.matrix.determinant-products-added",
+              "feedback": "That is $ad + bc$, with the two products added. The determinant subtracts them: $8 - 3 = 5$."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d3",
+          "stem": "Which of these is $A^{-1}$ for $A = \\begin{pmatrix}4 & 1 \\\\ 3 & 2\\end{pmatrix}$, where $\\det A = 5$?",
+          "skill": "The three actions",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\begin{pmatrix}\\frac{2}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{5} & \\frac{4}{5}\\end{pmatrix}$",
+              "correct": true,
+              "feedback": "Swapped, negated and then divided by $5$."
+            },
+            {
+              "id": "b",
+              "text": "$\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "Swapped and negated, and then never divided by the determinant.",
+              "misconception": "fm.matrix.inverse-not-divided-by-det"
+            },
+            {
+              "id": "c",
+              "text": "$\\begin{pmatrix}\\frac{4}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{5} & \\frac{2}{5}\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "The signs changed but the leading diagonal never swapped.",
+              "misconception": "fm.matrix.adjugate-not-swapped"
+            },
+            {
+              "id": "d",
+              "text": "$\\begin{pmatrix}\\frac{2}{5} & -1 \\\\ -3 & 4\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "Only the first entry was divided by the determinant; the other three were left as they were.",
+              "misconception": "fm.matrix.det-factor-on-one-entry-only"
+            }
+          ],
+          "secondsExpected": 40,
           "confidence": true,
           "hypercorrectionQueue": true
         }
@@ -1078,7 +1482,7 @@
             "Determinant on its own line first.",
             "Swap, negate, then divide every entry."
           ],
-          "workedSolution": "$\\det A = 5$.\nSwapping and negating gives $\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix}$.\nDividing every entry by $5$: $A^{-1} = \\frac{1}{5}\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix} = \\begin{pmatrix}\\frac{2}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{5} & \\frac{4}{5}\\end{pmatrix}$.",
+          "workedSolution": "$\\det A = 5$.\nSwapping and negating gives $\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix}$.\nDividing every entry by $5$:\n$$A^{-1} = \\frac{1}{5}\\begin{pmatrix}2 & -1 \\\\ -3 & 4\\end{pmatrix} = \\begin{pmatrix}\\frac{2}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{5} & \\frac{4}{5}\\end{pmatrix}$$",
           "commonErrors": [
             {
               "misconception": "fm.matrix.inverse-not-divided-by-det",
@@ -1560,7 +1964,7 @@
             "Determinant on its own line first.",
             "Swap, negate, divide."
           ],
-          "workedSolution": "$\\det F = (7)(2) - (3)(4) = 2$.\nSwapping and negating gives $\\begin{pmatrix}2 & -3 \\\\ -4 & 7\\end{pmatrix}$.\nDividing by $2$: $F^{-1} = \\begin{pmatrix}1 & -\\frac{3}{2} \\\\ -2 & \\frac{7}{2}\\end{pmatrix}$.",
+          "workedSolution": "$\\det F = (7)(2) - (3)(4) = 2$.\nSwapping and negating gives $\\begin{pmatrix}2 & -3 \\\\ -4 & 7\\end{pmatrix}$.\nDividing by $2$:\n$$F^{-1} = \\begin{pmatrix}1 & -\\frac{3}{2} \\\\ -2 & \\frac{7}{2}\\end{pmatrix}$$",
           "commonErrors": [
             {
               "misconception": "fm.matrix.inverse-not-divided-by-det",
@@ -1774,6 +2178,32 @@
       ],
       "feedback": "The determinant is right, sign included, so the first mark stands; the second is for the finished inverse, and line 3 is where it went. The fix is a pair of brackets: write the factor as one over the determinant in brackets, sign attached, straight after you work the determinant out. Then check by multiplying back — the identity will not appear if a sign is wrong.",
       "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+    },
+    {
+      "id": "ftm.fm.u1.matrix-inverse-2x2.02",
+      "topic": "fm.u1.matrix-inverse-2x2",
+      "specRefs": [
+        "FM1-MAT-02"
+      ],
+      "stem": "Bríd was asked to find $R^{-1}$, where $R = \\begin{pmatrix}4 & 9 \\\\ 1 & 2\\end{pmatrix}$. Her working:",
+      "studentWorking": [
+        "det R = (4)(2) - (9)(1) = -1",
+        "swap and negate: (2 -9 ; -1 4)",
+        "R inverse = 1/1 x (2 -9 ; -1 4)",
+        "R inverse = (2 -9 ; -1 4)"
+      ],
+      "mistakeLine": 3,
+      "misconception": "fm.matrix.reciprocal-sign-dropped",
+      "whatWentWrong": "Lines 1 and 2 are right, the determinant's sign included. Line 3 writes the factor as $\\frac{1}{1}$, dropping the minus sign that line 1 found. The factor is $\\frac{1}{-1}$, which changes the sign of all four entries: $R^{-1} = \\begin{pmatrix}-2 & 9 \\\\ 1 & -4\\end{pmatrix}$.",
+      "correction": [
+        "R inverse = 1/(-1) x (2 -9 ; -1 4)",
+        "R inverse = (-2 9 ; 1 -4)"
+      ],
+      "marksEarnedAsWritten": [
+        "MW1"
+      ],
+      "feedback": "The determinant is right, sign and all, so the first mark stands; the finished inverse is where the second went. Keep the determinant in brackets inside the factor, and check by multiplying back: her matrix times R gives the identity with every sign turned over.",
+      "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
     }
   ],
   "prompts": [
@@ -1889,6 +2319,21 @@
         "FM1-MAT-02"
       ],
       "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.matrix-inverse-2x2.08",
+      "kind": "trap",
+      "prompt": "A determinant is negative. What sign has the factor in front of the inverse?",
+      "answer": "Negative: one over the determinant, sign kept.",
+      "keyWords": [
+        "negative"
+      ],
+      "difficultyPrior": 3,
+      "topic": "fm.u1.matrix-inverse-2x2",
+      "specRefs": [
+        "FM1-MAT-02"
+      ],
+      "examUnit": "FM1"
     }
   ],
   "verification": [
@@ -1968,10 +2413,71 @@
           "detail": "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line, holds no prose words, and carries no TeX command without its backslash (scratchpad/fm1-batch-g/bare-tex.mjs). Six inline SVG figures, all drawn from the computed matrices, and one embeddable video from data/links/media-map.json followed immediately by a gate.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026, teach-first migration (owner-approved; see-it-block-shape.md; V3.1): six stretches, each explain -> See it -> Your turn, on the note's own matrices (none a later item's): the idea (an inverse multiplied back to the identity), the determinant with its sign, swap / negate / divide, a negative determinant (the body's one examiner callout, Summer 2025 Q5), the singular case with the matrix named (Summer 2023 Q6), and the papers' twists (a letter that makes a matrix singular, Summer 2021 Q6(ii)). Marks on each line in CCEA's split (MW1 for the determinant, W1 for the finished inverse). Gates g1-g5 withdrawn (this log's withdrawn list); g6-g11 new, each with a twin and an option note on every wrong option of a choice gate. Two prompts wired (rp.01, rp.08), both passing recallFit.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Every determinant, adjugate, inverse and product the note prints computed in exact integers and rationals in mi-note.mjs (det, adj, mul, inverse), each inverse multiplied back to the identity",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "From the papers read in full (FM1 2018-2026), the schemes and the reports 2018-2025: the inverse as part (i) (2024, 2025), as the first step of a matrix equation (2018, 2019, 2021, 2022, 2023, 2026), a letter that makes a matrix singular (2021) and the named reason (2023); the reports' determinant slips (2019, 2022, 2023, 2024) and the reciprocal's sign (2025)",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g6",
+          "reason": "An interface warm-up ('One tap to begin'), which the owner's answer 8 withdraws; g6, the first check, asks for an inverse checked by multiplying, after the first See it.",
+          "on": "2026-10-07T22:01:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "Its matrix N and answer, det N = -5, are practice 0002's word for word, and it was asked before its section showed a determinant worked; g7 asks a new determinant after the See it.",
+          "on": "2026-10-07T22:01:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "Asked before its section showed the singular case worked (it was only explained); g10 asks for the named reason after the See it.",
+          "on": "2026-10-07T22:01:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "Asked before its section showed the three actions carried out on a matrix; g8 asks a whole inverse after the See it.",
+          "on": "2026-10-07T22:01:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g9",
+          "reason": "Its matrix N is practice 0002's and find-the-mistake ftm.01's, and the note had worked N's inverse beside it; g9 asks a negative determinant's factor on a new matrix.",
+          "on": "2026-10-07T22:01:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.matrix-inverse-2x2.01",
@@ -2025,10 +2531,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Every whole-matrix answer is a matrix spec marked entry by entry, and a fraction in front of the brackets is multiplied through by the marker (probe-matrix-kind.mts), so the stem's promise about fractions holds.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration): Its matrix A is practice 0001, 0005 and 0006 and diagnostics d1 and d3, so the path worked those answers before asking them, and its twin B is practice 0007 word for word; we.03 works a new matrix with an input on every step. Kept with its id so a review card that points at it resolves.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u1.matrix-inverse-2x2.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u1.matrix-inverse-2x2.03",
+          "reason": "Its matrix A is practice 0001, 0005 and 0006 and diagnostics d1 and d3, so the path worked those answers before asking them, and its twin B is practice 0007 word for word; we.03 works a new matrix with an input on every step.",
+          "on": "2026-10-07T22:01:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.matrix-inverse-2x2.02",
@@ -2082,10 +2605,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Every whole-matrix answer is a matrix spec marked entry by entry, and a fraction in front of the brackets is multiplied through by the marker (probe-matrix-kind.mts), so the stem's promise about fractions holds.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration): Its matrix N is practice 0002 and find-the-mistake ftm.01, and its twin F is exam-style 0009(a) word for word; we.04 works a new matrix with a negative determinant, an input on every step. Kept with its id so a review card that points at it resolves.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u1.matrix-inverse-2x2.02",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u1.matrix-inverse-2x2.04",
+          "reason": "Its matrix N is practice 0002 and find-the-mistake ftm.01, and its twin F is exam-style 0009(a) word for word; we.04 works a new matrix with a negative determinant, an input on every step.",
+          "on": "2026-10-07T22:01:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.matrix-inverse-2x2.0001",
@@ -2367,6 +2907,14 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Every whole-matrix answer is a matrix spec marked entry by entry, and a fraction in front of the brackets is multiplied through by the marker (probe-matrix-kind.mts), so the stem's promise about fractions holds.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026 (FM1 migration, presentation only): the worked solution's inverse line, over 60 characters of inline TeX, moved to display maths so a phone scrolls it; no value, scheme, answer or common error changed.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2595,6 +3143,14 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Every whole-matrix answer is a matrix spec marked entry by entry, and a fraction in front of the brackets is multiplied through by the marker (probe-matrix-kind.mts), so the stem's promise about fractions holds.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026 (FM1 migration, presentation only): the worked solution's inverse line, over 60 characters of inline TeX, moved to display maths so a phone scrolls it; no value, scheme, answer or common error changed.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2677,10 +3233,34 @@
           "detail": "Read through as the student before shipping; British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026 (FM1 migration): d1 and d3 withdrawn into the kept set (practice 0001 and 0005 word for word, their answers as the right options); d6 and d7 ask the same on new matrices, every distractor naming a registered misconception; d2, d4 and d5 kept.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-inverse-2x2.post#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-inverse-2x2.post#d6",
+          "reason": "Its matrix A is practice 0001's, and its right option is that question's answer, det A = 5; d6 asks a determinant of a new matrix.",
+          "on": "2026-10-07T22:01:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-inverse-2x2.post#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-inverse-2x2.post#d7",
+          "reason": "Its matrix A is practice 0005's, and its right option is that question's answer, A's inverse; d7 asks the three actions on a new matrix.",
+          "on": "2026-10-07T22:01:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u1.matrix-inverse-2x2.01",
@@ -2726,10 +3306,27 @@
           "detail": "Read through as the student; calm feedback that names the mark that stands before the one that went; no exclamation marks.",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration): It works practice question 0002's matrix N in full and prints that question's answer, det N = -5, in its first line; ftm.02 asks the same Summer 2025 finding (the reciprocal's sign dropped) on a new matrix.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.fm.u1.matrix-inverse-2x2.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.fm.u1.matrix-inverse-2x2.02",
+          "reason": "It works practice question 0002's matrix N in full and prints that question's answer, det N = -5, in its first line; ftm.02 asks the same Summer 2025 finding (the reciprocal's sign dropped) on a new matrix.",
+          "on": "2026-10-07T22:01:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-inverse-2x2.01",
@@ -2960,6 +3557,299 @@
         }
       ],
       "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.matrix-inverse-2x2.03",
+      "itemId": "we.fm.u1.matrix-inverse-2x2.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by the build's own checks on the staged copy (validate-stage.mts) and by npm run content:check",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; the inverse of 2 × 2 matrices only (FM1-MAT-02 and its Teacher Guidance: 3 × 3 matrices not included); neither the determinant nor the inverse is on the formula sheet",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach for this topic. The worked example uses its own matrices and wording; no eight-word run shared with the FM1 papers 2018-2026, the schemes 2018-2025 or the reports",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced; no inline maths over 60 characters of TeX",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "2 marks across the steps in CCEA's split (the Summer 2019 scheme: MW1 for the determinant, W1 for the finished inverse); the swap, negate and check lines earn nothing on their own",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Determinant, adjugate and inverse computed in exact rationals (mi-note.mjs det, adj, inverse); adj(M)M = det(M)I checked for the example and its twin; each step's input spec equals what the step prints",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "The Summer 2024 Q5(i) and 2025 Q5(i) part (i) shape: find the inverse, 2 marks",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Every step's input probed through markAnswer (probe-matrix-inverse-2x2.mts): the printed line and natural spellings (factor outside, decimals, a nested list) earn the step; stepLineMatches reads each printed line",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.matrix-inverse-2x2.04",
+      "itemId": "we.fm.u1.matrix-inverse-2x2.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by the build's own checks on the staged copy (validate-stage.mts) and by npm run content:check",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; the inverse of 2 × 2 matrices only (FM1-MAT-02 and its Teacher Guidance: 3 × 3 matrices not included); neither the determinant nor the inverse is on the formula sheet",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach for this topic. The worked example uses its own matrices and wording; no eight-word run shared with the FM1 papers 2018-2026, the schemes 2018-2025 or the reports",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced; no inline maths over 60 characters of TeX",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "2 marks across the steps in CCEA's split (the Summer 2019 scheme: MW1 for the determinant, W1 for the finished inverse); the swap, negate and check lines earn nothing on their own",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Determinant, adjugate and inverse computed in exact rationals (mi-note.mjs det, adj, inverse); adj(M)M = det(M)I checked for the example and its twin; each step's input spec equals what the step prints",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "The Summer 2025 Q5(i) finding (a negative determinant's reciprocal written without its sign) carried through a worked inverse",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Every step's input probed through markAnswer (probe-matrix-inverse-2x2.mts): the printed line and natural spellings (factor outside, decimals, a nested list) earn the step; stepLineMatches reads each printed line",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.matrix-inverse-2x2.02",
+      "itemId": "ftm.fm.u1.matrix-inverse-2x2.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by the build's own checks on the staged copy (validate-stage.mts) and by npm run content:check",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; the inverse of 2 × 2 matrices only (FM1-MAT-02 and its Teacher Guidance: 3 × 3 matrices not included); neither the determinant nor the inverse is on the formula sheet",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach for this topic. The find-the-mistake item uses its own matrices and wording; no eight-word run shared with the FM1 papers 2018-2026, the schemes 2018-2025 or the reports",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced; no inline maths over 60 characters of TeX",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "det R = -1, adj R = (2 -9; -1 4), her matrix times R = -I and the corrected inverse times R = I, all computed in integers; exactly one line (3) is wrong",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Seeded from the Summer 2025 FM1 Q5(i) report: a few wrote the reciprocal of a negative determinant without its minus sign",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "The correction marked through markFix in several wordings; her own line refused as a fix (probe)",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.matrix-inverse-2x2.08",
+      "itemId": "rp.fm.u1.matrix-inverse-2x2.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by the build's own checks on the staged copy (validate-stage.mts) and by npm run content:check",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; the inverse of 2 × 2 matrices only (FM1-MAT-02 and its Teacher Guidance: 3 × 3 matrices not included); neither the determinant nor the inverse is on the formula sheet",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 after this pass: no breach for this topic. The prompt uses its own matrices and wording; no eight-word run shared with the FM1 papers 2018-2026, the schemes 2018-2025 or the reports",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair balanced; no inline maths over 60 characters of TeX",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "pass",
+          "detail": "A short recall: the question in 14 words and the answer in 7 (a formula counting as one); its key word is in the answer; recallFit passes; probed through keywordsPresent. It is wired with rp.01; rp.03 (two questions in one) and rp.04 (an 18-word question) stay in the bundle for the deck, unwired.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.matrix-inverse-2x2.post.withdrawn",
+      "itemId": "dx.fm.u1.matrix-inverse-2x2.post.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration group 1: scratchpad/probes/fm1-g1/matrix-inverse-2x2.mjs and mi-note.mjs compute every determinant, adjugate, inverse and product in exact rationals and multiply each inverse back to the identity; marking probed through markAnswer, markGate, markFix, keywordsPresent and stepLineMatches by probe-matrix-inverse-2x2.mts)",
+          "result": "fail",
+          "detail": "7 Oct 2026: the kept copies of the withdrawn items d1 and d3 of the post set, so a review card that points at them resolves.",
+          "at": "2026-10-07T22:01:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-inverse-2x2.post.withdrawn#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-inverse-2x2.post#d6",
+          "reason": "The kept copy of dx.fm.u1.matrix-inverse-2x2.post#d1, withdrawn: Its matrix A is practice 0001's, and its right option is that question's answer, det A = 5; d6 asks a determinant of a new matrix.",
+          "on": "2026-10-07T22:01:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-inverse-2x2.post.withdrawn#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-inverse-2x2.post#d7",
+          "reason": "The kept copy of dx.fm.u1.matrix-inverse-2x2.post#d3, withdrawn: Its matrix A is practice 0005's, and its right option is that question's answer, A's inverse; d7 asks the three actions on a new matrix.",
+          "on": "2026-10-07T22:01:00Z"
+        }
+      ],
       "reports": []
     }
   ]
