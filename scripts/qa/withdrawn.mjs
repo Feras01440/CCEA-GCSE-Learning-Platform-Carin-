@@ -102,6 +102,88 @@ function chainOf(record, records) {
   return { ids, end: "nothing", at: ids[ids.length - 1] };
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+/** "2026-09-28T10:00:00Z" as "28 Sep 2026" (the record's own date, read in UTC). */
+const dayOf = (iso) => {
+  const d = new Date(String(iso ?? ""));
+  return Number.isNaN(d.getTime()) ? String(iso ?? "an unknown date") : `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+};
+/** The kind a set entry names, by its id: a question, a prompt, a find-the-mistake item, or a whole diagnostic set. */
+const SET_ENTRY_KINDS = [
+  ["q.", "questions", "question"],
+  ["rp.", "prompts", "prompt"],
+  ["ftm.", "findTheMistake", "findTheMistake"],
+  ["dx.", "diagnostics", "diagnostic"],
+];
+
+/**
+ * Practice, mixed and ladder sets (`bundle.sets[].itemIds`) list only items that ship (the lead, 7 Oct 2026). An entry
+ * that was withdrawn is named with its record's date and where its replacement chain leads ("set 'vessels' lists
+ * rp.….10, withdrawn 28 Sep 2026, replaced by rp.….11: list rp.….11 instead"); one withdrawn with nothing in its place is
+ * to be taken out; one that does not ship (a draft) or names no item of this topic is said so. An entry of another topic
+ * is not judged here (the corpus has none, 7 Oct 2026).
+ */
+function setProblems(bundle, records) {
+  const out = [];
+  const logs = objects(bundle?.verification);
+  const topicId = String(bundle?.topic?.id ?? "");
+  const logOf = (it) => (typeof it?.verification === "string" ? logs.find((l) => l.id === it.verification) : logs.find((l) => l.itemId === it?.id));
+  const ships = (it) => SHIPPABLE.has(logOf(it)?.status);
+  for (const s of objects(bundle?.sets)) {
+    const name = String(s.id ?? "").split(".").pop();
+    const lists = (id, rest) => out.push({ id: String(s.id ?? "(set)"), log: "sets", problem: `set '${name}' lists ${id}, ${rest}` });
+    for (const entry of Array.isArray(s.itemIds) ? s.itemIds.map(String) : []) {
+      const kind = SET_ENTRY_KINDS.find(([prefix]) => entry.startsWith(prefix));
+      const list = kind ? objects(bundle?.[kind[1]]) : [];
+      const item = list.find((x) => x.id === entry);
+      const recordFor = (id) => records.find((r) => r.id === id && (!kind || r.kind === kind[2]));
+      const record = recordFor(entry);
+      const withdrawn = Boolean(record) || logOf(item)?.status === "withdrawn";
+      if (!item && !record) {
+        if (topicId && entry.includes(`.${topicId}.`)) lists(entry, "which names no item of this topic");
+        continue;
+      }
+      if (!withdrawn) {
+        if (!ships(item)) lists(entry, `which does not ship (${logOf(item) ? `its log says "${logOf(item).status}"` : "it has no verification log"})`);
+        continue;
+      }
+      if (!record) {
+        lists(entry, "which its log says is withdrawn, with no record of what replaces it: take it out of the set, or list its replacement");
+        continue;
+      }
+      // follow the replacements for the message
+      let text = `withdrawn ${dayOf(record.on)}`;
+      let current = record;
+      const seen = new Set([entry]);
+      let first = true;
+      for (;;) {
+        if (current.replacedBy === null || current.replacedBy === undefined) {
+          text += first ? " with nothing in its place: take it out of the set" : ", which was withdrawn with nothing in its place: take the entry out of the set";
+          break;
+        }
+        const next = String(current.replacedBy);
+        text += first ? `, replaced by ${next}` : `, itself withdrawn and replaced by ${next}`;
+        first = false;
+        if (seen.has(next)) {
+          text += ", which comes round again: the chain is a circle";
+          break;
+        }
+        seen.add(next);
+        const nextRecord = recordFor(next);
+        if (nextRecord) {
+          current = nextRecord;
+          continue;
+        }
+        const target = list.find((x) => x.id === next);
+        text += target && ships(target) && logOf(target)?.status !== "withdrawn" ? `: list ${next} instead` : `, which does not ship: the chain is broken`;
+        break;
+      }
+      lists(entry, text);
+    }
+  }
+  return out;
+}
+
 /**
  * @param {any[]} blocks  note.blocks.json
  * @param {any} bundle  bundle.json
@@ -157,6 +239,9 @@ export function withdrawnFindings(blocks, bundle, { resolve } = {}) {
       if (r.kind === "gate" && ids.gate.has(r.id)) say(r.id, log.id, "withdrawn, but the note still has a gate with this id");
     }
   }
+
+  // a practice set lists only items that ship (the lead, 7 Oct 2026: two B2 sets still listed withdrawn prompts)
+  for (const p of setProblems(bundle, allRecords)) say(p.id, p.log, p.problem);
 
   // every log that says withdrawn carries the record for its own item (or, for a diagnostic set, for its items)
   const recorded = new Set(records.map((r) => r.id));

@@ -72,7 +72,16 @@ export function recallFindings(blocks, { shipped, all, logs }, recall) {
       kind = "unshipped";
       const held = all.some((x) => x.id === id);
       const log = logs.find((l) => l.itemId === id);
-      reasons = [!held ? "the bundle holds no prompt with this id" : log ? `the bundle does not ship it (its log says "${log.status}")` : "the bundle does not ship it (it has no verification log)"];
+      const withdrawn = logs.some((l) => Array.isArray(l?.withdrawn) && l.withdrawn.some((w) => w && w.id === id));
+      reasons = [
+        withdrawn
+          ? "it is withdrawn (a withdrawn record names it): unwire its prompt block"
+          : !held
+            ? "the bundle holds no prompt with this id"
+            : log
+              ? `the bundle does not ship it (its log says "${log.status}")`
+              : "the bundle does not ship it (it has no verification log)",
+      ];
     } else {
       const fit = recall.recallFit(p);
       expected = fit.expected;

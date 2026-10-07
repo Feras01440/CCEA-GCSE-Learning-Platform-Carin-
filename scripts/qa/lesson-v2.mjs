@@ -449,8 +449,9 @@ function mathsIssues(strings) {
 const short = (s, n = 48) => (s.length > n ? `${s.slice(0, n)}…` : s);
 
 /**
- * The depth measures for one note and its bundle, against the band's floor; `see` is the note's seeItFindings, `model` its
- * lessonMinutesFor result (src/lib/slides/minutes.ts) and `keptRecall` the recall cards its lesson keeps (recall.ts).
+ * The depth measures for one note and its bundle, against the band's floor; `bundle` is the bundle less its withdrawn
+ * items (checkNote's `live`), `see` the note's seeItFindings, `model` its lessonMinutesFor result
+ * (src/lib/slides/minutes.ts) and `keptRecall` the recall cards its lesson keeps (recall.ts).
  */
 function depthOf(blocks, bundle, see, model, keptRecall) {
   if (!bundle?.topic) return null;
@@ -653,10 +654,9 @@ function depthOf(blocks, bundle, see, model, keptRecall) {
 
   // figures: note figures and the bundle's own SVGs
   const noteFigures = blocks.map((b, i) => ({ where: `note#${i}`, svg: b.type === "figure" && b.svg ? b.svg : null })).filter((f) => f.svg);
-  // Withdrawn items are not measured (the lead's item g, 29 Sep 2026): a withdrawn item stays byte-identical in the pack
-  // by rule and never ships, so a label-size line against its figure asks for an edit that must not be made. The rule is
-  // shingles-allow.mjs withoutWithdrawn, as figure-leaks and shingles read it.
-  const live = withoutWithdrawn(bundle);
+  // `bundle` is the live bundle (checkNote: withoutWithdrawn), so no withdrawn item is measured here or below (the lead's
+  // item g, 29 Sep 2026, and 7 Oct 2026: a withdrawn item stays byte-identical in the pack and never ships).
+  const live = bundle;
   const bundleFigures = [];
   for (const q of live.questions ?? []) for (const f of q.figures ?? []) if (f.kind === "svg") bundleFigures.push({ where: q.id, svg: decodeFigure(f.src) });
   for (const we of live.workedExamples ?? []) {
@@ -709,6 +709,12 @@ function checkNote(file, orphans) {
   const blocks = JSON.parse(fs.readFileSync(file, "utf8"));
   const bundleFile = path.join(path.dirname(file), "bundle.json");
   const bundle = fs.existsSync(bundleFile) ? JSON.parse(fs.readFileSync(bundleFile, "utf8")) : null;
+  // Withdrawn items are not read (the lead, 7 Oct 2026, after the M4 author restored 19 withdrawn items and the depth maths
+  // line counted their worked solutions): every line below that reads the bundle's items reads `live`, the bundle less its
+  // withdrawn items (shingles-allow.mjs withoutWithdrawn: an id in a withdrawn record, a diagnostic item as set#item, or an
+  // item whose own log says withdrawn). Only the withdrawn-record check reads `bundle` whole, because the records and the
+  // withdrawn items are its subject; the traps check reads the Sheet and the topic, and readiness the note's own log.
+  const live = bundle ? withoutWithdrawn(bundle) : null;
   const say = [];
   const fail = (check, detail) => say.push({ check, detail });
 
@@ -802,14 +808,14 @@ function checkNote(file, orphans) {
     }
 
   // Lesson structure v3 (see-it.mjs): warnings unless --see-fatal or the unit's default
-  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle, positional: positionalWording });
+  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle: live, positional: positionalWording });
   // Lesson readiness, as the build decides it (the raw bundle with its note blocks; readiness reads the note's own log)
   const readiness = bundle ? lessonReadiness({ note: bundle.note, noteBlocks: blocks, verification: bundle.verification }) : lessonReadiness(null);
   // sizes over the build's limits (content-lint.ts sizeWarnings): a warning line each, printed under the summary
-  const sizes = sizeWarnings(bundle, blocks, `${unit}/${slug}`);
+  const sizes = sizeWarnings(live, blocks, `${unit}/${slug}`);
   // the app's minute model and recall rule, priced on what ships (the build's rule), as the topic page prices them
-  const shippedPrompts = bundle ? shippedOf(bundle, "prompts") : [];
-  const model = minutesModel.lessonMinutesFor({ blocks, workedExamples: bundle ? shippedOf(bundle, "workedExamples") : [], prompts: shippedPrompts, topicId: bundle?.topic?.id ?? null });
+  const shippedPrompts = live ? shippedOf(live, "prompts") : [];
+  const model = minutesModel.lessonMinutesFor({ blocks, workedExamples: live ? shippedOf(live, "workedExamples") : [], prompts: shippedPrompts, topicId: bundle?.topic?.id ?? null });
   // the pack's hero.minutes against the model's Read minutes: report only, since the build ships the model's number
   // (src/lib/build/hero-minutes.ts; the lead's ruling, 29 Sep 2026, 18:00)
   const heroMinutes = heroMinutesFinding(blocks, model, minutesModel);
@@ -820,7 +826,7 @@ function checkNote(file, orphans) {
   for (const f of see.findings) say.push({ check: "see", detail: f.detail, v3: true });
 
   // the depth floor: warnings unless --depth-fatal
-  const depth = bundle ? depthOf(blocks, bundle, see, model, recall.kept.length) : null;
+  const depth = live ? depthOf(blocks, live, see, model, recall.kept.length) : null;
   if (depth) {
     for (const r of [...depth.rows, ...depth.sectionRows]) if (!r.ok) say.push({ check: "depth", detail: `${r.name} ${r.value} (floor ${r.floor})${r.note ? ` — ${r.note}` : ""}`, depth: true });
     for (const s of [...depth.slides, ...depth.figures, ...depth.maths]) say.push({ check: "depth", detail: s, depth: true });
@@ -831,7 +837,7 @@ function checkNote(file, orphans) {
   for (const f of teach.failures) say.push({ check: "teach", detail: describeFailure(f), teach: true });
 
   // retrieval prompts few and short: warnings unless --prompts-fatal
-  const prompts = bundle ? promptFindings(blocks, bundle) : [];
+  const prompts = live ? promptFindings(blocks, live) : [];
   for (const f of prompts) say.push({ check: "prompts", detail: f.detail, few: true });
 
   // withdraw-and-replace records (scripts/qa/withdrawn.mjs): warnings unless --withdrawn-fatal
@@ -839,7 +845,7 @@ function checkNote(file, orphans) {
   for (const p of withdrawn.problems) say.push({ check: "withdrawn", detail: `${p.id}: ${p.problem} (log ${p.log})`, wd: true });
 
   // the answers over the 12-word target: a report line, never a warning
-  const targets = bundle ? promptTargets(blocks, bundle) : [];
+  const targets = live ? promptTargets(blocks, live) : [];
 
   // a unit's defaults (lesson-v2.fatal.json) make its warnings breaches as its migration lands
   const fatal = {

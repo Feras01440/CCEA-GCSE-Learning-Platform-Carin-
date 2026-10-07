@@ -37,4 +37,19 @@ describe("lintKeyWords", () => {
     };
     expect(lintKeyWords(bundle, "b1/x").hard[0]).toMatch(/we\.science\.b1\.x\.01 key-word group 1/);
   });
+  // A key-word entry written with bars ("reproduce|multiply|breed") is one idea in several spellings, which the engine
+  // reads spelling by spelling (text-marking.ts markText splits every entry at "|"); read whole, it never matched an
+  // accepted answer and the build printed a KEYWORDS line for it (the lead, 7 Oct 2026: seven such lines in B2).
+  test("an entry written with bars is read spelling by spelling, as the engine reads it", () => {
+    const bundle = {
+      questions: [
+        { id: "q.science.b2.x.0005", parts: [part(["the resistant bacteria survive and reproduce, passing on the gene"], ["reproduce|multiply|breed|divide"])] },
+        { id: "q.science.b2.x.0006", parts: [part(["they survive"], ["multiply|breed"])] },
+      ],
+    };
+    const r = lintKeyWords(bundle, "b2/x");
+    expect(r.soft).toEqual([]);
+    expect(r.hard).toHaveLength(1);
+    expect(r.hard[0]).toMatch(/0006\(b\) key-word group 1 \["multiply\|breed"\]/);
+  });
 });

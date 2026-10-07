@@ -234,6 +234,9 @@ export const ALLOWED = new Map([
   ["q.science.b1.b1-fieldwork-sampling.0006#a", "a dichotomous key has to name the plants it keys out; the mark is for following the key"],
   ["q.science.b1.b1-fieldwork-sampling.0006#b", "a dichotomous key has to name the plants it keys out; the mark is for following the key"],
   ["q.science.b1.b1-leaf-structure-gas-exchange.0005#a", "the hydrogencarbonate colour key is given material, as CCEA gives it; the mark is for choosing the colour that goes with high carbon dioxide"],
+  // The lead's ruling, 7 Oct 2026 (the B2 D author's content:check): the agar dish's key names the two kinds of bacteria,
+  // and reading the key is the task, as on the Summer 2025 Q7 dish.
+  ["q.science.b2.b2-natural-selection-selective-breeding.0018#a", "the dish figure's key names the two kinds of bacteria and reading the key is the task (the Summer 2025 Q7 dish); the lead's ruling, 7 Oct 2026"],
 
   // The part's own stem prints the word. figure-leaks never reports these (a phrase the stem uses is
   // the figure repeating the question); they are listed so the build's broader FIGURE warning can

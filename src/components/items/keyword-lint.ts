@@ -46,9 +46,12 @@ export function lintKeyWords(bundle: unknown, label: string): KeyWordLint {
       const where = `${label} ${qid ?? "?"}${pid ? `(${pid})` : ""}`;
       (rec.keyWords as unknown[]).forEach((g, gi) => {
         const any = g && typeof g === "object" ? onlyStrings((g as Record<string, unknown>).any) : [];
-        if (accepted.some((a) => any.some((k) => phraseIn(a, normaliseText(k))))) return;
+        // An entry written "reproduce|multiply|breed" is one idea in several spellings, read spelling by spelling as the
+        // engine reads it (text-marking.ts markText splits every entry at "|"; the lead, 7 Oct 2026).
+        const spellings = any.flatMap((k) => k.split("|")).map((k) => k.trim()).filter(Boolean);
+        if (accepted.some((a) => spellings.some((k) => phraseIn(a, normaliseText(k))))) return;
         const msg = `${where} key-word group ${gi + 1} ${JSON.stringify(any)} is not earned by any accepted answer`;
-        if (any.some((k) => phraseIn(partText, normaliseText(k)))) out.soft.push(`${msg} (the part's own wording uses it)`);
+        if (spellings.some((k) => phraseIn(partText, normaliseText(k)))) out.soft.push(`${msg} (the part's own wording uses it)`);
         else out.hard.push(`${msg}: a paraphrase of the model answer cannot get that mark`);
       });
       return;

@@ -69,6 +69,12 @@ describe("lesson-model: the wired prompts the lesson leaves out, with recall.ts'
     );
   });
 
+  it("says a wired prompt is withdrawn when a record withdraws it, whatever its own log says (7 Oct 2026)", () => {
+    const logs = [{ itemId: "rp.x.03", status: "verified" }, { id: "ver.note", withdrawn: [{ id: "rp.x.03", kind: "prompt", replacedBy: null, reason: "Over the cap.", on: "2026-10-07T21:00:00Z" }] }];
+    const r = recallFindings(note(8, ...wire("rp.x.01", "rp.x.03")), { shipped: [light], all: [light, draft], logs }, recall);
+    expect(r.leftOut.map((x: { id: string; kind: string; reasons: string[] }) => [x.id, x.kind, x.reasons])).toEqual([["rp.x.03", "unshipped", ["it is withdrawn (a withdrawn record names it): unwire its prompt block"]]]);
+  });
+
   it("keeps at most two light ones, the shortest, and says why a third is left out", () => {
     const third = prompt("rp.x.04", "What is the unit of power?", "The watt, one joule every second of the time it runs.");
     const r = recallFindings(note(8, ...wire("rp.x.01", "rp.x.04", "rp.x.03")), { shipped: [light, third, draft], all: [light, third, draft], logs: [] }, recall);

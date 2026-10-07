@@ -21,6 +21,10 @@ import { positionalWording } from "@/lib/gate-order";
 import type { AnswerSpec, VerificationLog } from "@/lib/content/schema";
 import { publicVerification } from "@/lib/build/public-verification";
 import { planFade } from "./fade";
+// The figure rule's two shared pieces, so the build and scripts/qa/figure-leaks.mjs never disagree (the lead, 7 Oct 2026):
+// withdrawn items are not read (the same withoutWithdrawn) and the reviewed exemptions are the same list (ALLOWED).
+import { withoutWithdrawn } from "../../../scripts/qa/shingles-allow.mjs";
+import { ALLOWED as FIGURE_ALLOWED } from "../../../scripts/qa/figure-leaks.mjs";
 import type { z } from "zod";
 import { SeeBlockInline, SeeBlockReference, WorkedExampleStep } from "@/lib/content/schema";
 
@@ -662,8 +666,13 @@ function finalAnswerPhrases(finalAnswer: string): Phrase[] {
  */
 export function figureLeakWarnings(bundle: unknown, label: string): string[] {
   const out: string[] = [];
-  const b = bundle && typeof bundle === "object" ? (bundle as Record<string, unknown>) : null;
+  // Withdrawn items are not read (shingles-allow.mjs withoutWithdrawn: an id in a withdrawn record, a diagnostic item as
+  // set#item, or an item whose own log says withdrawn); a withdrawn item stays byte-identical in the pack and never ships.
+  const b = bundle && typeof bundle === "object" ? (withoutWithdrawn(bundle) as Record<string, unknown>) : null;
   if (!b) return out;
+  // A part scripts/qa/figure-leaks.mjs exempts after review ("<item>#<part>"; a worked example's "step n", "final" or
+  // "twin") is not reported here either.
+  const allowed = (item: string, part: string) => FIGURE_ALLOWED.has(`${item}#${part}`);
   // Worked examples (WorkedExampleAsQuestion.tsx). The twin mode shows only the twin's figure, beside the twin's
   // answer box. The example's own figure is shown in the full, faded and problem modes, so it must not print what
   // those modes ask her to write: a step a faded version leaves to her, or the final answer the problem version
@@ -684,7 +693,7 @@ export function figureLeakWarnings(bundle: unknown, label: string): string[] {
         const given = ` ${normaliseText([stem, ...steps.filter((s) => s.n <= plan.showSteps).map((s) => String(s.working ?? ""))].join(" \n "))} `;
         for (const n of plan.supplied) {
           const step = steps.find((s) => s.n === n);
-          if (!step || reported.has(n)) continue;
+          if (!step || reported.has(n) || allowed(id, `step ${n}`)) continue;
           const hit = stepAnswerPhrases(step).find((p) => printedIn(fig, p.norm) && !given.includes(` ${p.norm} `));
           if (hit) {
             reported.add(n);
@@ -694,14 +703,14 @@ export function figureLeakWarnings(bundle: unknown, label: string): string[] {
       }
       const givenStem = ` ${normaliseText(stem)} `;
       const hit = finalAnswerPhrases(typeof we.finalAnswer === "string" ? we.finalAnswer : "").find((p) => printedIn(fig, p.norm) && !givenStem.includes(` ${p.norm} `));
-      if (hit) out.push(`${label} ${id}: the worked example's figure prints "${hit.raw}", which the problem version asks for as the final answer`);
+      if (hit && !allowed(id, "final")) out.push(`${label} ${id}: the worked example's figure prints "${hit.raw}", which the problem version asks for as the final answer`);
     }
     const twin = we.twin && typeof we.twin === "object" ? (we.twin as Record<string, unknown>) : null;
     const twinFig = twin?.figure && typeof twin.figure === "object" ? (twin.figure as Record<string, unknown>) : null;
     if (twin && twinFig) {
       const stem = ` ${normaliseText(typeof twin.stem === "string" ? twin.stem : "")} `;
       const hit = answerPhrases(twin).find((p) => p && printedIn(twinFig, p) && !stem.includes(` ${p} `));
-      if (hit) out.push(`${label} ${id}: the twin's figure prints "${hit}", which the twin asks her to give`);
+      if (hit && !allowed(id, "twin")) out.push(`${label} ${id}: the twin's figure prints "${hit}", which the twin asks her to give`);
     }
   }
   // Two labels drawn on top of each other are unreadable: same anchor x and baselines within 12 px.
@@ -726,6 +735,7 @@ export function figureLeakWarnings(bundle: unknown, label: string): string[] {
     const figs = [...onlyObjects(q.figures), ...onlyObjects(q.parts).flatMap((p) => onlyObjects(p.figures))];
     if (figs.length === 0) continue;
     for (const p of onlyObjects(q.parts)) {
+      if (allowed(String(q.id), String(p.id))) continue;
       for (const phrase of answerPhrases(p)) {
         // one text node, title or alt at a time: two labels side by side ("wheat", "hawthorn") are not one phrase
         const hit = figs.findIndex((f) => printedIn(f, phrase));

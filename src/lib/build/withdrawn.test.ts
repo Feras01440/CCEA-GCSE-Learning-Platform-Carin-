@@ -139,3 +139,44 @@ describe("withdrawn records: a replacement withdrawn later is followed to the en
     expect(problems(b)).toEqual(["q.x.0001: replacedBy chain q.x.0001 → q.x.0012 does not end in a question that ships: it ends in q.x.0012, which does not ship and no record withdraws it"]);
   });
 });
+
+describe("withdrawn records: a practice set lists only items that ship (the lead, 7 Oct 2026)", () => {
+  const set = (id: string, itemIds: string[]) => ({ id, kind: "mixed", title: "Vessels", subject: "maths", units: ["FM1"], itemIds, showTopicLabels: false, version: 1 });
+  const withSet = (itemIds: string[], tweak?: (logs: Json[]) => void) => {
+    const b = bundle([], { sets: [set("set.fm.u1.x.vessels", itemIds)] });
+    tweak?.(b.verification as Json[]);
+    return b;
+  };
+  const ON2 = "2026-09-28T10:00:00Z";
+
+  it("passes a set whose every entry ships", () => {
+    expect(problems(withSet(["q.x.0001", "rp.x.01", "ftm.x.01", "dx.x"], (logs) => logs.push(log("ver.ftm.x.01", "ftm.x.01", "verified"))), blocks("g2"))).toEqual([]);
+  });
+
+  it("names a withdrawn entry with its date and the replacement to list instead", () => {
+    const b = withSet(["q.x.0001", "rp.x.01"], (logs) => {
+      logs[3] = log("ver.rp.x.01", "rp.x.01", "withdrawn", [rec("rp.x.01", "prompt", "rp.x.12", "Over the cap.", ON2)]);
+    });
+    expect(problems(b, blocks("g2"))).toEqual(["set.fm.u1.x.vessels: set 'vessels' lists rp.x.01, withdrawn 28 Sep 2026, replaced by rp.x.12: list rp.x.12 instead"]);
+  });
+
+  it("follows a chain of replacements to the item that ships", () => {
+    const b = withSet(["rp.x.01"], (logs) => {
+      logs[3] = log("ver.rp.x.01", "rp.x.01", "withdrawn", [rec("rp.x.01", "prompt", "rp.x.05", "Over the cap.", ON2)]);
+      logs[7] = log("ver.rp.x.05", "rp.x.05", "withdrawn", [rec("rp.x.05", "prompt", "rp.x.12")]);
+    });
+    expect(problems(b, blocks("g2"))).toEqual(["set.fm.u1.x.vessels: set 'vessels' lists rp.x.01, withdrawn 28 Sep 2026, replaced by rp.x.05, itself withdrawn and replaced by rp.x.12: list rp.x.12 instead"]);
+  });
+
+  it("says when nothing replaces a withdrawn entry, when an entry does not ship, and when it names nothing in the topic", () => {
+    const b = withSet(["rp.x.01", "q.x.0012", "rp.fm.u1.x.99"], (logs) => {
+      logs[3] = log("ver.rp.x.01", "rp.x.01", "withdrawn", [rec("rp.x.01", "prompt", null, "Its fact is in the Sheet.", ON2)]);
+      logs[2] = log("ver.q.x.0012", "q.x.0012", "draft");
+    });
+    expect(problems(b, blocks("g2"))).toEqual([
+      "set.fm.u1.x.vessels: set 'vessels' lists rp.x.01, withdrawn 28 Sep 2026 with nothing in its place: take it out of the set",
+      'set.fm.u1.x.vessels: set \'vessels\' lists q.x.0012, which does not ship (its log says "draft")',
+      "set.fm.u1.x.vessels: set 'vessels' lists rp.fm.u1.x.99, which names no item of this topic",
+    ]);
+  });
+});

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { figureLeakWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, markingWarnings, noteBlockWarnings, sizeWarnings, svgDrawDefects, weFigureFor } from "./content-lint";
 import { figureForMode } from "./WorkedExampleAsQuestion";
+import { ALLOWED } from "../../../scripts/qa/figure-leaks.mjs";
 
 describe("lintContent", () => {
   test("duplicate option texts in a diagnostic item or an mcq part are reported once per pair", () => {
@@ -491,6 +492,29 @@ describe("figureLeakWarnings", () => {
   test("generic words and numbers do not count", () => {
     const b = { questions: [{ id: "q.x.0002", figures: [{ kind: "svg", src: svg("<text>time / s</text><text>12</text>"), alt: "a graph" }], parts: [{ id: "a", answer: { kind: "text", accepted: ["time"], keyWords: [{ any: ["time"], marks: 1 }] } }, { id: "b", answer: { kind: "numeric", value: 12 } }] }] };
     expect(figureLeakWarnings(b, "x")).toEqual([]);
+  });
+
+  // The build and scripts/qa/figure-leaks.mjs never disagree (the lead, 7 Oct 2026): the build reads no withdrawn item
+  // (shingles-allow.mjs withoutWithdrawn, the same rule) and drops every part figure-leaks.mjs ALLOWED exempts.
+  const leakyQ = (id: string, verification?: string) => ({
+    id,
+    ...(verification ? { verification } : {}),
+    figures: [{ kind: "svg", src: svg("<text>chloroplasts</text>"), alt: "a labelled plant cell" }],
+    parts: [{ id: "a", answer: { kind: "text", accepted: ["chloroplasts"], keyWords: [] } }],
+  });
+  test("a withdrawn question is not read, by a record or by its own log; a draft is", () => {
+    const rec = { id: "q.x.0001", kind: "question", replacedBy: null, reason: "Reissued.", on: "2026-10-07T21:00:00Z" };
+    expect(figureLeakWarnings({ questions: [leakyQ("q.x.0001"), leakyQ("q.x.0002")], verification: [{ id: "v.note", status: "verified", withdrawn: [rec] }] }, "x")).toEqual([
+      'x q.x.0002(a): figure 1 prints "chloroplasts", which this part asks her to give',
+    ]);
+    expect(figureLeakWarnings({ questions: [leakyQ("q.x.0001", "v.q1")], verification: [{ id: "v.q1", itemId: "q.x.0001", status: "withdrawn" }] }, "x")).toEqual([]);
+    expect(figureLeakWarnings({ questions: [leakyQ("q.x.0001", "v.q1")], verification: [{ id: "v.q1", itemId: "q.x.0001", status: "draft" }] }, "x")).toHaveLength(1);
+  });
+  test("a part figure-leaks.mjs ALLOWED exempts is not reported, and the B2 natural-selection dish is allowed with its reason", () => {
+    // q.science.b1.b1-fieldwork-sampling.0006#a: a dichotomous key has to name the plants it keys out
+    const key = { id: "q.science.b1.b1-fieldwork-sampling.0006", figures: [{ kind: "svg", src: svg("<text>clover</text>"), alt: "a key" }], parts: [{ id: "a", answer: { kind: "text", accepted: ["clover"], keyWords: [] } }] };
+    expect(figureLeakWarnings({ questions: [key] }, "x")).toEqual([]);
+    expect(ALLOWED.get("q.science.b2.b2-natural-selection-selective-breeding.0018#a")).toMatch(/key names the two kinds of bacteria/);
   });
 });
 
