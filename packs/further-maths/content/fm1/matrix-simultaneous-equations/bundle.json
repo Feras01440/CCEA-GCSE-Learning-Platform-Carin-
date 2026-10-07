@@ -111,7 +111,8 @@
         "Work out X = A⁻¹B with the inverse in front",
         "Name both values on the answer line rather than leaving a column",
         "Check both values in both original equations",
-        "Say that a zero determinant means no unique solution, and name the matrix"
+        "Say that a zero determinant means no unique solution, and name the matrix",
+        "Use the inverse from an earlier part when the question says hence, lining the pair up to match its rows"
       ],
       "howExamined": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. The shape is 'find the inverse' then 'hence, using a matrix method, solve', for about 2 + 4 marks. Summer 2025 Q5 is the example in our evidence: the inverse was very well answered, and part (ii) was not, because many solved by substitution or elimination despite the instruction and received no marks; several who did use matrices struggled with the layout. The report also records that the type had not appeared recently. The questions here give a mark for each stage of the route (the pair written as AX = B, the determinant, the inverse, the product, and x and y named), with follow-through from the inverse in the earlier part.",
       "traps": [
@@ -122,14 +123,16 @@
         "Reading the coefficients down the columns instead of across the rows",
         "Writing the constants into the coefficient matrix instead of a column of their own",
         "Multiplying the inverse on the wrong side (Summer 2018 FM1 Q5)",
-        "Leaving the answer as a column instead of naming x and y (Summer 2025 FM1 Q5)",
-        "Giving the two values the wrong way round (Summer 2025 FM1 Q5)",
+        "Leaving the answer as a column instead of naming x and y",
+        "Giving the two values the wrong way round",
+        "Writing 1 over 26 where 1 over −26 belongs, so the determinant's minus sign is lost and every entry of the inverse changes sign (Summer 2025 FM1 Q5)",
+        "Copying a hence pair in its printed order, so its rows no longer match the matrix whose inverse was found",
         "Explaining why the method fails without naming the matrix whose determinant is zero (Summer 2023 FM1 Q6)"
       ]
     },
     "verification": "ver.note.fm.u1.matrix-simultaneous-equations",
-    "version": 1,
-    "updated": "2026-09-20"
+    "version": 2,
+    "updated": "2026-10-07"
   },
   "workedExamples": [
     {
@@ -149,8 +152,8 @@
       "stem": "Solve the simultaneous equations\n$4x + 3y = 18$\n$2x + 5y = 16$\nYou must use a matrix method.\nGive the values of $x$ and $y$.",
       "figure": {
         "kind": "svg",
-        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 600 148' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two simultaneous equations beside the three matrices they become: the coefficients in a two by two box, the unknowns in a column, and the constants in a column on the other side of the equals sign'><title>Two simultaneous equations beside the three matrices they become: the coefficients in a two by two box, the unknowns in a column, and the constants in a column on the other side of the equals sign</title><text x='26' y='54' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>4x + 3y = 18</text><text x='26' y='84' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>2x + 5y = 16</text><text x='96' y='26' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>the pair as printed</text><path d='M 186 68 L 232 68 M 222 61 L 232 68 L 222 75' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='209' y='54' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>copy</text><path d='M 257 42 L 248 42 L 248 102 L 257 102' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 323 42 L 332 42 L 332 102 L 323 102' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='269' y='60' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='311' y='60' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='269' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='311' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='290' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>coefficients</text><path d='M 353 42 L 344 42 L 344 102 L 353 102' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 369 42 L 378 42 L 378 102 L 369 102' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='361' y='62' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>x</text><text x='361' y='92' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>y</text><text x='361' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>unknowns</text><text x='392' y='72' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>=</text><path d='M 417 42 L 408 42 L 408 102 L 417 102' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 439 42 L 448 42 L 448 102 L 439 102' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='428' y='60' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>18</text><text x='428' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><text x='428' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>constants</text><text x='300' y='134' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>nothing is solved here: the numbers are copied where they stand</text></svg>",
-        "alt": "Two simultaneous equations beside the three matrices they become: the coefficients in a box, the unknowns in a column and the constants in a column."
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 236' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The pair 4x + 3y = 18 and 2x + 5y = 16 above the matrix equation it becomes: the coefficients in A, the unknowns in X and the numbers on the right in B'><title>The pair 4x + 3y = 18 and 2x + 5y = 16 above the matrix equation it becomes: the coefficients in A, the unknowns in X and the numbers on the right in B</title><text x='200' y='30' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>4x + 3y = 18</text><text x='200' y='56' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>2x + 5y = 16</text><path d='M 200 70 L 200 100 M 193 92 L 200 100 L 207 92' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 111 134 L 103 134 L 103 198 L 111 198 M 171 134 L 179 134 L 179 198 L 171 198' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='122' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='160' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='122' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='160' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='141' y='124' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>A</text><path d='M 193 134 L 185 134 L 185 198 L 193 198 M 211 134 L 219 134 L 219 198 L 211 198' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='202' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>x</text><text x='202' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>y</text><text x='202' y='124' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>X</text><text x='238' y='171' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 265 134 L 257 134 L 257 198 L 265 198 M 289 134 L 297 134 L 297 198 L 289 198' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='277' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>18</text><text x='277' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>16</text><text x='277' y='124' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>B</text><text x='200' y='222' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>copied, not solved</text></svg>",
+        "alt": "The pair 4x + 3y = 18 and 2x + 5y = 16 above the matrix equation it becomes: the coefficients in A, the unknowns in X and the numbers on the right in B."
       },
       "steps": [
         {
@@ -159,7 +162,26 @@
           "decision": "This line is transcription, not mathematics, and it earns a mark before any arithmetic. Both equations are already in the right form here, so nothing has to be rearranged.",
           "earns": [
             "MW1"
-          ]
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "4",
+                "3"
+              ],
+              [
+                "2",
+                "5"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
         },
         {
           "n": 2,
@@ -167,7 +189,20 @@
           "decision": "The determinant on its own line. A zero here would mean the pair has no unique solution, so it is worth knowing before any more work is done.",
           "earns": [
             "M2"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 14,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         },
         {
           "n": 3,
@@ -184,7 +219,26 @@
           },
           "earns": [
             "M3"
-          ]
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "5/14",
+                "-3/14"
+              ],
+              [
+                "-1/7",
+                "2/7"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
         },
         {
           "n": 4,
@@ -192,7 +246,24 @@
           "decision": "The inverse goes in front of the constants. The product of a two by two and a column is a column, which is what the two unknowns need.",
           "earns": [
             "M4"
-          ]
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 1,
+            "entries": [
+              [
+                "3"
+              ],
+              [
+                "2"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
         },
         {
           "n": 5,
@@ -200,7 +271,16 @@
           "decision": "The column is not the answer line. Name both values, and substitute them into both original equations: that check costs twenty seconds and catches every slip above it.",
           "earns": [
             "W1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "(3, 2)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          }
         }
       ],
       "finalAnswer": "$x = 3$, $y = 2$",
@@ -237,6 +317,219 @@
       ],
       "verification": "ver.we.fm.u1.matrix-simultaneous-equations.01",
       "version": 1
+    },
+    {
+      "id": "we.fm.u1.matrix-simultaneous-equations.02",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "Solve the simultaneous equations\n$y = 3 - 2x$\n$x - 6y = 8$\nYou must use a matrix method.\nGive the values of $x$ and $y$.",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The pair y = 3 − 2x and x − 6y = 8 as printed, then lined up as 2x + y = 3 and x − 6y = 8'><title>The pair y = 3 − 2x and x − 6y = 8 as printed, then lined up as 2x + y = 3 and x − 6y = 8</title><rect x='40' y='20' width='320' height='82' rx='6' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='200' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>as printed</text><text x='200' y='66' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>y = 3 − 2x</text><text x='200' y='92' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>x − 6y = 8</text><path d='M 200 108 L 200 132 M 193 124 L 200 132 L 207 124' stroke='currentColor' stroke-width='1.4' fill='none'/><rect x='40' y='138' width='320' height='82' rx='6' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='200' y='158' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>lined up: x, then y, then the number</text><text x='200' y='184' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>2x + y = 3</text><text x='200' y='210' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>x − 6y = 8</text></svg>",
+        "alt": "The pair y = 3 − 2x and x − 6y = 8 as printed, then lined up as 2x + y = 3 and x − 6y = 8."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "Line up the first equation: $2x + y = 3$.",
+          "decision": "The second equation already reads $x$, then $y$, then the number; the first does not, so it is rearranged before anything is copied.",
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x + y = 3$",
+                "correct": true,
+                "feedback": "Right: the $-2x$ crosses the equals sign as $+2x$ and goes first."
+              },
+              {
+                "id": "b",
+                "text": "$-2x + y = 3$",
+                "correct": false,
+                "misconception": "fm.matrix.coefficient-matrix-misformed",
+                "feedback": "The $-2x$ changes sign when it crosses the equals sign, so it arrives as $+2x$."
+              },
+              {
+                "id": "c",
+                "text": "$2x + y = -3$",
+                "correct": false,
+                "misconception": "fm.matrix.coefficient-matrix-misformed",
+                "feedback": "The $3$ stays where it is, on the right, so its sign does not change."
+              }
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "$A = \\begin{pmatrix}2 & 1 \\\\ 1 & -6\\end{pmatrix}$ and $B = \\begin{pmatrix}3 \\\\ 8\\end{pmatrix}$, so $AX = B$.",
+          "decision": "One equation to a row; the $-6$ keeps its sign in the matrix.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "2",
+                "1"
+              ],
+              [
+                "1",
+                "-6"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 3,
+          "working": "$\\det A = (2)(-6) - (1)(1) = -13$.",
+          "decision": "Negative, as in the 2025 paper's matrix. The minus sign has to reach the inverse.",
+          "earns": [
+            "M2"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": -13,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "$A^{-1}$ is $\\frac{1}{-13}\\begin{pmatrix}-6 & -1 \\\\ -1 & 2\\end{pmatrix}$.",
+          "decision": "Swap $2$ and $-6$, change the signs of the two $1$s, and divide by $-13$, minus included.",
+          "earns": [
+            "M3"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "6/13",
+                "1/13"
+              ],
+              [
+                "1/13",
+                "-2/13"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "whyMenu": {
+            "options": [
+              "Because the reciprocal of the determinant multiplies every entry, sign and all",
+              "Because a determinant is always written as a positive number",
+              "Because the minus sign only belongs to the leading diagonal"
+            ],
+            "correct": 0,
+            "explain": "The inverse is $\\frac{1}{\\det A}$ times the swapped-and-negated matrix, so a negative determinant makes every entry change sign; dropping it gives the negative of the answer."
+          }
+        },
+        {
+          "n": 5,
+          "working": "$X = A^{-1}B$, which is $\\frac{1}{-13}\\begin{pmatrix}-26 \\\\ 13\\end{pmatrix}$, so $X = \\begin{pmatrix}2 \\\\ -1\\end{pmatrix}$.",
+          "decision": "The inverse in front of $B$, row by column: $(-6)(3) + (-1)(8) = -26$ and $(-1)(3) + (2)(8) = 13$.",
+          "earns": [
+            "M4"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 1,
+            "entries": [
+              [
+                "2"
+              ],
+              [
+                "-1"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 6,
+          "working": "$x = 2$, $y = -1$. Check: $-1 = 3 - 2(2)$ and $2 - 6(-1) = 8$.",
+          "decision": "Named from the column, top for $x$, then checked in the equations as printed.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "(2, -1)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "$x = 2$, $y = -1$",
+      "twin": {
+        "stem": "Solve $y = 7 - 3x$ and $2x - 5y = 16$, using a matrix method. Give the values of $x$ and $y$.",
+        "answer": {
+          "kind": "algebraic",
+          "latex": "(3, -2)",
+          "equivalence": "equivalent",
+          "variables": [
+            "x",
+            "y"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 4,
+          "studentSupplies": [
+            5,
+            6
+          ]
+        },
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4,
+            5,
+            6
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.matrix-simultaneous-equations.02",
+      "version": 1
     }
   ],
   "diagnostics": [
@@ -249,27 +542,27 @@
       "when": "pre",
       "items": [
         {
-          "id": "p1",
-          "stem": "Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nRearrange $5x = 11 - 2y$ so that both letters are on the left.",
+          "id": "p5",
+          "stem": "Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nRearrange $3x = 14 - 5y$ so that both letters are on the left.",
           "skill": "Rearranging a linear equation",
           "options": [
             {
               "id": "a",
-              "text": "$5x + 2y = 11$",
+              "text": "$3x + 5y = 14$",
               "correct": true,
               "feedback": "The term in $y$ crosses the equals sign and changes sign."
             },
             {
               "id": "b",
-              "text": "$5x - 2y = 11$",
+              "text": "$3x - 5y = 14$",
               "correct": false,
-              "feedback": "Moving $-2y$ across makes it $+2y$, not $-2y$."
+              "feedback": "Moving $-5y$ across makes it $+5y$, not $-5y$."
             },
             {
               "id": "c",
-              "text": "$5x + 2y = -11$",
+              "text": "$3x + 5y = -14$",
               "correct": false,
-              "feedback": "The $11$ was already on the right and does not move, so its sign is unchanged."
+              "feedback": "The $14$ was already on the right and does not move, so its sign is unchanged."
             }
           ],
           "secondsExpected": 25,
@@ -277,25 +570,25 @@
           "hypercorrectionQueue": true
         },
         {
-          "id": "p2",
-          "stem": "What is the inverse of $\\begin{pmatrix}2 & 3 \\\\ 3 & 5\\end{pmatrix}$?",
+          "id": "p4",
+          "stem": "What is the inverse of $\\begin{pmatrix}4 & 1 \\\\ 7 & 2\\end{pmatrix}$?",
           "skill": "The inverse of a 2 by 2",
           "options": [
             {
               "id": "a",
-              "text": "$\\begin{pmatrix}5 & -3 \\\\ -3 & 2\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}2 & -1 \\\\ -7 & 4\\end{pmatrix}$",
               "correct": true,
               "feedback": "The determinant is $1$, so swapping and negating is the whole of it."
             },
             {
               "id": "b",
-              "text": "$\\begin{pmatrix}5 & 3 \\\\ 3 & 2\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}2 & 1 \\\\ 7 & 4\\end{pmatrix}$",
               "correct": false,
               "feedback": "The leading diagonal swapped and the other one kept its signs."
             },
             {
               "id": "c",
-              "text": "$\\begin{pmatrix}2 & -3 \\\\ -3 & 5\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}4 & -1 \\\\ -7 & 2\\end{pmatrix}$",
               "correct": false,
               "feedback": "The signs changed and the leading diagonal never swapped."
             }
@@ -343,28 +636,28 @@
       "when": "post",
       "items": [
         {
-          "id": "d1",
-          "stem": "For the pair $4x + 3y = 18$ and $2x + 5y = 16$, which is the coefficient matrix?",
+          "id": "d6",
+          "stem": "For the pair $2x + 7y = 11$ and $5x + y = 8$, which is the coefficient matrix?",
           "skill": "Transcribing the coefficients",
           "options": [
             {
               "id": "a",
-              "text": "$\\begin{pmatrix}4 & 3 \\\\ 2 & 5\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}2 & 7 \\\\ 5 & 1\\end{pmatrix}$",
               "correct": true,
               "feedback": "One equation to a row, in the order the terms are written."
             },
             {
               "id": "b",
-              "text": "$\\begin{pmatrix}4 & 2 \\\\ 3 & 5\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}2 & 5 \\\\ 7 & 1\\end{pmatrix}$",
               "correct": false,
               "feedback": "The coefficients have been read down the columns instead of across the rows.",
               "misconception": "fm.matrix.coefficient-matrix-misformed"
             },
             {
               "id": "c",
-              "text": "$\\begin{pmatrix}4 & 18 \\\\ 2 & 16\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}2 & 11 \\\\ 5 & 8\\end{pmatrix}$",
               "correct": false,
-              "feedback": "The constants have gone into the coefficient matrix. They belong in a column of their own.",
+              "feedback": "The numbers on the right have gone into the coefficient matrix. They belong in a column of their own.",
               "misconception": "fm.matrix.coefficient-matrix-misformed"
             }
           ],
@@ -433,26 +726,26 @@
           "hypercorrectionQueue": true
         },
         {
-          "id": "d4",
-          "stem": "Solving a pair gives the column $\\begin{pmatrix}3 \\\\ 2\\end{pmatrix}$. What should be written on the answer line?",
+          "id": "d7",
+          "stem": "Solving a pair gives the column $\\begin{pmatrix}-5 \\\\ 8\\end{pmatrix}$. What should be written on the answer line?",
           "skill": "Naming the two values",
           "options": [
             {
               "id": "a",
-              "text": "$x = 3$, $y = 2$",
+              "text": "$x = -5$, $y = 8$",
               "correct": true,
               "feedback": "The top entry is $x$ and the bottom is $y$."
             },
             {
               "id": "b",
-              "text": "$x = 2$, $y = 3$",
+              "text": "$x = 8$, $y = -5$",
               "correct": false,
               "misconception": "fm.matrix.values-in-wrong-slots",
               "feedback": "The two values have swapped. The column is read top to bottom in the order the unknowns were written."
             },
             {
               "id": "c",
-              "text": "The column $\\begin{pmatrix}3 \\\\ 2\\end{pmatrix}$ on its own",
+              "text": "The column $\\begin{pmatrix}-5 \\\\ 8\\end{pmatrix}$ on its own",
               "correct": false,
               "misconception": "fm.matrix.values-in-wrong-slots",
               "feedback": "The question asked for two values, so both have to be named. A column is not an answer line."
@@ -486,6 +779,142 @@
               "correct": false,
               "misconception": "fm.matrix.singular-not-recognised",
               "feedback": "Elimination would not find a unique solution either: there is not one to find."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.matrix-simultaneous-equations.pre.withdrawn",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "when": "pre",
+      "items": [
+        {
+          "id": "p1",
+          "stem": "Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nRearrange $5x = 11 - 2y$ so that both letters are on the left.",
+          "skill": "Rearranging a linear equation",
+          "options": [
+            {
+              "id": "a",
+              "text": "$5x + 2y = 11$",
+              "correct": true,
+              "feedback": "The term in $y$ crosses the equals sign and changes sign."
+            },
+            {
+              "id": "b",
+              "text": "$5x - 2y = 11$",
+              "correct": false,
+              "feedback": "Moving $-2y$ across makes it $+2y$, not $-2y$."
+            },
+            {
+              "id": "c",
+              "text": "$5x + 2y = -11$",
+              "correct": false,
+              "feedback": "The $11$ was already on the right and does not move, so its sign is unchanged."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "p2",
+          "stem": "What is the inverse of $\\begin{pmatrix}2 & 3 \\\\ 3 & 5\\end{pmatrix}$?",
+          "skill": "The inverse of a 2 by 2",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\begin{pmatrix}5 & -3 \\\\ -3 & 2\\end{pmatrix}$",
+              "correct": true,
+              "feedback": "The determinant is $1$, so swapping and negating is the whole of it."
+            },
+            {
+              "id": "b",
+              "text": "$\\begin{pmatrix}5 & 3 \\\\ 3 & 2\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "The leading diagonal swapped and the other one kept its signs."
+            },
+            {
+              "id": "c",
+              "text": "$\\begin{pmatrix}2 & -3 \\\\ -3 & 5\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "The signs changed and the leading diagonal never swapped."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.matrix-simultaneous-equations.post.withdrawn",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "d1",
+          "stem": "For the pair $4x + 3y = 18$ and $2x + 5y = 16$, which is the coefficient matrix?",
+          "skill": "Transcribing the coefficients",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\begin{pmatrix}4 & 3 \\\\ 2 & 5\\end{pmatrix}$",
+              "correct": true,
+              "feedback": "One equation to a row, in the order the terms are written."
+            },
+            {
+              "id": "b",
+              "text": "$\\begin{pmatrix}4 & 2 \\\\ 3 & 5\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "The coefficients have been read down the columns instead of across the rows.",
+              "misconception": "fm.matrix.coefficient-matrix-misformed"
+            },
+            {
+              "id": "c",
+              "text": "$\\begin{pmatrix}4 & 18 \\\\ 2 & 16\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "The constants have gone into the coefficient matrix. They belong in a column of their own.",
+              "misconception": "fm.matrix.coefficient-matrix-misformed"
+            }
+          ],
+          "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d4",
+          "stem": "Solving a pair gives the column $\\begin{pmatrix}3 \\\\ 2\\end{pmatrix}$. What should be written on the answer line?",
+          "skill": "Naming the two values",
+          "options": [
+            {
+              "id": "a",
+              "text": "$x = 3$, $y = 2$",
+              "correct": true,
+              "feedback": "The top entry is $x$ and the bottom is $y$."
+            },
+            {
+              "id": "b",
+              "text": "$x = 2$, $y = 3$",
+              "correct": false,
+              "misconception": "fm.matrix.values-in-wrong-slots",
+              "feedback": "The two values have swapped. The column is read top to bottom in the order the unknowns were written."
+            },
+            {
+              "id": "c",
+              "text": "The column $\\begin{pmatrix}3 \\\\ 2\\end{pmatrix}$ on its own",
+              "correct": false,
+              "misconception": "fm.matrix.values-in-wrong-slots",
+              "feedback": "The question asked for two values, so both have to be named. A column is not an answer line."
             }
           ],
           "secondsExpected": 30,
@@ -706,8 +1135,7 @@
                 ]
               },
               "feedback": "The term in $y$ crossed the equals sign without changing sign. Moving $-2y$ across makes it $+2y$, so the first row is $5$ and $2$. The copying itself follows through and keeps a mark.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1128,8 +1556,7 @@
                 "latex": "(3, 2)"
               },
               "feedback": "Both values are right and they are the wrong way round. The top of the column is $x$.",
-              "marksTypicallyEarned": 4,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+              "marksTypicallyEarned": 4
             }
           ],
           "requiresWorking": true
@@ -1724,8 +2151,7 @@
                 "latex": "(2, 5)"
               },
               "feedback": "The two prices are right and they belong the other way round: the top of the column is the notebook, at 5 pounds.",
-              "marksTypicallyEarned": 4,
-              "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+              "marksTypicallyEarned": 4
             }
           ],
           "requiresWorking": true,
@@ -1749,6 +2175,566 @@
       ],
       "solutionProgram": "a: 3 notebooks at $n$ pounds and 2 pens at $p$ pounds give 3n + 2p = 19 and 5n + 4p = 33. || b: $A = \\begin{pmatrix}3 & 2 \\\\ 5 & 4\\end{pmatrix}$ and $B = \\begin{pmatrix}19 \\\\ 33\\end{pmatrix}$. $\\det A = 2$, so $A^{-1} = \\frac{1}{2}\\begin{pmatrix}4 & -2 \\\\ -5 & 3\\end{pmatrix}$. $X = A^{-1}B = \\begin{pmatrix}5 \\\\ 2\\end{pmatrix}$, so a notebook costs 5 pounds and a pen costs 2 pounds. Checking: 3(5) + 2(2) = 19 and 5(5) + 4(2) = 33.",
       "verification": "ver.q.fm.u1.matrix-simultaneous-equations.0010",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u1.matrix-simultaneous-equations.0011",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 1,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Write down"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "The transcription on its own, before any solving",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "A pair of simultaneous equations is\n$6x + 5y = 28$\n$4x + 3y = 18$\nThis pair is to be written as $AX = B$.\nWrite down the coefficient matrix $A$.\nWrite the answer as a matrix.",
+          "marks": 1,
+          "answer": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "6",
+                "5"
+              ],
+              [
+                "4",
+                "3"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "scheme": [
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$\\begin{pmatrix}6 & 5 \\\\ 4 & 3\\end{pmatrix}$"
+            }
+          ],
+          "hints": [
+            "One equation to a row, the coefficient of $x$ first."
+          ],
+          "workedSolution": "Row 1 holds the coefficients of the first equation and row 2 those of the second, so $A = \\begin{pmatrix}6 & 5 \\\\ 4 & 3\\end{pmatrix}$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.coefficient-matrix-misformed",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "6",
+                    "4"
+                  ],
+                  [
+                    "5",
+                    "3"
+                  ]
+                ]
+              },
+              "feedback": "The coefficients have been read down the columns instead of across the rows. One equation fills one row, so $A = \\begin{pmatrix}6 & 5 \\\\ 4 & 3\\end{pmatrix}$.",
+              "marksTypicallyEarned": 0
+            },
+            {
+              "misconception": "fm.matrix.coefficient-matrix-misformed",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "6",
+                    "28"
+                  ],
+                  [
+                    "4",
+                    "18"
+                  ]
+                ]
+              },
+              "feedback": "The numbers on the right have gone into the coefficient matrix. They belong in the column $B$ on the other side of the equals sign.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 1,
+      "timeAllowanceSec": 72,
+      "skeleton": "(main)write-down1",
+      "examinerSources": [
+        "ccea-cer:further-maths:2025-summer:FM1:Q5",
+        "ccea-cer:further-maths:2023-summer:FM1:Q6"
+      ],
+      "solutionProgram": "main: Row 1 holds the coefficients of the first equation and row 2 those of the second, so $A = \\begin{pmatrix}6 & 5 \\\\ 4 & 3\\end{pmatrix}$.",
+      "verification": "ver.q.fm.u1.matrix-simultaneous-equations.0011",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u1.matrix-simultaneous-equations.0012",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 3,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Solve"
+      ],
+      "emphasis": [
+        "You must use a matrix method"
+      ],
+      "context": {
+        "setting": "The whole route on a pair with a positive determinant",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Solve the simultaneous equations\n$7x + 2y = 24$\n$3x + 4y = 26$\nYou must use a matrix method.\nGive the values of $x$ and $y$.",
+          "marks": 5,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "(2, 5)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "the pair as $AX = B$ with $A = \\begin{pmatrix}7 & 2 \\\\ 3 & 4\\end{pmatrix}$ and $B = \\begin{pmatrix}24 \\\\ 26\\end{pmatrix}$"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "$\\det A = 22$",
+              "dependsOn": [
+                "MW1"
+              ]
+            },
+            {
+              "id": "M3",
+              "code": "M",
+              "marks": 1,
+              "for": "$A^{-1}$ is $\\frac{1}{22}\\begin{pmatrix}4 & -2 \\\\ -3 & 7\\end{pmatrix}$",
+              "dependsOn": [
+                "M2"
+              ]
+            },
+            {
+              "id": "M4",
+              "code": "M",
+              "marks": 1,
+              "for": "$X = A^{-1}B$, with the inverse in front",
+              "dependsOn": [
+                "M3"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$x = 2$, $y = 5$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Copy the coefficients and the numbers on the right into matrices first.",
+            "Then find the inverse and put it in front of $B$.",
+            "Name the two values from the column."
+          ],
+          "workedSolution": "Writing the pair as $AX = B$ gives $A = \\begin{pmatrix}7 & 2 \\\\ 3 & 4\\end{pmatrix}$ and $B = \\begin{pmatrix}24 \\\\ 26\\end{pmatrix}$.\n$\\det A = (7)(4) - (2)(3) = 22$, so $A^{-1}$ is $\\frac{1}{22}\\begin{pmatrix}4 & -2 \\\\ -3 & 7\\end{pmatrix}$.\n$X = A^{-1}B$, which is $\\frac{1}{22}\\begin{pmatrix}44 \\\\ 110\\end{pmatrix}$, giving $X = \\begin{pmatrix}2 \\\\ 5\\end{pmatrix}$, so $x = 2$ and $y = 5$.\nChecking: $7(2) + 2(5) = 24$ and $3(2) + 4(5) = 26$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.values-in-wrong-slots",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "(5, 2)"
+              },
+              "feedback": "Both values are right and they have swapped places. The top entry of the column is $x$, so $x = 2$.",
+              "marksTypicallyEarned": 4
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 5,
+      "timeAllowanceSec": 360,
+      "skeleton": "(main)solve5",
+      "methodLock": {
+        "instruction": "You must use a matrix method.",
+        "requiredMethod": "Write the pair as AX = B, find the inverse of the coefficient matrix and compute X = A inverse times B. Elimination and substitution earn nothing.",
+        "evidence": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+      },
+      "examinerSources": [
+        "ccea-cer:further-maths:2025-summer:FM1:Q5",
+        "ccea-cer:further-maths:2023-summer:FM1:Q6"
+      ],
+      "solutionProgram": "main: Writing the pair as $AX = B$ gives $A = \\begin{pmatrix}7 & 2 \\\\ 3 & 4\\end{pmatrix}$ and $B = \\begin{pmatrix}24 \\\\ 26\\end{pmatrix}$. $\\det A = (7)(4) - (2)(3) = 22$, so $A^{-1}$ is $\\frac{1}{22}\\begin{pmatrix}4 & -2 \\\\ -3 & 7\\end{pmatrix}$. $X = A^{-1}B$, which is $\\frac{1}{22}\\begin{pmatrix}44 \\\\ 110\\end{pmatrix}$, giving $X = \\begin{pmatrix}2 \\\\ 5\\end{pmatrix}$, so $x = 2$ and $y = 5$. Checking: $7(2) + 2(5) = 24$ and $3(2) + 4(5) = 26$.",
+      "verification": "ver.q.fm.u1.matrix-simultaneous-equations.0012",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u1.matrix-simultaneous-equations.0013",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "exam-style",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Find",
+        "Solve"
+      ],
+      "emphasis": [
+        "You must use a matrix method"
+      ],
+      "context": {
+        "setting": "The inverse, then the pair it solves, with a negative determinant as the 2025 paper set it",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "a",
+          "stem": "The matrix $A = \\begin{pmatrix}3 & 2 \\\\ 5 & -2\\end{pmatrix}$.\nFind $A^{-1}$.\nWrite the answer as a matrix.",
+          "marks": 2,
+          "answer": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "1/8",
+                "1/8"
+              ],
+              [
+                "5/16",
+                "-3/16"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$\\det A = -16$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$A^{-1}$ is $\\frac{1}{-16}\\begin{pmatrix}-2 & -2 \\\\ -5 & 3\\end{pmatrix}$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Determinant first; it is negative here.",
+            "Swap, negate, then divide by the determinant, minus sign included."
+          ],
+          "workedSolution": "$\\det A = (3)(-2) - (2)(5) = -16$.\n$A^{-1}$ is $\\frac{1}{-16}\\begin{pmatrix}-2 & -2 \\\\ -5 & 3\\end{pmatrix}$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.reciprocal-sign-dropped",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "-1/8",
+                    "-1/8"
+                  ],
+                  [
+                    "-5/16",
+                    "3/16"
+                  ]
+                ]
+              },
+              "feedback": "The determinant is $-16$, and the minus sign has gone missing from $\\frac{1}{-16}$, so every entry has the wrong sign. The inverse is $\\frac{1}{-16}\\begin{pmatrix}-2 & -2 \\\\ -5 & 3\\end{pmatrix}$.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "b",
+          "stem": "Hence solve the simultaneous equations\n$3x + 2y = 5$\n$5x - 2y = -13$\nYou must use a matrix method.\nGive the values of $x$ and $y$.",
+          "marks": 4,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "(-1, 4)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "the pair as $AX = B$ with $A = \\begin{pmatrix}3 & 2 \\\\ 5 & -2\\end{pmatrix}$ and $B = \\begin{pmatrix}5 \\\\ -13\\end{pmatrix}$"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "$X = A^{-1}B$, using the inverse from part (a)",
+              "dependsOn": [
+                "M1"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$X = \\frac{1}{-16}\\begin{pmatrix}16 \\\\ -64\\end{pmatrix}$",
+              "ft": true
+            },
+            {
+              "id": "W2",
+              "code": "W",
+              "marks": 1,
+              "for": "$x = -1$, $y = 4$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "The coefficients are already the matrix $A$ from part (a).",
+            "Put the numbers on the right in a column and multiply by the inverse in front."
+          ],
+          "workedSolution": "The pair is $AX = B$ with $B = \\begin{pmatrix}5 \\\\ -13\\end{pmatrix}$.\nUsing part (a), $X = A^{-1}B$, which is $\\frac{1}{-16}\\begin{pmatrix}16 \\\\ -64\\end{pmatrix}$, giving $X = \\begin{pmatrix}-1 \\\\ 4\\end{pmatrix}$.\nSo $x = -1$ and $y = 4$; checking, $3(-1) + 2(4) = 5$ and $5(-1) - 2(4) = -13$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.values-in-wrong-slots",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "(4, -1)"
+              },
+              "feedback": "Both values are right and they are the wrong way round. The top of the column is $x$.",
+              "marksTypicallyEarned": 3
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value"
+          }
+        }
+      ],
+      "totalMarks": 6,
+      "timeAllowanceSec": 432,
+      "skeleton": "(a)find2|(b)find4",
+      "methodLock": {
+        "instruction": "You must use a matrix method.",
+        "requiredMethod": "Write the pair as AX = B, find the inverse of the coefficient matrix and compute X = A inverse times B. Elimination and substitution earn nothing.",
+        "evidence": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+      },
+      "examinerSources": [
+        "ccea-cer:further-maths:2025-summer:FM1:Q5",
+        "ccea-cer:further-maths:2023-summer:FM1:Q6"
+      ],
+      "solutionProgram": "a: $\\det A = (3)(-2) - (2)(5) = -16$. $A^{-1}$ is $\\frac{1}{-16}\\begin{pmatrix}-2 & -2 \\\\ -5 & 3\\end{pmatrix}$. || b: The pair is $AX = B$ with $B = \\begin{pmatrix}5 \\\\ -13\\end{pmatrix}$. Using part (a), $X = A^{-1}B$, which is $\\frac{1}{-16}\\begin{pmatrix}16 \\\\ -64\\end{pmatrix}$, giving $X = \\begin{pmatrix}-1 \\\\ 4\\end{pmatrix}$. So $x = -1$ and $y = 4$; checking, $3(-1) + 2(4) = 5$ and $5(-1) - 2(4) = -13$.",
+      "verification": "ver.q.fm.u1.matrix-simultaneous-equations.0013",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u1.matrix-simultaneous-equations.0014",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Solve"
+      ],
+      "emphasis": [
+        "You must use a matrix method",
+        "mixed-tail"
+      ],
+      "context": {
+        "setting": "Both equations printed out of line, solved by the named method",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "Solve the simultaneous equations\n$2y = 3x - 11$\n$x = 6 + y$\nYou must use a matrix method.\nGive the values of $x$ and $y$.",
+          "marks": 6,
+          "answer": {
+            "kind": "algebraic",
+            "latex": "(-1, -7)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x",
+              "y"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "both equations lined up, $-3x + 2y = -11$ and $x - y = 6$",
+              "accept": [
+                "$3x - 2y = 11$ and $x - y = 6$"
+              ]
+            },
+            {
+              "id": "MW2",
+              "code": "MW",
+              "marks": 1,
+              "for": "the pair as $AX = B$ with $A = \\begin{pmatrix}-3 & 2 \\\\ 1 & -1\\end{pmatrix}$ and $B = \\begin{pmatrix}-11 \\\\ 6\\end{pmatrix}$",
+              "ft": true
+            },
+            {
+              "id": "M3",
+              "code": "M",
+              "marks": 1,
+              "for": "$\\det A = 1$",
+              "dependsOn": [
+                "MW2"
+              ]
+            },
+            {
+              "id": "M4",
+              "code": "M",
+              "marks": 1,
+              "for": "$A^{-1} = \\begin{pmatrix}-1 & -2 \\\\ -1 & -3\\end{pmatrix}$",
+              "dependsOn": [
+                "M3"
+              ]
+            },
+            {
+              "id": "M5",
+              "code": "M",
+              "marks": 1,
+              "for": "$X = A^{-1}B$, with the inverse in front",
+              "dependsOn": [
+                "M4"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$x = -1$, $y = -7$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Rearrange each equation to $ax + by = c$ before copying anything.",
+            "Then it is $AX = B$: determinant, inverse, product."
+          ],
+          "workedSolution": "Lined up: $-3x + 2y = -11$ and $x - y = 6$.\n$A = \\begin{pmatrix}-3 & 2 \\\\ 1 & -1\\end{pmatrix}$, $B = \\begin{pmatrix}-11 \\\\ 6\\end{pmatrix}$ and $\\det A = (-3)(-1) - (2)(1) = 1$.\n$A^{-1} = \\begin{pmatrix}-1 & -2 \\\\ -1 & -3\\end{pmatrix}$, so $X = A^{-1}B = \\begin{pmatrix}-1 \\\\ -7\\end{pmatrix}$.\nSo $x = -1$ and $y = -7$; checking, $2(-7) = 3(-1) - 11$ and $-1 = 6 + (-7)$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.values-in-wrong-slots",
+              "pattern": {
+                "kind": "algebraic",
+                "latex": "(-7, -1)"
+              },
+              "feedback": "Both values are right and they are the wrong way round. The top of the column is $x$.",
+              "marksTypicallyEarned": 5
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 6,
+      "timeAllowanceSec": 432,
+      "skeleton": "(main)solve6",
+      "methodLock": {
+        "instruction": "You must use a matrix method.",
+        "requiredMethod": "Write the pair as AX = B, find the inverse of the coefficient matrix and compute X = A inverse times B. Elimination and substitution earn nothing.",
+        "evidence": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+      },
+      "examinerSources": [
+        "ccea-cer:further-maths:2025-summer:FM1:Q5",
+        "ccea-cer:further-maths:2023-summer:FM1:Q6"
+      ],
+      "solutionProgram": "main: Lined up: $-3x + 2y = -11$ and $x - y = 6$. $A = \\begin{pmatrix}-3 & 2 \\\\ 1 & -1\\end{pmatrix}$, $B = \\begin{pmatrix}-11 \\\\ 6\\end{pmatrix}$ and $\\det A = (-3)(-1) - (2)(1) = 1$. $A^{-1} = \\begin{pmatrix}-1 & -2 \\\\ -1 & -3\\end{pmatrix}$, so $X = A^{-1}B = \\begin{pmatrix}-1 \\\\ -7\\end{pmatrix}$. So $x = -1$ and $y = -7$; checking, $2(-7) = 3(-1) - 11$ and $-1 = 6 + (-7)$.",
+      "verification": "ver.q.fm.u1.matrix-simultaneous-equations.0014",
       "version": 1
     }
   ],
@@ -1778,6 +2764,62 @@
       ],
       "marksEarnedAsWritten": [],
       "feedback": "This is the hardest kind of mistake to accept, because nothing in it is wrong: the arithmetic is clean and the answer is right. What the examiners mark here is the method the question named, and the report for that series records correct elimination solutions earning nothing at all. Read the instruction before the equations, every time.",
+      "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+    },
+    {
+      "id": "ftm.fm.u1.matrix-simultaneous-equations.02",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "stem": "Ciara was asked to solve $3x + 4y = 2$ and $5x + 2y = 8$, using a matrix method. Her working:",
+      "studentWorking": [
+        "3x + 4y = 2",
+        "5x + 2y = 8",
+        "multiply the second equation by 2: 10x + 4y = 16",
+        "subtract the first: 7x = 14, so x = 2",
+        "y = -1"
+      ],
+      "mistakeLine": 3,
+      "misconception": "fm.matrix.method-instruction-ignored",
+      "whatWentWrong": "Every line is correct arithmetic and both values are right.\nLine 3 is where the marks go: it starts an elimination, and the question named the matrix method, so none of this route earns anything.\nThe line that belongs there writes the pair as $AX = B$.",
+      "correction": [
+        "AX = B",
+        "A = (3 4 ; 5 2) and B = (2 ; 8)",
+        "X = A inverse x B",
+        "X = (x ; y) = (2 ; -1)"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Nothing here is wrong except the route, and the route is what this question marks. Read the instruction before the equations, and start with the matrix equation whenever it names the method.",
+      "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+    },
+    {
+      "id": "ftm.fm.u1.matrix-simultaneous-equations.03",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "stem": "Tomás was asked to solve $2x + 3y = 9$ and $4x + y = 23$, using a matrix method. His working:",
+      "studentWorking": [
+        "A = (2 3 ; 4 1) and B = (9 ; 23)",
+        "det A = (2)(1) - (3)(4) = -10",
+        "A inverse = 1/10 (1 -3 ; -4 2)",
+        "X = 1/10 (-60 ; 10) = (-6 ; 1)",
+        "x = -6, y = 1"
+      ],
+      "mistakeLine": 3,
+      "misconception": "fm.matrix.reciprocal-sign-dropped",
+      "whatWentWrong": "Lines 1 and 2 are right: the determinant is $-10$.\nLine 3 divides by $10$ instead of $-10$, so the minus sign is lost and every entry of the inverse, and both values, come out with the wrong sign.\nA check would have caught it: $2(-6) + 3(1)$ is $-9$, not $9$.",
+      "correction": [
+        "A inverse = 1/-10 (1 -3 ; -4 2)",
+        "X = 1/-10 (-60 ; 10) = (6 ; -1)",
+        "x = 6, y = -1"
+      ],
+      "marksEarnedAsWritten": [
+        "MW1",
+        "M2"
+      ],
+      "feedback": "The matrix equation and the determinant earn their marks; the inverse loses its sign at the division. Keep the determinant's sign in the fraction, and check both values in both equations before you write them down.",
       "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
     }
   ],
@@ -1910,6 +2952,52 @@
         "FM1-MAT-04"
       ],
       "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.matrix-simultaneous-equations.09",
+      "kind": "procedure",
+      "prompt": "A question says use a matrix method. What is the first line?",
+      "answer": "The pair written as $AX = B$.",
+      "keyWords": [
+        "AX = B"
+      ],
+      "difficultyPrior": 4,
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.matrix-simultaneous-equations.10",
+      "kind": "formula",
+      "prompt": "Once a pair is written as $AX = B$, what is $X$?",
+      "answer": "$X = A^{-1}B$, with the inverse in front.",
+      "keyWords": [
+        "inverse in front"
+      ],
+      "difficultyPrior": 4,
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.matrix-simultaneous-equations.11",
+      "kind": "trap",
+      "prompt": "Before the coefficients are copied, how must the equations read?",
+      "answer": "Lined up as $ax + by = c$, with a zero for a missing term.",
+      "keyWords": [
+        "lined up",
+        "zero"
+      ],
+      "difficultyPrior": 5,
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "specRefs": [
+        "FM1-MAT-04"
+      ],
+      "examUnit": "FM1"
     }
   ],
   "insight": {
@@ -1952,87 +3040,137 @@
     ],
     "ruleToRemember": "For AX = B, X = A inverse B with the inverse on the left; follow a stated method exactly - the algebra route scores nothing when the matrix method is required."
   },
+  "sets": [
+    {
+      "id": "set.fm.u1.matrix-simultaneous-equations.mixed",
+      "topic": "fm.u1.matrix-simultaneous-equations",
+      "kind": "mixed",
+      "title": "Mixed practice: line up, invert, name",
+      "subject": "further-maths",
+      "units": [
+        "FM1"
+      ],
+      "itemIds": [
+        "q.fm.u1.matrix-simultaneous-equations.0012",
+        "q.fm.u1.matrix-simultaneous-equations.0003",
+        "q.fm.u1.matrix-simultaneous-equations.0013",
+        "q.fm.u1.matrix-simultaneous-equations.0008",
+        "q.fm.u1.matrix-simultaneous-equations.0006",
+        "q.fm.u1.matrix-simultaneous-equations.0014"
+      ],
+      "showTopicLabels": false,
+      "version": 1
+    }
+  ],
   "verification": [
     {
       "id": "ver.note.fm.u1.matrix-simultaneous-equations",
       "itemId": "note.fm.u1.matrix-simultaneous-equations",
-      "version": 1,
+      "version": 2,
       "checks": [
         {
           "type": "schema",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
           "result": "pass",
-          "detail": "Validated against the Zod NoteFrontmatter and the NoteBlock union by pipeline/build-content.mts; the hero block is first, gate ids g1 to g6 are unique, every prompt block names a prompt in this bundle, the recap is a heading and one paragraph of five lines before the closing section, and every gate restates the pair or the column it works on.",
-          "at": "2026-09-19T23:30:00Z",
+          "detail": "Rebuilt to the teach-first v3.1 shape (docs/plan/review/2026-09-27-see-it-block-shape.md), asserted by mig.mjs assertTeachFirst: idea:Two equations become one matrix equation; variant:Line them up before you copy; variant:Solve it with the inverse; variant:Name the values, then check them; variant:When there is no unique solution; twists:Exam twists. Every section explains, shows its own See it, then asks; every gate has a twin on new numbers; every choice gate and choice twin carries one option note per wrong option. Slides' own readiness structure (noteStructure) passes on the staged copy.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         },
         {
           "type": "scope-tier",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
           "result": "pass",
-          "detail": "FM1 is untiered and calculator-allowed. FM1-MAT-04 is 2 by 2 systems written as AX = B and solved with X = A inverse B, and excludes XA = B: every question here is that form. Nothing classifies consistent and inconsistent systems, and nothing goes to three unknowns by matrix methods, both of which the enrichment dossier marks as beyond this specification.",
-          "at": "2026-09-19T23:30:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "formula-sheet",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "The Unit 1 sheet carries nothing about matrices, so the inverse formula and the whole method are recall.",
-          "at": "2026-09-19T23:30:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "command-words",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "Solve, Find, Write down, Calculate, Identify and Explain are the command words, with the tariffs from packs/further-maths/exam-true/command-words.json; the Using a matrix method entry in exam-true/method-locks.json is carried on every question whose stem names the method, with the Summer 2025 Q5(ii) evidence.",
-          "at": "2026-09-19T23:30:00Z",
-          "by": "claude"
-        },
-        {
-          "type": "tariff",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
-          "result": "pass",
-          "detail": "2 + 4 for the inverse-then-solve pairing and 5 for an unscaffolded solve, matching Summer 2025 Q5 (2 marks for the inverse, 4 for the hence part); the worded context runs 2 + 5, and the singular explanation 2.",
-          "at": "2026-09-19T23:30:00Z",
+          "detail": "FM1 is untiered and calculator-allowed. FM1-MAT-04 is a 2 by 2 pair written as AX = B and solved with X = A inverse B, with XA = B excluded: every pair here is that form. Nothing classifies consistent and inconsistent systems beyond no unique solution, and nothing takes three unknowns by matrices (both beyond this specification, as the enrichment dossier notes).",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         },
         {
           "type": "maths-numeric",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
           "result": "pass",
-          "detail": "Every system is solved by inverting the coefficient matrix and the solution is substituted into BOTH original equations before it is printed: x = 3, y = 2 (det 14); x = 2, y = 3 (det -5); x = 1, y = 3 (det 14); x = 3/2, y = 3 (det 8); n = 5, p = 2 (det 2); x = 4, y = 2 (det 1). Every inverse was proved by back-multiplication both ways, and the singular pair's determinant is asserted to be zero.",
-          "at": "2026-09-19T23:30:00Z",
+          "detail": "The note works its own pairs, none of which an item, diagnostic, worked example, find-the-mistake item or prompt uses: 2x + 5y = 11 and 3x + 4y = 13 (det -7, x = 3, y = 1); 3y = 10 - 2x and 7x = 21 lined up; 3x + 2y = 16 and x - 4y = -18 checked at (2, 5); the singular 3x - 2y = 5 and 6x - 4y = 7; the hence twist with M = (5 -3 ; 2 1), det 11, giving (2, 1). Every inverse is back-multiplied to the identity both ways, every solution substituted into both equations and every printed value asserted in mse-v3.mjs; each gate's and twin's answer is computed there too (9, -7, -5, 1, 2, 3).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every gate and twin marked through markGate and checked by positionalWording (src/lib/gate-order.ts); a two-way overlap scan of maths spans finds no expression the note, a gate or a twin works that an item asks, nor the reverse (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts). The wired prompts pass Slides' recallFit.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         },
         {
           "type": "examiner-alignment",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
           "result": "pass",
-          "detail": "One examiner callout stands in the body beside the un-boxing step (Summer 2025 Q5, the method instruction ignored and the layout). Every other finding is a Sheet trap. Gate g1 is the instruction itself, g2 and g3 the transcription, g4 the determinant, g5 the naming of the two values and g6 the singular case.",
-          "at": "2026-09-19T23:30:00Z",
+          "detail": "One examiner callout in the body, Summer 2025 Q5 (the named method ignored and scoring nothing; working hard to follow), in our words. The twists cite the shape of Summer 2025 Q5 (find the inverse, then hence solve). The singular case follows Summer 2023 Q6(ii), whose report asks for the matrix to be named.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         },
         {
-          "type": "copy-shingle",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
           "result": "pass",
-          "detail": "Checked with node scripts/qa/shingles.mjs --topic matrix-simultaneous-equations: no eight-word run is shared with any question paper, mark scheme or Chief Examiner report.",
-          "at": "2026-09-19T23:30:00Z",
+          "detail": "Sheet traps corrected against the reports on 7 Oct 2026: the column left as the answer and the values swapped no longer cite Summer 2025 Q5 (its block names working hard to follow, not these slips); a trap for the minus sign lost from 1 over minus 26 (Summer 2025 Q5(i)) and one for a hence pair copied in its printed order are added.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         },
         {
           "type": "style-lint",
-          "tool": "claude (FM1 batch-G generators in scratchpad/fm1-batch-g: matlib.mjs computes every sum, product, determinant and inverse in exact rational arithmetic; routes are executed in the topic generator and re-executed against the published JSON by verify-published.mjs; check-marking.mts feeds every part to the app's own marker)",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
           "result": "pass",
-          "detail": "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line, holds no prose words, and carries no TeX command without its backslash. Six inline SVG figures, all drawn from the computed systems, and one embeddable video from data/links/media-map.json followed immediately by a gate.",
-          "at": "2026-09-19T23:30:00Z",
+          "detail": "British English, calm, no exclamation marks; every figure on a 400-unit viewBox with labels of 14 units or more (the 20 Sep figures were 600 wide with 10-unit labels), rendered at 358 px and looked at; the video sits beside its See it; every re-teaching explanation at most 60 words; no maths segment over 60 characters of TeX outside display maths.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "An interface warm-up (\"One tap to begin\") on the instruction; the topic's first check is now a real one, answerable from the first See it (the owner's answer 8 of 27 Sep 2026).",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "It asked an entry of the coefficient matrix of worked example 01's pair, whose first step prints the whole matrix; g7 asks an entry on a pair of the note's own.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g9",
+          "reason": "Its equation 2y = 6 is question 0003's own second equation; g9 checks the missing-term zero on 4y = 8.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "It asked the determinant of worked example 01's coefficient matrix, which that example's step 2 prints; g10 checks the inverse in use on a pair of the note's own.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "It asked y from the column (3; 2), worked example 01's own answer; g11 checks naming the values from a column no item reaches.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "It asked what a zero determinant means, the question diagnostic d5 asks after the lesson; g13 checks spotting the singular pair among three.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.matrix-simultaneous-equations.01",
@@ -2085,6 +3223,79 @@
           "result": "pass",
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Step inputs added in place on 7 Oct 2026 (a listed frozen-surface addition; lines, earns, fading and twin unchanged): step 1 the coefficient matrix, step 2 the determinant, step 3 the inverse, step 4 the column X, step 5 the pair of values; each accepts the step's own line in the spellings she would type and refuses the slips its reason warns about, probed through markAnswer. The figure is redrawn phone-native.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.matrix-simultaneous-equations.02",
+      "itemId": "we.fm.u1.matrix-simultaneous-equations.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Lined up as 2x + y = 3 and x - 6y = 8: det -13, the inverse back-multiplied to the identity, X = (2 ; -1), checked in both printed equations. The twin, y = 7 - 3x and 2x - 5y = 16, lines up to det -17 and gives (3, -2), checked the same way. Every step input marks its own line and refuses the slips the step names.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "The negative determinant carried into the inverse is the Summer 2025 Q5(i) finding (1 over 26 written where 1 over minus 26 belonged); the whyMenu turns on it.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         }
       ],
@@ -2143,10 +3354,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: It asked for the coefficient matrix of worked example 01's pair, the matrix that example's step 1 prints, and diagnostic d1 asked the same; question 0011 asks it on a new pair.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u1.matrix-simultaneous-equations.0001",
+          "kind": "question",
+          "replacedBy": "q.fm.u1.matrix-simultaneous-equations.0011",
+          "reason": "It asked for the coefficient matrix of worked example 01's pair, the matrix that example's step 1 prints, and diagnostic d1 asked the same; question 0011 asks it on a new pair.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.matrix-simultaneous-equations.0002",
@@ -2199,6 +3427,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 7 Oct 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check): the sign-not-changed transcription error (question 0002) and the values-in-wrong-slots errors (questions 0006 and 0010(b)) drop Summer 2025 Q5, whose block reports working that was hard to follow but not which slip caused it, as the registry's own notes say. Question 0004's determinant-sign error keeps Summer 2025 Q5: that block names inverses written with 1 over 26 where 1 over minus 26 belonged.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         }
       ],
@@ -2371,10 +3607,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: It set worked example 01's own pair, so the example answered it line by line; question 0012 sets the same 5-mark route on a new pair.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u1.matrix-simultaneous-equations.0005",
+          "kind": "question",
+          "replacedBy": "q.fm.u1.matrix-simultaneous-equations.0012",
+          "reason": "It set worked example 01's own pair, so the example answered it line by line; question 0012 sets the same 5-mark route on a new pair.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.matrix-simultaneous-equations.0006",
@@ -2427,6 +3680,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 7 Oct 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check): the sign-not-changed transcription error (question 0002) and the values-in-wrong-slots errors (questions 0006 and 0010(b)) drop Summer 2025 Q5, whose block reports working that was hard to follow but not which slip caused it, as the registry's own notes say. Question 0004's determinant-sign error keeps Summer 2025 Q5: that block names inverses written with 1 over 26 where 1 over minus 26 belonged.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         }
       ],
@@ -2599,10 +3860,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: Its part (b) is worked example 01's twin word for word and its part (a) the inverse diagnostic p2 asked before the lesson; question 0013 sets the inverse-then-hence shape on a new matrix with a negative determinant, as Summer 2025 Q5 did.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u1.matrix-simultaneous-equations.0009",
+          "kind": "question",
+          "replacedBy": "q.fm.u1.matrix-simultaneous-equations.0013",
+          "reason": "Its part (b) is worked example 01's twin word for word and its part (a) the inverse diagnostic p2 asked before the lesson; question 0013 sets the inverse-then-hence shape on a new matrix with a negative determinant, as Summer 2025 Q5 did.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.matrix-simultaneous-equations.0010",
@@ -2656,6 +3934,274 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. A solution pair is encoded as the engine's coordinate-pair form, so the paper's own x = …, y = … answer line is accepted.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Common-error citations corrected in place on 7 Oct 2026 (the lead's ruling of 27 Sep 17:14; nothing else in the item changed, proven by the frozen-surface check): the sign-not-changed transcription error (question 0002) and the values-in-wrong-slots errors (questions 0006 and 0010(b)) drop Summer 2025 Q5, whose block reports working that was hard to follow but not which slip caused it, as the registry's own notes say. Question 0004's determinant-sign error keeps Summer 2025 Q5: that block names inverses written with 1 over 26 where 1 over minus 26 belonged.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.matrix-simultaneous-equations.0011",
+      "itemId": "q.fm.u1.matrix-simultaneous-equations.0011",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Solved with exact fractions in mse-v3.mjs, the inverse back-multiplied and the solution substituted into both equations: main -> 6 5 ; 4 3. Each common error is the value its feedback's route produces.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "The swapped values carry the registry misconception and no citation, since no report names that slip; the method lock carries the Summer 2025 Q5(ii) evidence.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.matrix-simultaneous-equations.0012",
+      "itemId": "q.fm.u1.matrix-simultaneous-equations.0012",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Solved with exact fractions in mse-v3.mjs, the inverse back-multiplied and the solution substituted into both equations: main -> (2, 5). Each common error is the value its feedback's route produces.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "The swapped values carry the registry misconception and no citation, since no report names that slip; the method lock carries the Summer 2025 Q5(ii) evidence.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.matrix-simultaneous-equations.0013",
+      "itemId": "q.fm.u1.matrix-simultaneous-equations.0013",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Solved with exact fractions in mse-v3.mjs, the inverse back-multiplied and the solution substituted into both equations: a -> 1/8 1/8 ; 5/16 -3/16; b -> (-1, 4). Each common error is the value its feedback's route produces.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Part (a)'s common error is the Summer 2025 Q5(i) finding, 1 over 16 where 1 over minus 16 belongs, cited to that block; the swapped values in part (b) carry the registry misconception and no citation, since no report names that slip.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.matrix-simultaneous-equations.0014",
+      "itemId": "q.fm.u1.matrix-simultaneous-equations.0014",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Solved with exact fractions in mse-v3.mjs, the inverse back-multiplied and the solution substituted into both equations: main -> (-1, -7). Each common error is the value its feedback's route produces.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "The swapped values carry the registry misconception and no citation, since no report names that slip; the method lock carries the Summer 2025 Q5(ii) evidence.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2697,10 +4243,34 @@
           "detail": "Read through as the student before shipping; British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Items replaced on 7 Oct 2026 (records below): p5 (3x + 5y = 14) and p4 (the inverse (2 -1 ; -7 4), back-multiplied); each distractor is the route its feedback names, and every option was marked through the app's marker in the probe.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.pre#p1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.pre#p5",
+          "reason": "It rearranged 5x = 11 - 2y, the first equation of question 0002; p5 checks the same rearrangement on 3x = 14 - 5y.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.pre#p2",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.pre#p4",
+          "reason": "It asked the inverse of the matrix question 0009(a) asks and worked example 01's twin is built on; p4 checks an inverse on a new matrix.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u1.matrix-simultaneous-equations.post",
@@ -2738,10 +4308,34 @@
           "detail": "Read through as the student before shipping; British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Items replaced on 7 Oct 2026 (records below): d6 (the coefficient matrix (2 7 ; 5 1)) and d7 (x = -5, y = 8 from a column); each distractor is the route its feedback names, and every option was marked through the app's marker in the probe.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.post#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.post#d6",
+          "reason": "It asked the coefficient matrix of worked example 01's pair, which the example's step 1 prints; d6 asks it on a new pair.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.post#d4",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.post#d7",
+          "reason": "Its column (3; 2) is worked example 01's answer; d7 asks the naming on a column no item reaches.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u1.matrix-simultaneous-equations.01",
@@ -2787,10 +4381,27 @@
           "detail": "Read through as the student; calm feedback that names the mark that stands before the one that went; no exclamation marks.",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: Its pair was worked example 01's, so the values it prints answered that example and question 0005; ftm.02 shows the same instruction ignored on a new pair.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.fm.u1.matrix-simultaneous-equations.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.fm.u1.matrix-simultaneous-equations.02",
+          "reason": "Its pair was worked example 01's, so the values it prints answered that example and question 0005; ftm.02 shows the same instruction ignored on a new pair.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-simultaneous-equations.01",
@@ -2820,10 +4431,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: A 30-word answer, over the 25-word cap for a recall prompt; the note's first section and rp.09 carry the idea.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.matrix-simultaneous-equations.01",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 30-word answer, over the 25-word cap for a recall prompt; the note's first section and rp.09 carry the idea.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-simultaneous-equations.02",
@@ -2853,10 +4481,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: A 26-word answer, over the 25-word cap, and its key word \"lined up\" is not in its own answer (\"Line them up\"), so that chip could never light; rp.11 asks the same in 9 words with both key words in its answer.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.matrix-simultaneous-equations.02",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.matrix-simultaneous-equations.11",
+          "reason": "A 26-word answer, over the 25-word cap, and its key word \"lined up\" is not in its own answer (\"Line them up\"), so that chip could never light; rp.11 asks the same in 9 words with both key words in its answer.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-simultaneous-equations.03",
@@ -2919,10 +4564,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: Its key word \"A^-1 B\", with a space, never matches its own answer's $A^{-1}B$, so that chip could never light; rp.10 recalls the same rule with a key word its answer holds.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.matrix-simultaneous-equations.04",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.matrix-simultaneous-equations.10",
+          "reason": "Its key word \"A^-1 B\", with a space, never matches its own answer's $A^{-1}B$, so that chip could never light; rp.10 recalls the same rule with a key word its answer holds.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-simultaneous-equations.05",
@@ -3018,10 +4680,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Withdrawn on 7 Oct 2026: It carried an examiner's finding, which belongs to the Sheet's trap with its series, and its question ran to 19 words.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.matrix-simultaneous-equations.07",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It carried an examiner's finding, which belongs to the Sheet's trap with its series, and its question ran to 19 words.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-simultaneous-equations.08",
@@ -3050,6 +4729,301 @@
           "result": "pass",
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.matrix-simultaneous-equations.pre.withdrawn",
+      "itemId": "dx.fm.u1.matrix-simultaneous-equations.pre.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "The published copies of the items withdrawn from dx.fm.u1.matrix-simultaneous-equations.pre on 7 Oct 2026, kept unchanged so a review card that points at them resolves; none ships.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.pre.withdrawn#p1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.pre#p5",
+          "reason": "The kept copy of dx.fm.u1.matrix-simultaneous-equations.pre#p1, withdrawn: It rearranged 5x = 11 - 2y, the first equation of question 0002; p5 checks the same rearrangement on 3x = 14 - 5y.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.pre.withdrawn#p2",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.pre#p4",
+          "reason": "The kept copy of dx.fm.u1.matrix-simultaneous-equations.pre#p2, withdrawn: It asked the inverse of the matrix question 0009(a) asks and worked example 01's twin is built on; p4 checks an inverse on a new matrix.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.dx.fm.u1.matrix-simultaneous-equations.post.withdrawn",
+      "itemId": "dx.fm.u1.matrix-simultaneous-equations.post.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "The published copies of the items withdrawn from dx.fm.u1.matrix-simultaneous-equations.post on 7 Oct 2026, kept unchanged so a review card that points at them resolves; none ships.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.post.withdrawn#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.post#d6",
+          "reason": "The kept copy of dx.fm.u1.matrix-simultaneous-equations.post#d1, withdrawn: It asked the coefficient matrix of worked example 01's pair, which the example's step 1 prints; d6 asks it on a new pair.",
+          "on": "2026-10-07T21:59:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-simultaneous-equations.post.withdrawn#d4",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-simultaneous-equations.post#d7",
+          "reason": "The kept copy of dx.fm.u1.matrix-simultaneous-equations.post#d4, withdrawn: Its column (3; 2) is worked example 01's answer; d7 asks the naming on a column no item reaches.",
+          "on": "2026-10-07T21:59:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.ftm.fm.u1.matrix-simultaneous-equations.02",
+      "itemId": "ftm.fm.u1.matrix-simultaneous-equations.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Ciara's pair 3x + 4y = 2 and 5x + 2y = 8 is solved by her elimination to (2, -1), which the matrix route confirms (det -14); line 3 is the first line of the elimination and the only wrong line. The correction's lines were marked through markFix.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Seeded from the Summer 2025 Q5(ii) report: correct elimination answers scoring nothing where the matrix method was named.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.matrix-simultaneous-equations.03",
+      "itemId": "ftm.fm.u1.matrix-simultaneous-equations.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own per-bundle checks on a staged copy (scratchpad/probes/fm1-g2/validate-stage.mts) before the pack was written: the Zod schema, every scheme summing to its part's marks, the skeleton matching the parts.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Tomás's pair 2x + 3y = 9 and 4x + y = 23 has det -10 and solution (6, -1); his line 3 divides by 10, so lines 4 and 5 come out as (-6, 1). Lines 1 and 2 are right; the correction lines were marked through markFix.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Command words, tariffs and the method lock from packs/further-maths/exam-true/; the wording is ours. The solve tariffs follow Summer 2025 Q5: 2 for the inverse, then M1 for the matrix equation, M1 for the inverse in front, W1 for the product and W1 for the values.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Seeded from the Summer 2025 Q5(i) report: inverses written with 1 over 26 where 1 over minus 26 belonged.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Every right answer marked through the app's own engine in the spellings she would type, every wrong one refused and every common error shown to fire with at most its marks (scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts).",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "node scripts/qa/shingles.mjs --unit fm1 on the staged copy: no eight-word run shared with any paper, scheme, report or textbook.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free (lintTree); no exclamation marks.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.matrix-simultaneous-equations.09",
+      "itemId": "rp.fm.u1.matrix-simultaneous-equations.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own checks on the staged copy against the Zod RetrievalPrompt schema.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "A short recall wired in the note; its key words are in its own answer (keywordsPresent) and Slides' recallFit keeps it: \"A question says use a matrix method. What is the first line?\" -> \"The pair written as $AX = B$.\".",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.matrix-simultaneous-equations.10",
+      "itemId": "rp.fm.u1.matrix-simultaneous-equations.10",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own checks on the staged copy against the Zod RetrievalPrompt schema.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "A short recall wired in the note; its key words are in its own answer (keywordsPresent) and Slides' recallFit keeps it: \"Once a pair is written as $AX = B$, what is $X$?\" -> \"$X = A^{-1}B$, with the inverse in front.\".",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.matrix-simultaneous-equations.11",
+      "itemId": "rp.fm.u1.matrix-simultaneous-equations.11",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Validated by the build's own checks on the staged copy against the Zod RetrievalPrompt schema.",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-symbolic",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "A short recall wired in the note; its key words are in its own answer (keywordsPresent) and Slides' recallFit keeps it: \"Before the coefficients are copied, how must the equations read?\" -> \"Lined up as $ax + by = c$, with a zero for a missing term.\".",
+          "at": "2026-10-07T21:59:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (FM1 migration group 2, 7 Oct 2026: scratchpad/probes/fm1-g2/mse-v3.mjs solves every pair with exact fractions, back-multiplies every inverse and substitutes every solution into both equations; scratchpad/probes/fm1-g2/probe-matrix-simultaneous-equations.mts marks every answer, gate, twin, step input, fix and prompt through the app's own engine; render.mjs renders every figure; stage-check.sh runs the finish checks on a staged copy)",
+          "result": "pass",
+          "detail": "Read as the student; British English; maths segments paired and prose-free.",
+          "at": "2026-10-07T21:59:00Z",
           "by": "claude"
         }
       ],

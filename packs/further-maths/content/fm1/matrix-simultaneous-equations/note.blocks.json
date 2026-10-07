@@ -1,206 +1,623 @@
 [
   {
     "type": "hero",
-    "lede": "Two equations in two unknowns can be written as a single matrix equation: the coefficients in a box, the unknowns in a column, the constants in another. Once it is in that shape there is nothing new to learn — it is solved with an inverse, exactly like any matrix equation.",
+    "lede": "Two equations in two unknowns can be packed into one matrix equation: the numbers in front of x and y in a square, the unknowns in a column, the numbers on the right in another column. One inverse then finishes it, the way it finishes any matrix equation.",
     "can": [
-      "Read a pair of equations straight into a coefficient matrix and two columns",
-      "Solve the matrix equation with an inverse and read the two values off",
-      "Say why the instruction to use matrices makes every other method worth nothing"
+      "Write a pair of equations as AX = B, lining them up first",
+      "Solve it with X = A⁻¹B and name both values",
+      "Say why a pair with a zero determinant has no unique solution"
     ],
-    "minutes": 15
-  },
-  {
-    "type": "h",
-    "text": "When the question names the method"
-  },
-  {
-    "type": "p",
-    "md": "You can already solve two equations in two unknowns by elimination. This topic is not about a better way; it is about what to do when the question **tells you** to use matrices.\nWhen it does, a perfect elimination earns nothing at all. So the first thing to read is the instruction, not the equations."
+    "minutes": 17
   },
   {
     "type": "figure",
-    "alt": "Two versions of the same question side by side: one saying solve these equations, the other saying use a matrix method, with a note that only the matrix route earns marks in the second.",
-    "svg": "<svg viewBox='0 0 600 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two versions of the same question side by side: one saying solve these equations, the other saying use a matrix method, with a note that only the matrix route earns marks in the second'><title>Two versions of the same question side by side: one saying solve these equations, the other saying use a matrix method, with a note that only the matrix route earns marks in the second</title><rect x='22' y='38' width='258' height='86' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='151' y='32' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>one instruction</text><text x='151' y='68' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Solve these equations</text><text x='151' y='100' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>any correct method earns the marks</text><rect x='344' y='38' width='234' height='86' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='461' y='32' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>the other</text><text x='461' y='68' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>Using a matrix method,</text><text x='461' y='86' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>solve these equations</text><text x='461' y='112' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>only the matrix route earns anything</text><text x='300' y='150' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the same pair of equations, and only one of them lets you eliminate</text></svg>",
-    "caption": "Same equations. Only one of them leaves you free to eliminate."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to begin. A question says \"using a matrix method, solve these equations\", and a candidate solves them correctly by elimination. What does that earn?",
-    "options": [
-      "Nothing",
-      "Full marks, because the answer is right",
-      "Half the marks"
-    ],
-    "answer": "Nothing",
-    "explain": "A named method is part of the question. The examiners report full, correct elimination solutions scoring zero on exactly this instruction."
+    "alt": "Two equations, 2x + 5y = 11 and 3x + 4y = 13, above the matrix equation they become: the coefficients 2, 5, 3, 4 in a square matrix A, the column x, y, and the column 11, 13.",
+    "svg": "<svg viewBox='0 0 400 236' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The pair 2x + 5y = 11 and 3x + 4y = 13 above the matrix equation it becomes: the coefficients in A, the unknowns in X and the numbers on the right in B'><title>The pair 2x + 5y = 11 and 3x + 4y = 13 above the matrix equation it becomes: the coefficients in A, the unknowns in X and the numbers on the right in B</title><text x='200' y='30' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>2x + 5y = 11</text><text x='200' y='56' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>3x + 4y = 13</text><path d='M 200 70 L 200 100 M 193 92 L 200 100 L 207 92' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 111 134 L 103 134 L 103 198 L 111 198 M 171 134 L 179 134 L 179 198 L 171 198' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='122' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='160' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5</text><text x='122' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='160' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='141' y='124' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>A</text><path d='M 193 134 L 185 134 L 185 198 L 193 198 M 211 134 L 219 134 L 219 198 L 211 198' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='202' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>x</text><text x='202' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>y</text><text x='202' y='124' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>X</text><text x='238' y='171' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 265 134 L 257 134 L 257 198 L 265 198 M 289 134 L 297 134 L 297 198 L 289 198' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='277' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>11</text><text x='277' y='186' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>13</text><text x='277' y='124' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>B</text><text x='200' y='222' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>copied, not solved</text></svg>",
+    "caption": "Each number is copied to its own place; nothing is solved yet."
   },
   {
     "type": "h",
-    "text": "1. Copy the numbers into three boxes"
+    "text": "Two equations become one matrix equation",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "The translation is mechanical. The coefficients of $x$ and $y$ go into a $2 \\times 2$ box in the order they are written. The unknowns go into a column, and the constants into a column on the other side.\nNothing is worked out and nothing is cancelled. If you find yourself doing arithmetic at this stage, you are solving rather than copying."
-  },
-  {
-    "type": "figure",
-    "alt": "Two simultaneous equations beside the three matrices they become: the coefficients in a two by two box, the unknowns in a column, and the constants in a column.",
-    "svg": "<svg viewBox='0 0 600 148' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two simultaneous equations beside the three matrices they become: the coefficients in a two by two box, the unknowns in a column, and the constants in a column on the other side of the equals sign'><title>Two simultaneous equations beside the three matrices they become: the coefficients in a two by two box, the unknowns in a column, and the constants in a column on the other side of the equals sign</title><text x='26' y='54' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>4x + 3y = 18</text><text x='26' y='84' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start'>2x + 5y = 16</text><text x='96' y='26' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>the pair as printed</text><path d='M 186 68 L 232 68 M 222 61 L 232 68 L 222 75' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='209' y='54' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>copy</text><path d='M 257 42 L 248 42 L 248 102 L 257 102' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 323 42 L 332 42 L 332 102 L 323 102' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='269' y='60' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='311' y='60' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='269' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='311' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='290' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>coefficients</text><path d='M 353 42 L 344 42 L 344 102 L 353 102' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 369 42 L 378 42 L 378 102 L 369 102' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='361' y='62' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>x</text><text x='361' y='92' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>y</text><text x='361' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>unknowns</text><text x='392' y='72' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>=</text><path d='M 417 42 L 408 42 L 408 102 L 417 102' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 439 42 L 448 42 L 448 102 L 439 102' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='428' y='60' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>18</text><text x='428' y='90' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><text x='428' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>constants</text><text x='300' y='134' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>nothing is solved here: the numbers are copied where they stand</text></svg>",
-    "caption": "$AX = B$, read straight off the page."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "For the pair $4x + 3y = 18$ and $2x + 5y = 16$, the coefficients go into a $2 \\times 2$ matrix. What number sits in row 2, column 1 of it?",
-    "answer": "2",
-    "explain": "Row 2 is the second equation and column 1 is the $x$ column, so it is the coefficient of $x$ there, which is $2$."
-  },
-  {
-    "type": "h",
-    "text": "2. Line them up before you copy"
-  },
-  {
-    "type": "p",
-    "md": "The copying only works if both equations are in the form $ax + by = c$, with the letters in the same order on the left and the number alone on the right.\nSo $5x = 11 - 2y$ is rewritten as $5x + 2y = 11$ first. A missing term is a **zero**, not a gap: the box has four slots and all four are filled."
-  },
-  {
-    "type": "figure",
-    "alt": "Two equations as printed beside the same two lined up, with a missing term written as zero.",
-    "svg": "<svg viewBox='0 0 600 168' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two equations as printed beside the same two lined up: the terms in x and y on the left of each equals sign, and a missing term written as zero'><title>Two equations as printed beside the same two lined up: the terms in x and y on the left of each equals sign, and a missing term written as zero</title><rect x='22' y='36' width='258' height='92' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='151' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>as printed</text><text x='151' y='66' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5x = 11 − 2y</text><text x='151' y='94' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2y = 6</text><text x='151' y='118' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>not ready to copy</text><path d='M 292 82 L 330 82 M 320 75 L 330 82 L 320 89' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='344' y='36' width='234' height='92' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='461' y='30' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>lined up</text><text x='461' y='66' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>5x + 2y = 11</text><text x='461' y='94' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0x + 2y = 6</text><text x='461' y='118' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>a missing term is a zero</text><text x='300' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>four slots in the box, and all four have to be filled</text></svg>",
-    "caption": "Rearrange first, then copy."
+    "md": "Read $2x + 5y = 11$ and $3x + 4y = 13$ as three lists. The numbers in front of $x$ and $y$ make a $2 \\times 2$ matrix $A$, one equation to a row. The unknowns make the column $X$, and the numbers on the right make the column $B$. The pair is then the single equation $AX = B$."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why a missing term has to be a zero",
-    "md": "The product multiplies row by column, so every row needs an entry in both columns to reproduce its equation. An empty slot would change the shape of the matrix, and the product would no longer be the pair you started from."
+    "title": "Why the matrix form is the same pair",
+    "md": "Multiply $A$ by $X$ row by column. Row 1 gives $2x + 5y$ and row 2 gives $3x + 4y$: the two left-hand sides. Setting that column equal to $B$ states both equations at once, so nothing has been added and nothing lost."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Write $2x + 5y = 11$ and $3x + 4y = 13$ as one matrix equation.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$A = \\begin{pmatrix}2 & 5 \\\\ 3 & 4\\end{pmatrix}$",
+        "decision": "Row 1 holds the coefficients of the first equation and row 2 those of the second, $x$ before $y$ in each."
+      },
+      {
+        "n": 2,
+        "working": "$X = \\begin{pmatrix}x \\\\ y\\end{pmatrix}$ and $B = \\begin{pmatrix}11 \\\\ 13\\end{pmatrix}$",
+        "decision": "The unknowns stand in a column in the order of the columns of $A$; the right-hand sides make the other column."
+      },
+      {
+        "n": 3,
+        "working": "$$\\begin{pmatrix}2 & 5 \\\\ 3 & 4\\end{pmatrix}\\begin{pmatrix}x \\\\ y\\end{pmatrix} = \\begin{pmatrix}11 \\\\ 13\\end{pmatrix}$$",
+        "decision": "This line earns the first method mark, and nothing has been worked out: every number was copied.",
+        "earns": [
+          "M1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g3",
+    "id": "g7",
     "kind": "number",
-    "prompt": "An equation in a pair reads $2y = 6$, with no term in $x$. What number goes in its $x$ slot in the coefficient matrix?",
-    "answer": "0",
-    "explain": "Zero. Writing $0x + 2y = 6$ keeps the row complete, and the product still reproduces the equation."
+    "prompt": "For the pair $6x - y = 4$ and $2x + 9y = 13$, what number sits in row 2, column 2 of the coefficient matrix?",
+    "answer": "9",
+    "explain": "Row 2 is the second equation and column 2 is the $y$ column, so the entry is the coefficient of $y$ in $2x + 9y = 13$, which is $9$. This is step 1 of See it.",
+    "twin": {
+      "prompt": "For the pair $5x + 3y = 2$ and $4x - 7y = 1$, what number sits in row 2, column 2 of the coefficient matrix?",
+      "answer": "-7",
+      "explain": "Row 2, column 2 is the coefficient of $y$ in the second equation, and its sign comes with it: $-7$."
+    }
   },
   {
     "type": "h",
-    "text": "3. Now it is a matrix equation"
+    "text": "Line them up before you copy",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "From here there is nothing new. The equation is $AX = B$, so $X = A^{-1}B$: find the determinant, build the inverse, and pre-multiply both sides.\nThe inverse goes in front of the column of constants, as always, and the product of a $2 \\times 2$ with a $2 \\times 1$ is the $2 \\times 1$ column you are after."
+    "md": "Copying works only when both equations read $ax + by = c$: the $x$ term, then the $y$ term, then the number alone on the right. So $3y = 10 - 2x$ is rewritten as $2x + 3y = 10$ first, and a term that crosses the equals sign changes its sign."
+  },
+  {
+    "type": "p",
+    "md": "A missing term is a **zero**, not a gap. In $7x = 21$ there is no $y$, so it is $7x + 0y = 21$, and the matrix keeps all four of its entries."
   },
   {
     "type": "figure",
-    "alt": "The inverse of the coefficient matrix multiplied by the column of constants, giving the solution column.",
-    "svg": "<svg viewBox='0 0 374 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The inverse of the coefficient matrix multiplied by the column of constants, giving the solution column'><title>The inverse of the coefficient matrix multiplied by the column of constants, giving the solution column</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 119 42 L 128 42 L 128 110 L 119 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='50' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5/14</text><text x='102' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3/14</text><text x='50' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-1/7</text><text x='102' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2/7</text><text x='76' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>the inverse</text><text x='162' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>×</text><path d='M 189 42 L 180 42 L 180 110 L 189 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 223 42 L 232 42 L 232 110 L 223 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='206' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>18</text><text x='206' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><text x='206' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>constants</text><text x='266' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 293 42 L 284 42 L 284 110 L 293 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 327 42 L 336 42 L 336 110 L 327 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='310' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='310' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='310' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>X</text><text x='187' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the inverse goes in front, exactly as in a matrix equation</text></svg>",
-    "caption": "The same three steps as any matrix equation."
+    "alt": "Above, the pair as printed: 3y = 10 − 2x and 7x = 21. Below, the same pair lined up: 2x + 3y = 10 and 7x + 0y = 21.",
+    "svg": "<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The pair 3y = 10 − 2x and 7x = 21 as printed, then lined up as 2x + 3y = 10 and 7x + 0y = 21'><title>The pair 3y = 10 − 2x and 7x = 21 as printed, then lined up as 2x + 3y = 10 and 7x + 0y = 21</title><rect x='40' y='20' width='320' height='82' rx='6' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='200' y='40' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>as printed</text><text x='200' y='66' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>3y = 10 − 2x</text><text x='200' y='92' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>7x = 21</text><path d='M 200 108 L 200 132 M 193 124 L 200 132 L 207 124' stroke='currentColor' stroke-width='1.4' fill='none'/><rect x='40' y='138' width='320' height='82' rx='6' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='200' y='158' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>lined up: x, then y, then the number</text><text x='200' y='184' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>2x + 3y = 10</text><text x='200' y='210' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>7x + 0y = 21</text></svg>",
+    "caption": "Rearrange first, fill the empty slot with a zero, then copy."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Write $3y = 10 - 2x$ and $7x = 21$ as $AX = B$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$3y = 10 - 2x$ becomes $2x + 3y = 10$",
+        "decision": "The $-2x$ crosses the equals sign and becomes $+2x$; the $x$ term goes first."
+      },
+      {
+        "n": 2,
+        "working": "$7x = 21$ becomes $7x + 0y = 21$",
+        "decision": "There is no $y$ term, so its coefficient is $0$."
+      },
+      {
+        "n": 3,
+        "working": "$$\\begin{pmatrix}2 & 3 \\\\ 7 & 0\\end{pmatrix}\\begin{pmatrix}x \\\\ y\\end{pmatrix} = \\begin{pmatrix}10 \\\\ 21\\end{pmatrix}$$",
+        "decision": "With both lined up, each row copies straight across.",
+        "earns": [
+          "M1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g8",
     "kind": "number",
-    "prompt": "The coefficient matrix for the pair above is $\\begin{pmatrix}4 & 3 \\\\ 2 & 5\\end{pmatrix}$. What is its determinant?",
-    "answer": "14",
-    "explain": "$(4)(5) - (3)(2) = 14$. A determinant of zero would mean no unique solution."
+    "prompt": "Line up $4x = 11 + 5y$ in the form $ax + by = c$. What is the coefficient of $y$?",
+    "answer": "-5",
+    "explain": "Moving $5y$ to the left changes its sign: $4x - 5y = 11$, so the coefficient of $y$ is $-5$. This is step 1 of See it.",
+    "twin": {
+      "prompt": "Line up $6y = 13 - x$ in the form $ax + by = c$. What is the coefficient of $x$?",
+      "answer": "1",
+      "explain": "The $-x$ crosses to the left as $+x$: $x + 6y = 13$, so the coefficient of $x$ is $1$."
+    }
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "The pair is $5x + 2y = 9$ and $4y = 8$. What is row 2 of the coefficient matrix?",
+    "options": [
+      "$0$ and $4$",
+      "$4$ and $0$",
+      "$4$ and $8$"
+    ],
+    "answer": "$0$ and $4$",
+    "optionNotes": [
+      {
+        "option": "$4$ and $0$",
+        "why": "The $4$ belongs to $y$, the second column; the missing $x$ fills the first slot with a zero.",
+        "misconception": "fm.matrix.coefficient-matrix-misformed"
+      },
+      {
+        "option": "$4$ and $8$",
+        "why": "The $8$ is the number on the right, which goes in the column $B$ and not in the coefficient matrix.",
+        "misconception": "fm.matrix.coefficient-matrix-misformed"
+      }
+    ],
+    "explain": "There is no $x$ in $4y = 8$, so it is $0x + 4y = 8$ and row 2 reads $0$ then $4$. This is step 2 of See it.",
+    "twin": {
+      "prompt": "The pair is $5x - y = 2$ and $3x = 12$. What is row 2 of the coefficient matrix?",
+      "options": [
+        "$3$ and $0$",
+        "$0$ and $3$",
+        "$3$ and $12$"
+      ],
+      "answer": "$3$ and $0$",
+      "optionNotes": [
+        {
+          "option": "$0$ and $3$",
+          "why": "The $3$ belongs to $x$, the first column; the missing $y$ is the zero in the second slot.",
+          "misconception": "fm.matrix.coefficient-matrix-misformed"
+        },
+        {
+          "option": "$3$ and $12$",
+          "why": "The $12$ is the number on the right, which belongs in the column $B$.",
+          "misconception": "fm.matrix.coefficient-matrix-misformed"
+        }
+      ],
+      "explain": "$3x = 12$ is $3x + 0y = 12$, so row 2 reads $3$ then $0$."
+    }
   },
   {
     "type": "h",
-    "text": "4. The column is not the answer yet"
+    "text": "Solve it with the inverse",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The product gives a column. The question asked for two values, so name them: $x = 3$ and $y = 2$.\nThen check. Put both values into **both** original equations: $4(3) + 3(2) = 18$, and the second works as well. Twenty seconds, and it catches every slip above it."
+    "md": "Once the pair is $AX = B$, it is a matrix equation like any other. Multiply both sides by $A^{-1}$ **in front**, so $X = A^{-1}B$: find the determinant, build the inverse, multiply the inverse by $B$, then read off the column."
   },
   {
-    "type": "figure",
-    "alt": "The solution column beside the same two numbers written out as named values on the answer line.",
-    "svg": "<svg viewBox='0 0 600 142' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The solution column beside the same two numbers written out as named values on the answer line'><title>The solution column beside the same two numbers written out as named values on the answer line</title><path d='M 159 40 L 150 40 L 150 104 L 159 104' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 185 40 L 194 40 L 194 104 L 185 104' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='172' y='59.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='172' y='91.2' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='172' y='31' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>X</text><path d='M 226 72 L 282 72 M 272 65 L 282 72 L 272 79' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='254' y='58' font-family='inherit' font-size='10' fill='currentColor' text-anchor='middle'>read it off</text><rect x='300' y='46' width='200' height='52' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.07'/><text x='400' y='78' font-family='inherit' font-size='17' fill='currentColor' text-anchor='middle'>x = 3, y = 2</text><text x='400' y='38' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>the answer line</text><text x='300' y='128' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>a column is not the answer until the two values are named</text></svg>",
-    "caption": "Read the column off, top for $x$ and bottom for $y$."
+    "type": "p",
+    "md": "When a question says **using a matrix method**, this is the only route that earns marks. A correct answer reached by elimination or substitution scores nothing, so read the instruction before you start."
   },
   {
     "type": "callout",
     "kind": "examiner",
     "title": "Summer 2025, Unit 1, Question 5",
-    "md": "The inverse in part (i) was very well done. Part (ii) said to use a matrix method, and many solved by substitution or elimination instead: those answers received no marks. Of those who did use matrices, several struggled with the layout.",
+    "md": "Most candidates found the inverse in part (i). In part (ii) many then solved the pair by substitution or elimination despite the instruction, and scored nothing for it; some who did use matrices set their working out in a way that was hard to follow.",
     "source": "ccea-cer:further-maths:2025-summer:FM1:Q5"
+  },
+  {
+    "type": "figure",
+    "alt": "One over minus 7 times the matrix with rows 4, minus 5 and minus 3, 2, multiplied by the column 11, 13, equals the column 3, 1.",
+    "svg": "<svg viewBox='0 0 400 140' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='One over minus 7 times the matrix 4, minus 5, minus 3, 2, times the column 11, 13, giving the column 3, 1'><title>One over minus 7 times the matrix 4, minus 5, minus 3, 2, times the column 11, 13, giving the column 3, 1</title><text x='81' y='68' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><path d='M 69 74 L 93 74' stroke='currentColor' stroke-width='1.3' fill='none'/><text x='81' y='92' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−7</text><path d='M 110 42 L 102 42 L 102 106 L 110 106 M 170 42 L 178 42 L 178 106 L 170 106' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='121' y='64' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4</text><text x='159' y='64' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−5</text><text x='121' y='94' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>−3</text><text x='159' y='94' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>2</text><text x='140' y='32' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>swap, negate</text><text x='197' y='79' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>×</text><path d='M 224 42 L 216 42 L 216 106 L 224 106 M 248 42 L 256 42 L 256 106 L 248 106' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='236' y='64' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>11</text><text x='236' y='94' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>13</text><text x='236' y='32' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>B</text><text x='275' y='79' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 302 42 L 294 42 L 294 106 L 302 106 M 326 42 L 334 42 L 334 106 L 326 106' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='314' y='64' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='314' y='94' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='314' y='32' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>X</text><text x='200' y='130' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>the inverse goes in front of B</text></svg>",
+    "caption": "$X = A^{-1}B$ for the pair above, the inverse in front."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Solve $2x + 5y = 11$ and $3x + 4y = 13$ using a matrix method.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$$\\begin{pmatrix}2 & 5 \\\\ 3 & 4\\end{pmatrix}\\begin{pmatrix}x \\\\ y\\end{pmatrix} = \\begin{pmatrix}11 \\\\ 13\\end{pmatrix}$$",
+        "decision": "The pair as $AX = B$, copied as in the first section.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\det A = (2)(4) - (5)(3) = -7$",
+        "decision": "Leading diagonal multiplied, minus the other diagonal multiplied. It is negative, and the minus sign stays with it."
+      },
+      {
+        "n": 3,
+        "working": "$$A^{-1} = \\frac{1}{-7}\\begin{pmatrix}4 & -5 \\\\ -3 & 2\\end{pmatrix}$$",
+        "decision": "Swap the $2$ and the $4$, change the signs of the $5$ and the $3$, and divide by the determinant, minus sign included."
+      },
+      {
+        "n": 4,
+        "working": "$$X = \\frac{1}{-7}\\begin{pmatrix}4 & -5 \\\\ -3 & 2\\end{pmatrix}\\begin{pmatrix}11 \\\\ 13\\end{pmatrix}$$",
+        "decision": "The inverse goes in front of $B$: that is what pre-multiplying means.",
+        "earns": [
+          "M2"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "$$X = \\frac{1}{-7}\\begin{pmatrix}-21 \\\\ -7\\end{pmatrix} = \\begin{pmatrix}3 \\\\ 1\\end{pmatrix}$$",
+        "decision": "Row by column: $44 - 65 = -21$ and $-33 + 26 = -7$, then each is divided by $-7$.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 6,
+        "working": "$x = 3$, $y = 1$",
+        "decision": "The top entry is $x$ and the bottom entry is $y$, named on the answer line.",
+        "earns": [
+          "W2"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "OQmK37wH_WA",
     "title": "Using Matrices to Solve Simultaneous Equations - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "The whole route once, from the pair of equations to the two values, with the layout written out."
+    "why": "The whole route worked once more, with the layout written out line by line, beside our own steps."
   },
   {
     "type": "gate",
-    "id": "g5",
+    "id": "g10",
     "kind": "number",
-    "prompt": "Solving a pair gives the column $\\begin{pmatrix}3 \\\\ 2\\end{pmatrix}$, where the top entry is $x$ and the bottom is $y$. What is the value of $y$?",
+    "prompt": "For $3x + y = 9$ and $5x + 2y = 16$, the inverse of the coefficient matrix is $\\begin{pmatrix}2 & -1 \\\\ -5 & 3\\end{pmatrix}$. What is the value of $x$?",
     "answer": "2",
-    "explain": "The bottom entry is $y$, so $y = 2$. Writing the column alone would leave the answer line unanswered."
+    "explain": "$X = A^{-1}B$, so $x$ is row 1 of the inverse times the column $B$: $(2)(9) + (-1)(16) = 2$. This is steps 4 and 5 of See it.",
+    "twin": {
+      "prompt": "For $4x + 3y = 5$ and $5x + 4y = 7$, the inverse of the coefficient matrix is $\\begin{pmatrix}4 & -3 \\\\ -5 & 4\\end{pmatrix}$. What is the value of $y$?",
+      "answer": "3",
+      "explain": "$y$ is row 2 of the inverse times the column $B$: $(-5)(5) + (4)(7) = 3$."
+    }
   },
   {
     "type": "h",
-    "text": "5. When there is no unique solution"
+    "text": "Name the values, then check them",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "If the determinant of the coefficient matrix is zero, the matrix has no inverse and the method stops. That is not a mistake in your working: it is the pair telling you something.\nTwo equations whose coefficients are in the same ratio are parallel lines, so they never meet at a single point. Say that, and name the matrix whose determinant is zero."
+    "md": "The product gives a column, but the question asked for two values. Read the column in the order of $X$: the top entry is $x$ and the bottom entry is $y$. Write them on the answer line as $x = \\ldots$, $y = \\ldots$."
+  },
+  {
+    "type": "p",
+    "md": "Then substitute both values into **both** original equations. If either fails, there is a slip above it: in the determinant, the signs of the inverse or the product. It takes twenty seconds."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Solving $3x + 2y = 16$ and $x - 4y = -18$ gave the column $\\begin{pmatrix}2 \\\\ 5\\end{pmatrix}$. Name the values and check them.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$x = 2$, $y = 5$",
+        "decision": "Top entry for $x$, bottom entry for $y$, in the order the column $X$ was written."
+      },
+      {
+        "n": 2,
+        "working": "$3(2) + 2(5) = 16$",
+        "decision": "The first equation holds."
+      },
+      {
+        "n": 3,
+        "working": "$2 - 4(5) = -18$",
+        "decision": "The second holds too, so both values stand."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "Solving a pair in $x$ and $y$ gives the column $\\begin{pmatrix}-4 \\\\ 7\\end{pmatrix}$. Which answer line is right?",
+    "options": [
+      "$x = -4$, $y = 7$",
+      "$x = 7$, $y = -4$",
+      "$x = -4$ only"
+    ],
+    "answer": "$x = -4$, $y = 7$",
+    "optionNotes": [
+      {
+        "option": "$x = 7$, $y = -4$",
+        "why": "The column is read top to bottom in the order of $X$, so the top entry belongs to $x$.",
+        "misconception": "fm.matrix.values-in-wrong-slots"
+      },
+      {
+        "option": "$x = -4$ only",
+        "why": "The question asks for both unknowns, so $y$ has to be named on the answer line as well.",
+        "misconception": "fm.matrix.values-in-wrong-slots"
+      }
+    ],
+    "explain": "The column lists $x$ and then $y$, so $x = -4$ and $y = 7$, both named. This is step 1 of See it.",
+    "twin": {
+      "prompt": "Solving a pair in $p$ and $q$ gives $X = \\begin{pmatrix}6 \\\\ -1\\end{pmatrix}$, where $X = \\begin{pmatrix}p \\\\ q\\end{pmatrix}$. Which answer line is right?",
+      "options": [
+        "$p = 6$, $q = -1$",
+        "$p = -1$, $q = 6$",
+        "$p = 6$ only"
+      ],
+      "answer": "$p = 6$, $q = -1$",
+      "optionNotes": [
+        {
+          "option": "$p = -1$, $q = 6$",
+          "why": "The entries follow the order of the unknowns, $p$ above $q$, so $p$ takes the top value.",
+          "misconception": "fm.matrix.values-in-wrong-slots"
+        },
+        {
+          "option": "$p = 6$ only",
+          "why": "Both unknowns are asked for, so $q$ needs its value too.",
+          "misconception": "fm.matrix.values-in-wrong-slots"
+        }
+      ],
+      "explain": "Top for $p$, bottom for $q$: $p = 6$ and $q = -1$."
+    }
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "Someone found $x = 3$, $y = -2$ for $5x + 2y = 11$ and $4x - 3y = 20$. What does the check show?",
+    "options": [
+      "It fails the second equation",
+      "It fails the first equation",
+      "Both equations hold"
+    ],
+    "answer": "It fails the second equation",
+    "optionNotes": [
+      {
+        "option": "It fails the first equation",
+        "why": "$5(3) + 2(-2) = 11$, so the first equation holds; the trouble is elsewhere."
+      },
+      {
+        "option": "Both equations hold",
+        "why": "$4(3) - 3(-2) = 18$, not $20$, so one equation fails and there is a slip to find."
+      }
+    ],
+    "explain": "Substitute into each: $5(3) + 2(-2) = 11$ holds, but $4(3) - 3(-2) = 18$, not $20$. This is steps 2 and 3 of See it.",
+    "twin": {
+      "prompt": "Someone found $x = -1$, $y = 4$ for $2x + 5y = 18$ and $3x - y = -7$. What does the check show?",
+      "options": [
+        "Both equations hold",
+        "It fails the second equation",
+        "It fails the first equation"
+      ],
+      "answer": "Both equations hold",
+      "optionNotes": [
+        {
+          "option": "It fails the second equation",
+          "why": "$3(-1) - 4 = -7$, so the second equation holds as well."
+        },
+        {
+          "option": "It fails the first equation",
+          "why": "$2(-1) + 5(4) = 18$, so the first equation holds."
+        }
+      ],
+      "explain": "$2(-1) + 5(4) = 18$ and $3(-1) - 4 = -7$: both hold, so the values stand."
+    }
+  },
+  {
+    "type": "h",
+    "text": "When there is no unique solution",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "If $\\det A = 0$, the coefficient matrix has no inverse, so $A^{-1}B$ cannot be formed. That is not a slip in your working. It means the two equations are parallel lines, with the same gradient, and parallel lines never meet at a single point."
+  },
+  {
+    "type": "p",
+    "md": "When a question asks why a pair cannot be solved this way, give the determinant, say that it is $0$, and **name the matrix**: the coefficient matrix has no inverse."
   },
   {
     "type": "figure",
-    "alt": "A pair of equations whose coefficient matrix has determinant zero, with the two equations shown to be multiples of one another.",
-    "svg": "<svg viewBox='0 0 320 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The coefficient matrix of a pair whose determinant is zero, so the two equations describe parallel lines'><title>The coefficient matrix of a pair whose determinant is zero, so the two equations describe parallel lines</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 103 42 L 112 42 L 112 110 L 103 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='46' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='90' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='46' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='90' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>6</text><text x='68' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>coefficients</text><text x='160' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>every entry of row 2 is twice the entry above it, so the determinant is zero</text></svg>",
-    "caption": "One row is a multiple of the other, so the determinant is zero."
+    "alt": "The lines 3x − 2y = 5 and 6x − 4y = 7 drawn on axes from x = −1 to 4. They are parallel and never cross.",
+    "svg": "<svg viewBox='0 0 400 280' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The lines 3x − 2y = 5 and 6x − 4y = 7 drawn on axes: parallel, so they never cross'><title>The lines 3x − 2y = 5 and 6x − 4y = 7 drawn on axes: parallel, so they never cross</title><path d='M 40 246 L 40 18 M 108.8 246 L 108.8 18 M 177.6 246 L 177.6 18 M 246.4 246 L 246.4 18 M 315.2 246 L 315.2 18 M 384 246 L 384 18 M 40 246 L 384 246 M 40 217.5 L 384 217.5 M 40 189 L 384 189 M 40 160.5 L 384 160.5 M 40 132 L 384 132 M 40 103.5 L 384 103.5 M 40 75 L 384 75 M 40 46.5 L 384 46.5 M 40 18 L 384 18' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.15' fill='none'/><path d='M 40 132 L 384 132 M 108.8 246 L 108.8 18' stroke='currentColor' stroke-width='1.3' fill='none'/><text x='40' y='152' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>−1</text><text x='177.6' y='152' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='246.4' y='152' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>2</text><text x='315.2' y='152' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='384' y='152' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='100.8' y='251' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>−4</text><text x='100.8' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>−2</text><text x='100.8' y='80' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>2</text><text x='100.8' y='23' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>4</text><path d='M 40 246 L 384 32.3' stroke='currentColor' stroke-width='2' fill='none'/><path d='M 40 224.6 L 384 10.9' stroke='currentColor' stroke-width='2' stroke-dasharray='7 5' fill='none'/><text x='322.1' y='92.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>3x − 2y = 5</text><text x='187.9' y='120.7' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end'>6x − 4y = 7</text><text x='384' y='124' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>x</text><text x='118.8' y='24' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>y</text></svg>",
+    "caption": "Same gradient, no crossing point: no unique solution."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Explain why $3x - 2y = 5$ and $6x - 4y = 7$ cannot be solved by a matrix method.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$A = \\begin{pmatrix}3 & -2 \\\\ 6 & -4\\end{pmatrix}$",
+        "decision": "The coefficient matrix, copied as usual."
+      },
+      {
+        "n": 2,
+        "working": "$\\det A = (3)(-4) - (-2)(6) = 0$",
+        "decision": "On the left, row 2 is twice row 1, so the determinant comes out as zero.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "The coefficient matrix $A$ has no inverse, so there is no unique solution",
+        "decision": "Name the matrix and say what a zero determinant rules out.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g13",
     "kind": "choice",
-    "prompt": "The coefficient matrix of a pair of equations has determinant zero. What does that mean?",
+    "prompt": "Which pair of equations has no unique solution?",
     "options": [
-      "There is no unique solution",
-      "The solution is zero",
-      "One unknown must be negative"
+      "$2x + y = 5$ and $6x + 3y = 4$",
+      "$2x + y = 5$ and $3x + 2y = 4$",
+      "$x + 2y = 5$ and $2x + y = 4$"
     ],
-    "answer": "There is no unique solution",
-    "explain": "No inverse exists, so the matrix method stops. The two equations describe parallel lines, which never meet at a single point."
+    "answer": "$2x + y = 5$ and $6x + 3y = 4$",
+    "optionNotes": [
+      {
+        "option": "$2x + y = 5$ and $3x + 2y = 4$",
+        "why": "Its determinant is $(2)(2) - (1)(3) = 1$, not $0$, so it has an inverse and one solution.",
+        "misconception": "fm.matrix.singular-not-recognised"
+      },
+      {
+        "option": "$x + 2y = 5$ and $2x + y = 4$",
+        "why": "Its determinant is $(1)(1) - (2)(2) = -3$: the rows are not multiples of each other, so there is one solution.",
+        "misconception": "fm.matrix.singular-not-recognised"
+      }
+    ],
+    "explain": "The determinant of $\\begin{pmatrix}2 & 1 \\\\ 6 & 3\\end{pmatrix}$ is $6 - 6 = 0$: on the left, row 2 is three times row 1, so the lines are parallel. This is step 2 of See it.",
+    "twin": {
+      "prompt": "Which of these pairs has no unique solution?",
+      "options": [
+        "$4x - 6y = 1$ and $2x - 3y = 5$",
+        "$4x + 6y = 1$ and $2x - 3y = 5$",
+        "$4x - 6y = 1$ and $3x - 2y = 5$"
+      ],
+      "answer": "$4x - 6y = 1$ and $2x - 3y = 5$",
+      "optionNotes": [
+        {
+          "option": "$4x + 6y = 1$ and $2x - 3y = 5$",
+          "why": "Its determinant is $(4)(-3) - (6)(2) = -24$, so it has an inverse.",
+          "misconception": "fm.matrix.singular-not-recognised"
+        },
+        {
+          "option": "$4x - 6y = 1$ and $3x - 2y = 5$",
+          "why": "Its determinant is $(4)(-2) - (-6)(3) = 10$, so it has an inverse.",
+          "misconception": "fm.matrix.singular-not-recognised"
+        }
+      ],
+      "explain": "$\\begin{pmatrix}4 & -6 \\\\ 2 & -3\\end{pmatrix}$ has determinant $-12 + 12 = 0$: row 1 is twice row 2 on the left."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "Exam twists",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "Read the instruction first, and use matrices whenever the question names them.\nLine both equations up, writing a missing term as a zero.\nCopy the coefficients, the unknowns and the constants into three matrices.\nSolve with the inverse, in front, and read the two values off the column.\nCheck both values in both original equations, and say when there is no unique solution."
+    "md": "**Find the inverse, then hence solve.** A part asks for $A^{-1}$, then says hence solve a pair. Use that inverse, and line the pair up so its rows match $A$: the paper may print the terms, or the equations, in another order."
+  },
+  {
+    "type": "p",
+    "md": "**The method is named.** Using a matrix method makes elimination worth nothing, however accurate it is. Start with the matrix equation."
+  },
+  {
+    "type": "p",
+    "md": "**A story first.** Two totals, costs or counts become two equations. Write them, line them up, then use matrices."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Part (i) gave $M = \\begin{pmatrix}5 & -3 \\\\ 2 & 1\\end{pmatrix}$ and $M^{-1}$ is $\\frac{1}{11}\\begin{pmatrix}1 & 3 \\\\ -2 & 5\\end{pmatrix}$. Hence solve $y + 2x = 5$ and $5x - 3y = 7$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$5x - 3y = 7$ and $2x + y = 5$",
+        "decision": "Reorder so that row 1 matches $5$ and $-3$ and row 2 matches $2$ and $1$: the rows of $M$."
+      },
+      {
+        "n": 2,
+        "working": "$$M\\begin{pmatrix}x \\\\ y\\end{pmatrix} = \\begin{pmatrix}7 \\\\ 5\\end{pmatrix}$$",
+        "decision": "Each constant follows its own equation into the column.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$$\\begin{pmatrix}x \\\\ y\\end{pmatrix} = \\frac{1}{11}\\begin{pmatrix}1 & 3 \\\\ -2 & 5\\end{pmatrix}\\begin{pmatrix}7 \\\\ 5\\end{pmatrix}$$",
+        "decision": "Hence means this inverse, from part (i), in front.",
+        "earns": [
+          "M2"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$$= \\frac{1}{11}\\begin{pmatrix}22 \\\\ 11\\end{pmatrix} = \\begin{pmatrix}2 \\\\ 1\\end{pmatrix}$$",
+        "decision": "Row by column: $7 + 15 = 22$ and $-14 + 25 = 11$.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 5,
+        "working": "$x = 2$, $y = 1$",
+        "decision": "Named on the answer line.",
+        "earns": [
+          "W2"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "choice",
+    "prompt": "Part (i) found the inverse of $\\begin{pmatrix}3 & 4 \\\\ 1 & 2\\end{pmatrix}$. Part (ii) says hence solve $4y + 3x = 10$ and $x + 2y = 4$. Which coefficient matrix does the working use?",
+    "options": [
+      "$\\begin{pmatrix}3 & 4 \\\\ 1 & 2\\end{pmatrix}$",
+      "$\\begin{pmatrix}4 & 3 \\\\ 1 & 2\\end{pmatrix}$",
+      "$\\begin{pmatrix}4 & 3 \\\\ 2 & 1\\end{pmatrix}$"
+    ],
+    "answer": "$\\begin{pmatrix}3 & 4 \\\\ 1 & 2\\end{pmatrix}$",
+    "optionNotes": [
+      {
+        "option": "$\\begin{pmatrix}4 & 3 \\\\ 1 & 2\\end{pmatrix}$",
+        "why": "That copies the first equation in its printed order; lined up as $3x + 4y = 10$ it matches part (i)'s matrix.",
+        "misconception": "fm.matrix.coefficient-matrix-misformed"
+      },
+      {
+        "option": "$\\begin{pmatrix}4 & 3 \\\\ 2 & 1\\end{pmatrix}$",
+        "why": "That swaps the columns in both rows, so each coefficient sits under the wrong unknown.",
+        "misconception": "fm.matrix.coefficient-matrix-misformed"
+      }
+    ],
+    "explain": "Line the pair up as $3x + 4y = 10$ and $x + 2y = 4$: the rows are then exactly part (i)'s matrix, so its inverse can be used. This is step 1 of See it.",
+    "twin": {
+      "prompt": "Part (i) found the inverse of $\\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$. Part (ii) says hence solve $5y + 2x = 9$ and $3y + x = 5$. Which coefficient matrix does the working use?",
+      "options": [
+        "$\\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$",
+        "$\\begin{pmatrix}5 & 2 \\\\ 3 & 1\\end{pmatrix}$",
+        "$\\begin{pmatrix}5 & 2 \\\\ 1 & 3\\end{pmatrix}$"
+      ],
+      "answer": "$\\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$",
+      "optionNotes": [
+        {
+          "option": "$\\begin{pmatrix}5 & 2 \\\\ 3 & 1\\end{pmatrix}$",
+          "why": "That copies both equations in their printed order, $y$ before $x$; lined up they give part (i)'s matrix.",
+          "misconception": "fm.matrix.coefficient-matrix-misformed"
+        },
+        {
+          "option": "$\\begin{pmatrix}5 & 2 \\\\ 1 & 3\\end{pmatrix}$",
+          "why": "Only the first equation was copied in its printed order; both have to be lined up, $x$ first.",
+          "misconception": "fm.matrix.coefficient-matrix-misformed"
+        }
+      ],
+      "explain": "Lined up, the pair is $2x + 5y = 9$ and $x + 3y = 5$, which is part (i)'s matrix."
+    }
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "This comes as \"find the inverse\" and then \"hence, using a matrix method, solve\", for about $2 + 4$ marks, and the second part is locked to the matrix route. The working runs from the pair written as $AX = B$ to $x$ and $y$ named on the answer line. Stuck? Copy the coefficients into a box: once the pair is $AX = B$, the method marks are within reach."
+    "md": "Write a pair as $AX = B$ once both equations are lined up, with a $0$ for a missing term.\nSolve with $X = A^{-1}B$, the inverse in front.\nName $x$ and $y$ from the column and check them in both equations.\nSay why a pair with $\\det A = 0$ has no unique solution, naming the matrix.\nRead the instruction: when it names the matrix method, use it."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "Expect one part that asks for $A^{-1}$ and then one that says hence, using a matrix method, solve the pair: about $2 + 4$ marks. The first mark of the solve is the pair written as $AX = B$; the last is $x$ and $y$ named. Stuck? Write the matrix equation anyway: it earns its mark before any arithmetic."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-simultaneous-equations.01"
+    "promptId": "rp.fm.u1.matrix-simultaneous-equations.09"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-simultaneous-equations.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-simultaneous-equations.05"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-simultaneous-equations.07"
+    "promptId": "rp.fm.u1.matrix-simultaneous-equations.10"
   }
 ]
