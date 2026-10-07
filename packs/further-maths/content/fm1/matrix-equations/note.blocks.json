@@ -1,207 +1,602 @@
 [
   {
     "type": "hero",
-    "lede": "An equation with a matrix in it is solved the way any equation is: undo whatever was done to the unknown. Adding and subtracting behave normally. Multiplying does not, because there is no dividing by a matrix, so the undo is the inverse — and it has to go in front on both sides.",
+    "lede": "A matrix equation is solved the way any equation is: undo what was done to the unknown matrix. An added or subtracted matrix is undone entry by entry. A matrix that multiplies cannot be divided away, so its inverse does the undoing, written in front on both sides.",
     "can": [
-      "Sort a matrix equation into the kind that needs subtraction and the kind that needs an inverse",
-      "Solve AX = B by writing X as the inverse of A multiplied by B, in that order",
-      "Clear an added matrix first, and say what shape the answer will be"
+      "Solve $A + X = B$ and $A - X = B$ entry by entry, in the right direction.",
+      "Solve $AX = B$ as $X = A^{-1}B$, the inverse in front, whatever the determinant.",
+      "Clear an added matrix first, and say why a singular matrix stops the method."
     ],
-    "minutes": 14
+    "minutes": 15
   },
   {
     "type": "h",
-    "text": "Two kinds of equation, sorted first"
+    "text": "Undo what was done to X",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "$A + X = B$ and $AX = B$ look alike and are not. The first is ordinary algebra: take $A$ from both sides, entry by entry, and $X$ is left.\nThe second cannot be done that way, because there is no dividing by a matrix. It needs the inverse. So the first thing to do with any matrix equation is decide which kind it is."
+    "md": "A matrix equation is solved like a number equation: do the same to both sides until $X$ is alone. An added matrix is taken away from both sides, position by position, and the direction matters: $A + X = B$ gives $X = B - A$, never $A - B$. From $A - X = B$, add $X$ to both sides first: $X = A - B$."
   },
   {
     "type": "figure",
-    "alt": "Four boxed matrix equations with the method named under each: subtract A, multiply by the inverse, add A, and clear C first.",
-    "svg": "<svg viewBox='0 0 600 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four boxed matrix equations with the method named under each: subtract A, multiply by the inverse, add A, and clear C before using the inverse'><title>Four boxed matrix equations with the method named under each: subtract A, multiply by the inverse, add A, and clear C before using the inverse</title><rect x='26' y='36' width='264' height='64' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='158' y='64' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>A + X = B</text><text x='158' y='86' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>subtract A</text><rect x='314' y='36' width='264' height='64' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='446' y='64' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>A X = B</text><text x='446' y='86' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>multiply by the inverse</text><rect x='26' y='120' width='264' height='64' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='158' y='148' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>X − A = B</text><text x='158' y='170' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>add A</text><rect x='314' y='120' width='264' height='64' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='446' y='148' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>A X + C = B</text><text x='446' y='170' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>clear C, then the inverse</text><text x='300' y='218' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>sort the equation before you calculate anything</text></svg>",
-    "caption": "Four equations, four methods. Sorting comes before arithmetic."
+    "alt": "Matrix B minus matrix A equals matrix X, side by side, with the top-left entries joined: 5 minus 2 equals 3.",
+    "svg": "<svg viewBox='0 0 400 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Matrix B minus matrix A equals matrix X, written side by side. A dashed curve joins the top-left entries of all three, labelled top left: 5 minus 2 equals 3.'><title>Matrix B minus matrix A equals matrix X, written side by side. A dashed curve joins the top-left entries of all three, labelled top left: 5 minus 2 equals 3.</title><path d='M 20 40 Q 12 70 20 100' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 80 40 Q 88 70 80 100' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='35' y='62.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>5</text><text x='65' y='62.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>2</text><text x='35' y='88.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>1</text><text x='65' y='88.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>7</text><path d='M 136 40 Q 128 70 136 100' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 196 40 Q 204 70 196 100' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='151' y='62.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>2</text><text x='181' y='62.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−1</text><text x='151' y='88.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>4</text><text x='181' y='88.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>3</text><path d='M 274 40 Q 266 70 274 100' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 334 40 Q 342 70 334 100' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='289' y='62.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>3</text><text x='319' y='62.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>3</text><text x='289' y='88.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−3</text><text x='319' y='88.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>4</text><text x='117' y='73' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>−</text><text x='250' y='73' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>=</text><text x='50' y='28' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle' font-style='italic'>B</text><text x='166' y='28' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle' font-style='italic'>A</text><text x='304' y='28' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle' font-style='italic'>X</text><path d='M 35 106 Q 93 134 151 106' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='5 4'/><path d='M 151 106 Q 220 134 289 106' fill='none' stroke='currentColor' stroke-width='1.2' stroke-dasharray='5 4'/><text x='200' y='156' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>top left: 5 − 2 = 3</text></svg>",
+    "caption": "Position by position: each entry of A comes off the entry in the same place in B."
+  },
+  {
+    "type": "see",
+    "stem": "It is given that $A + X = B$, where $A = \\begin{pmatrix}2 & -1 \\\\ 4 & 3\\end{pmatrix}$ and $B = \\begin{pmatrix}5 & 2 \\\\ 1 & 7\\end{pmatrix}$. Find $X$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$X = B - A$",
+        "decision": "Take $A$ from both sides; what is left on the right is $B - A$.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$$X = \\begin{pmatrix}5 - 2 & 2 - (-1) \\\\ 1 - 4 & 7 - 3\\end{pmatrix}$$",
+        "decision": "Each entry of $A$ comes off the entry in the same place in $B$."
+      },
+      {
+        "n": 3,
+        "working": "$$X = \\begin{pmatrix}3 & 3 \\\\ -3 & 4\\end{pmatrix}$$",
+        "decision": "Check: $A + X$ gives $B$ back.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
   },
   {
     "type": "gate",
-    "id": "g1",
+    "id": "g7",
     "kind": "choice",
-    "prompt": "One tap to begin. Among the four equations in the card above, which one is solved simply by taking $A$ from both sides?",
+    "prompt": "It is given that $X + A = B$, where $A = \\begin{pmatrix}1 & 4 \\\\ -2 & 0\\end{pmatrix}$ and $B = \\begin{pmatrix}6 & 3 \\\\ 1 & 5\\end{pmatrix}$. Which matrix is $X$?",
     "options": [
-      "$A + X = B$",
-      "$AX = B$",
-      "$AX + C = B$"
+      "$\\begin{pmatrix}5 & -1 \\\\ 3 & 5\\end{pmatrix}$",
+      "$\\begin{pmatrix}-5 & 1 \\\\ -3 & -5\\end{pmatrix}$",
+      "$\\begin{pmatrix}7 & 7 \\\\ -1 & 5\\end{pmatrix}$"
     ],
-    "answer": "$A + X = B$",
-    "explain": "$A$ is added to $X$, so subtracting $A$ undoes it. The two with $AX$ in them need the inverse, because $A$ is multiplying."
+    "answer": "$\\begin{pmatrix}5 & -1 \\\\ 3 & 5\\end{pmatrix}$",
+    "explain": "Take $A$ from both sides, as step 1 of See it did, so $X = B - A$, worked position by position: top left $6 - 1 = 5$. $A - B$ reverses every sign, and $A + B$ adds where the equation needs taking away.",
+    "twin": {
+      "prompt": "It is given that $X + A = B$, where $A = \\begin{pmatrix}3 & -2 \\\\ 0 & 6\\end{pmatrix}$ and $B = \\begin{pmatrix}4 & 1 \\\\ 2 & 2\\end{pmatrix}$. Which matrix is $X$?",
+      "options": [
+        "$\\begin{pmatrix}1 & 3 \\\\ 2 & -4\\end{pmatrix}$",
+        "$\\begin{pmatrix}-1 & -3 \\\\ -2 & 4\\end{pmatrix}$",
+        "$\\begin{pmatrix}7 & -1 \\\\ 2 & 8\\end{pmatrix}$"
+      ],
+      "answer": "$\\begin{pmatrix}1 & 3 \\\\ 2 & -4\\end{pmatrix}$",
+      "explain": "$X = B - A$, position by position: top left $4 - 3 = 1$, top right $1 - (-2) = 3$.",
+      "optionNotes": [
+        {
+          "option": "$\\begin{pmatrix}-1 & -3 \\\\ -2 & 4\\end{pmatrix}$",
+          "why": "That reverses every sign: the rearrangement gives B − A.",
+          "misconception": "fm.matrix.subtract-wrong-way"
+        },
+        {
+          "option": "$\\begin{pmatrix}7 & -1 \\\\ 2 & 8\\end{pmatrix}$",
+          "why": "That adds A on, where it has to come off.",
+          "misconception": "fm.matrix.equation-undone-wrongly"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\begin{pmatrix}-5 & 1 \\\\ -3 & -5\\end{pmatrix}$",
+        "why": "That is $A - B$: taking $A$ from both sides leaves $B - A$, so every sign here is reversed.",
+        "misconception": "fm.matrix.subtract-wrong-way"
+      },
+      {
+        "option": "$\\begin{pmatrix}7 & 7 \\\\ -1 & 5\\end{pmatrix}$",
+        "why": "That adds $A$ on, where the equation needs it taken off.",
+        "misconception": "fm.matrix.equation-undone-wrongly"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "1. When the matrix is added or subtracted"
+    "text": "When A multiplies X, use the inverse",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Treat it exactly as you would a number equation. From $A + X = B$, take $A$ from both sides: $X = B - A$, worked entry by entry.\nThe direction matters. $X = B - A$, not $A - B$: every entry of the answer changes sign if you take them the wrong way round, and nothing in the layout will warn you."
-  },
-  {
-    "type": "figure",
-    "alt": "Matrix B take away matrix A, entry by entry, giving the unknown matrix X.",
-    "svg": "<svg viewBox='0 0 430 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Matrix B take away matrix A, entry by entry, giving the unknown matrix X'><title>Matrix B take away matrix A, entry by entry, giving the unknown matrix X</title><path d='M 33 42 L 24 42 L 24 110 L 33 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 103 42 L 112 42 L 112 110 L 103 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='46' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>9</text><text x='90' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>1</text><text x='46' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>0</text><text x='90' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>8</text><text x='68' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>B</text><text x='146' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>−</text><path d='M 173 42 L 164 42 L 164 110 L 173 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 243 42 L 252 42 L 252 110 L 243 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='186' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='230' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-2</text><text x='186' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='230' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='208' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='286' y='76' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>=</text><path d='M 313 42 L 304 42 L 304 110 L 313 110' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M 383 42 L 392 42 L 392 110 L 383 110' stroke='currentColor' stroke-width='1.4' fill='none'/><text x='326' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>5</text><text x='370' y='62.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='326' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>-3</text><text x='370' y='96.4' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>3</text><text x='348' y='33' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>X</text><text x='215' y='138' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>ordinary algebra: take A from both sides</text></svg>",
-    "caption": "$X = B - A$, position by position."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "For $A + X = B$ with $A = \\begin{pmatrix}4 & -2 \\\\ 3 & 5\\end{pmatrix}$ and $B = \\begin{pmatrix}9 & 1 \\\\ 0 & 8\\end{pmatrix}$, the answer is $X = B - A$. What is the entry in row 1, column 1 of $X$?",
-    "answer": "5",
-    "explain": "$9 - 4 = 5$. Taking them the other way round would give $-5$."
-  },
-  {
-    "type": "h",
-    "text": "2. When the matrix is multiplying"
-  },
-  {
-    "type": "p",
-    "md": "From $AX = B$ there is nothing to divide by, so multiply instead — by $A^{-1}$, which is the matrix that undoes $A$.\nWrite the chain out. $A^{-1}AX = A^{-1}B$. The left side has $A^{-1}A$, which is the identity, and the identity leaves $X$ unchanged. So $X = A^{-1}B$."
-  },
-  {
-    "type": "figure",
-    "alt": "Four lines of working: A X equals B, the inverse pushed in from the left of both sides, the identity times X, and X equals the inverse of A times B.",
-    "svg": "<svg viewBox='0 0 600 210' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four lines of working: A X equals B, then the inverse of A pushed in from the left of both sides, then the identity times X, then X equals the inverse of A times B'><title>Four lines of working: A X equals B, then the inverse of A pushed in from the left of both sides, then the identity times X, then X equals the inverse of A times B</title><text x='32' y='40' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>A X = B</text><text x='290' y='40' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>the equation as it stands</text><rect x='20' y='53' width='250' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.09'/><text x='32' y='74' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>A⁻¹ A X = A⁻¹ B</text><text x='290' y='74' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>the inverse pushed in from the left of both sides</text><text x='32' y='108' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>I X = A⁻¹ B</text><text x='290' y='108' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>because A⁻¹ A is the identity</text><text x='32' y='142' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>X = A⁻¹ B</text><text x='290' y='142' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>and the identity leaves X alone</text><path d='M 14 20 L 14 160' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='300' y='196' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>four lines, and the middle two are the justification</text></svg>",
-    "caption": "The middle two lines are the reason, not decoration."
+    "md": "In $AX = B$ the matrix $A$ multiplies $X$, and there is no dividing by a matrix. What undoes $A$ is its inverse: $A^{-1}A = I$, the identity, which acts like the number $1$. So multiply both sides by $A^{-1}$, and $X$ is left on its own."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why an inverse and not a division",
-    "md": "Division is defined for numbers because every number except zero has a reciprocal. Matrices have inverses instead, and only when the determinant is not zero. So \"divide both sides by $A$\" has no meaning; \"multiply both sides by $A^{-1}$\" has one, and it does the same job."
+    "title": "Why there is no dividing by a matrix",
+    "md": "For numbers, dividing by $4$ is multiplying by $\\frac{1}{4}$, the number that undoes $4$. A matrix has no reciprocal, but it may have an inverse that does the same job, and only when its determinant is not zero. So the undo is multiplication by $A^{-1}$."
+  },
+  {
+    "type": "figure",
+    "alt": "The identity matrix times the column x over y gives the column x over y; underneath, 1 times x plus 0 times y equals x.",
+    "svg": "<svg viewBox='0 0 400 142' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The identity matrix, 1 0 over 0 1, times the column x over y gives the column x over y unchanged; underneath, 1 times x plus 0 times y equals x.'><title>The identity matrix, 1 0 over 0 1, times the column x over y gives the column x over y unchanged; underneath, 1 times x plus 0 times y equals x.</title><path d='M 46 30 Q 38 60 46 90' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 106 30 Q 114 60 106 90' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='61' y='52.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>1</text><text x='91' y='52.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>0</text><text x='61' y='78.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>0</text><text x='91' y='78.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>1</text><path d='M 130 30 Q 122 60 130 90' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 160 30 Q 168 60 160 90' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='145' y='52.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>x</text><text x='145' y='78.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>y</text><path d='M 246 30 Q 238 60 246 90' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 276 30 Q 284 60 276 90' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='261' y='52.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>x</text><text x='261' y='78.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>y</text><text x='205' y='63' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>=</text><text x='76' y='20' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle' font-style='italic'>I</text><text x='200' y='126' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1 × x + 0 × y = x</text></svg>",
+    "caption": "The identity is the matrix version of 1: whatever it multiplies comes out as it went in."
+  },
+  {
+    "type": "see",
+    "stem": "Show that $AX = B$ gives $X = A^{-1}B$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$A^{-1}AX = A^{-1}B$",
+        "decision": "Multiply both sides by the inverse, written in front of each side.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$IX = A^{-1}B$",
+        "decision": "A matrix times its own inverse is the identity matrix, $I$."
+      },
+      {
+        "n": 3,
+        "working": "$X = A^{-1}B$",
+        "decision": "The identity changes nothing it multiplies, so $IX$ is simply $X$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "proof"
   },
   {
     "type": "gate",
     "id": "g3",
     "kind": "choice",
-    "prompt": "In the chain shown above, $A^{-1}AX = A^{-1}B$ becomes $X = A^{-1}B$. What happened to $A^{-1}A$?",
+    "prompt": "Multiplying both sides of $AX = B$ by $A^{-1}$ gives $A^{-1}AX = A^{-1}B$. What happened to $A^{-1}A$ on the way to $X = A^{-1}B$?",
     "options": [
       "It became the identity, which leaves $X$ unchanged",
       "It cancelled to zero",
       "It became $A^{2}$"
     ],
     "answer": "It became the identity, which leaves $X$ unchanged",
-    "explain": "An inverse multiplied by its own matrix is the identity, and the identity is the matrix version of $1$."
+    "explain": "Step 2 of See it: a matrix times its own inverse is the identity, the matrix version of $1$, and step 3 used $IX = X$. It does not vanish to zero, and it is not $A$ times itself.",
+    "twin": {
+      "prompt": "Which matrix, multiplied in front of $LX$, leaves $X$ on its own?",
+      "options": [
+        "$L^{-1}$",
+        "$L$",
+        "$\\frac{1}{L}$"
+      ],
+      "answer": "$L^{-1}$",
+      "explain": "$L^{-1}L = I$ and $IX = X$. $L$ itself would give $L^{2}X$, and there is no dividing by a matrix.",
+      "optionNotes": [
+        {
+          "option": "$L$",
+          "why": "$L$ in front gives $L^{2}X$; only the inverse undoes $L$.",
+          "misconception": "fm.matrix.equation-undone-wrongly"
+        },
+        {
+          "option": "$\\frac{1}{L}$",
+          "why": "There is no dividing by a matrix; its inverse does that job.",
+          "misconception": "fm.matrix.equation-undone-wrongly"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "It cancelled to zero",
+        "why": "A matrix times its own inverse is the identity, not the zero matrix; zero would wipe X out."
+      },
+      {
+        "option": "It became $A^{2}$",
+        "why": "$A^{-1}A$ is the inverse times the matrix, not $A$ times $A$: the inverse undoes $A$."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "3. In front, on both sides"
+    "text": "In front, on both sides",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The inverse goes **in front** of each side. That is called pre-multiplying, and it matters because $AB$ and $BA$ are different matrices.\nWriting $A^{-1}$ in front on one side and behind on the other breaks the equation, and it is the slip the examiners look for here. One rule covers every question on this specification: inverse first, both sides."
-  },
-  {
-    "type": "figure",
-    "alt": "Two boxes: the inverse written in front of both sides, which balances; and the inverse in front of one side and behind the other, struck through.",
-    "svg": "<svg viewBox='0 0 600 154' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two boxes: on the left the inverse written in front of both sides, which balances; on the right the inverse in front of one side and behind the other, struck through'><title>Two boxes: on the left the inverse written in front of both sides, which balances; on the right the inverse in front of one side and behind the other, struck through</title><rect x='22' y='34' width='250' height='76' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='147' y='28' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>both inverses on the left</text><text x='147' y='70' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>A⁻¹ A X = A⁻¹ B</text><text x='147' y='96' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>the equation still balances</text><rect x='312' y='34' width='266' height='76' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='445' y='28' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>one left, one right</text><text x='445' y='70' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>A⁻¹ A X = B A⁻¹</text><path d='M 356 62 L 534 78' stroke='currentColor' stroke-width='1.8' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='445' y='96' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>not allowed: the order changes the product</text><text x='300' y='140' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>pre-multiply means in front, on both sides at once</text></svg>",
-    "caption": "Same side, both sides."
+    "md": "The inverse goes in front of $A$, where it meets $A$ and makes $I$, so it goes in front of $B$ as well: the same thing, in the same place, on both sides. The place matters because two matrices multiplied the other way round usually give a different matrix, so $BA^{-1}$ is not the answer."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "Summer 2018, Unit 1, Question 5",
-    "md": "This was really well done, and the candidates who saw that the inverse was the way in made good progress. The marks that went were mostly arithmetic slips, and now and then a product multiplied in the wrong order. Write $A^{-1}$ in front of both sides before you work anything out.",
-    "source": "ccea-cer:further-maths:2018-summer:FM1:Q5"
+    "title": "What Summer 2018 found",
+    "md": "Summer 2018 Q5: most saw that finding an inverse was the way in, and the marks that went were mostly arithmetic; now and then the two matrices were multiplied the wrong way round."
+  },
+  {
+    "type": "figure",
+    "alt": "P inverse Q and Q P inverse written one above the other: two different matrices, with a not-equal sign between them.",
+    "svg": "<svg viewBox='0 0 400 186' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two products of the same two matrices. P inverse Q, which solves PX = Q, and Q P inverse, which does not, are different matrices, with a not-equal sign between them.'><title>Two products of the same two matrices. P inverse Q, which solves PX = Q, and Q P inverse, which does not, are different matrices, with a not-equal sign between them.</title><path d='M 176 18 Q 168 48 176 78' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 236 18 Q 244 48 236 78' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='191' y='40.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>0</text><text x='221' y='40.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−1</text><text x='191' y='66.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>1</text><text x='221' y='66.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>2</text><path d='M 176 112 Q 168 142 176 172' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 236 112 Q 244 142 236 172' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='191' y='134.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>2</text><text x='221' y='134.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−1</text><text x='191' y='160.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>1</text><text x='221' y='160.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>0</text><text x='150' y='51' font-family='inherit' font-size='17' fill='currentColor' text-anchor='end'>P⁻¹Q =</text><text x='150' y='145' font-family='inherit' font-size='17' fill='currentColor' text-anchor='end'>QP⁻¹ =</text><text x='206' y='102' font-family='inherit' font-size='22' fill='currentColor' text-anchor='middle'>≠</text><text x='258' y='51' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>solves PX = Q</text><text x='258' y='145' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>does not</text></svg>",
+    "caption": "The same two matrices in the two orders: only one of them solves PX = Q."
+  },
+  {
+    "type": "see",
+    "stem": "With $P^{-1} = \\begin{pmatrix}2 & -1 \\\\ -3 & 2\\end{pmatrix}$ and $Q = \\begin{pmatrix}1 & 0 \\\\ 2 & 1\\end{pmatrix}$, compare the two orders for $PX = Q$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$$P^{-1}Q = \\begin{pmatrix}0 & -1 \\\\ 1 & 2\\end{pmatrix}$$",
+        "decision": "Row by column, with the inverse first."
+      },
+      {
+        "n": 2,
+        "working": "$$QP^{-1} = \\begin{pmatrix}2 & -1 \\\\ 1 & 0\\end{pmatrix}$$",
+        "decision": "The same two matrices the other way round: a different matrix."
+      },
+      {
+        "n": 3,
+        "working": "$$P\\begin{pmatrix}0 & -1 \\\\ 1 & 2\\end{pmatrix} = \\begin{pmatrix}1 & 0 \\\\ 2 & 1\\end{pmatrix}$$",
+        "decision": "Only the inverse-first product gives $Q$ back, with $P = \\begin{pmatrix}2 & 1 \\\\ 3 & 2\\end{pmatrix}$, so $X = P^{-1}Q$.",
+        "earns": [
+          "M1"
+        ]
+      }
+    ],
+    "kind": "explanation"
   },
   {
     "type": "gate",
     "id": "g4",
     "kind": "choice",
-    "prompt": "To solve $AX = B$, where should $A^{-1}$ be written?",
+    "prompt": "To solve $LX = M$ for $X$, where must $L^{-1}$ be written?",
     "options": [
       "In front of both sides",
       "Behind both sides",
       "In front of the left side only"
     ],
     "answer": "In front of both sides",
-    "explain": "In front of $A$ so that $A^{-1}A$ becomes the identity, and in front of $B$ so the equation stays balanced."
+    "explain": "In front of $L$, so that $L^{-1}L$ becomes $I$, and in the same place on the right to keep the sides equal, which is the product step 3 of See it checked: $X = L^{-1}M$. Behind $L$ the inverse never meets it, so $X$ is never freed.",
+    "twin": {
+      "prompt": "Multiplying both sides of $LX = M$ by $L^{-1}$, which product is $X$?",
+      "options": [
+        "$L^{-1}M$",
+        "$ML^{-1}$",
+        "$L^{-1}ML$"
+      ],
+      "answer": "$L^{-1}M$",
+      "explain": "The inverse goes in front on both sides, so the right side becomes $L^{-1}M$. $ML^{-1}$ is the other order, usually a different matrix.",
+      "optionNotes": [
+        {
+          "option": "$ML^{-1}$",
+          "why": "That is the other order, usually a different matrix: the inverse goes in front.",
+          "misconception": "fm.matrix.inverse-order"
+        },
+        {
+          "option": "$L^{-1}ML$",
+          "why": "One inverse in front of each side is all it takes; nothing multiplies on the right.",
+          "misconception": "fm.matrix.equation-undone-wrongly"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Behind both sides",
+        "why": "Behind $L$ the inverse never meets it, so $L^{-1}L$ is never formed and $X$ is not freed.",
+        "misconception": "fm.matrix.inverse-order"
+      },
+      {
+        "option": "In front of the left side only",
+        "why": "Whatever is done to one side is done to the other, in the same place, or the equation breaks.",
+        "misconception": "fm.matrix.inverse-order"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "4. Know the shape before you start"
+    "text": "The full method, line by line",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "$X = A^{-1}B$, so the shape rule from matrix arithmetic decides what $X$ looks like. A $2 \\times 2$ inverse multiplied by a $2 \\times 1$ column gives a $2 \\times 1$ column.\nSo if $B$ is a column, $X$ is a column, and an answer written as a square matrix is wrong before the arithmetic is read. Check the shape, then do the work."
+    "md": "On the paper the inverse is found inside the same question. Write the determinant on its own line, then the inverse, then $X = A^{-1}B$, then the product row by column. A $2 \\times 2$ inverse times a column gives a column, so when $B$ is a column, expect $X$ to be one too."
   },
   {
     "type": "figure",
-    "alt": "The shape rule applied to A times X equals B: a 2 by 2 multiplied by a 2 by 1 gives a 2 by 1.",
-    "svg": "<svg viewBox='0 0 600 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The shape rule applied to A times X equals B: a 2 by 2 multiplied by a 2 by 1 gives a 2 by 1, with the inner pair joined and the outer pair joined'><title>The shape rule applied to A times X equals B: a 2 by 2 multiplied by a 2 by 1 gives a 2 by 1, with the inner pair joined and the outer pair joined</title><text x='300' y='32' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>the shape of X is fixed before any arithmetic</text><text x='150' y='78' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>2 × 2</text><text x='150' y='98' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>A</text><text x='228' y='78' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>×</text><text x='300' y='78' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>2 × 1</text><text x='300' y='98' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>X</text><text x='372' y='78' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>=</text><text x='445' y='78' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>2 × 1</text><text x='445' y='98' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>B</text><path d='M 180 90 L 180 112 L 272 112 L 272 90' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='226' y='128' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='middle'>these match, so the product exists</text><path d='M 128 62 L 128 46 L 476 46 L 476 62' stroke='currentColor' stroke-width='1.1' fill='none' stroke-dasharray='4 3'/><text x='300' y='156' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>so X has as many rows as A and as many columns as B</text></svg>",
-    "caption": "As many rows as $A$, as many columns as $B$."
+    "alt": "The inverse times the column B gives X; row 1 of the inverse, the column and the top entry of X are boxed, with 1 times 4 plus (minus 2) times 3 equals minus 2 underneath.",
+    "svg": "<svg viewBox='0 0 400 144' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The inverse times the column B gives X. Row 1 of the inverse and the column are boxed, and so is the top entry of X; underneath, 1 times 4 plus -2 times 3 equals -2.'><title>The inverse times the column B gives X. Row 1 of the inverse and the column are boxed, and so is the top entry of X; underneath, 1 times 4 plus -2 times 3 equals -2.</title><path d='M 36 34 Q 28 64 36 94' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 96 34 Q 104 64 96 94' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='51' y='56.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>1</text><text x='81' y='56.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−2</text><text x='51' y='82.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−2</text><text x='81' y='82.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>5</text><path d='M 132 34 Q 124 64 132 94' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 162 34 Q 170 64 162 94' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='147' y='56.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>4</text><text x='147' y='82.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>3</text><path d='M 256 34 Q 248 64 256 94' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 286 34 Q 294 64 286 94' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='271' y='56.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>−2</text><text x='271' y='82.6' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>7</text><text x='220' y='67' font-family='inherit' font-size='20' fill='currentColor' text-anchor='middle'>=</text><rect x='38' y='38' width='56' height='24' rx='6' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.3'/><rect x='134' y='37' width='26' height='54' rx='6' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1.3'/><rect x='254' y='38.6' width='34' height='24' rx='6' fill='currentColor' fill-opacity='0' stroke='currentColor' stroke-width='1.3'/><text x='200' y='128' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1 × 4 + (−2) × 3 = −2</text></svg>",
+    "caption": "Row 1 of the inverse meets the column to give the top entry of X."
   },
   {
-    "type": "gate",
-    "id": "g5",
-    "kind": "choice",
-    "prompt": "$A$ is a $2 \\times 2$ matrix and $B$ is a $2 \\times 1$ column. In the equation $AX = B$, what shape is $X$?",
-    "options": [
-      "$2 \\times 1$",
-      "$2 \\times 2$",
-      "$1 \\times 2$"
+    "type": "see",
+    "stem": "It is given that $AX = B$, where $A = \\begin{pmatrix}5 & 2 \\\\ 2 & 1\\end{pmatrix}$ and $B = \\begin{pmatrix}4 \\\\ 3\\end{pmatrix}$. Find $X$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\det A = (5)(1) - (2)(2) = 1$",
+        "decision": "The determinant first, on its own line; it is not zero, so the inverse exists.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$$A^{-1} = \\begin{pmatrix}1 & -2 \\\\ -2 & 5\\end{pmatrix}$$",
+        "decision": "Swap the leading diagonal, change the signs of the other two, divide by 1.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$X = A^{-1}B$",
+        "decision": "The inverse in front of $B$; $X$ will be a column, like $B$.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$$X = \\begin{pmatrix}1 \\times 4 + (-2) \\times 3 \\\\ -2 \\times 4 + 5 \\times 3\\end{pmatrix} = \\begin{pmatrix}-2 \\\\ 7\\end{pmatrix}$$",
+        "decision": "Each row of the inverse meets the column. Check: $AX$ gives $B$ back.",
+        "earns": [
+          "W1"
+        ]
+      }
     ],
-    "answer": "$2 \\times 1$",
-    "explain": "$X = A^{-1}B$ is a $2 \\times 2$ times a $2 \\times 1$, so it is a column with two entries."
-  },
-  {
-    "type": "h",
-    "text": "5. When something is added as well"
-  },
-  {
-    "type": "p",
-    "md": "$AX + C = B$ is both kinds at once, and the order is the ordinary one: clear the added matrix first, then deal with the multiplication.\nTake $C$ from both sides to get $AX = B - C$, work out that column, and only then multiply by $A^{-1}$. Going straight to $A^{-1}B$ solves a different equation."
-  },
-  {
-    "type": "figure",
-    "alt": "Four lines of working: A X plus C equals B, then A X equals B minus C, then the inverse of A in front of both sides, then X equals the inverse of A times the bracket B minus C.",
-    "svg": "<svg viewBox='0 0 600 210' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Four lines of working: A X plus C equals B, then A X equals B minus C, then the inverse of A in front of both sides, then X equals the inverse of A times the bracket B minus C'><title>Four lines of working: A X plus C equals B, then A X equals B minus C, then the inverse of A in front of both sides, then X equals the inverse of A times the bracket B minus C</title><text x='32' y='40' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>A X + C = B</text><text x='290' y='40' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>the equation as it stands</text><rect x='20' y='53' width='250' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.09'/><text x='32' y='74' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>A X = B − C</text><text x='290' y='74' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>take C from both sides first</text><text x='32' y='108' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>A⁻¹ A X = A⁻¹ (B − C)</text><text x='290' y='108' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>then the inverse, in front of both sides</text><text x='32' y='142' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>X = A⁻¹ (B − C)</text><text x='290' y='142' font-family='inherit' font-size='10.5' fill='currentColor' text-anchor='start'>the bracket stays until the product is worked out</text><path d='M 14 20 L 14 160' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='300' y='196' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the added matrix is cleared before the inverse comes in</text></svg>",
-    "caption": "Clear $C$ first; only then does the inverse come in."
+    "kind": "calculation"
   },
   {
     "type": "video",
     "videoId": "RFKGvx1isyI",
     "title": "Matrix Equations part 1 - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "The same method worked through on several equations, with the inverse written in front each time."
+    "why": "The same method on several equations, the inverse written in front each time, beside our own steps above."
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g8",
     "kind": "number",
-    "prompt": "For $AX + C = B$ with $C = \\begin{pmatrix}3 \\\\ 1\\end{pmatrix}$ and $B = \\begin{pmatrix}11 \\\\ 4\\end{pmatrix}$, the first step gives $AX = B - C$. What is the entry in row 1 of $B - C$?",
-    "answer": "8",
-    "explain": "$11 - 3 = 8$. Only once $C$ is cleared does the inverse come in."
-  },
-  {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "The other side, which CCEA does not set",
-    "md": "An equation written $XA = B$ needs the inverse **after** $B$, as $X = BA^{-1}$. The Teacher Guidance for this statement excludes that form, so on this specification the inverse always goes in front. It is worth knowing the other case exists, and no more."
-  },
-  {
-    "type": "h",
-    "text": "You can now"
-  },
-  {
-    "type": "p",
-    "md": "Sort a matrix equation before solving it: added, subtracted, or multiplying.\nSolve $A + X = B$ as $X = B - A$, in that direction.\nSolve $AX = B$ as $X = A^{-1}B$, with the inverse in front of both sides.\nClear an added matrix before you reach for the inverse.\nSay what shape $X$ will be before doing any arithmetic."
+    "prompt": "It is given that $AX = B$, where $A = \\begin{pmatrix}3 & 2 \\\\ 4 & 3\\end{pmatrix}$ and $B = \\begin{pmatrix}5 \\\\ 6\\end{pmatrix}$. What is the top entry of $X$?",
+    "answer": "3",
+    "explain": "As in steps 1 to 4 of See it: $\\det A = 9 - 8 = 1$, so $A^{-1} = \\begin{pmatrix}3 & -2 \\\\ -4 & 3\\end{pmatrix}$. Row 1 times the column: $3 \\times 5 + (-2) \\times 6 = 3$.",
+    "twin": {
+      "prompt": "It is given that $AX = B$, where $A = \\begin{pmatrix}2 & 3 \\\\ 1 & 2\\end{pmatrix}$ and $B = \\begin{pmatrix}7 \\\\ 4\\end{pmatrix}$. What is the top entry of $X$?",
+      "answer": "2",
+      "explain": "$\\det A = 1$, so $A^{-1} = \\begin{pmatrix}2 & -3 \\\\ -1 & 2\\end{pmatrix}$, and row 1 gives $2 \\times 7 + (-3) \\times 4 = 2$."
+    }
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "When the determinant is not 1",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "A matrix equation is usually worth $4$ or $5$ marks, with the inverse found inside the same question, so the later marks ride on it. The marks go on the inverse, on the product set up with the inverse in front, and on the final entries. Stuck? Write the inverse in front of both sides and say which side each one is on: that line alone can earn a mark."
+    "md": "Most papers set an inverse with a fraction in front, often a negative one: $\\det A = -2$ gives $-\\frac{1}{2}$. Keep that fraction outside the matrix. Multiply the swapped-and-negated matrix by $B$ first, in whole numbers, and divide by the determinant at the very end, minus sign included."
+  },
+  {
+    "type": "see",
+    "stem": "It is given that $AX = B$, where $A = \\begin{pmatrix}1 & 3 \\\\ 2 & 4\\end{pmatrix}$ and $B = \\begin{pmatrix}5 \\\\ 6\\end{pmatrix}$. Find $X$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\det A = (1)(4) - (3)(2) = -2$",
+        "decision": "Negative, so the fraction in front of the inverse is negative.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$$A^{-1} = -\\frac{1}{2}\\begin{pmatrix}4 & -3 \\\\ -2 & 1\\end{pmatrix}$$",
+        "decision": "Swap, change two signs, and keep $-\\frac{1}{2}$ outside.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$$X = -\\frac{1}{2}\\begin{pmatrix}2 \\\\ -4\\end{pmatrix}$$",
+        "decision": "Row by column in whole numbers: $4 \\times 5 + (-3) \\times 6 = 2$ and $-2 \\times 5 + 1 \\times 6 = -4$.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$$X = \\begin{pmatrix}-1 \\\\ 2\\end{pmatrix}$$",
+        "decision": "Now divide by $-2$: every sign flips. Check: $AX$ gives $B$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "It is given that $AX = B$, where $A = \\begin{pmatrix}2 & 1 \\\\ 3 & 4\\end{pmatrix}$ and $B = \\begin{pmatrix}1 \\\\ 1\\end{pmatrix}$. What is the top entry of $X$, as a decimal?",
+    "answer": "0.6",
+    "explain": "As steps 1 to 4 of See it: $\\det A = 8 - 3 = 5$. Row 1 of the swapped-and-negated matrix times the column is $4 \\times 1 + (-1) \\times 1 = 3$, and dividing by $5$ last gives $\\frac{3}{5} = 0.6$.",
+    "twin": {
+      "prompt": "It is given that $AX = B$, where $A = \\begin{pmatrix}3 & 1 \\\\ 1 & 2\\end{pmatrix}$ and $B = \\begin{pmatrix}1 \\\\ 3\\end{pmatrix}$. What is the top entry of $X$, as a decimal?",
+      "answer": "-0.2",
+      "explain": "$\\det A = 6 - 1 = 5$. Row 1: $2 \\times 1 + (-1) \\times 3 = -1$, then divide by $5$: $-0.2$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Clear an added matrix first",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "When the equation also adds or subtracts a matrix, clear that first, exactly as in a number equation: from $AX - C = B$, add $C$ to both sides to reach $AX = B + C$. Only then bring in the inverse, and let it multiply the whole of $B + C$. The papers have set this as $(P - Q)X = R$ and as $AX = B + C$."
+  },
+  {
+    "type": "see",
+    "stem": "It is given that $AX - C = B$, where $A = \\begin{pmatrix}3 & 1 \\\\ 2 & 1\\end{pmatrix}$, $B = \\begin{pmatrix}4 \\\\ 3\\end{pmatrix}$ and $C = \\begin{pmatrix}2 \\\\ 5\\end{pmatrix}$. Find $X$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$$AX = B + C = \\begin{pmatrix}6 \\\\ 8\\end{pmatrix}$$",
+        "decision": "Add $C$ to both sides first; $A$ waits.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\det A = 1$, so $A^{-1} = \\begin{pmatrix}1 & -1 \\\\ -2 & 3\\end{pmatrix}$",
+        "decision": "Swap and change signs; the determinant is 1.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$X = A^{-1}(B + C)$",
+        "decision": "The inverse multiplies the whole right side, bracket and all.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$$X = \\begin{pmatrix}6 - 8 \\\\ -12 + 24\\end{pmatrix} = \\begin{pmatrix}-2 \\\\ 12\\end{pmatrix}$$",
+        "decision": "Row by column. Check: $AX - C$ gives $B$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "It is given that $AX + C = B$, where $A = \\begin{pmatrix}5 & 2 \\\\ 7 & 3\\end{pmatrix}$, $C = \\begin{pmatrix}1 \\\\ 2\\end{pmatrix}$ and $B = \\begin{pmatrix}7 \\\\ 6\\end{pmatrix}$. What is the top entry of $X$?",
+    "answer": "10",
+    "explain": "Clear $C$ first, as step 1 of See it did: $AX = B - C = \\begin{pmatrix}6 \\\\ 4\\end{pmatrix}$. Then $A^{-1} = \\begin{pmatrix}3 & -2 \\\\ -7 & 5\\end{pmatrix}$, and row 1 gives $18 - 8 = 10$. Going straight to $A^{-1}B$ solves a different equation.",
+    "twin": {
+      "prompt": "It is given that $AX - C = B$, where $A = \\begin{pmatrix}4 & 1 \\\\ 3 & 1\\end{pmatrix}$, $C = \\begin{pmatrix}1 \\\\ 1\\end{pmatrix}$ and $B = \\begin{pmatrix}6 \\\\ 3\\end{pmatrix}$. What is the top entry of $X$?",
+      "answer": "3",
+      "explain": "Add $C$ first: $AX = B + C = \\begin{pmatrix}7 \\\\ 4\\end{pmatrix}$. Then $A^{-1} = \\begin{pmatrix}1 & -1 \\\\ -3 & 4\\end{pmatrix}$, and row 1 gives $7 - 4 = 3$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "How the paper twists it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**No inverse.** If the matrix multiplying $X$ has determinant $0$, it has no inverse and the equation cannot be solved this way. Say so naming the matrix: in 2023 some answers only said the matrix had no inverse, without saying which. A part may instead ask which value makes a matrix singular (2021)."
+  },
+  {
+    "type": "p",
+    "md": "**Unknown entries.** A product with letters in it (2021, 2024): multiply it out row by column, then set the matching entries equal and solve."
+  },
+  {
+    "type": "p",
+    "md": "**Work something out first.** The right side may be a product or a square, as in $AY = B^{2}$ (2026): find it first, row by column, never by squaring each entry (2024)."
+  },
+  {
+    "type": "figure",
+    "alt": "The matrix S with its two diagonals drawn: 6 times 2 is 12, 4 times 3 is 12, so det S = 12 − 12 = 0.",
+    "svg": "<svg viewBox='0 0 400 154' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The matrix S with its two diagonals drawn: 6 times 2 is 12 and 4 times 3 is 12, so det S is 12 minus 12, which is 0.'><title>The matrix S with its two diagonals drawn: 6 times 2 is 12 and 4 times 3 is 12, so det S is 12 minus 12, which is 0.</title><path d='M 156 30 Q 148 68 156 106' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 236 30 Q 244 68 236 106' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='176' y='57.3' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>6</text><text x='216' y='57.3' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>4</text><text x='176' y='91.3' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>3</text><text x='216' y='91.3' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>2</text><text x='140' y='72' font-family='inherit' font-size='17' fill='currentColor' text-anchor='end'>S =</text><line x1='184' y1='55.3' x2='208' y2='79.3' stroke='currentColor' stroke-width='1.3'/><line x1='208' y1='55.3' x2='184' y2='79.3' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><text x='260' y='60' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>6 × 2 = 12</text><text x='260' y='86' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>4 × 3 = 12</text><text x='200' y='138' font-family='inherit' font-size='16' fill='currentColor' text-anchor='middle'>det S = 12 − 12 = 0</text></svg>",
+    "caption": "Two equal diagonal products: the determinant is zero, so S has no inverse."
+  },
+  {
+    "type": "see",
+    "stem": "With $S = \\begin{pmatrix}6 & 4 \\\\ 3 & 2\\end{pmatrix}$, explain why $SX = B$ cannot be solved.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\det S = (6)(2) - (4)(3) = 12 - 12 = 0$",
+        "decision": "The determinant decides whether an inverse exists.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "So $S$ has no inverse",
+        "decision": "Name the matrix, $S$, not just 'the matrix'."
+      },
+      {
+        "n": 3,
+        "working": "So $SX = B$ cannot be solved by pre-multiplying",
+        "decision": "There is no $S^{-1}$ to put in front of both sides.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "explanation"
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "$T = \\begin{pmatrix}4 & -2 \\\\ -6 & 3\\end{pmatrix}$. Which line explains why $TX = B$ cannot be solved?",
+    "options": [
+      "$\\det T = 0$, so $T$ has no inverse",
+      "The matrix has no inverse",
+      "Divide both sides by $T$ instead"
+    ],
+    "answer": "$\\det T = 0$, so $T$ has no inverse",
+    "explain": "As steps 1 and 2 of See it: $\\det T = 12 - 12 = 0$, so $T$ has no inverse, and the line names $T$. 'The matrix has no inverse' does not say which matrix, and there is no dividing by a matrix.",
+    "twin": {
+      "prompt": "$U = \\begin{pmatrix}3 & 6 \\\\ 1 & 2\\end{pmatrix}$. Which line explains why $UX = B$ cannot be solved?",
+      "options": [
+        "$\\det U = 0$, so $U$ has no inverse",
+        "The matrix has no inverse",
+        "Multiply both sides by $U$ instead"
+      ],
+      "answer": "$\\det U = 0$, so $U$ has no inverse",
+      "explain": "$\\det U = 6 - 6 = 0$, so $U$ has no inverse: name $U$ in the line.",
+      "optionNotes": [
+        {
+          "option": "The matrix has no inverse",
+          "why": "Say which matrix: $U$ has no inverse.",
+          "misconception": "fm.matrix.singular-not-recognised"
+        },
+        {
+          "option": "Multiply both sides by $U$ instead",
+          "why": "Multiplying by $U$ adds a factor and cannot free $X$; $U$ has no inverse.",
+          "misconception": "fm.matrix.equation-undone-wrongly"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The matrix has no inverse",
+        "why": "True, but it does not say which matrix; name $T$ as the one with no inverse.",
+        "misconception": "fm.matrix.singular-not-recognised"
+      },
+      {
+        "option": "Divide both sides by $T$ instead",
+        "why": "There is no dividing by a matrix, and $T$ has no inverse to do the job either.",
+        "misconception": "fm.matrix.equation-undone-wrongly"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "$A + X = B$: $X = B - A$, position by position.\n$AX = B$: $X = A^{-1}B$, the inverse in front of both sides.\nDeterminant, inverse, then the product row by column; a fraction stays outside until the end.\nClear an added matrix first, then let the inverse multiply the whole right side.\nDeterminant 0: name the matrix with no inverse; the equation cannot be solved this way."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "Usually 4 to 7 marks, with the inverse found inside the question: marks for the determinant, the inverse, $X = A^{-1}B$ in that order, and the final matrix, whose mark needs every entry right. Stuck: write $X = A^{-1}B$ with the inverse in front; that line earns a method mark."
   },
   {
     "type": "prompt",
@@ -210,13 +605,5 @@
   {
     "type": "prompt",
     "promptId": "rp.fm.u1.matrix-equations.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-equations.05"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.matrix-equations.07"
   }
 ]

@@ -108,12 +108,12 @@
         "Solve A − X = B as X = A − B",
         "Write the chain A⁻¹AX = A⁻¹B, then IX = A⁻¹B, then X = A⁻¹B",
         "Pre-multiply both sides, keeping the inverse in front",
-        "Work the product row by column, keeping any fraction from the inverse",
+        "Work the product row by column, keeping the inverse's fraction, and its sign, outside until the end",
         "Clear an added matrix before bringing in the inverse",
         "State the shape of X before doing any arithmetic",
         "Say why an equation cannot be solved when the matrix is singular, naming the matrix"
       ],
-      "howExamined": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. A matrix equation is worth about 4 marks, with the inverse usually found inside the same question, so the marks here ride on that inverse: Summer 2019 Q5 (4 marks, most formed the product in the right order), Summer 2023 Q6(i) (4 marks, with (ii) worth 1 for explaining why a second equation could not be solved), Summer 2018 Q5 (really well done), Summer 2022 Q3(b) (very few multiplied the wrong way round; the slips were in the determinant), Summer 2024 Q7(b) (unfamiliar to some, marked generously on follow-through). The Summer 2019 scheme gave two marks for the inverse, one for the product set up with the inverse in front and one for every entry right.",
+      "howExamined": "Unit 1 is one two-hour calculator paper of 100 marks, sat every Summer. A matrix equation is worth about 4 marks, with the inverse usually found inside the same question, so the marks here ride on that inverse: Summer 2019 Q5 (4 marks, most formed the product in the right order), Summer 2023 Q6(i) (4 marks, with (ii) worth 1 for explaining why a second equation could not be solved), Summer 2018 Q5 (really well done), Summer 2022 Q3(b) (very few multiplied the wrong way round; the slips were in the determinant), Summer 2024 Q7(b) (unfamiliar to some, marked generously on follow-through). The Summer 2019 scheme gave two marks for the inverse, one for the product set up with the inverse in front and one for every entry right. The combined shapes have been set as (P − Q)X = R (Summer 2018 Q5, 7 marks), AX = B + C (Summer 2021 Q10, 5 marks) and AY = B² (Summer 2026 Q11, 7 marks).",
       "traps": [
         "Multiplying the inverse on the wrong side, so BA⁻¹ is formed instead of A⁻¹B (Summer 2018 FM1 Q5, Summer 2022 FM1 Q3)",
         "Arithmetic slips inside the determinant, which then spoil the whole product (Summer 2019 FM1 Q5, Summer 2022 FM1 Q3)",
@@ -121,13 +121,14 @@
         "Writing X = A − B where the rearrangement gives B − A",
         "Giving X as a square matrix when B is a column",
         "Handing in the swapped and negated matrix without dividing by the determinant",
-        "Saying only that the determinant is zero, without naming the matrix that has no inverse (Summer 2023 FM1 Q6)",
-        "Meeting a matrix equation of an unfamiliar kind, such as unknown letters inside a product, and not knowing where to begin: multiply out, then set matching entries equal (Summer 2024 FM1 Q7)"
+        "Writing that the matrix has no inverse without saying which matrix it is (Summer 2023 FM1 Q6)",
+        "Meeting a matrix equation of an unfamiliar kind, such as unknown letters inside a product, and not knowing where to begin: multiply out, then set matching entries equal (Summer 2024 FM1 Q7)",
+        "Squaring each entry when a matrix is squared, instead of multiplying the matrix by itself row by column (Summer 2024 FM1 Q7)"
       ]
     },
     "verification": "ver.note.fm.u1.matrix-equations",
-    "version": 1,
-    "updated": "2026-09-20"
+    "version": 2,
+    "updated": "2026-10-07"
   },
   "workedExamples": [
     {
@@ -324,6 +325,384 @@
       ],
       "verification": "ver.we.fm.u1.matrix-equations.02",
       "version": 1
+    },
+    {
+      "id": "we.fm.u1.matrix-equations.03",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "It is given that $AX = C$, where $A = \\begin{pmatrix}2 & 5 \\\\ 3 & 4\\end{pmatrix}$ and $C = \\begin{pmatrix}1 \\\\ 6\\end{pmatrix}$.\nFind the matrix $X$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$\\det A = (2)(4) - (5)(3) = -7$",
+          "decision": "The determinant on its own line. It is negative, so the inverse carries a negative fraction.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": -7,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "$$A^{-1} = -\\frac{1}{7}\\begin{pmatrix}4 & -5 \\\\ -3 & 2\\end{pmatrix}$$",
+          "decision": "Swap the leading diagonal, change the other two signs, and keep the fraction, with its minus sign, outside.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "-4/7",
+                "5/7"
+              ],
+              [
+                "3/7",
+                "-2/7"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 3,
+          "working": "$X = A^{-1}C$",
+          "decision": "The inverse goes in front of $C$, as it went in front of $A$.",
+          "earns": [
+            "M1"
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$X = A^{-1}C$",
+                "correct": true,
+                "feedback": "The inverse in front of both sides, so in front of $C$."
+              },
+              {
+                "id": "b",
+                "text": "$X = CA^{-1}$",
+                "correct": false,
+                "misconception": "fm.matrix.inverse-order",
+                "feedback": "That puts the inverse behind $C$; the order changes the product."
+              },
+              {
+                "id": "c",
+                "text": "$X = AC$",
+                "correct": false,
+                "misconception": "fm.matrix.equation-undone-wrongly",
+                "feedback": "That multiplies by $A$ itself; only its inverse undoes it."
+              }
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "$$\\begin{pmatrix}4 & -5 \\\\ -3 & 2\\end{pmatrix}\\begin{pmatrix}1 \\\\ 6\\end{pmatrix} = \\begin{pmatrix}-26 \\\\ 9\\end{pmatrix}$$",
+          "decision": "The whole-number product first: the fraction waits.",
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 1,
+            "entries": [
+              [
+                "-26"
+              ],
+              [
+                "9"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "whyMenu": {
+            "options": [
+              "Because whole-number arithmetic is safer, and the fraction can be applied once at the end",
+              "Because the determinant does not matter until the check",
+              "Because the fraction cancels with the product"
+            ],
+            "correct": 0,
+            "explain": "Multiplying by the fraction first turns every entry into a fraction before the product; keeping it outside means one division at the end, where a sign or a slip is easy to see."
+          }
+        },
+        {
+          "n": 5,
+          "working": "$$X = -\\frac{1}{7}\\begin{pmatrix}-26 \\\\ 9\\end{pmatrix} = \\begin{pmatrix}\\frac{26}{7} \\\\ -\\frac{9}{7}\\end{pmatrix}$$",
+          "decision": "Divide by $-7$: both signs flip. Check: $AX$ gives $C$.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 1,
+            "entries": [
+              [
+                "26/7"
+              ],
+              [
+                "-9/7"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        }
+      ],
+      "finalAnswer": "$X = \\begin{pmatrix}\\frac{26}{7} \\\\ -\\frac{9}{7}\\end{pmatrix}$",
+      "twin": {
+        "stem": "It is given that $AX = C$, where $A = \\begin{pmatrix}3 & 2 \\\\ 5 & 4\\end{pmatrix}$ and $C = \\begin{pmatrix}1 \\\\ 2\\end{pmatrix}$.\nFind the matrix $X$.",
+        "answer": {
+          "kind": "matrix",
+          "rows": 2,
+          "cols": 1,
+          "entries": [
+            [
+              "0"
+            ],
+            [
+              "1/2"
+            ]
+          ],
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.0005
+          }
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 4,
+          "studentSupplies": [
+            5
+          ]
+        },
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4,
+            5
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.matrix-equations.03",
+      "version": 1
+    },
+    {
+      "id": "we.fm.u1.matrix-equations.04",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "stem": "It is given that $AY = B^{2}$, where $A = \\begin{pmatrix}4 & 3 \\\\ 1 & 1\\end{pmatrix}$ and $B = \\begin{pmatrix}2 & 1 \\\\ -1 & 0\\end{pmatrix}$.\nFind the matrix $Y$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$$B^{2} = \\begin{pmatrix}2 & 1 \\\\ -1 & 0\\end{pmatrix}\\begin{pmatrix}2 & 1 \\\\ -1 & 0\\end{pmatrix} = \\begin{pmatrix}3 & 2 \\\\ -2 & -1\\end{pmatrix}$$",
+          "decision": "$B^{2}$ is $B$ times $B$, row by column; squaring each entry would give a different matrix.",
+          "earns": [
+            "M1",
+            "W1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "3",
+                "2"
+              ],
+              [
+                "-2",
+                "-1"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "whyMenu": {
+            "options": [
+              "Because $B^{2}$ means $B$ multiplied by $B$, row by column",
+              "Because squaring each entry is how a matrix is squared",
+              "Because $B^{2}$ only matters for the check"
+            ],
+            "correct": 0,
+            "explain": "A power of a matrix is repeated matrix multiplication, so $B^{2} = BB$, worked row by column. Squaring each entry is the slip the Summer 2024 report names."
+          }
+        },
+        {
+          "n": 2,
+          "working": "$\\det A = 1$, so $A^{-1} = \\begin{pmatrix}1 & -3 \\\\ -1 & 4\\end{pmatrix}$",
+          "decision": "Swap, change the other two signs, and divide by 1.",
+          "earns": [
+            "MW1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "1",
+                "-3"
+              ],
+              [
+                "-1",
+                "4"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        },
+        {
+          "n": 3,
+          "working": "$Y = A^{-1}B^{2}$",
+          "decision": "The inverse in front of both sides, so in front of $B^{2}$.",
+          "earns": [
+            "M1"
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$Y = A^{-1}B^{2}$",
+                "correct": true,
+                "feedback": "The inverse in front of both sides, so in front of $B^{2}$."
+              },
+              {
+                "id": "b",
+                "text": "$Y = B^{2}A^{-1}$",
+                "correct": false,
+                "misconception": "fm.matrix.inverse-order",
+                "feedback": "That puts the inverse behind $B^{2}$; the order changes the product."
+              },
+              {
+                "id": "c",
+                "text": "$Y = AB^{2}$",
+                "correct": false,
+                "misconception": "fm.matrix.equation-undone-wrongly",
+                "feedback": "That multiplies by $A$ itself; only its inverse undoes it."
+              }
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "$$Y = \\begin{pmatrix}1 & -3 \\\\ -1 & 4\\end{pmatrix}\\begin{pmatrix}3 & 2 \\\\ -2 & -1\\end{pmatrix} = \\begin{pmatrix}9 & 5 \\\\ -11 & -6\\end{pmatrix}$$",
+          "decision": "Row by column. Check: $AY$ gives $B^{2}$.",
+          "earns": [
+            "W1"
+          ],
+          "input": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "9",
+                "5"
+              ],
+              [
+                "-11",
+                "-6"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          }
+        }
+      ],
+      "finalAnswer": "$Y = \\begin{pmatrix}9 & 5 \\\\ -11 & -6\\end{pmatrix}$",
+      "twin": {
+        "stem": "It is given that $AY = B^{2}$, where $A = \\begin{pmatrix}3 & 5 \\\\ 1 & 2\\end{pmatrix}$ and $B = \\begin{pmatrix}1 & 1 \\\\ 0 & 2\\end{pmatrix}$.\nFind the matrix $Y$.",
+        "answer": {
+          "kind": "matrix",
+          "rows": 2,
+          "cols": 2,
+          "entries": [
+            [
+              "2",
+              "-14"
+            ],
+            [
+              "-1",
+              "9"
+            ]
+          ],
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.0005
+          }
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 3,
+          "studentSupplies": [
+            4
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "verification": "ver.we.fm.u1.matrix-equations.04",
+      "version": 1
     }
   ],
   "diagnostics": [
@@ -336,25 +715,25 @@
       "when": "pre",
       "items": [
         {
-          "id": "p1",
-          "stem": "Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is the inverse of $\\begin{pmatrix}3 & 1 \\\\ 5 & 2\\end{pmatrix}$?",
+          "id": "p4",
+          "stem": "Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is the inverse of $\\begin{pmatrix}4 & 1 \\\\ 7 & 2\\end{pmatrix}$?",
           "skill": "The inverse of a 2 by 2",
           "options": [
             {
               "id": "a",
-              "text": "$\\begin{pmatrix}2 & -1 \\\\ -5 & 3\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}2 & -1 \\\\ -7 & 4\\end{pmatrix}$",
               "correct": true,
-              "feedback": "The determinant is $1$, so swapping and negating is the whole of it."
+              "feedback": "The determinant is $8 - 7 = 1$, so swapping the leading diagonal and changing the other two signs is the whole of it."
             },
             {
               "id": "b",
-              "text": "$\\begin{pmatrix}-2 & 1 \\\\ 5 & -3\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}-2 & 1 \\\\ 7 & -4\\end{pmatrix}$",
               "correct": false,
               "feedback": "Every sign has been changed. Only the other diagonal changes sign."
             },
             {
               "id": "c",
-              "text": "$\\begin{pmatrix}3 & -1 \\\\ -5 & 2\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}4 & -1 \\\\ -7 & 2\\end{pmatrix}$",
               "correct": false,
               "feedback": "The signs changed but the leading diagonal never swapped."
             }
@@ -490,29 +869,29 @@
           "hypercorrectionQueue": true
         },
         {
-          "id": "d3",
-          "stem": "Which of these is $X$ for $AX = B$, with $A = \\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$ and $B = \\begin{pmatrix}1 & 4 \\\\ 2 & 3\\end{pmatrix}$?",
+          "id": "d6",
+          "stem": "Which of these is $X$ for $AX = B$, with $A = \\begin{pmatrix}1 & 2 \\\\ 1 & 3\\end{pmatrix}$ and $B = \\begin{pmatrix}2 & 1 \\\\ 3 & 1\\end{pmatrix}$?",
           "skill": "Working the product in the right order",
           "options": [
             {
               "id": "a",
-              "text": "$\\begin{pmatrix}-7 & -3 \\\\ 3 & 2\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}0 & 1 \\\\ 1 & 0\\end{pmatrix}$",
               "correct": true,
-              "feedback": "$A^{-1}B$, with the inverse in front."
+              "feedback": "$A^{-1}B$, with the inverse in front: $\\det A = 1$ and $A^{-1} = \\begin{pmatrix}3 & -2 \\\\ -1 & 1\\end{pmatrix}$."
             },
             {
               "id": "b",
-              "text": "$\\begin{pmatrix}-1 & 3 \\\\ 3 & -4\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}5 & -3 \\\\ 8 & -5\\end{pmatrix}$",
               "correct": false,
-              "feedback": "That is $BA^{-1}$, the inverse behind $B$.",
-              "misconception": "fm.matrix.inverse-order"
+              "misconception": "fm.matrix.inverse-order",
+              "feedback": "That is $BA^{-1}$, the inverse behind $B$; the order changes the product."
             },
             {
               "id": "c",
-              "text": "$\\begin{pmatrix}12 & 23 \\\\ 7 & 13\\end{pmatrix}$",
+              "text": "$\\begin{pmatrix}8 & 3 \\\\ 11 & 4\\end{pmatrix}$",
               "correct": false,
-              "feedback": "That is $AB$: the matrix itself was used where its inverse belonged.",
-              "misconception": "fm.matrix.equation-undone-wrongly"
+              "misconception": "fm.matrix.equation-undone-wrongly",
+              "feedback": "That is $AB$: the matrix itself was used where its inverse belonged."
             }
           ],
           "secondsExpected": 45,
@@ -580,6 +959,75 @@
           "hypercorrectionQueue": true
         }
       ]
+    },
+    {
+      "id": "dx.fm.u1.matrix-equations.withdrawn",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "when": "both",
+      "items": [
+        {
+          "id": "p1",
+          "stem": "Three quick checks on what this lesson is built from. None of them is the new method, so answer from what you already know.\nWhat is the inverse of $\\begin{pmatrix}3 & 1 \\\\ 5 & 2\\end{pmatrix}$?",
+          "skill": "The inverse of a 2 by 2",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\begin{pmatrix}2 & -1 \\\\ -5 & 3\\end{pmatrix}$",
+              "correct": true,
+              "feedback": "The determinant is $1$, so swapping and negating is the whole of it."
+            },
+            {
+              "id": "b",
+              "text": "$\\begin{pmatrix}-2 & 1 \\\\ 5 & -3\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "Every sign has been changed. Only the other diagonal changes sign."
+            },
+            {
+              "id": "c",
+              "text": "$\\begin{pmatrix}3 & -1 \\\\ -5 & 2\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "The signs changed but the leading diagonal never swapped."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d3",
+          "stem": "Which of these is $X$ for $AX = B$, with $A = \\begin{pmatrix}2 & 5 \\\\ 1 & 3\\end{pmatrix}$ and $B = \\begin{pmatrix}1 & 4 \\\\ 2 & 3\\end{pmatrix}$?",
+          "skill": "Working the product in the right order",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\begin{pmatrix}-7 & -3 \\\\ 3 & 2\\end{pmatrix}$",
+              "correct": true,
+              "feedback": "$A^{-1}B$, with the inverse in front."
+            },
+            {
+              "id": "b",
+              "text": "$\\begin{pmatrix}-1 & 3 \\\\ 3 & -4\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "That is $BA^{-1}$, the inverse behind $B$.",
+              "misconception": "fm.matrix.inverse-order"
+            },
+            {
+              "id": "c",
+              "text": "$\\begin{pmatrix}12 & 23 \\\\ 7 & 13\\end{pmatrix}$",
+              "correct": false,
+              "feedback": "That is $AB$: the matrix itself was used where its inverse belonged.",
+              "misconception": "fm.matrix.equation-undone-wrongly"
+            }
+          ],
+          "secondsExpected": 45,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ],
+      "verification": "ver.dx.fm.u1.matrix-equations.withdrawn"
     }
   ],
   "questions": [
@@ -674,8 +1122,7 @@
                 ]
               },
               "feedback": "That is $A - B$. Taking $A$ from both sides leaves $B - A$, so every entry has the opposite sign: $\\begin{pmatrix}5 & 3 \\\\ -3 & 3\\end{pmatrix}$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2024-summer:FM1:Q7"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -783,8 +1230,7 @@
                 ]
               },
               "feedback": "That is $B - A$. Because $X$ was the one being subtracted, the rearrangement gives $X = A - B$, which is $\\begin{pmatrix}4 & -3 \\\\ -3 & 4\\end{pmatrix}$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2024-summer:FM1:Q7"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1319,8 +1765,7 @@
                 ]
               },
               "feedback": "The swapped and negated matrix was used without dividing by the determinant, so every entry is $10$ times too big. With the division, $X = \\begin{pmatrix}0 \\\\ 5\\end{pmatrix}$.",
-              "marksTypicallyEarned": 2,
-              "source": "ccea-cer:further-maths:2022-summer:FM1:Q3"
+              "marksTypicallyEarned": 2
             }
           ],
           "requiresWorking": true
@@ -1336,6 +1781,152 @@
       ],
       "solutionProgram": "main: $\\det A = 10$, so $A^{-1} = \\frac{1}{10}\\begin{pmatrix}4 & -2 \\\\ -3 & 4\\end{pmatrix} = \\begin{pmatrix}\\frac{2}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{10} & \\frac{2}{5}\\end{pmatrix}$. $X = A^{-1}B = \\begin{pmatrix}\\frac{2}{5} & -\\frac{1}{5} \\\\ -\\frac{3}{10} & \\frac{2}{5}\\end{pmatrix}\\begin{pmatrix}10 \\\\ 20\\end{pmatrix} = \\begin{pmatrix}0 \\\\ 5\\end{pmatrix}$. Checking, $AX = \\begin{pmatrix}10 \\\\ 20\\end{pmatrix}$, which is $B$.",
       "verification": "ver.q.fm.u1.matrix-equations.0007",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u1.matrix-equations.0011",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "practice",
+      "difficulty": 3,
+      "ao": [
+        "AO1",
+        "AO2"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "A square unknown found through an inverse with a fraction in front",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "It is given that $AX = B$, where $A = \\begin{pmatrix}3 & 4 \\\\ 1 & 2\\end{pmatrix}$ and $B = \\begin{pmatrix}4 & 2 \\\\ 2 & 2\\end{pmatrix}$.\nFind the matrix $X$.\nWrite the answer as a matrix.",
+          "marks": 4,
+          "answer": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "0",
+                "-2"
+              ],
+              [
+                "1",
+                "2"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$\\det A = 2$"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "$A^{-1} = \\frac{1}{2}\\begin{pmatrix}2 & -4 \\\\ -1 & 3\\end{pmatrix}$",
+              "dependsOn": [
+                "MW1"
+              ]
+            },
+            {
+              "id": "M3",
+              "code": "M",
+              "marks": 1,
+              "for": "$X = A^{-1}B$, with the inverse in front",
+              "dependsOn": [
+                "M2"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$\\begin{pmatrix}0 & -2 \\\\ 1 & 2\\end{pmatrix}$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "Find the determinant first.",
+            "The inverse goes in front of $B$.",
+            "Keep the $\\frac{1}{2}$ outside until the end."
+          ],
+          "workedSolution": "$\\det A = (3)(2) - (4)(1) = 2$, so $A^{-1} = \\frac{1}{2}\\begin{pmatrix}2 & -4 \\\\ -1 & 3\\end{pmatrix}$.\n$X = A^{-1}B = \\frac{1}{2}\\begin{pmatrix}0 & -4 \\\\ 2 & 4\\end{pmatrix} = \\begin{pmatrix}0 & -2 \\\\ 1 & 2\\end{pmatrix}$.\nChecking, $AX = \\begin{pmatrix}4 & 2 \\\\ 2 & 2\\end{pmatrix}$, which is $B$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.inverse-order",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "3",
+                    "-5"
+                  ],
+                  [
+                    "1",
+                    "-1"
+                  ]
+                ]
+              },
+              "feedback": "The inverse went behind $B$, so this is $BA^{-1}$. The order of a matrix product changes the answer, and the equation needs $A^{-1}B$, which is $\\begin{pmatrix}0 & -2 \\\\ 1 & 2\\end{pmatrix}$.",
+              "marksTypicallyEarned": 2,
+              "source": "ccea-cer:further-maths:2018-summer:FM1:Q5"
+            },
+            {
+              "misconception": "fm.matrix.inverse-not-divided-by-det",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "0",
+                    "-4"
+                  ],
+                  [
+                    "2",
+                    "4"
+                  ]
+                ]
+              },
+              "feedback": "The swapped-and-negated matrix was used without dividing by the determinant, so every entry is twice too big. With the $\\frac{1}{2}$, $X = \\begin{pmatrix}0 & -2 \\\\ 1 & 2\\end{pmatrix}$.",
+              "marksTypicallyEarned": 2
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 4,
+      "timeAllowanceSec": 288,
+      "skeleton": "(main)find4",
+      "examinerSources": [
+        "ccea-cer:further-maths:2018-summer:FM1:Q5",
+        "ccea-cer:further-maths:2022-summer:FM1:Q3"
+      ],
+      "solutionProgram": "main: det A = 3 × 2 − 4 × 1 = 2; A⁻¹ = (1/2)(2 −4; −1 3); X = A⁻¹B = (0 -2 ; 1 2); A X returns B",
+      "verification": "ver.q.fm.u1.matrix-equations.0011",
       "version": 1
     },
     {
@@ -1443,8 +2034,7 @@
                 ]
               },
               "feedback": "That is $A^{-1}B$: the inverse was applied with $C$ still in the equation. Clearing $C$ first gives $AX = \\begin{pmatrix}8 \\\\ 3\\end{pmatrix}$, and then $X = \\begin{pmatrix}-5 \\\\ 4\\end{pmatrix}$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2018-summer:FM1:Q5"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1554,8 +2144,7 @@
                 ]
               },
               "feedback": "The leading diagonal swapped and $b$ and $c$ kept their signs. The other diagonal changes sign, giving $\\begin{pmatrix}3 & -5 \\\\ -1 & 2\\end{pmatrix}$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:further-maths:2019-summer:FM1:Q5"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1932,6 +2521,250 @@
       "solutionProgram": "a: $\\det A = (4)(2) - (7)(1) = 1$. Swapping and negating gives $A^{-1} = \\begin{pmatrix}2 & -7 \\\\ -1 & 4\\end{pmatrix}$. || b: Taking $C$ from both sides: $AX = B - C = \\begin{pmatrix}8 \\\\ 3\\end{pmatrix}$. Pre-multiplying by the inverse from part (a): $X = \\begin{pmatrix}2 & -7 \\\\ -1 & 4\\end{pmatrix}\\begin{pmatrix}8 \\\\ 3\\end{pmatrix} = \\begin{pmatrix}-5 \\\\ 4\\end{pmatrix}$. Checking, $AX + C = \\begin{pmatrix}11 \\\\ 4\\end{pmatrix}$.",
       "verification": "ver.q.fm.u1.matrix-equations.0010",
       "version": 1
+    },
+    {
+      "id": "q.fm.u1.matrix-equations.0012",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "paper": {
+        "unit": "FM1",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet"
+        ]
+      },
+      "tier": "untiered",
+      "style": "exam-style",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [],
+      "context": {
+        "setting": "A difference of two matrices multiplying the unknown, the Summer 2018 shape, in three parts",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "a",
+          "stem": "It is given that $P = \\begin{pmatrix}5 & 2 \\\\ 3 & 4\\end{pmatrix}$, $Q = \\begin{pmatrix}2 & 1 \\\\ 1 & 1\\end{pmatrix}$ and $R = \\begin{pmatrix}5 \\\\ 1\\end{pmatrix}$.\nFind $P - Q$.\nWrite the answer as a matrix.",
+          "marks": 1,
+          "answer": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "3",
+                "1"
+              ],
+              [
+                "2",
+                "3"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "scheme": [
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$\\begin{pmatrix}3 & 1 \\\\ 2 & 3\\end{pmatrix}$"
+            }
+          ],
+          "hints": [
+            "Subtract position by position: each entry of $Q$ from the entry in the same place in $P$."
+          ],
+          "workedSolution": "$P - Q = \\begin{pmatrix}3 & 1 \\\\ 2 & 3\\end{pmatrix}$, position by position.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.subtract-wrong-way",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "-3",
+                    "-1"
+                  ],
+                  [
+                    "-2",
+                    "-3"
+                  ]
+                ]
+              },
+              "feedback": "That is $Q - P$: every sign is reversed. $P - Q$ takes each entry of $Q$ from $P$: $\\begin{pmatrix}3 & 1 \\\\ 2 & 3\\end{pmatrix}$.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": false
+        },
+        {
+          "id": "b",
+          "stem": "Find $(P - Q)^{-1}$.\nWrite the answer as a matrix.",
+          "marks": 2,
+          "answer": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 2,
+            "entries": [
+              [
+                "3/7",
+                "-1/7"
+              ],
+              [
+                "-2/7",
+                "3/7"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$\\det(P - Q) = 9 - 2 = 7$"
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$\\frac{1}{7}\\begin{pmatrix}3 & -1 \\\\ -2 & 3\\end{pmatrix}$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "The determinant first.",
+            "Swap the leading diagonal, change the other two signs, divide by the determinant."
+          ],
+          "workedSolution": "$\\det(P - Q) = (3)(3) - (1)(2) = 7$, so $(P - Q)^{-1} = \\frac{1}{7}\\begin{pmatrix}3 & -1 \\\\ -2 & 3\\end{pmatrix}$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.inverse-not-divided-by-det",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "3",
+                    "-1"
+                  ],
+                  [
+                    "-2",
+                    "3"
+                  ]
+                ]
+              },
+              "feedback": "The swapped-and-negated matrix is right; it still has to be divided by the determinant: $(P - Q)^{-1} = \\frac{1}{7}\\begin{pmatrix}3 & -1 \\\\ -2 & 3\\end{pmatrix}$.",
+              "marksTypicallyEarned": 1
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value"
+          }
+        },
+        {
+          "id": "c",
+          "stem": "Hence find $X$, given that $(P - Q)X = R$.\nWrite the answer as a matrix.",
+          "marks": 3,
+          "answer": {
+            "kind": "matrix",
+            "rows": 2,
+            "cols": 1,
+            "entries": [
+              [
+                "2"
+              ],
+              [
+                "-1"
+              ]
+            ],
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            }
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "$X = (P - Q)^{-1}R$, with the inverse in front"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "the product worked row by column",
+              "dependsOn": [
+                "M1"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$\\begin{pmatrix}2 \\\\ -1\\end{pmatrix}$",
+              "ft": true
+            }
+          ],
+          "hints": [
+            "The inverse from part (b) goes in front of $R$.",
+            "Keep the $\\frac{1}{7}$ outside until the end."
+          ],
+          "workedSolution": "Multiplying both sides by $(P - Q)^{-1}$, in front: $X = (P - Q)^{-1}R = \\frac{1}{7}\\begin{pmatrix}3 & -1 \\\\ -2 & 3\\end{pmatrix}\\begin{pmatrix}5 \\\\ 1\\end{pmatrix}$.\n$X = \\frac{1}{7}\\begin{pmatrix}14 \\\\ -7\\end{pmatrix} = \\begin{pmatrix}2 \\\\ -1\\end{pmatrix}$.\nChecking, $(P - Q)X = \\begin{pmatrix}5 \\\\ 1\\end{pmatrix}$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.matrix.inverse-not-divided-by-det",
+              "pattern": {
+                "kind": "matrix",
+                "entries": [
+                  [
+                    "14"
+                  ],
+                  [
+                    "-7"
+                  ]
+                ]
+              },
+              "feedback": "The product is right but the $\\frac{1}{7}$ was left off, so both entries are 7 times too big: $X = \\begin{pmatrix}2 \\\\ -1\\end{pmatrix}$.",
+              "marksTypicallyEarned": 2
+            }
+          ],
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "b",
+            "rule": "use-candidate-value"
+          }
+        }
+      ],
+      "totalMarks": 6,
+      "timeAllowanceSec": 432,
+      "skeleton": "(a)find1|(b)find2|(c)find3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2018-summer:FM1:Q5",
+        "ccea-cer:further-maths:2022-summer:FM1:Q3"
+      ],
+      "solutionProgram": "a: P − Q = (3 1 ; 2 3) | b: det = 9 − 2 = 7; (P − Q)⁻¹ = (1/7)(3 -1 ; -2 3) | c: X = (P − Q)⁻¹R = (1/7)(14 ; -7) = (2 ; -1); (P − Q)X returns R",
+      "verification": "ver.q.fm.u1.matrix-equations.0012",
+      "version": 1
     }
   ],
   "findTheMistake": [
@@ -1961,6 +2794,56 @@
       ],
       "feedback": "The determinant and the inverse are right, so the first two marks stand. The order mark and the answer mark both go with line 3, however accurate line 4 is. The habit that fixes it is to write the inverse in front of both sides on one line, before any multiplying: $A^{-1}AX = A^{-1}B$. Then the order is already settled by the time the arithmetic starts.",
       "source": "ccea-cer:further-maths:2018-summer:FM1:Q5"
+    },
+    {
+      "id": "ftm.fm.u1.matrix-equations.02",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "stem": "Orla was asked to find $X$ for $LX = M$, where $L = \\begin{pmatrix}2 & 1 \\\\ 5 & 3\\end{pmatrix}$ and $M = \\begin{pmatrix}1 & 2 \\\\ 0 & 1\\end{pmatrix}$. Her working:",
+      "studentWorking": [
+        "det L = 6 - 5 = 1",
+        "L inverse = (3 -1 ; -5 2)",
+        "X = M x L inverse",
+        "X = (-7 3 ; -5 2)"
+      ],
+      "mistakeLine": 3,
+      "misconception": "fm.matrix.inverse-order",
+      "whatWentWrong": "Lines 1 and 2 are right: the determinant and the inverse are correct. Line 3 puts the inverse behind M. Multiplying both sides by the inverse puts it in front of each side, so X is L inverse times M, and because the order of a product changes the answer, line 4 is accurate arithmetic on the wrong product. X should be (3 5 ; -5 -8).",
+      "correction": [
+        "X = L inverse x M",
+        "X = (3 5 ; -5 -8)"
+      ],
+      "marksEarnedAsWritten": [
+        "MW1",
+        "MW1"
+      ],
+      "feedback": "Write the inverse in front of both sides on one line, before any multiplying: L inverse L X = L inverse M. Then the order is settled before the arithmetic starts.",
+      "source": "ccea-cer:further-maths:2018-summer:FM1:Q5"
+    },
+    {
+      "id": "ftm.fm.u1.matrix-equations.03",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03",
+        "FM1-MAT-01"
+      ],
+      "stem": "Ciara needs $B^{2}$ on the way to solving $AY = B^{2}$, where $B = \\begin{pmatrix}3 & 1 \\\\ 2 & -1\\end{pmatrix}$. Her working:",
+      "studentWorking": [
+        "B² = (3² 1² ; 2² (-1)²)",
+        "B² = (9 1 ; 4 1)"
+      ],
+      "mistakeLine": 1,
+      "misconception": "fm.matrix.elementwise-product",
+      "whatWentWrong": "Line 1 squares each entry. B² means B times B, worked row by column, so the top-left entry is 3 × 3 + 1 × 2 = 11, not 3² = 9. B² = (11 2 ; 4 3), and Y is then found from that matrix.",
+      "correction": [
+        "B² = (3 1 ; 2 -1)(3 1 ; 2 -1)",
+        "B² = (11 2 ; 4 3)"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "A power of a matrix is repeated multiplication: write B² as B times B, then work each entry as a row times a column.",
+      "source": "ccea-cer:further-maths:2024-summer:FM1:Q7"
     }
   ],
   "prompts": [
@@ -2091,6 +2974,21 @@
         "FM1-MAT-03"
       ],
       "examUnit": "FM1"
+    },
+    {
+      "id": "rp.fm.u1.matrix-equations.09",
+      "topic": "fm.u1.matrix-equations",
+      "specRefs": [
+        "FM1-MAT-03"
+      ],
+      "kind": "qa",
+      "prompt": "Where does the inverse go when you solve $AX = B$?",
+      "answer": "In front of both sides, so $X = A^{-1}B$.",
+      "keyWords": [
+        "front"
+      ],
+      "examUnit": "FM1",
+      "difficultyPrior": 4
     }
   ],
   "verification": [
@@ -2170,10 +3068,64 @@
           "detail": "British English, second person, calm; no exclamation marks and no verdict word about a learner's answer. Every maths segment opens and closes inside one line, holds no prose words, and carries no TeX command without its backslash. Seven inline SVG figures, all drawn from the computed matrices, and one embeddable video from data/links/media-map.json followed immediately by a gate.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026, Lesson structure v3.1 (the teach-first case approved by the owner, with his eight answers): seven teaching sections (idea, five variants, twists) on the note's own matrices, each explain -> See it -> Your turn; the first check, g7, follows the first See it; g3 and g4 keep their ids, kinds and answers with their prompts rewritten to stand alone; every explanation re-teaches, points at a step of its See it and names no option by position; every gate has a twin on new numbers and every wrong option a note; two prompts wired (rp.01, rp.03), both passing recallFit.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Every determinant, inverse, product and check computed in exact rational arithmetic in the generator and asserted before printing; every gate option and twin checked against the computation.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "isomorph",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Two-way overlap scan (scratchpad/probes/fm1-g0/overlap.mjs): no matrix the note, a gate, a twin or a worked example works is asked by a later question, post diagnostic, find-the-mistake item or shipped prompt.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "An interface warm-up ('One tap to begin') on a card of four equations, asked before anything was shown; the first check is now a real one after the first See it.",
+          "on": "2026-10-07T21:50:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g7",
+          "reason": "Its matrices and answer (row 1, column 1 of X = B − A is 5) are practice question 0001's own; g7 asks for X on new matrices, with the reversed subtraction as an option.",
+          "on": "2026-10-07T21:50:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "It asked exactly what practice question 0006 and prompt rp.07 ask (the shape of X for a 2 × 2 A and a 2 × 1 B); the shape is now a step of the full method's See it, and g8 checks the whole method on new numbers.",
+          "on": "2026-10-07T21:50:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g10",
+          "reason": "Its C and B were worked example 02's and practice question 0008's own; g10 clears an added matrix and solves on new matrices.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.matrix-equations.01",
@@ -2227,10 +3179,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration, group 0): It worked practice question 0004's own equation, A = (3 1; 5 2) and B = (7; 12), word for word, and pre item p1 printed the same inverse; we.03 works an inverse with a negative fraction in front on new matrices, the shape most papers set. Replaced by we.fm.u1.matrix-equations.03.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u1.matrix-equations.01",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u1.matrix-equations.03",
+          "reason": "It worked practice question 0004's own equation, A = (3 1; 5 2) and B = (7; 12), word for word, and pre item p1 printed the same inverse; we.03 works an inverse with a negative fraction in front on new matrices, the shape most papers set.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u1.matrix-equations.02",
@@ -2284,10 +3253,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration, group 0): It worked practice question 0008's own equation, which exam question 0010(b) asked again, so the worked example answered two later items; we.04 works the Summer 2026 shape, AY = B², on new matrices. Replaced by we.fm.u1.matrix-equations.04.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.fm.u1.matrix-equations.02",
+          "kind": "workedExample",
+          "replacedBy": "we.fm.u1.matrix-equations.04",
+          "reason": "It worked practice question 0008's own equation, which exam question 0010(b) asked again, so the worked example answered two later items; we.04 works the Summer 2026 shape, AY = B², on new matrices.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.matrix-equations.0001",
@@ -2340,6 +3326,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026: the source removed from part (main)'s fm.matrix.subtract-wrong-way common error (the Summer 2024 Q7 report names arithmetic slips and squared entries, not a subtraction taken the wrong way round); pattern, feedback, marks and tag unchanged (a credit-only edit in place).",
+          "at": "2026-10-07T21:50:00Z",
           "by": "claude"
         }
       ],
@@ -2397,6 +3391,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026: the source removed from part (main)'s fm.matrix.subtract-wrong-way common error (the Summer 2024 Q7 report names arithmetic slips and squared entries, not a subtraction taken the wrong way round); pattern, feedback, marks and tag unchanged (a credit-only edit in place).",
+          "at": "2026-10-07T21:50:00Z",
           "by": "claude"
         }
       ],
@@ -2569,10 +3571,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration, group 0): Its A and B, (2 5; 1 3) and (1 4; 2 3), are exam question 0009's own, and find-the-mistake 01 and post item d3 printed its answer, so the practice item answered the exam question in advance; q0011 asks the same shape on new matrices with a fraction in front of the inverse. Replaced by q.fm.u1.matrix-equations.0011.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u1.matrix-equations.0005",
+          "kind": "question",
+          "replacedBy": "q.fm.u1.matrix-equations.0011",
+          "reason": "Its A and B, (2 5; 1 3) and (1 4; 2 3), are exam question 0009's own, and find-the-mistake 01 and post item d3 printed its answer, so the practice item answered the exam question in advance; q0011 asks the same shape on new matrices with a fraction in front of the inverse.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u1.matrix-equations.0006",
@@ -2683,6 +3702,14 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026: the source removed from part (main)'s fm.matrix.inverse-not-divided-by-det common error (the Summer 2022 Q3 report names slips in the determinant and in the product, not an inverse left undivided); pattern, feedback, marks and tag unchanged (a credit-only edit in place).",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2739,6 +3766,14 @@
           "result": "pass",
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026: the source removed from part (main)'s fm.matrix.equation-undone-wrongly common error (the Summer 2018 Q5 report names the wrong order and arithmetic slips, not an inverse applied with an added matrix still in place); pattern, feedback, marks and tag unchanged (a credit-only edit in place).",
+          "at": "2026-10-07T21:50:00Z",
           "by": "claude"
         }
       ],
@@ -2797,6 +3832,14 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026: the source removed from part (a)'s fm.matrix.adjugate-not-negated common error (the Summer 2019 Q5 report names slips in the determinant, not unnegated entries); pattern, feedback, marks and tag unchanged (a credit-only edit in place).",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2854,10 +3897,27 @@
           "detail": "KaTeX segments paired, prose-free and backslash-complete; British English; no exclamation marks. Whole-matrix answers use the engine's matrix kind, which accepts a leading scalar as well as worked-out entries.",
           "at": "2026-09-19T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration, group 0): Its part (b) was practice question 0008's equation, A = (4 7; 1 2), C = (3; 1), B = (11; 4), word for word, which worked example 02 had also worked; q0012 sets the Summer 2018 shape, (P − Q)X = R, on new matrices. Replaced by q.fm.u1.matrix-equations.0012.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u1.matrix-equations.0010",
+          "kind": "question",
+          "replacedBy": "q.fm.u1.matrix-equations.0012",
+          "reason": "Its part (b) was practice question 0008's equation, A = (4 7; 1 2), C = (3; 1), B = (11; 4), word for word, which worked example 02 had also worked; q0012 sets the Summer 2018 shape, (P − Q)X = R, on new matrices.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u1.matrix-equations.pre",
@@ -2895,10 +3955,27 @@
           "detail": "Read through as the student before shipping; British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026 (FM1 migration, group 0): item p1 withdrawn for p4 (a new matrix, the intro moved with it); the other items unchanged.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-equations.pre#p1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-equations.pre#p4",
+          "reason": "Its matrix, (3 1; 5 2), is practice question 0004's own, so the pre-check printed that question's inverse, the line its second method mark is for; p4 asks the same inverse skill on a matrix no later item uses.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u1.matrix-equations.post",
@@ -2936,10 +4013,27 @@
           "detail": "Read through as the student before shipping; British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "7 Oct 2026 (FM1 migration, group 0): item d3 withdrawn for d6 (new matrices); the other items unchanged.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-equations.post#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-equations.post#d6",
+          "reason": "Its A and B are exam question 0009(b)'s own, with that part's answer as the correct option; d6 checks the same order on new matrices.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u1.matrix-equations.01",
@@ -2985,10 +4079,27 @@
           "detail": "Read through as the student; calm feedback that names the mark that stands before the one that went; no exclamation marks.",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration, group 0): Its matrices, A = (2 5; 1 3) and B = (1 4; 2 3), are exam question 0009(b)'s own, and its correction printed that part's answer; ftm.02 shows the same slip, the inverse behind, on new matrices. Replaced by ftm.fm.u1.matrix-equations.02.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.fm.u1.matrix-equations.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.fm.u1.matrix-equations.02",
+          "reason": "Its matrices, A = (2 5; 1 3) and B = (1 4; 2 3), are exam question 0009(b)'s own, and its correction printed that part's answer; ftm.02 shows the same slip, the inverse behind, on new matrices.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-equations.01",
@@ -3150,10 +4261,27 @@
           "detail": "Read through as the student; British English; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 7 Oct 2026 (FM1 migration, group 0): A 26-word answer, over the 25-word cap for a recall card, asking two things at once; rp.09 asks where the inverse goes in a ten-word answer. Replaced by rp.fm.u1.matrix-equations.09.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u1.matrix-equations.05",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u1.matrix-equations.09",
+          "reason": "A 26-word answer, over the 25-word cap for a recall card, asking two things at once; rp.09 asks where the inverse goes in a ten-word answer.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.matrix-equations.06",
@@ -3253,6 +4381,578 @@
       ],
       "status": "verified",
       "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.matrix-equations.03",
+      "itemId": "we.fm.u1.matrix-equations.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-MAT-03 (A ± X = B, AX = B or a combination; XA = B excluded by the Teacher Guidance)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet: the inverse and X = A⁻¹B are must-know",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Find / Write down / Identify / Explain, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "det A = 8 − 15 = −7; the swapped-and-negated matrix times C is (−26; 9); X = (26/7; −9/7); A X returns C; twin det 2, X = (0; 1/2); exact rational arithmetic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "The Summer 2022 Q3(b) and 2023 Q6(i) shape (an inverse with a negative fraction in front); every step carries an input spec marked through markAnswer",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q5, 2019 Q5, 2021 Q6 and Q10, 2022 Q3(b), 2023 Q6, 2024 Q5 and Q7 and 2026 Q11 with their schemes and the reports; new matrices and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.fm.u1.matrix-equations.04",
+      "itemId": "we.fm.u1.matrix-equations.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-MAT-03 (A ± X = B, AX = B or a combination; XA = B excluded by the Teacher Guidance)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet: the inverse and X = A⁻¹B are must-know",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Find / Write down / Identify / Explain, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "B² = BB = (3 2; −2 −1), not the squared entries (4 1; 1 0); A⁻¹ = (1 −3; −1 4); Y = (9 5; −11 −6); A Y returns B²; twin Y = (2 −14; −1 9)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "The Summer 2026 Q11 shape (AY = B²); squaring each entry is the Summer 2024 Q7 report's slip",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q5, 2019 Q5, 2021 Q6 and Q10, 2022 Q3(b), 2023 Q6, 2024 Q5 and Q7 and 2026 Q11 with their schemes and the reports; new matrices and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.matrix-equations.02",
+      "itemId": "ftm.fm.u1.matrix-equations.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-MAT-03 (A ± X = B, AX = B or a combination; XA = B excluded by the Teacher Guidance)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet: the inverse and X = A⁻¹B are must-know",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Find / Write down / Identify / Explain, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "det L = 1; L⁻¹ = (3 −1; −5 2); L⁻¹M = (3 5; −5 −8); ML⁻¹ = (−7 3; −5 2), the line-4 value; exact arithmetic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Summer 2018 Q5 report: now and then the matrices were multiplied in the wrong order",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q5, 2019 Q5, 2021 Q6 and Q10, 2022 Q3(b), 2023 Q6, 2024 Q5 and Q7 and 2026 Q11 with their schemes and the reports; new matrices and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.matrix-equations.03",
+      "itemId": "ftm.fm.u1.matrix-equations.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-MAT-03 (A ± X = B, AX = B or a combination; XA = B excluded by the Teacher Guidance)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet: the inverse and X = A⁻¹B are must-know",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Find / Write down / Identify / Explain, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "B² = BB = (11 2; 4 3); the squared entries give (9 1; 4 1)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Summer 2024 Q7 report: some squared the entries one at a time instead of multiplying the matrices; Summer 2026 Q11 sets AY = B²",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q5, 2019 Q5, 2021 Q6 and Q10, 2022 Q3(b), 2023 Q6, 2024 Q5 and Q7 and 2026 Q11 with their schemes and the reports; new matrices and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.matrix-equations.0011",
+      "itemId": "q.fm.u1.matrix-equations.0011",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-MAT-03 (A ± X = B, AX = B or a combination; XA = B excluded by the Teacher Guidance)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet: the inverse and X = A⁻¹B are must-know",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Find / Write down / Identify / Explain, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "4 marks (MW1 M2 M3 W1), the Summer 2019 Q5 and 2022 Q3(b) shape",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "det A = 2; A⁻¹ = (1/2)(2 −4; −1 3); X = (0 −2; 1 2); A X returns B; the wrong-order route BA⁻¹ = (3 −5; 1 −1) and the undivided route (0 −4; 2 4) executed as their common errors",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Replaces q0005, whose A and B were exam question 0009's own (and ftm.01's and post item d3's). Summer 2018 Q5 (the order), Summer 2022 Q3(b) (the determinant)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q5, 2019 Q5, 2021 Q6 and Q10, 2022 Q3(b), 2023 Q6, 2024 Q5 and Q7 and 2026 Q11 with their schemes and the reports; new matrices and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u1.matrix-equations.0012",
+      "itemId": "q.fm.u1.matrix-equations.0012",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts (npm run content:check)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Unit 1 (Pure Mathematics), untiered, calculator allowed; statement FM1-MAT-03 (A ± X = B, AX = B or a combination; XA = B excluded by the Teacher Guidance)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Nothing on the FM1 formula sheet: the inverse and X = A⁻¹B are must-know",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Find / Write down / Identify / Explain, from packs/further-maths/exam-true/command-words.json",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "6 marks over three parts (1 + 2 + 3), the Summer 2018 Q5 shape ((P − Q)X = R, 7 marks as one part) set in parts with follow-through",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "P − Q = (3 1; 2 3); det 7; (P − Q)⁻¹ = (1/7)(3 −1; −2 3); X = (2; −1); (P − Q)X returns R; Q − P and the undivided routes executed as their common errors",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Replaces q0010, which was practice question 0008's equation again. Summer 2018 Q5 report (the inverse central, the order, arithmetic slips), Summer 2022 Q3(b) (determinant slips)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Pattern read from FM1 Summer 2018 Q5, 2019 Q5, 2021 Q6 and Q10, 2022 Q3(b), 2023 Q6, 2024 Q5 and Q7 and 2026 Q11 with their schemes and the reports; new matrices and wording throughout; node scripts/qa/shingles.mjs --unit fm1 prints no breach for this topic",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $…$ pair closes on its own line",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u1.matrix-equations.09",
+      "itemId": "rp.fm.u1.matrix-equations.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by pipeline/build-content.mts",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "FM1-MAT-03; one fact she needs on the paper, answered in under 12 words (recallFit), no series or examiner's finding in it",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "Carries the move behind a Sheet trap (the inverse on the wrong side, Summer 2018 Q5) as one short fact",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "pass",
+          "detail": "British English; its key word appears in its own answer (keywordsPresent probed)",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.matrix-equations.withdrawn",
+      "itemId": "dx.fm.u1.matrix-equations.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (7 Oct FM1 migration, group 0: scratchpad/probes/fm1-g0/matrix-equations.mjs, every determinant, inverse, product and check computed in exact rational arithmetic and asserted before printing; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent by scratchpad/probes/fm1-g0/ts/probe-matrix-equations.mts)",
+          "result": "fail",
+          "detail": "The kept copies of dx.fm.u1.matrix-equations.pre#p1 and dx.fm.u1.matrix-equations.post#d3, withdrawn 7 Oct 2026 (FM1 migration, group 0), with their ids, so a review card that points at them resolves. p1: Its matrix, (3 1; 5 2), is practice question 0004's own, so the pre-check printed that question's inverse, the line its second method mark is for; p4 asks the same inverse skill on a matrix no later item uses. d3: Its A and B are exam question 0009(b)'s own, with that part's answer as the correct option; d6 checks the same order on new matrices.",
+          "at": "2026-10-07T21:50:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.matrix-equations.withdrawn#p1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-equations.pre#p4",
+          "reason": "The kept copy of dx.fm.u1.matrix-equations.pre#p1, withdrawn: Its matrix, (3 1; 5 2), is practice question 0004's own, so the pre-check printed that question's inverse, the line its second method mark is for; p4 asks the same inverse skill on a matrix no later item uses.",
+          "on": "2026-10-07T21:50:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-equations.withdrawn#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-equations.post#d6",
+          "reason": "The kept copy of dx.fm.u1.matrix-equations.post#d3, withdrawn: Its A and B are exam question 0009(b)'s own, with that part's answer as the correct option; d6 checks the same order on new matrices.",
+          "on": "2026-10-07T21:50:00Z"
+        }
+      ]
+    }
+  ],
+  "sets": [
+    {
+      "id": "set.fm.u1.matrix-equations.ladder",
+      "topic": "fm.u1.matrix-equations",
+      "kind": "interleaved",
+      "title": "Matrix equations: added, multiplied, then both",
+      "subject": "further-maths",
+      "units": [
+        "FM1"
+      ],
+      "itemIds": [
+        "q.fm.u1.matrix-equations.0001",
+        "q.fm.u1.matrix-equations.0002",
+        "q.fm.u1.matrix-equations.0003",
+        "rp.fm.u1.matrix-equations.01",
+        "q.fm.u1.matrix-equations.0006",
+        "q.fm.u1.matrix-equations.0004",
+        "ftm.fm.u1.matrix-equations.02",
+        "q.fm.u1.matrix-equations.0007",
+        "q.fm.u1.matrix-equations.0011",
+        "q.fm.u1.matrix-equations.0008"
+      ],
+      "showTopicLabels": false,
+      "version": 1
+    },
+    {
+      "id": "set.fm.u1.matrix-equations.mixed",
+      "topic": "fm.u1.matrix-equations",
+      "kind": "mixed",
+      "title": "Matrix equations, mixed: sort the equation, then solve it",
+      "subject": "further-maths",
+      "units": [
+        "FM1"
+      ],
+      "itemIds": [
+        "q.fm.u1.matrix-equations.0009",
+        "ftm.fm.u1.matrix-equations.03",
+        "q.fm.u1.matrix-equations.0012",
+        "rp.fm.u1.matrix-equations.03"
+      ],
+      "showTopicLabels": false,
+      "version": 1
     }
   ]
 }
