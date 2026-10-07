@@ -24,7 +24,9 @@
  * record pointing at it, and its own record points on. The app follows that chain (src/lib/review/withdrawn.ts
  * resolveCardId: "a replacement that was itself withdrawn points on to its own replacement"), so the lint asks what the
  * app asks, with the app's own resolver, passed in as `resolve` (lesson-v2 loads it through tsx, the tests import it):
- * the chain must end in an item of the same kind that ships, with no circle and no dangling link. "Ships" is the build's
+ * the chain must end in an item of the same kind that ships, with no circle and no dangling link; a chain whose last
+ * link was withdrawn with replacedBy null also passes, a deliberate retirement the app honours by retiring the card (the
+ * lead's ruling, 7 Oct 2026, 23:00). "Ships" is the build's
  * rule (pipeline/build-content.mts keep: a log found by the item's `verification` ref, else by `itemId`, that says
  * verified or published), read by the resolver together with the records, on the topic as it ships. A failing chain is
  * reported with every link ("g3 → g3b → g9") and how it ends. With no resolver passed, the old check stands: the
@@ -137,7 +139,7 @@ export function withdrawnFindings(blocks, bundle, { resolve } = {}) {
         const noun = NOUN[r.kind];
         if (!view) {
           if (!ids[r.kind].has(r.replacedBy)) say(r.id, log.id, `replacedBy ${r.replacedBy} is not a ${noun} of this topic`);
-        } else if (resolve(cardIdFor(r, bundle), view)?.kind !== "replaced") {
+        } else if (resolve(cardIdFor(r, bundle), view)?.kind !== "replaced" && chainOf(r, allRecords).end !== "nothing") {
           const c = chainOf(r, allRecords);
           const how =
             c.end === "circle"

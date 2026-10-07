@@ -120,9 +120,16 @@ describe("withdrawn records: a replacement withdrawn later is followed to the en
     ]);
   });
 
-  it("reports a chain whose last link was withdrawn with nothing in its place", () => {
+  it("passes a chain whose last link was withdrawn with nothing in its place: a deliberate retirement, as the app retires the card", () => {
+    // The lead's ruling, 7 Oct 2026: replacedBy null at the end of a chain is a retirement the app honours.
     const b = bundle([rec("g3", "gate", "g3b"), rec("g3b", "gate", null, "Its idea is now taught in section 2.")]);
-    expect(problems(b, blocks("g2"))).toEqual(["g3: replacedBy chain g3 → g3b does not end in a gate that ships: it ends in g3b, withdrawn with nothing in its place"]);
+    expect(problems(b, blocks("g2"))).toEqual([]);
+    // the same chain with its last link pointing at nothing that exists still fails
+    const dangling = bundle([rec("g3", "gate", "g3b"), rec("g3b", "gate", "g7")]);
+    expect(problems(dangling, blocks("g2"))).toEqual([
+      "g3: replacedBy chain g3 → g3b → g7 does not end in a gate that ships: it ends in g7, which is not a gate of this topic",
+      "g3b: replacedBy chain g3b → g7 does not end in a gate that ships: it ends in g7, which is not a gate of this topic",
+    ]);
   });
 
   it("reports a replacement that exists but does not ship (a draft), with no record to follow", () => {
