@@ -7,21 +7,16 @@
       "Choose the point to take moments about, then resolve vertically for the rest",
       "Find reactions, tensions, a ratio, an unknown distance or the tipping point"
     ],
-    "minutes": 19
-  },
-  {
-    "type": "h",
-    "text": "Turning, not sliding",
-    "role": "idea"
-  },
-  {
-    "type": "p",
-    "md": "Push a door near its hinges and it hardly moves; push the handle and it swings open: a force turns more the further out it acts."
+    "minutes": 32
   },
   {
     "type": "h",
     "text": "1. The moment of a force",
     "role": "idea"
+  },
+  {
+    "type": "p",
+    "md": "Push a door near its hinges and it hardly moves; push the handle and it swings open. A force turns things more the further from the pivot it acts."
   },
   {
     "type": "figure",
@@ -31,11 +26,35 @@
   },
   {
     "type": "p",
-    "md": "The **moment** of a force about a point is the force times the perpendicular distance from the point to its line of action. On a horizontal rod every weight acts straight down, so that distance is measured along the rod. It is in newton metres, N m, clockwise or anticlockwise."
+    "md": "A force's **moment** about a point is the force multiplied by its perpendicular distance from that point. On a horizontal rod every weight acts straight down, so that distance is measured along the rod. Moments are in newton metres, N m, and each one turns either clockwise or anticlockwise."
   },
   {
-    "type": "p",
-    "md": "**Shown, for the see-saw:** $400 \\times 0.9 = 360$ N m anticlockwise equals $300 \\times 1.2 = 360$ N m clockwise, so it balances."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The see-saw in the picture carries 400 N, 0.9 m to the left of its pivot, and 300 N, 1.2 m to the right. Find each load's moment about the pivot.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Left: $400 \\times 0.9 = 360$ N m, anticlockwise",
+        "decision": "The force times its distance from the pivot, measured along the plank.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Right: $300 \\times 1.2 = 360$ N m, clockwise",
+        "decision": "The lighter load sits further out, so its moment is just as large.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Clockwise equals anticlockwise, so the see-saw balances",
+        "decision": "Equal turning effects each way: nothing starts to turn."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -43,7 +62,12 @@
     "kind": "number",
     "prompt": "A 40 N force acts straight down at the end A of a rod, and the pivot C is 0.75 m from A. What is the moment of the force about C, in newton metres?",
     "answer": "30",
-    "explain": "A moment is the force times its distance from the point, measured along the rod, as in the see-saw line above. Here $40 \\times 0.75 = 30$ N m, anticlockwise about C."
+    "explain": "A moment is the force times its distance from the point, measured along the rod, as in step 1 of See it. Here $40 \\times 0.75 = 30$ N m, anticlockwise about C.",
+    "twin": {
+      "prompt": "A 25 N force acts straight down at the end B of a rod, and the pivot C is 1.6 m from B. What is the moment of the force about C, in newton metres?",
+      "answer": "40",
+      "explain": "The force times its distance from C, as in step 2 of See it: $25 \\times 1.6 = 40$ N m."
+    }
   },
   {
     "type": "h",
@@ -52,17 +76,35 @@
   },
   {
     "type": "figure",
-    "alt": "A uniform rod AB, 5 metres long, resting on supports at A and at C, 3 metres from A, with reactions R A and R C drawn upwards. The rod's weight is a dashed arrow straight down from its midpoint M, 2.5 metres from A, which is not halfway between the supports.",
-    "svg": "<svg viewBox='0 0 400 236' xmlns='http://www.w3.org/2000/svg' width='400' height='236'><g fill='currentColor' font-family='inherit'><rect x='46' y='85' width='308' height='14' rx='3' fill='currentColor' fill-opacity='0.1' stroke='currentColor' stroke-width='1.6'/><path d='M46 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M46 85L46 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M46 41L50.2 51L41.8 51Z' fill='currentColor'/><text x='46' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>A</tspan></text><path d='M230.8 99l-11 21h22Z' fill='currentColor' fill-opacity='0.12' stroke='currentColor' stroke-width='1.4'/><path d='M230.8 85L230.8 41' fill='none' stroke='currentColor' stroke-width='2'/><path d='M230.8 41L235 51L226.6 51Z' fill='currentColor'/><text x='230.8' y='33' text-anchor='middle' font-size='16'>R<tspan dy='4' font-size='14'>C</tspan></text><circle cx='200' cy='92' r='3' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M200 100L200 146' fill='none' stroke='currentColor' stroke-width='2' stroke-dasharray='5 4'/><path d='M200 146L195.8 136L204.2 136Z' fill='currentColor'/><text x='200' y='164' text-anchor='middle' font-size='15'>weight</text><text x='38' y='98' text-anchor='end' font-size='16' font-weight='600'>A</text><text x='195' y='116' text-anchor='end' font-size='16' font-weight='600'>M</text><text x='217.8' y='116' text-anchor='end' font-size='16' font-weight='600'>C</text><text x='362' y='98' text-anchor='start' font-size='16' font-weight='600'>B</text><path d='M46 189v10M200 189v10M46 194H200' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='123' y='187' text-anchor='middle' font-size='14'>2.5 m</text><path d='M46 219v10M230.8 219v10M46 224H230.8' fill='none' stroke='currentColor' stroke-width='1.1' stroke-opacity='0.85'/><text x='138.4' y='217' text-anchor='middle' font-size='14'>3 m</text></g></svg>",
+    "alt": "A uniform rod AB, 4.4 metres long, resting on supports at A and at C, 3 metres from A, with reactions R A and R C drawn upwards. Its weight is a dashed arrow straight down from its midpoint M, which is not halfway between the supports.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 238\" role=\"img\" aria-label=\"A uniform rod AB, 4.4 metres long, on supports at A and at C, 3 metres from A. Its weight is a dashed arrow from its midpoint M.\" font-family=\"inherit\"><title>A uniform rod AB, 4.4 metres long, on supports at A and at C, 3 metres from A. Its weight is a dashed arrow from its midpoint M.</title><g font-family=\"inherit\"><rect x=\"52\" y=\"86\" width=\"296\" height=\"14\" rx=\"3\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M52 100l-11 21h22Z\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M52 86L52 44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M52 42L56.2 52L47.8 52Z\" fill=\"currentColor\"/><text x=\"52\" y=\"34\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">R<tspan dy=\"4\" font-size=\"14\">A</tspan></text><path d=\"M253.82 100l-11 21h22Z\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M253.82 86L253.82 44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M253.82 42L258.02 52L249.62 52Z\" fill=\"currentColor\"/><text x=\"253.82\" y=\"34\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">R<tspan dy=\"4\" font-size=\"14\">C</tspan></text><circle cx=\"200\" cy=\"93\" r=\"3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\"/><path d=\"M200 101L200 146\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><path d=\"M200 146L195.8 136L204.2 136Z\" fill=\"currentColor\"/><text x=\"200\" y=\"164\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">weight</text><text x=\"43\" y=\"98\" font-size=\"16\" text-anchor=\"end\" fill=\"currentColor\" font-weight=\"600\">A</text><text x=\"194\" y=\"117\" font-size=\"16\" text-anchor=\"end\" fill=\"currentColor\" font-weight=\"600\">M</text><text x=\"238.82\" y=\"117\" font-size=\"16\" text-anchor=\"end\" fill=\"currentColor\" font-weight=\"600\">C</text><text x=\"357\" y=\"98\" font-size=\"16\" text-anchor=\"start\" fill=\"currentColor\" font-weight=\"600\">B</text><path d=\"M52 187v10M253.82 187v10M52 192H253.82\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-opacity=\"0.85\"/><text x=\"152.91\" y=\"185\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\">3 m</text><path d=\"M52 217v10M348 217v10M52 222H348\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-opacity=\"0.85\"/><text x=\"200\" y=\"215\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\">4.4 m</text></g></svg>",
     "caption": "Uniform: the weight acts at M, the rod's midpoint, wherever the supports are."
   },
   {
     "type": "p",
-    "md": "A rod has a weight of its own, and it belongs in every equation. **Uniform** means the mass is spread evenly, so the whole weight acts at the rod's midpoint. That is the middle of the rod, not the point halfway between its supports or strings, where the 2019 report found it drawn."
+    "md": "A rod has a weight of its own, and it belongs in every equation. **Uniform** means its mass is spread evenly, so the whole weight acts at the rod's midpoint: the middle of the rod, not the point halfway between its supports or strings. The 2019 report found it drawn halfway between the strings."
   },
   {
-    "type": "p",
-    "md": "**Shown, for the rod in the figure:** it is 5 m long, so its weight acts at M, $5 \\div 2 = 2.5$ m from A. Halfway between the supports, $3 \\div 2 = 1.5$ m from A, is the wrong place."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "The uniform rod AB in the picture is 4.4 m long and rests on supports at A and at C, 3 m from A. Where does its weight act?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Uniform: the weight acts at the midpoint M",
+        "decision": "The mass is spread evenly, so every piece on one side of M has a partner on the other."
+      },
+      {
+        "n": 2,
+        "working": "$AM = 4.4 \\div 2 = 2.2$ m",
+        "decision": "Half the rod's length, measured from either end."
+      },
+      {
+        "n": 3,
+        "working": "Not $3 \\div 2 = 1.5$ m from A, between the supports",
+        "decision": "Where the supports stand has nothing to do with where the weight acts."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -70,7 +112,12 @@
     "kind": "number",
     "prompt": "A uniform rod AB is 3.6 m long and rests on supports at A and at a point 2.4 m from A. How far from A does the rod's weight act, in metres?",
     "answer": "1.8",
-    "explain": "Uniform means the whole weight acts at the rod's midpoint, M in the picture, wherever the supports are: half of 3.6 m is 1.8 m from A. Halfway between the supports, 1.2 m, is the misplacement the 2019 report names."
+    "explain": "Uniform means the whole weight acts at the rod's midpoint, as in step 2 of See it: half of 3.6 m is 1.8 m from A. Halfway between the supports, 1.2 m, is the misplacement the 2019 report names.",
+    "twin": {
+      "prompt": "A uniform rod AB is 5.4 m long and hangs from strings at A and at a point 4 m from A. How far from A does the rod's weight act, in metres?",
+      "answer": "2.7",
+      "explain": "Half the rod's length, as in step 2 of See it: $5.4 \\div 2 = 2.7$ m from A. Where the strings are does not move it."
+    }
   },
   {
     "type": "h",
@@ -78,12 +125,42 @@
     "role": "why"
   },
   {
+    "type": "figure",
+    "alt": "A uniform rod of weight 200 newtons resting on two supports. One support pushes up with R and the other with 230 newtons; the rod's weight is a dashed arrow from its midpoint and a 150 newton load hangs between the supports.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 178\" role=\"img\" aria-label=\"A uniform rod of weight 200 newtons on two supports, one pushing up with R and the other with 230 newtons, carrying a 150 newton load.\" font-family=\"inherit\"><title>A uniform rod of weight 200 newtons on two supports, one pushing up with R and the other with 230 newtons, carrying a 150 newton load.</title><g font-family=\"inherit\"><rect x=\"52\" y=\"86\" width=\"296\" height=\"14\" rx=\"3\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M81.6 100l-11 21h22Z\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M81.6 86L81.6 44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M81.6 42L85.8 52L77.4 52Z\" fill=\"currentColor\"/><text x=\"81.6\" y=\"34\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">R</text><path d=\"M318.4 100l-11 21h22Z\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M318.4 86L318.4 44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M318.4 42L322.6 52L314.2 52Z\" fill=\"currentColor\"/><text x=\"318.4\" y=\"34\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">230 N</text><path d=\"M265.12 100L265.12 146\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M265.12 146L260.92 136L269.32 136Z\" fill=\"currentColor\"/><text x=\"265.12\" y=\"164\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">150 N</text><circle cx=\"200\" cy=\"93\" r=\"3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\"/><path d=\"M200 101L200 146\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><path d=\"M200 146L195.8 136L204.2 136Z\" fill=\"currentColor\"/><text x=\"200\" y=\"164\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">200 N</text></g></svg>",
+    "caption": "Up equals down: the two reactions hold up the rod and the load between them."
+  },
+  {
     "type": "p",
     "md": "A rod at rest is not speeding up, so the forces up equal the forces down. It is not starting to turn either, so the clockwise moments equal the anticlockwise moments. Because the forces balance too, that is true about every point on the rod, so you may take moments about whichever point you choose."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a 200 N rod carries a 150 N load on two supports, and one pushes up with 230 N. **Up equals down:** $R + 230 = 200 + 150$, so $R = 120$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform rod in the picture weighs 200 N and carries a 150 N load on two supports. One support pushes up with 230 N. Find the other reaction.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Down: $200 + 150 = 350$ N",
+        "decision": "The rod's own weight and the load: the rod's weight is never left out."
+      },
+      {
+        "n": 2,
+        "working": "Up equals down: $R + 230 = 350$",
+        "decision": "The two reactions together hold up everything on the rod.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$R = 120$ N",
+        "decision": "One reaction known gives the other in one line, with no moments.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -91,17 +168,61 @@
     "kind": "number",
     "prompt": "A uniform plank of weight 300 N carries a 500 N load and rests on two supports. One support pushes up with 620 N. What does the other push up with, in newtons?",
     "answer": "180",
-    "explain": "Up equals down, as in the line above: the two reactions together hold up the plank and the load, so $R + 620 = 300 + 500$ and $R = 180$ N. Once one reaction is known, no moments are needed for the other."
+    "explain": "Up equals down, as in step 2 of See it: the two reactions together hold up the plank and the load, so $R + 620 = 300 + 500$ and $R = 180$ N.",
+    "twin": {
+      "prompt": "A uniform plank of weight 260 N carries a 340 N load and rests on two supports. One support pushes up with 410 N. What does the other push up with, in newtons?",
+      "answer": "190",
+      "explain": "Up equals down: $R + 410 = 260 + 340$, so $R = 190$ N."
+    }
+  },
+  {
+    "type": "h",
+    "text": "See it: choosing the point",
+    "role": "see"
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why the choice of point matters",
-    "md": "Take moments about the point where an unknown force acts and that force has no distance, so no moment: it drops out of the equation. Choosing the point is how you choose which unknown to find first."
+    "md": "Take moments about the point where an unknown force acts and that force has no distance, so no moment: it drops out of the equation. Choosing the point is choosing which unknown to find first."
   },
   {
-    "type": "p",
-    "md": "**Shown:** a uniform 6 m rod of weight 150 N rests on supports at A and B, with 120 N hanging 2 m from A. About A, the reaction at A has distance 0 and drops out: $6R_B = 150 \\times 3 + 120 \\times 2 = 690$, so $R_B = 115$ N."
+    "type": "figure",
+    "alt": "A uniform rod PQ, 6 metres long and of weight 150 newtons, resting on supports at P and at Q, with a 120 newton load hanging 2 metres from P. A ring marks Q, the point moments are taken about.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 238\" role=\"img\" aria-label=\"A uniform rod PQ, 6 metres long and of weight 150 newtons, on supports at P and Q, with 120 newtons hanging 2 metres from P. A ring marks Q.\" font-family=\"inherit\"><title>A uniform rod PQ, 6 metres long and of weight 150 newtons, on supports at P and Q, with 120 newtons hanging 2 metres from P. A ring marks Q.</title><g font-family=\"inherit\"><rect x=\"52\" y=\"86\" width=\"296\" height=\"14\" rx=\"3\" fill=\"currentColor\" fill-opacity=\"0.1\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M52 100l-11 21h22Z\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M52 86L52 44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M52 42L56.2 52L47.8 52Z\" fill=\"currentColor\"/><text x=\"52\" y=\"34\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">R<tspan dy=\"4\" font-size=\"14\">P</tspan></text><path d=\"M348 100l-11 21h22Z\" fill=\"currentColor\" fill-opacity=\"0.12\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M348 86L348 44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M348 42L352.2 52L343.8 52Z\" fill=\"currentColor\"/><text x=\"348\" y=\"34\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\">R<tspan dy=\"4\" font-size=\"14\">Q</tspan></text><path d=\"M150.67 100L150.67 146\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M150.67 146L146.47 136L154.87 136Z\" fill=\"currentColor\"/><text x=\"150.67\" y=\"164\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">120 N</text><circle cx=\"200\" cy=\"93\" r=\"3\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\"/><path d=\"M200 101L200 146\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-dasharray=\"5 4\"/><path d=\"M200 146L195.8 136L204.2 136Z\" fill=\"currentColor\"/><text x=\"200\" y=\"164\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">150 N</text><circle cx=\"348\" cy=\"93\" r=\"11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"43\" y=\"98\" font-size=\"16\" text-anchor=\"end\" fill=\"currentColor\" font-weight=\"600\">P</text><text x=\"363\" y=\"98\" font-size=\"16\" text-anchor=\"start\" fill=\"currentColor\" font-weight=\"600\">Q</text><path d=\"M52 187v10M150.67 187v10M52 192H150.67\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-opacity=\"0.85\"/><text x=\"101.33\" y=\"185\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\">2 m</text><path d=\"M52 217v10M348 217v10M52 222H348\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.1\" stroke-opacity=\"0.85\"/><text x=\"200\" y=\"215\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\">6 m</text></g></svg>",
+    "caption": "Moments about Q: the reaction at Q has no distance, so it drops out."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform rod PQ in the picture is 6 m long, weighs 150 N and rests on supports at P and Q, with 120 N hanging 2 m from P. Find the reaction at P.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About Q: $R_Q$ has no distance, so no moment",
+        "decision": "Taking moments about Q removes the reaction you do not want.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Anticlockwise about Q: $150 \\times 3 + 120 \\times 4 = 930$ N m",
+        "decision": "Each weight times its distance from Q: the rod's weight 3 m away, the load 4 m away.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Clockwise: $6R_P = 930$, so $R_P = 155$ N",
+        "decision": "The reaction at the far support turns the rod the other way; equate and divide.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -114,7 +235,41 @@
       "The midpoint of the rod"
     ],
     "answer": "A",
-    "explain": "About A, the reaction at A has distance 0, as in the line above, so it drops out and the reaction at B is the only unknown left. About B, the reaction you want would drop out instead."
+    "explain": "Take moments about the support whose reaction you do not want, as See it took them about Q to find the reaction at P. Here you want B's reaction, so take moments about A: the reaction at A drops out.",
+    "twin": {
+      "prompt": "A rod rests on supports at C and D, and neither reaction is known. You want the reaction at C first. About which point should you take moments?",
+      "options": [
+        "D",
+        "C",
+        "The midpoint of the rod"
+      ],
+      "answer": "D",
+      "explain": "About D the reaction at D has no distance, so it drops out and the reaction at C is the only unknown left.",
+      "optionNotes": [
+        {
+          "option": "C",
+          "why": "About P the reaction you want has no distance, so it drops out of the very equation meant to find it.",
+          "misconception": "fm.moments.pivot-chosen-at-random"
+        },
+        {
+          "option": "The midpoint of the rod",
+          "why": "About the midpoint both reactions keep their distances, so two unknowns stay in one equation.",
+          "misconception": "fm.moments.pivot-chosen-at-random"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "B",
+        "why": "About B the reaction you want has no distance, so it drops out of the very equation meant to find it.",
+        "misconception": "fm.moments.pivot-chosen-at-random"
+      },
+      {
+        "option": "The midpoint of the rod",
+        "why": "About the midpoint both reactions keep their distances, so two unknowns stay in one equation.",
+        "misconception": "fm.moments.pivot-chosen-at-random"
+      }
+    ]
   },
   {
     "type": "h",
@@ -132,16 +287,39 @@
     "md": "Cut a uniform rod into many equal small pieces, each of weight $w$. For every piece a distance $x$ to the left of the midpoint, an identical piece sits $x$ to the right. About the midpoint their moments are $wx$ each way, so they cancel, pair by pair. The whole weight has no moment about the midpoint, so it acts there."
   },
   {
-    "type": "p",
-    "md": "**Shown:** two 5 N pieces sit 0.3 m either side of M. One turns clockwise with $5 \\times 0.3 = 1.5$ N m, the other anticlockwise with $5 \\times 0.3 = 1.5$ N m, and $1.5 - 1.5 = 0$."
+    "type": "see",
+    "kind": "proof",
+    "stem": "Two 5 N pieces of a uniform rod sit 0.3 m either side of its midpoint M. Show that together they have no moment about M.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Left piece: $5 \\times 0.3 = 1.5$ N m, anticlockwise",
+        "decision": "Its weight times its distance from M."
+      },
+      {
+        "n": 2,
+        "working": "Right piece: $5 \\times 0.3 = 1.5$ N m, clockwise",
+        "decision": "The same weight at the same distance, on the other side."
+      },
+      {
+        "n": 3,
+        "working": "Together: $1.5 - 1.5 = 0$",
+        "decision": "Every piece has such a partner, so the whole weight has no moment about M: it acts there."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g9",
+    "id": "g16",
     "kind": "number",
-    "prompt": "Two equal pieces of a uniform rod, each weighing 6 N, sit 0.4 m either side of the rod's midpoint. What is their total moment about the midpoint, in N m?",
-    "answer": "0",
-    "explain": "Each has a moment of $6 \\times 0.4 = 2.4$ N m, one clockwise and one anticlockwise, so together they give 0. Pair every piece like this and the rod's weight has no moment about its midpoint."
+    "prompt": "A uniform rod AB is 3 m long and weighs 80 N. What is the moment of its weight about the end A, in newton metres?",
+    "answer": "120",
+    "explain": "The pieces cancel in pairs about M, as See it showed, so the whole 80 N acts at the midpoint, 1.5 m from A: $80 \\times 1.5 = 120$ N m.",
+    "twin": {
+      "prompt": "A uniform rod AB is 2.6 m long and weighs 50 N. What is the moment of its weight about the end B, in newton metres?",
+      "answer": "65",
+      "explain": "The weight acts at the midpoint, 1.3 m from B: $50 \\times 1.3 = 65$ N m."
+    }
   },
   {
     "type": "h",
@@ -166,8 +344,29 @@
     "source": "ccea-cer:further-maths:2024-summer:FM2:Q5"
   },
   {
-    "type": "p",
-    "md": "**Shown, for the plank in the figure:** about A, $R_A$ has no moment, so $6R_C = 300 \\times 4 + 450 \\times 5$ and $R_C = 575$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The plank in the picture is 8 m long and weighs 300 N. It rests on trestles at A and at C, 6 m from A, and a 450 N person stands at D, 5 m from A. Find the reaction at C.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About A: $6R_C = 300 \\times 4 + 450 \\times 5$",
+        "decision": "The reaction at A has no distance from A, so it drops out; the plank's weight acts 4 m from A.",
+        "earns": [
+          "M1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$6R_C = 3450$, so $R_C = 575$ N",
+        "decision": "Collect the moments, then divide by C's distance from A.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -175,16 +374,47 @@
     "kind": "number",
     "prompt": "A uniform rod AB, of length 4 m and weight 60 N, rests on supports at A and B. A 90 N load hangs 1 m from A. Taking moments about A, what is the reaction at B, in newtons?",
     "answer": "52.5",
-    "explain": "About A the reaction at A has no moment, as in the plank's line above, so only the reaction at B is left: $4R_B = 60 \\times 2 + 90 \\times 1$, so $4R_B = 210$ and $R_B = 52.5$ N."
+    "explain": "About A the reaction at A has no moment, as in step 1 of See it, so only the reaction at B is left: $4R_B = 60 \\times 2 + 90 \\times 1 = 210$, so $R_B = 52.5$ N.",
+    "twin": {
+      "prompt": "A uniform rod AB, of length 5 m and weight 80 N, rests on supports at A and B. A 120 N load hangs 2 m from A. Taking moments about A, what is the reaction at B, in newtons?",
+      "answer": "88",
+      "explain": "About A: $5R_B = 80 \\times 2.5 + 120 \\times 2 = 440$, so $R_B = 88$ N."
+    }
   },
   {
     "type": "h",
-    "text": "6. See it done: a plank on trestles",
+    "text": "See it done: both reactions",
     "role": "see"
   },
   {
-    "type": "p",
-    "md": "The whole method on the plank above, at writing speed: 8 m long, 300 N, trestles at A and C, a 450 N person at D.\n**About A:** $6R_C = 3450$, so $R_C = 575$ N.\n**Up equals down:** $R_A + 575 = 750$, so $R_A = 175$ N.\n**Check about C:** $6R_A = 300 \\times 2 + 450 \\times 1$, which gives 175 again."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The same plank, for both reactions: 8 m long and 300 N, on trestles at A and at C, 6 m from A, with a 450 N person at D, 5 m from A.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About A, as before: $R_C = 575$ N",
+        "decision": "Moments about one support first: one unknown, one equation.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Up equals down: $R_A + 575 = 300 + 450$, so $R_A = 175$ N",
+        "decision": "With one reaction known, resolving gives the other.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Check about C: $6R_A = 300 \\times 2 + 450 \\times 1$",
+        "decision": "That gives 175 again: a second point confirms the first."
+      }
+    ]
   },
   {
     "type": "video",
@@ -199,11 +429,16 @@
     "kind": "number",
     "prompt": "A uniform plank AB, 5 m long and of weight 200 N, rests on trestles at A and at C, 4 m from A. A 300 N load sits 3 m from A. What is the reaction at A, in newtons?",
     "answer": "150",
-    "explain": "Two steps, as for the plank above: moments about A give the reaction at C, then up equals down gives A's. About A: $4R_C = 200 \\times 2.5 + 300 \\times 3$, so $R_C = 350$ N. Up equals down: $R_A = 500 - 350$, so $R_A = 150$ N."
+    "explain": "Two steps, as See it showed: moments about A give the reaction at C, then up equals down gives A's. About A, $4R_C = 200 \\times 2.5 + 300 \\times 3$, so $R_C = 350$ N, and $R_A = 500 - 350 = 150$ N.",
+    "twin": {
+      "prompt": "A uniform plank AB, 7 m long and of weight 210 N, rests on trestles at A and at C, 6 m from A. A 330 N load sits 4 m from A. What is the reaction at A, in newtons?",
+      "answer": "197.5",
+      "explain": "About A: $6R_C = 210 \\times 3.5 + 330 \\times 4 = 2055$, so $R_C = 342.5$ N. Up equals down: $R_A = 540 - 342.5 = 197.5$ N."
+    }
   },
   {
     "type": "h",
-    "text": "7. Loads beyond the supports",
+    "text": "6. Loads beyond the supports",
     "role": "variant"
   },
   {
@@ -217,8 +452,36 @@
     "md": "CCEA often hangs the rod from two vertical strings, with masses at the ends beyond the strings. The tensions act as the reactions, so give each string its own letter. Take moments about one string: a load beyond that point turns the rod the other way, so its moment goes on the other side."
   },
   {
-    "type": "p",
-    "md": "**Shown, about C for the rod in the figure:** the 20 N at A is beyond C, so it turns the same way as $T_B$.\n**Moments:** $2.5T_B + 20 \\times 0.5 = 30 \\times 1$, so $T_B = 8$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform rod AB in the picture is 3 m long, weighs 30 N and hangs from strings at C, 0.5 m from A, and at B. A 20 N weight hangs at A. Find the tension at B.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About C: the 20 N at A is on the other side of C",
+        "decision": "So it turns the rod the same way as $T_B$, and its moment goes on that side.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2.5T_B + 20 \\times 0.5 = 30 \\times 1$",
+        "decision": "The rod's weight acts at its midpoint, 1 m beyond C.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$2.5T_B = 20$, so $T_B = 8$ N",
+        "decision": "Take the 10 N m across, then divide by B's distance from C.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -226,11 +489,16 @@
     "kind": "number",
     "prompt": "A uniform rod AB, 3 m long and of weight 40 N, hangs from strings at C and D, where AC = 0.5 m and DB = 0.5 m. 30 N hangs at A and 50 N at B. Taking moments about C, what is the tension at D, in newtons?",
     "answer": "75",
-    "explain": "The 30 N at A is beyond C, so its moment sits on the same side as $T_D$'s, just as the 20 N did above. About C: $2T_D + 30 \\times 0.5 = 40 \\times 1 + 50 \\times 2.5$, so $2T_D = 150$ and $T_D = 75$ N."
+    "explain": "The 30 N at A is beyond C, so its moment sits on the same side as $T_D$'s, as in step 2 of See it. About C: $2T_D + 30 \\times 0.5 = 40 \\times 1 + 50 \\times 2.5$, so $T_D = 75$ N.",
+    "twin": {
+      "prompt": "A uniform rod AB, 4 m long and of weight 50 N, hangs from strings at C and D, where AC = 0.5 m and DB = 1 m. 20 N hangs at A and 40 N at B. Taking moments about C, what is the tension at D, in newtons?",
+      "answer": "82",
+      "explain": "About C: $2.5T_D + 20 \\times 0.5 = 50 \\times 1.5 + 40 \\times 3.5$, so $2.5T_D = 205$ and $T_D = 82$ N."
+    }
   },
   {
     "type": "h",
-    "text": "8. See it done: two strings",
+    "text": "See it done: two strings",
     "role": "see"
   },
   {
@@ -240,8 +508,38 @@
     "caption": "The 80 N hangs at E, not at the end: measure its distance from C with care."
   },
   {
-    "type": "p",
-    "md": "**About C:** $2T_D + 40 \\times 1 = 60 \\times 1 + 80 \\times 2.5$\n**So** $2T_D + 40 = 260$ and $T_D = 110$ N.\n**Up equals down:** $T_C + 110 = 180$, so $T_C = 70$ N."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform rod AB in the picture is 4 m long, weighs 60 N and hangs from strings at C, 1 m from A, and D, 1 m from B. 40 N hangs at A and 80 N at E, 0.5 m from B. Find both tensions.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About C: $2T_D + 40 \\times 1 = 60 \\times 1 + 80 \\times 2.5$",
+        "decision": "E is 2.5 m from C: measure every distance from the point the moments are about.",
+        "earns": [
+          "M1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2T_D + 40 = 260$, so $T_D = 110$ N",
+        "decision": "Collect, then divide by D's distance from C.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Up equals down: $T_C + 110 = 180$, so $T_C = 70$ N",
+        "decision": "The strings hold up the rod and both loads between them.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
@@ -256,11 +554,16 @@
     "kind": "number",
     "prompt": "A uniform rod of weight 45 N hangs from two vertical strings, with 40 N hanging at one end and 60 N at the other. One string pulls up with 88 N. What is the tension in the other string, in newtons?",
     "answer": "57",
-    "explain": "Up equals down, as in the last line above: the two strings together hold up the rod and both loads, so $T + 88 = 45 + 40 + 60$ and $T = 57$ N."
+    "explain": "Up equals down, as in step 3 of See it: the two strings together hold up the rod and both loads, so $T + 88 = 45 + 40 + 60$ and $T = 57$ N.",
+    "twin": {
+      "prompt": "A uniform rod of weight 35 N hangs from two vertical strings, with 25 N hanging at one end and 50 N at the other. One string pulls up with 64 N. What is the tension in the other string, in newtons?",
+      "answer": "46",
+      "explain": "Up equals down: $T + 64 = 35 + 25 + 50$, so $T = 46$ N."
+    }
   },
   {
     "type": "h",
-    "text": "9. One support: an unknown distance",
+    "text": "7. One support: an unknown distance",
     "role": "variant"
   },
   {
@@ -274,8 +577,38 @@
     "md": "On one support or one string, the reaction is the total weight: up equals down. The position is the unknown, so call it $x$, take moments about the end A and solve. The 2025 report saw the weakest candidates try values by trial and error instead."
   },
   {
-    "type": "p",
-    "md": "**Up equals down:** the pivot carries 90 + 60 + 30, so $R = 180$ N.\n**About A:** $180x = 60 \\times 3 + 30 \\times 6$, so $180x = 360$.\n**So** $x = 2$ m."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform rod AB in the picture is 6 m long, weighs 60 N and balances on one pivot at C, a distance $x$ from A, with 90 N at A and 30 N at B. Find $x$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Up equals down: $R = 90 + 60 + 30 = 180$ N",
+        "decision": "One support carries the whole weight.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "About A: $180x = 60 \\times 3 + 30 \\times 6$",
+        "decision": "The 90 N at A has no moment about A; the reaction acts at the unknown distance.",
+        "earns": [
+          "M1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$180x = 360$, so $x = 2$ m",
+        "decision": "Keep $x$ as a letter and solve: never try values.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "sim",
@@ -292,11 +625,16 @@
     "kind": "number",
     "prompt": "A uniform rod AB, 3 m long and of weight 40 N, rests on a single pivot, with 60 N hanging at A and 20 N at B. The pivot's reaction is 120 N. Taking moments about A, how far is the pivot from A, in metres?",
     "answer": "1",
-    "explain": "Call the unknown distance $x$ and take moments about A, as the lines above did: the 60 N at A has no moment there, so $120x = 40 \\times 1.5 + 20 \\times 3$, $120x = 120$ and $x = 1$ m."
+    "explain": "Call the distance $x$ and take moments about A, as in step 2 of See it: the 60 N at A has no moment there, so $120x = 40 \\times 1.5 + 20 \\times 3 = 120$ and $x = 1$ m.",
+    "twin": {
+      "prompt": "A uniform rod AB, 5 m long and of weight 30 N, rests on a single pivot, with 50 N hanging at A and 20 N at B. The pivot's reaction is 100 N. Taking moments about A, how far is the pivot from A, in metres?",
+      "answer": "1.75",
+      "explain": "About A: $100x = 30 \\times 2.5 + 20 \\times 5 = 175$, so $x = 1.75$ m."
+    }
   },
   {
     "type": "h",
-    "text": "10. On the point of tipping",
+    "text": "8. On the point of tipping",
     "role": "variant"
   },
   {
@@ -307,23 +645,56 @@
   },
   {
     "type": "p",
-    "md": "As a load moves out past a support, the plank presses less and less on the other support. On the point of tipping it presses not at all, so that reaction is **zero**. Set it to zero and take moments about the support the plank tips about. CCEA has not set this yet; it is the same two rules."
+    "md": "As a load moves out past a support, the plank presses less and less on the other support. On the point of tipping it presses not at all, so that reaction is **zero**. Set it to zero and take moments about the support the plank tips about. No paper from 2019 to 2026 has set it yet; it uses the same two rules."
   },
   {
-    "type": "p",
-    "md": "**Tipping about D, so** $R_C = 0$.\n**About D:** $400 \\times 1.5 = 600x$\n**So** $x = 1$ m beyond D."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform plank AB in the picture is 6 m long and weighs 400 N, on supports at C and D, each 1.5 m from an end. How far beyond D can a 600 N person stand before it tips?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About to tip about D, so $R_C = 0$",
+        "decision": "The plank is just leaving C, so C pushes not at all.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "About D: $400 \\times 1.5 = 600x$",
+        "decision": "The plank's weight acts at its midpoint, 1.5 m on the other side of D; $R_D$ has no moment there.",
+        "earns": [
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$x = 1$ m beyond D",
+        "decision": "Divide by the person's weight.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g7",
+    "id": "g17",
     "kind": "number",
-    "prompt": "A uniform plank of weight 240 N rests on two supports, and its midpoint is 1 m from the support D. A person of weight 480 N walks out beyond D. How far beyond D can they stand before the plank tips, in metres?",
-    "answer": "0.5",
-    "explain": "On the point of tipping the plank just leaves the other support, so that reaction is zero, as in the picture. Then moments about D: $240 \\times 1 = 480x$, so $x = 0.5$ m."
+    "prompt": "A uniform plank of weight 320 N rests on two supports, and its midpoint is 1.4 m from the support D. A person of weight 640 N walks out beyond D. How far beyond D can they stand before the plank tips, in metres?",
+    "answer": "0.7",
+    "explain": "On the point of tipping the other reaction is zero, as in step 1 of See it. Moments about D: $320 \\times 1.4 = 640x$, so $x = 0.7$ m.",
+    "twin": {
+      "prompt": "A uniform plank of weight 270 N rests on two supports, and its midpoint is 1.2 m from the support D. A child of weight 450 N walks out beyond D. How far beyond D can the child stand before the plank tips, in metres?",
+      "answer": "0.72",
+      "explain": "Moments about D with the other reaction zero: $270 \\times 1.2 = 450x$, so $x = 0.72$ m."
+    }
   },
   {
     "type": "h",
-    "text": "11. Reactions in a ratio",
+    "text": "9. Reactions in a ratio",
     "role": "variant"
   },
   {
@@ -337,8 +708,38 @@
     "md": "Some questions fix the reactions in a ratio: one is twice or three times the other. Call the smaller $R$ and the larger $2R$ or $3R$, and put both into both equations. When every weight is known, up equals down finds $R$ at once, and moments then find the missing distance."
   },
   {
-    "type": "p",
-    "md": "**Up equals down:** $R + 2R = 200 + 40$, so $R = 80$ N.\n**About A:** $160 \\times 4 = 200 \\times 2.5 + 40 \\times AP$\n**So** $640 = 500 + 40 \\times AP$ and $AP = 3.5$ m."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform plank AB in the picture is 5 m long and weighs 200 N, on pivots at A and at C, 4 m from A. A 40 N box sits at P, and the reaction at C is twice the reaction at A. Find AP.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Up equals down: $R + 2R = 200 + 40$, so $R = 80$ N",
+        "decision": "Both reactions in one letter: one unknown.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "About A: $160 \\times 4 = 200 \\times 2.5 + 40 \\times AP$",
+        "decision": "The reaction at C is $2R = 160$ N, 4 m from A.",
+        "earns": [
+          "M1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$640 = 500 + 40 \\times AP$, so $AP = 3.5$ m",
+        "decision": "Take the 500 across and divide by 40.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -346,11 +747,16 @@
     "kind": "number",
     "prompt": "A rod rests on supports at A and C. The reaction at C is three times as large as the reaction at A, and the total downward force on the rod is 480 N. What is the reaction at A, in newtons?",
     "answer": "120",
-    "explain": "Write the reactions as $R$ and $3R$ and resolve, as the lines above did with $R$ and $2R$: $R + 3R = 480$, so $4R = 480$ and $R = 120$ N. The reaction at C is then 360 N."
+    "explain": "Write the reactions as $R$ and $3R$ and resolve, as step 1 of See it did with $R$ and $2R$: $R + 3R = 480$, so $4R = 480$ and $R = 120$ N.",
+    "twin": {
+      "prompt": "A rod rests on supports at A and C. The reaction at C is four times the reaction at A, and the total downward force on the rod is 350 N. What is the reaction at A, in newtons?",
+      "answer": "70",
+      "explain": "Write them as $R$ and $4R$: $R + 4R = 350$, so $5R = 350$ and $R = 70$ N."
+    }
   },
   {
     "type": "h",
-    "text": "12. Exam twists",
+    "text": "10. Exam twists",
     "role": "twists"
   },
   {
@@ -359,11 +765,53 @@
   },
   {
     "type": "p",
-    "md": "**The load changes** (2021, 2022). A mass is added, moved or swapped, and the reactions change by different amounts. First line: a new moments equation with the new load in place."
+    "md": "**The load changes** (2021, 2022). A mass is added, moved or swapped, and the two reactions change by different amounts. First line: a new moments equation with the new load in place."
   },
   {
     "type": "p",
-    "md": "**Shown:** a 2 m, 40 N rod on supports at A and B (20 N each) takes a 30 N load 0.5 m from A.\n**About A:** $2R_B = 40 \\times 1 + 30 \\times 0.5$, so $R_B = 27.5$ N.\n**Up equals down:** $R_A = 42.5$ N: one rose by 22.5 N, the other by 7.5 N."
+    "md": "**The point is named** (2022). Moments about a given point are help: an unknown you do not want acts there."
+  },
+  {
+    "type": "p",
+    "md": "**Equal reactions** (2022). After a change the reactions are equal, so each is half the total downward force."
+  },
+  {
+    "type": "p",
+    "md": "**The length is the unknown** (2021). Asked to show the rod's length, call it $L$, put the weight at $\\frac{L}{2}$, and let the value come out last."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A uniform rod AB, 2 m long and of weight 40 N, rests on supports at A and B, each pushing up with 20 N. A 30 N load is then hung 0.5 m from A. Find the new reactions.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About A: $2R_B = 40 \\times 1 + 30 \\times 0.5$",
+        "decision": "A new load means a new moments equation.",
+        "earns": [
+          "M1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2R_B = 55$, so $R_B = 27.5$ N",
+        "decision": "Divide by B's distance from A.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Up equals down: $R_A = 70 - 27.5 = 42.5$ N",
+        "decision": "One reaction rose by 22.5 N and the other by 7.5 N: never by the same amount.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -376,23 +824,80 @@
       "The old reactions, unchanged"
     ],
     "answer": "A new moments equation with the 2 kg included",
-    "explain": "The new mass has its own moment, so the reactions change by different amounts, as the two reactions above rose by different amounts. The 2022 report found many candidates reusing the old reaction instead of finding it again."
+    "explain": "The new mass has its own moment, so the reactions change by different amounts, as in step 3 of See it. The 2022 report found many candidates reusing the old reaction instead of finding it again.",
+    "twin": {
+      "prompt": "A box on a plank resting on two supports is slid nearer to one support, and the plank stays level. What should the first line of the new part be?",
+      "options": [
+        "A new moments equation with the box in its new place",
+        "The old reactions, unchanged",
+        "The old reactions, swapped over"
+      ],
+      "answer": "A new moments equation with the box in its new place",
+      "explain": "Moving the box changes its moment, so the reactions must be found again from a new moments equation.",
+      "optionNotes": [
+        {
+          "option": "The old reactions, unchanged",
+          "why": "The total stays the same, but the box's moment has changed, so the share each support carries changes too.",
+          "misconception": "fm.moments.reaction-not-recalculated"
+        },
+        {
+          "option": "The old reactions, swapped over",
+          "why": "Swapping only fits a box moved to the mirror-image point; anywhere else the new shares come from a new moments equation.",
+          "misconception": "fm.moments.reaction-not-recalculated"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The old reactions, each increased by 10 N",
+        "why": "Sharing the new weight equally ignores where it hangs: a mass at one end loads the nearer support more.",
+        "misconception": "fm.moments.reaction-not-recalculated"
+      },
+      {
+        "option": "The old reactions, unchanged",
+        "why": "The rod now carries 20 N more, so the reactions must rise; reusing the old ones is the slip the 2022 report names.",
+        "misconception": "fm.moments.reaction-not-recalculated"
+      }
+    ]
   },
   {
-    "type": "p",
-    "md": "**The point is named** (2022). It is help, as the 2022 report says: an unknown you do not want acts there."
+    "type": "h",
+    "text": "See it: a length you must show",
+    "role": "see"
   },
   {
-    "type": "p",
-    "md": "**Equal reactions** (2022). After a change the reactions are equal: each is half the total downward force."
-  },
-  {
-    "type": "p",
-    "md": "**The length is the unknown** (2021). A part asks you to show the rod's length: call it $L$, with the weight at $\\frac{L}{2}$, and let the value come out last."
-  },
-  {
-    "type": "p",
-    "md": "**Shown:** a 90 N rod on supports at A and C, AC = 1.5 m, with $R_C = 2R_A$; show it is 2 m long.\n**Up equals down:** $R_A = 30$ N and $R_C = 60$ N.\n**About A:** $60 \\times 1.5 = 90 \\times \\frac{L}{2}$, so $L = 2$ m."
+    "type": "see",
+    "kind": "proof",
+    "stem": "A uniform rod of weight 90 N rests on supports at A and C, where AC = 1.5 m, and the reaction at C is twice the reaction at A. Show that the rod is 2 m long.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Up equals down: $R + 2R = 90$, so $R_A = 30$ N and $R_C = 60$ N",
+        "decision": "The ratio first, by resolving.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "About A: $60 \\times 1.5 = 90 \\times \\frac{L}{2}$",
+        "decision": "The length stays a letter, $L$, with the weight at its middle.",
+        "earns": [
+          "M1",
+          "MW1",
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$90 = 45L$, so $L = 2$ m, as required",
+        "decision": "The given value comes out last: that is what the final mark is for.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
@@ -405,11 +910,43 @@
       "Leave the rod's weight out until the end"
     ],
     "answer": "Call it L, with the weight at half of L",
-    "explain": "A show-that gives you the answer, so an equation that starts from 2.4 m proves nothing: keep the length as $L$, with the weight at $\\frac{L}{2}$, as the rod above did, and the value comes out last. The 2021 scheme wanted exactly that, with a last mark for reaching the given value."
+    "explain": "A show-that gives you the answer, so an equation that starts from 2.4 m proves nothing: keep the length as $L$, with the weight at $\\frac{L}{2}$, as in step 2 of See it, and let the value come out last.",
+    "twin": {
+      "prompt": "A part asks you to show that the distance from the end A to a pivot is 1.75 m. How should your moments equation treat that distance?",
+      "options": [
+        "Call it x and solve for it",
+        "Use 1.75 m in the equation",
+        "Measure it from the diagram"
+      ],
+      "answer": "Call it x and solve for it",
+      "explain": "Keep the distance as a letter and solve: the equation must produce 1.75 m, never start from it.",
+      "optionNotes": [
+        {
+          "option": "Use 1.75 m in the equation",
+          "why": "Putting the given value in assumes what you are asked to prove, so the working shows nothing."
+        },
+        {
+          "option": "Measure it from the diagram",
+          "why": "CCEA diagrams are not drawn to scale; the distance has to come from the equation.",
+          "misconception": "fm.moments.trial-and-error-for-distance"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Use 2.4 m, with the weight at 1.2 m",
+        "why": "Starting from the given length assumes what you are asked to prove, so the last mark has nothing to show."
+      },
+      {
+        "option": "Leave the rod's weight out until the end",
+        "why": "The rod's weight has a moment in every equation; leaving it out changes the length you find.",
+        "misconception": "fm.moments.rod-weight-omitted"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "13. Going further: the whole chain",
+    "text": "11. Going further: the whole chain",
     "role": "further"
   },
   {
@@ -423,27 +960,68 @@
     "md": "The hardest shape so far (2022) chains four parts on one rod, each part using the answer before it."
   },
   {
-    "type": "p",
-    "md": "**About B:** $4R + 1 \\times 3R = 280 \\times 2$, so $R = 80$ N.\n**Up equals down:** $80 + 240 = 280 + 10M$, so $M = 4$.\n**M goes; 200 N hangs at D, $d$ m from A; the reactions are now equal:** $2X = 480$, so $X = 240$ N.\n**About A:** $3 \\times 240 = 280 \\times 2 + 200d$, so $d = 0.8$ m."
-  },
-  {
-    "type": "gate",
-    "id": "g14",
-    "kind": "choice",
-    "prompt": "A uniform rod rests on supports at A and C, with the reaction at C three times the reaction at A. An unknown mass hangs at the end B. About which point should you take moments to find the reactions first?",
-    "options": [
-      "B",
-      "A",
-      "C"
-    ],
-    "answer": "B",
-    "explain": "About B the unknown mass has no moment, and both reactions are written in R, so R is the only unknown. About A or C, R and the mass would both remain."
-  },
-  {
     "type": "callout",
     "kind": "notonspec",
     "title": "Where the specification stops",
     "md": "Hinges, ladders, rods that are not uniform or not horizontal, and forces at an angle to a rod are A-level mechanics. CCEA's GCSE rods are uniform and horizontal, on one or two supports or strings."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The uniform plank AB in the picture is 4 m long and weighs 280 N, on pivots at A and at C, 3 m from A, with reactions $R$ and $3R$ and a mass of $M$ kg at B. Then $M$ goes, 200 N hangs at D, and the reactions become equal. Find $R$, $M$ and AD.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "About B: $4R + 1 \\times 3R = 280 \\times 2$, so $R = 80$ N",
+        "decision": "B is where the unknown mass hangs, so it drops out.",
+        "earns": [
+          "M1",
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Up equals down: $80 + 240 = 280 + 10M$, so $M = 4$",
+        "decision": "Resolving finds the mass: no second moments equation needed.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Equal reactions: $2X = 280 + 200$, so $X = 240$ N",
+        "decision": "A new load means new reactions, found before any moments.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "About A: $3 \\times 240 = 280 \\times 2 + 200d$, so $d = 0.8$ m",
+        "decision": "Every link uses the one before it.",
+        "earns": [
+          "M1",
+          "MW1",
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g19",
+    "kind": "number",
+    "prompt": "A uniform rod of weight 120 N rests on supports at A and C. The reaction at A is 50 N, the reaction at C is three times as large, and a mass of M kg hangs at the end B. What is M?",
+    "answer": "8",
+    "explain": "Resolve vertically, as step 2 of See it did: $50 + 150 = 120 + 10M$, so $10M = 80$ and $M = 8$. The 2022 report saw moments tried here instead.",
+    "twin": {
+      "prompt": "A uniform rod of weight 85 N rests on supports at A and C. The reaction at A is 45 N, the reaction at C is twice as large, and a mass of M kg hangs at the end B. What is M?",
+      "answer": "5",
+      "explain": "Resolve vertically: $45 + 90 = 85 + 10M$, so $10M = 50$ and $M = 5$."
+    }
   },
   {
     "type": "h",
@@ -452,7 +1030,7 @@
   },
   {
     "type": "p",
-    "md": "Calculate a moment, with the rod's weight at its midpoint.\nTake moments about a support to remove its reaction, then resolve.\nHandle loads beyond the supports, and an unknown distance on one support.\nSet a reaction to zero on the point of tipping, and write a ratio as $R$ and $3R$.\nSpot the twists: strings, a changed load, a named point, a length to show, equal reactions."
+    "md": "Calculate a moment, with the rod's own weight at its midpoint.\nTake moments about one support to remove its reaction, then resolve vertically.\nHandle loads beyond the supports, strings, and an unknown distance on one support.\nSet a reaction to zero on the point of tipping, and write a ratio as $R$ and $3R$.\nSpot the twists: a changed load, a named point, equal reactions, a length to show."
   },
   {
     "type": "h",
@@ -465,10 +1043,10 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.moments-uniform-rod.02"
+    "promptId": "rp.fm.u2.moments-uniform-rod.13"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u2.moments-uniform-rod.04"
+    "promptId": "rp.fm.u2.moments-uniform-rod.14"
   }
 ]
