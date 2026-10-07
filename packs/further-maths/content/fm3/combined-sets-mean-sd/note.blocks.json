@@ -1,211 +1,786 @@
 [
   {
     "type": "hero",
-    "lede": "Two machines pack boxes of bulbs. One fills 12 boxes, the other 8, and each has its own average and its own consistency. A shop wants one figure for the whole morning. You cannot simply average the two averages, and you certainly cannot average the two spreads. Here is what you do instead.",
+    "lede": "A delivery firm knows its weekday mean and its weekend mean, and wants one figure for the whole week. Averaging the two means is the trap: a mean is a total already shared out. Turn each summary back into totals, pool the totals, and the combined mean and spread follow from the formula you already know.",
     "can": [
-      "Recover $\\sum x$ and $\\sum x^{2}$ from $n$, the mean and the deviation.",
-      "Pool two groups by adding the counts and both totals.",
-      "Work out the combined mean and standard deviation from the pooled totals."
+      "Rebuild $\\sum x$ and $\\sum x^{2}$ from a group's size, mean and standard deviation",
+      "Pool two groups, or take one out, and find the new mean and standard deviation",
+      "Find a missing group's mean and spread from the whole set and one part"
     ],
-    "minutes": 10
+    "minutes": 26
   },
   {
     "type": "h",
-    "text": "Two groups, one answer"
+    "text": "A mean is a total shared out",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "Averaging two averages works only when the groups are the same size, and spreads cannot be averaged at all. What does combine is the raw totals: rebuild each group's $sum x$ and $sum x^{2}$, add them, and the pooled set behaves like one you had measured all along."
+    "md": "A mean is a total that has already been shared out: $\\bar{x} = \\dfrac{\\sum x}{n}$. Share it out again over a different number of values and it means nothing, so two means cannot simply be averaged. Undo the sharing instead, $\\sum x = n\\bar{x}$, because totals are the things that add."
   },
   {
     "type": "figure",
-    "alt": "Two blocks on a scale of bulbs per box. The wider block sits at 25 and holds 12 boxes; the narrower one sits at 35 and holds 8. A solid line marks the combined mean of 29 and a dashed line marks the halfway point of 30.",
-    "svg": "<svg viewBox='0 0 460 200' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two blocks on a scale of bulbs per box: machine A holds 12 boxes at a mean of 25, machine B holds 8 boxes at a mean of 35, and the combined mean of 29 sits nearer machine A than the halfway point of 30'><title>Two blocks on a scale of bulbs per box: machine A holds 12 boxes at a mean of 25, machine B holds 8 boxes at a mean of 35, and the combined mean of 29 sits nearer machine A than the halfway point of 30</title><rect x='117.0' y='96.0' width='44' height='40.0' fill='currentColor' fill-opacity='0.18' stroke='currentColor' stroke-width='1.3'/><text x='139.0' y='89.0' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>machine A</text><text x='139.0' y='120.0' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>12</text><rect x='315.0' y='104.7' width='44' height='31.3' fill='currentColor' fill-opacity='0.18' stroke='currentColor' stroke-width='1.3'/><text x='337.0' y='97.7' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>machine B</text><text x='337.0' y='124.3' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>8</text><path d='M40 140 L436 140' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M40.0 140 L40.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='40.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>20</text><path d='M139.0 140 L139.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='139.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>25</text><path d='M238.0 140 L238.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='238.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>30</text><path d='M337.0 140 L337.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='337.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>35</text><path d='M436.0 140 L436.0 146' stroke='currentColor' stroke-width='1.1' fill='none'/><text x='436.0' y='161' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>40</text><path d='M238.0 138 L238.0 180' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 4' fill='none' stroke-opacity='0.6'/><text x='238.0' y='194' font-family='inherit' font-size='11.5' fill='currentColor' fill-opacity='0.7' text-anchor='middle'>halfway 30</text><path d='M218.2 138 L218.2 168' stroke='currentColor' stroke-width='2' fill='none'/><text x='218.2' y='180' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>combined 29</text><text x='40' y='18' font-family='inherit' font-size='12' fill='currentColor'>bulbs per box</text></svg>",
-    "caption": "The combined mean of 29 sits nearer machine A, because machine A filled more boxes. Halfway would be 30."
+    "alt": "Two blocks on a scale of parcels per delivery: 14 weekday deliveries centred on 23 and 6 weekend deliveries centred on 33, the weekday block taller, with the combined mean and the halfway point marked.",
+    "svg": "<svg viewBox='0 0 400 258' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two blocks on a scale of parcels per delivery: 14 weekday deliveries centred on 23 and 6 weekend deliveries centred on 33, the weekday block taller. A solid line marks the combined mean of 26 and a dashed line the halfway point of 28.'><title>Two blocks on a scale of parcels per delivery: 14 weekday deliveries centred on 23 and 6 weekend deliveries centred on 33, the weekday block taller. A solid line marks the combined mean of 26 and a dashed line the halfway point of 28.</title><path d='M26 200 L374 200' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M26 200 L26 206' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='26' y='224' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>15</text><path d='M95.6 200 L95.6 206' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='95.6' y='224' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><path d='M165.2 200 L165.2 206' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='165.2' y='224' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>25</text><path d='M234.8 200 L234.8 206' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='234.8' y='224' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>30</text><path d='M304.4 200 L304.4 206' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='304.4' y='224' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>35</text><path d='M374 200 L374 206' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='374' y='224' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>40</text><rect x='114.4' y='108' width='46' height='92' stroke='currentColor' stroke-width='1.3' fill='currentColor' fill-opacity='0.16'/><text x='125.4' y='100' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>14 weekdays</text><rect x='253.6' y='160.6' width='46' height='39.4' stroke='currentColor' stroke-width='1.3' fill='currentColor' fill-opacity='0.16'/><text x='276.6' y='152.6' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>6 weekend days</text><path d='M179.1 14 L179.1 200' stroke='currentColor' stroke-width='1.4' fill='none' stroke-opacity='0.9'/><text x='173.1' y='26' font-family='inherit' font-size='14' fill='currentColor' text-anchor='end' font-weight='600'>combined mean 26</text><path d='M207 36 L207 200' stroke='currentColor' stroke-width='1.4' fill='none' stroke-dasharray='5 4' stroke-opacity='0.9'/><text x='213' y='48' font-family='inherit' font-size='14' fill='currentColor' text-anchor='start'>halfway 28</text><text x='200' y='250' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>parcels per delivery</text></svg>",
+    "caption": "The combined mean, 26, leans towards the 14 weekdays. Halfway, 28, would treat the two groups as the same size."
   },
   {
-    "type": "h",
-    "text": "1. Why averaging the averages fails"
-  },
-  {
-    "type": "p",
-    "md": "A mean is a total that has already been shared out. Sharing it out again over a different number of items is meaningless, so the two means cannot be averaged unless the groups happen to be the same size.\nWhat you can do is put each mean back together into a total: $\\sum x = n\\bar{x}$."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "A firm's 14 weekday deliveries averaged 23 parcels; its 6 weekend deliveries averaged 33. Find each group's total.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weekdays: $\\sum x = 14 \\times 23 = 322$",
+        "decision": "Undo the sharing: the mean times the number of values."
+      },
+      {
+        "n": 2,
+        "working": "Weekend: $\\sum x = 6 \\times 33 = 198$",
+        "decision": "The same for the other group. Totals, unlike means, can now be added."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g1",
+    "id": "g7",
     "kind": "number",
-    "prompt": "Machine A filled 12 boxes with a mean of 25 bulbs. What is $\\sum x$ for machine A?",
-    "answer": "300",
-    "explain": "$12 \\times 25 = 300$ bulbs. That total is a thing you can add to another total."
+    "prompt": "A class of 18 pupils has a mean mark of 36. What is $\\sum x$, the total of their marks?",
+    "answer": "648",
+    "explain": "As in step 1 of See it, multiply back: $18 \\times 36 = 648$. That total, not the mean, is what adds to another group's total.",
+    "twin": {
+      "prompt": "25 runners have a mean time of 14.2 minutes. What is $\\sum x$?",
+      "answer": "355",
+      "explain": "Multiply back: $25 \\times 14.2 = 355$."
+    }
   },
   {
     "type": "h",
-    "text": "2. Totals add; averages do not"
+    "text": "The combined mean: add totals, add counts",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Three quantities survive being poured together: the count $n$, the total $\\sum x$, and the total of the squares $\\sum x^{2}$. Everything else has to be rebuilt from them.\nSo the combined mean is $\\dfrac{\\sum x_{1} + \\sum x_{2}}{n_{1} + n_{2}}$, which for the two machines is $\\dfrac{580}{20} = 29$."
-  },
-  {
-    "type": "figure",
-    "alt": "A table with a row for each machine showing its sum of x and its sum of x squared, and a totals row adding them to 580 and 17780.",
-    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780'><title>A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>totals add; averages do not</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>A (12 boxes)</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12 x 25 = 300</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12(4² + 25²) = 7692</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>B (8 boxes)</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8 x 35 = 280</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8(6² + 35²) = 10088</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>all 20 boxes</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>580</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>17780</text></svg>",
-    "caption": "One row per group, two totals each. The bottom row is the only thing the formula ever sees."
+    "md": "With both totals rebuilt, pooling is addition: add the totals, add the counts, then share out once. The combined mean $\\dfrac{\\sum x_{1} + \\sum x_{2}}{n_{1} + n_{2}}$ always lies between the two group means, nearer the bigger group. It equals their halfway point only when the groups are the same size."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why the pooled spread is bigger than both",
-    "md": "Even if each machine were perfectly consistent, a box from machine A would still differ from a box from machine B. The gap between the two means is spread in its own right, so the pooled standard deviation of 6.93 is larger than either 4 or 6."
+    "title": "Why the bigger group pulls harder",
+    "md": "Every delivery counts once in the mean of all twenty. Fourteen of the twenty values sit near 23 and only six near 33, so the balance point sits nearer 23."
   },
   {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "Machine A's total is 300 and machine B's is 280, over 20 boxes in all. What is the combined mean?",
-    "answer": "29",
-    "explain": "$\\dfrac{580}{20} = 29$. Averaging 25 and 35 would have given 30."
-  },
-  {
-    "type": "h",
-    "text": "3. Getting the sum of squares back"
-  },
-  {
-    "type": "p",
-    "md": "The question hands you a standard deviation, and the formula wants $\\sum x^{2}$. Square the sheet's formula and rearrange:\n$\\sigma^{2} = \\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}$, so $\\sum x^{2} = n\\left(\\sigma^{2} + \\bar{x}^{2}\\right)$.\nBoth terms matter. Drop the $\\sigma^{2}$ and every group becomes perfectly uniform, which is never what the data said."
-  },
-  {
-    "type": "figure",
-    "alt": "A four-row table of conversions: n and the mean give the sum of x; n, the mean and the standard deviation give the sum of x squared; the totals and n give the mean back; the totals and n give the standard deviation back.",
-    "svg": "<svg viewBox='0 0 500 224' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A four-row table of the conversions between n, mean, standard deviation and the two totals'><title>A four-row table of the conversions between n, mean, standard deviation and the two totals</title><text x='20' y='22' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8'>the four conversions this topic runs on</text><text x='96.7' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>what you are given</text><text x='250.0' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>what you want</text><text x='403.3' y='44' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.8' text-anchor='middle'>how</text><path d='M14 52 L486 52' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='96.7' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>n and the mean</text><text x='250.0' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>sum of x</text><text x='403.3' y='72' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>multiply: n x mean</text><text x='96.7' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>n, the mean and the sd</text><text x='250.0' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>sum of x squared</text><text x='403.3' y='100' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>n(sd² + mean²)</text><text x='96.7' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the two totals and n</text><text x='250.0' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the mean</text><text x='403.3' y='128' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>divide: sum of x over n</text><text x='96.7' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the two totals and n</text><text x='250.0' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the sd</text><text x='403.3' y='156' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>the sheet's formula</text><path d='M14 166 L486 166' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='96.7' y='190' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='250.0' y='190' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'></text><text x='403.3' y='190' font-family='inherit' font-size='13' fill='currentColor' font-weight='600' text-anchor='middle'>every route goes through the totals</text></svg>",
-    "caption": "Four conversions, and every pooled question is some path through them."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the mean number of parcels over all 20 deliveries.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\sum x = 322 + 198 = 520$",
+        "decision": "Add the totals, and add the counts: 14 + 6 = 20.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\bar{x} = \\dfrac{520}{20}$\n$= 26$",
+        "decision": "Share out once, over all 20 deliveries: 26, not the halfway 28.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "L6mssp1aP10",
     "title": "Combined Mean",
     "channel": "corbettmaths",
-    "why": "The weighted-mean step on its own, worked slowly, before the sum of squares is added to it."
+    "why": "The combined mean worked slowly from two groups' sizes and means, the first half of every pooled question."
   },
   {
     "type": "gate",
-    "id": "g3",
+    "id": "g8",
     "kind": "number",
-    "prompt": "Machine B has $n = 8$, $\\bar{x} = 35$ and $\\sigma = 6$. What is $\\sum x^{2}$?",
-    "answer": "10088",
-    "explain": "$8\\left(6^{2} + 35^{2}\\right) = 8 \\times 1261 = 10088$."
+    "prompt": "Group A has 15 values with mean 40; group B has 10 values with mean 50. What is the mean of all 25 values?",
+    "answer": "44",
+    "explain": "As in See it, rebuild and add the totals, $600 + 500 = 1100$, then share out once: $\\dfrac{1100}{25} = 44$. Halfway, 45, would treat 15 values and 10 values as equal.",
+    "twin": {
+      "prompt": "Group A has 14 values with mean 30; group B has 21 values with mean 20. What is the mean of all 35?",
+      "answer": "24",
+      "explain": "$\\dfrac{420 + 420}{35} = 24$, nearer group B's mean because it has more values."
+    }
   },
   {
     "type": "h",
-    "text": "4. A worked example, start to finish"
+    "text": "Getting the sum of squares back",
+    "role": "derivation"
   },
   {
     "type": "p",
-    "md": "Machine A: 12 boxes, mean 25, standard deviation 4. Machine B: 8 boxes, mean 35, standard deviation 6.\n**Step 1.** $\\sum x = 300 + 280 = 580$, so $\\bar{x} = 29$.\n**Step 2.** $\\sum x^{2} = 12\\left(4^{2} + 25^{2}\\right) = 7692$ for A.\n**Step 3.** $\\sum x^{2} = 8\\left(6^{2} + 35^{2}\\right) = 10088$ for B, so 17780 altogether.\n**Step 4.** $\\sigma = \\sqrt{\\dfrac{17780}{20} - 29^{2}} = \\sqrt{48} = 6.93$ bulbs."
+    "md": "The standard deviation needs $\\sum x^{2}$ too, and a question gives only $n$, $\\bar{x}$ and $\\sigma$. The sheet's formula holds the answer: square both sides and rearrange. The result is worth learning, but it is the sheet's formula turned round, not a new fact."
   },
   {
-    "type": "figure",
-    "alt": "The same two-row totals table again, showing how the worked example's numbers 580 and 17780 are reached.",
-    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780'><title>A table of the two groups' totals: machine A contributes a sum of 300 and a sum of squares of 7692, machine B contributes 280 and 10088, and the two rows add to 580 and 17780</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>totals add; averages do not</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>A (12 boxes)</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12 x 25 = 300</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>12(4² + 25²) = 7692</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>B (8 boxes)</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8 x 35 = 280</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8(6² + 35²) = 10088</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>all 20 boxes</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>580</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>17780</text></svg>",
-    "caption": "Every number in the worked example comes from this table and the combined mean of 29."
+    "type": "p",
+    "md": "Read the formula in words: the variance is the mean of the squares minus the square of the mean. So the mean of the squares is $\\sigma^{2} + \\bar{x}^{2}$, and $n$ times a mean is a total."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Rearrange $\\sigma = \\sqrt{\\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}}$ to give $\\sum x^{2}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\sigma^{2} = \\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}$",
+        "decision": "Square both sides: the root disappears."
+      },
+      {
+        "n": 2,
+        "working": "$\\sigma^{2} + \\bar{x}^{2} = \\dfrac{\\sum x^{2}}{n}$",
+        "decision": "Add the mean squared to both sides."
+      },
+      {
+        "n": 3,
+        "working": "$\\sum x^{2} = n\\left(\\sigma^{2} + \\bar{x}^{2}\\right)$",
+        "decision": "Multiply by $n$. Both terms matter: without $\\sigma^{2}$ the group would have no spread at all.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "Weekdays: $14\\left(4^{2} + 23^{2}\\right) = 7630$",
+        "decision": "Used on the weekday deliveries, whose standard deviation is 4."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g9",
     "kind": "number",
-    "prompt": "Finish it: $\\sqrt{48}$, to 2 decimal places.",
-    "answer": "6.93 | 6.928",
-    "explain": "6.93 bulbs, which is larger than either 4 or 6 because the two machine means are 10 bulbs apart."
+    "prompt": "A group has $n = 10$, $\\bar{x} = 12$ and $\\sigma = 3$. What is $\\sum x^{2}$?",
+    "answer": "1530",
+    "explain": "As in step 3 of See it, $\\sum x^{2} = 10\\left(3^{2} + 12^{2}\\right) = 10 \\times 153 = 1530$. Leaving out the $3^{2}$ would give 1440, a group with no spread.",
+    "twin": {
+      "prompt": "A group has $n = 8$, $\\bar{x} = 15$ and $\\sigma = 2$. What is $\\sum x^{2}$?",
+      "answer": "1832",
+      "explain": "$8\\left(2^{2} + 15^{2}\\right) = 8 \\times 229 = 1832$."
+    }
   },
   {
     "type": "h",
-    "text": "5. Running it backwards: taking a group out"
+    "text": "Why pooling widens the spread",
+    "role": "why"
   },
   {
     "type": "p",
-    "md": "Sometimes the whole set is summarised and one group is listed, and the question asks about the rest. Nothing changes except the sign: rebuild both totals for the whole set, subtract the listed group's two totals, and **subtract the counts as well**.\nThen divide by the new count. That division is the step examiners describe candidates reaching and then forgetting."
+    "md": "A pooled standard deviation is often larger than either group's own. The reason is the gap between the two means: even if every value in each group were the same, values from different groups would still differ. The pooled spread is the spread inside the groups and the spread between them, together."
+  },
+  {
+    "type": "p",
+    "md": "So when two means are far apart, expect the pooled standard deviation to beat both groups' own. An answer smaller than both is worth a second look."
   },
   {
     "type": "figure",
-    "alt": "A table showing the whole walking group's sum of 270 and sum of squares of 5235, the family's 95 and 1953, and the remainder of 175 and 3282.",
-    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table showing the whole set's totals of 270 and 5235, the listed group's totals of 95 and 1953, and the difference of 175 and 3282 for the rest'><title>A table showing the whole set's totals of 270 and 5235, the listed group's totals of 95 and 1953, and the difference of 175 and 3282 for the rest</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>take a group out the same way you put one in</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>all 15 walkers</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>270</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>5235</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>the 5 of them listed</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>95</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>1953</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>the other 10</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>175</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>3282</text></svg>",
-    "caption": "15 walkers less 5 leaves 10, with a mean of 17.5 km and a standard deviation of 4.69 km."
+    "alt": "Eight dots stacked at 20 and eight stacked at 30 on a scale from 10 to 40, with a dashed line at the pooled mean of 25.",
+    "svg": "<svg viewBox='0 0 400 214' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Eight dots stacked at 20 and eight stacked at 30 on a scale from 10 to 40, with a dashed line at the pooled mean of 25.'><title>Eight dots stacked at 20 and eight stacked at 30 on a scale from 10 to 40, with a dashed line at the pooled mean of 25.</title><path d='M30 170 L370 170' stroke='currentColor' stroke-width='1.4' fill='none'/><path d='M30 170 L30 176' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='30' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>10</text><path d='M143.3 170 L143.3 176' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='143.3' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>20</text><path d='M256.7 170 L256.7 176' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='256.7' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>30</text><path d='M370 170 L370 176' stroke='currentColor' stroke-width='1.2' fill='none'/><text x='370' y='194' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>40</text><circle cx='136.3' cy='158' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='150.3' cy='158' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='136.3' cy='145' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='150.3' cy='145' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='136.3' cy='132' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='150.3' cy='132' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='136.3' cy='119' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='150.3' cy='119' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><text x='143.3' y='100' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>8 values of 20</text><circle cx='249.7' cy='158' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='263.7' cy='158' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='249.7' cy='145' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='263.7' cy='145' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='249.7' cy='132' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='263.7' cy='132' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='249.7' cy='119' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><circle cx='263.7' cy='119' r='5.5' fill='currentColor' fill-opacity='0.35' stroke='currentColor' stroke-width='1.4'/><text x='256.7' y='100' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>8 values of 30</text><path d='M200 30 L200 170' stroke='currentColor' stroke-width='1.3' fill='none' stroke-dasharray='5 4' stroke-opacity='0.85'/><text x='200' y='22' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>pooled mean 25</text></svg>",
+    "caption": "Neither stack has any spread, but pooled, every value sits 5 from the mean of 25."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Eight values are all 20 and eight are all 30, so each group's standard deviation is 0. Find the pooled standard deviation.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\sum x = 160 + 240 = 400$, so $\\bar{x} = 25$",
+        "decision": "Pool the totals and the counts."
+      },
+      {
+        "n": 2,
+        "working": "$\\sum x^{2} = 8 \\times 400 + 8 \\times 900 = 10400$",
+        "decision": "Each group's sum of squares, then added."
+      },
+      {
+        "n": 3,
+        "working": "$\\sigma = \\sqrt{\\dfrac{10400}{16} - 25^{2}}$\n$= \\sqrt{25} = 5$",
+        "decision": "No spread inside either group, yet the pooled set has a standard deviation of 5: every value is 5 from the pooled mean."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g5",
-    "kind": "number",
-    "prompt": "All 15 walkers covered 270 km and the family of 5 covered 95 km. What is the mean distance of the other 10?",
-    "answer": "17.5",
-    "explain": "$\\dfrac{270 - 95}{10} = \\dfrac{175}{10} = 17.5$ km. The count drops from 15 to 10 as well as the total."
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Two groups of the same size have standard deviations 3 and 4, and means 40 and 60. What can you say about the standard deviation of the two groups pooled?",
+    "options": [
+      "It is more than 4",
+      "It is between 3 and 4",
+      "It is exactly 3.5"
+    ],
+    "answer": "It is more than 4",
+    "explain": "As in See it, the gap between the means is spread of its own. Here the means are 20 apart, so the values sit about 10 from the pooled mean before either group's own spread is counted: far more than 4.",
+    "twin": {
+      "prompt": "Two groups of the same size both have mean 50, with standard deviations 3 and 5. What can you say about their pooled standard deviation?",
+      "options": [
+        "It is between 3 and 5",
+        "It is more than 5",
+        "It is exactly 4"
+      ],
+      "answer": "It is between 3 and 5",
+      "explain": "With equal means there is no gap to add, so the pooled spread comes only from inside the groups: it lies between 3 and 5 (here 4.12).",
+      "optionNotes": [
+        {
+          "option": "It is more than 5",
+          "why": "Pooling widens the spread only through a gap between the means, and here there is none."
+        },
+        {
+          "option": "It is exactly 4",
+          "why": "Averaging the two deviations is not how spread combines; the pooled value here is 4.12.",
+          "misconception": "fm.sd.average-of-sds"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "It is between 3 and 4",
+        "why": "That would be so only if the two means were equal; here they are 20 apart, and the gap adds spread.",
+        "misconception": "fm.sd.average-of-sds"
+      },
+      {
+        "option": "It is exactly 3.5",
+        "why": "That averages the two standard deviations, which never combine that way.",
+        "misconception": "fm.sd.average-of-sds"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "6. Finding a group you were never told about"
+    "text": "Two summaries pooled: the standard deviation",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The same subtraction answers a question the specification names directly: one group's mean is missing, and the overall mean is given.\nWith 20 players averaging 70 and 8 of them averaging 64: the squad totals 1400, team A totals 512, so team B totals 888 over 12 players."
-  },
-  {
-    "type": "figure",
-    "alt": "A table showing the squad total of 1400, team A's total of 512 and the remaining 888 shared over 12 players.",
-    "svg": "<svg viewBox='0 0 460 164' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table showing the whole squad's total of 1400, team A's total of 512, and the remaining 888 shared over 12 players to give a mean of 74'><title>A table showing the whole squad's total of 1400, team A's total of 512, and the remaining 888 shared over 12 players to give a mean of 74</title><text x='14' y='20' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>one unknown mean, found from the two totals</text><text x='14' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>group</text><text x='170' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x</text><text x='300' y='40' font-family='inherit' font-size='12.5' fill='currentColor' fill-opacity='0.75'>sum of x squared</text><path d='M8 50 L452 50' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>all 20 players</text><text x='170' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>20 x 70 = 1400</text><text x='300' y='74' font-family='inherit' font-size='13.5' fill='currentColor'>not needed here</text><text x='14' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>team A (8)</text><text x='170' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>8 x 64 = 512</text><text x='300' y='108' font-family='inherit' font-size='13.5' fill='currentColor'>not needed here</text><path d='M8 120 L452 120' stroke='currentColor' stroke-width='1' stroke-opacity='0.45' fill='none'/><text x='14' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>team B (12)</text><text x='170' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>888</text><text x='300' y='146' font-family='inherit' font-size='13.5' fill='currentColor' font-weight='600'>mean 74</text></svg>",
-    "caption": "One unknown mean, read straight off the two totals: 74 points."
-  },
-  {
-    "type": "gate",
-    "id": "g6",
-    "kind": "number",
-    "prompt": "Team B totals 888 points over 12 players. What is their mean?",
-    "answer": "74",
-    "explain": "$\\dfrac{888}{12} = 74$ points. Averaging 70 and 64 would have given 67."
+    "md": "Now put it together, as Summer 2022 did with two summarised groups. Rebuild $\\sum x^{2}$ for each group, add them, and use the pooled totals in the sheet's formula with the pooled mean. Use the pooled mean, never one group's mean or the halfway point."
   },
   {
     "type": "callout",
     "kind": "mustknow",
-    "title": "You can now",
-    "md": "Recover $\\sum x = n\\bar{x}$ and $\\sum x^{2} = n\\left(\\sigma^{2} + \\bar{x}^{2}\\right)$ for any summarised group.\nAdd the counts and the two totals to pool two groups, and divide for the combined mean.\nPut the combined totals into the sheet's formula and finish with the square root.\nSubtract a listed group's totals, and its count, to describe the group that is left.\nFind a missing group's mean from the overall total and the known group's total."
+    "title": "One row per group",
+    "md": "Before any formula, write $n$, $\\sum x$ and $\\sum x^{2}$ for every group. Pooling adds the rows; taking a group out subtracts them. Means and standard deviations are never added, subtracted or averaged."
+  },
+  {
+    "type": "figure",
+    "alt": "A table of the deliveries: weekdays n 14, sum of x 322, sum of x squared 7630; weekend n 6, 198 and 6684; all 20 deliveries 520 and 14314.",
+    "svg": "<svg viewBox='0 0 400 160' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the deliveries: weekdays n 14, sum of x 322, sum of x squared 7630; weekend n 6, 198 and 6684; all 20 deliveries 520 and 14314.'><title>A table of the deliveries: weekdays n 14, sum of x 322, sum of x squared 7630; weekend n 6, 198 and 6684; all 20 deliveries 520 and 14314.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M124 12 L124 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M196 12 L196 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M292 12 L292 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M388 12 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='160' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>n</text><text x='244' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Σx</text><text x='340' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Σx²</text><text x='68' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Weekdays</text><text x='160' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>14</text><text x='244' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>322</text><text x='340' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>7630</text><text x='68' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Weekend</text><text x='160' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6</text><text x='244' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>198</text><text x='340' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6684</text><text x='68' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>All</text><text x='160' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>20</text><text x='244' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>520</text><text x='340' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>14314</text></svg>",
+    "caption": "One row of totals for each group; the formula only ever sees the bottom row."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The weekday deliveries had a standard deviation of 4 parcels and the weekend deliveries 5. Find the standard deviation of all 20.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Weekdays: $\\sum x^{2} = 14\\left(4^{2} + 23^{2}\\right) = 7630$",
+        "decision": "Rebuild one group's sum of squares.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Weekend: $\\sum x^{2} = 6\\left(5^{2} + 33^{2}\\right) = 6684$",
+        "decision": "Then the other's.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\sigma = \\sqrt{\\dfrac{7630 + 6684}{20} - 26^{2}}$",
+        "decision": "The pooled sum of squares over the pooled count, minus the pooled mean squared.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$= \\sqrt{39.7}$\n$= 6.30$",
+        "decision": "Bigger than both 4 and 5: the gap between 23 and 33 adds spread.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "number",
+    "prompt": "Two groups pooled give $n = 25$, $\\sum x = 1100$ and $\\sum x^{2} = 49000$. What is the pooled standard deviation, to 2 decimal places?",
+    "answer": "4.90 | 4.899",
+    "explain": "As in steps 3 and 4 of See it: the pooled mean is $\\dfrac{1100}{25} = 44$, then $\\dfrac{49000}{25} - 44^{2} = 1960 - 1936 = 24$, and $\\sqrt{24} = 4.90$.",
+    "twin": {
+      "prompt": "Two groups pooled give $n = 16$, $\\sum x = 400$ and $\\sum x^{2} = 10360$. What is the pooled standard deviation, to 2 decimal places?",
+      "answer": "4.74 | 4.743",
+      "explain": "The mean is 25, so $\\dfrac{10360}{16} - 625 = 22.5$, and $\\sqrt{22.5} = 4.74$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "One group listed, one summarised",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Recover $sum x$ and $sum x^{2}$ for each group.\nAdd the counts and both totals to pool them.\nDivide for the combined mean, then use the same formula for the deviation."
+    "md": "Sometimes one group arrives as a list of values, as two results did beside a summarised group of twelve in Summer 2019. For the listed group add the values for $\\sum x$, and add their squares for $\\sum x^{2}$: square each value first, never the total. Then pool exactly as before."
+  },
+  {
+    "type": "figure",
+    "alt": "A table of two groups: a listed group of 3 values, 12, 16 and 20; a summarised group of 9 values with mean 14 and standard deviation 2.",
+    "svg": "<svg viewBox='0 0 400 126' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of two groups: a listed group of 3 values, 12, 16 and 20; a summarised group of 9 values with mean 14 and standard deviation 2.'><title>A table of two groups: a listed group of 3 values, 12, 16 and 20; a summarised group of 9 values with mean 14 and standard deviation 2.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 114' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M132 12 L132 114' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M188 12 L188 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M388 12 L388 114' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='72' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Group</text><text x='160' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>n</text><text x='288' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Given as</text><text x='72' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Listed</text><text x='160' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3</text><text x='288' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>12, 16, 20</text><text x='72' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Summary</text><text x='160' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>9</text><text x='288' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>mean 14, σ = 2</text></svg>",
+    "caption": "The same two totals are needed from each group, however it is given."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Three values, 12, 16 and 20, are pooled with 9 values whose mean is 14 and standard deviation 2. Find the mean and standard deviation of all 12.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Listed: $\\sum x = 48$, $\\sum x^{2} = 144 + 256 + 400 = 800$",
+        "decision": "Square each listed value, then add."
+      },
+      {
+        "n": 2,
+        "working": "Summary: $\\sum x = 126$, $\\sum x^{2} = 9\\left(2^{2} + 14^{2}\\right) = 1800$",
+        "decision": "Rebuild both totals for the summarised group.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\bar{x} = \\dfrac{174}{12} = 14.5$",
+        "decision": "Pooled total over pooled count.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\sigma = \\sqrt{\\dfrac{800 + 1800}{12} - 14.5^{2}}$\n$= 2.53$",
+        "decision": "The pooled sum of squares in the sheet's formula.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "number",
+    "prompt": "Three listed values are 6, 9 and 10. What do they add to $\\sum x^{2}$?",
+    "answer": "217",
+    "explain": "As in step 1 of See it, square each value, then add: $36 + 81 + 100 = 217$. Squaring their total, $25^{2}$, would give 625.",
+    "twin": {
+      "prompt": "Three listed values are 5, 8 and 11. What do they add to $\\sum x^{2}$?",
+      "answer": "210",
+      "explain": "$25 + 64 + 121 = 210$; the total squared, $24^{2} = 576$, is not it."
+    }
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "Taking a group out: the mean",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The pooled question appears every year the paper has been sat: two marks for the combined mean, three or four for the combined deviation. The first mark is a rebuilt total; the last is the deviation from the pooled totals. Stuck: write $sum x$ and $sum x^{2}$ for each group before combining anything."
+    "md": "The same totals run backwards. When the whole set is summarised and part of it is listed, rebuild the whole set's totals and subtract the part's. The count subtracts too: what is left has $n_{\\text{whole}} - n_{\\text{part}}$ values, and that is what you divide by. Answer for the group the question names."
+  },
+  {
+    "type": "p",
+    "md": "Then check the direction. If the values taken out sit below the whole set's mean, what is left must sit above it, and the other way round. A remaining mean on the wrong side of the whole set's mean is a slip."
+  },
+  {
+    "type": "figure",
+    "alt": "A table: the whole set of 16 values with total 480; the listed part of 4 values, 22, 24, 28 and 34, with total 108; the 12 values left with total 372.",
+    "svg": "<svg viewBox='0 0 400 160' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table: the whole set of 16 values with total 480; the listed part of 4 values, 22, 24, 28 and 34, with total 108; the 12 values left with total 372.'><title>A table: the whole set of 16 values with total 480; the listed part of 4 values, 22, 24, 28 and 34, with total 108; the 12 values left with total 372.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M132 12 L132 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M188 12 L188 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M388 12 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='160' y='35' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>n</text><text x='288' y='35' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Σx</text><text x='72' y='69' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Whole</text><text x='160' y='69' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16</text><text x='288' y='69' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>16 × 30 = 480</text><text x='72' y='103' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Listed part</text><text x='160' y='103' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>4</text><text x='288' y='103' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle'>22 + 24 + 28 + 34 = 108</text><text x='72' y='137' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>Left</text><text x='160' y='137' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>12</text><text x='288' y='137' font-family='inherit' font-size='14' fill='currentColor' text-anchor='middle' font-weight='600'>480 − 108 = 372</text></svg>",
+    "caption": "Subtract the part's total and its count; what is left is shared over 12, not 16."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "All 16 values in a set have mean 30. Four of them are 22, 24, 28 and 34. Find the mean of the other 12.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Whole: $\\sum x = 16 \\times 30 = 480$",
+        "decision": "Rebuild the whole set's total.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Part: $\\sum x = 22 + 24 + 28 + 34 = 108$",
+        "decision": "Add the listed values."
+      },
+      {
+        "n": 3,
+        "working": "$\\bar{x} = \\dfrac{480 - 108}{16 - 4} = \\dfrac{372}{12}$\n$= 31$",
+        "decision": "Subtract the totals and the counts, then divide by the 12 that are left.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "number",
+    "prompt": "All 20 values in a set have mean 45. Five of them total 200. What is the mean of the other 15, to 2 decimal places?",
+    "answer": "46.67 | 140/3",
+    "explain": "As in step 3 of See it: $\\dfrac{20 \\times 45 - 200}{20 - 5} = \\dfrac{700}{15} = 46.67$. Dividing by 20 would forget that only 15 values are left.",
+    "twin": {
+      "prompt": "All 12 values in a set have mean 18. Four of them total 64. What is the mean of the other 8?",
+      "answer": "19",
+      "explain": "$\\dfrac{216 - 64}{8} = 19$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "A missing group's mean",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "The specification names a related shape: the whole set's mean is given, one group's mean is given, and the other group's mean is missing. Turn both means into totals, subtract, and share out over the missing group's own count."
+  },
+  {
+    "type": "figure",
+    "alt": "A table: all 25 values with mean 62; a known group of 10 with mean 56; a missing group of 15 whose mean is unknown.",
+    "svg": "<svg viewBox='0 0 400 160' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table: all 25 values with mean 62; a known group of 10 with mean 56; a missing group of 15 whose mean is unknown.'><title>A table: all 25 values with mean 62; a known group of 10 with mean 56; a missing group of 15 whose mean is unknown.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M148 12 L148 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M228 12 L228 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M388 12 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='80' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Group</text><text x='188' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>n</text><text x='308' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Mean</text><text x='80' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>All</text><text x='188' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>25</text><text x='308' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>62</text><text x='80' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Known</text><text x='188' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>10</text><text x='308' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>56</text><text x='80' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Missing</text><text x='188' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>15</text><text x='308' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>?</text></svg>",
+    "caption": "Two means given, one missing: the totals fill the gap."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "25 values have mean 62. Ten of them have mean 56. Find the mean of the other 15.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "All: $\\sum x = 25 \\times 62 = 1550$",
+        "decision": "Turn the whole set's mean into a total.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Known: $\\sum x = 10 \\times 56 = 560$",
+        "decision": "And the known group's."
+      },
+      {
+        "n": 3,
+        "working": "$\\bar{x} = \\dfrac{1550 - 560}{15} = \\dfrac{990}{15}$\n$= 66$",
+        "decision": "The missing group sits above 62, because the known group sits below it.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "number",
+    "prompt": "30 values have mean 48. Twelve of them have mean 51. What is the mean of the other 18?",
+    "answer": "46",
+    "explain": "As in step 3 of See it: $\\dfrac{30 \\times 48 - 12 \\times 51}{18} = \\dfrac{1440 - 612}{18} = 46$. The known group is above 48, so the missing one must be below it.",
+    "twin": {
+      "prompt": "16 values have mean 20. Six of them have mean 16. What is the mean of the other 10?",
+      "answer": "22.4",
+      "explain": "$\\dfrac{320 - 96}{10} = 22.4$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Taking a group out: the spread",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "For the spread of what is left, subtract sums of squares the same way: the part's squares come out of the whole set's $\\sum x^{2}$. Then use the formula with the remaining group's own count and its own mean. The Summer 2023 report saw the right total reached and then the division by the new count forgotten."
+  },
+  {
+    "type": "p",
+    "md": "A variance can never be negative. If $\\dfrac{\\sum x^{2}}{n} - \\bar{x}^{2}$ comes out below zero, a total has been mis-copied or the wrong count used: find it before taking the root."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The 16 values above have standard deviation 5. Find the standard deviation of the 12 values left after 22, 24, 28 and 34 are taken out.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Whole: $\\sum x^{2} = 16\\left(5^{2} + 30^{2}\\right) = 14800$",
+        "decision": "Rebuild the whole set's sum of squares.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Part: $\\sum x^{2} = 484 + 576 + 784 + 1156 = 3000$",
+        "decision": "Square each listed value, then add."
+      },
+      {
+        "n": 3,
+        "working": "Left: $\\sum x^{2} = 14800 - 3000 = 11800$",
+        "decision": "Squares come out of a sum of squares.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\sigma = \\sqrt{\\dfrac{11800}{12} - 31^{2}}$\n$= 4.73$",
+        "decision": "Divide by the 12 that are left, and use their mean, 31.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g15",
+    "kind": "number",
+    "prompt": "After a group is taken out, the 8 values left have $\\sum x = 160$ and $\\sum x^{2} = 3320$. What is their standard deviation, to 2 decimal places?",
+    "answer": "3.87 | 3.873",
+    "explain": "As in step 4 of See it, use the remaining group's own count and mean: the mean is $\\dfrac{160}{8} = 20$, then $\\dfrac{3320}{8} - 20^{2} = 415 - 400 = 15$, and $\\sqrt{15} = 3.87$.",
+    "twin": {
+      "prompt": "The 10 values left have $\\sum x = 150$ and $\\sum x^{2} = 2390$. What is their standard deviation, to 2 decimal places?",
+      "answer": "3.74 | 3.742",
+      "explain": "The mean is 15, so $239 - 225 = 14$, and $\\sqrt{14} = 3.74$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Exam twists: which group, which count",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**The answer is for the other group.** Summer 2021 listed three results and asked about the rest; Summer 2023 listed four lorries and asked about the cars, and some found the lorries' mean instead. Name the group before you divide."
+  },
+  {
+    "type": "p",
+    "md": "**The count changes.** Taking a group out leaves fewer values, and adding one leaves more. Summer 2023 saw the division by the new count forgotten; Summer 2025 saw 14 used where 15 was right."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "All 18 results in a test have mean 61. Four are listed: 55, 58, 66 and 70. A part asks for the mean of 'the other candidates'.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "The other candidates: 18 − 4 = 14 of them",
+        "decision": "Name the group first: it is the 14, not the 4 that are listed."
+      },
+      {
+        "n": 2,
+        "working": "$\\bar{x} = \\dfrac{18 \\times 61 - 249}{14} = \\dfrac{849}{14}$\n$= 60.64$",
+        "decision": "Subtract the listed total and the listed count, then divide by 14."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g16",
+    "kind": "choice",
+    "prompt": "A set of 30 values is summarised and 8 of them are listed. A part asks for the standard deviation of the other values. What goes under $\\sum x^{2}$ in the formula?",
+    "options": [
+      "22, the number of values left",
+      "30, the whole set",
+      "8, the listed values"
+    ],
+    "answer": "22, the number of values left",
+    "explain": "As in step 1 of See it, name the group first: the part asks about the values that are left, and there are 30 − 8 = 22 of them. Their sum of squares is shared over 22.",
+    "twin": {
+      "prompt": "A set of 25 values is summarised and 5 are listed. A part asks for the mean of the rest. What do you divide their total by?",
+      "options": [
+        "20, the number of values left",
+        "25, the whole set",
+        "5, the listed values"
+      ],
+      "answer": "20, the number of values left",
+      "explain": "The rest are 25 − 5 = 20 values, so their total is shared over 20.",
+      "optionNotes": [
+        {
+          "option": "25, the whole set",
+          "why": "Five values have gone, so 25 is no longer the count of the group asked about.",
+          "misconception": "fm.sd.wrong-n-after-adjustment"
+        },
+        {
+          "option": "5, the listed values",
+          "why": "The 5 are the group taken out, not the group asked about.",
+          "misconception": "fm.sd.wrong-group-recovered"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "30, the whole set",
+        "why": "The whole set's count was right before the 8 came out; the group asked about has only 22 values.",
+        "misconception": "fm.sd.wrong-n-after-adjustment"
+      },
+      {
+        "option": "8, the listed values",
+        "why": "The 8 are the group taken out; the question names the others.",
+        "misconception": "fm.sd.wrong-group-recovered"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Exam twists: data in disguise",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Percentages as data.** Summer 2019 and 2021 gave marks as percentages: they are values like any others, and the totals are in percentage points. **A deviation to one decimal place.** Summer 2022 gave deviations such as 15.4, so $\\sum x^{2}$ comes out as a decimal: keep it unrounded until the end."
+  },
+  {
+    "type": "p",
+    "md": "**A mean that is not whole.** Keep its exact value in the calculator. A mean rounded to two decimal places and then squared can move the standard deviation in its second decimal place."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Six values have mean 52 and standard deviation 6.5. Find their sum of squares.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\sum x^{2} = 6\\left(6.5^{2} + 52^{2}\\right)$",
+        "decision": "The same recovery, whatever the decimals."
+      },
+      {
+        "n": 2,
+        "working": "$= 6\\left(42.25 + 2704\\right) = 16477.5$",
+        "decision": "Keep the .5: rounding it moves the final standard deviation."
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g17",
+    "kind": "number",
+    "prompt": "Five values have mean 40 and standard deviation 2.4. What is $\\sum x^{2}$?",
+    "answer": "8028.8",
+    "explain": "As in See it: $5\\left(2.4^{2} + 40^{2}\\right) = 5\\left(5.76 + 1600\\right) = 8028.8$. Rounding 5.76 to 6 would add 1.2 that the data never had.",
+    "twin": {
+      "prompt": "Four values have mean 25 and standard deviation 1.5. What is $\\sum x^{2}$?",
+      "answer": "2509",
+      "explain": "$4\\left(2.25 + 625\\right) = 2509$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Going further: a missing group's spread",
+    "role": "further"
+  },
+  {
+    "type": "p",
+    "md": "The hardest shape gives the whole set and one group only as summaries, and asks for the other group's standard deviation. Rebuild both sums of squares, subtract, then use the missing group's own count and mean."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where this specification stops",
+    "md": "Three or more groups pool the same way, one more row of totals each. Formulas that combine variances directly, and the calculator's $s_{x}$ with divisor $n - 1$, are not part of this specification."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "The 25 values above have standard deviation 8, and the 10 values with mean 56 have standard deviation 6. Find the standard deviation of the other 15, whose mean is 66.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "All: $\\sum x^{2} = 25\\left(8^{2} + 62^{2}\\right) = 97700$",
+        "decision": "Rebuild the whole set's sum of squares.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "Known: $\\sum x^{2} = 10\\left(6^{2} + 56^{2}\\right) = 31720$",
+        "decision": "And the known group's."
+      },
+      {
+        "n": 3,
+        "working": "Missing: $\\sum x^{2} = 97700 - 31720 = 65980$",
+        "decision": "Subtract: what is left belongs to the 15.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\sigma = \\sqrt{\\dfrac{65980}{15} - 66^{2}}$\n$= 6.53$",
+        "decision": "The missing group's own count and its own mean.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g18",
+    "kind": "number",
+    "prompt": "20 values have mean 40 and standard deviation 6. Eight of them have mean 37 and standard deviation 4. The other 12 have mean 42. What is their standard deviation, to 2 decimal places?",
+    "answer": "6.27 | 6.272",
+    "explain": "As in See it: the whole set gives $20\\left(36 + 1600\\right) = 32720$, the eight give $8\\left(16 + 1369\\right) = 11080$, leaving 21640 for the 12. Then $\\dfrac{21640}{12} - 42^{2} = 39.33$, and its root is 6.27.",
+    "twin": {
+      "prompt": "12 values have mean 25 and standard deviation 5. Four of them have mean 21 and standard deviation 3. The other 8 have mean 27. What is their standard deviation, to 2 decimal places?",
+      "answer": "4.58 | 4.583",
+      "explain": "$12\\left(25 + 625\\right) = 7800$ less $4\\left(9 + 441\\right) = 1800$ leaves 6000; $\\dfrac{6000}{8} - 27^{2} = 21$, and $\\sqrt{21} = 4.58$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "You can now",
+    "role": "recap"
+  },
+  {
+    "type": "p",
+    "md": "Rebuild $\\sum x$ and $\\sum x^{2}$ for a summarised group; square and add for a listed one.\nPool two groups: add the counts and both totals, then use the pooled mean.\nTake a group out: subtract totals and counts, and answer for the group left.\nFind a missing group's mean and spread from the whole set and one part.\nExpect pooling to widen the spread when the means are far apart."
+  },
+  {
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
+  },
+  {
+    "type": "p",
+    "md": "The pooled question was set in Summer 2019 Q3, 2021 Q1, 2022 Q5 and 2023 Q2: two marks for the mean, four for the standard deviation. The first marks are rebuilt totals; the last is the root, over the right count. Stuck: make a row of $n$, $\\sum x$ and $\\sum x^{2}$ for every group, then add or subtract rows."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.combined-sets-mean-sd.01"
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.12"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.combined-sets-mean-sd.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.combined-sets-mean-sd.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.combined-sets-mean-sd.05"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.combined-sets-mean-sd.07"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.combined-sets-mean-sd.08"
+    "promptId": "rp.fm.u3.combined-sets-mean-sd.13"
   }
 ]
