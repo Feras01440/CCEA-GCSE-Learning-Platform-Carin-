@@ -24,6 +24,14 @@ const MX = (id, label, statements, ledgerTag, extraSources, note) => ({
   ...(note ? { note } : {}),
 });
 
+/**
+ * MA: an anticipated entry. The items anticipate the error (a distractor, a commonError or a
+ * find-the-mistake is tagged with it) but no Chief Examiner report names it, so it carries no
+ * source and no firstSeen / lastSeen; `note` says, in a line, what the reports do say. The lead's
+ * ruling of 7 Oct 2026: an honest registry says what the reports say and no more.
+ */
+const MA = (id, label, statements, ledgerTag, note) => ({ id, label, statements, ledgerTag, extraSources: [], anticipated: true, note });
+
 const misconceptions = [
   // algebraic fractions
   M("fm.algfrac.not-factorised-first", "Adds or divides algebraic fractions without factorising every quadratic first, producing cubic numerators and denominators", ["FM1-ALF-01"], "method"),
@@ -130,13 +138,14 @@ const misconceptions = [
   M("fm.simeq.scale-factor-not-reapplied", "Divides through by 1000 (or similar) to reach the given form and forgets to multiply the answers back", ["FM1-SIM-01"], "misread"),
   M("fm.simeq.wrong-scaling-to-reach-given", "Multiplies instead of dividing (or divides sides by different numbers) to reach the printed equation", ["FM1-SIM-01"], "method"),
   M("fm.presentation.calculator-no-method", "Answers produced on a calculator with no method shown, earning nothing", ["FM1-SIM-01", "FM3-BIN-02"], "presentation"),
-  MX("fm.simeq.elimination-sign-slip", "Changes the sign of every letter when subtracting one equation from another but not of the number on the right, so the new equation looks tidy and is already wrong", ["FM1-SIM-01"], "accuracy", [S("2019-summer", "FM1", 7), S("2025-summer", "FM1", 12)]),
-  MX("fm.simeq.multiplier-not-applied-to-constant", "Scales an equation to match a coefficient and leaves its right-hand side unscaled", ["FM1-SIM-01"], "method", [S("2024-summer", "FM1", 11), S("2019-summer", "FM1", 7)]),
-  MX("fm.simeq.added-instead-of-subtracted", "Adds two equations whose terms in the chosen letter are equal and the same sign (or subtracts when they are equal and opposite), so the letter is not removed at all", ["FM1-SIM-01"], "method", [S("2019-summer", "FM1", 7), S("2024-summer", "FM1", 11)]),
-  MX("fm.simeq.different-letter-eliminated", "Clears a different letter from the second pair, so the two new equations are not in the same two unknowns and cannot be solved together", ["FM1-SIM-01"], "concept", [S("2019-summer", "FM1", 7), S("2022-summer", "FM1", 11)]),
-  MX("fm.simeq.stopped-at-the-pair", "Solves the two-unknown pair and never goes back to an original equation for the third value", ["FM1-SIM-01"], "not-attempted", [S("2022-summer", "FM1", 11), S("2019-summer", "FM1", 7)]),
-  MX("fm.simeq.values-in-wrong-slots", "Writes the three values on the wrong labelled answer lines", ["FM1-SIM-01"], "presentation", [S("2025-summer", "FM1", 12), S("2019-summer", "FM1", 7)]),
-  MX("fm.simeq.no-check-in-third-equation", "Never substitutes the three values back into the equation that was not used to find them, so an arithmetic slip reaches the answer line unnoticed", ["FM1-SIM-01"], "presentation", [S("2019-summer", "FM1", 7), S("2025-summer", "FM1", 12)]),
+  MX("fm.simeq.arithmetic-slip", "Eliminates and back-substitutes by the right method but makes an arithmetic slip on the way, so the method marks are kept and the accuracy marks lost", ["FM1-SIM-01"], "accuracy", [S("2018-summer", "FM1", 10), S("2019-summer", "FM1", 7), S("2022-summer", "FM1", 11), S("2024-summer", "FM1", 11), S("2025-summer", "FM1", 12)], "All five reports put the wrong answers in the solving down to arithmetic (2025: an incorrect multiplication); 2018, 2019 and 2022 add that the elimination method itself was known, 2019 that most marks were still earned for it, and 2025 that follow-through gave partial credit."),
+  MA("fm.simeq.elimination-sign-slip", "Changes the sign of every letter when subtracting one equation from another but not of the number on the right, so the new equation looks tidy and is already wrong", ["FM1-SIM-01"], "accuracy", "No report names this sign slip; the FM1 reports of 2018, 2019, 2022, 2024 and 2025 blame arithmetic slips in general (fm.simeq.arithmetic-slip) and never itemise them."),
+  MA("fm.simeq.multiplier-not-applied-to-constant", "Scales an equation to match a coefficient and leaves its right-hand side unscaled", ["FM1-SIM-01"], "method", "No report names leaving the right-hand side unscaled; the scaling error the reports do name is multiplying instead of dividing to reach a printed equation (2024 Q11, fm.simeq.wrong-scaling-to-reach-given)."),
+  MA("fm.simeq.added-instead-of-subtracted", "Adds two equations whose terms in the chosen letter are equal and the same sign (or subtracts when they are equal and opposite), so the letter is not removed at all", ["FM1-SIM-01"], "method", "No report names it; on the elimination itself the reports are positive: nearly all knew to eliminate (2019), candidates were clear how to (2018), and errors were arithmetic, not method (2022)."),
+  MA("fm.simeq.different-letter-eliminated", "Clears a different letter from the second pair, so the two new equations are not in the same two unknowns and cannot be solved together", ["FM1-SIM-01"], "concept", "No report names it; the reports describe the elimination method as well known (2018, 2019, 2022) and put the wrong answers down to arithmetic."),
+  MA("fm.simeq.stopped-at-the-pair", "Solves the two-unknown pair and never goes back to an original equation for the third value", ["FM1-SIM-01"], "not-attempted", "No report names it; 2019 says nearly all knew to back-substitute, and the parts 2022 says were often omitted are the equation-forming parts, not the solving."),
+  MA("fm.simeq.values-in-wrong-slots", "Writes the three values on the wrong labelled answer lines", ["FM1-SIM-01"], "presentation", "No report names answers on the wrong lines; the presentation the reports do fault is a show-that set out without its steps (2018), money notation not used (2022) and presentation in general (2025)."),
+  MA("fm.simeq.no-check-in-third-equation", "Never substitutes the three values back into the equation that was not used to find them, so an arithmetic slip reaches the answer line unnoticed", ["FM1-SIM-01"], "presentation", "No report names a missing check in the unused equation; 2018 says candidates do not ask whether their final values make sense in context (fm.simeq.unrealistic-values-unchecked), and the reports blame arithmetic slips for wrong answers."),
 
   // integration
   M("fm.int.constant-omitted", "Omits the constant of integration or fails to find its value", ["FM1-INT-01", "FM1-INT-02"], "accuracy"),
@@ -169,6 +178,8 @@ const misconceptions = [
   M("fm.trig.answer-outside-range", "Gives a solution outside the stated range (or drops the minus sign of the value)", ["FM1-TRG-02"], "accuracy"),
   M("fm.trig.transform-order", "Undoes 2x + 20 in the wrong order (multiplies by 2 then adds 20)", ["FM1-TRG-02"], "method"),
   M("fm.trig.cast-with-negative-value", "Cannot use the CAST diagram or the sketch when the ratio is negative", ["FM1-TRG-02"], "concept"),
+  // FM1 migration group 2 (7 Oct 2026): the partner found with another curve's rule; until now carried by answer-outside-range
+  MX("fm.trig.partner-rule-swapped", "Finds the second angle with another curve's rule: 360° minus the angle on a sine, 180° minus it on a cosine, or 90° added or taken away on a tangent", ["FM1-TRG-02"], "method", [S("2025-summer", "FM1", 2)], "Summer 2025 Q2(b)(i) reports the 90° rule used on a tangent, leading to answers outside the range; the sine and cosine forms are the same slip on the other curves and no report names them, so the evidence for those is step-level."),
   MX("fm.trig.period-confused", "Gives 360° as the period of tan x, or 180° as the period of sin x or cos x, or offers a quarter of a period as the whole", ["FM1-TRG-01"], "concept", [S("2025-summer", "FM1", 2), S("2022-summer", "FM1", 4)]),
   MX("fm.trig.sin-cos-swapped", "Draws or reads one curve where the other was asked for: a cosine sketch starting at the origin, or sin x read where cos x was wanted", ["FM1-TRG-01"], "concept", [S("2022-summer", "FM1", 4), S("2023-summer", "FM1", 3)]),
   MX("fm.trig.symmetry-sign-error", "Changes the sign when using the symmetry of a curve, reflecting it in the x-axis instead of sideways, so sin 130° is given as the negative of sin 50°", ["FM1-TRG-01", "FM1-TRG-02"], "accuracy", [S("2019-summer", "FM1", 4), S("2018-summer", "FM1", 3)]),

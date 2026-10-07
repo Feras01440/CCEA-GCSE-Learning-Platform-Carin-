@@ -17,6 +17,11 @@
  * misconception, plus any `extraSources` on the entry), `firstSeen` / `lastSeen` (earliest and
  * latest series among those sources).
  *
+ * An entry the items anticipate but no report names carries `anticipated: true` and a `note` saying
+ * what the reports do say (the lead's ruling, 7 Oct 2026); it is built with no sources and no
+ * firstSeen / lastSeen. Every other entry still needs a finding or an extraSource, and an entry
+ * marked anticipated that a report is cited for is a problem (drop the mark or the source).
+ *
  * Topic id rule (shared with scripts/validate-insights.mjs):
  *   maths    maths.<unit>.<slug>         unit = topic.introducedIn lower-cased   e.g. maths.m4.histograms-unequal-widths
  *   fm       fm.u<n>.<slug>              topic.unit FM<n>                        e.g. fm.u1.algebraic-fractions-add-subtract
@@ -105,18 +110,18 @@ export function buildSubject(mod) {
       const pa = parseSource(a), pb = parseSource(b);
       return seriesKey(pa.series) - seriesKey(pb.series) || a.localeCompare(b);
     });
-    if (sources.length === 0) problems.push(`${mc.id}: no finding cites this misconception`);
+    if (mc.anticipated) {
+      if (sources.length > 0) problems.push(`${mc.id}: marked anticipated, yet a report is cited for it; drop the mark or the source`);
+      if (!mc.note) problems.push(`${mc.id}: an anticipated entry needs a note saying what the reports do say`);
+    } else if (sources.length === 0) problems.push(`${mc.id}: no finding cites this misconception`);
     const series = sources.map((s) => parseSource(s).series);
-    const entry = {
-      id: mc.id,
-      label: mc.label,
-      subject,
-      statements: [...mc.statements],
-      sources,
-      firstSeen: series.length ? series.reduce((a, b) => (seriesKey(a) <= seriesKey(b) ? a : b)) : null,
-      lastSeen: series.length ? series.reduce((a, b) => (seriesKey(a) >= seriesKey(b) ? a : b)) : null,
-      ledgerTag: mc.ledgerTag,
-    };
+    const entry = { id: mc.id, label: mc.label, subject, statements: [...mc.statements], sources };
+    if (series.length) {
+      entry.firstSeen = series.reduce((a, b) => (seriesKey(a) <= seriesKey(b) ? a : b));
+      entry.lastSeen = series.reduce((a, b) => (seriesKey(a) >= seriesKey(b) ? a : b));
+    }
+    entry.ledgerTag = mc.ledgerTag;
+    if (mc.anticipated) entry.anticipated = true;
     if (mc.note) entry.note = mc.note;
     registry.push(entry);
   }

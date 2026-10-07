@@ -5,7 +5,9 @@
  * Checks packs/<subject>/insights/ for maths, further-maths and science:
  *   - misconceptions.json: every entry validates as a Misconception, ids are unique, subject matches, every
  *     statement exists in the subject's spec (data/spec/*.json via src/lib/content/ids.ts), sources match the
- *     ExaminerSource pattern, firstSeen/lastSeen agree with the sources;
+ *     ExaminerSource pattern, firstSeen/lastSeen agree with the sources; every entry has a source unless it is
+ *     marked anticipated (no report names it; it carries a note saying what the reports do say, and no series),
+ *     and no card cites an anticipated entry;
  *   - every <unit>.<slug>.json validates as an ExaminerInsight, its topic exists in the spec taxonomy
  *     (maths.<unit>.<slug> / fm.u<n>.<slug> / science.<unit>.<slug> / science.u7.<group>), the file name and id
  *     follow from the topic, every specRef exists, every finding source matches the pattern and names this
@@ -112,7 +114,8 @@ for (const subject of SUBJECTS) {
       registry.set(mc.id, mc);
       if (mc.subject !== subject) err(subject, `misconception ${mc.id} has subject "${mc.subject}"`);
       for (const s of mc.statements) if (!statements.has(s)) err(subject, `misconception ${mc.id}: statement ${s} is not in the spec`);
-      if (mc.sources.length === 0) err(subject, `misconception ${mc.id} has no sources`);
+      // The schema refuses an entry with no source unless it is anticipated, and an anticipated entry with no note.
+      if (mc.anticipated && mc.sources.length > 0) err(subject, `misconception ${mc.id}: marked anticipated, yet it has sources`);
       for (const s of mc.sources) {
         if (checkSource(subject, `misconception ${mc.id}`, s) && cer && !cer.has(normaliseSource(s))) err(subject, `misconception ${mc.id}: source ${s} has no CER block`);
       }
@@ -120,6 +123,7 @@ for (const subject of SUBJECTS) {
       if (keys.length && (seriesKey(mc.firstSeen) !== Math.min(...keys) || seriesKey(mc.lastSeen) !== Math.max(...keys))) {
         err(subject, `misconception ${mc.id}: firstSeen/lastSeen do not match its sources`);
       }
+      if (!keys.length && (mc.firstSeen !== undefined || mc.lastSeen !== undefined)) err(subject, `misconception ${mc.id}: firstSeen/lastSeen given with no sources`);
     }
   }
 
@@ -157,13 +161,20 @@ for (const subject of SUBJECTS) {
   }
   // The builder accepts a registry entry that no card cites only when the source module gives it extraSources;
   // that is legitimate (the report evidence exists, the card does not yet), so it is reported, not failed.
-  for (const id of registry.keys()) if (!cited.has(id)) warnings.push(`${subject}: misconception ${id} is cited by no card (kept alive by extraSources in the source module)`);
+  // An anticipated entry is cited by no card by definition, so it is counted in the summary line instead.
+  let anticipated = 0;
+  for (const [id, mc] of registry) {
+    if (mc.anticipated) {
+      anticipated++;
+      if (cited.has(id)) err(subject, `misconception ${id} is marked anticipated, yet a card cites it`);
+    } else if (!cited.has(id)) warnings.push(`${subject}: misconception ${id} is cited by no card (kept alive by extraSources in the source module)`);
+  }
 
-  summary.push({ subject, cards: files.length, findings, misconceptions: registry.size, cited: cited.size, cerChecked: cer ? cer.size : null });
+  summary.push({ subject, cards: files.length, findings, misconceptions: registry.size, cited: cited.size, anticipated, cerChecked: cer ? cer.size : null });
 }
 
 for (const s of summary) {
-  console.log(`${s.subject.padEnd(14)} ${String(s.cards).padStart(3)} cards  ${String(s.findings).padStart(4)} findings  ${String(s.misconceptions).padStart(3)} misconceptions (${s.cited} cited)${s.cerChecked === null ? "  (CER blocks absent: citation existence not checked)" : `  (checked against ${s.cerChecked} CER blocks)`}`);
+  console.log(`${s.subject.padEnd(14)} ${String(s.cards).padStart(3)} cards  ${String(s.findings).padStart(4)} findings  ${String(s.misconceptions).padStart(3)} misconceptions (${s.cited} cited${s.anticipated ? `, ${s.anticipated} anticipated` : ""})${s.cerChecked === null ? "  (CER blocks absent: citation existence not checked)" : `  (checked against ${s.cerChecked} CER blocks)`}`);
 }
 for (const w of warnings) console.log(`warning: ${w}`);
 if (errors.length) {

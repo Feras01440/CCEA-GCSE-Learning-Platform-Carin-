@@ -1065,17 +1065,38 @@ export const FindTheMistake = named(
 );
 export type FindTheMistake = z.infer<typeof FindTheMistake>;
 
+/**
+ * A registry entry. An entry evidenced by Chief Examiner reports carries its sources and the first and last series that
+ * name it. An entry the items anticipate but no report names (the lead's ruling, 7 Oct 2026: "an honest registry says
+ * what the reports say and no more") carries `anticipated: true` and a one-line `note` saying what the reports do say;
+ * it needs no source and no series. No app surface reads the registry (7 Oct 2026: a misconception tag is shown from its
+ * id, src/components/items/format.ts humaniseMisconception), so an anticipated entry changes no display.
+ */
 export const Misconception = named(
-  z.object({
-    id: MisconceptionId,
-    label: z.string().min(1),
-    subject: SubjectId,
-    statements: z.array(SpecRef),
-    sources: z.array(ExaminerSource),
-    firstSeen: SeriesId,
-    lastSeen: SeriesId,
-    ledgerTag: z.enum(["method", "accuracy", "misread", "presentation", "not-attempted", "concept"]),
-  }),
+  z
+    .object({
+      id: MisconceptionId,
+      label: z.string().min(1),
+      subject: SubjectId,
+      statements: z.array(SpecRef),
+      sources: z.array(ExaminerSource),
+      firstSeen: SeriesId.optional(),
+      lastSeen: SeriesId.optional(),
+      ledgerTag: z.enum(["method", "accuracy", "misread", "presentation", "not-attempted", "concept"]),
+      /** No report names this error; the items anticipate it. */
+      anticipated: z.literal(true).optional(),
+      /** How strong the report evidence is, in a line; required on an anticipated entry (what the reports do say). */
+      note: z.string().min(1).optional(),
+    })
+    .superRefine((m, ctx) => {
+      if (m.anticipated) {
+        if (!m.note) ctx.addIssue({ code: "custom", message: "an anticipated entry needs a note saying what the reports do say", path: ["note"] });
+        return;
+      }
+      if (m.sources.length === 0) ctx.addIssue({ code: "custom", message: "an entry no report names must be marked anticipated, with a note", path: ["sources"] });
+      if (m.firstSeen === undefined) ctx.addIssue({ code: "custom", message: "an entry not marked anticipated needs firstSeen, the earliest series among its sources", path: ["firstSeen"] });
+      if (m.lastSeen === undefined) ctx.addIssue({ code: "custom", message: "an entry not marked anticipated needs lastSeen, the latest series among its sources", path: ["lastSeen"] });
+    }),
   "Misconception",
   "Registry entry that names a recurring error; the vocabulary for distractor tags and ledger tags",
 );
