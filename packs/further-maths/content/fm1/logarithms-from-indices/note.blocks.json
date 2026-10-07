@@ -1,160 +1,619 @@
 [
   {
     "type": "hero",
-    "lede": "A logarithm answers one question: what index turns the base into this number? Powers you already know, read backwards. Once you can read an index statement as a logarithm and back again, every later logarithm question has somewhere to start.",
+    "lede": "A logarithm answers one question: what index turns the base into this number? It is a power you already know, read from the other end. Learn to switch between the two spellings and every logarithm question has a first line you can write.",
     "can": [
-      "Read an index statement as a logarithm and a logarithm as an index statement",
-      "Work out a logarithm from a power you know, without reaching for a calculator",
-      "Find a missing base or a missing number by going back to index form"
+      "Switch between an index statement and a logarithm, both ways.",
+      "Work out a logarithm by counting powers, a fraction's included.",
+      "Find a missing base or number, and undo a base-10 logarithm."
     ],
-    "minutes": 8
+    "minutes": 15
   },
   {
     "type": "h",
-    "text": "Powers, read backwards"
-  },
-  {
-    "type": "p",
-    "md": "You already write $2^{5} = 32$. A logarithm asks the same thing from the other end: **what index do I put on 2 to reach 32?** The answer is 5, and we write that as $\\log_{2} 32 = 5$.\nNothing new has happened. The two lines carry exactly the same information; only the unknown has moved."
+    "text": "Powers, read backwards",
+    "role": "idea"
   },
   {
     "type": "figure",
-    "alt": "The index statement 2 to the power 5 equals 32 beside the logarithm statement log to the base 2 of 32 equals 5, with arrows both ways.",
-    "svg": "<svg viewBox='0 0 560 156' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two boxes side by side: the index form 2 to the power 5 equals 32, and the logarithm form log to the base 2 of 32 equals 5, with arrows running both ways between them'><title>Two boxes side by side: the index form 2 to the power 5 equals 32, and the logarithm form log to the base 2 of 32 equals 5, with arrows running both ways between them</title><rect x='20' y='34' width='220' height='66' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.06'/><text x='130' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>index form</text><text x='130' y='76' font-family='inherit' font-size='26' fill='currentColor' text-anchor='middle'>2^5 = 32</text><rect x='320' y='34' width='220' height='66' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.06'/><text x='430' y='26' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>logarithm form</text><text x='430' y='76' font-family='inherit' font-size='24' fill='currentColor' text-anchor='middle'>log  32 = 5</text><text x='408' y='82' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2</text><path d='M 244 58 L 312 58 M 300 51 L 312 58 L 300 65' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 316 82 L 248 82 M 260 75 L 248 82 L 260 89' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='280' y='116' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the same sentence, read two ways</text><text x='130' y='140' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the base is 2</text><text x='430' y='140' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the index is 5</text><path d='M 108 128 L 96 100' stroke='currentColor' stroke-width='1' fill='none' stroke-dasharray='4 3' stroke-linejoin='round' stroke-linecap='round'/><path d='M 452 128 L 466 100' stroke='currentColor' stroke-width='1' fill='none' stroke-dasharray='4 3' stroke-linejoin='round' stroke-linecap='round'/></svg>",
-    "caption": "One sentence, two spellings: $2^{5} = 32$ and $\\log_{2} 32 = 5$."
-  },
-  {
-    "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to begin. In the picture, $\\log_{2} 32 = 5$ and $2^{5} = 32$ say the same thing. Which number is the base?",
-    "options": [
-      "2",
-      "5",
-      "32"
-    ],
-    "answer": "2",
-    "explain": "The base is the number being raised, written small under the word. Here it is $2$, and $5$ is the index it is raised to."
-  },
-  {
-    "type": "h",
-    "text": "1. The rule, and why it is the same rule"
+    "alt": "3 to the power 5 equals 243 beside log to the base 3 of 243 equals 5, with arrows both ways; the base 3, the index 5 and the number 243 are labelled in each",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 200\" role=\"img\" aria-label=\"3 to the power 5 equals 243 written beside log to the base 3 of 243 equals 5, with arrows both ways; the base 3, the index 5 and the number 243 are labelled in each\" font-family=\"inherit\"><title>3 to the power 5 equals 243 written beside log to the base 3 of 243 equals 5, with arrows both ways; the base 3, the index 5 and the number 243 are labelled in each</title><text x=\"100\" y=\"92\" font-size=\"30\" text-anchor=\"middle\" fill=\"currentColor\">3<tspan font-size=\"20\" baseline-shift=\"super\">5</tspan> = 243</text><text x=\"300\" y=\"92\" font-size=\"30\" text-anchor=\"middle\" fill=\"currentColor\">log<tspan font-size=\"20\" baseline-shift=\"sub\">3</tspan> 243 = 5</text><line x1=\"176\" y1=\"70\" x2=\"214\" y2=\"70\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M214 70 L205 65 M214 70 L205 75\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><line x1=\"214\" y1=\"82\" x2=\"176\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M176 82 L185 77 M176 82 L185 87\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"72\" y=\"140\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">base 3</text><line x1=\"72\" y1=\"124\" x2=\"76\" y2=\"102\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"100\" y=\"34\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">index 5</text><line x1=\"96\" y1=\"42\" x2=\"90\" y2=\"62\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"140\" y=\"140\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">number 243</text><line x1=\"140\" y1=\"124\" x2=\"140\" y2=\"102\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"258\" y=\"140\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">base 3</text><line x1=\"258\" y1=\"124\" x2=\"252\" y2=\"104\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"306\" y=\"34\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">number 243</text><line x1=\"306\" y1=\"42\" x2=\"300\" y2=\"64\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"366\" y=\"140\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">index 5</text><line x1=\"366\" y1=\"124\" x2=\"362\" y2=\"102\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"200\" y=\"182\" font-size=\"16\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">the logarithm is the index</text></svg>",
+    "caption": "One statement, two spellings: the base, the index and the number keep their jobs."
   },
   {
     "type": "p",
-    "md": "$a^{x} = n$ and $x = \\log_{a} n$ are the same statement. That line is printed on your formula sheet, so you never have to recall it — but you do have to use it.\nSo whenever a logarithm is in your way, write the index statement underneath it, and the question turns into one about powers."
+    "md": "You already know $3^{5} = 243$. A logarithm asks the same thing from the other end: what index turns 3 into 243? The answer is 5, written $\\log_{3} 243 = 5$. Nothing new has happened. The two lines carry the same information, and only the unknown has moved."
   },
   {
-    "type": "figure",
-    "alt": "The powers of 2 from 2 to the power 0 up to 2 to the power 5, each value on a number line with its index written underneath.",
-    "svg": "<svg viewBox='0 0 560 168' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A line of the powers of 2 from 2 to the power 0 up to 2 to the power 5, with each value above the line and its index below it'><title>A line of the powers of 2 from 2 to the power 0 up to 2 to the power 5, with each value above the line and its index below it</title><path d='M 30 96 L 486 96' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 46 90 L 46 102' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='46' y='80' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>1</text><text x='46' y='122' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>0</text><rect x='20' y='40' width='52' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='46' y='58' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2^0</text><path d='M 128 90 L 128 102' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='128' y='80' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>2</text><text x='128' y='122' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>1</text><rect x='102' y='40' width='52' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='128' y='58' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2^1</text><path d='M 210 90 L 210 102' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='210' y='80' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>4</text><text x='210' y='122' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>2</text><rect x='184' y='40' width='52' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='210' y='58' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2^2</text><path d='M 292 90 L 292 102' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='292' y='80' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>8</text><text x='292' y='122' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>3</text><rect x='266' y='40' width='52' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='292' y='58' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2^3</text><path d='M 374 90 L 374 102' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='374' y='80' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>16</text><text x='374' y='122' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>4</text><rect x='348' y='40' width='52' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='374' y='58' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2^4</text><path d='M 456 90 L 456 102' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><text x='456' y='80' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>32</text><text x='456' y='122' font-family='inherit' font-size='13' fill='currentColor' text-anchor='middle'>5</text><rect x='430' y='40' width='52' height='26' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.05'/><text x='456' y='58' font-family='inherit' font-size='12' fill='currentColor' text-anchor='middle'>2^5</text><text x='26' y='80' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>value</text><text x='26' y='122' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>index</text><text x='251' y='152' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the logarithm is the row underneath</text></svg>",
-    "caption": "Reading down gives a power; reading up gives a logarithm."
+    "type": "p",
+    "md": "The formula sheet prints the link: $a^{x} = n$ means $x = \\log_{a} n$. The base is the number being raised, written small after log, and the logarithm is the index."
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why a logarithm undoes a power",
-    "md": "Raising to a power and taking a logarithm are opposite moves, like squaring and square-rooting. Each puts back what the other took away, so the index form never changes the statement: it only moves the unknown somewhere you can reach it."
+    "md": "Raising to a power and taking a logarithm are opposite moves, like squaring and taking a square root. Each puts back what the other did, so switching spellings never changes the statement: it only moves the unknown to where you can reach it."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Write $3^{5} = 243$ as a logarithm, and read it back.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$a^{x} = n$ with $a = 3$, $x = 5$, $n = 243$",
+        "decision": "Give each number its job: 3 is raised, 5 is the index, 243 is the result."
+      },
+      {
+        "n": 2,
+        "working": "$\\log_{3} 243 = 5$",
+        "decision": "The base goes small after log, the number goes inside, and the index becomes the answer.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\log_{3} 243 = 5$ means $3^{5} = 243$",
+        "decision": "Read it back to check: the base raised to the answer gives the number."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "On the line of powers of $2$ shown above, $2^{4} = 16$. What is $\\log_{2} 16$?",
-    "answer": "4",
-    "explain": "The logarithm is the index, so $\\log_{2} 16 = 4$. Find the value on the top row and read the number underneath it."
+    "id": "g6",
+    "kind": "choice",
+    "prompt": "Which is $10^{4} = 10\\,000$ written as a logarithm?",
+    "options": [
+      "$\\log_{10} 10\\,000 = 4$",
+      "$\\log_{4} 10\\,000 = 10$",
+      "$\\log_{10} 4 = 10\\,000$"
+    ],
+    "answer": "$\\log_{10} 10\\,000 = 4$",
+    "explain": "Match it to $a^{x} = n$ as in the See it: the base 10 goes small after log, the number 10 000 goes inside, and the index 4 is the answer. So $\\log_{10} 10\\,000 = 4$.",
+    "twin": {
+      "prompt": "Which is $11^{2} = 121$ written as a logarithm?",
+      "options": [
+        "$\\log_{11} 121 = 2$",
+        "$\\log_{2} 121 = 11$",
+        "$\\log_{11} 2 = 121$"
+      ],
+      "answer": "$\\log_{11} 121 = 2$",
+      "explain": "The base 11 goes small after log and 121 goes inside, so $\\log_{11} 121 = 2$.",
+      "optionNotes": [
+        {
+          "option": "$\\log_{2} 121 = 11$",
+          "why": "The base and the index have swapped: 11 is the number being raised, so it is the base.",
+          "misconception": "fm.logs.base-and-index-swapped"
+        },
+        {
+          "option": "$\\log_{11} 2 = 121$",
+          "why": "121 is the result of the power, so it goes inside the logarithm; the index 2 is the answer."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\log_{4} 10\\,000 = 10$",
+        "why": "The base and the index have changed places. The base is the number being raised, 10, and it goes small after log.",
+        "misconception": "fm.logs.base-and-index-swapped"
+      },
+      {
+        "option": "$\\log_{10} 4 = 10\\,000$",
+        "why": "The number and the index have changed places. The result of the power, 10 000, goes inside the logarithm, and the index is the answer."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "2. Two anchors, and one minus sign"
+    "text": "Count the powers to work one out",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Two values are worth knowing outright. $\\log_{a} a = 1$, because $a^{1} = a$. And $\\log_{a} 1 = 0$, because $a^{0} = 1$. Candidates swap those two more often than any other pair.\nA fraction brings a minus sign with it. Since $2^{-3} = \\frac{1}{8}$, we get $\\log_{2} \\frac{1}{8} = -3$. Any number below $1$ has a negative logarithm."
+    "md": "To work out a logarithm without a calculator, call it x, write the index form, and count up in powers of the base until you reach the number. The index you stop at is the logarithm."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Work out $\\log_{7} 2401$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\log_{7} 2401 = x$, so $7^{x} = 2401$",
+        "decision": "Write the index form first: that line is where the method mark sits.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$7^{1} = 7$, $7^{2} = 49$, $7^{3} = 343$, $7^{4} = 2401$",
+        "decision": "Count up in powers of 7 until the number appears."
+      },
+      {
+        "n": 3,
+        "working": "$x = 4$",
+        "decision": "The count stopped at the index 4. Check: $7^{4} = 2401$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "video",
     "videoId": "qeaLrh7If0I",
     "title": "Introduction to Logarithms - Corbettmaths",
     "channel": "corbettmaths",
-    "why": "A short introduction that keeps the index form beside the logarithm form the whole way through."
+    "why": "More logarithms worked from their index form. Pause before each answer and count the powers yourself."
   },
   {
     "type": "gate",
-    "id": "g3",
-    "kind": "number",
-    "prompt": "Using $\\log_{a} a = 1$ and $\\log_{a} 1 = 0$: what is $\\log_{9} 1$?",
-    "answer": "0",
-    "explain": "$9^{0} = 1$, so $\\log_{9} 1 = 0$. The base raised to zero is always $1$, whatever the base."
+    "id": "g7",
+    "kind": "choice",
+    "prompt": "Work out $\\log_{3} 729$.",
+    "options": [
+      "$6$",
+      "$243$",
+      "$9$"
+    ],
+    "answer": "$6$",
+    "explain": "Write $3^{x} = 729$ and count as in the See it: 3, 9, 27, 81, 243, 729. The sixth power reaches 729, so $\\log_{3} 729 = 6$.",
+    "twin": {
+      "prompt": "Work out $\\log_{2} 1024$.",
+      "options": [
+        "$10$",
+        "$512$",
+        "$32$"
+      ],
+      "answer": "$10$",
+      "explain": "Write $2^{x} = 1024$ and keep doubling from 2: the tenth power is 1024, so the answer is 10.",
+      "optionNotes": [
+        {
+          "option": "$512$",
+          "why": "That is $1024 \\div 2$. Count how many 2s multiply to 1024 instead of dividing once.",
+          "misconception": "fm.logs.unknown-base-divided"
+        },
+        {
+          "option": "$32$",
+          "why": "That solves $x^{2} = 1024$. The base is 2, so the equation is $2^{x} = 1024$.",
+          "misconception": "fm.logs.base-and-index-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$243$",
+        "why": "That is $729 \\div 3$. A logarithm counts how many 3s multiply to 729, so count the powers rather than divide once.",
+        "misconception": "fm.logs.unknown-base-divided"
+      },
+      {
+        "option": "$9$",
+        "why": "That solves $x^{3} = 729$, with the base and the index the other way round. The base is 3, so solve $3^{x} = 729$.",
+        "misconception": "fm.logs.base-and-index-swapped"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "3. A worked logarithm, start to finish"
+    "text": "Two values you know at once",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Work out $\\log_{3} 81$.\n**Step 1.** Let the answer be $x$, so $\\log_{3} 81 = x$.\n**Step 2.** Write the index form: $3^{x} = 81$.\n**Step 3.** Count up in powers of $3$: $3^{1} = 3$, $3^{2} = 9$, $3^{3} = 27$, $3^{4} = 81$.\n**Step 4.** So $x = 4$."
+    "md": "Two logarithms need no counting. $\\log_{a} a = 1$, because $a^{1} = a$. And $\\log_{a} 1 = 0$, because $a^{0} = 1$, whatever the base. They are easy to swap, so tie each one to its power."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Write down $\\log_{12} 12$ and $\\log_{12} 1$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$12^{1} = 12$, so $\\log_{12} 12 = 1$",
+        "decision": "The base to the power 1 is the base itself.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$12^{0} = 1$, so $\\log_{12} 1 = 0$",
+        "decision": "Any base to the power 0 is 1, so the logarithm of 1 is 0.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "Which statement about base 15 is true?",
+    "options": [
+      "$\\log_{15} 1 = 0$",
+      "$\\log_{15} 1 = 1$",
+      "$\\log_{15} 15 = 0$"
+    ],
+    "answer": "$\\log_{15} 1 = 0$",
+    "explain": "Tie each value to its power, as in the See it: $15^{0} = 1$, so $\\log_{15} 1 = 0$, and $15^{1} = 15$, so $\\log_{15} 15 = 1$.",
+    "twin": {
+      "prompt": "Which statement about base 8 is true?",
+      "options": [
+        "$\\log_{8} 8 = 1$",
+        "$\\log_{8} 8 = 0$",
+        "$\\log_{8} 1 = 8$"
+      ],
+      "answer": "$\\log_{8} 8 = 1$",
+      "explain": "$8^{1} = 8$, so $\\log_{8} 8 = 1$; the logarithm of 1 is 0.",
+      "optionNotes": [
+        {
+          "option": "$\\log_{8} 8 = 0$",
+          "why": "That is the value of $\\log_{8} 1$. The base to the power 1 is the base, so $\\log_{8} 8 = 1$.",
+          "misconception": "fm.logs.log-of-one-given-as-one"
+        },
+        {
+          "option": "$\\log_{8} 1 = 8$",
+          "why": "The logarithm of 1 is the index that turns 8 into 1, and that is 0, since $8^{0} = 1$.",
+          "misconception": "fm.logs.base-and-index-swapped"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$\\log_{15} 1 = 1$",
+        "why": "The value 1 belongs to $\\log_{15} 15$. The logarithm of 1 is 0, because $15^{0} = 1$.",
+        "misconception": "fm.logs.log-of-one-given-as-one"
+      },
+      {
+        "option": "$\\log_{15} 15 = 0$",
+        "why": "The two anchors have swapped: $15^{1} = 15$, so $\\log_{15} 15 = 1$.",
+        "misconception": "fm.logs.log-of-one-given-as-one"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Below 1, the logarithm is negative",
+    "role": "variant"
   },
   {
     "type": "figure",
-    "alt": "The index statement 3 to the power 4 equals 81 translated into log to the base 3 of 81 equals 4.",
-    "svg": "<svg viewBox='0 0 560 126' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The index statement 3 to the power 4 equals 81 beside the same statement written as a logarithm to the base 3'><title>The index statement 3 to the power 4 equals 81 beside the same statement written as a logarithm to the base 3</title><rect x='30' y='30' width='200' height='60' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.06'/><text x='130' y='22' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>start here</text><text x='130' y='68' font-family='inherit' font-size='24' fill='currentColor' text-anchor='middle'>3^4 = 81</text><path d='M 236 60 L 306 60 M 294 53 L 306 60 L 294 67' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='312' y='30' width='218' height='60' stroke='currentColor' stroke-width='1.2' fill='currentColor' fill-opacity='0.06'/><text x='421' y='22' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>read it as a logarithm</text><text x='421' y='68' font-family='inherit' font-size='22' fill='currentColor' text-anchor='middle'>log  81 = 4</text><text x='400' y='74' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><text x='280' y='112' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the base stays 3, the index becomes the answer</text></svg>",
-    "caption": "The index form is the working; $\\log_{3} 81 = 4$ is the answer line."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "number",
-    "prompt": "Same method, new numbers. Write $\\log_{5} 625 = x$ in index form and solve it. What is $x$?",
-    "answer": "4",
-    "explain": "$5^{x} = 625$, and $5^{4} = 625$, so $x = 4$."
-  },
-  {
-    "type": "h",
-    "text": "4. When the base or the number is missing"
+    "alt": "A number line of the powers of 3: the values one ninth, one third, 1, 3, 9, 27, 81 and 243 above it and the indices minus 2 to 5 below it",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 420 170\" role=\"img\" aria-label=\"A number line of the powers of 3: the values one ninth, one third, 1, 3, 9, 27, 81 and 243 above it and the indices minus 2 to 5 below it\" font-family=\"inherit\"><title>A number line of the powers of 3: the values one ninth, one third, 1, 3, 9, 27, 81 and 243 above it and the indices minus 2 to 5 below it</title><line x1=\"20\" y1=\"85\" x2=\"400\" y2=\"85\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M400 85 L391 80 M400 85 L391 90\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><line x1=\"30\" y1=\"78\" x2=\"30\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"30\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1/9</text><text x=\"30\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">−2</text><line x1=\"81.43\" y1=\"78\" x2=\"81.43\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"81.43\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1/3</text><text x=\"81.43\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">−1</text><line x1=\"132.86\" y1=\"78\" x2=\"132.86\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"132.86\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"132.86\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">0</text><line x1=\"184.29\" y1=\"78\" x2=\"184.29\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"184.29\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">3</text><text x=\"184.29\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1</text><line x1=\"235.71\" y1=\"78\" x2=\"235.71\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"235.71\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">9</text><text x=\"235.71\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">2</text><line x1=\"287.14\" y1=\"78\" x2=\"287.14\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"287.14\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">27</text><text x=\"287.14\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">3</text><line x1=\"338.57\" y1=\"78\" x2=\"338.57\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"338.57\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">81</text><text x=\"338.57\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">4</text><line x1=\"390\" y1=\"78\" x2=\"390\" y2=\"92\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"390\" y=\"62\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">243</text><text x=\"390\" y=\"116\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">5</text><text x=\"210\" y=\"22\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">value: a power of 3</text><text x=\"210\" y=\"150\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">index: the logarithm to base 3</text></svg>",
+    "caption": "To the left of 1 the values are fractions and the indices are negative."
   },
   {
     "type": "p",
-    "md": "The same move rescues both. $\\log_{4} x = 3$ becomes $4^{3} = x$, so $x = 64$.\n$\\log_{x} 216 = 3$ becomes $x^{3} = 216$, so $x = 6$ — a cube root, not a division.\nWhen no power fits, the calculator's log key gives base $10$: $\\log 470 = 2.672$ to three decimal places. Give logarithms to three decimal places unless a question says otherwise."
+    "md": "Read the line of powers of 3 to the left of 1: the values are fractions and the indices are negative. A number below 1 is a reciprocal, and a reciprocal carries a negative index, so its logarithm is negative."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Work out $\\log_{3} \\frac{1}{9}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$3^{x} = \\frac{1}{9}$",
+        "decision": "Index form first.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{1}{9} = \\frac{1}{3^{2}} = 3^{-2}$",
+        "decision": "A reciprocal is a negative index: 9 is $3^{2}$, so its reciprocal is $3^{-2}$."
+      },
+      {
+        "n": 3,
+        "working": "$x = -2$",
+        "decision": "Keep the minus sign: the number is below 1.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "Work out $\\log_{4} \\frac{1}{64}$.",
+    "options": [
+      "$-3$",
+      "$3$",
+      "$16$"
+    ],
+    "answer": "$-3$",
+    "explain": "As with $\\frac{1}{9}$ in the See it: $64 = 4^{3}$, so $\\frac{1}{64} = 4^{-3}$ and $\\log_{4} \\frac{1}{64} = -3$. A number below 1 always has a negative logarithm.",
+    "twin": {
+      "prompt": "Work out $\\log_{2} \\frac{1}{32}$.",
+      "options": [
+        "$-5$",
+        "$5$",
+        "$16$"
+      ],
+      "answer": "$-5$",
+      "explain": "$32 = 2^{5}$, so $\\frac{1}{32} = 2^{-5}$ and the logarithm is $-5$.",
+      "optionNotes": [
+        {
+          "option": "$5$",
+          "why": "That is $\\log_{2} 32$. The reciprocal needs the negative index.",
+          "misconception": "fm.logs.negative-index-sign-dropped"
+        },
+        {
+          "option": "$16$",
+          "why": "That is $32 \\div 2$. Use powers: $2^{x} = \\frac{1}{32}$.",
+          "misconception": "fm.logs.unknown-base-divided"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$3$",
+        "why": "That is $\\log_{4} 64$. The fraction is the reciprocal of $4^{3}$, so its index is negative.",
+        "misconception": "fm.logs.negative-index-sign-dropped"
+      },
+      {
+        "option": "$16$",
+        "why": "That is $64 \\div 4$. Write $4^{x} = \\frac{1}{64}$ and use powers, not division.",
+        "misconception": "fm.logs.unknown-base-divided"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "A missing base or a missing number",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "When the base or the number is the unknown, the index form still does the work. A missing number is a power: $\\log_{2} x = 7$ gives $x = 2^{7} = 128$. A missing base needs a root, because the index sits on the unknown."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find $x$ when $\\log_{x} 512 = 3$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$x^{3} = 512$",
+        "decision": "Index form: the base x is raised to the logarithm, 3.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$x = \\sqrt[3]{512} = 8$",
+        "decision": "Undo a cube with a cube root, never by dividing by 3. Check: $8^{3} = 512$.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "number",
+    "prompt": "Find $x$ when $\\log_{x} 1000 = 3$.",
+    "answer": "10",
+    "explain": "As in the See it, write the index form: $x^{3} = 1000$. Undo the cube with a cube root: $x = 10$, since $10^{3} = 1000$. Dividing 1000 by 3 would treat the index as a multiplier.",
+    "twin": {
+      "prompt": "Find $x$ when $\\log_{x} 32 = 5$.",
+      "answer": "2",
+      "explain": "$x^{5} = 32$, and the fifth root of 32 is 2, because $2^{5} = 32$."
+    }
+  },
+  {
+    "type": "h",
+    "text": "The log key, and back again",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A number line marked 0, 1, 2 and 3 below and 1, 10, 100 and 1000 above; the number 52 is marked between 10 and 100, at 1.716 on the lower scale",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 170\" role=\"img\" aria-label=\"A number line marked 0, 1, 2 and 3 below and 1, 10, 100 and 1000 above; the number 52 is marked between 10 and 100, at 1.716 on the lower scale\" font-family=\"inherit\"><title>A number line marked 0, 1, 2 and 3 below and 1, 10, 100 and 1000 above; the number 52 is marked between 10 and 100, at 1.716 on the lower scale</title><line x1=\"30\" y1=\"90\" x2=\"371\" y2=\"90\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M371 90 L362 85 M371 90 L362 95\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><line x1=\"40\" y1=\"82\" x2=\"40\" y2=\"98\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"40\" y=\"70\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1</text><text x=\"40\" y=\"120\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">0</text><line x1=\"145\" y1=\"82\" x2=\"145\" y2=\"98\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"145\" y=\"70\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">10</text><text x=\"145\" y=\"120\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1</text><line x1=\"250\" y1=\"82\" x2=\"250\" y2=\"98\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"250\" y=\"70\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">100</text><text x=\"250\" y=\"120\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">2</text><line x1=\"355\" y1=\"82\" x2=\"355\" y2=\"98\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"355\" y=\"70\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">1000</text><text x=\"355\" y=\"120\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">3</text><circle cx=\"220.18\" cy=\"90\" r=\"5\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.4\"/><line x1=\"220.18\" y1=\"90\" x2=\"220.18\" y2=\"136\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"220.18\" y=\"154\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\">log 52 = 1.716</text><text x=\"220.18\" y=\"46\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-weight=\"bold\">52</text><line x1=\"220.18\" y1=\"52\" x2=\"220.18\" y2=\"84\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"356\" y=\"28\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">number</text><text x=\"356\" y=\"146\" font-size=\"15\" text-anchor=\"middle\" fill=\"currentColor\" font-style=\"italic\">logarithm</text></svg>",
+    "caption": "Base-10 logarithms: 52 lies between 10 and 100, so its logarithm lies between 1 and 2."
+  },
+  {
+    "type": "p",
+    "md": "Most numbers are not neat powers, so the calculator's log key does the work, always to base 10: $\\log 52 = 1.716$ to three decimal places, between 1 and 2 because 52 lies between 10 and 100. Log-log tables ask for three decimal places."
+  },
+  {
+    "type": "p",
+    "md": "Going back is the same switch of spellings. $\\log a = 0.903$ means $10^{0.903} = a$, so $a$ is 10 raised to that power: the number itself, never its logarithm."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "Summer 2019, Unit 1, Question 9",
-    "md": "Almost nobody used indices on a question built on this link. Most candidates turned it into logarithms of both sides, reached a line with logarithms on it and stopped there. Writing the index form underneath would have finished the question in two lines.",
-    "source": "ccea-cer:further-maths:2019-summer:FM1:Q9"
+    "title": "Give the number, not its logarithm",
+    "md": "In the log-log graph questions of Summer 2018, 2019 and 2022, the reports found candidates giving log a as the value of a. A logarithm is an index on 10; the constant is 10 raised to it.",
+    "source": "ccea-cer:further-maths:2022-summer:FM1:Q12"
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "$\\log a = 0.903$. Find $a$, correct to 2 decimal places.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$a = 10^{0.903}$",
+        "decision": "Index form, base 10: the logarithm is the index on 10.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$a = 7.998\\ldots$",
+        "decision": "Raise 10 to the power on the calculator."
+      },
+      {
+        "n": 3,
+        "working": "$a = 8.00$",
+        "decision": "Round only at the end, to the places asked for.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g5",
-    "kind": "number",
-    "prompt": "Go to index form. If $\\log_{x} 216 = 3$, then $x^{3} = 216$. What is $x$?",
-    "answer": "6",
-    "explain": "The cube root of $216$ is $6$, because $6^{3} = 216$. Dividing $216$ by $3$ would give $72$, which is not a base at all."
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "$\\log b = 1.301$. What is $b$, correct to 1 decimal place?",
+    "options": [
+      "$20.0$",
+      "$1.3$",
+      "$0.1$"
+    ],
+    "answer": "$20.0$",
+    "explain": "Switch spellings as in the See it: $\\log b = 1.301$ means $b = 10^{1.301} = 19.999\\ldots$, which is 20.0 to 1 decimal place. A value such as 1.3 is still the logarithm.",
+    "twin": {
+      "prompt": "$\\log m = 0.477$. What is $m$, correct to 1 decimal place?",
+      "options": [
+        "$3.0$",
+        "$0.5$",
+        "$-0.3$"
+      ],
+      "answer": "$3.0$",
+      "explain": "$m = 10^{0.477} = 2.999\\ldots$, which is 3.0 to 1 decimal place.",
+      "optionNotes": [
+        {
+          "option": "$0.5$",
+          "why": "That is the logarithm itself, rounded, not the number m.",
+          "misconception": "fm.logs.log-a-given-as-a"
+        },
+        {
+          "option": "$-0.3$",
+          "why": "That is $\\log 0.477$, the log key pressed again. Raise 10 to the power instead."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$1.3$",
+        "why": "That is the logarithm itself, rounded. The question wants $b$, which is $10^{1.301}$.",
+        "misconception": "fm.logs.log-a-given-as-a"
+      },
+      {
+        "option": "$0.1$",
+        "why": "That is the log key pressed again: $\\log 1.301 = 0.114$. Going back from a logarithm raises 10 to it."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "How the paper uses it",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "Read $a^{x} = n$ as $x = \\log_{a} n$ and back again.\nWork out a logarithm by writing its index form and counting powers.\nUse $\\log_{a} a = 1$ and $\\log_{a} 1 = 0$ without hesitating.\nHandle a fraction, which always gives a negative logarithm.\nFind a missing base with a root, and a missing number with a power."
+    "md": "**Stay with the powers.** (2019) When a number and a power of one base are multiplied, write the number as a power of that base and compare indices. The 2019 report found most candidates took logarithms of both sides instead, then could not finish."
+  },
+  {
+    "type": "p",
+    "md": "**The base as a factor.** (2022, 2023, 2026) A laws question names logarithms with letters and asks for another in terms of them; a factor equal to the base brings $\\log_{a} a = 1$ into the answer."
+  },
+  {
+    "type": "p",
+    "md": "**Logs in a table, then back.** (2019, 2022, 2024, 2025) Log-log graphs want logarithms to three decimal places, and the constant at the end is a number, not its logarithm."
+  },
+  {
+    "type": "see",
+    "kind": "proof",
+    "stem": "Given that $27 \\times 3^{x} = 3^{y}$, show that $y = x + 3$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$27 = 3^{3}$",
+        "decision": "Write the number as a power of the base already in the question."
+      },
+      {
+        "n": 2,
+        "working": "$3^{3} \\times 3^{x} = 3^{x+3}$",
+        "decision": "Multiplying powers of one base adds the indices.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$3^{x+3} = 3^{y}$, so $y = x + 3$",
+        "decision": "The same base on both sides, so the indices are equal.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g12",
+    "kind": "choice",
+    "prompt": "Given that $25 \\times 5^{x} = 5^{y}$, which is true?",
+    "options": [
+      "$y = x + 2$",
+      "$y = 2x$",
+      "$y = x + 25$"
+    ],
+    "answer": "$y = x + 2$",
+    "explain": "As in the See it, write 25 as $5^{2}$. Then $5^{2} \\times 5^{x} = 5^{x+2}$, and with the same base on both sides, $y = x + 2$.",
+    "twin": {
+      "prompt": "Given that $\\frac{1}{4} \\times 2^{x} = 2^{y}$, which is true?",
+      "options": [
+        "$y = x - 2$",
+        "$y = x + 2$",
+        "$y = \\frac{x}{4}$"
+      ],
+      "answer": "$y = x - 2$",
+      "explain": "$\\frac{1}{4} = 2^{-2}$, so $2^{-2} \\times 2^{x} = 2^{x-2}$ and $y = x - 2$.",
+      "optionNotes": [
+        {
+          "option": "$y = x + 2$",
+          "why": "$\\frac{1}{4}$ is a reciprocal, so its index is negative: $2^{-2}$.",
+          "misconception": "fm.logs.negative-index-sign-dropped"
+        },
+        {
+          "option": "$y = \\frac{x}{4}$",
+          "why": "Multiplying by $\\frac{1}{4}$ adds $-2$ to the index; it does not divide the index."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$y = 2x$",
+        "why": "Multiplying powers adds the indices: $5^{2} \\times 5^{x} = 5^{x+2}$, not $5^{2x}$."
+      },
+      {
+        "option": "$y = x + 25$",
+        "why": "25 is the number, not its index. As a power of 5 it is $5^{2}$, so 2 is added."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "This rarely stands as a question of its own: it opens the logarithm questions that do, at $1$ or $2$ marks. The first mark is the index form written underneath the logarithm; the last is the value itself. Stuck? Write $a^{x} = n$ with the question's own numbers in it, and read what is missing."
+    "md": "Switch between $a^{x} = n$ and $x = \\log_{a} n$, both ways.\nWork out a logarithm by counting powers; a fraction gives a negative index.\nWrite down $\\log_{a} a = 1$ and $\\log_{a} 1 = 0$.\nFind a missing number with a power and a missing base with a root.\nUndo a base-10 logarithm by raising 10 to it."
   },
   {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.logarithms-from-indices.01"
+    "type": "h",
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.logarithms-from-indices.02"
+    "type": "p",
+    "md": "Rarely a question of its own: this is the first line inside the logarithm and log-log questions. The mark comes for the index form written under the logarithm, then for the value. Stuck? Write $a^{x} = n$ with the question's own numbers and read off what is missing."
   },
   {
     "type": "prompt",
@@ -162,6 +621,6 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.logarithms-from-indices.05"
+    "promptId": "rp.fm.u1.logarithms-from-indices.06"
   }
 ]
