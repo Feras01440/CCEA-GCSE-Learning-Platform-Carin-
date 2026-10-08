@@ -122,8 +122,8 @@ function svgSource(src) {
   }
 }
 
-/** Everything a learner can read or hear from a figure, tagged with the channel it came from. */
-function figureChannels(fig) {
+/** Everything a learner can read or hear from a figure, tagged with the channel it came from (also read by see-it.mjs same-case). */
+export function figureChannels(fig) {
   const out = [];
   const push = (channel, text) => {
     const t = String(text ?? "").trim();
@@ -287,6 +287,58 @@ export const ALLOWED = new Map([
   // in words for a screen reader, so it says what a sighted learner sees, and the faded step is that reading.
   // A blank copy would leave nothing to match.
   ["we.maths.m7.recognising-and-sketching-linear-quadratic-cubic-and-reciprocal-graphs.01#step 4", "the question is to match four drawn graphs to equations; the alt has to describe each graph's shape (Graph A turns twice and crosses the x-axis three times), which is what a sighted learner sees; the step is the matching"],
+]);
+
+/**
+ * The same-case allow list (scripts/qa/see-it.mjs same-case; the lead, 8 Oct 2026). A Your turn that shares a
+ * distinctive value with its section's See it asks the case the See it worked, unless the value is one the
+ * specification or the topic's Sheet fixes as a fact: g = 10 N/kg, 46 chromosomes, Mr 18 for water, the grid's
+ * 0.1 to 0.6 A. Such a value is the same in every case, so sharing it is not sharing the case.
+ *
+ * Keyed by topic, "<subject>/<unit>/<slug>"; each value (as see-it.mjs distinctiveValues writes it: "2.5", "3/8",
+ * "2√3", "1200") with the reason a reviewer would accept. Never a value the author chose for the example.
+ */
+/** @type {Map<string, Record<string, string>>} */
+export const SAME_CASE_ALLOWED = new Map([
+  // Further Mathematics
+  ["further-maths/fm1/laws-of-logarithms", { "10": "the base 10 of a common logarithm (log 10 = 1), the topic's own fact" }],
+  ["further-maths/fm1/trig-equations", {
+    "180": "the 180° of the solution rules and of a −180° to 180° range, the topic's own facts",
+    "360": "the 0° to 360° range and the 360° − α rule, the topic's own facts",
+  }],
+  ["further-maths/fm2/connected-particles-and-pulleys", { "10": "g = 10 m/s², which CCEA's Further Mathematics mark schemes take (data/spec/further-mathematics.json): the same in every case" }],
+  ["further-maths/fm2/force-diagrams", { "10": "g = 10 m/s², which CCEA's Further Mathematics mark schemes take (data/spec/further-mathematics.json): the same in every case" }],
+  ["further-maths/fm2/newtons-second-law-inclined-plane", { "10": "g = 10 m/s², which CCEA's Further Mathematics mark schemes take (data/spec/further-mathematics.json): the same in every case" }],
+  ["further-maths/fm2/velocity-time-graphs", { "1/2": "the ½ of s = ½(u + v)t, a formula's constant" }],
+  // Mathematics
+  ["maths/m4/frustums-and-compound-solids", { "1/3": "the ⅓ of the cone's volume formula, a formula's constant" }],
+  ["maths/m8/fractional-and-negative-indices", {
+    "1/2": "a fractional index (½) is the topic's own notation for a square root, not a value of the case",
+    "1/4": "a fractional index (¼) is the topic's own notation for a fourth root, not a value of the case",
+  }],
+  ["maths/m8/recurring-decimals-to-fractions", {
+    "10": "the 10x of the method, the same for every recurring decimal",
+    "100": "the 100x of the method, the same for every recurring decimal",
+  }],
+  // Science
+  ["science/c2/c2-alcohols-fermentation", { "30": "fermentation is kept at about 30 °C, one of the conditions the specification asks for" }],
+  ["science/c2/c2-aluminium-extraction", {
+    "660": "the melting point of aluminium, a property of the metal",
+    "950": "the temperature of the cell with cryolite, a property of the process",
+    "2072": "the melting point of aluminium oxide, a property of the compound",
+    "1122": "2072 − 950: how much cooler cryolite lets the cell run, a property of the process",
+  }],
+  ["science/c2/c2-hydrated-salts-water-of-crystallisation", {
+    "14": "Ar of nitrogen, from the periodic table on CCEA's data leaflet",
+    "16": "Ar of oxygen, from the periodic table on CCEA's data leaflet",
+    "18": "Mr of water, on the topic's Sheet",
+    "32": "Ar of sulfur, from the periodic table on CCEA's data leaflet",
+    "64": "Ar of copper, from the periodic table on CCEA's data leaflet",
+  }],
+  ["science/p2/p2-echoes-ultrasound-sonar-radar", { "340": "the speed of sound in air, 340 m/s, the same in every question" }],
+  ["science/p2/p2-electrical-power-energy-cost", { "230": "the UK mains voltage, 230 V, the same in every question" }],
+  ["science/p2/p2-electricity-in-the-home", { "230": "the UK mains voltage, 230 V, the same in every question" }],
+  ["science/u7/u7-conclusions", { "18": "Mr of water, 18, the same in every question" }],
 ]);
 
 const objects = (v) => (Array.isArray(v) ? v.filter((x) => x && typeof x === "object") : []);

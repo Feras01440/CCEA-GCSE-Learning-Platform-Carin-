@@ -105,7 +105,9 @@
  * --see           print every note's v3 structure findings (See it, first check, explanation length, Your turn,
  *                 video, option by its place, answer printed in the See it, See it block problems), then one
  *                 readiness line per topic: "ready" or the reasons it is not (src/lib/slides/readiness.ts)
- * --see-fatal     count those as breaches rather than warnings
+ * --see-fatal     count those as breaches rather than warnings (same-case stays a warning)
+ * --same-case-loose  list every Your turn that shares any distinctive value with its See it (the default lists two or
+ *                 more shared values, or one decimal, fraction, surd or value of 100 or more)
  * --minutes       print every note whose authored hero.minutes differs from the app's minute model (the build ships the model's)
  * --json          print the findings as JSON for an author's generator (the depth rows under `depth`,
  *                 the teach → show → check failures under `teach`, the prompt findings under `prompts`,
@@ -120,6 +122,7 @@ import { withdrawnFindings } from "./withdrawn.mjs";
 import { EXPLAIN_MAX, markCodes, seeItFindings } from "./see-it.mjs";
 import { heroMinutesFinding, recallFindings } from "./lesson-model.mjs";
 import { withoutWithdrawn } from "./shingles-allow.mjs";
+import { SAME_CASE_ALLOWED } from "./figure-leaks.mjs";
 
 // The app's own TypeScript rules, read as the build reads them (through tsx, so `node scripts/qa/lesson-v2.mjs` keeps
 // working): the lesson readiness rule (src/lib/slides/readiness.ts lessonReadiness, the one the build writes into the
@@ -155,6 +158,9 @@ const withdrawnReport = argv.includes("--withdrawn");
 const withdrawnFatal = argv.includes("--withdrawn-fatal");
 const seeReport = argv.includes("--see");
 const seeFatal = argv.includes("--see-fatal");
+// same-case lists only the tight rule's gates (two or more shared values, or one decimal, fraction, surd or value of 100 or
+// more: the lead, 8 Oct 2026); --same-case-loose lists every gate that shares any distinctive value with its See it
+const sameCaseLoose = argv.includes("--same-case-loose");
 const minutesReport = argv.includes("--minutes");
 const units = argv.flatMap((a, i) => (a === "--unit" ? [String(argv[i + 1] || "").toLowerCase()] : []));
 
@@ -808,7 +814,7 @@ function checkNote(file, orphans) {
     }
 
   // Lesson structure v3 (see-it.mjs): warnings unless --see-fatal or the unit's default
-  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle: live, positional: positionalWording });
+  const see = seeItFindings(blocks, { codes: codesFor(subject), bundle: live, positional: positionalWording, sameCaseAllowed: SAME_CASE_ALLOWED.get(`${subject}/${unit}/${slug}`), sameCaseLoose });
   // Lesson readiness, as the build decides it (the raw bundle with its note blocks; readiness reads the note's own log)
   const readiness = bundle ? lessonReadiness({ note: bundle.note, noteBlocks: blocks, verification: bundle.verification }) : lessonReadiness(null);
   // sizes over the build's limits (content-lint.ts sizeWarnings): a warning line each, printed under the summary
@@ -823,7 +829,8 @@ function checkNote(file, orphans) {
   // loses to two lighter ones is listed, never warned: the "wires more than two" warning already carries it.
   const recall = recallFindings(blocks, { shipped: shippedPrompts, all: bundle?.prompts ?? [], logs: bundle?.verification ?? [] }, recallModel);
   for (const f of recall.leftOut) if (f.kind !== "over") say.push({ check: "prompts", detail: f.detail, few: true });
-  for (const f of see.findings) say.push({ check: "see", detail: f.detail, v3: true });
+  // same-case is always a warning (the lead, 8 Oct 2026), whatever --see-fatal or the unit's default say
+  for (const f of see.findings) say.push({ check: "see", detail: f.detail, v3: true, ...(f.kind === "same-case" ? { warnOnly: true } : {}) });
 
   // the depth floor: warnings unless --depth-fatal
   const depth = live ? depthOf(blocks, live, see, model, recall.kept.length) : null;
@@ -855,7 +862,7 @@ function checkNote(file, orphans) {
     see: seeFatal || unitFlag(unit, "see"),
   };
   const isWarning = (f) =>
-    (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !fatal.teach) || (f.few && !fatal.prompts) || (f.wd && !fatal.withdrawn) || (f.v3 && !fatal.see);
+    (f.check === "traps" && !trapsFatal) || (f.depth && !depthFatal) || (f.teach && !fatal.teach) || (f.few && !fatal.prompts) || (f.wd && !fatal.withdrawn) || (f.v3 && !fatal.see) || f.warnOnly === true;
   return {
     subject,
     unit,
@@ -938,7 +945,7 @@ const overTargetWired = notes.reduce((a, n) => a + n.targets.filter((t) => t.wir
 const promptsLine = `retrieval prompts: ${wiredOver} of ${notes.length} notes wire more than ${WIRED_MAX}; ${longAnswers} shipped prompt(s) expect an answer over ${ANSWER_WORDS} words (${longWired} of them wired); ${numberedAnswers} expect a numbered list; ${examinerPrompts} carry an examiner's finding; ${longQuestions} wired prompt(s) ask a question over ${QUESTION_WORDS} words${promptsFatal ? "" : " (warnings; --prompts-fatal makes them breaches)"}; report only: ${overTarget} shipped answer(s) over the ${ANSWER_TARGET}-word target (${overTargetWired} wired)${promptsReport || depthReport || !promptNotes.length ? "" : "; run --prompts for the list"}.`;
 
 // Lesson structure v3, over every note checked
-const seeKinds = ["see-missing", "first-check", "explain-long", "explain-blocks", "turn-last", "turns", "video", "option-position", "answer-shown", "reteach", "twin", "block"];
+const seeKinds = ["see-missing", "first-check", "explain-long", "explain-blocks", "turn-last", "turns", "video", "option-position", "answer-shown", "same-case", "reteach", "twin", "block"];
 const readyNotes = notes.filter((n) => n.readiness.ready);
 const seeCount = Object.fromEntries(seeKinds.map((k) => [k, notes.reduce((a, n) => a + n.see.findings.filter((f) => f.kind === k).length, 0)]));
 const seeNotes = notes.filter((n) => n.see.findings.length);
@@ -948,7 +955,7 @@ const seeBlocksAll = notes.reduce((a, n) => a + n.see.seeBlocks, 0);
 const notesWithSee = notes.filter((n) => n.see.seeBlocks).length;
 const firstOk = notes.filter((n) => n.see.firstCheck === true).length;
 const seeFindingsAll = seeKinds.reduce((a, k) => a + seeCount[k], 0);
-const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation and ${seeCount["explain-blocks"]} with more than three explanation blocks; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) or sim(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by its place; ${seeCount["answer-shown"]} Your turn(s) whose answer its See it prints; ${seeCount.reteach} over 60 words; ${seeCount.twin} twin(s) repeating their gate; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
+const seeLine = `see it (v3): ${seeAfter} of ${seeGates} gates follow a See it in their section; ${seeBlocksAll} See it block(s) in ${notesWithSee} of ${notes.length} notes; the first check follows a See it in ${firstOk} of ${notes.length} notes; ${seeCount["explain-long"]} section(s) over ${EXPLAIN_MAX} words of explanation and ${seeCount["explain-blocks"]} with more than three explanation blocks; ${seeCount["turn-last"]} Your turn(s) with more of their section after them; ${seeCount.turns} section(s) with more than two; ${seeCount.video} video(s) or sim(s) as a section's only See it or before it; ${seeCount["option-position"]} gate explanation(s) name an option by its place; ${seeCount["answer-shown"]} Your turn(s) whose answer its See it prints; ${seeCount["same-case"]} asking the case their See it worked (same-case, always a warning); ${seeCount.reteach} over 60 words; ${seeCount.twin} twin(s) repeating their gate; ${seeCount.block} See it block problem(s)${seeFatal ? "" : " (warnings; --see-fatal makes them breaches)"}${seeReport || depthReport || !seeFindingsAll ? "" : "; run --see for the list"}.`;
 
 // hero.minutes against the app's minute model (the lead's item e), and the wired prompts the lesson leaves out (item f)
 const minutesOff = notes.filter((n) => n.heroMinutes);

@@ -39,6 +39,16 @@
  *                   answer, a value ending a sentence; words as whole words, not in a sentence that names another
  *                   option), so she can copy it: it re-asks on new numbers, as a twin does (the lead, 27 Sep 2026; the
  *                   line drawn against the Slides candidates on 29 Sep, above answerShownIn).
+ *   same-case       a Your turn (its prompt, the labels of a figure standing between its See it and it, its twin's
+ *                   prompt) shares a distinctive value with a See it of its own section shown before it (the steps'
+ *                   working, reasons and earns, and the See it's figure labels): a number with a decimal point, a surd,
+ *                   a fraction, or an integer of 10 or more, unless the topic allows the value as a fact
+ *                   (scripts/qa/figure-leaks.mjs SAME_CASE_ALLOWED). It asks the case the See it worked; ask it on new
+ *                   numbers (the lead, 8 Oct 2026, from the FM2 review). Reported when two or more values are shared,
+ *                   or one that is a decimal, a fraction, a surd or 100 or more (the lead's ruling on the sweep: one
+ *                   shared whole number under 100 is a coincidence as often as not); `sameCaseLoose` reports every one.
+ *                   A gate reported as answer-shown is not also reported here. A repeat in words alone (the same
+ *                   letter, slope or table) is the reviewer's to see. Always a warning (lesson-v2.mjs).
  *   reteach         a gate's explanation, or its twin's, runs past RETEACH_WORDS words: a miss re-teaches in at most
  *                   60 (the case §6.3), a fraction or a formula counting as one word.
  *   twin            a gate's twin repeats the gate's prompt or answer: a twin is the same structure on new numbers,
@@ -50,6 +60,8 @@
  * These are the raw sections of the v3 structure; teach-show-check.mjs, which judges explained-and-shown, keeps its
  * own reading (it also lets a gateless section's teaching run on), and the two are reported side by side.
  */
+
+import { figureChannels } from "./figure-leaks.mjs";
 
 export const SEE_STEPS = { min: 2, max: 6 };
 export const REASON_WORDS = 40;
@@ -232,6 +244,97 @@ function answerShownIn(gate, see, bundle) {
 }
 
 /**
+ * same-case (the lead, 8 Oct 2026, from the FM2 review: ten gates asked the exact case their See it had just worked, the
+ * same crate, force or box, without printing the answer, so answer-shown missed them).
+ *
+ * The distinctive values of a text, each as one key: a number with a decimal point ("2.5" for 2.50), a fraction ("3/8"
+ * for \frac{3}{8}, 3/8 or ⅜-style characters), a surd ("2√3" for 2\sqrt{3} or 2√3) and an integer of 10 or more
+ * ("1200" for 1,200 or 1{,}200). A small integer is on every card, and the 10 of a power of ten (3 × 10^5, 3 × 10⁸) is notation,
+ * not a value; a specification reference (1.1.6) is not a decimal. Signs are not read.
+ */
+const UNICODE_FRACTIONS = { "½": "1/2", "⅓": "1/3", "⅔": "2/3", "¼": "1/4", "¾": "3/4", "⅕": "1/5", "⅛": "1/8" };
+const valueKey = (s) =>
+  String(s)
+    .replace(/^0+(?=\d)/, "")
+    .replace(/(\.\d*?)0+$/, "$1")
+    .replace(/\.$/, "");
+export function distinctiveValues(text) {
+  let t = String(text ?? "");
+  for (const [u, f] of Object.entries(UNICODE_FRACTIONS)) t = t.split(u).join(` ${f} `);
+  // thousands separators: 1,200, 1{,}200, 1\,200
+  t = t.replace(/(\d)(?:\{,\}|\\,|,)(?=\d{3}(?!\d))/g, "$1");
+  // each match is blanked with spaces of its own length, so every position stays where it was read; the keys come back
+  // in reading order
+  const found = [];
+  const take = (re, key) => {
+    t = t.replace(re, (...m) => {
+      const k = key(...m);
+      if (k) found.push({ k, at: m[m.length - 2] });
+      return " ".repeat(m[0].length);
+    });
+  };
+  take(/\\[dt]?frac\s*\{\s*(\d+(?:\.\d+)?)\s*\}\s*\{\s*(\d+(?:\.\d+)?)\s*\}/g, (_, a, b) => `${valueKey(a)}/${valueKey(b)}`);
+  take(/\\[dt]?frac\s*(\d)\s*(\d)/g, (_, a, b) => `${a}/${b}`);
+  take(/(?<![\d.])(\d+(?:\.\d+)?)?\s*(?:\\sqrt\s*\{\s*(\d+)\s*\}|\\sqrt\s*(\d+)|√\s*\{?\s*(\d+)\s*\}?)/g, (_, c, a, b, d) => `${c ? valueKey(c) : ""}√${a ?? b ?? d}`);
+  take(/(?<![\d.])(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)(?!\d|\.\d)/g, (_, a, b) => `${valueKey(a)}/${valueKey(b)}`);
+  take(/(?<![\d.])(\d+\.\d+)(?!\d|\.\d)/g, (_, a) => valueKey(a));
+  take(/(?<![\d.])(\d{2,})(?!\d|\.\d)/g, (m, a, at, whole) => (a === "10" && /^\s*(?:\^|[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺])/.test(whole.slice(at + m.length)) ? null : Number(a) >= 10 ? String(Number(a)) : null));
+  return new Set(found.sort((x, y) => x.at - y.at).map((f) => f.k));
+}
+
+/** What a learner reads on a figure: its alt, caption and SVG labels (figure-leaks.mjs figureChannels); a generated figure's data and its option labels. */
+function figureText(fig) {
+  if (!fig || typeof fig !== "object") return "";
+  if (fig.kind === "svg-gen") {
+    const leaves = [];
+    const walk = (v, numbers) => {
+      if (typeof v === "string" || (numbers && typeof v === "number")) leaves.push(String(v));
+      else if (Array.isArray(v)) v.forEach((x) => walk(x, numbers));
+      else if (v && typeof v === "object") Object.values(v).forEach((x) => walk(x, numbers));
+    };
+    walk(fig.data, true);
+    walk(fig.options, false);
+    return leaves.join(" ; ");
+  }
+  return figureChannels(fig)
+    .map((c) => c.text)
+    .join(" ; ");
+}
+
+const allowedValue = (allowed, v) => (allowed instanceof Map ? allowed.has(v) : Boolean(allowed && Object.prototype.hasOwnProperty.call(allowed, v)));
+
+/** One shared value that is enough on its own: a decimal, a fraction, a surd, or a whole number of 100 or more. */
+const strongValue = (v) => /[./√]/.test(v) || Number(v) >= 100;
+
+/**
+ * The values a Your turn shares with a See it of its section shown before it: [{ value, turn, see }] for the first See it
+ * that shares two or more, or one strong value (any at all when `loose`) (turn: "its prompt", "its figure" or "its twin";
+ * see: "step 2 working", "step 1 reason", "step 3 earns" or "figure"), or null. The See it's stem and final answer are
+ * not read: a given is read where the working restates it.
+ */
+function sameCaseIn(gate, figures, shown, bundle, allowed, loose = false) {
+  const turn = [["its prompt", gate.prompt], ...figures.map((f) => ["its figure", figureText(f)]), ["its twin", gate.twin?.prompt]];
+  const turnValues = new Map();
+  for (const [where, text] of turn) for (const v of distinctiveValues(text)) if (!turnValues.has(v) && !allowedValue(allowed, v)) turnValues.set(v, where);
+  if (!turnValues.size) return null;
+  for (const see of shown) {
+    const we = typeof see.workedExample === "string" ? (bundle?.workedExamples ?? []).find((w) => w.id === see.workedExample) : null;
+    const steps = we ? (we.steps ?? []) : Array.isArray(see.steps) ? see.steps : [];
+    const places = steps.flatMap((st, k) => [
+      [`step ${k + 1} working`, st?.working],
+      [`step ${k + 1} reason`, st?.decision],
+      [`step ${k + 1} earns`, (st?.earns ?? []).join(" ")],
+    ]);
+    places.push(["figure", figureText(we ? we.figure : see.figure)]);
+    const seeValues = new Map();
+    for (const [where, text] of places) for (const v of distinctiveValues(text)) if (!seeValues.has(v)) seeValues.set(v, where);
+    const shared = [...turnValues].filter(([v]) => seeValues.has(v)).map(([value, where]) => ({ value, turn: where, see: seeValues.get(value) }));
+    if (shared.length >= 2 || shared.some((v) => strongValue(v.value)) || (loose && shared.length)) return shared;
+  }
+  return null;
+}
+
+/**
  * A See it block's own problems (the ones the build lets through).
  * @param {object} block  a `see` block
  * @param {{codes?: string[], bundle?: object}} ctx  the subject's step mark codes; the bundle, to resolve a reference
@@ -273,9 +376,9 @@ function stepsOf(block, bundle) {
 /**
  * The v3 structure of one note.
  * @param {Array<object>} blocks  note.blocks.json
- * @param {{codes?: string[], bundle?: object, positional?: (explain: string | null) => string | null}} ctx  the step mark codes; the bundle; gate-order.ts positionalWording
+ * @param {{codes?: string[], bundle?: object, positional?: (explain: string | null) => string | null, sameCaseAllowed?: Map<string, string> | Record<string, string>, sameCaseLoose?: boolean}} ctx  the step mark codes; the bundle; gate-order.ts positionalWording; the topic's same-case allow list (figure-leaks.mjs SAME_CASE_ALLOWED); every shared value, not only the tight rule's
  */
-export function seeItFindings(blocks, { codes = [], bundle, positional } = {}) {
+export function seeItFindings(blocks, { codes = [], bundle, positional, sameCaseAllowed, sameCaseLoose = false } = {}) {
   const recapAt = blocks.findIndex(isRecap);
   const pointerAt = blocks.findIndex(isPointer);
   const end = recapAt >= 0 ? recapAt : pointerAt >= 0 ? pointerAt : blocks.length;
@@ -312,15 +415,18 @@ export function seeItFindings(blocks, { codes = [], bundle, positional } = {}) {
     const where = `"${s.heading}"`;
     let seen = false;
     const shown = []; // the section's See it blocks so far
+    let turnFigures = []; // figures standing between the last See it (or gate) and the next gate: the Your turn's own
     s.items.forEach((b, k) => {
       if (b.type === "see") {
         seen = true;
         shown.push(b);
+        turnFigures = [];
         seeBlocks += 1;
         seeSteps += stepsOf(b, bundle);
         for (const p of seeBlockProblems(b, { codes, bundle })) findings.push({ kind: "block", section: s.heading, detail: `See it in ${where}: ${p}` });
         return;
       }
+      if ((b.type === "figure" || b.type === "photo") && shown.length) turnFigures.push(b);
       if (b.type !== "gate") return;
       gates += 1;
       if (seen) gatesAfterSee += 1;
@@ -341,12 +447,27 @@ export function seeItFindings(blocks, { codes = [], bundle, positional } = {}) {
         if (theirs) findings.push({ kind: "option-position", gate: b.id, section: s.heading, detail: `gate ${b.id}: its twin's explanation names an option by its place ("${theirs}"): ${PINNED_TWIN}` });
       }
       // its answer printed in a See it of its own section, shown before it
+      let answerShown = false;
       for (const v of shown) {
         const hit = answerShownIn(b, v, bundle);
         if (!hit) continue;
+        answerShown = true;
         findings.push({ kind: "answer-shown", gate: b.id, section: s.heading, detail: `gate ${b.id}'s answer "${hit.answer}" is printed in its section's See it (${hit.where}): she can copy it rather than do it; ask it on new numbers, as a twin does` });
         break;
       }
+      // the case its See it worked, asked again: a distinctive value shared with the See it (not when answer-shown says it)
+      if (!answerShown) {
+        const values = sameCaseIn(b, turnFigures, shown, bundle, sameCaseAllowed, sameCaseLoose);
+        if (values)
+          findings.push({
+            kind: "same-case",
+            gate: b.id,
+            section: s.heading,
+            values,
+            detail: `gate ${b.id} asks the case its See it worked: it shares ${values.map((v) => `${v.value} (${v.turn}; See it ${v.see})`).join(", ")}; ask it on new numbers, as a twin does (a repeat in words alone, the same letter, slope or table, is for the reviewer's eye, not this lint's)`,
+          });
+      }
+      turnFigures = [];
       // a miss re-teaches in at most 60 words (the case §6.3), the twin's too
       for (const [whose, text] of [["explanation", b.explain], ["twin explanation", b.twin?.explain]]) {
         const n = text === undefined ? 0 : reasonWords(text);
