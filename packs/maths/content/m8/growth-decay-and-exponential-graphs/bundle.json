@@ -25,10 +25,10 @@
       "ccea-cer:maths:2024-summer:M82:Q9",
       "ccea-cer:maths:2024-november:M82:Q10",
       "ccea-cer:maths:2023-summer:M82:Q11",
-      "ccea-cer:maths:2024-summer:M3:Q27",
+      "ccea-cer:maths:2024-summer:M3:Q19",
       "ccea-cer:maths:2024-november:M3:Q16"
     ],
-    "examWeightHint": "Mostly M8 Paper 2, in the middle of the paper, as a three-part graph question worth 5 or 6 marks: draw the curve, read something off it, then draw a tangent for a rate (Summer 2024 Q9; Summer 2023 Q11 for decay; November 2024 Q10, where the two interpretation parts were answered by about half the entry). The graph has also appeared on Paper 1 with the curve already printed. The growth and decay half is a 3 to 5 mark value question in money or counts, and the compound-interest method carries across from M3 and M4.",
+    "examWeightHint": "Mostly M8 Paper 2, in the middle of the paper, as a graph question of 5 to 8 marks in two to four parts: draw the curve, read something off it, then draw a tangent for a rate (Summer 2024 Q9; Summer 2023 Q11 for decay; November 2024 Q10, where the two interpretation parts were answered by about half the entry). The graph has also appeared on Paper 1 with the curve already printed. The growth and decay half is a 1 to 6 mark value question in money or counts, and the compound-interest method carries across from M3 and M4.",
     "mustMemorise": [
       "Value = start x multiplier^n; the multiplier is 1 + r/100 for a rise and 1 - r/100 for a fall",
       "Rates cannot be added across periods, because each period's percentage applies to the running total",
@@ -137,22 +137,24 @@
         "Draw a tangent to estimate a rate of increase or decay, taking the gradient from a large triangle",
         "Find k from a point on the curve, and solve a simple index equation by matching bases"
       ],
-      "howExamined": "Both M8 papers, though the drawn-curve question belongs mostly to Paper 2 (calculator, 1 hour 15 minutes, 50 marks). The graph question runs to 5 or 6 marks in three parts and is marked MA1 per completed stage: the table of values, the plotted points, the smooth curve, then the reading, then the tangent and its gradient. The growth and decay question is 3 to 5 marks, M1 for the multiplier, MA1 for the power, A1 for the value in the demanded form; a threshold question adds a mark for showing the period below.",
+      "howExamined": "Both M8 papers, though the drawn curve belongs to Paper 2 (calculator, 75 minutes, 50 marks). The graph question runs to 5 to 8 marks in two to four parts, marked MA1 or A1 per stage: the table of values, the plotted points, the smooth curve, a reading (sometimes in months), then a tangent and its gradient, or which percentage the base shows (Summer 2024 Q9, Summer 2023 Q11, November 2024 Q10, November 2021 Q11, Summer 2022 Q8). The value question is 1 to 6 marks: circle, complete or explain the formula, the value after n years (MA1 for the multiplier and power, A1 for the value), the interest earned, or the year a value was reached (Summer 2021 Q7, November 2021 Q9, November 2023 Q8).",
       "traps": [
-        "Using the rate as the multiplier, so 0.04 replaces 1.04, Summer 2024 M3 Q27",
-        "Simple interest where compound was required, Summer 2024 M3 Q27 (about one candidate in ten fully correct)",
-        "Adding the rates across the periods and applying them once",
-        "Plotting the value at x = 0 as 0 rather than 1, Summer 2024 M8 Paper 2 Q9",
-        "Joining the plotted points with ruled straight lines instead of a smooth curve, Summer 2023 M8 Paper 2 Q11",
-        "Not drawing a tangent when a rate of increase or decay is asked for, Summer 2024 M8 Paper 2 Q9 and Summer 2023 M8 Paper 2 Q11",
-        "Reading the base of the model straight onto the answer line as the percentage, November 2024 M8 Paper 2 Q10",
-        "Testing only the year that passes a threshold and never the year below it, November 2024 M3 Q16",
-        "Leaving a money answer without its second decimal place"
+        "Simple interest where compound was required: many took each year's percentage of the original amount (Summer 2024 M3 Q19)",
+        "Adding the rates across the years and applying them once (Summer 2024 M3 Q19)",
+        "Mishandling a small rate such as 0.5% in the multiplier (Summer 2024 M3 Q19)",
+        "Writing the interest where the value of the investment was asked, or the reverse (Summer 2024 M3 Q19)",
+        "Using the rate itself as the multiplier, so 0.04 replaces 1.04",
+        "Losing the mark for the value at x = 0, which is 1, on an otherwise correct curve (Summer 2024 M8 Paper 2 Q9)",
+        "A smooth curve is still wanted on an awkward scale, not straight lines joining the points (Summer 2023 M8 Paper 2 Q11)",
+        "Not drawing a tangent when a rate of increase or decay is asked: only the better candidates drew one (Summer 2024 M8 Paper 2 Q9; Summer 2023 M8 Paper 2 Q11)",
+        "Choosing which percentage rise the graph shows: answered by just over half (November 2024 M8 Paper 2 Q10)",
+        "Testing only the year that passes a threshold and never the year before it (November 2024 M3 Q16)",
+        "Leaving a money answer without its second decimal place (Summer 2023 M4 Q1)"
       ]
     },
     "verification": "ver.note.maths.m8.growth-decay-and-exponential-graphs",
     "version": 1,
-    "updated": "2026-09-13"
+    "updated": "2026-10-08"
   },
   "workedExamples": [
     {
@@ -187,6 +189,17 @@
             ],
             "correct": 0,
             "explain": "The percentage applies to whatever is there now, not to the starting amount. That is exactly what repeated multiplication does, and it is why the fall gets smaller as the hours pass."
+          },
+          "input": {
+            "kind": "numeric",
+            "value": 0.95,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
           }
         },
         {
@@ -195,7 +208,39 @@
           "decision": "12 hours means 12 multiplications, which is the power. The whole thing goes into the calculator in one go: no rounding until the answer line.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "$1500 \\times 0.95^{12}$",
+                "correct": true,
+                "feedback": "Twelve hours of multiplying by 0.95 is the power 12."
+              },
+              {
+                "id": "b",
+                "text": "$1500 \\times 0.05^{12}$",
+                "correct": false,
+                "feedback": "Multiplying by 0.05 would keep only 5% each hour; the multiplier is what remains, 0.95.",
+                "misconception": "maths.percent.multiplier-is-rate-not-scale-factor"
+              },
+              {
+                "id": "c",
+                "text": "$1500 - 12 \\times 75$",
+                "correct": false,
+                "feedback": "That takes 5% of the first 1500 every hour; each hour's 5% is of the smaller activity.",
+                "misconception": "maths.percent.compound-uses-original-each-year"
+              },
+              {
+                "id": "d",
+                "text": "$1500 \\times 0.95 \\times 12$",
+                "correct": false,
+                "feedback": "Twelve hours repeat the multiplying, which is a power, not a multiplication by 12."
+              }
+            ]
+          }
         },
         {
           "n": 3,
@@ -203,7 +248,20 @@
           "decision": "The display carries far more digits than the answer needs. It stays in the calculator so nothing is lost before the rounding.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 810.54,
+            "tolerance": {
+              "type": "range",
+              "min": 810.5,
+              "max": 810.6
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 4,
@@ -211,7 +269,18 @@
           "decision": "Round once, at the end, to what the question asked for. A quick sanity check: the activity has roughly halved over 12 hours, which is what a 5% hourly fall should do.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 811,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "811 counts per second",
@@ -268,8 +337,8 @@
       "stem": "The graph of $y = 2^{x}$ is shown for $0 \\leqslant x \\leqslant 4$.\n\n(a) From the graph, estimate the value of $x$ when $y = 5$.\n\n(b) Draw a suitable line and use it to estimate the rate of increase of $y$ when $x = 2$.",
       "figure": {
         "kind": "svg",
-        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 440 310' xmlns='http://www.w3.org/2000/svg' width='440' height='310' role='img' aria-labelledby='fig-a-tangent-drawn-to-the-curve-y-equals-two-to-the-power-x-at-x-equals-two'><title id='fig-a-tangent-drawn-to-the-curve-y-equals-two-to-the-power-x-at-x-equals-two'>A tangent drawn to the curve y equals two to the power x at x equals two</title><g fill='none' stroke='currentColor' stroke-width='0.6' stroke-opacity='0.35'><path d='M52 24 L52 270 M144.5 24 L144.5 270 M237 24 L237 270 M329.5 24 L329.5 270 M422 24 L422 270 M52 270 L422 270 M52 239.3 L422 239.3 M52 208.5 L422 208.5 M52 177.8 L422 177.8 M52 147 L422 147 M52 116.3 L422 116.3 M52 85.5 L422 85.5 M52 54.8 L422 54.8 M52 24 L422 24'/></g><g fill='none' stroke='currentColor' stroke-width='1.4' stroke-linecap='round'><path d='M52 24 L52 270 L422 270'/></g><g fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'><path d='M52 254.6 L55.9 254.2 L59.7 253.7 L63.6 253.2 L67.4 252.7 L71.3 252.2 L75.1 251.7 L79 251.2 L82.8 250.6 L86.7 250.1 L90.5 249.5 L94.4 248.9 L98.3 248.3 L102.1 247.6 L106 247 L109.8 246.3 L113.7 245.6 L117.5 244.9 L121.4 244.1 L125.2 243.4 L129.1 242.6 L132.9 241.8 L136.8 241 L140.6 240.1 L144.5 239.3 L148.4 238.3 L152.2 237.4 L156.1 236.5 L159.9 235.5 L163.8 234.5 L167.6 233.4 L171.5 232.4 L175.3 231.3 L179.2 230.1 L183 229 L186.9 227.8 L190.8 226.5 L194.6 225.2 L198.5 223.9 L202.3 222.6 L206.2 221.2 L210 219.8 L213.9 218.3 L217.7 216.8 L221.6 215.2 L225.4 213.6 L229.3 212 L233.1 210.3 L237 208.5 L240.9 206.7 L244.7 204.8 L248.6 202.9 L252.4 201 L256.3 198.9 L260.1 196.9 L264 194.7 L267.8 192.5 L271.7 190.2 L275.5 187.9 L279.4 185.5 L283.3 183 L287.1 180.5 L291 177.9 L294.8 175.2 L298.7 172.4 L302.5 169.5 L306.4 166.6 L310.2 163.5 L314.1 160.4 L317.9 157.2 L321.8 153.9 L325.6 150.5 L329.5 147 L333.4 143.4 L337.2 139.7 L341.1 135.9 L344.9 131.9 L348.8 127.9 L352.6 123.7 L356.5 119.4 L360.3 115 L364.2 110.5 L368 105.8 L371.9 101 L375.8 96.1 L379.6 91 L383.5 85.7 L387.3 80.3 L391.2 74.7 L395 69 L398.9 63.1 L402.7 57.1 L406.6 50.8 L410.4 44.4 L414.3 37.8 L418.1 31 L422 24'/></g><g fill='none' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4'><path d='M52 193.1 L266.8 193.1 L266.8 270'/></g><g fill='none' stroke='currentColor' stroke-width='1.3'><path d='M89 276.7 L385 140.3'/></g><circle cx='237' cy='208.5' r='3' fill='currentColor'/><g fill='currentColor' font-family='inherit' font-size='11'><text x='52' y='286' text-anchor='middle'>0</text><text x='144.5' y='286' text-anchor='middle'>1</text><text x='237' y='286' text-anchor='middle'>2</text><text x='329.5' y='286' text-anchor='middle'>3</text><text x='422' y='286' text-anchor='middle'>4</text><text x='44' y='274' text-anchor='end'>0</text><text x='44' y='243.3' text-anchor='end'>2</text><text x='44' y='212.5' text-anchor='end'>4</text><text x='44' y='181.8' text-anchor='end'>6</text><text x='44' y='151' text-anchor='end'>8</text><text x='44' y='120.3' text-anchor='end'>10</text><text x='44' y='89.5' text-anchor='end'>12</text><text x='44' y='58.8' text-anchor='end'>14</text><text x='44' y='28' text-anchor='end'>16</text><text x='422' y='300' text-anchor='end' font-weight='600'>x</text><text x='18' y='28' text-anchor='start' font-weight='600'>y</text><text x='266.8' y='300' text-anchor='middle'>2.3</text></g></svg>",
-        "alt": "The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up. A dashed line runs across from y equals 5 to the curve and down to the x axis at about 2.3, and a straight line touches the curve at x equals 2."
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 448' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up. A dashed line runs across from y equals 5 to the curve and down to the x-axis, and a dashed straight line touches the curve at x equals 2.'><title>The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up. A dashed line runs across from y equals 5 to the curve and down to the x-axis, and a dashed straight line touches the curve at x equals 2.</title><path d='M57.5 408V28M74.5 408V28M92 408V28M109 408V28M144 408V28M161 408V28M178.5 408V28M195.5 408V28M230.5 408V28M247.5 408V28M265 408V28M282 408V28M317 408V28M334 408V28M351.5 408V28M368.5 408V28M40 396H386M40 384.5H386M40 372.5H386M40 348.5H386M40 337H386M40 325H386M40 301H386M40 289.5H386M40 277.5H386M40 253.5H386M40 242H386M40 230H386M40 206H386M40 194.5H386M40 182.5H386M40 158.5H386M40 147H386M40 135H386M40 111H386M40 99.5H386M40 87.5H386M40 63.5H386M40 52H386M40 40H386' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.18'/><path d='M40 408V28M126.5 408V28M213 408V28M299.5 408V28M386 408V28M40 408H386M40 360.5H386M40 313H386M40 265.5H386M40 218H386M40 170.5H386M40 123H386M40 75.5H386M40 28H386' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M40 408H386M40 408V28' fill='none' stroke='currentColor' stroke-width='1.4'/><g font-family='inherit' font-size='14' fill='currentColor' fill-opacity='0.85'><text x='40' y='425' text-anchor='middle'>0</text><text x='126.5' y='425' text-anchor='middle'>1</text><text x='213' y='425' text-anchor='middle'>2</text><text x='299.5' y='425' text-anchor='middle'>3</text><text x='386' y='425' text-anchor='middle'>4</text><text x='35' y='413' text-anchor='end'>0</text><text x='35' y='365.5' text-anchor='end'>2</text><text x='35' y='318' text-anchor='end'>4</text><text x='35' y='270.5' text-anchor='end'>6</text><text x='35' y='223' text-anchor='end'>8</text><text x='35' y='175.5' text-anchor='end'>10</text><text x='35' y='128' text-anchor='end'>12</text><text x='35' y='80.5' text-anchor='end'>14</text><text x='35' y='33' text-anchor='end'>16</text></g><g font-family='inherit' font-size='15' font-style='italic' fill='currentColor'><text x='384' y='442' text-anchor='end'>x</text><text x='20' y='16' text-anchor='middle'>y</text></g><path d='M40 384.5L42 384L44.5 383.5L46.5 383L48.5 382.5L51 382L53 381.5L55 381L57.5 380.5L59.5 380L61.5 380L64 379.5L66 379L68 378L70.5 377.5L72.5 377L74.5 376.5L77 376L79 375.5L81 375L83.5 374.5L85.5 374L87.5 373L89.5 372.5L92 372L94 371.5L96 370.5L98.5 370L100.5 369.5L102.5 368.5L105 368L107 367.5L109 366.5L111.5 366L113.5 365L115.5 364.5L118 363.5L120 363L122 362L124.5 361.5L126.5 360.5L128.5 359.5L131 359L133 358L135 357L137.5 356L139.5 355.5L141.5 354.5L144 353.5L146 352.5L148 351.5L150.5 350.5L152.5 349.5L154.5 348.5L157 347.5L159 346.5L161 345.5L163.5 344L165.5 343L167.5 342L169.5 341L172 339.5L174 338.5L176 337L178.5 336L180.5 334.5L182.5 333.5L185 332L187 331L189 329.5L191.5 328L193.5 326.5L195.5 325.5L198 324L200 322.5L202 321L204.5 319.5L206.5 318L208.5 316L211 314.5L213 313L215 311.5L217.5 309.5L219.5 308L221.5 306L224 304.5L226 302.5L228 300.5L230.5 299L232.5 297L234.5 295L237 293L239 291L241 289L243.5 287L245.5 285L247.5 282.5L250 280.5L252 278L254 276L256 273.5L258.5 271.5L260.5 269L262.5 266.5L265 264L267 261.5L269 259L271.5 256.5L273.5 253.5L275.5 251L278 248L280 245.5L282 242.5L284.5 239.5L286.5 237L288.5 234L291 230.5L293 227.5L295 224.5L297.5 221.5L299.5 218L301.5 214.5L304 211.5L306 208L308 204.5L310.5 201L312.5 197L314.5 193.5L317 189.5L319 186L321 182L323.5 178L325.5 174L327.5 170L330 166L332 161.5L334 157.5L336.5 153L338.5 148.5L340.5 144L342.5 139.5L345 134.5L347 130L349 125L351.5 120L353.5 115L355.5 110L358 104.5L360 99.5L362 94L364.5 88.5L366.5 83L368.5 77L371 71.5L373 65.5L375 59.5L377.5 53.5L379.5 47L381.5 41L384 34.5L386 28' fill='none' stroke='currentColor' stroke-width='2'/><path d='M40 289.5H241V408' fill='none' stroke='currentColor' stroke-width='1.3' stroke-dasharray='4 4'/><path d='M92 405L351.5 207.5' fill='none' stroke='currentColor' stroke-width='1.8' stroke-dasharray='7 5'/><circle cx='213' cy='313' r='6' fill='none' stroke='currentColor' stroke-width='1.6'/><g font-family='inherit' font-size='14' fill='currentColor'><text x='325.5' y='63.5' text-anchor='end'>y = 2ˣ</text></g></svg>",
+        "alt": "The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up. A dashed line runs across from y equals 5 to the curve and down to the x-axis, and a dashed straight line touches the curve at x equals 2."
       },
       "steps": [
         {
@@ -278,7 +347,20 @@
           "decision": "Reading a graph means drawing the lines, not guessing. The two dashed lines are the working, and a scheme gives the mark for the reading only when they are there.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 2.3,
+            "tolerance": {
+              "type": "range",
+              "min": 2.2,
+              "max": 2.4
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         },
         {
           "n": 2,
@@ -295,6 +377,32 @@
             ],
             "correct": 0,
             "explain": "Substituting gives the height, not the steepness. This is the step the Summer 2024 report says the stronger candidates took and the rest did not."
+          },
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "A tangent touching the curve at $x = 2$",
+                "correct": true,
+                "feedback": "The rate at one point is the gradient of the tangent there."
+              },
+              {
+                "id": "b",
+                "text": "A straight line from $(0, 1)$ to the point at $x = 2$",
+                "correct": false,
+                "feedback": "That gives the average rate from x = 0 to 2, not the rate at x = 2.",
+                "misconception": "maths.graphs.chord-instead-of-tangent"
+              },
+              {
+                "id": "c",
+                "text": "Substitute $x = 2$ into $y = 2^{x}$",
+                "correct": false,
+                "feedback": "Substituting gives the height, 4, not how steep the curve is.",
+                "misconception": "maths.graphs.substitute-instead-of-read-graph"
+              }
+            ]
           }
         },
         {
@@ -303,7 +411,20 @@
           "decision": "Take the rise and the run from two points far apart on the tangent, not on the curve. Reading a small triangle makes the answer wildly sensitive to the thickness of your pencil line.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 2.8,
+            "tolerance": {
+              "type": "range",
+              "min": 2.4,
+              "max": 3.2
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
         }
       ],
       "finalAnswer": "(a) $x \\approx 2.3$   (b) rate of increase $\\approx 2.8$ per unit of $x$",
@@ -339,7 +460,12 @@
         }
       ],
       "verification": "ver.we.maths.m8.growth-decay-and-exponential-graphs.02",
-      "version": 1
+      "version": 1,
+      "figurePlain": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 448' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up.'><title>The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up.</title><path d='M57.5 408V28M74.5 408V28M92 408V28M109 408V28M144 408V28M161 408V28M178.5 408V28M195.5 408V28M230.5 408V28M247.5 408V28M265 408V28M282 408V28M317 408V28M334 408V28M351.5 408V28M368.5 408V28M40 396H386M40 384.5H386M40 372.5H386M40 348.5H386M40 337H386M40 325H386M40 301H386M40 289.5H386M40 277.5H386M40 253.5H386M40 242H386M40 230H386M40 206H386M40 194.5H386M40 182.5H386M40 158.5H386M40 147H386M40 135H386M40 111H386M40 99.5H386M40 87.5H386M40 63.5H386M40 52H386M40 40H386' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.18'/><path d='M40 408V28M126.5 408V28M213 408V28M299.5 408V28M386 408V28M40 408H386M40 360.5H386M40 313H386M40 265.5H386M40 218H386M40 170.5H386M40 123H386M40 75.5H386M40 28H386' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M40 408H386M40 408V28' fill='none' stroke='currentColor' stroke-width='1.4'/><g font-family='inherit' font-size='14' fill='currentColor' fill-opacity='0.85'><text x='40' y='425' text-anchor='middle'>0</text><text x='126.5' y='425' text-anchor='middle'>1</text><text x='213' y='425' text-anchor='middle'>2</text><text x='299.5' y='425' text-anchor='middle'>3</text><text x='386' y='425' text-anchor='middle'>4</text><text x='35' y='413' text-anchor='end'>0</text><text x='35' y='365.5' text-anchor='end'>2</text><text x='35' y='318' text-anchor='end'>4</text><text x='35' y='270.5' text-anchor='end'>6</text><text x='35' y='223' text-anchor='end'>8</text><text x='35' y='175.5' text-anchor='end'>10</text><text x='35' y='128' text-anchor='end'>12</text><text x='35' y='80.5' text-anchor='end'>14</text><text x='35' y='33' text-anchor='end'>16</text></g><g font-family='inherit' font-size='15' font-style='italic' fill='currentColor'><text x='384' y='442' text-anchor='end'>x</text><text x='20' y='16' text-anchor='middle'>y</text></g><path d='M40 384.5L42 384L44.5 383.5L46.5 383L48.5 382.5L51 382L53 381.5L55 381L57.5 380.5L59.5 380L61.5 380L64 379.5L66 379L68 378L70.5 377.5L72.5 377L74.5 376.5L77 376L79 375.5L81 375L83.5 374.5L85.5 374L87.5 373L89.5 372.5L92 372L94 371.5L96 370.5L98.5 370L100.5 369.5L102.5 368.5L105 368L107 367.5L109 366.5L111.5 366L113.5 365L115.5 364.5L118 363.5L120 363L122 362L124.5 361.5L126.5 360.5L128.5 359.5L131 359L133 358L135 357L137.5 356L139.5 355.5L141.5 354.5L144 353.5L146 352.5L148 351.5L150.5 350.5L152.5 349.5L154.5 348.5L157 347.5L159 346.5L161 345.5L163.5 344L165.5 343L167.5 342L169.5 341L172 339.5L174 338.5L176 337L178.5 336L180.5 334.5L182.5 333.5L185 332L187 331L189 329.5L191.5 328L193.5 326.5L195.5 325.5L198 324L200 322.5L202 321L204.5 319.5L206.5 318L208.5 316L211 314.5L213 313L215 311.5L217.5 309.5L219.5 308L221.5 306L224 304.5L226 302.5L228 300.5L230.5 299L232.5 297L234.5 295L237 293L239 291L241 289L243.5 287L245.5 285L247.5 282.5L250 280.5L252 278L254 276L256 273.5L258.5 271.5L260.5 269L262.5 266.5L265 264L267 261.5L269 259L271.5 256.5L273.5 253.5L275.5 251L278 248L280 245.5L282 242.5L284.5 239.5L286.5 237L288.5 234L291 230.5L293 227.5L295 224.5L297.5 221.5L299.5 218L301.5 214.5L304 211.5L306 208L308 204.5L310.5 201L312.5 197L314.5 193.5L317 189.5L319 186L321 182L323.5 178L325.5 174L327.5 170L330 166L332 161.5L334 157.5L336.5 153L338.5 148.5L340.5 144L342.5 139.5L345 134.5L347 130L349 125L351.5 120L353.5 115L355.5 110L358 104.5L360 99.5L362 94L364.5 88.5L366.5 83L368.5 77L371 71.5L373 65.5L375 59.5L377.5 53.5L379.5 47L381.5 41L384 34.5L386 28' fill='none' stroke='currentColor' stroke-width='2'/><g font-family='inherit' font-size='14' fill='currentColor'><text x='325.5' y='63.5' text-anchor='end'>y = 2ˣ</text></g></svg>",
+        "alt": "The curve y equals 2 to the power x on axes from 0 to 4 across and 0 to 16 up."
+      }
     }
   ],
   "diagnostics": [
@@ -538,6 +664,43 @@
           "secondsExpected": 30,
           "confidence": true,
           "hypercorrectionQueue": true
+        },
+        {
+          "id": "07",
+          "stem": "A quantity is modelled by $y = 0.92^{x}$, where $x$ is the number of years. What does the model describe?",
+          "skill": "Read a percentage fall out of a base below 1",
+          "options": [
+            {
+              "id": "a",
+              "text": "A fall of 8% a year",
+              "correct": true,
+              "feedback": "Yes. The base 0.92 is $1 - 0.08$, so each year keeps 92% and loses 8%."
+            },
+            {
+              "id": "b",
+              "text": "A fall of 92% a year",
+              "correct": false,
+              "misconception": "maths.exponential.base-read-as-percentage",
+              "feedback": "92% is what is kept each year, not what is lost. Subtract the base from 1: the fall is 8%."
+            },
+            {
+              "id": "c",
+              "text": "A rise of 8% a year",
+              "correct": false,
+              "misconception": "maths.percent.depreciation-means-increase",
+              "feedback": "A base below 1 shrinks the quantity every year, so it falls; 1.08 would be the rise."
+            },
+            {
+              "id": "d",
+              "text": "A fall of 0.92% a year",
+              "correct": false,
+              "misconception": "maths.exponential.base-read-as-percentage",
+              "feedback": "That copies the base onto the answer line. The base is the multiplier; the change is $1 - 0.92 = 0.08$, a fall of 8%."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
         }
       ]
     }
@@ -614,8 +777,7 @@
                 }
               },
               "feedback": "That is the rate itself. Multiplying by 0.07 would leave only 7% of the amount; the multiplier is what survives, 0.93.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-summer:M3:Q27"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -625,7 +787,7 @@
       "timeAllowanceSec": 90,
       "skeleton": "(main)write-down1",
       "examinerSources": [
-        "ccea-cer:maths:2024-summer:M3:Q27"
+        "ccea-cer:maths:2024-summer:M3:Q19"
       ],
       "solutionProgram": "1 - 7/100 = 0.93",
       "verification": "ver.q.maths.m8.growth-decay-and-exponential-graphs.0001",
@@ -728,7 +890,7 @@
               },
               "feedback": "This is simple interest: 3% of the opening £5000 taken 4 times. Compound interest adds each year's interest to the balance first, which is why the true value is £5627.54, about £27.54 more.",
               "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-summer:M3:Q27"
+              "source": "ccea-cer:maths:2024-summer:M3:Q19"
             },
             {
               "misconception": "maths.percent.money-not-2dp",
@@ -752,7 +914,7 @@
       "timeAllowanceSec": 270,
       "skeleton": "(main)work-out3",
       "examinerSources": [
-        "ccea-cer:maths:2024-summer:M3:Q27",
+        "ccea-cer:maths:2024-summer:M3:Q19",
         "ccea-cer:maths:2023-summer:M4:Q1"
       ],
       "solutionProgram": "multiplier 1.03; 1.03^4 = 1.12550881...; 5000 x that = 5627.5440... -> £5627.54; simple-interest route £5600.00",
@@ -853,8 +1015,7 @@
                 }
               },
               "feedback": "A multiplier of 0.12 keeps only 12% of the value each year, which is a fall of 88%. The van keeps 88%, so the multiplier is 0.88.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-summer:M3:Q27"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -864,7 +1025,7 @@
       "timeAllowanceSec": 270,
       "skeleton": "(main)work-out3",
       "examinerSources": [
-        "ccea-cer:maths:2024-summer:M3:Q27"
+        "ccea-cer:maths:2024-summer:M3:Q19"
       ],
       "solutionProgram": "multiplier 0.88; ^3 = 0.681472; 18500 x that = 12607.232 -> 12607",
       "verification": "ver.q.maths.m8.growth-decay-and-exponential-graphs.0003",
@@ -941,7 +1102,7 @@
           "workedSolution": "Substituting gives $k^{2} = 49$, so $k = \\sqrt{49} = 7$. Only the positive root is used, because $y = k^{x}$ is defined for positive $k$.",
           "commonErrors": [
             {
-              "misconception": "maths.exponential.base-read-as-percentage",
+              "misconception": "maths.indices.equation-base-not-matched",
               "pattern": {
                 "kind": "numeric",
                 "value": 24.5,
@@ -951,8 +1112,7 @@
                 }
               },
               "feedback": "Dividing the $y$-coordinate by the $x$-coordinate treats the relationship as a straight line. In $y = k^{x}$ the $x$ is a power, so undo it with a root instead: $k = \\sqrt{49} = 7$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-november:M82:Q10"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -961,9 +1121,7 @@
       "totalMarks": 2,
       "timeAllowanceSec": 180,
       "skeleton": "(main)find2",
-      "examinerSources": [
-        "ccea-cer:maths:2024-november:M82:Q10"
-      ],
+      "examinerSources": [],
       "solutionProgram": "k^2 = 49 so k = 49^(1/2) = 7",
       "verification": "ver.q.maths.m8.growth-decay-and-exponential-graphs.0004",
       "version": 1
@@ -1038,7 +1196,7 @@
                   "value": 0
                 }
               },
-              "feedback": "The curve never touches the $x$-axis. At $x = 0$ nothing has been multiplied yet, so the height is $1$. This single height is the mark the Summer 2024 report says was dropped most often on an otherwise correct curve.",
+              "feedback": "The curve never touches the $x$-axis. At $x = 0$ nothing has been multiplied yet, so the height is $1$. The Summer 2024 report says this one value, at x = 0, was the only mark many lost on an otherwise correct curve.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:maths:2024-summer:M82:Q9"
             }
@@ -1155,8 +1313,7 @@
                 "regex": "^\\s*B\\b"
               },
               "feedback": "Model $B$ multiplies by 1.15 each step, which is more than $1$, so it rises. Decay needs a base between $0$ and $1$, which is model $A$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-november:M82:Q10"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -1340,7 +1497,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 460 320' xmlns='http://www.w3.org/2000/svg' width='460' height='320' role='img' aria-labelledby='fig-a-decay-curve-for-an-activity-starting-at-one-hundred-and-falling-by-ten-per-cent-each-hour'><title id='fig-a-decay-curve-for-an-activity-starting-at-one-hundred-and-falling-by-ten-per-cent-each-hour'>A decay curve for an activity starting at one hundred and falling by ten per cent each hour</title><g fill='none' stroke='currentColor' stroke-width='0.6' stroke-opacity='0.35'><path d='M52 24 L52 280 M91 24 L91 280 M130 24 L130 280 M169 24 L169 280 M208 24 L208 280 M247 24 L247 280 M286 24 L286 280 M325 24 L325 280 M364 24 L364 280 M403 24 L403 280 M442 24 L442 280 M52 280 L442 280 M52 254.4 L442 254.4 M52 228.8 L442 228.8 M52 203.2 L442 203.2 M52 177.6 L442 177.6 M52 152 L442 152 M52 126.4 L442 126.4 M52 100.8 L442 100.8 M52 75.2 L442 75.2 M52 49.6 L442 49.6 M52 24 L442 24'/></g><g fill='none' stroke='currentColor' stroke-width='1.4' stroke-linecap='round'><path d='M52 24 L52 280 L442 280'/></g><g fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'><path d='M52 24 L56.1 29.6 L60.1 35 L64.2 40.3 L68.3 45.5 L72.3 50.6 L76.4 55.6 L80.4 60.5 L84.5 65.2 L88.6 69.9 L92.6 74.5 L96.7 78.9 L100.8 83.3 L104.8 87.6 L108.9 91.7 L112.9 95.8 L117 99.8 L121.1 103.7 L125.1 107.6 L129.2 111.3 L133.3 115 L137.3 118.5 L141.4 122.1 L145.4 125.5 L149.5 128.8 L153.6 132.1 L157.6 135.3 L161.7 138.5 L165.8 141.5 L169.8 144.5 L173.9 147.5 L177.9 150.4 L182 153.2 L186.1 155.9 L190.1 158.6 L194.2 161.3 L198.3 163.8 L202.3 166.4 L206.4 168.8 L210.4 171.2 L214.5 173.6 L218.6 175.9 L222.6 178.2 L226.7 180.4 L230.8 182.5 L234.8 184.7 L238.9 186.7 L242.9 188.8 L247 190.7 L251.1 192.7 L255.1 194.6 L259.2 196.4 L263.3 198.2 L267.3 200 L271.4 201.8 L275.4 203.5 L279.5 205.1 L283.6 206.7 L287.6 208.3 L291.7 209.9 L295.8 211.4 L299.8 212.9 L303.9 214.4 L307.9 215.8 L312 217.2 L316.1 218.5 L320.1 219.9 L324.2 221.2 L328.2 222.5 L332.3 223.7 L336.4 224.9 L340.4 226.1 L344.5 227.3 L348.6 228.4 L352.6 229.6 L356.7 230.7 L360.8 231.7 L364.8 232.8 L368.9 233.8 L372.9 234.8 L377 235.8 L381.1 236.7 L385.1 237.7 L389.2 238.6 L393.3 239.5 L397.3 240.4 L401.4 241.2 L405.4 242.1 L409.5 242.9 L413.6 243.7 L417.6 244.5 L421.7 245.3 L425.8 246 L429.8 246.8 L433.9 247.5 L437.9 248.2 L442 248.9'/></g><g fill='currentColor' font-family='inherit' font-size='11'><text x='52' y='296' text-anchor='middle'>0</text><text x='91' y='296' text-anchor='middle'>2</text><text x='130' y='296' text-anchor='middle'>4</text><text x='169' y='296' text-anchor='middle'>6</text><text x='208' y='296' text-anchor='middle'>8</text><text x='247' y='296' text-anchor='middle'>10</text><text x='286' y='296' text-anchor='middle'>12</text><text x='325' y='296' text-anchor='middle'>14</text><text x='364' y='296' text-anchor='middle'>16</text><text x='403' y='296' text-anchor='middle'>18</text><text x='442' y='296' text-anchor='middle'>20</text><text x='44' y='284' text-anchor='end'>0</text><text x='44' y='258.4' text-anchor='end'>10</text><text x='44' y='232.8' text-anchor='end'>20</text><text x='44' y='207.2' text-anchor='end'>30</text><text x='44' y='181.6' text-anchor='end'>40</text><text x='44' y='156' text-anchor='end'>50</text><text x='44' y='130.4' text-anchor='end'>60</text><text x='44' y='104.8' text-anchor='end'>70</text><text x='44' y='79.2' text-anchor='end'>80</text><text x='44' y='53.6' text-anchor='end'>90</text><text x='44' y='28' text-anchor='end'>100</text><text x='442' y='310' text-anchor='end' font-weight='600'>t (hours)</text><text x='18' y='28' text-anchor='start' font-weight='600'>A</text></g></svg>",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 448' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A falling curve on axes with t in hours from 0 to 20 across and A from 0 to 100 up. The curve starts at 100 when t is 0 and falls more and more slowly.'><title>A falling curve on axes with t in hours from 0 to 20 across and A from 0 to 100 up. The curve starts at 100 when t is 0 and falls more and more slowly.</title><path d='M63 408V28M80 408V28M97 408V28M114 408V28M148 408V28M165 408V28M182 408V28M199 408V28M233 408V28M250 408V28M267 408V28M284 408V28M318 408V28M335 408V28M352 408V28M369 408V28M46 389H386M46 370H386M46 351H386M46 313H386M46 294H386M46 275H386M46 237H386M46 218H386M46 199H386M46 161H386M46 142H386M46 123H386M46 85H386M46 66H386M46 47H386' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.18'/><path d='M46 408V28M131 408V28M216 408V28M301 408V28M386 408V28M46 408H386M46 332H386M46 256H386M46 180H386M46 104H386M46 28H386' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M46 408H386M46 408V28' fill='none' stroke='currentColor' stroke-width='1.4'/><g font-family='inherit' font-size='14' fill='currentColor' fill-opacity='0.85'><text x='46' y='425' text-anchor='middle'>0</text><text x='131' y='425' text-anchor='middle'>5</text><text x='216' y='425' text-anchor='middle'>10</text><text x='301' y='425' text-anchor='middle'>15</text><text x='386' y='425' text-anchor='middle'>20</text><text x='41' y='413' text-anchor='end'>0</text><text x='41' y='337' text-anchor='end'>20</text><text x='41' y='261' text-anchor='end'>40</text><text x='41' y='185' text-anchor='end'>60</text><text x='41' y='109' text-anchor='end'>80</text><text x='41' y='33' text-anchor='end'>100</text></g><g font-family='inherit' font-size='15' font-style='italic' fill='currentColor'><text x='384' y='442' text-anchor='end'>t (hours)</text><text x='26' y='16' text-anchor='middle'>A</text></g><path d='M46 28L48 33L50.5 38L52.5 42.5L54.5 47.5L56.5 52L59 57L61 61.5L63 66L65 70.5L67.5 75L69.5 79L71.5 83.5L73.5 88L76 92L78 96L80 100L82 104L84.5 108L86.5 112L88.5 116L90.5 120L93 123.5L95 127.5L97 131L99 134.5L101.5 138L103.5 141.5L105.5 145L107.5 148.5L110 152L112 155.5L114 158.5L116 162L118.5 165L120.5 168.5L122.5 171.5L124.5 174.5L127 177.5L129 180.5L131 183.5L133 186.5L135.5 189.5L137.5 192.5L139.5 195L141.5 198L144 200.5L146 203.5L148 206L150 208.5L152.5 211.5L154.5 214L156.5 216.5L158.5 219L161 221.5L163 224L165 226L167 228.5L169.5 231L171.5 233.5L173.5 235.5L175.5 238L178 240L180 242.5L182 244.5L184 246.5L186.5 248.5L188.5 251L190.5 253L192.5 255L195 257L197 259L199 261L201 262.5L203.5 264.5L205.5 266.5L207.5 268.5L209.5 270L212 272L214 273.5L216 275.5L218 277L220.5 279L222.5 280.5L224.5 282.5L226.5 284L229 285.5L231 287L233 289L235 290.5L237.5 292L239.5 293.5L241.5 295L243.5 296.5L246 298L248 299.5L250 300.5L252 302L254.5 303.5L256.5 305L258.5 306L260.5 307.5L263 309L265 310L267 311.5L269 312.5L271.5 314L273.5 315L275.5 316.5L277.5 317.5L280 318.5L282 320L284 321L286 322L288.5 323.5L290.5 324.5L292.5 325.5L294.5 326.5L297 327.5L299 328.5L301 330L303 331L305.5 332L307.5 333L309.5 334L311.5 334.5L314 335.5L316 336.5L318 337.5L320 338.5L322.5 339.5L324.5 340.5L326.5 341L328.5 342L331 343L333 344L335 344.5L337 345.5L339.5 346.5L341.5 347L343.5 348L345.5 348.5L348 349.5L350 350L352 351L354 351.5L356.5 352.5L358.5 353L360.5 354L362.5 354.5L365 355.5L367 356L369 356.5L371 357.5L373.5 358L375.5 358.5L377.5 359.5L379.5 360L382 360.5L384 361L386 362' fill='none' stroke='currentColor' stroke-width='2'/></svg>",
           "alt": "A falling curve on axes with t in hours from 0 to 20 across and A from 0 to 100 up. The curve starts at 100 when t is 0 and falls more and more slowly."
         }
       ],
@@ -1393,8 +1550,7 @@
                 "regex": "\\blog|logarithm"
               },
               "feedback": "The question says to use the graph, so the drawn lines are part of the answer and the reading earns the mark. Logarithms are not on this specification in any case.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2023-summer:M82:Q11"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -1492,8 +1648,7 @@
                 }
               },
               "feedback": "Dividing treats the $x$ as a multiplier. It is a power, so the way in is to rewrite 81 as a power of 3 and then compare the indices.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2023-summer:M71:Q11"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -1502,9 +1657,7 @@
       "totalMarks": 2,
       "timeAllowanceSec": 180,
       "skeleton": "(main)solve2",
-      "examinerSources": [
-        "ccea-cer:maths:2023-summer:M71:Q11"
-      ],
+      "examinerSources": [],
       "solutionProgram": "81 = 3^4 so x = 4",
       "verification": "ver.q.maths.m8.growth-decay-and-exponential-graphs.0009",
       "version": 1
@@ -1549,7 +1702,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 440 320' xmlns='http://www.w3.org/2000/svg' width='440' height='320' role='img' aria-labelledby='fig-an-empty-grid-with-axes-x-from-zero-to-five-and-y-from-zero-to-six-for-the-curve-to-be-drawn-on'><title id='fig-an-empty-grid-with-axes-x-from-zero-to-five-and-y-from-zero-to-six-for-the-curve-to-be-drawn-on'>An empty grid with axes x from zero to five and y from zero to six, for the curve to be drawn on</title><g fill='none' stroke='currentColor' stroke-width='0.6' stroke-opacity='0.35'><path d='M52 24 L52 280 M126 24 L126 280 M200 24 L200 280 M274 24 L274 280 M348 24 L348 280 M422 24 L422 280 M52 280 L422 280 M52 237.3 L422 237.3 M52 194.7 L422 194.7 M52 152 L422 152 M52 109.3 L422 109.3 M52 66.7 L422 66.7 M52 24 L422 24'/></g><g fill='none' stroke='currentColor' stroke-width='1.4' stroke-linecap='round'><path d='M52 24 L52 280 L422 280'/></g><g fill='currentColor' font-family='inherit' font-size='11'><text x='52' y='296' text-anchor='middle'>0</text><text x='126' y='296' text-anchor='middle'>1</text><text x='200' y='296' text-anchor='middle'>2</text><text x='274' y='296' text-anchor='middle'>3</text><text x='348' y='296' text-anchor='middle'>4</text><text x='422' y='296' text-anchor='middle'>5</text><text x='44' y='284' text-anchor='end'>0</text><text x='44' y='241.3' text-anchor='end'>1</text><text x='44' y='198.7' text-anchor='end'>2</text><text x='44' y='156' text-anchor='end'>3</text><text x='44' y='113.3' text-anchor='end'>4</text><text x='44' y='70.7' text-anchor='end'>5</text><text x='44' y='28' text-anchor='end'>6</text><text x='422' y='310' text-anchor='end' font-weight='600'>x</text><text x='18' y='28' text-anchor='start' font-weight='600'>y</text></g></svg>",
+          "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 248' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='An empty grid with the horizontal axis labelled x from 0 to 5 and the vertical axis labelled y from 0 to 6, ready for a curve to be drawn on it.'><title>An empty grid with the horizontal axis labelled x from 0 to 5 and the vertical axis labelled y from 0 to 6, ready for a curve to be drawn on it.</title><path d='M54 208V28M67.5 208V28M81.5 208V28M95.5 208V28M123 208V28M137 208V28M150.5 208V28M164.5 208V28M192 208V28M206 208V28M220 208V28M234 208V28M261.5 208V28M275.5 208V28M289 208V28M303 208V28M330.5 208V28M344.5 208V28M358.5 208V28M372 208V28M40 202H386M40 196H386M40 190H386M40 184H386M40 172H386M40 166H386M40 160H386M40 154H386M40 142H386M40 136H386M40 130H386M40 124H386M40 112H386M40 106H386M40 100H386M40 94H386M40 82H386M40 76H386M40 70H386M40 64H386M40 52H386M40 46H386M40 40H386M40 34H386' fill='none' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.18'/><path d='M40 208V28M109 208V28M178.5 208V28M247.5 208V28M317 208V28M386 208V28M40 208H386M40 178H386M40 148H386M40 118H386M40 88H386M40 58H386M40 28H386' fill='none' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.4'/><path d='M40 208H386M40 208V28' fill='none' stroke='currentColor' stroke-width='1.4'/><g font-family='inherit' font-size='14' fill='currentColor' fill-opacity='0.85'><text x='40' y='225' text-anchor='middle'>0</text><text x='109' y='225' text-anchor='middle'>1</text><text x='178.5' y='225' text-anchor='middle'>2</text><text x='247.5' y='225' text-anchor='middle'>3</text><text x='317' y='225' text-anchor='middle'>4</text><text x='386' y='225' text-anchor='middle'>5</text><text x='35' y='213' text-anchor='end'>0</text><text x='35' y='183' text-anchor='end'>1</text><text x='35' y='153' text-anchor='end'>2</text><text x='35' y='123' text-anchor='end'>3</text><text x='35' y='93' text-anchor='end'>4</text><text x='35' y='63' text-anchor='end'>5</text><text x='35' y='33' text-anchor='end'>6</text></g><g font-family='inherit' font-size='15' font-style='italic' fill='currentColor'><text x='384' y='242' text-anchor='end'>x</text><text x='20' y='16' text-anchor='middle'>y</text></g></svg>",
           "alt": "An empty grid with the horizontal axis labelled x from 0 to 5 and the vertical axis labelled y from 0 to 6, ready for a curve to be drawn on it."
         }
       ],
@@ -1638,7 +1791,7 @@
                 "kind": "graph",
                 "test": "curve passes through (0, 0) instead of (0, 1)"
               },
-              "feedback": "The value at $x = 0$ is 1.4$^{0}$, which is $1$. The Summer 2024 report puts this single height at the top of the list of marks dropped on an otherwise correct curve.",
+              "feedback": "The value at $x = 0$ is 1.4$^{0}$, which is $1$. The Summer 2024 report says this one value was the only mark many lost on an otherwise correct curve.",
               "marksTypicallyEarned": 2,
               "source": "ccea-cer:maths:2024-summer:M82:Q9"
             },
@@ -1649,8 +1802,7 @@
                 "test": "points joined with straight line segments"
               },
               "feedback": "The points are right and both earlier marks stand. An exponential curve bends everywhere, so ruled segments lose the last mark; draw it freehand in one movement.",
-              "marksTypicallyEarned": 2,
-              "source": "ccea-cer:maths:2023-summer:M82:Q11"
+              "marksTypicallyEarned": 2
             }
           ],
           "requiresWorking": true
@@ -1858,9 +2010,9 @@
                   "value": 0.005
                 }
               },
-              "feedback": "That is simple interest: 2.8% of £6500 taken 4 times. The Summer 2024 report describes a simple-interest attempt as the usual one at this stage of a paper, with about one candidate in ten producing every value correctly. Each year's interest joins the balance, so the multiplier is applied 4 times.",
+              "feedback": "That is simple interest: 2.8% of £6500 taken 4 times. On a Summer 2024 compound-interest question many took each year's percentage of the original amount, which is simple interest. Each year's interest joins the balance, so the multiplier is applied 4 times.",
               "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-summer:M3:Q27"
+              "source": "ccea-cer:maths:2024-summer:M3:Q19"
             }
           ],
           "requiresWorking": true
@@ -1927,8 +2079,7 @@
                 "regex": "\\bno\\b"
               },
               "feedback": "A no here usually comes from doubling the interest earned in part (a) rather than applying the multiplier for another 4 years. Compound growth is multiplicative, so the second 4 years earn more than the first: the value reaches £8106.96.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-summer:M3:Q27"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true,
@@ -1942,7 +2093,7 @@
       "timeAllowanceSec": 450,
       "skeleton": "(a)work-out3|(b)explain2",
       "examinerSources": [
-        "ccea-cer:maths:2024-summer:M3:Q27",
+        "ccea-cer:maths:2024-summer:M3:Q19",
         "ccea-cer:maths:2024-november:M3:Q16"
       ],
       "solutionProgram": "multiplier 1.028; ^4 = 1.11679242... giving £7259.15; ^8 = 1.24722531... giving £8106.96, which is above £8000.00",
@@ -1974,8 +2125,32 @@
         "Value after 3 years = £10123.78"
       ],
       "marksEarnedAsWritten": [],
-      "feedback": "The first line is sound arithmetic, and the error is one the examiners see every series: the Summer 2024 report describes a simple-interest attempt as the usual one on a compound-interest question, with about one candidate in ten producing every value correctly. The fix is a habit rather than a formula. Write the multiplier on its own line first, then raise it to the number of years, and the interest automatically lands on the running total. Here that gives £10123.78, about £43.78 more than the simple-interest figure.",
-      "source": "ccea-cer:maths:2024-summer:M3:Q27"
+      "feedback": "The first line is sound arithmetic, and the error is one the examiners see every series: on a Summer 2024 compound-interest question many took each year's percentage of the original amount, and others added the two years' rates. The fix is a habit rather than a formula. Write the multiplier on its own line first, then raise it to the number of years, and the interest automatically lands on the running total. Here that gives £10123.78, about £43.78 more than the simple-interest figure.",
+      "source": "ccea-cer:maths:2024-summer:M3:Q19"
+    },
+    {
+      "id": "ftm.maths.m8.growth-decay-and-exponential-graphs.02",
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-08"
+      ],
+      "stem": "Orla completed a table of values for $y = 1.35^{x}$ before drawing its graph. Her working:",
+      "studentWorking": [
+        "x = 0: y = 0",
+        "x = 1: y = 1.35",
+        "x = 2: y = 1.8225",
+        "x = 3: y = 2.460375"
+      ],
+      "mistakeLine": 1,
+      "misconception": "maths.exponential.curve-not-through-one",
+      "whatWentWrong": "Line 1 gives 0, but any positive number to the power 0 is 1: before any multiplying has happened, the value is 1. Her curve would start on the x-axis, which no graph of y = kˣ ever touches.",
+      "correction": [
+        "x = 0: y = 1.35⁰ = 1",
+        "The curve starts at (0, 1)"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Lines 2 to 4 are right: each value is the one before times 1.35. Only the start is wrong, and it is the value the Summer 2024 Paper 2 report found many lost a mark on, on an otherwise correct curve. Every y = kˣ passes through (0, 1).",
+      "source": "ccea-cer:maths:2024-summer:M82:Q9"
     }
   ],
   "prompts": [
@@ -2100,6 +2275,103 @@
         "M8-NA-08"
       ],
       "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.growth-decay-and-exponential-graphs.08",
+      "kind": "formula",
+      "prompt": "How do you find a value after n years of percentage change?",
+      "answer": "Start times the multiplier to the power n.",
+      "keyWords": [
+        "multiplier",
+        "power n"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-04",
+        "M8-NA-08"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.growth-decay-and-exponential-graphs.09",
+      "kind": "definition",
+      "prompt": "Where does every graph of y = kˣ cross the y-axis?",
+      "answer": "At (0, 1), because k⁰ = 1.",
+      "keyWords": [
+        "(0, 1)"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-04",
+        "M8-NA-08"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.growth-decay-and-exponential-graphs.10",
+      "kind": "definition",
+      "prompt": "Which bases make y = kˣ show decay?",
+      "answer": "Bases between 0 and 1.",
+      "keyWords": [
+        "between 0 and 1"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-04",
+        "M8-NA-08"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.growth-decay-and-exponential-graphs.11",
+      "kind": "procedure",
+      "prompt": "How do you show a year is the first past a target?",
+      "answer": "Give its value and the value for the year before.",
+      "keyWords": [
+        "year before"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-04",
+        "M8-NA-08"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.growth-decay-and-exponential-graphs.12",
+      "kind": "procedure",
+      "prompt": "Which line gives a rate of change at one point of a curve?",
+      "answer": "A tangent drawn at that point.",
+      "keyWords": [
+        "tangent"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-04",
+        "M8-NA-08"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.growth-decay-and-exponential-graphs.13",
+      "kind": "trap",
+      "prompt": "Three years at 5%: is the total rise 15%?",
+      "answer": "No: it is 15.76%, because each year grows on the last.",
+      "keyWords": [
+        "15.76%"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.growth-decay-and-exponential-graphs",
+      "specRefs": [
+        "M8-NA-04",
+        "M8-NA-08"
+      ],
+      "examUnit": "M8"
     }
   ],
   "sets": [
@@ -2114,12 +2386,12 @@
       ],
       "itemIds": [
         "dx.maths.m8.growth-decay-and-exponential-graphs",
-        "rp.maths.m8.growth-decay-and-exponential-graphs.01",
+        "rp.maths.m8.growth-decay-and-exponential-graphs.08",
         "q.maths.m8.growth-decay-and-exponential-graphs.0001",
         "q.maths.m8.growth-decay-and-exponential-graphs.0002",
         "q.maths.m8.growth-decay-and-exponential-graphs.0003",
         "q.maths.m8.growth-decay-and-exponential-graphs.0005",
-        "rp.maths.m8.growth-decay-and-exponential-graphs.03"
+        "rp.maths.m8.growth-decay-and-exponential-graphs.09"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -2138,9 +2410,10 @@
         "q.maths.m8.growth-decay-and-exponential-graphs.0007",
         "ftm.maths.m8.growth-decay-and-exponential-graphs.01",
         "q.maths.m8.growth-decay-and-exponential-graphs.0008",
+        "ftm.maths.m8.growth-decay-and-exponential-graphs.02",
         "q.maths.m8.growth-decay-and-exponential-graphs.0010",
         "q.maths.m8.growth-decay-and-exponential-graphs.0011",
-        "rp.maths.m8.growth-decay-and-exponential-graphs.04"
+        "rp.maths.m8.growth-decay-and-exponential-graphs.12"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -2223,10 +2496,98 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI. Prose between gates checked against the 150-word limit in src/components/items/gates.ts.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: every citation checked against the report text. Summer 2024 M3 Q19 (the same question as M2 Q27): many used simple interest on the original £2400, others added the two rates, many mishandled 0.5% in a multiplier, and some gave the interest for the value. The Summer 2024 M3 Q27 report is about reverse percentages, so no finding here cites it now. Summer 2024 M82 Q9: many lost only the value at x = 0; only the better candidates drew a tangent. Summer 2023 M82 Q11: an awkward scale, generous marking, the tangent only by the best. November 2024 M8 (calculator) Q10: the interpretation parts answered by less than half and just over half. November 2024 M3 Q16: formula users tested only Year 3.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: seven teaching sections (idea, five variants, twists), each explain -> See it -> Your turn on the note's own numbers; gates g11-g17, each with a twin on new numbers and a note on every wrong option, probed through markGate by text and position; the two-way overlap scan finds nothing of the note, a gate, a twin or a worked example that a later item asks. Ten gates withdrawn (the records above).",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "An interface warm-up ('A warm-up. What single number…'), asked before anything was shown worked; g11 is a real check after the first See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "The multiplier for a 12% fall, asked before the section showed a multiplier worked; g12 asks a decay value after its See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "£5000 at 3% for 4 years is practice question 0002 word for word; g11 chooses the calculation for new numbers after its See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "y at x = 0, asked with nothing worked before it (the fixed point is practice question 0005's own question); g15 starts a reading from that value after its See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "The yearly rise in y = 1.25^x is diagnostic 03's own question, asked before a base was read worked; g14 reads a base after the graph section's See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "Which curve shows decay, asked before the section showed one; g14 asks it as a model for a stated fall after its See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g10",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "The year before a threshold, asked before any threshold was worked; g13 asks the first year past a target after its See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "Its explanation named an option by its place ('The third option …'), so it was shown in its written order with its answer first; g16 asks the line for a rate after its See it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "Ruled segments against a smooth curve, a question about drawing with nothing worked before it; the graph section's See it draws the curve and g15 reads it.",
+          "on": "2026-10-08T04:51:00Z"
+        },
+        {
+          "id": "g9",
+          "kind": "gate",
+          "replacedBy": null,
+          "reason": "How to solve 1.25^x = 2 on this specification, a question about method choice; reading a curve is g15's, and the Sheet's not-on-spec line carries logarithms.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.maths.m8.growth-decay-and-exponential-graphs.01",
@@ -2303,6 +2664,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: an input added on every step in place (the multiplier 0.95; the calculation chosen from its routes; 810.54 from the display; 811), probed through markAnswer; working, earns, faded and the twin unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -2385,6 +2754,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: an input on every step in place (the reading 2.3 within half a small square of 2.32; the line to draw, with its routes; the gradient 2.8 within 2.4 to 3.2 of 2.77); the figure redrawn at the label floor and its alt no longer naming the reading; a plain figure (figurePlain) for the faded and problem versions; working, earns, faded and twin unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2465,6 +2842,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: item 07 added (post), so the post-instruction check holds three items as the S floor asks; every distractor from its route with its registry id. Items 01-06 unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -2547,6 +2932,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2627,6 +3020,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -2709,6 +3110,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2789,6 +3198,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): the common error retagged from base-read-as-percentage to an index treated as a multiplier (equation-base-not-matched, as q0009 tags the same slip) and its unsupported source removed; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -2871,6 +3288,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: the common error's citation reworded to what the Summer 2024 M8 Paper 2 Q9 report says (many lost only the value at x = 0); value, pattern, marks and spec unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2951,6 +3376,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -3114,6 +3547,22 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: the figure redrawn at the label floor (14 on a 400 viewBox) from the same curve A = 100 x 0.9^t; its alt and every marked field unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3194,6 +3643,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -3276,6 +3733,22 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: the blank grid redrawn at the label floor, same ranges; its alt and every marked field unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3356,6 +3829,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common error's source that no report supports is removed or pointed at the report that names the slip (Summer 2024 M3 Q19 for simple interest; the Summer 2024 M3 Q27 report is about reverse percentages); values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
@@ -3438,6 +3919,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: the citation pointed at Summer 2024 M3 Q19, whose report names simple interest and added rates (the Summer 2024 M3 Q27 report is about reverse percentages), and the feedback reworded to what that report says; working, mistake line, misconception and correction unchanged.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3495,10 +3984,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): Its question runs to 17 words and its answer past 25, and its key words ('start times multiplier to the n', '1 plus or minus r over 100') are not in its own answer; rp.08 asks the formula in eleven words. Replaced by rp.maths.m8.growth-decay-and-exponential-graphs.08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.01",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.growth-decay-and-exponential-graphs.08",
+          "reason": "Its question runs to 17 words and its answer past 25, and its key words ('start times multiplier to the n', '1 plus or minus r over 100') are not in its own answer; rp.08 asks the formula in eleven words.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.02",
@@ -3552,10 +4058,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): Its answer runs to 32 words and it asks why, an explanation; rp.13 asks the same trap as one fact. Replaced by rp.maths.m8.growth-decay-and-exponential-graphs.13.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.02",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.growth-decay-and-exponential-graphs.13",
+          "reason": "Its answer runs to 32 words and it asks why, an explanation; rp.13 asks the same trap as one fact.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.03",
@@ -3609,10 +4132,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks two things at once in 17 words and its answer runs to 29; rp.09 and rp.10 ask the fixed point and the decay bases one at a time. Replaced by rp.maths.m8.growth-decay-and-exponential-graphs.09.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.03",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.growth-decay-and-exponential-graphs.09",
+          "reason": "It asks two things at once in 17 words and its answer runs to 29; rp.09 and rp.10 ask the fixed point and the decay bases one at a time.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.04",
@@ -3666,10 +4206,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): Its question runs to 21 words and its answer to 42; rp.12 asks the line for a rate in twelve words. Replaced by rp.maths.m8.growth-decay-and-exponential-graphs.12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.04",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.growth-decay-and-exponential-graphs.12",
+          "reason": "Its question runs to 21 words and its answer to 42; rp.12 asks the line for a rate in twelve words.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.05",
@@ -3723,10 +4280,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks two things at once (the percentage and the trap) with a 32-word answer; reading a base as a percentage is diagnostic 03's and dx07's, and the Sheet's trap.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.05",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asks two things at once (the percentage and the trap) with a 32-word answer; reading a base as a percentage is diagnostic 03's and dx07's, and the Sheet's trap.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.06",
@@ -3780,10 +4354,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): Its answer runs to 44 words; rp.11 asks how to show the first year past a target, in eleven words. Replaced by rp.maths.m8.growth-decay-and-exponential-graphs.11.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.06",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.growth-decay-and-exponential-graphs.11",
+          "reason": "Its answer runs to 44 words; rp.11 asks how to show the first year past a target, in eleven words.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.07",
@@ -3836,6 +4427,382 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Percentages are written out as 'per cent' inside SVG text so no percent sign can break a data URI.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks exactly what worked example 01 works (1500 counts per second falling 5% an hour for 12 hours), so the deck replayed the example as a card.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.growth-decay-and-exponential-graphs.07",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asks exactly what worked example 01 works (1500 counts per second falling 5% an hour for 12 hours), so the deck replayed the example as a card.",
+          "on": "2026-10-08T04:51:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.ftm.maths.m8.growth-decay-and-exponential-graphs.02",
+      "itemId": "ftm.maths.m8.growth-decay-and-exponential-graphs.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-08: a table of values for y = k^x with k positive.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "1.35^0 = 1, 1.35^1 = 1.35, 1.35^2 = 1.8225, 1.35^3 = 2.460375; one wrong line, line 1.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Summer 2024 M8 Paper 2 Q9: the majority drew the graph for full marks, many losing only the mark for the value at x = 0.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own numbers and wording; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; one wrong line.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass for the S floor (two find-the-mistake items from different findings). markFix probed: her line refused; 'y = 1', 'x = 0: y = 1', '1.35^0 = 1' and the correction's line accepted.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.08",
+      "itemId": "rp.maths.m8.growth-decay-and-exponential-graphs.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-04 and M8-NA-08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 8 words; key words [\"multiplier\",\"power n\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.09",
+      "itemId": "rp.maths.m8.growth-decay-and-exponential-graphs.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-04 and M8-NA-08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 7 words; key words [\"(0, 1)\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.10",
+      "itemId": "rp.maths.m8.growth-decay-and-exponential-graphs.10",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-04 and M8-NA-08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 5 words; key words [\"between 0 and 1\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.11",
+      "itemId": "rp.maths.m8.growth-decay-and-exponential-graphs.11",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-04 and M8-NA-08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 10 words; key words [\"year before\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.12",
+      "itemId": "rp.maths.m8.growth-decay-and-exponential-graphs.12",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-04 and M8-NA-08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 6 words; key words [\"tangent\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.growth-decay-and-exponential-graphs.13",
+      "itemId": "rp.maths.m8.growth-decay-and-exponential-graphs.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-04 and M8-NA-08.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T04:51:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/gd.mjs; every value computed in gd.mjs and gd-numbers.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-growth-decay-and-exponential-graphs.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 11 words; key words [\"15.76%\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T04:51:00Z",
           "by": "claude"
         }
       ],
