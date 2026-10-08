@@ -26,6 +26,7 @@ import { planFade } from "./fade";
 import { withoutWithdrawn } from "../../../scripts/qa/shingles-allow.mjs";
 import { ALLOWED as FIGURE_ALLOWED } from "../../../scripts/qa/figure-leaks.mjs";
 import type { z } from "zod";
+import { decodeSvgDataUri } from "@/lib/ux/svg";
 import { SeeBlockInline, SeeBlockReference, WorkedExampleStep } from "@/lib/content/schema";
 
 const onlyObjects = (v: unknown): Record<string, unknown>[] =>
@@ -204,6 +205,169 @@ export function svgDrawDefects(svg: string): string[] {
   }
   const shapes = (svg.match(/<(path|line|polyline|polygon|rect|circle|ellipse)\b/g) ?? []).length;
   if (shapes === 0) out.push("no drawn shape at all (no path, line, polyline, polygon, rect, circle or ellipse)");
+  return out;
+}
+
+/**
+ * The first place an SVG is not well-formed XML, or null: an element left open or closed out of order, an attribute without
+ * a quoted value, a bare "&" or "<", text or a second element outside the root. A small reader of our own (no XML parser
+ * ships with the app); the browser's HTML parser would repair any of these silently and may draw the figure wrongly.
+ */
+export function svgXmlError(svg: string): { at: number; why: string } | null {
+  const ENTITY = /^&(?:[A-Za-z][A-Za-z0-9]*|#[0-9]+|#x[0-9A-Fa-f]+);/;
+  const bareAmp = (from: number, to: number) => {
+    for (let k = svg.indexOf("&", from); k >= 0 && k < to; k = svg.indexOf("&", k + 1))
+      if (!ENTITY.test(svg.slice(k, k + 12))) return { at: k, why: 'a bare "&" (write &amp;)' };
+    return null;
+  };
+  const stack: Array<{ name: string; at: number }> = [];
+  let roots = 0;
+  let i = 0;
+  while (i < svg.length) {
+    const lt = svg.indexOf("<", i);
+    const textEnd = lt < 0 ? svg.length : lt;
+    if (stack.length) {
+      const amp = bareAmp(i, textEnd);
+      if (amp) return amp;
+    } else if (svg.slice(i, textEnd).trim()) return { at: i + svg.slice(i, textEnd).search(/\S/), why: "text outside the root element" };
+    if (lt < 0) break;
+    const specials: Array<[string, string, string]> = [["<!--", "-->", "a comment"], ["<![CDATA[", "]]>", "a CDATA section"], ["<?", "?>", "a processing instruction"], ["<!", ">", "a declaration"]];
+    const special = specials.find(([open]) => svg.startsWith(open, lt));
+    if (special) {
+      const end = svg.indexOf(special[1], lt + special[0].length);
+      if (end < 0) return { at: lt, why: `${special[2]} that never closes` };
+      i = end + special[1].length;
+      continue;
+    }
+    const closing = svg[lt + 1] === "/";
+    const nameAt = lt + (closing ? 2 : 1);
+    const name = /^[A-Za-z_:][\w:.-]*/.exec(svg.slice(nameAt))?.[0];
+    if (!name) return { at: lt, why: 'a bare "<" (write &lt;)' };
+    let k = nameAt + name.length;
+    if (closing) {
+      const gt = /^\s*>/.exec(svg.slice(k));
+      if (!gt) return { at: k, why: `</${name}> does not end with ">"` };
+      const top = stack.pop();
+      if (!top) return { at: lt, why: `</${name}> closes nothing` };
+      if (top.name !== name) return { at: lt, why: `</${name}> closes <${top.name}>` };
+      i = k + gt[0].length;
+      continue;
+    }
+    const seen = new Set<string>();
+    for (;;) {
+      const ws = /^\s*/.exec(svg.slice(k))?.[0] ?? "";
+      k += ws.length;
+      if (svg.startsWith("/>", k)) {
+        k += 2;
+        if (!stack.length) roots += 1;
+        break;
+      }
+      if (svg[k] === ">") {
+        k += 1;
+        stack.push({ name, at: lt });
+        if (stack.length === 1) roots += 1;
+        break;
+      }
+      if (k >= svg.length) return { at: lt, why: `<${name}> never ends` };
+      if (!ws) return { at: k, why: `<${name}> runs two attributes together` };
+      const attr = /^([A-Za-z_:][\w:.-]*)\s*=\s*/.exec(svg.slice(k));
+      if (!attr) return { at: k, why: `<${name}> has an attribute without a value` };
+      if (seen.has(attr[1])) return { at: k, why: `<${name}> gives the attribute ${attr[1]} twice` };
+      seen.add(attr[1]);
+      k += attr[0].length;
+      const quote = svg[k];
+      if (quote !== '"' && quote !== "'") return { at: k, why: `the attribute ${attr[1]} of <${name}> has no quotes` };
+      const end = svg.indexOf(quote, k + 1);
+      if (end < 0) return { at: k, why: `the attribute ${attr[1]} of <${name}> never closes its quote` };
+      const inner = svg.slice(k + 1, end).indexOf("<");
+      if (inner >= 0) return { at: k + 1 + inner, why: `a "<" inside the attribute ${attr[1]} of <${name}>` };
+      const amp = bareAmp(k + 1, end);
+      if (amp) return amp;
+      k = end + 1;
+    }
+    if (roots > 1) return { at: lt, why: "a second root element" };
+    i = k;
+  }
+  const open = stack[stack.length - 1];
+  return open ? { at: open.at, why: `<${open.name}> is never closed` } : null;
+}
+
+/** A few characters either side of a position, on one line, for a warning. */
+const around = (text: string, at: number) => text.slice(Math.max(0, at - 20), at + 20).replace(/\s+/g, " ");
+
+/**
+ * What stops the renderer inlining a data:image/svg+xml source, or null (null too for any other source). The renderer is
+ * src/lib/ux/svg.ts decodeSvgDataUri, read by Figure.tsx: a body that does not decode, or decodes to text that does not
+ * begin with its <svg> element, falls back to an <img>, which draws in fixed colours. Positions count from 1, in the
+ * source for a decoding fault and in the decoded SVG for a well-formedness fault.
+ */
+function dataUriProblem(src: string): string | null {
+  const trimmed = src.trim();
+  const m = /^data:image\/svg\+xml(;charset=[^;,]+)?(;utf8)?(;base64)?,(.*)$/is.exec(trimmed);
+  if (!m) return null;
+  const bodyAt = src.indexOf(trimmed) + trimmed.indexOf(",") + 1;
+  const body = m[4];
+  const fallsBack = "Figure.tsx falls back to <img>, which draws in fixed colours (black lines on the dark and evening themes)";
+  let text: string;
+  if (m[3]) {
+    const bad = /[^A-Za-z0-9+/=\s]/.exec(body);
+    if (bad) return `is a data URI with a character base64 does not use ("${bad[0]}") at character ${bodyAt + bad.index + 1}: ${fallsBack}`;
+    try {
+      text = atob(body);
+    } catch {
+      return `is a data URI whose base64 body does not decode (its length or padding is wrong): ${fallsBack}`;
+    }
+  } else {
+    try {
+      text = decodeURIComponent(body);
+    } catch {
+      const raw = /%(?![0-9A-Fa-f]{2})/.exec(body);
+      if (raw) return `is a data URI with a raw "%" at character ${bodyAt + raw.index + 1} ("…${around(body, raw.index)}…"), which does not decode (write it as %25): ${fallsBack}`;
+      for (const run of body.matchAll(/(?:%[0-9A-Fa-f]{2})+/g)) {
+        try {
+          decodeURIComponent(run[0]);
+        } catch {
+          return `is a data URI with an escape sequence that is not UTF-8 ("${run[0].slice(0, 12)}") at character ${bodyAt + (run.index ?? 0) + 1}: ${fallsBack}`;
+        }
+      }
+      return `is a data URI whose body does not decode: ${fallsBack}`;
+    }
+  }
+  if (decodeSvgDataUri(src) === null) return `is a data URI that decodes to text that does not begin with its <svg> element (it begins "${text.trim().slice(0, 30)}"): ${fallsBack}`;
+  const e = svgXmlError(text);
+  if (e) return `is a data URI that decodes to SVG that is not well-formed at character ${e.at + 1} of the SVG, ${e.why} ("…${around(text, e.at)}…"): the page inlines it as HTML, which repairs it silently and may draw it wrongly`;
+  return null;
+}
+
+/**
+ * Warnings (never fatal): a figure source the renderer cannot inline as it was written (the Unit 7 reviewer, 8 Oct 2026:
+ * u7-conclusions q0007's data URI carries a raw "%", so the graph fell back to an <img> and drew black in the dark and
+ * evening themes, and the build did not notice). Every data:image/svg+xml string in a bundle (withdrawn items not read)
+ * or in a note's blocks, named by its item id or its note block, with the character position of the fault.
+ */
+export function figureSourceWarnings(json: unknown, label: string): string[] {
+  const out: string[] = [];
+  const walk = (node: unknown, owner: string, at: string) => {
+    if (typeof node === "string") {
+      const problem = node.trimStart().startsWith("data:image/svg+xml") ? dataUriProblem(node) : null;
+      if (problem) out.push(`${label} ${owner}: the figure at ${at} ${problem}`);
+      return;
+    }
+    if (Array.isArray(node)) return node.forEach((x, k) => walk(x, owner, `${at}[${k}]`));
+    if (!node || typeof node !== "object") return;
+    const o = node as Record<string, unknown>;
+    const own = typeof o.id === "string" ? o.id : owner;
+    for (const [k, v] of Object.entries(o)) walk(v, own, own === owner && at ? `${at}.${k}` : k);
+  };
+  if (Array.isArray(json)) {
+    json.forEach((b, k) => {
+      const type = b && typeof b === "object" && typeof (b as { type?: unknown }).type === "string" ? (b as { type: string }).type : "block";
+      const id = b && typeof b === "object" && typeof (b as { id?: unknown }).id === "string" ? (b as { id: string }).id : null;
+      walk(b, id ?? `note block ${k + 1} (${type})`, "");
+    });
+    return out;
+  }
+  if (json && typeof json === "object") walk(withoutWithdrawn(json), "bundle", "");
   return out;
 }
 

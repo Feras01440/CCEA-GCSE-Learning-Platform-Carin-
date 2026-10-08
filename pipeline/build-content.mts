@@ -15,7 +15,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { TopicBundle, type VerificationLog } from "../src/lib/content/schema.ts";
 import { lintKeyWords } from "../src/components/items/keyword-lint.ts";
-import { figureLeakWarnings, lintContent, lintNoteBlocks, markingWarnings, noteBlockWarnings, sizeWarnings } from "../src/components/items/content-lint.ts";
+import { figureLeakWarnings, figureSourceWarnings, lintContent, lintNoteBlocks, markingWarnings, noteBlockWarnings, sizeWarnings } from "../src/components/items/content-lint.ts";
 import { lessonReadiness } from "../src/lib/slides/readiness.ts";
 import { publicVerification } from "../src/lib/build/public-verification.ts";
 import { characterWarnings, keyWordBarWarnings } from "../src/lib/content/shipped-text-lint.ts";
@@ -76,6 +76,7 @@ const manifest: { generatedAt: string; topics: ManifestTopic[]; problems: string
 const written = new Set<string>();
 const keyWordWarnings = { hard: 0, soft: 0 };
 let figureWarnings = 0;
+let figureSourceCount = 0;
 let markingWarningCount = 0;
 let gateWarningCount = 0;
 let sizeWarningCount = 0;
@@ -117,6 +118,12 @@ for (const file of files) {
     console.warn("FIGURE", w);
     figureWarnings += 1;
   }
+  // A figure source the renderer cannot inline (a data URI that does not decode, or SVG that is not well-formed):
+  // warned, never fatal (content-lint.ts figureSourceWarnings; the Unit 7 reviewer, 8 Oct 2026).
+  for (const w of figureSourceWarnings(raw, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"))) {
+    console.warn("FIGURE", w);
+    figureSourceCount += 1;
+  }
   const kw = lintKeyWords(raw, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"));
   for (const w of kw.hard) console.warn("KEYWORDS", w);
   // A group earned only by the part's own wording (a key word the stem, scheme or solution already says, as in the C2 E
@@ -151,6 +158,10 @@ for (const file of files) {
   for (const w of noteBlockWarnings(noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"), raw)) {
     console.warn("GATE", w);
     gateWarningCount += 1;
+  }
+  for (const w of figureSourceWarnings(noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"))) {
+    console.warn("FIGURE", w);
+    figureSourceCount += 1;
   }
   // Sizes a phone should not have to download (content-lint.ts sizeWarnings): warned, never fatal.
   for (const w of sizeWarnings(raw, noteBlocks, path.relative(PACKS, path.dirname(file)).split(path.sep).join("/"))) {
@@ -243,7 +254,7 @@ function listFiles(dir: string, out: string[] = []): string[] {
 for (const stale of listFiles(OUT_PUBLIC).filter((p) => !written.has(path.resolve(p)))) fs.rmSync(stale, { force: true });
 console.log(
   `\n${manifest.topics.length} topic bundle(s) published, ${manifest.problems.length} problem(s), ${keyWordWarnings.hard} key-word warning(s)` +
-    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}${markingWarningCount ? `, ${markingWarningCount} marking warning(s) (MARKING above)` : ""}${gateWarningCount ? `, ${gateWarningCount} gate warning(s) (GATE above)` : ""}${sizeWarningCount ? `, ${sizeWarningCount} size warning(s) (SIZE above)` : ""}${characterWarningCount ? `, ${characterWarningCount} character warning(s) (CHARACTER above)` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
+    `${keyWordWarnings.soft ? ` (+${keyWordWarnings.soft} earned only by the part's own wording, each named above as KEYWORDS … "(the part's own wording uses it)")` : ""}${figureWarnings ? `, ${figureWarnings} figure(s) printing an answer` : ""}${figureSourceCount ? `, ${figureSourceCount} figure source(s) the renderer cannot inline (FIGURE above)` : ""}${markingWarningCount ? `, ${markingWarningCount} marking warning(s) (MARKING above)` : ""}${gateWarningCount ? `, ${gateWarningCount} gate warning(s) (GATE above)` : ""}${sizeWarningCount ? `, ${sizeWarningCount} size warning(s) (SIZE above)` : ""}${characterWarningCount ? `, ${characterWarningCount} character warning(s) (CHARACTER above)` : ""}. Manifest → ${path.relative(ROOT, OUT_MANIFEST)}`,
 );
 // An invalid bundle is skipped (never shipped) and reported. `--strict` (used by `npm run content:check`
 // and by authors) turns problems into a failing exit code; the app build keeps publishing the valid bundles.

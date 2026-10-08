@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { figureLeakWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, markingWarnings, noteBlockWarnings, sizeWarnings, svgDrawDefects, weFigureFor } from "./content-lint";
+import { figureLeakWarnings, figureSourceWarnings, lintContent, lintNoteBlocks, lostBackslashDefect, mangledRegexDefect, markingWarnings, noteBlockWarnings, sizeWarnings, svgDrawDefects, weFigureFor } from "./content-lint";
 import { figureForMode } from "./WorkedExampleAsQuestion";
 import { ALLOWED } from "../../../scripts/qa/figure-leaks.mjs";
 
@@ -884,5 +884,59 @@ describe("markingWarnings", () => {
     expect(markingWarnings(b, label)).toEqual([
       `${label} q.x.y.0001(a): common error alg.uncancelled earns 3 of 3 on a form task (at most 2: the form is a mark; ruling 15)`,
     ]);
+  });
+});
+
+describe("figure sources the renderer cannot inline (FIGURE)", () => {
+  // The Unit 7 reviewer, 8 Oct 2026: u7-conclusions q0007's figure is a data URI with a raw "%", so decodeSvgDataUri
+  // (src/lib/ux/svg.ts) fails, Figure.tsx falls back to an <img>, and the graph draws black on the dark and evening themes.
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path d="M0 0L10 10" stroke="currentColor"/><text x="1" y="9">50 %</text></svg>';
+  const utf8 = (body: string) => `data:image/svg+xml;utf8,${body}`;
+  const encoded = utf8(encodeURIComponent(svg));
+  const base64 = `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+  const bundle = (src: string, extra: Record<string, unknown> = {}) => ({
+    questions: [{ id: "q.science.u7.u7-conclusions.0007", parts: [{ id: "a" }], figures: [{ kind: "svg", src, alt: "A graph." }], verification: "ver.q.7" }],
+    verification: [{ id: "ver.q.7", itemId: "q.science.u7.u7-conclusions.0007", status: "verified" }],
+    ...extra,
+  });
+
+  test("is quiet for a data URI that decodes to a well-formed SVG, URL-encoded or base64, and for an inline SVG", () => {
+    expect(figureSourceWarnings(bundle(encoded), "science/u7/u7-conclusions")).toEqual([]);
+    expect(figureSourceWarnings(bundle(base64), "science/u7/u7-conclusions")).toEqual([]);
+    expect(figureSourceWarnings(bundle(svg), "science/u7/u7-conclusions")).toEqual([]);
+  });
+
+  test("names the item and the position of a raw % that does not decode", () => {
+    const raw = utf8(encodeURIComponent(svg).replace("50%20%25", "50%20%"));
+    const [w, ...rest] = figureSourceWarnings(bundle(raw), "science/u7/u7-conclusions");
+    expect(rest).toEqual([]);
+    expect(w).toContain("science/u7/u7-conclusions q.science.u7.u7-conclusions.0007");
+    expect(w).toContain('a raw "%" at character ' + (raw.indexOf("50%20%") + 5 + 1));
+    expect(w).toContain("<img>");
+  });
+
+  test("reports a base64 body that does not decode, and a body that does not begin with its <svg> element", () => {
+    expect(figureSourceWarnings(bundle("data:image/svg+xml;base64,PHN2Zz4*"), "t")[0]).toContain('a character base64 does not use ("*") at character');
+    const declared = utf8(encodeURIComponent('<?xml version="1.0"?>' + svg));
+    expect(figureSourceWarnings(bundle(declared), "t")[0]).toContain("does not begin with its <svg> element");
+  });
+
+  test("reports SVG that is not well-formed after decoding, with the position in the decoded SVG", () => {
+    const unclosed = figureSourceWarnings(bundle(utf8(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg"><g><path d="M0 0"/></svg>'))), "t")[0];
+    expect(unclosed).toContain("not well-formed");
+    expect(unclosed).toContain("</svg> closes <g>");
+    const amp = figureSourceWarnings(bundle(utf8(encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg"><text>salt & water</text></svg>'))), "t")[0];
+    expect(amp).toContain('a bare "&"');
+  });
+
+  test("reads every figure source in a bundle and in note blocks, and skips withdrawn items", () => {
+    const raw = utf8(encodeURIComponent(svg).replace("%25", "%"));
+    const we = { id: "we.x.01", steps: [], figure: { kind: "svg", src: raw, alt: "x" }, twin: { figure: { kind: "svg", src: raw, alt: "x" } } };
+    const warnings = figureSourceWarnings(bundle(encoded, { workedExamples: [we] }), "t");
+    expect(warnings.map((w) => w.split(":")[0])).toEqual(["t we.x.01", "t we.x.01"]);
+    const blocks = [{ type: "h", text: "One" }, { type: "see", stem: "S", steps: [], figure: { kind: "svg", src: raw, alt: "x" } }, { type: "figure", alt: "x", svg: raw }];
+    expect(figureSourceWarnings(blocks, "t").map((w) => w.split(":")[0])).toEqual(["t note block 2 (see)", "t note block 3 (figure)"]);
+    const withdrawn = bundle(raw, { verification: [{ id: "ver.q.7", itemId: "q.science.u7.u7-conclusions.0007", status: "withdrawn" }] });
+    expect(figureSourceWarnings(withdrawn, "t")).toEqual([]);
   });
 });
