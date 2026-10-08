@@ -64,7 +64,7 @@ export type NoteBlock =
   | { type: "callout"; kind: "spec" | "mustknow" | "notonspec" | "examiner" | "why"; title?: string; md: string; source?: string }
   | { type: "figure"; alt: string; svg?: string; caption?: string }
   | { type: "photo"; src: string; alt: string; credit: string; licence: string; licenceUrl?: string; sourceUrl?: string; caption?: string; prompt?: string }
-  | { type: "video"; videoId: string; title: string; channel: string; start?: number; end?: number; why?: string; corbettmathsNumber?: number }
+  | { type: "video"; videoId: string; title: string; channel: string; start?: number; end?: number; why?: string; corbettmathsNumber?: number | string }
   | { type: "sim"; provider: "phet" | "geogebra"; url: string; title: string; attribution: string; licence: string; task?: string; height?: number }
   | { type: "prompt"; promptId: string };
 

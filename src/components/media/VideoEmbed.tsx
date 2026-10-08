@@ -13,7 +13,8 @@ export interface VideoRef {
   start?: number;
   end?: number;
   why?: string;
-  corbettmathsNumber?: number;
+  /** Printed, never computed with: Corbettmaths numbers carry letter suffixes (267d). */
+  corbettmathsNumber?: number | string;
 }
 
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;

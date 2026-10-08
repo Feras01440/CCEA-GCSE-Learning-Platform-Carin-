@@ -1874,7 +1874,8 @@ const OtherNoteBlock = z.discriminatedUnion("type", [
     start: z.number().optional(),
     end: z.number().optional(),
     why: z.string().optional(),
-    corbettmathsNumber: z.number().optional(),
+    /** Corbettmaths video numbers carry letter suffixes (267d): a number, or digits with at most one lower-case letter. */
+    corbettmathsNumber: z.union([z.number(), z.string().regex(/^\d+[a-z]?$/)]).optional(),
   }),
   z.object({
     type: z.literal("sim"),

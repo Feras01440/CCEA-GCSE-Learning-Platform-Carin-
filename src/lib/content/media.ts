@@ -8,7 +8,7 @@ export interface TopicMedia {
   reading: Array<{ label: string; url: string; provider: string }>;
 }
 
-type RawVideo = { provider?: string; videoId: string; title: string; channel: string; url?: string; start?: number; end?: number; why?: string; embeddable?: boolean; corbettmathsNumber?: number };
+type RawVideo = { provider?: string; videoId: string; title: string; channel: string; url?: string; start?: number; end?: number; why?: string; embeddable?: boolean; corbettmathsNumber?: number | string };
 type RawSim = { provider: "phet" | "geogebra"; url: string; title: string; licence?: string; attribution?: string; task?: string };
 type RawEntry = { videos?: RawVideo[]; sims?: RawSim[]; reading?: Array<{ label: string; url: string; provider: string }> };
 
