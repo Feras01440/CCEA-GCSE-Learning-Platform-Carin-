@@ -122,7 +122,7 @@
         "Substitute both roots back into the length expressions, reject the one that makes a length negative, and write the reason",
         "Give answers to 2 decimal places when asked, keeping full accuracy in the working and rounding once at the end"
       ],
-      "howExamined": "M4 (calculator, 2 hours, 100 marks; the formula sheet is page 2). Three shapes recur. A bare 'solve' of 3-4 marks sits early-to-middle (Summer 2025 Q3, November 2025 Q14, Summer 2026 Q10). A setting-up question of 5-6 marks, usually with a diagram and often with 'set up and solve a quadratic equation', sits at Q19-Q22 (Summer 2023 Q20, Summer 2024 Q22, November 2025 Q19, Summer 2026 Q20). A scaffolded 'show that' then 'solve' then 'find the length' of 6-7 marks sits at Q12-Q19 (January 2020 Q16, Summer 2024 Q12, November 2023 Q19, November 2024 Q18, Summer 2025 Q15). Schemes for this topic are written almost entirely in combined MA marks — one per line of the derivation — with an M for the formula substitution and an A for the final value; a 'show that' is all or nothing per line, and the rejection of the impossible root is its own mark.",
+      "howExamined": "M4 (calculator, 2 hours, 100 marks; the formula sheet is page 2). Three shapes recur. A bare quadratic is rarely set on its own: the formula is most often the last step of an algebraic-fractions equation, 6 to 8 marks late in the paper and usually to 2 decimal places (nine of the eleven papers from Summer 2021 to Summer 2026, for example November 2023 Q23, November 2024 Q20 and November 2025 Q24), and once after a squared bracket (Summer 2022 Q14). A setting-up question of 5-6 marks, usually with a diagram and often with 'set up and solve a quadratic equation', sits at Q19-Q22 (Summer 2023 Q20, Summer 2024 Q22, November 2025 Q19, Summer 2026 Q20). A scaffolded 'show that' then 'solve' then 'find the length' of 6-7 marks sits at Q12-Q19 (January 2020 Q16, Summer 2024 Q12, November 2023 Q19, November 2024 Q18, Summer 2025 Q15). Schemes for this topic are written almost entirely in combined MA marks — one per line of the derivation — with an M for the formula substitution and an A for the final value; a 'show that' is all or nothing per line, and the rejection of the impossible root is its own mark.",
       "traps": [
         "Solving the printed equation instead of deriving it: full marks or zero, and the commonest route to zero (Summer 2025 M4 Q15, November 2024 M4 Q18)",
         "Losing the half from the area of a triangle, or treating a trapezium as a rectangle (November 2024 M4 Q18, Summer 2023 M4 Q20)",
@@ -131,12 +131,12 @@
         "Adding overlapping rectangles in a compound shape, so the corner is counted twice (November 2025 M4 Q19)",
         "Typing −b² without brackets, so the value under the root comes out negative (November 2025 M4 Q24)",
         "Leaving a root on the answer line that makes a length negative, or dropping the second root when no context forbids it (Summer 2024 M4 Q22, Summer 2023 M4 Q22)",
-        "Ignoring 'correct to 2 decimal places', including the final zero in an answer such as 0.20 (Summer 2023 M4 Q22)"
+        "Ignoring 'correct to 2 decimal places' (Summer 2023 M4 Q22); two places means two, so a root such as 0.2 is written 0.20"
       ]
     },
     "verification": "ver.note.maths.m4.quadratic-formula-and-harder-quadratic-equations",
     "version": 1,
-    "updated": "2026-09-13"
+    "updated": "2026-10-08"
   },
   "workedExamples": [
     {
@@ -160,7 +160,41 @@
           "decision": "The equation is already in the form ax² + bx + c = 0 with the x² term positive, so the three numbers can be read straight off. I write them down before touching the calculator: b is −8, and the minus sign belongs to it.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "a = 3, b = -8, c = -2"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "a = 3",
+                  "a=3"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "b = -8",
+                  "b = −8",
+                  "b=-8",
+                  "b=−8"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "c = -2",
+                  "c = −2",
+                  "c=-2",
+                  "c=−2"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         },
         {
           "n": 2,
@@ -177,7 +211,15 @@
           },
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "x=\\frac{8+\\sqrt{88}}{6}, x=\\frac{8-\\sqrt{88}}{6}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 3,
@@ -185,7 +227,20 @@
           "decision": "The value under the root is worked out on its own line. Subtracting a negative adds: 64 − (−24) = 88. A negative here would be the signal to go back, not a conclusion.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 88,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         },
         {
           "n": 4,
@@ -193,7 +248,20 @@
           "decision": "The root is kept at full calculator accuracy. Rounding it to 9.38 now would move the second answer in the third decimal place, and the scheme marks the most accurate figure seen.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 9.38083151964686,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
         },
         {
           "n": 5,
@@ -201,7 +269,42 @@
           "decision": "Both signs of the ± are used. The plus branch gives (8 + 9.3808…) ÷ 6 and the minus branch gives (8 − 9.3808…) ÷ 6; the second is negative, which is fine because there is no context to forbid it.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "x = 2.896805 or x = -0.230139"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "2.90",
+                  "2.9",
+                  "2.897",
+                  "2.8968",
+                  "2.89681",
+                  "2.896805"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "-0.23",
+                  "−0.23",
+                  "-0.230",
+                  "−0.230",
+                  "-0.2301",
+                  "−0.2301",
+                  "-0.23014",
+                  "−0.23014",
+                  "-0.230139",
+                  "−0.230139"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         },
         {
           "n": 6,
@@ -209,7 +312,29 @@
           "decision": "Rounding happens once, at the end, to the accuracy the question named. Both values go on the answer line; solve means every solution.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "x = 2.90 or x = -0.23"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "2.90"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "-0.23",
+                  "−0.23"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         }
       ],
       "finalAnswer": "$x = 2.90$ or $x = -0.23$",
@@ -399,6 +524,231 @@
       "version": 1
     },
     {
+      "id": "we.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "paper": {
+        "unit": "M4",
+        "calculator": true,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "stem": "Factorise $6x^2 - x - 15$ and hence solve $6x^2 - x - 15 = 0$.",
+      "steps": [
+        {
+          "n": 1,
+          "working": "$ac = 6 \\times (-15) = -90$",
+          "decision": "With a ≠ 1 the pair comes from ac, not from c alone: it must multiply to −90 and add to −1, the coefficient of x.",
+          "earns": [
+            "M1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": -90,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "$-10 \\times 9 = -90$ and $-10 + 9 = -1$",
+          "decision": "Go through the factor pairs of 90 until one, with a minus sign, adds to −1: 9 and 10 differ by 1, so −10 and +9.",
+          "whyMenu": {
+            "options": [
+              "Because the pair must multiply to ac = −90, not to c = −15",
+              "Because the pair must multiply to −15 and add to −1",
+              "Because −10 and 9 are the only numbers that add to −1"
+            ],
+            "correct": 0,
+            "explain": "When a is not 1 the product to aim for is ac. Using c alone works only for x² + bx + c."
+          },
+          "earns": [
+            "MA1"
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "-10 and 9"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "-10",
+                  "−10"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "9"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
+        },
+        {
+          "n": 3,
+          "working": "$6x^2 - 10x + 9x - 15 = 2x(3x - 5) + 3(3x - 5)$",
+          "decision": "Split the middle term with the pair, then take the highest common factor out of each half. Both brackets must match.",
+          "earns": [
+            "MA1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "2x(3x-5)+3(3x-5)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
+        },
+        {
+          "n": 4,
+          "working": "$(3x - 5)(2x + 3)$",
+          "decision": "The repeated bracket is one factor and what is left outside is the other. Expanding checks it: 6x² + 9x − 10x − 15.",
+          "earns": [
+            "A1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "(3x-5)(2x+3)",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ],
+            "mustBeFactorised": true
+          }
+        },
+        {
+          "n": 5,
+          "working": "$(3x - 5)(2x + 3) = 0$, so $3x - 5 = 0$ or $2x + 3 = 0$",
+          "decision": "Only now is it an equation. A product is zero only when one of its factors is zero.",
+          "earns": [
+            "MA1"
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "3x - 5 = 0 or 2x + 3 = 0"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "3x - 5 = 0",
+                  "3x − 5 = 0",
+                  "3x-5=0",
+                  "3x−5=0"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "2x + 3 = 0",
+                  "2x+3=0"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
+        },
+        {
+          "n": 6,
+          "working": "$x = \\tfrac{5}{3}$ or $x = -\\tfrac{3}{2}$",
+          "decision": "Each bracket is solved on its own. The roots are exact fractions, so there is nothing to round.",
+          "earns": [
+            "A1"
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "x=\\frac{5}{3}, x=-\\frac{3}{2}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "$(3x - 5)(2x + 3)$; $x = \\tfrac{5}{3}$ or $x = -\\tfrac{3}{2}$",
+      "twin": {
+        "stem": "Factorise $4x^2 + 4x - 15$ and hence solve $4x^2 + 4x - 15 = 0$.",
+        "answer": {
+          "kind": "text",
+          "accepted": [
+            "(2x + 5)(2x - 3); x = 1.5 or x = -2.5",
+            "(2x - 3)(2x + 5); x = 3/2 or x = -5/2",
+            "x = 1.5 or x = -2.5",
+            "x = 3/2 or x = -5/2"
+          ],
+          "keyWords": [
+            {
+              "any": [
+                "(2x + 5)(2x - 3)",
+                "(2x - 3)(2x + 5)",
+                "(2x+5)(2x-3)",
+                "(2x-3)(2x+5)",
+                "(2x + 5)(2x − 3)",
+                "(2x − 3)(2x + 5)"
+              ],
+              "marks": 1
+            },
+            {
+              "any": [
+                "1.5",
+                "3/2"
+              ],
+              "marks": 1
+            },
+            {
+              "any": [
+                "-2.5",
+                "−2.5",
+                "-5/2",
+                "−5/2"
+              ],
+              "marks": 1
+            }
+          ],
+          "listingRule": false
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        }
+      ],
+      "verification": "ver.we.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
+      "version": 1
+    },
+    {
       "id": "we.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
       "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
       "specRefs": [
@@ -414,8 +764,8 @@
       "stem": "In the right-angled triangle $PQR$ the right angle is at $Q$, $PQ = (x + 4)$ cm and $QR = (2x + 1)$ cm. The area of the triangle is $15\\ \\text{cm}^2$.\n\n(a) Show that $2x^2 + 9x - 26 = 0$.\n\n(b) Find the lengths of $PQ$ and $QR$.",
       "figure": {
         "kind": "svg",
-        "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20380%20250'%20width%3D'380'%20height%3D'250'%20role%3D'img'%20aria-label%3D'Right-angled%20triangle%20PQR%20with%20the%20right%20angle%20at%20Q%2C%20PQ%20%3D%20x%20%2B%204%20and%20QR%20%3D%202x%20%2B%201%2C%20lengths%20in%20centimetres'%3E%3Ctitle%3ERight-angled%20triangle%20PQR%20with%20the%20right%20angle%20at%20Q%2C%20PQ%20%3D%20x%20%2B%204%20and%20QR%20%3D%202x%20%2B%201%2C%20lengths%20in%20centimetres%3C%2Ftitle%3E%3Cpath%20d%3D'M108%2048%20L108%20196%20L330%20196%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Cpath%20d%3D'M108%20180%20L124%20180%20L124%20196'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'1.5'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'96'%20y%3D'127'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3Ex%20%2B%204%3C%2Ftext%3E%3Ctext%20x%3D'219'%20y%3D'222'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E2x%20%2B%201%3C%2Ftext%3E%3Ctext%20x%3D'98'%20y%3D'42'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3EP%3C%2Ftext%3E%3Ctext%20x%3D'98'%20y%3D'216'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3EQ%3C%2Ftext%3E%3Ctext%20x%3D'338'%20y%3D'216'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%3ER%3C%2Ftext%3E%3Ctext%20x%3D'372'%20y%3D'22'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'12'%20text-anchor%3D'end'%20opacity%3D'0.75'%3Elengths%20in%20cm%3B%20diagram%20not%20drawn%20accurately%3C%2Ftext%3E%3C%2Fsvg%3E",
-        "alt": "Right-angled triangle PQR. The right angle is at Q. The vertical side PQ is labelled x + 4 and the horizontal side QR is labelled 2x + 1, with a note that the lengths are in centimetres."
+        "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 290' role='img' font-family='inherit'><title>Right-angled triangle PQR with the right angle at Q</title><polygon points='150,50 150,230 350,230' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><path d='M164 230L164 216L150 216' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='140' y='145' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>(x + 4) cm</text><text x='250' y='256' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(2x + 1) cm</text><text x='150' y='40' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>P</text><text x='140' y='248' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>Q</text><text x='358' y='235' font-size='15' text-anchor='start' fill='currentColor' stroke='none' font-family='inherit'>R</text><text x='392' y='282' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
+        "alt": "Right-angled triangle PQR with the right angle at Q; PQ is labelled (x + 4) cm and QR is labelled (2x + 1) cm."
       },
       "steps": [
         {
@@ -424,7 +774,25 @@
           "decision": "Name the shape and write its formula in words before any algebra. The right angle at Q means the two given sides are the base and the height, so no extra length is needed. The area of a triangle is not on the formula sheet.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "Area = 1/2 × base × height"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "1/2",
+                  "½",
+                  "half",
+                  "0.5"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         },
         {
           "n": 2,
@@ -441,7 +809,15 @@
           },
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "\\frac{1}{2}(x+4)(2x+1)=15",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 3,
@@ -449,7 +825,15 @@
           "decision": "Doubling both sides clears the half in one move. Then the double bracket is expanded in full: four products, not two.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "2x^2+9x+4=30",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 4,
@@ -457,7 +841,15 @@
           "decision": "Collect and take the 30 across. The line before the printed equation has to be visible; an answer that begins at the printed equation earns nothing in a show that.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "2x^2+9x-26=0",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 5,
@@ -466,7 +858,15 @@
           "earns": [
             "MA1",
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "x=-6.5, x=2",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 6,
@@ -474,7 +874,28 @@
           "decision": "Each root is substituted back into the length expressions. A length cannot be negative, so −6.5 goes, and the reason is written down. Check: ½ × 6 × 5 = 15, the area given.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "PQ = 6 cm and QR = 5 cm"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "6"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "5"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         }
       ],
       "finalAnswer": "$2x^2 + 9x - 26 = 0$; $PQ = 6$ cm and $QR = 5$ cm",
@@ -538,7 +959,15 @@
           "decision": "The equation is not in the form ax² + bx + c = 0, so nothing can be substituted yet. Expand one side at a time, starting on the left.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "4x^2+4x",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 2,
@@ -555,7 +984,15 @@
           },
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "x^2+6x+14",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 3,
@@ -563,15 +1000,31 @@
           "decision": "Move everything to the side that keeps x² positive. 4x² − x² = 3x², 4x − 6x = −2x, and 0 − 14 = −14. Now it is in the form the formula expects.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "3x^2-2x-14=0",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 4,
-          "working": "$x = \\frac{-(-2) \\pm \\sqrt{(-2)^2 - 4(3)(-14)}}{2(3)} = \\frac{2 \\pm \\sqrt{172}}{6}$",
+          "working": "$$x = \\frac{-(-2) \\pm \\sqrt{(-2)^2 - 4(3)(-14)}}{2(3)} = \\frac{2 \\pm \\sqrt{172}}{6}$$",
           "decision": "a = 3, b = −2, c = −14. Pairs for 3 × (−14) = −42 adding to −2? None, so this one will not factorise and the formula is the route. Brackets round the −2 before squaring.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "x=\\frac{2+\\sqrt{172}}{6}, x=\\frac{2-\\sqrt{172}}{6}",
+            "equivalence": "equivalent",
+            "variables": [
+              "x"
+            ]
+          }
         },
         {
           "n": 5,
@@ -579,7 +1032,29 @@
           "decision": "√172 = 13.1148… kept in full, then (2 + 13.1148…) ÷ 6 and (2 − 13.1148…) ÷ 6. Both roots go on the answer line, rounded only here.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "text",
+            "accepted": [
+              "x = 2.52 or x = -1.85"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "2.52"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "-1.85",
+                  "−1.85"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          }
         }
       ],
       "finalAnswer": "$x = 2.52$ or $x = -1.85$",
@@ -919,6 +1394,217 @@
             }
           ],
           "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.maths.m4.quadratic-formula-and-harder-quadratic-equations.post",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "01",
+          "stem": "For $3x^2 - 4x - 2 = 0$, what is $b^2 - 4ac$?",
+          "skill": "Substitute with negatives bracketed",
+          "options": [
+            {
+              "id": "a",
+              "text": "$40$",
+              "correct": true,
+              "feedback": "(−4)² − 4(3)(−2) = 16 + 24 = 40."
+            },
+            {
+              "id": "b",
+              "text": "$8$",
+              "correct": false,
+              "misconception": "maths.quadratics.formula-b-squared-unbracketed",
+              "feedback": "−4² keyed without its bracket gives −16. Bracket the negative: (−4)² = 16, so 16 + 24 = 40."
+            },
+            {
+              "id": "c",
+              "text": "$-8$",
+              "correct": false,
+              "misconception": "maths.algebra.bracket-expansion-sign",
+              "feedback": "c is −2, so −4ac is +24, not −24: 16 + 24 = 40."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "02",
+          "stem": "Which is $2x^2 = 5x + 3$ rearranged so that one side is zero?",
+          "skill": "Make one side zero",
+          "options": [
+            {
+              "id": "a",
+              "text": "$2x^2 - 5x - 3 = 0$",
+              "correct": true,
+              "feedback": "Take 5x and 3 from both sides: both change sign as they cross."
+            },
+            {
+              "id": "b",
+              "text": "$2x^2 + 5x + 3 = 0$",
+              "correct": false,
+              "misconception": "maths.quadratics.not-rearranged-to-zero",
+              "feedback": "The terms were moved without changing sign. Subtract 5x and 3 from both sides."
+            },
+            {
+              "id": "c",
+              "text": "$2x^2 - 5x + 3 = 0$",
+              "correct": false,
+              "misconception": "maths.algebra.bracket-expansion-sign",
+              "feedback": "Only one sign changed. Moving +3 across makes it −3 as well."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "03",
+          "stem": "A right-angled triangle has perpendicular sides $x$ cm and $(x + 5)$ cm and an area of $18\\ \\text{cm}^2$. Which equation is right?",
+          "skill": "Set up from a triangle",
+          "options": [
+            {
+              "id": "a",
+              "text": "$\\tfrac{1}{2}x(x + 5) = 18$",
+              "correct": true,
+              "feedback": "Half the product of the two sides at the right angle."
+            },
+            {
+              "id": "b",
+              "text": "$x(x + 5) = 18$",
+              "correct": false,
+              "misconception": "maths.quadratics.wrong-shape-formula-setup",
+              "feedback": "That is a rectangle's area; the triangle is half of it."
+            },
+            {
+              "id": "c",
+              "text": "$x + (x + 5) = 18$",
+              "correct": false,
+              "misconception": "maths.quadratics.wrong-shape-formula-setup",
+              "feedback": "Adding the sides is part of a perimeter. An area multiplies them, with the half."
+            },
+            {
+              "id": "d",
+              "text": "$\\tfrac{1}{2}x(5x) = 18$",
+              "correct": false,
+              "misconception": "maths.algebra.misread-plus-as-times",
+              "feedback": "x + 5 is five more than x, not five times x. Copy each label exactly."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "04",
+          "stem": "A side is $(4x - 5)$ cm. The equation gives $x = 3$ or $x = -2.5$. What goes on the answer line?",
+          "skill": "Reject a root with a reason",
+          "options": [
+            {
+              "id": "a",
+              "text": "$x = 3$, because $4x - 5$ is negative when $x = -2.5$",
+              "correct": true,
+              "feedback": "At x = −2.5 the side would be −15 cm, so that root is rejected, with the reason."
+            },
+            {
+              "id": "b",
+              "text": "$x = 3$ and $x = -2.5$",
+              "correct": false,
+              "misconception": "maths.quadratics.no-validity-check-of-roots",
+              "feedback": "Both solve the equation, but x = −2.5 makes the side −15 cm."
+            },
+            {
+              "id": "c",
+              "text": "$x = -2.5$",
+              "correct": false,
+              "misconception": "maths.quadratics.no-validity-check-of-roots",
+              "feedback": "That root makes the side negative; x = 3 makes it 7 cm."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "05",
+          "stem": "Expand $(x - 6)^2$.",
+          "skill": "A squared bracket has a middle term",
+          "options": [
+            {
+              "id": "a",
+              "text": "$x^2 - 12x + 36$",
+              "correct": true,
+              "feedback": "(x − 6)(x − 6): two rectangles of −6x make −12x."
+            },
+            {
+              "id": "b",
+              "text": "$x^2 + 36$",
+              "correct": false,
+              "misconception": "maths.algebra.expand-squared-bracket",
+              "feedback": "The middle term is missing: (x − 6)² is (x − 6)(x − 6)."
+            },
+            {
+              "id": "c",
+              "text": "$x^2 - 36$",
+              "correct": false,
+              "misconception": "maths.algebra.expand-squared-bracket",
+              "feedback": "That is (x − 6)(x + 6). Squaring the bracket gives x² − 12x + 36."
+            },
+            {
+              "id": "d",
+              "text": "$x^2 - 6x + 36$",
+              "correct": false,
+              "misconception": "maths.algebra.expand-squared-bracket",
+              "feedback": "Only one rectangle counted; there are two, −12x in all."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "06",
+          "stem": "The formula gives $x = 4.0704\\ldots$ and $x = -0.7370\\ldots$, and the question asks for 2 decimal places. What goes on the answer line?",
+          "skill": "Round once, both roots",
+          "options": [
+            {
+              "id": "a",
+              "text": "$x = 4.07$ or $x = -0.74$",
+              "correct": true,
+              "feedback": "Both roots, each rounded once to two decimal places."
+            },
+            {
+              "id": "b",
+              "text": "$x = 4.07$",
+              "correct": false,
+              "misconception": "maths.quadratics.negative-root-discarded",
+              "feedback": "Nothing rules out the negative root, so it belongs on the answer line too."
+            },
+            {
+              "id": "c",
+              "text": "$x = 4.1$ or $x = -0.7$",
+              "correct": false,
+              "misconception": "maths.quadratics.rounding-not-as-demanded",
+              "feedback": "That is one decimal place; the question asked for two."
+            },
+            {
+              "id": "d",
+              "text": "$x = 4.07$ or $x = -0.73$",
+              "correct": false,
+              "misconception": "maths.quadratics.rounding-not-as-demanded",
+              "feedback": "−0.7370… rounds to −0.74: the third digit, 7, rounds the second up."
+            }
+          ],
+          "secondsExpected": 40,
           "confidence": true,
           "hypercorrectionQueue": true
         }
@@ -1422,7 +2108,7 @@
             "(−11)² = 121, and 4 × 4 × 2 = 32.",
             "√89 stays at full accuracy until the last line."
           ],
-          "workedSolution": "$x = \\dfrac{11 \\pm \\sqrt{(-11)^2 - 4(4)(2)}}{2(4)} = \\dfrac{11 \\pm \\sqrt{89}}{8}$, so $x = 2.55$ or $x = 0.20$ (2 d.p.).",
+          "workedSolution": "$$x = \\dfrac{11 \\pm \\sqrt{(-11)^2 - 4(4)(2)}}{2(4)} = \\dfrac{11 \\pm \\sqrt{89}}{8}$$, so $x = 2.55$ or $x = 0.20$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.quadratics.rounding-not-as-demanded",
@@ -1556,7 +2242,7 @@
             "−4ac = −4(3)(−5) = +60, so the value under the root is 49 + 60.",
             "Both roots are asked for; one is negative."
           ],
-          "workedSolution": "$x = \\dfrac{7 \\pm \\sqrt{(-7)^2 - 4(3)(-5)}}{2(3)} = \\dfrac{7 \\pm \\sqrt{109}}{6}$, so $x = 2.91$ or $x = -0.57$ (2 d.p.).",
+          "workedSolution": "$$x = \\dfrac{7 \\pm \\sqrt{(-7)^2 - 4(3)(-5)}}{2(3)} = \\dfrac{7 \\pm \\sqrt{109}}{6}$$, so $x = 2.91$ or $x = -0.57$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.algebra.bracket-expansion-sign",
@@ -1690,7 +2376,7 @@
             "(9)² − 4(2)(−4) = 81 + 32.",
             "The two roots are on opposite sides of zero; give both."
           ],
-          "workedSolution": "$x = \\dfrac{-9 \\pm \\sqrt{9^2 - 4(2)(-4)}}{2(2)} = \\dfrac{-9 \\pm \\sqrt{113}}{4}$, so $x = 0.41$ or $x = -4.91$ (2 d.p.).",
+          "workedSolution": "$$x = \\dfrac{-9 \\pm \\sqrt{9^2 - 4(2)(-4)}}{2(2)} = \\dfrac{-9 \\pm \\sqrt{113}}{4}$$, so $x = 0.41$ or $x = -4.91$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.algebra.bracket-expansion-sign",
@@ -1820,7 +2506,7 @@
             "Take 3x and 11 across: 5x² − 3x − 11 = 0.",
             "a = 5, b = −3, c = −11."
           ],
-          "workedSolution": "$5x^2 - 3x - 11 = 0$, so $x = \\dfrac{3 \\pm \\sqrt{(-3)^2 - 4(5)(-11)}}{2(5)} = \\dfrac{3 \\pm \\sqrt{229}}{10}$, giving $x = 1.81$ or $x = -1.21$ (2 d.p.).",
+          "workedSolution": "$5x^2 - 3x - 11 = 0$, so $$x = \\dfrac{3 \\pm \\sqrt{(-3)^2 - 4(5)(-11)}}{2(5)} = \\dfrac{3 \\pm \\sqrt{229}}{10}$$, giving $x = 1.81$ or $x = -1.21$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.quadratics.not-rearranged-to-zero",
@@ -1950,7 +2636,7 @@
             "(x + 4)² = x² + 8x + 16; it has a middle term.",
             "Collect to 2x² − 14x − 6 = 0 and divide by 2 to make the numbers smaller."
           ],
-          "workedSolution": "$3x^2 - 6x = x^2 + 8x + 6$, so $2x^2 - 14x - 6 = 0$ and, dividing by 2, $x^2 - 7x - 3 = 0$. Then $x = \\dfrac{7 \\pm \\sqrt{(-7)^2 - 4(1)(-3)}}{2} = \\dfrac{7 \\pm \\sqrt{61}}{2}$, so $x = 7.41$ or $x = -0.41$ (2 d.p.).",
+          "workedSolution": "$3x^2 - 6x = x^2 + 8x + 6$, so $2x^2 - 14x - 6 = 0$ and, dividing by 2, $x^2 - 7x - 3 = 0$. Then $$x = \\dfrac{7 \\pm \\sqrt{(-7)^2 - 4(1)(-3)}}{2} = \\dfrac{7 \\pm \\sqrt{61}}{2}$$, so $x = 7.41$ or $x = -0.41$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.algebra.expand-squared-bracket",
@@ -2094,7 +2780,7 @@
             "2x² + 8x − x − 4 = 2x² + 7x − 4.",
             "Take 5x + 3 across: 2x² + 2x − 7 = 0."
           ],
-          "workedSolution": "$(2x-1)(x+4) = 2x^2 + 7x - 4$, so $2x^2 + 7x - 4 - 5x - 3 = 0$ and $2x^2 + 2x - 7 = 0$. Then $x = \\dfrac{-2 \\pm \\sqrt{2^2 - 4(2)(-7)}}{4} = \\dfrac{-2 \\pm \\sqrt{60}}{4}$, so $x = 1.44$ or $x = -2.44$ (2 d.p.).",
+          "workedSolution": "$(2x-1)(x+4) = 2x^2 + 7x - 4$, so $2x^2 + 7x - 4 - 5x - 3 = 0$ and $2x^2 + 2x - 7 = 0$. Then $$x = \\dfrac{-2 \\pm \\sqrt{2^2 - 4(2)(-7)}}{4} = \\dfrac{-2 \\pm \\sqrt{60}}{4}$$, so $x = 1.44$ or $x = -2.44$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.quadratics.not-rearranged-to-zero",
@@ -2477,7 +3163,7 @@
             "Area is length times width: w(w + 3) = 50.",
             "This one does not factorise, so use the formula, then decide which root is a width."
           ],
-          "workedSolution": "Let the width be $w$ m, so the length is $(w + 3)$ m and $w(w+3) = 50$, that is $w^2 + 3w - 50 = 0$. Then $w = \\dfrac{-3 \\pm \\sqrt{3^2 - 4(1)(-50)}}{2} = \\dfrac{-3 \\pm \\sqrt{209}}{2}$, so $w = 5.728416\\ldots$ or $w = -8.728416\\ldots$. A width cannot be negative, so the width is $5.73$ m (2 d.p.). Check: $5.728416 \\times 8.728416 = 50.0$.",
+          "workedSolution": "Let the width be $w$ m, so the length is $(w + 3)$ m and $w(w+3) = 50$, that is $w^2 + 3w - 50 = 0$. Then $$w = \\dfrac{-3 \\pm \\sqrt{3^2 - 4(1)(-50)}}{2} = \\dfrac{-3 \\pm \\sqrt{209}}{2}$$, so $w = 5.728416\\ldots$ or $w = -8.728416\\ldots$. A width cannot be negative, so the width is $5.73$ m (2 d.p.). Check: $5.728416 \\times 8.728416 = 50.0$.",
           "commonErrors": [
             {
               "misconception": "maths.quadratics.no-validity-check-of-roots",
@@ -2559,7 +3245,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20380%20250'%20width%3D'380'%20height%3D'250'%20role%3D'img'%20aria-label%3D'Right-angled%20triangle%20LMN%20with%20the%20right%20angle%20at%20M%2C%20LM%20%3D%20(2x%20-%201)%20cm%20and%20MN%20%3D%20(x%20%2B%203)%20cm'%3E%3Ctitle%3ERight-angled%20triangle%20LMN%20with%20the%20right%20angle%20at%20M%2C%20LM%20%3D%20(2x%20-%201)%20cm%20and%20MN%20%3D%20(x%20%2B%203)%20cm%3C%2Ftitle%3E%3Cpath%20d%3D'M108%2048%20L108%20196%20L330%20196%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Cpath%20d%3D'M108%20180%20L124%20180%20L124%20196'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'1.5'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'96'%20y%3D'127'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3E(2x%20%E2%88%92%201)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'219'%20y%3D'222'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(x%20%2B%203)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'98'%20y%3D'42'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3EL%3C%2Ftext%3E%3Ctext%20x%3D'98'%20y%3D'216'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3EM%3C%2Ftext%3E%3Ctext%20x%3D'338'%20y%3D'216'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%3EN%3C%2Ftext%3E%3Ctext%20x%3D'372'%20y%3D'22'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'12'%20text-anchor%3D'end'%20opacity%3D'0.75'%3Elengths%20in%20cm%3B%20diagram%20not%20drawn%20accurately%3C%2Ftext%3E%3C%2Fsvg%3E",
+          "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 290' role='img' font-family='inherit'><title>Right-angled triangle LMN with the right angle at M</title><polygon points='150,50 150,230 350,230' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><path d='M164 230L164 216L150 216' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='140' y='145' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>(2x − 1) cm</text><text x='250' y='256' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(x + 3) cm</text><text x='150' y='40' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>L</text><text x='140' y='248' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>M</text><text x='358' y='235' font-size='15' text-anchor='start' fill='currentColor' stroke='none' font-family='inherit'>N</text><text x='392' y='282' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
           "alt": "Right-angled triangle LMN with the right angle at M. The vertical side LM is labelled (2x − 1) cm and the horizontal side MN is labelled (x + 3) cm."
         }
       ],
@@ -2693,7 +3379,9 @@
               {
                 "any": [
                   "-5.5",
-                  "−5.5"
+                  "−5.5",
+                  "-11/2",
+                  "−11/2"
                 ],
                 "marks": 1
               }
@@ -2823,7 +3511,8 @@
           "requiresWorking": false,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "2 * x - 1"
           }
         }
       ],
@@ -2881,8 +3570,8 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20420%20250'%20width%3D'420'%20height%3D'250'%20role%3D'img'%20aria-label%3D'Trapezium%20with%20parallel%20sides%20(x%20%2B%203)%20cm%20and%20(3x%20-%201)%20cm%20and%20perpendicular%20height%20(x%20%2B%202)%20cm'%3E%3Ctitle%3ETrapezium%20with%20parallel%20sides%20(x%20%2B%203)%20cm%20and%20(3x%20-%201)%20cm%20and%20perpendicular%20height%20(x%20%2B%202)%20cm%3C%2Ftitle%3E%3Cpath%20d%3D'M152%2062%20L300%2062%20L372%20194%20L104%20194%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Cpath%20d%3D'M152%2062%20L152%20194'%20stroke%3D'currentColor'%20stroke-width%3D'1.5'%20stroke-dasharray%3D'5%204'%20fill%3D'none'%2F%3E%3Cpath%20d%3D'M152%20180%20L166%20180%20L166%20194'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'1.5'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'226'%20y%3D'50'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(x%20%2B%203)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'238'%20y%3D'220'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(3x%20%E2%88%92%201)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'174'%20y%3D'133'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%3E(x%20%2B%202)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'412'%20y%3D'22'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'12'%20text-anchor%3D'end'%20opacity%3D'0.75'%3Elengths%20in%20cm%3B%20diagram%20not%20drawn%20accurately%3C%2Ftext%3E%3C%2Fsvg%3E",
-          "alt": "A trapezium. The shorter parallel side at the top is (x + 3) cm, the longer parallel side at the bottom is (3x − 1) cm, and a dashed line with a right-angle mark shows the perpendicular distance between them, (x + 2) cm."
+          "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 290' role='img' font-family='inherit'><title>A trapezium with parallel sides (x + 3) cm and (3x − 1) cm and height (x + 2) cm</title><polygon points='140,70 270,70 350,225 50,225' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><line x1='140' y1='70' x2='140' y2='225' stroke='currentColor' stroke-width='1.8' stroke-dasharray='6 4'/><path d='M154 225L154 211L140 211' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='205' y='58' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(x + 3) cm</text><text x='200' y='252' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(3x − 1) cm</text><text x='150' y='160' font-size='15' text-anchor='start' fill='currentColor' stroke='none' font-family='inherit'>(x + 2) cm</text><text x='392' y='282' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
+          "alt": "A trapezium. The shorter parallel side at the top is (x + 3) cm, the longer parallel side at the bottom is (3x − 1) cm, and a dashed line at right angles to them, the height, is (x + 2) cm."
         }
       ],
       "parts": [
@@ -2991,7 +3680,8 @@
               {
                 "any": [
                   "3.5",
-                  "3.5"
+                  "3.5",
+                  "7/2"
                 ],
                 "marks": 1
               },
@@ -3117,7 +3807,8 @@
           "requiresWorking": false,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "3 * x - 1"
           }
         }
       ],
@@ -3172,7 +3863,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20420%20250'%20width%3D'420'%20height%3D'250'%20role%3D'img'%20aria-label%3D'Rectangle%20of%20width%20x%20cm%20and%20length%20(x%20%2B%2017)%20cm%20with%20a%20diagonal%20of%2025%20cm'%3E%3Ctitle%3ERectangle%20of%20width%20x%20cm%20and%20length%20(x%20%2B%2017)%20cm%20with%20a%20diagonal%20of%2025%20cm%3C%2Ftitle%3E%3Cpath%20d%3D'M96%2062%20H352%20V194%20H96%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Cpath%20d%3D'M96%20194%20L352%2062'%20stroke%3D'currentColor'%20stroke-width%3D'1.6'%20fill%3D'none'%2F%3E%3Cpath%20d%3D'M96%20179%20L111%20179%20L111%20194'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'1.5'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'84'%20y%3D'133'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3Ex%20cm%3C%2Ftext%3E%3Ctext%20x%3D'224'%20y%3D'220'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(x%20%2B%2017)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'218'%20y%3D'116.4'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%20transform%3D'rotate(-27.3%20218%20116.4)'%3E25%20cm%3C%2Ftext%3E%3Ctext%20x%3D'412'%20y%3D'22'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'12'%20text-anchor%3D'end'%20opacity%3D'0.75'%3Elengths%20in%20cm%3B%20diagram%20not%20drawn%20accurately%3C%2Ftext%3E%3C%2Fsvg%3E",
+          "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 270' role='img' font-family='inherit'><title>A rectangle x cm by (x + 17) cm with a diagonal of 25 cm</title><polygon points='110,60 340,60 340,200 110,200' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><line x1='110' y1='200' x2='340' y2='60' stroke='currentColor' stroke-width='2'/><path d='M124 200L124 186L110 186' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='100' y='135' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>x cm</text><text x='225' y='226' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(x + 17) cm</text><text x='215' y='115' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>25 cm</text><text x='392' y='262' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
           "alt": "A rectangle with a right-angle mark at one corner. The short side is x cm, the long side is (x + 17) cm, and the diagonal drawn across it is 25 cm."
         }
       ],
@@ -3426,8 +4117,8 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20360%20300'%20width%3D'360'%20height%3D'300'%20role%3D'img'%20aria-label%3D'L-shaped%20tile%20with%20the%20top%20edge%20(3x%20-%201)%20cm%2C%20right%20edge%205%20cm%2C%20base%20(x%20%2B%202)%20cm%20and%20lower%20left%20edge%202x%20cm'%3E%3Ctitle%3EL-shaped%20tile%20with%20the%20top%20edge%20(3x%20-%201)%20cm%2C%20right%20edge%205%20cm%2C%20base%20(x%20%2B%202)%20cm%20and%20lower%20left%20edge%202x%20cm%3C%2Ftitle%3E%3Cpath%20d%3D'M96%2052%20H250%20V144%20H188%20V252%20H96%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'173'%20y%3D'40'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(3x%20%E2%88%92%201)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'260'%20y%3D'103'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%3E5%20cm%3C%2Ftext%3E%3Ctext%20x%3D'142'%20y%3D'278'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(x%20%2B%202)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'84'%20y%3D'203'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'end'%3E2x%20cm%3C%2Ftext%3E%3Ctext%20x%3D'352'%20y%3D'22'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'12'%20text-anchor%3D'end'%20opacity%3D'0.75'%3Elengths%20in%20cm%3B%20diagram%20not%20drawn%20accurately%3C%2Ftext%3E%3C%2Fsvg%3E",
-          "alt": "An L-shaped figure. The top edge is (3x − 1) cm, the short right-hand edge is 5 cm, the base is (x + 2) cm and the lower part of the left-hand edge is 2x cm."
+          "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' role='img' font-family='inherit'><title>An L-shaped tile with all corners right angles</title><polygon points='110,50 340,50 340,125 215,125 215,250 110,250' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><text x='225' y='40' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(3x − 1) cm</text><text x='348' y='93' font-size='15' text-anchor='start' fill='currentColor' stroke='none' font-family='inherit'>5 cm</text><text x='162' y='274' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(x + 2) cm</text><text x='100' y='192' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>2x cm</text><text x='392' y='292' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
+          "alt": "An L-shaped tile with all corners right angles. The top edge is (3x − 1) cm, the short right-hand edge is 5 cm, the base is (x + 2) cm and the lower part of the left-hand edge is 2x cm."
         }
       ],
       "parts": [
@@ -3578,7 +4269,7 @@
       "figures": [
         {
           "kind": "svg",
-          "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20500%20240'%20width%3D'500'%20height%3D'240'%20role%3D'img'%20aria-label%3D'A%20square%20of%20side%20(2x%20-%203)%20cm%20beside%20a%20rectangle%20measuring%20(3x%20%2B%202)%20cm%20by%205%20cm'%3E%3Ctitle%3EA%20square%20of%20side%20(2x%20-%203)%20cm%20beside%20a%20rectangle%20measuring%20(3x%20%2B%202)%20cm%20by%205%20cm%3C%2Ftitle%3E%3Cpath%20d%3D'M40%2058%20H164%20V182%20H40%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'102'%20y%3D'208'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(2x%20%E2%88%92%203)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'102'%20y%3D'126'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'14'%20text-anchor%3D'middle'%20opacity%3D'0.8'%3Esquare%3C%2Ftext%3E%3Cpath%20d%3D'M258%20112%20H430%20V182%20H258%20Z'%20fill%3D'none'%20stroke%3D'currentColor'%20stroke-width%3D'2'%20stroke-linejoin%3D'round'%2F%3E%3Ctext%20x%3D'344'%20y%3D'208'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%20text-anchor%3D'middle'%3E(3x%20%2B%202)%20cm%3C%2Ftext%3E%3Ctext%20x%3D'440'%20y%3D'152'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'15'%3E5%20cm%3C%2Ftext%3E%3Ctext%20x%3D'492'%20y%3D'22'%20font-family%3D'ui-sans-serif%2C%20system-ui%2C%20Segoe%20UI%2C%20sans-serif'%20fill%3D'currentColor'%20font-size%3D'12'%20text-anchor%3D'end'%20opacity%3D'0.75'%3Elengths%20in%20cm%3B%20diagram%20not%20drawn%20accurately%3C%2Ftext%3E%3C%2Fsvg%3E",
+          "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 230' role='img' font-family='inherit'><title>A square of side (2x − 3) cm beside a rectangle (3x + 2) cm by 5 cm</title><polygon points='30,40 160,40 160,170 30,170' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><polygon points='200,100 350,100 350,170 200,170' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><text x='95' y='195' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(2x − 3) cm</text><text x='95' y='112' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>square</text><text x='275' y='195' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(3x + 2) cm</text><text x='358' y='140' font-size='15' text-anchor='start' fill='currentColor' stroke='none' font-family='inherit'>5 cm</text><text x='392' y='222' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
           "alt": "Two shapes side by side: a square whose side is labelled (2x − 3) cm, and a rectangle whose length is (3x + 2) cm and whose width is 5 cm."
         }
       ],
@@ -3650,7 +4341,7 @@
             "Collect everything to the side that keeps x² positive, then use the formula.",
             "Only one root gives a square with a positive side."
           ],
-          "workedSolution": "The square has area $(2x-3)^2 = 4x^2 - 12x + 9$ and the rectangle has area $5(3x+2) = 15x + 10$. The square is twice the rectangle, so $4x^2 - 12x + 9 = 2(15x + 10) = 30x + 20$, giving $4x^2 - 42x - 11 = 0$. Then $x = \\dfrac{42 \\pm \\sqrt{(-42)^2 - 4(4)(-11)}}{2(4)} = \\dfrac{42 \\pm \\sqrt{1940}}{8}$, so $x = 10.755679\\ldots$ or $x = -0.255679\\ldots$. At the negative root the side $2x - 3$ would be negative, so $x = 10.76$ (2 d.p.).",
+          "workedSolution": "The square has area $(2x-3)^2 = 4x^2 - 12x + 9$ and the rectangle has area $5(3x+2) = 15x + 10$. The square is twice the rectangle, so $4x^2 - 12x + 9 = 2(15x + 10) = 30x + 20$, giving $4x^2 - 42x - 11 = 0$. Then $$x = \\dfrac{42 \\pm \\sqrt{(-42)^2 - 4(4)(-11)}}{2(4)} = \\dfrac{42 \\pm \\sqrt{1940}}{8}$$, so $x = 10.755679\\ldots$ or $x = -0.255679\\ldots$. At the negative root the side $2x - 3$ would be negative, so $x = 10.76$ (2 d.p.).",
           "commonErrors": [
             {
               "misconception": "maths.algebra.expand-squared-bracket",
@@ -3849,6 +4540,632 @@
       "solutionProgram": "open box: base x^2 plus four sides x(x+3) -> x^2 + 4x^2 + 12x = 81 -> 5x^2 + 12x - 81 = 0; (5x+27)(x-3) = 0 -> x = 3 (reject -5.4); check 9 + 4(3)(6) = 9 + 72 = 81",
       "verification": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0019",
       "version": 1
+    },
+    {
+      "id": "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0020",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05",
+        "M3-NA-11"
+      ],
+      "paper": {
+        "unit": "M4",
+        "calculator": true,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO1",
+        "AO3"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [
+        "mixed-tail",
+        "set up and solve",
+        "consecutive numbers"
+      ],
+      "context": {
+        "setting": "Two consecutive even numbers with a given product",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "marks": 4,
+          "stem": "The product of two consecutive even numbers is 168. Both numbers are positive.\n\nSet up and solve a quadratic equation to find the two numbers.",
+          "answer": {
+            "kind": "text",
+            "accepted": [
+              "12 and 14",
+              "12, 14",
+              "14 and 12"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "12"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "14"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "n(n + 2) = 168, with n the smaller number"
+            },
+            {
+              "id": "MA2",
+              "code": "MA",
+              "marks": 1,
+              "for": "n² + 2n − 168 = 0"
+            },
+            {
+              "id": "MA3",
+              "code": "MA",
+              "marks": 1,
+              "for": "(n + 14)(n − 12) = 0, or the formula with a = 1, b = 2, c = −168"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "12 and 14, with n = −14 rejected because the numbers are positive",
+              "dependsOn": [
+                "MA3"
+              ]
+            }
+          ],
+          "hints": [
+            "Call the smaller number n. The next even number is n + 2.",
+            "Their product is 168: multiply, then make one side zero.",
+            "Both numbers are positive, so one root is rejected."
+          ],
+          "workedSolution": "Let the numbers be $n$ and $n + 2$. Then $n(n + 2) = 168$, so $n^2 + 2n - 168 = 0$ and $(n + 14)(n - 12) = 0$, giving $n = -14$ or $n = 12$. The numbers are positive, so $n = 12$ and the numbers are 12 and 14. Check: $12 \\times 14 = 168$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.quadratics.no-validity-check-of-roots",
+              "pattern": {
+                "kind": "text",
+                "regex": "-\\s*14|−\\s*14"
+              },
+              "feedback": "The algebra is right, but the question says both numbers are positive, so n = −14 is rejected. The numbers are 12 and 14.",
+              "marksTypicallyEarned": 3
+            },
+            {
+              "misconception": "maths.quadratics.treat-as-linear",
+              "pattern": {
+                "kind": "numeric",
+                "value": 83,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0
+                }
+              },
+              "feedback": "That adds the two numbers. Their product is 168, so n(n + 2) = 168, a quadratic.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 4,
+      "timeAllowanceSec": 288,
+      "skeleton": "(main)find4",
+      "examinerSources": [],
+      "solutionProgram": "n(n+2) = 168 -> n^2 + 2n - 168 = 0 -> (n+14)(n-12) = 0 -> n = 12 (n = -14 rejected: positive) -> 12, 14",
+      "verification": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0020",
+      "version": 1
+    },
+    {
+      "id": "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0021",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05",
+        "M4-NA-04"
+      ],
+      "paper": {
+        "unit": "M4",
+        "calculator": true,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "practice",
+      "difficulty": 5,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Solve"
+      ],
+      "emphasis": [
+        "algebraic fractions",
+        "correct to 2 decimal places"
+      ],
+      "context": {
+        "setting": "An equation with algebraic fractions that becomes a quadratic",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "marks": 6,
+          "stem": "Solve $\\dfrac{3}{x - 2} + \\dfrac{4}{x + 1} = 2$.\n\nGive your answers correct to 2 decimal places.",
+          "answer": {
+            "kind": "text",
+            "accepted": [
+              "x = 4.39 or x = 0.11",
+              "4.39, 0.11",
+              "4.39 and 0.11",
+              "x = 0.11 or x = 4.39"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "4.39"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "0.11"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "3(x + 1) + 4(x − 2) = 2(x − 2)(x + 1)"
+            },
+            {
+              "id": "MA2",
+              "code": "MA",
+              "marks": 1,
+              "for": "7x − 5 = 2x² − 2x − 4"
+            },
+            {
+              "id": "MA3",
+              "code": "MA",
+              "marks": 1,
+              "for": "2x² − 9x + 1 = 0"
+            },
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "formula with a = 2, b = −9, c = 1, the negative bracketed: (−9)² − 4(2)(1) = 73"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "x = 4.39",
+              "dependsOn": [
+                "M1"
+              ]
+            },
+            {
+              "id": "A2",
+              "code": "A",
+              "marks": 1,
+              "for": "x = 0.11",
+              "dependsOn": [
+                "M1"
+              ]
+            }
+          ],
+          "hints": [
+            "Multiply every term by (x − 2)(x + 1), the 2 on the right included.",
+            "Expand, collect, and make one side zero.",
+            "Use the formula and give both roots to 2 decimal places."
+          ],
+          "workedSolution": "Multiplying every term by $(x - 2)(x + 1)$: $3(x + 1) + 4(x - 2) = 2(x - 2)(x + 1)$, so $7x - 5 = 2x^2 - 2x - 4$ and $2x^2 - 9x + 1 = 0$.\n\n$$x = \\dfrac{9 \\pm \\sqrt{(-9)^2 - 4(2)(1)}}{2(2)} = \\dfrac{9 \\pm \\sqrt{73}}{4}$$\n\nso $x = 4.39$ or $x = 0.11$ (2 d.p.). Neither makes a denominator zero, so both stand.",
+          "commonErrors": [
+            {
+              "misconception": "maths.alg-fractions.multiply-only-part-of-side",
+              "pattern": {
+                "kind": "numeric",
+                "value": 1,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0
+                }
+              },
+              "feedback": "The 2 on the right was not multiplied by (x − 2)(x + 1), so the equation stayed linear. Every term is multiplied, which makes it a quadratic.",
+              "marksTypicallyEarned": 0
+            },
+            {
+              "misconception": "maths.algebra.bracket-expansion-sign",
+              "pattern": {
+                "kind": "text",
+                "regex": "5\\.79"
+              },
+              "feedback": "4(x − 2) was expanded as 4x + 8. A bracket with a minus inside gives 4x − 8; the rest of the method was right.",
+              "marksTypicallyEarned": 3
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 6,
+      "timeAllowanceSec": 432,
+      "skeleton": "(main)solve6",
+      "examinerSources": [
+        "ccea-cer:maths:2023-november:M4:Q23",
+        "ccea-cer:maths:2024-november:M4:Q20"
+      ],
+      "solutionProgram": "3(x+1) + 4(x-2) = 2(x-2)(x+1) -> 2x^2 - 9x + 1 = 0 -> x = (9 ± √73)/4 -> 4.39, 0.11; the slip 4x + 8 gives 2x^2 - 9x - 15 = 0 -> 5.79",
+      "verification": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0021",
+      "version": 1
+    },
+    {
+      "id": "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0022",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05",
+        "M2-GM-05",
+        "M3-GM-04"
+      ],
+      "paper": {
+        "unit": "M4",
+        "calculator": true,
+        "resources": [
+          "formula-sheet-H"
+        ]
+      },
+      "tier": "H",
+      "style": "exam-style",
+      "difficulty": 5,
+      "ao": [
+        "AO1",
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Show that",
+        "Find",
+        "Calculate"
+      ],
+      "emphasis": [
+        "Show that",
+        "reject a root",
+        "Pythagoras",
+        "trigonometry"
+      ],
+      "context": {
+        "setting": "A right-angled triangle set up as a quadratic, then solved with Pythagoras and trigonometry",
+        "original": true
+      },
+      "figures": [
+        {
+          "kind": "svg",
+          "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 290' role='img' font-family='inherit'><title>Right-angled triangle ABC with the right angle at B</title><polygon points='150,50 150,230 350,230' fill='currentColor' fill-opacity='0.05' stroke='currentColor' stroke-width='2.2' stroke-linejoin='round'/><path d='M164 230L164 216L150 216' fill='none' stroke='currentColor' stroke-width='1.6'/><text x='140' y='145' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>(x − 1) cm</text><text x='250' y='256' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>(x + 6) cm</text><text x='150' y='40' font-size='15' text-anchor='middle' fill='currentColor' stroke='none' font-family='inherit'>A</text><text x='140' y='248' font-size='15' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>B</text><text x='358' y='235' font-size='15' text-anchor='start' fill='currentColor' stroke='none' font-family='inherit'>C</text><text x='392' y='282' font-size='14' text-anchor='end' fill='currentColor' stroke='none' font-family='inherit'>not drawn accurately</text></svg>",
+          "alt": "Right-angled triangle ABC with the right angle at B. The vertical side AB is labelled (x − 1) cm and the horizontal side BC is labelled (x + 6) cm."
+        }
+      ],
+      "parts": [
+        {
+          "id": "a",
+          "marks": 3,
+          "stem": "$ABC$ is a right-angled triangle with the right angle at $B$. $AB = (x - 1)$ cm and $BC = (x + 6)$ cm. The area of the triangle is $22\\ \\text{cm}^2$.\n\nShow that $x^2 + 5x - 50 = 0$.  [3]",
+          "answer": {
+            "kind": "text",
+            "accepted": [
+              "1/2(x - 1)(x + 6) = 22; (x - 1)(x + 6) = 44; x^2 + 6x - x - 6 = 44; x^2 + 5x - 6 = 44; x^2 + 5x - 50 = 0"
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "1/2(x - 1)(x + 6) = 22",
+                  "½(x − 1)(x + 6) = 22",
+                  "(x - 1)(x + 6) = 44",
+                  "(x − 1)(x + 6) = 44",
+                  "0.5(x - 1)(x + 6) = 22"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "x^2 + 5x - 6 = 44",
+                  "x² + 5x − 6 = 44",
+                  "x^2 + 6x - x - 6 = 44",
+                  "x² + 6x − x − 6 = 44"
+                ],
+                "marks": 1
+              },
+              {
+                "any": [
+                  "x^2 + 5x - 50 = 0",
+                  "x² + 5x − 50 = 0"
+                ],
+                "marks": 1
+              }
+            ],
+            "listingRule": false
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "½(x − 1)(x + 6) = 22, the two perpendicular sides bracketed",
+              "accept": [
+                "(x − 1)(x + 6) = 44"
+              ],
+              "reject": [
+                "(x − 1)(x + 6) = 22"
+              ]
+            },
+            {
+              "id": "MA2",
+              "code": "MA",
+              "marks": 1,
+              "for": "expanded: x² + 6x − x − 6 = 44, or x² + 5x − 6 = 44"
+            },
+            {
+              "id": "MA3",
+              "code": "MA",
+              "marks": 1,
+              "for": "x² + 5x − 50 = 0 reached, with the line before it seen",
+              "examinerNote": "An answer that begins at the printed equation scores zero for this part."
+            }
+          ],
+          "hints": [
+            "The two sides at the right angle are the base and the height.",
+            "Keep the half, then double both sides.",
+            "Expand, collect and take 44 across."
+          ],
+          "workedSolution": "The area is $\\tfrac{1}{2}(x - 1)(x + 6) = 22$, so $(x - 1)(x + 6) = 44$. Expanding: $x^2 + 6x - x - 6 = 44$, so $x^2 + 5x - 6 = 44$ and $x^2 + 5x - 50 = 0$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.quadratics.wrong-shape-formula-setup",
+              "pattern": {
+                "kind": "text",
+                "regex": "^\\s*\\(?x\\s*[-−]\\s*1\\)?\\s*\\(x\\s*\\+\\s*6\\)\\s*=\\s*22"
+              },
+              "feedback": "That is a rectangle's area. The triangle is half of it: ½(x − 1)(x + 6) = 22.",
+              "marksTypicallyEarned": 0
+            },
+            {
+              "misconception": "maths.quadratics.show-that-solve-instead",
+              "pattern": {
+                "kind": "text",
+                "regex": "x\\s*=\\s*5\\b"
+              },
+              "feedback": "This part asks for the derivation, not the value. The marks are for the lines from the area to the printed equation.",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "b",
+          "marks": 3,
+          "stem": "Solve $x^2 + 5x - 50 = 0$, and give the value of $x$ that fits the triangle.  [3]",
+          "answer": {
+            "kind": "numeric",
+            "value": 5,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "(x + 10)(x − 5) = 0, or the formula with a = 1, b = 5, c = −50"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "x = 5 and x = −10",
+              "dependsOn": [
+                "MA1"
+              ]
+            },
+            {
+              "id": "A2",
+              "code": "A",
+              "marks": 1,
+              "for": "x = 5, with −10 rejected because AB = x − 1 would be negative",
+              "dependsOn": [
+                "MA1"
+              ]
+            }
+          ],
+          "hints": [
+            "Find two numbers that multiply to −50 and add to 5.",
+            "One root makes a side negative."
+          ],
+          "workedSolution": "$(x + 10)(x - 5) = 0$, so $x = -10$ or $x = 5$. At $x = -10$, $AB = x - 1 = -11$ cm, which cannot be, so $x = 5$.",
+          "commonErrors": [
+            {
+              "misconception": "maths.quadratics.no-validity-check-of-roots",
+              "pattern": {
+                "kind": "numeric",
+                "value": -10,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0
+                }
+              },
+              "feedback": "−10 solves the equation, but it makes AB = −11 cm. Reject it, with that reason, and keep x = 5.",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "maths.quadratics.no-validity-check-of-roots",
+              "pattern": {
+                "kind": "text",
+                "regex": "5[^0-9]+(-|−)\\s*10|(-|−)\\s*10[^0-9]+5"
+              },
+              "feedback": "Both roots are right, but x is a length here: x = −10 makes AB negative, so it is rejected, leaving x = 5.",
+              "marksTypicallyEarned": 2
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "c",
+          "marks": 2,
+          "stem": "Calculate the length of $AC$. Give your answer correct to 1 decimal place.  [2]",
+          "answer": {
+            "kind": "numeric",
+            "value": 11.7,
+            "tolerance": {
+              "type": "dp",
+              "places": 1
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ],
+            "unit": "cm"
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "AC² = 4² + 11² (their AB and BC from part (b))"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "11.7 (cm), ft from their x",
+              "dependsOn": [
+                "MA1"
+              ]
+            }
+          ],
+          "hints": [
+            "With x = 5, AB = 4 cm and BC = 11 cm.",
+            "AC is the hypotenuse."
+          ],
+          "workedSolution": "With $x = 5$, $AB = 4$ cm and $BC = 11$ cm, so $AC^2 = 4^2 + 11^2 = 137$ and $AC = \\sqrt{137} = 11.7$ cm (1 d.p.).",
+          "followThrough": {
+            "fromPart": "b",
+            "rule": "use-candidate-value",
+            "relation": "√((x - 1)^2 + (x + 6)^2)"
+          },
+          "commonErrors": [
+            {
+              "misconception": "maths.quadratics.pythagoras-not-recognised-in-setup",
+              "pattern": {
+                "kind": "numeric",
+                "value": 15,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0
+                }
+              },
+              "feedback": "AB + BC is a sum of lengths. The hypotenuse comes from Pythagoras: AC² = 4² + 11².",
+              "marksTypicallyEarned": 0
+            }
+          ],
+          "requiresWorking": true
+        },
+        {
+          "id": "d",
+          "marks": 2,
+          "stem": "Calculate the size of angle $BAC$. Give your answer correct to 1 decimal place.  [2]",
+          "answer": {
+            "kind": "numeric",
+            "value": 70,
+            "tolerance": {
+              "type": "dp",
+              "places": 1
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ],
+            "unit": "°"
+          },
+          "scheme": [
+            {
+              "id": "MA1",
+              "code": "MA",
+              "marks": 1,
+              "for": "tan BAC = 11/4 (their BC over their AB)"
+            },
+            {
+              "id": "A1",
+              "code": "A",
+              "marks": 1,
+              "for": "70.0°",
+              "dependsOn": [
+                "MA1"
+              ]
+            }
+          ],
+          "hints": [
+            "From A, BC is opposite and AB is adjacent.",
+            "Use the inverse tangent."
+          ],
+          "workedSolution": "From $A$, $BC = 11$ cm is opposite and $AB = 4$ cm is adjacent, so $\\tan BAC = \\tfrac{11}{4}$ and angle $BAC = 70.0°$ (1 d.p.).",
+          "commonErrors": [
+            {
+              "misconception": "maths.formula.misapplied-power-or-coefficient",
+              "pattern": {
+                "kind": "numeric",
+                "value": 20,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.05
+                }
+              },
+              "feedback": "That is the angle at C: 4/11 is AB over BC. From A, the opposite side is BC, so tan BAC = 11/4.",
+              "marksTypicallyEarned": 1
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 10,
+      "timeAllowanceSec": 720,
+      "skeleton": "(a)showthat3|(b)solve3|(c)calculate2|(d)calculate2",
+      "examinerSources": [
+        "ccea-cer:maths:2025-summer:M4:Q15",
+        "ccea-cer:maths:2024-november:M4:Q18"
+      ],
+      "solutionProgram": "1/2(x-1)(x+6) = 22 -> x^2 + 5x - 50 = 0 -> (x+10)(x-5) = 0 -> x = 5 (x = -10 makes AB negative) -> AB 4, BC 11 -> AC = √137 = 11.7 -> tan A = 11/4 -> 70.0°",
+      "verification": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0022",
+      "version": 1
     }
   ],
   "findTheMistake": [
@@ -3906,6 +5223,36 @@
       ],
       "feedback": "Two of the three marks. The method and the roots are secure; the last mark is for choosing between them and saying why. One sentence does it: 'x = −5.5 is rejected because 2x − 1 would be negative.' Summer 2024 M4 Q22 was the hardest question on that paper, and leaving an impossible root on the line was one of the reported losses.",
       "source": "ccea-cer:maths:2024-summer:M4:Q22"
+    },
+    {
+      "id": "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "stem": "Orla had correctly shown that $3x^2 + 4x - 64 = 0$ for a right-angled triangle with perpendicular sides $(3x - 2)$ cm and $(x + 2)$ cm and an area of $30\\ \\text{cm}^2$. She was then asked to solve it and give the length of the side $(3x - 2)$ cm. Her working:",
+      "studentWorking": [
+        "3x² + 4x − 64 = 0",
+        "(3x + 16)(x − 4) = 0",
+        "x = −16/3 or x = 4",
+        "3x − 2 = −18 or 3x − 2 = 10",
+        "Answer: the side is −18 cm or 10 cm"
+      ],
+      "mistakeLine": 5,
+      "misconception": "maths.quadratics.no-validity-check-of-roots",
+      "whatWentWrong": "The factorising and both roots are right, and Orla even worked out both lengths. Then she put both on the answer line. A side of −18 cm cannot exist, so that root has to be rejected in writing, leaving one length.",
+      "correction": [
+        "x = −16/3 gives 3x − 2 = −18, and a length cannot be negative, so this root is rejected",
+        "x = 4 gives 3x − 2 = 10",
+        "The side is 10 cm",
+        "Check: the other side is 6 cm, and ½ × 10 × 6 = 30 cm², as given"
+      ],
+      "marksEarnedAsWritten": [
+        "MA1",
+        "A1"
+      ],
+      "feedback": "Two of the three marks. The method and the roots are secure; the last mark is for choosing between them and saying why. One sentence does it: 'x = −16/3 is rejected because 3x − 2 would be negative.' In November 2023 Q10 answers that wrote both roots for a length lost a mark in the same way.",
+      "source": "ccea-cer:maths:2023-november:M4:Q10"
     },
     {
       "id": "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
@@ -4147,6 +5494,111 @@
       ],
       "examUnit": "M4",
       "difficultyPrior": 6
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.13",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "qa",
+      "prompt": "Before you use the formula, what must one side of the equation be?",
+      "answer": "Zero: rearrange to ax² + bx + c = 0 first.",
+      "keyWords": [
+        "zero"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.14",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "trap",
+      "prompt": "With b = −12, what is b² in the formula?",
+      "answer": "144: square the whole bracket, (−12)².",
+      "keyWords": [
+        "144"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.15",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "formula",
+      "prompt": "What does (x + k)² expand to?",
+      "answer": "x² + 2kx + k².",
+      "keyWords": [
+        "2kx"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.16",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "qa",
+      "prompt": "In a show that from a triangle's area, what must the first line keep?",
+      "answer": "The half: ½ × base × height.",
+      "keyWords": [
+        "half"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.17",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "procedure",
+      "prompt": "A root makes a side negative. What do you write?",
+      "answer": "Reject it, with that reason.",
+      "keyWords": [
+        "reject"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.18",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "qa",
+      "prompt": "A diagonal is given. Which rule makes the equation?",
+      "answer": "Pythagoras: the diagonal is the hypotenuse.",
+      "keyWords": [
+        "Pythagoras"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
+    },
+    {
+      "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.19",
+      "topic": "maths.m4.quadratic-formula-and-harder-quadratic-equations",
+      "specRefs": [
+        "M4-NA-05"
+      ],
+      "kind": "trap",
+      "prompt": "When you split a compound shape into rectangles, what must not happen?",
+      "answer": "Any region counted twice.",
+      "keyWords": [
+        "twice"
+      ],
+      "examUnit": "M4",
+      "difficultyPrior": 3
     }
   ],
   "insight": {
@@ -4251,11 +5703,11 @@
       ],
       "itemIds": [
         "dx.maths.m4.quadratic-formula-and-harder-quadratic-equations",
-        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.01",
+        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.13",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0001",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0002",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0003",
-        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
+        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.14",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0005"
       ],
       "showTopicLabels": false,
@@ -4278,9 +5730,12 @@
         "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.01",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0014",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0017",
-        "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.02",
+        "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
         "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0018",
-        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.05"
+        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.16",
+        "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0020",
+        "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0021",
+        "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.19"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -4362,6 +5817,14 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (the 16:40 ruling: an addition; the steps' lines, answers and earns unchanged): an input on every step, its answer what the step prints; probed through markAnswer on the step's own line and natural spellings (probes/m4/probe-qf.mts).",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -4452,10 +5915,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: It worked 6x² + 5x − 4, practice questions 0002 and 0003's own expression and equation, so she met those questions already solved; and its twin, 10x² − 11x − 6, was question 0004's expression. we.05 works the same method on 6x² − x − 15, with a twin on 4x² + 4x − 15.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.maths.m4.quadratic-formula-and-harder-quadratic-equations.02",
+          "kind": "workedExample",
+          "replacedBy": "we.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
+          "reason": "It worked 6x² + 5x − 4, practice questions 0002 and 0003's own expression and equation, so she met those questions already solved; and its twin, 10x² − 11x − 6, was question 0004's expression. we.05 works the same method on 6x² − x − 15, with a twin on 4x² + 4x − 15.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.we.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
@@ -4532,6 +6012,22 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (the 16:40 ruling: an addition; the steps' lines, answers and earns unchanged): an input on every step, its answer what the step prints; probed through markAnswer on the step's own line and natural spellings (probes/m4/probe-qf.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the figure redrawn at the phone floor (its note was 11.3 px); the same triangle, letters and labels, now with their units; it prints no value a step asks for.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -4613,6 +6109,22 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (the 16:40 ruling: an addition; the steps' lines, answers and earns unchanged): an input on every step, its answer what the step prints; probed through markAnswer on the step's own line and natural spellings (probes/m4/probe-qf.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: step 4's long inline chain set as display maths; the same TeX, rendering only (its answer, earns and input unchanged).",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -5116,6 +6628,14 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5196,6 +6716,14 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -5278,6 +6806,14 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5358,6 +6894,14 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -5440,6 +6984,14 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5520,6 +7072,14 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -5772,6 +7332,14 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5860,6 +7428,30 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (credit-only, in place): part (b)'s key-word group 2 widened with \"-11/2\", \"−11/2\": its scheme accepts −11/2, and \"3, −11/2\" earned 1 of 3 (probes/m4/probe-qf-pub.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (credit-only, in place): part (c)'s follow-through relation \"2 * x - 1\" added (the length LM = 2x − 1 from her positive root, as the scheme's ft allows), clearing the MARKING line (ruling 14). Part (b) is a two-root text answer, so the engine does not yet carry her value (engine-pending, recorded).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the figure redrawn at the phone floor (its note, or with a 500-wide view every label, was under 12.5 px on a phone); the same shape and labels as the stem, not drawn accurately, no value a part asks for.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -5950,6 +7542,30 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (credit-only, in place): part (b)'s key-word group 1 widened with \"7/2\": its scheme accepts 7/2, and \"x = 7/2 or x = −6\" earned 1 of 3 (probes/m4/probe-qf-pub.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (credit-only, in place): part (c)'s follow-through relation \"3 * x - 1\" added (the length 3x − 1 from her positive root, as the scheme's ft allows), clearing the MARKING line (ruling 14). Part (b) is a two-root text answer, so the engine does not yet carry her value (engine-pending, recorded).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the figure redrawn at the phone floor (its note, or with a 500-wide view every label, was under 12.5 px on a phone); the same shape and labels as the stem, not drawn accurately, no value a part asks for.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -6038,6 +7654,14 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the figure redrawn at the phone floor (its note, or with a 500-wide view every label, was under 12.5 px on a phone); the same shape and labels as the stem, not drawn accurately, no value a part asks for.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -6128,6 +7752,14 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the figure redrawn at the phone floor (its note, or with a 500-wide view every label, was under 12.5 px on a phone); the same shape and labels as the stem, not drawn accurately, no value a part asks for.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -6208,6 +7840,22 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the figure redrawn at the phone floor (its note, or with a 500-wide view every label, was under 12.5 px on a phone); the same shape and labels as the stem, not drawn accurately, no value a part asks for.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration: the worked solution's long inline chain set as display maths; the same TeX, rendering only.",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
@@ -6460,10 +8108,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: It set question 0014's own triangle, equation and answer (sides (2x − 1) and (x + 3), 2x² + 5x − 33 = 0, the side 5 cm), so the fix gave that question away. ftm.04 sets the same mistake on a new triangle.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.02",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
+          "reason": "It set question 0014's own triangle, equation and answer (sides (2x − 1) and (x + 3), 2x² + 5x − 33 = 0, the side 5 cm), so the fix gave that question away. ftm.04 sets the same mistake on a new triangle.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
@@ -6622,10 +8287,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: It asked two things at once (the formula and where it is printed); the formula is on page 2, so recalling it earns nothing, and the idea section shows where it is.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.01",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asked two things at once (the formula and where it is printed); the formula is on page 2, so recalling it earns nothing, and the idea section shows where it is.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.02",
@@ -6703,10 +8385,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A five-step procedure as a recall card (a 62-word answer); rp.13 asks the step that comes first.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.02",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.13",
+          "reason": "A five-step procedure as a recall card (a 62-word answer); rp.13 asks the step that comes first.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
@@ -6784,10 +8483,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: Two questions in one card, with a 31-word answer; rp.14 asks b squared for a negative b.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.03",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.14",
+          "reason": "Two questions in one card, with a 31-word answer; rp.14 asks b squared for a negative b.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
@@ -6865,10 +8581,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A four-move list as a recall card (a 54-word answer); rp.16 asks what the first line must keep.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.16",
+          "reason": "A four-move list as a recall card (a 54-word answer); rp.16 asks what the first line must keep.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
@@ -6946,10 +8679,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 42-word answer on where the marks are; rp.16 asks the first line's key word.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.16",
+          "reason": "A 42-word answer on where the marks are; rp.16 asks the first line's key word.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.06",
@@ -7027,10 +8777,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 34-word answer listing what the sheet holds; the note's sheet callout says it.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.06",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 34-word answer listing what the sheet holds; the note's sheet callout says it.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.07",
@@ -7108,10 +8875,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: Two expansions in one card; rp.15 asks the general squared bracket.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.07",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.15",
+          "reason": "Two expansions in one card; rp.15 asks the general squared bracket.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.08",
@@ -7189,10 +8973,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 56-word factorising procedure as a recall card; it is taught in the factorising lesson and shown in a See it here.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.08",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 56-word factorising procedure as a recall card; it is taught in the factorising lesson and shown in a See it here.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.09",
@@ -7270,10 +9071,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 37-word answer to a 16-word question; rp.17 asks what to write when a root fails.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.09",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.17",
+          "reason": "A 37-word answer to a 16-word question; rp.17 asks what to write when a root fails.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.10",
@@ -7351,10 +9169,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 37-word answer on which methods are in scope; the note's not-on-this-specification callout says it.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.10",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 37-word answer on which methods are in scope; the note's not-on-this-specification callout says it.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.11",
@@ -7432,10 +9267,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 34-word answer on rounding, set on question 0005's own root; the idea section's See it and its second Your turn carry the rule.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.11",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "A 34-word answer on rounding, set on question 0005's own root; the idea section's See it and its second Your turn carry the rule.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.12",
@@ -7513,10 +9365,27 @@
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Withdrawn in the v3.1 migration: A 38-word answer on splitting a compound shape; rp.19 asks the one thing that must not happen.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.12",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.19",
+          "reason": "A 38-word answer on splitting a compound shape; rp.19 asks the one thing that must not happen.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
     },
     {
       "id": "ver.note.maths.m4.quadratic-formula-and-harder-quadratic-equations",
@@ -7593,6 +9462,766 @@
           "result": "pass",
           "detail": "Every $...$ segment compiled with KaTeX 0.18.5 (throwOnError); British English; no exclamation marks; the two banned tokens from the authoring brief (the W-word for an incorrect answer, and the numeric grade label used by the English boards) do not occur anywhere in the bundle or the note blocks.",
           "at": "2026-09-13T10:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "v3.1 migration (lesson structure v3): eleven sections, each explain -> See it -> Your turn; 14 gates, 11 See it blocks; 7 figures and 2 videos; gate g2 kept with its prompt, options and answer (explanation rewritten, twin and option notes added); g1, g3, g4, g5, g6, g7 and g8 withdrawn (records on this log).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every value printed in the note, its gates, twins and options computed in the script (section 1); each See it's roots substituted back.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Twists and examiner cards checked against the six Chief Examiner's reports (Summer 2023 to November 2025) and the fifteen M4 papers and schemes 2018-2026: November 2025 Q24 (brackets round b), November 2023 Q10 (one side zero; a negative root left on the line), November 2024 Q18 and Summer 2025 Q15 (show that), Summer 2024 Q12 (Pythagoras), November 2025 Q19 (overlap), Summer 2024 Q22 (a positive root rejected in the scheme), Summer 2023 Q20 (trapezium), November 2023 Q19 (open box), the fractional equations (nine papers). The Teacher Guidance's examples for M4-NA-05 are named.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Note written in our own words and numbers; two-way overlap scan (scratchpad/probes/m4/overlap.mjs) against every shipped item.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "The Sheet's exam pattern corrected: it named Summer 2025 Q3, November 2025 Q14 and Summer 2026 Q10 as bare quadratic solves, but all three are linear equations (checked against the papers); the 2 d.p. trap no longer attributes the final-zero point to the Summer 2023 report, which says only that some did not round to two decimal places.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": null,
+          "reason": "It asked the value of a in 2x² − 7x + 3 = 0, the one coefficient with no sign to keep; the idea section's checks are now the sign of b squared (g2) and the rounding (g21), the two steps the reports show going wrong.",
+          "on": "2026-10-08T05:17:59Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g21",
+          "reason": "It asked the rounding of 0.1957…, practice question 0005's own root and answer; g21 asks the same rounding on new values.",
+          "on": "2026-10-08T05:17:59Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "It asked to factorise 10x² − 11x − 6, practice question 0004's own expression and the twin of worked example 02; g11 asks the solving step on new brackets.",
+          "on": "2026-10-08T05:17:59Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "It asked the first line for 2x² + 5x − 33 = 0 from sides (2x − 1) and (x + 3), question 0014(a)'s own triangle and first mark; g12 asks the same on a new triangle.",
+          "on": "2026-10-08T05:17:59Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "It used question 0017's own tile (5 by (3x − 1) and 2x by (x + 2)) and its x² coefficient; g15 asks a compound shape's coefficient on new pieces.",
+          "on": "2026-10-08T05:17:59Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "It set question 0014's side (2x − 1) and roots 3 and −5.5, and diagnostic 05 almost word for word; g16 asks the rejection on a new triangle.",
+          "on": "2026-10-08T05:17:59Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": null,
+          "reason": "It asked which formula is printed on the sheet, a fact the note's sheet callout states rather than a step of the method.",
+          "on": "2026-10-08T05:17:59Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.13",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 13 words, answer 11 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.14",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.14",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 10 words, answer 6 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.15",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.15",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 7 words, answer 5 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.16",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.16",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 14 words, answer 7 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.17",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.17",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 10 words, answer 5 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.18",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.18",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 9 words, answer 6 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.19",
+      "itemId": "rp.maths.m4.quadratic-formula-and-harder-quadratic-equations.19",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "RetrievalPrompt shape; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A short recall: question 12 words, answer 4 words; its key word sits in its own answer; no examiner finding; British English.",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Key words probed through keywordsPresent on the model answer and natural spellings; wired prompts through Slides' recallFit (probes/m4/probe-qf.mts, recall-check.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
+      "itemId": "we.maths.m4.quadratic-formula-and-harder-quadratic-equations.05",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "WorkedExample shape (TopicBundle) checked by the build; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier: solving by factors with a ≠ 1",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "ac = −90, the pair −10 and 9, (3x − 5)(2x + 3) = 6x² − x − 15 and the twin (2x + 5)(2x − 3) = 4x² + 4x − 15 checked at several x in the script; roots 5/3, −3/2 and 1.5, −2.5",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "The Teacher Guidance's 'using factors where the coefficient of x² ≠ 1' (its own example, 6x² + 5x − 4, stays as practice 0002 and 0003); November 2021 Q15(c) and November 2025 Q13(a) factorised a ≠ 1 quadratics",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Our own expressions; none worked in the note or asked by another shipped item (overlap.mjs)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; every reason under 40 words; an input on every step; two faded versions",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every step input probed through markAnswer on the step's own line and natural spellings; the twin answer probed (probes/m4/probe-qf.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
+      "itemId": "ftm.maths.m4.quadratic-formula-and-harder-quadratic-equations.04",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "FindTheMistake shape (TopicBundle) checked by the build; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "½(3x − 2)(x + 2) = 30 gives 3x² + 4x − 64 = 0 = (3x + 16)(x − 4); x = 4 gives sides 10 and 6, area 30; x = −16/3 gives 3x − 2 = −18 (computed in the script)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "November 2023 Q10: some wrote both roots of a length equation and lost a mark (the report); the rejection is its own mark in that scheme",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Our own triangle and numbers; none worked in the note or asked by another shipped item (overlap.mjs)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; no 'Wrong'; the feedback names the step and what to write",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Her fix probed through markFix with natural phrasings (probes/m4/probe-qf.mts).",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0020",
+      "itemId": "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0020",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Question shape (TopicBundle) checked by the build; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, M3-NA-11, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "4 marks in 1 part(s), 288 s at 72 s a mark; inside the M4 range for this statement, 2 to 8 marks a question (2018-2026)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "12 × 14 = 168 and (−14) × (−12) = 168 computed in the script; the linear slip n + n + 2 = 168 gives 83",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "A tail item from the neighbouring statement M3-NA-11 (setting up and solving by factors, a = 1), so the mixed set makes her choose factors or the formula; November 2022 Q11 set a number problem whose context picked the root",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Our own numbers and situation; none worked in the note, a worked example or another item (overlap.mjs)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; no 'Wrong'; every common error's feedback names the step and what to do",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0021",
+      "itemId": "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0021",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Question shape (TopicBundle) checked by the build; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, M4-NA-04, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "6 marks in 1 part(s), 432 s at 72 s a mark; inside the M4 range for this statement, 2 to 8 marks a question (2018-2026)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Roots (9 ± √73)/4 = 4.386…, 0.113… substituted back into the fractions (sum 2) in the script; the sign slip's root 5.79 computed",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "The fractional equation that ends in the formula, set in nine of the eleven M4 papers from Summer 2021 to Summer 2026 for 6 to 8 marks; November 2023 Q23 and November 2024 Q20: marks lost expanding and collecting",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Our own numbers and situation; none worked in the note, a worked example or another item (overlap.mjs)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; no 'Wrong'; every common error's feedback names the step and what to do",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0022",
+      "itemId": "q.maths.m4.quadratic-formula-and-harder-quadratic-equations.0022",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Question shape (TopicBundle) checked by the build; published by pipeline/build-content.mts",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, M2-GM-05, M3-GM-04, Higher tier",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "10 marks in 4 part(s), 720 s at 72 s a mark; inside the M4 range for this statement, 2 to 8 marks a question (2018-2026)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Area ½ × 4 × 11 = 22; roots 5 and −10; AC = √137 = 11.70; angle BAC = tan⁻¹(11/4) = 70.02°; the angle-at-C slip tan⁻¹(4/11) = 19.98°, all computed in the script",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Summer 2025 Q15: a show that from a right-angled triangle's area, then the root used with trigonometry (the report: full marks or zero on the show that; most knew to use tan); November 2024 Q18: the half lost or the printed equation solved",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Our own numbers and situation; none worked in the note, a worked example or another item (overlap.mjs)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; no 'Wrong'; every common error's feedback names the step and what to do",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.maths.m4.quadratic-formula-and-harder-quadratic-equations.post",
+      "itemId": "dx.maths.m4.quadratic-formula-and-harder-quadratic-equations.post",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "DiagnosticSet, when post: six items, a feedback on every option and a registered misconception on every distractor",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "M4-NA-05, Higher tier; the recheck after practice",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Every option computed in the script (section 1): 40, 8, −8; the rearrangement; the roots of 3x² − 10x − 9 = 0, 4.0704… and −0.7370…",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "01 brackets round b (November 2025 Q24); 02 one side zero (November 2023 Q10); 03 the half (November 2024 Q18) and x + 4 read as 4x (Summer 2025 Q15); 04 the rejection (November 2025 Q19); 05 the middle term (Summer 2024 Q12); 06 the accuracy named (Summer 2023 Q22)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "Our own numbers, none worked in the note or asked by another item (overlap.mjs)",
+          "at": "2026-10-08T05:17:59Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3.1 migration, 8 Oct 2026: scratchpad/probes/m4/quadratic-formula.mjs, every value computed in the script; marking probed by scratchpad/probes/m4/probe-qf.mts through markAnswer, markGate, keywordsPresent and markFix)",
+          "result": "pass",
+          "detail": "British English; no 'Wrong'; every feedback says what the step is and what to do",
+          "at": "2026-10-08T05:17:59Z",
           "by": "claude"
         }
       ],
