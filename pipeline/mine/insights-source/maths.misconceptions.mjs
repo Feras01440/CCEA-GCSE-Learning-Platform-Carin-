@@ -158,7 +158,7 @@ export const misconceptions = [
   M("maths.percent.reverse-take-percent-of-given", "Finds r% of the final value and adds or subtracts it instead of dividing by (100 plus or minus r)%", ["M3-NA-02"], "concept"),
   M("maths.percent.reverse-wrong-direction-100-minus", "Equates the given value to 72% instead of 128% (or the reverse)", ["M3-NA-02"], "concept"),
   M("maths.percent.stop-at-original-not-question", "Finds the original amount but not the quantity the question actually asks for", ["M3-NA-02"], "misread"),
-  MX("maths.percent.multiplier-is-rate-not-scale-factor", "Uses the rate itself as the multiplier (times 0.08 for an 8% increase, times 0.15 for a 15% decrease) instead of 1 plus or minus the rate", ["M3-NA-02"], "concept", [C("2024-summer", "M3", 27), C("2025-november", "M3", 30)]),
+  MA("maths.percent.multiplier-is-rate-not-scale-factor", "Uses the rate itself as the multiplier (times 0.08 for an 8% increase, times 0.15 for a 15% decrease) instead of 1 plus or minus the rate", ["M3-NA-02"], "concept", "No report names the rate itself used as the multiplier; the percentage reports name a percentage of the given value added or taken off in a reverse question (Summer 2024 M3 Q27, November 2025 M3 Q30), depreciation read as an increase (November 2025 M3 Q30) and an increase found but not added on (November 2025 M2 Q19)."),
   MX("maths.percent.reverse-multiply-by-complement", "Tries to undo a percentage change by multiplying by the complementary multiplier (times 0.8 to undo times 1.2) instead of dividing by the original one", ["M3-NA-02"], "concept", [C("2024-summer", "M4", 11), C("2025-november", "M3", 30), C("2025-november", "M4", 15)]),
   MX("maths.percent.unitary-stops-at-one-percent", "Finds 1% by the unitary method and writes that on the answer line instead of multiplying it by 100", ["M3-NA-02"], "method", [C("2023-summer", "M3", 18)]),
   MX("maths.percent.change-over-new-not-original", "Divides the change by the new value instead of the original when finding a percentage change, profit or loss", ["M1-NA-23", "M3-NA-02"], "concept", [C("2025-summer", "M1", 23), C("2025-summer", "M2", 15), C("2025-november", "M4", 1)]),
@@ -397,12 +397,12 @@ export const misconceptions = [
     "concept",
     [C("2025-summer", "M81", 8)],
   ),
-  MX(
+  MA(
     "maths.indices.equation-base-not-matched",
     "Does not rewrite both sides of an index equation as powers of one base, so the indices cannot be compared and the value is guessed instead",
     ["M7-NA-02"],
     "method",
-    [C("2023-summer", "M71", 11)],
+    "No report names bases left unmatched; the index-equation reports say a few found both values and swapped them (Summer 2023 M71 Q11, maths.indices.unknown-powers-swapped) and that the strongest set up and solved the equations in the indices (November 2024 M81 Q14).",
   ),
   MX(
     "maths.indices.unknown-powers-swapped",

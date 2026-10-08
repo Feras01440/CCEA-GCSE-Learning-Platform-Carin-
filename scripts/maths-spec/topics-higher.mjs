@@ -551,7 +551,6 @@ export const HIGHER_TOPICS = [
     statementIds: ['M8-NA-07'], prerequisites: ['simultaneous-equations-algebraically', 'quadratic-formula-and-harder-quadratic-equations'], calculator: 'either', difficulty: 4,
     examinerEvidence: [
       ev('Summer 2023', 'M8', 'Paper 1 Q12: line/circle intersection and equation of a diameter (A*) — trial and error with a sketch.'),
-      ev('Summer 2023', 'M8', 'Paper 2 Q13: A* AO3 algebra problem — just over a third scored; only the strongest full marks.'),
     ],
     mustMemorise: ['Rearrange the linear equation, substitute into the quadratic, solve, find both pairs'], onFormulaSheet: [],
     corbettmaths: [cm('Non-linear Simultaneous Equations', '298')],
@@ -597,6 +596,7 @@ export const HIGHER_TOPICS = [
     examinerEvidence: [
       ev('Summer 2025', 'M8', 'Paper 1 Q10: inverse variation with algebraic manipulation (grade A) — top 20% correct; a quarter no marks.'),
       ev('November 2025', 'M8', 'Paper 1 Q13: inverse proportion — a third beyond reach; 40% full; equation manipulation.'),
+      ev('Summer 2023', 'M8', 'Paper 2 Q13: P inversely proportional to x² (closing A* AO3 question) — just over a third gained some marks; only the strongest full marks.'),
     ],
     mustMemorise: ['y ∝ 1/x → y = k/x (xy constant); y ∝ 1/x² → y = k/x²'], onFormulaSheet: [],
     corbettmaths: [cm('Inverse Proportion', '255')],

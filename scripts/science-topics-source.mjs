@@ -1412,7 +1412,7 @@ topics.push(
     slug: 'p1-motion-graphs', unit: 'P1', title: 'Distance-time, speed-time, displacement-time and velocity-time graphs',
     outcomeIds: ['1.1.5', '1.1.6'], practicals: [], prerequisites: ['p1-speed-equations'], difficulty: 3,
     examinerEvidence: [
-      ev('Summer 2025', 'P1', 'H', '"Constant speed" given for a sloping section of a velocity-time graph (it shows constant acceleration).'),
+      ev('Summer 2025', 'P1', 'H', 'Q5(i): "constant speed" given for the flat section of a velocity-time graph, where the scheme wanted constant velocity (no acceleration).'),
       ev('March 2026', 'P1', 'F', 'Distance-time graphs were well prepared.'),
     ],
     mustRecall: [
