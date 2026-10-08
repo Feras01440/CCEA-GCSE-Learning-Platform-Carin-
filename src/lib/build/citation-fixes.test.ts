@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { DeckFile } from "@/lib/content/deck-schema";
 import { buildSubject } from "../../../pipeline/mine/build-insights.mjs";
+import fm from "../../../pipeline/mine/insights-source/further-maths.mjs";
 import maths from "../../../pipeline/mine/insights-source/maths.mjs";
 
 /**
@@ -89,4 +90,35 @@ describe("maths registry: two entries whose reports name a different error are a
       expect(m.note).toContain("No report names");
     });
   }
+});
+
+describe("FM3 adjustments: Summer 2025 Q5's '18²' is the square of the difference, not a raw 182", () => {
+  // The FM3 author, from the PDF's text layer (8 Oct 2026): the report's "adding 182" is "adding 18²", a superscript lost in
+  // extraction; 113 was recorded for 131, so the reported slip adds the square of the difference. Adding a value without
+  // squaring it is what Summer 2019 Q3 names ("added the two other scores without squaring them").
+  const S = (series: string, q: number) => `ccea-cer:further-maths:${series}:FM3:Q${q}`;
+  const { registry, insights, problems } = buildSubject(fm);
+  const entry = (id: string) => registry.find((m: { id: string }) => m.id === id) as { label: string; sources: string[]; firstSeen?: string };
+  type Finding = { source: string; wentWrong: string; misconceptions: string[] };
+  const finding = (source: string) => insights.flatMap((i: { findings: Finding[] }) => i.findings).find((f: Finding) => f.source === source) as Finding;
+
+  it("builds with no problems", () => {
+    expect(problems).toEqual([]);
+  });
+
+  it("sources the unsquared slip to Summer 2019 Q3 alone", () => {
+    expect(entry("fm.sd.adjustment-unsquared").sources).toEqual([S("2019-summer", 3)]);
+    expect(finding(S("2019-summer", 3)).misconceptions).toContain("fm.sd.adjustment-unsquared");
+  });
+
+  it("gives the squared-difference slip its own entry, sourced to Summer 2025 Q5", () => {
+    const m = entry("fm.sd.adjustment-difference-squared");
+    expect(m.sources).toEqual([S("2025-summer", 5)]);
+    expect(m.label).toContain("square of the difference");
+    const f = finding(S("2025-summer", 5));
+    expect(f.misconceptions).toContain("fm.sd.adjustment-difference-squared");
+    expect(f.misconceptions).not.toContain("fm.sd.adjustment-unsquared");
+    expect(f.wentWrong).not.toContain("182");
+    expect(f.wentWrong).toContain("18 squared");
+  });
 });

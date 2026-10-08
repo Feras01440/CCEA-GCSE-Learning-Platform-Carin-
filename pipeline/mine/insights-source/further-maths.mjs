@@ -182,6 +182,8 @@ const misconceptions = [
   M("fm.trig.cast-with-negative-value", "Cannot use the CAST diagram or the sketch when the ratio is negative", ["FM1-TRG-02"], "concept"),
   // FM1 migration group 2 (7 Oct 2026): the partner found with another curve's rule; until now carried by answer-outside-range
   MX("fm.trig.partner-rule-swapped", "Finds the second angle with another curve's rule: 360° minus the angle on a sine, 180° minus it on a cosine, or 90° added or taken away on a tangent", ["FM1-TRG-02"], "method", [S("2025-summer", "FM1", 2)], "Summer 2025 Q2(b)(i) reports the 90° rule used on a tangent, leading to answers outside the range; the sine and cosine forms are the same slip on the other curves and no report names them, so the evidence for those is step-level."),
+  // Added 8 Oct 2026 by the FM1 group 2 author (the strictest reviewer's trig-equations minor 1): q0009(c)'s calculator-error reason.
+  MA("fm.trig.no-solution-reason-missing", "Explains why a trigonometric equation has no solution with a calculator's error message instead of the range of the ratio (sin x and cos x never pass 1 or -1)", ["FM1-TRG-01", "FM1-TRG-02"], "concept", "No report names it; the reports on the trigonometric equations (2018 Q3, 2019 Q4, 2022 Q4, 2023 Q3, 2024 Q4, 2025 Q2) set no no-solution part."),
   MX("fm.trig.period-confused", "Gives 360° as the period of tan x, or 180° as the period of sin x or cos x, or offers a quarter of a period as the whole", ["FM1-TRG-01"], "concept", [S("2025-summer", "FM1", 2), S("2022-summer", "FM1", 4)]),
   MX("fm.trig.sin-cos-swapped", "Draws or reads one curve where the other was asked for: a cosine sketch starting at the origin, or sin x read where cos x was wanted", ["FM1-TRG-01"], "concept", [S("2022-summer", "FM1", 4), S("2023-summer", "FM1", 3)]),
   MX("fm.trig.symmetry-sign-error", "Changes the sign when using the symmetry of a curve, reflecting it in the x-axis instead of sideways, so sin 130° is given as the negative of sin 50°", ["FM1-TRG-01", "FM1-TRG-02"], "accuracy", [S("2019-summer", "FM1", 4), S("2018-summer", "FM1", 3)]),
@@ -296,6 +298,9 @@ const misconceptions = [
   MX("fm.kin.wrong-equation-chosen", "Uses an equation of motion that does not contain the quantity wanted, or mishandles the algebra inside a correct one (a sum inside a bracket turned into a product)", ["FM2-KIN-02"], "method", [S("2019-summer", "FM2", 2), S("2025-summer", "FM2", 3)]),
   // Added 27 Sep 2026 by the v3 migration of fm2/displacement-time-graphs (FM2 group 0): replacements q.0015, q.0017.
   MX("fm.kin.leg-left-out", "Totals the distance of a multi-stage journey from only some of its legs, leaving a leg out", ["FM2-KIN-01"], "method", [S("2024-summer", "FM2", 1)], "Summer 2024 Q1(ii) reports that only the stronger candidates took the total distance over the total time; the report does not itemise which legs the others left out."),
+  // Added 8 Oct 2026 by the FM2 fixer (the strictest reviewer's ij m1 and velocity-time M1): two slips the items anticipate.
+  MA("fm.kin.half-omitted-in-suvat", "Leaves the one half out of s = ut + ½at² (or its vector form), so the acceleration term comes out doubled", ["FM2-KIN-02", "FM2-VEC-03"], "accuracy", "No report names the half left out; the Summer 2019 report on Q2 names t not squared in s = ut + ½at² and brackets expanded wrongly (fm.kin.t-not-squared)."),
+  MA("fm.kin.gap-not-formed", "Hands in one body's own distance as the gap between two bodies, without taking the other body's distance from it", ["FM2-KIN-01"], "method", "No report names it; the Summer 2023 report on Q6(iv), the gap after the motorcyclist stops, says only that it was reasonably well attempted."),
   M("fm.vectors.weight-scalar", "Classifies weight as a scalar", ["FM2-VEC-01"], "concept"),
   M("fm.vectors.definition-by-example", "Defines vector or scalar with a specific example instead of a general definition", ["FM2-VEC-01"], "presentation"),
   M("fm.vectors.magnitude-when-vector-asked", "Finds magnitudes or angles when a vector was required", ["FM2-VEC-03"], "misread"),
@@ -339,6 +344,7 @@ const misconceptions = [
   M("fm.sd.average-of-means", "Combines two groups by averaging their means instead of using the totals", ["FM3-CTD-02"], "concept"),
   M("fm.sd.sum-squared-vs-sum-of-squares", "Confuses (sum of x) squared with sum of x squared, or squares the fx column instead of f times x squared", ["FM3-CTD-01", "FM3-CTD-02"], "concept"),
   M("fm.sd.adjustment-unsquared", "Adds or removes values from the sum of squares without squaring them", ["FM3-CTD-02", "FM3-CTD-03"], "concept"),
+  M("fm.sd.adjustment-difference-squared", "Corrects a wrongly recorded value by adding the square of the difference between the two values to the sum of squares, instead of taking off the old value's square and adding the new one's", ["FM3-CTD-03"], "concept"),
   M("fm.sd.wrong-n-after-adjustment", "Uses the old n (14 instead of 15) after adding a value", ["FM3-CTD-03"], "accuracy"),
   M("fm.sd.transformation-added-to-sd", "Adds a constant to the standard deviation when a constant is added to every value", ["FM3-CTD-03"], "concept"),
   M("fm.sd.table-treated-as-grouped", "Treats a table of daily values as a grouped frequency table and invents midpoints", ["FM3-CTD-01"], "misread"),
@@ -1510,7 +1516,7 @@ const insights = [
         wentWrong: "Many averaged the girls' mean and the boys' mean (83.75); for the SD, the girls' sum of squares was found but the boys' values were added unsquared, or the square of their sum was used.",
         fullMarkAnswersDid: "Recovered sum of x and sum of x squared for each group from n, mean and SD, added them, and recomputed.",
         rule: "Combine totals (sum x, sum x squared), never averages.",
-        misconceptions: ["fm.sd.average-of-means", "fm.sd.sum-squared-vs-sum-of-squares"],
+        misconceptions: ["fm.sd.average-of-means", "fm.sd.sum-squared-vs-sum-of-squares", "fm.sd.adjustment-unsquared"],
       },
       {
         source: S("2022-summer", "FM3", 5),
@@ -1529,9 +1535,9 @@ const insights = [
       {
         source: S("2025-summer", "FM3", 5),
         asked: "Adjust a mean and SD when values are corrected.",
-        wentWrong: "108.4 x 14 instead of x 15; adjusted using only one of the two values; in the SD part the sum of squares was adjusted by adding the raw difference (182) rather than the squares; some squared sum x instead of summing x squared.",
+        wentWrong: "108.4 x 14 instead of x 15; adjusted using only one of the two values; in the SD part some adjusted the sum of squares by adding the square of the difference (18 squared) instead of taking off 113 squared and adding 131 squared; some squared sum x instead of summing x squared.",
         rule: "Remove the old value and its square, add the new value and its square, then recompute with the correct n.",
-        misconceptions: ["fm.sd.wrong-n-after-adjustment", "fm.sd.adjustment-unsquared", "fm.sd.sum-squared-vs-sum-of-squares"],
+        misconceptions: ["fm.sd.wrong-n-after-adjustment", "fm.sd.adjustment-difference-squared", "fm.sd.sum-squared-vs-sum-of-squares"],
       },
     ],
     ruleToRemember: "Work with totals: sum x = n x mean and sum x squared = n(SD squared + mean squared); add, remove or replace the actual values and their squares; recompute mean and SD from the new totals with the new n.",
