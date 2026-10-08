@@ -26,6 +26,16 @@ const MX = (id, label, statements, ledgerTag, extraSources, note) => ({
   ...(note ? { note } : {}),
 });
 
+/**
+ * MA: an anticipated entry. The items anticipate the error (a distractor, a commonError or a
+ * find-the-mistake is tagged with it) but no Chief Examiner report names it, so it carries no
+ * source and no firstSeen / lastSeen; `note` says, in a line, what the reports do say. A general
+ * remark in a report ("arithmetic errors") supports a general entry, not a specific slip. Same
+ * helper in maths.misconceptions.mjs, science.misconceptions.mjs and further-maths.mjs (the lead's
+ * ruling of 7 Oct 2026: an honest registry says what the reports say and no more).
+ */
+export const MA = (id, label, statements, ledgerTag, note) => ({ id, label, statements, ledgerTag, extraSources: [], anticipated: true, note });
+
 export const misconceptions = [
   // --- histograms and sampling (M4-HD) ---
   M("maths.histograms.median-class-only", "Names the class the median lies in but does not estimate a value inside it by proportion", ["M4-HD-02"], "concept"),

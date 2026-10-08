@@ -1,7 +1,12 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { Misconception } from "@/lib/content/schema";
 import { buildSubject } from "../../../pipeline/mine/build-insights.mjs";
-import fm from "../../../pipeline/mine/insights-source/further-maths.mjs";
+import fm, { MA as maFm } from "../../../pipeline/mine/insights-source/further-maths.mjs";
+import { MA as maMaths } from "../../../pipeline/mine/insights-source/maths.misconceptions.mjs";
+import { MA as maScience } from "../../../pipeline/mine/insights-source/science.misconceptions.mjs";
+import { joinsRegistry } from "../../../pipeline/mine/insights-source/science.mjs";
 
 /**
  * Anticipated registry entries (the lead's ruling, 7 Oct 2026): an honest registry says what the reports say and no more.
@@ -84,5 +89,42 @@ describe("build-insights: anticipated entries", () => {
     const general = byId.get("fm.simeq.arithmetic-slip") as { sources: string[]; firstSeen: string; lastSeen: string; anticipated?: boolean };
     expect(general.sources).toEqual([S("2018-summer", "FM1", 10), S("2019-summer", "FM1", 7), S("2022-summer", "FM1", 11), S("2024-summer", "FM1", 11), S("2025-summer", "FM1", 12)]);
     expect([general.firstSeen, general.lastSeen, general.anticipated]).toEqual(["2018-summer", "2025-summer", undefined]);
+  });
+});
+
+describe("MA() in every source module, science's registry filter and the author prompts", () => {
+  const note = "No report names it; the reports name arithmetic slips in general.";
+  const args = ["x.y.z", "L", ["S-1"], "accuracy", note] as const;
+
+  it("gives the same anticipated entry in maths, further maths and science", () => {
+    const want = { id: "x.y.z", label: "L", statements: ["S-1"], ledgerTag: "accuracy", extraSources: [], anticipated: true, note };
+    expect(maMaths(...args)).toEqual(want);
+    expect(maScience(...args)).toEqual(want);
+    expect(maFm(...args)).toEqual(want);
+  });
+
+  it("builds an MA entry as anticipated in maths and in science", () => {
+    for (const [subject, ma] of [["maths", maMaths], ["science", maScience]] as const) {
+      const { registry, problems } = buildSubject({ subject, misconceptions: [ma(...args)], insights: [] });
+      expect(problems, subject).toEqual([]);
+      expect(registry, subject).toEqual([{ id: "x.y.z", label: "L", subject, statements: ["S-1"], sources: [], ledgerTag: "accuracy", anticipated: true, note }]);
+    }
+  });
+
+  it("keeps an anticipated science entry that no card cites, and still drops a plain uncited one", () => {
+    const cited = new Set(["sci.cited"]);
+    expect(joinsRegistry({ id: "sci.cited" }, cited)).toBe(true);
+    expect(joinsRegistry({ id: "sci.extra", extraSources: ["ccea-cer:science:2024-summer:P1H:Q5"] }, cited)).toBe(true);
+    expect(joinsRegistry(maScience("sci.anticipated", "L", [], "concept", note), cited)).toBe(true);
+    expect(joinsRegistry({ id: "sci.plain" }, cited)).toBe(false);
+    expect(joinsRegistry({ id: "sci.plain", extraSources: [] }, cited)).toBe(false);
+  });
+
+  it("tells authors in all three prompts to register an error no report names with MA() and no report citation", () => {
+    for (const f of ["author-deck", "author-topic", "author-unit-batch"]) {
+      const text = fs.readFileSync(path.join(process.cwd(), "pipeline/prompts", `${f}.md`), "utf8");
+      expect(text, f).toMatch(/If no Chief Examiner report names the error, register it with the MA\(\) helper and a one-line note on what the reports do say; never give it a report citation/);
+      expect(text, f).toContain("(Further Maths: `pipeline/mine/insights-source/further-maths.mjs`)");
+    }
   });
 });

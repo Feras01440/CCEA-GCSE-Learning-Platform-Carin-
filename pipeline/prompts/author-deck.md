@@ -25,7 +25,8 @@ Finish by running `npx tsx pipeline/build-decks.mts` and report the card counts 
 
 ## Working files
 
-Other authors share the scratchpad. Put every generator or temporary file in your OWN subfolder of the scratchpad (`scratchpad/<topic-or-unit-slug>/`), never at its root. Misconception ids: run `npm run insights:unregistered` before you finish (it exits 1 if any id you used is missing from the registry); add missing entries to the registry SOURCE module `pipeline/mine/insights-source/<subject>.misconceptions.mjs` (use the MX() helper for entries carried by extraSources), then run `npm run insights:build && npm run insights:validate`. Never edit the generated `packs/*/insights/misconceptions.json` directly.
+Other authors share the scratchpad. Put every generator or temporary file in your OWN subfolder of the scratchpad (`scratchpad/<topic-or-unit-slug>/`), never at its root. Misconception ids: run `npm run insights:unregistered` before you finish (it exits 1 if any id you used is missing from the registry); add missing entries to the registry SOURCE module `pipeline/mine/insights-source/<subject>.misconceptions.mjs` (Further Maths: `pipeline/mine/insights-source/further-maths.mjs`) (use the MX() helper for entries carried by extraSources), then run `npm run insights:build && npm run insights:validate`. Never edit the generated `packs/*/insights/misconceptions.json` directly.
+If no Chief Examiner report names the error, register it with the MA() helper and a one-line note on what the reports do say; never give it a report citation (MX() and its extraSources are only for a report that names the error).
 
 ## SVG rule
 

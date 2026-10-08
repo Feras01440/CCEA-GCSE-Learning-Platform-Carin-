@@ -12,8 +12,9 @@
  * and science.u7.<planning|carrying-out|analysing|conclusions> for the Unit 7 skill groups.
  *
  * The vocabulary in science.misconceptions.mjs is bigger than the set of cards written so far. The builder rejects
- * a registry entry that no finding cites, so only cited entries (or ones carrying extraSources) are exported as
- * `misconceptions`; the rest are exported as `uncitedMisconceptions` and join the registry as soon as a card cites them.
+ * a registry entry that no finding cites, so only cited entries (or ones carrying extraSources, or anticipated ones made
+ * with MA()) are exported as `misconceptions`; the rest are exported as `uncitedMisconceptions` and join the registry as
+ * soon as a card cites them.
  */
 import { misconceptions as vocabulary } from "./science.misconceptions.mjs";
 
@@ -1072,8 +1073,11 @@ export const insights = [
   },
 ];
 
+/** An entry joins the built registry when a card cites it, when extraSources carry its evidence, or when it is anticipated (MA). */
+export const joinsRegistry = (m, cited) => cited.has(m.id) || (m.extraSources ?? []).length > 0 || m.anticipated === true;
+
 const cited = new Set(insights.flatMap((i) => i.findings.flatMap((f) => f.misconceptions ?? [])));
-export const misconceptions = vocabulary.filter((m) => cited.has(m.id) || (m.extraSources ?? []).length > 0);
-export const uncitedMisconceptions = vocabulary.filter((m) => !cited.has(m.id) && !(m.extraSources ?? []).length);
+export const misconceptions = vocabulary.filter((m) => joinsRegistry(m, cited));
+export const uncitedMisconceptions = vocabulary.filter((m) => !joinsRegistry(m, cited));
 
 export default { subject: "science", misconceptions, insights };

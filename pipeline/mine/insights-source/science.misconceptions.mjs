@@ -10,8 +10,9 @@ const C = (series, unit, q) => `ccea-cer:science:${series}:${unit}:Q${q}`;
  * distractor, a commonError or a find-the-mistake item with this misconception but no card finding names it
  * yet. The sources are the ones the bundle itself already cites for that failure: a commonError's own
  * `source`, or otherwise the `examinerSources` of the question (or find-the-mistake item) carrying the tag.
- * science.mjs only keeps an MX entry in the built registry once it has extraSources (see its filter); a plain
- * M() entry with no citing finding is dropped into `uncitedMisconceptions` instead. build-insights.mjs still
+ * science.mjs only keeps an MX entry in the built registry once it has extraSources, and an MA entry because it
+ * is anticipated (see joinsRegistry there); a plain M() entry with no citing finding is dropped into
+ * `uncitedMisconceptions` instead. build-insights.mjs still
  * derives `sources`, `firstSeen` and `lastSeen` from them; validate-insights.mjs reports an uncited entry as a
  * warning, not an error.
  */
@@ -23,6 +24,16 @@ const MX = (id, label, statements, ledgerTag, extraSources, note) => ({
   extraSources,
   ...(note ? { note } : {}),
 });
+
+/**
+ * MA: an anticipated entry. The items anticipate the error (a distractor, a commonError or a
+ * find-the-mistake is tagged with it) but no Chief Examiner report names it, so it carries no
+ * source and no firstSeen / lastSeen; `note` says, in a line, what the reports do say. A general
+ * remark in a report ("arithmetic errors") supports a general entry, not a specific slip. Same
+ * helper in maths.misconceptions.mjs, science.misconceptions.mjs and further-maths.mjs (the lead's
+ * ruling of 7 Oct 2026: an honest registry says what the reports say and no more).
+ */
+export const MA = (id, label, statements, ledgerTag, note) => ({ id, label, statements, ledgerTag, extraSources: [], anticipated: true, note });
 
 export const misconceptions = [
   // --- biology ---
