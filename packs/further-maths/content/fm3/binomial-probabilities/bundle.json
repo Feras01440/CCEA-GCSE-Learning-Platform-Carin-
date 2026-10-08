@@ -26,7 +26,7 @@
       "ccea-cer:further-maths:2024-summer:FM3:Q4",
       "ccea-cer:further-maths:2025-summer:FM3:Q4"
     ],
-    "examWeightHint": "Unit 3 is one 1-hour calculator paper of 50 marks, sat each Summer. The binomial question was Q4 in every series from 2019 to 2025 (Q2 in the 2021 paper, Q3 in 2026): Pascal's triangle and the expansion of (p + q)ⁿ for 1 or 2 marks each, then the probabilities, usually 3 marks for exactly r and 3 for at least r, sometimes 2 for a simple all-or-none part, and 'at most' or 'more than' in place of 'at least'. The 2025 and 2026 papers ask for 4 decimal places. The scheme gives M1 for the term's structure, W1 for the coefficient or the substituted terms and W1 for the value, and a calculator's statistics function with no working earns nothing.",
+    "examWeightHint": "Unit 3 is one 1-hour calculator paper of 50 marks, sat each Summer. The binomial question was Q4 in every series from 2019 to 2025 (Q2 in the 2021 paper, Q3 in 2026): Pascal's triangle and the expansion of (p + q)ⁿ for 1 or 2 marks each, then the probabilities, usually 3 marks for exactly r and 3 for at least r, sometimes 2 for a simple all-or-none part, and 'at most' or 'more than' in place of 'at least'. The 2025 and 2026 papers ask for 4 decimal places. The scheme gives M1 for the term's structure, W1 for the coefficient or the substituted terms and W1 for the value, and the Summer 2025 report asks that a calculator's statistics functions be backed up with working.",
     "mustMemorise": [
       "Identify p (the success, as the question defines it) and q = 1 − p, and which term matches 'exactly r successes'",
       "'At least r' = 1 − (the sum of the terms below r), with brackets",
@@ -130,18 +130,18 @@
         "Keep full accuracy to the last line and round (never cut off) to the 4 decimal places the paper asks for",
         "Translate the story before any term: $p$ from a fraction, words or a percentage; $n$ from a period such as a week of days; a points total as a count of one score"
       ],
-      "howExamined": "Unit 3 is one 1-hour calculator paper of 50 marks, sat each Summer. The binomial question was Q4 in every series from 2019 to 2025 (Q2 in the 2021 paper, Q3 in 2026): Pascal's triangle and the expansion of (p + q)ⁿ for 1 or 2 marks each, then the probabilities, usually 3 marks for exactly r and 3 for at least r, sometimes 2 for a simple all-or-none part, and 'at most' or 'more than' in place of 'at least'. The 2025 and 2026 papers ask for 4 decimal places. The scheme gives M1 for the term's structure, W1 for the coefficient or the substituted terms and W1 for the value, and a calculator's statistics function with no working earns nothing.",
+      "howExamined": "Unit 3 is one 1-hour calculator paper of 50 marks, sat each Summer. The binomial question was Q4 in every series from 2019 to 2025 (Q2 in the 2021 paper, Q3 in 2026): Pascal's triangle and the expansion of (p + q)ⁿ for 1 or 2 marks each, then the probabilities, usually 3 marks for exactly r and 3 for at least r, sometimes 2 for a simple all-or-none part, and 'at most' or 'more than' in place of 'at least'. The 2025 and 2026 papers ask for 4 decimal places. The scheme gives M1 for the term's structure, W1 for the coefficient or the substituted terms and W1 for the value, and the Summer 2025 report asks that a calculator's statistics functions be backed up with working.",
       "traps": [
         "Summer 2019 FM3 Q4: the answer for 'none of the pens' taken from 1 when nothing needed subtracting, p and q mixed up, 'at least 2' answered with P(2) alone, and the final mark lost to early or incorrect rounding",
         "Summer 2022 FM3 Q4: the two probabilities used the wrong way round, the coefficient 4 left out of the term, and the words 'at least' not acted on",
         "Summer 2023 FM3 Q4: the bracket left out of 1 − (P(0) + P(1)), so P(1) was added back on, and coefficients dropped from the terms",
         "Summer 2024 FM3 Q4: the wrong terms of the expansion chosen for 'exactly one' and 'at least two', a simple p³ turned into a long calculation, and 0.027 cut down to 0.03",
-        "Summer 2025 FM3 Q4: the probabilities of two, three, four and five absences each worked out where 1 minus two terms was quicker and safer, and calculator statistics functions used with no working shown"
+        "Summer 2025 FM3 Q4: the probabilities of two, three, four and five absences each worked out where 1 minus two terms was simpler and more reliable, and calculator statistics functions used without the working to back them up"
       ]
     },
     "verification": "ver.note.fm.u3.binomial-probabilities",
     "version": 1,
-    "updated": "2026-09-22"
+    "updated": "2026-10-08"
   },
   "workedExamples": [
     {
@@ -714,6 +714,196 @@
           "hypercorrectionQueue": true
         }
       ]
+    },
+    {
+      "id": "dx.fm.u3.binomial-probabilities.post-b",
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "d1",
+          "stem": "A school minibus is full on 70% of trips, independently. Which expression gives the probability that it is not full on exactly 2 of 5 trips?",
+          "skill": "Naming the success when the stem states the other outcome",
+          "options": [
+            {
+              "id": "a",
+              "text": "$10(0.3)^{2}(0.7)^{3}$",
+              "correct": true,
+              "feedback": "Yes: not full is what is counted, so $p = 0.3$ and exactly 2 is $10p^{2}q^{3}$."
+            },
+            {
+              "id": "b",
+              "text": "$10(0.7)^{2}(0.3)^{3}$",
+              "correct": false,
+              "misconception": "fm.binomial.p-q-swapped",
+              "feedback": "That uses 0.7, the probability of a full minibus, as $p$. The question counts trips that are not full, so $p = 0.3$."
+            },
+            {
+              "id": "c",
+              "text": "$(0.3)^{2}(0.7)^{3}$",
+              "correct": false,
+              "misconception": "fm.binomial.coefficient-omitted",
+              "feedback": "The powers are right, but that is one order only. There are 10 ways to choose which 2 of the 5 trips are not full, so the coefficient 10 is needed."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d2",
+          "stem": "What is the coefficient of the term for exactly 3 successes in 7 trials?",
+          "skill": "Reading a coefficient from the right row and position of Pascal's triangle",
+          "options": [
+            {
+              "id": "a",
+              "text": "35",
+              "correct": true,
+              "feedback": "Yes: row 7 is 1, 7, 21, 35, then the same four in reverse, and the term with $p^{3}q^{4}$ takes 35."
+            },
+            {
+              "id": "b",
+              "text": "20",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-power",
+              "feedback": "20 comes from row 6. Seven trials need row 7, 1, 7, 21, 35, then the same four in reverse, which gives 35."
+            },
+            {
+              "id": "c",
+              "text": "21",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-terms-selected",
+              "feedback": "21 is the coefficient for exactly 2 successes in row 7. Count along from 0: the fourth number, 35, is the one for 3."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d3",
+          "stem": "In 5 trials, which numbers of successes does 'at least 3' mean?",
+          "skill": "Turning 'at least' into a set of terms",
+          "options": [
+            {
+              "id": "a",
+              "text": "3, 4 or 5",
+              "correct": true,
+              "feedback": "Yes: at least 3 includes 3 itself and everything above it, up to 5."
+            },
+            {
+              "id": "b",
+              "text": "4 or 5",
+              "correct": false,
+              "misconception": "fm.binomial.wrong-terms-selected",
+              "feedback": "That is 'more than 3'. At least 3 includes 3."
+            },
+            {
+              "id": "c",
+              "text": "0, 1, 2 or 3",
+              "correct": false,
+              "misconception": "fm.binomial.at-least-ignored",
+              "feedback": "That is 'at most 3', the other direction. At least 3 is 3 or more: 3, 4 or 5."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d7",
+          "stem": "In 5 independent trials with $p = 0.2$, $P(0) = 0.32768$ and $P(1) = 0.4096$. What is the probability of at least 2 successes?",
+          "skill": "The complement with its bracket",
+          "options": [
+            {
+              "id": "a",
+              "text": "0.26272",
+              "correct": true,
+              "feedback": "Yes: $1 - (0.32768 + 0.4096) = 0.26272$."
+            },
+            {
+              "id": "b",
+              "text": "1.08192",
+              "correct": false,
+              "misconception": "fm.binomial.brackets-in-complement",
+              "feedback": "That is $1 - 0.32768 + 0.4096$, with the bracket left off, so $P(1)$ was added on. It is more than 1, so it cannot be a probability."
+            },
+            {
+              "id": "c",
+              "text": "0.73728",
+              "correct": false,
+              "misconception": "fm.binomial.at-least-ignored",
+              "feedback": "That is $P(0) + P(1)$, the chance of fewer than 2. Take it from 1: 0.26272."
+            }
+          ],
+          "secondsExpected": 40,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d5",
+          "stem": "A calculator shows 0.31415926 for a probability. What is it to 4 decimal places?",
+          "skill": "Rounding once, at the end, to the accuracy asked for",
+          "options": [
+            {
+              "id": "a",
+              "text": "0.3142",
+              "correct": true,
+              "feedback": "Yes: the fifth decimal place is 5, so the fourth rounds up from 1 to 2."
+            },
+            {
+              "id": "b",
+              "text": "0.3141",
+              "correct": false,
+              "misconception": "fm.binomial.early-rounding",
+              "feedback": "That cuts the value off after four places instead of rounding it. The next digit is 5, so round up: 0.3142."
+            },
+            {
+              "id": "c",
+              "text": "0.314",
+              "correct": false,
+              "misconception": "fm.binomial.early-rounding",
+              "feedback": "That is 3 decimal places. The question asked for 4: 0.3142."
+            }
+          ],
+          "secondsExpected": 20,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d6",
+          "stem": "A player wins a game with probability 0.9, independently each time. She plays 3 games. What is the probability that she wins all three?",
+          "skill": "The simple case: all successes is p to the power n",
+          "options": [
+            {
+              "id": "a",
+              "text": "0.729",
+              "correct": true,
+              "feedback": "Yes: all three is the single term $p^{3} = 0.9^{3} = 0.729$, with coefficient 1."
+            },
+            {
+              "id": "b",
+              "text": "0.271",
+              "correct": false,
+              "misconception": "fm.binomial.complement-not-needed",
+              "feedback": "That is $1 - 0.9^{3}$, the chance that she loses at least one game. All three wins is $0.9^{3}$ itself."
+            },
+            {
+              "id": "c",
+              "text": "0.001",
+              "correct": false,
+              "misconception": "fm.binomial.p-q-swapped",
+              "feedback": "That is $0.1^{3}$, the chance of losing all three. Winning has probability 0.9."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
     }
   ],
   "questions": [
@@ -885,7 +1075,12 @@
               "source": "ccea-cer:further-maths:2024-summer:FM3:Q4"
             }
           ],
-          "requiresWorking": true
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value",
+            "relation": "7 * x * (1 - x)^6"
+          }
         }
       ],
       "totalMarks": 4,
@@ -2535,7 +2730,12 @@
               "source": "ccea-cer:further-maths:2024-summer:FM3:Q4"
             }
           ],
-          "requiresWorking": true
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value",
+            "relation": "56 * (1 - x)^3 * x^5"
+          }
         },
         {
           "id": "c",
@@ -2620,7 +2820,12 @@
               "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
             }
           ],
-          "requiresWorking": true
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value",
+            "relation": "x^8 + 8 * (1 - x) * x^7"
+          }
         },
         {
           "id": "d",
@@ -2697,7 +2902,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "c",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "1 - x"
           }
         }
       ],
@@ -2812,6 +3018,441 @@
               },
               "feedback": "That counts two 50s only, a total of 110. Three 50s make 150, which is also at least 100, so add $p^{3} = 0.008$: 0.104.",
               "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2024-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.p-q-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.896,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              "feedback": "That gives 0.8 to a 50-point dart, but 0.8 is the chance of a 10. A 50 is what the total needs, so $p = 0.2$: 0.104.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2022-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.coefficient-omitted",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.04,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              "feedback": "The term for two 50s needs its coefficient 3: the 10-point dart could be the first, second or third throw. With it the answer is 0.104.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2023-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(main)find3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2024-summer:FM3:Q4"
+      ],
+      "solutionProgram": "3 * 0.2^2 * 0.8 + 0.2^3 = 0.104"
+    },
+    {
+      "id": "q.fm.u3.binomial-probabilities.0013",
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.binomial-probabilities.0013",
+      "style": "practice",
+      "difficulty": 1,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [
+        "all",
+        "none",
+        "keeping it simple"
+      ],
+      "context": {
+        "setting": "Completing a level of a video game on each of three attempts",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "a",
+          "stem": "Each time Niall plays a particular level of a video game, he completes it with probability 0.4, independently of his other attempts. He plays the level 3 times.\nFind the probability that he completes it on all three attempts.",
+          "marks": 1,
+          "answer": {
+            "kind": "numeric",
+            "value": 0.064,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$0.4^{3} = 0.064$"
+            }
+          ],
+          "hints": [
+            "All three is a single term with coefficient 1.",
+            "It is just $p^{3}$."
+          ],
+          "workedSolution": "All three completed is the term $p^{3}$, with coefficient 1 and no $q$.\n$0.4^{3} = 0.064$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.complement-not-needed",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.936,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              "feedback": "$1 - 0.4^{3}$ is the probability that he fails at least once. The question asks for all three completed, which is $0.4^{3} = 0.064$ with nothing taken from 1.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": false
+        },
+        {
+          "id": "b",
+          "stem": "Find the probability that he does not complete the level on any of the three attempts.",
+          "marks": 2,
+          "answer": {
+            "kind": "numeric",
+            "value": 0.216,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "$q^{3}$ with $q = 0.6$",
+              "accept": [
+                "0.6^3"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "0.216",
+              "dependsOn": [
+                "M1"
+              ]
+            }
+          ],
+          "hints": [
+            "Not completing is the failure, with probability q.",
+            "$q = 1 - 0.4$."
+          ],
+          "workedSolution": "Not completing has probability $q = 0.6$ each time.\nNone completed is the term $q^{3} = 0.6^{3}$\n$= 0.216$.",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.p-q-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.064,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              "feedback": "$0.4^{3}$ is the probability of completing all three, part (a), so the scheme's method mark, $q^{3}$ with $q = 0.6$, is not reached. Not completing has probability $0.6$ each time: $0.6^{3} = 0.216$.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.complement-not-needed",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.784,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              "feedback": "$0.6^{3} = 0.216$ was already the answer; taking it from 1 gives the probability of completing the level at least once. Nothing needed subtracting here.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(a)find1|(b)find2",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM3:Q4",
+        "ccea-cer:further-maths:2024-summer:FM3:Q4"
+      ],
+      "solutionProgram": "a: 0.4^3 = 0.064; b: 0.6^3 = 0.216"
+    },
+    {
+      "id": "q.fm.u3.binomial-probabilities.0014",
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.binomial-probabilities.0014",
+      "style": "practice",
+      "difficulty": 3,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Calculate"
+      ],
+      "emphasis": [
+        "p as a fraction",
+        "exactly r"
+      ],
+      "context": {
+        "setting": "Rolling a fair six-sided dice five times",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "A fair six-sided dice is rolled 5 times.\nCalculate the probability that exactly one of the rolls is a six.\nGive your answer to 4 decimal places.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 0.401878,
+            "tolerance": {
+              "type": "dp",
+              "places": 4
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "$pq^{4}$ with $p = \\frac{1}{6}$",
+              "accept": [
+                "(1/6)(5/6)^4"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$5pq^{4} = 5\\left(\\frac{1}{6}\\right)\\left(\\frac{5}{6}\\right)^{4}$",
+              "accept": [
+                "5(1/6)(5/6)^4"
+              ],
+              "dependsOn": [
+                "M1"
+              ]
+            },
+            {
+              "id": "W2",
+              "code": "W",
+              "marks": 1,
+              "for": "0.4019",
+              "dependsOn": [
+                "W1"
+              ]
+            }
+          ],
+          "hints": [
+            "A six is the success: $p = \\frac{1}{6}$, $q = \\frac{5}{6}$.",
+            "Keep the fractions until the end."
+          ],
+          "workedSolution": "$p = \\frac{1}{6}$, $q = \\frac{5}{6}$, $n = 5$.\n$P(\\text{exactly one six}) = 5pq^{4}$\n$= 5\\left(\\frac{1}{6}\\right)\\left(\\frac{5}{6}\\right)^{4}$\n$= \\frac{3125}{7776}$\n$= 0.4019$ to 4 decimal places.",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.p-q-swapped",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.003215,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 4
+                }
+              },
+              "feedback": "That is $5 \\times \\frac{5}{6} \\times \\left(\\frac{1}{6}\\right)^{4}$, exactly one roll that is not a six. The scheme's method mark is $pq^{4}$ with $p = \\frac{1}{6}$, so this route earns nothing: a six is what is counted, and the answer is 0.4019.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2019-summer:FM3:Q4"
+            },
+            {
+              "misconception": "fm.binomial.coefficient-omitted",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.080376,
+                "tolerance": {
+                  "type": "dp",
+                  "places": 4
+                }
+              },
+              "feedback": "That is one order, such as a six first and then four others. The six can come on any of the 5 rolls, so multiply by 5: 0.4019.",
+              "marksTypicallyEarned": 1,
+              "source": "ccea-cer:further-maths:2023-summer:FM3:Q4"
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(main)calculate3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2019-summer:FM3:Q4",
+        "ccea-cer:further-maths:2023-summer:FM3:Q4"
+      ],
+      "solutionProgram": "5 * (1/6) * (5/6)^4 = 3125/7776"
+    },
+    {
+      "id": "q.fm.u3.binomial-probabilities.0015",
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "figures": [],
+      "version": 1,
+      "verification": "ver.q.fm.u3.binomial-probabilities.0015",
+      "style": "practice",
+      "difficulty": 4,
+      "ao": [
+        "AO2",
+        "AO3"
+      ],
+      "commandWords": [
+        "Find"
+      ],
+      "emphasis": [
+        "a points total turned into a count",
+        "at least r",
+        "naming the success"
+      ],
+      "context": {
+        "setting": "Three darts, each scoring 50 or 10 points",
+        "original": true
+      },
+      "parts": [
+        {
+          "id": "main",
+          "stem": "In a darts game every dart scores either 50 points or 10 points. Each dart Maeve throws scores 50 with probability 0.2, independently of her other darts, and otherwise scores 10. She throws 3 darts.\nFind the probability that her total is at least 100 points.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 0.104,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "A total of at least 100 needs at least two 50s: two make 110 and three make 150, but one makes only 70"
+            },
+            {
+              "id": "M2",
+              "code": "M",
+              "marks": 1,
+              "for": "$3(0.2)^{2}(0.8) + (0.2)^{3}$",
+              "accept": [
+                "3 × 0.2^2 × 0.8 + 0.2^3"
+              ],
+              "dependsOn": [
+                "M1"
+              ]
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "0.104",
+              "dependsOn": [
+                "M2"
+              ]
+            }
+          ],
+          "hints": [
+            "What totals can three darts make? List them.",
+            "Which of those totals are at least 100, and how many 50s does each need?"
+          ],
+          "workedSolution": "Three darts make 30, 70, 110, 150 points, from 0, 1, 2 or 3 darts scoring 50.\nAt least 100 means 110 or 150: at least two 50s.\nA 50 is the success: $p = 0.2$, $q = 0.8$, $n = 3$.\n$P(\\text{at least two}) = 3p^{2}q + p^{3}$\n$= 3(0.2)^{2}(0.8) + (0.2)^{3}$\n$= 0.096 + 0.008$\n$= 0.104$",
+          "commonErrors": [
+            {
+              "misconception": "fm.binomial.wrong-terms-selected",
+              "pattern": {
+                "kind": "numeric",
+                "value": 0.096,
+                "tolerance": {
+                  "type": "exact"
+                }
+              },
+              "feedback": "That counts two 50s only, a total of 110. The scheme's first mark is for seeing that at least 100 needs at least two 50s, so three 50s (150) count too; add $p^{3} = 0.008$: 0.104.",
+              "marksTypicallyEarned": 0,
               "source": "ccea-cer:further-maths:2024-summer:FM3:Q4"
             },
             {
@@ -3045,6 +3686,72 @@
       ],
       "examUnit": "FM3",
       "difficultyPrior": 4
+    },
+    {
+      "id": "rp.fm.u3.binomial-probabilities.09",
+      "kind": "formula",
+      "prompt": "Which term of $(p + q)^{n}$ gives exactly $r$ successes?",
+      "answer": "The term with $p^{r}q^{n - r}$, times its coefficient from row $n$.",
+      "difficultyPrior": 2,
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.binomial-probabilities.10",
+      "kind": "qa",
+      "prompt": "A chance is given per school day; the question covers a school week. What is $n$?",
+      "answer": "$n = 5$, the school days in a week.",
+      "difficultyPrior": 2,
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.binomial-probabilities.11",
+      "kind": "formula",
+      "prompt": "Write $P(\\text{at least 2})$ using $P(0)$ and $P(1)$.",
+      "answer": "$1 - \\left(P(0) + P(1)\\right)$",
+      "difficultyPrior": 2,
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.binomial-probabilities.12",
+      "kind": "procedure",
+      "prompt": "When do you round a binomial probability?",
+      "answer": "Only on the last line, to the accuracy the question asks for.",
+      "keyWords": [
+        "last line"
+      ],
+      "difficultyPrior": 2,
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "examUnit": "FM3"
+    },
+    {
+      "id": "rp.fm.u3.binomial-probabilities.13",
+      "kind": "procedure",
+      "prompt": "What do you write before any binomial arithmetic?",
+      "answer": "The success, in the question's words, then p, q and n.",
+      "keyWords": [
+        "success"
+      ],
+      "difficultyPrior": 2,
+      "topic": "fm.u3.binomial-probabilities",
+      "specRefs": [
+        "FM3-BIN-02"
+      ],
+      "examUnit": "FM3"
     }
   ],
   "insight": {
@@ -3129,17 +3836,17 @@
       ],
       "itemIds": [
         "dx.fm.u3.binomial-probabilities.pre",
-        "q.fm.u3.binomial-probabilities.0004",
+        "q.fm.u3.binomial-probabilities.0013",
         "q.fm.u3.binomial-probabilities.0001",
         "q.fm.u3.binomial-probabilities.0002",
-        "rp.fm.u3.binomial-probabilities.01",
+        "rp.fm.u3.binomial-probabilities.13",
         "q.fm.u3.binomial-probabilities.0005",
         "q.fm.u3.binomial-probabilities.0003",
         "ftm.fm.u3.binomial-probabilities.02",
         "q.fm.u3.binomial-probabilities.0006",
         "ftm.fm.u3.binomial-probabilities.01",
-        "q.fm.u3.binomial-probabilities.0012",
-        "rp.fm.u3.binomial-probabilities.08"
+        "q.fm.u3.binomial-probabilities.0015",
+        "rp.fm.u3.binomial-probabilities.10"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -3156,11 +3863,11 @@
       "itemIds": [
         "q.fm.u3.binomial-probabilities.0007",
         "q.fm.u3.binomial-probabilities.0008",
-        "q.fm.u3.binomial-probabilities.0009",
+        "q.fm.u3.binomial-probabilities.0014",
         "rp.fm.u3.binomial-probabilities.06",
         "q.fm.u3.binomial-probabilities.0010",
         "q.fm.u3.binomial-probabilities.0011",
-        "dx.fm.u3.binomial-probabilities.post",
+        "dx.fm.u3.binomial-probabilities.post-b",
         "rp.fm.u3.binomial-probabilities.03"
       ],
       "showTopicLabels": false,
@@ -3244,10 +3951,105 @@
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, and every TeX command keeps its backslash (lint in emit.mjs, mirroring src/components/items/content-lint.ts).",
           "at": "2026-09-22T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "v3 (8 Oct 2026): the note is rebuilt as explain, See it, Your turn in seven sections on its own numbers, every probability generated in bin-data.mjs and bin-note.mjs and asserted: four penalties at 0.7 (0.0081, 0.0756, 0.2646, 0.4116, 0.2401; total 1); seeds failing at 0.15 over 6 (exactly 1 0.39933478125, none 0.377149515625, at least 2 0.223515703125; unbracketed 1.02218526563); kits undamaged at 0.875 over 5 (exactly 4 0.366363525391). No value a question, worked example, diagnostic, find-the-mistake or prompt asks is worked in the note (overlap-scan 0). Gates g1 to g11 withdrawn for g12 to g18 (seven, each with a twin; option notes on every wrong choice).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "8 Oct 2026: the howExamined line and the 2025 trap say what the Summer 2025 report says, that a calculator's statistics functions should be backed up with working; the base said such answers earn nothing, which the report does not state.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "Its answer (0.1536) was printed in the table its section shows, and it carried no twin; g12 asks an exactly-1 term on its own numbers, with a twin.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g9",
+          "kind": "gate",
+          "replacedBy": "g12",
+          "reason": "It asked a reading of the same table and carried no twin; the lesson's first check is now g12.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "It carried no twin and no option notes; g13 asks the four checks with both.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "It carried no twin; g14 asks the same naming of the success with one.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "It carried no twin; g15 asks a whole exactly-r term with one.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "It worked the footballer's 0.36015, the same data as g6, and carried no twin; g15 replaces it.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "It carried no twin; g16 asks the bracketed complement with one.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g16",
+          "reason": "It carried no twin and repeated g6's step; g16 replaces both.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g8",
+          "kind": "gate",
+          "replacedBy": "g17",
+          "reason": "It carried no twin and no option notes; g17 asks the boundary with both.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g10",
+          "kind": "gate",
+          "replacedBy": "g18",
+          "reason": "It carried no twin and no option notes; g18 asks the first line with both.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "g11",
+          "kind": "gate",
+          "replacedBy": "g18",
+          "reason": "It carried no twin and no option notes; the points-total twist is now taught in its section's paragraph.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.fm.u3.binomial-probabilities.01",
@@ -3506,8 +4308,52 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u3.binomial-probabilities.post#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.binomial-probabilities.post-b#d1",
+          "reason": "Carried over unchanged into the replacement set.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "dx.fm.u3.binomial-probabilities.post#d2",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.binomial-probabilities.post-b#d2",
+          "reason": "Carried over unchanged into the replacement set.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "dx.fm.u3.binomial-probabilities.post#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.binomial-probabilities.post-b#d3",
+          "reason": "Carried over unchanged into the replacement set.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "dx.fm.u3.binomial-probabilities.post#d4",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.binomial-probabilities.post-b#d7",
+          "reason": "Its right option, 0.104, is the answer question 0012 asks (3 trials at 0.2 again); d7 asks the same bracketed complement on 5 trials.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "dx.fm.u3.binomial-probabilities.post#d5",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.binomial-probabilities.post-b#d5",
+          "reason": "Carried over unchanged into the replacement set.",
+          "on": "2026-10-08T05:15:00Z"
+        },
+        {
+          "id": "dx.fm.u3.binomial-probabilities.post#d6",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.binomial-probabilities.post-b#d6",
+          "reason": "Carried over unchanged into the replacement set.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u3.binomial-probabilities.01",
@@ -3677,8 +4523,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u3.binomial-probabilities.01",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u3.binomial-probabilities.13",
+          "reason": "Its answer listed four things in 27 words, joined by semicolons; rp.13 asks the same opening in eleven.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.binomial-probabilities.02",
@@ -3734,8 +4589,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u3.binomial-probabilities.02",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u3.binomial-probabilities.09",
+          "reason": "Its answer ran to 30 words, over the recall card's limit; rp.09 asks which term in twelve.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.binomial-probabilities.03",
@@ -3848,8 +4712,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u3.binomial-probabilities.04",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asked why, with a 25-word answer, and repeated the naming of the success that rp.01 asks.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.binomial-probabilities.05",
@@ -4019,8 +4892,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u3.binomial-probabilities.07",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u3.binomial-probabilities.12",
+          "reason": "Its answer ran to 26 words, over the recall card's limit, and asked how as well as when; rp.12 asks when, in eleven words.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.binomial-probabilities.08",
@@ -4076,8 +4958,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u3.binomial-probabilities.08",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u3.binomial-probabilities.10",
+          "reason": "It asked two things in a 34-word answer; rp.10 asks the week's n alone.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u3.binomial-probabilities.0001",
@@ -4162,6 +5053,14 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, and every TeX command keeps its backslash (lint in emit.mjs, mirroring src/components/items/content-lint.ts).",
           "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "8 Oct 2026 (v3 pass): part (b) carries followThrough from (a) with the relation 7x(1 - x)^6, so a term built on her own p is paid (probed with a perturbed p).",
+          "at": "2026-10-08T05:15:00Z",
           "by": "claude"
         }
       ],
@@ -4432,8 +5331,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u3.binomial-probabilities.0004",
+          "kind": "question",
+          "replacedBy": "q.fm.u3.binomial-probabilities.0013",
+          "reason": "Part (b)'s swapped error (0.064) paid 1 mark where its scheme's only method mark is q cubed with q = 0.6, which that route never uses; question 0013 asks the same parts with that error worth nothing.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u3.binomial-probabilities.0005",
@@ -4877,8 +5785,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u3.binomial-probabilities.0009",
+          "kind": "question",
+          "replacedBy": "q.fm.u3.binomial-probabilities.0014",
+          "reason": "Its swapped error (0.003215) paid 2 marks where its scheme's M1 is the term with p = 1/6, which that route never uses; question 0014 asks the same part with that error worth nothing.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u3.binomial-probabilities.0010",
@@ -5053,6 +5970,14 @@
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, and every TeX command keeps its backslash (lint in emit.mjs, mirroring src/components/items/content-lint.ts).",
           "at": "2026-09-22T23:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "8 Oct 2026 (v3 pass): parts (b) and (c) follow through from her q in (a) (relations 56(1 - x)^3 x^5 and x^8 + 8(1 - x)x^7), and part (d) from (c) with 1 - x, the 'Hence' the stem prints; probed with perturbed earlier values.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5141,6 +6066,744 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, and every TeX command keeps its backslash (lint in emit.mjs, mirroring src/components/items/content-lint.ts).",
           "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u3.binomial-probabilities.0012",
+          "kind": "question",
+          "replacedBy": "q.fm.u3.binomial-probabilities.0015",
+          "reason": "Its two-50s-only error (0.096) paid 1 mark where its scheme's first mark is for at least two 50s, which that route misses; question 0015 asks the same part with that error worth nothing.",
+          "on": "2026-10-08T05:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.q.fm.u3.binomial-probabilities.0013",
+      "itemId": "q.fm.u3.binomial-probabilities.0013",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-02 (binomial probabilities from the expansion of (p + q) to the n).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The Unit 3 formula sheet gives the mean and the standard deviation (with frequencies); nothing else on it is used here.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Calculate, Find, Write down).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "3 marks: (a) MW1; (b) M1 for q cubed with q = 0.6, W1 for 0.216.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "0.4^3 = 0.064; 0.6^3 = 0.216 (generated in bin-data.mjs and ed-bin.mjs). Errors: (a) 1 - 0.064 = 0.936 (0); (b) 0.064 (0), 1 - 0.216 = 0.784 (1).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The complement taken when nothing needed subtracting keeps Summer 2019 Q4 (the report: P(0) subtracted from 1); the swap keeps its citation.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.binomial-probabilities.0014",
+      "itemId": "q.fm.u3.binomial-probabilities.0014",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-02 (binomial probabilities from the expansion of (p + q) to the n).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The Unit 3 formula sheet gives the mean and the standard deviation (with frequencies); nothing else on it is used here.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Calculate, Find, Write down).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "3 marks: M1 for p q^4 with p = 1/6, W1 for 5 p q^4, W1 for 0.4019.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "5 (1/6)(5/6)^4 = 3125/7776 = 0.401878; the swap 5 (5/6)(1/6)^4 = 0.003215; one order 0.080376 (generated in bin-data.mjs).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The swap keeps Summer 2019 Q4 (p and q swapped); the omitted coefficient keeps Summer 2023 Q4.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.binomial-probabilities.0015",
+      "itemId": "q.fm.u3.binomial-probabilities.0015",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-02 (binomial probabilities from the expansion of (p + q) to the n).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The Unit 3 formula sheet gives the mean and the standard deviation (with frequencies); nothing else on it is used here.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Calculate, Find, Write down).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "3 marks: M1 for at least two 50s, M1 for 3(0.2)^2(0.8) + (0.2)^3, W1 for 0.104.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "3(0.2)^2(0.8) = 0.096; 0.2^3 = 0.008; total 0.104 (generated in ed-bin.mjs). Errors: 0.096 (0); the swap 0.896 (1); no coefficient 0.04 (1).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The wrong terms keep Summer 2024 Q4 (the wrong terms of the expansion chosen); the points total is that paper's part (v).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u3.binomial-probabilities.post-b",
+      "itemId": "dx.fm.u3.binomial-probabilities.post-b",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator paper; statement FM3-BIN-02 (binomial probabilities from the expansion of (p + q) to the n).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "The Unit 3 formula sheet gives the mean and the standard deviation (with frequencies); nothing else on it is used here.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Command words taken from packs/further-maths/exam-true/command-words.json (Calculate, Find, Write down).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Diagnostic items carry no marks.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "d7: 0.2 over 5 trials, P(0) = 0.32768, P(1) = 0.4096, at least 2 = 0.26272; the unbracketed 1.08192; fewer than 2 0.73728 (generated in bin-data.mjs). d1 to d3, d5 and d6 as published.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Each distractor tagged by the slip that produces it: the missing bracket (Summer 2023 Q4) and 'at least' not acted on (Summer 2022 Q4).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.binomial-probabilities.09",
+      "itemId": "rp.fm.u3.binomial-probabilities.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "FM3-BIN-02; one short recall (question at most 15 words, answer about 12).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Recall only.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A plain recall question.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Retrieval prompts carry no marks.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "No calculation.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Carries a fact the paper pays for; no examiner finding in the prompt (the Sheet's traps carry those).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.binomial-probabilities.10",
+      "itemId": "rp.fm.u3.binomial-probabilities.10",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "FM3-BIN-02; one short recall (question at most 15 words, answer about 12).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Recall only.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A plain recall question.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Retrieval prompts carry no marks.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "No calculation.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Carries a fact the paper pays for; no examiner finding in the prompt (the Sheet's traps carry those).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.binomial-probabilities.11",
+      "itemId": "rp.fm.u3.binomial-probabilities.11",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "FM3-BIN-02; one short recall (question at most 15 words, answer about 12).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Recall only.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A plain recall question.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Retrieval prompts carry no marks.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "No calculation.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Carries a fact the paper pays for; no examiner finding in the prompt (the Sheet's traps carry those).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.binomial-probabilities.12",
+      "itemId": "rp.fm.u3.binomial-probabilities.12",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "FM3-BIN-02; one short recall (question at most 15 words, answer about 12).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Recall only.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A plain recall question.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Retrieval prompts carry no marks.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "No calculation.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Carries a fact the paper pays for; no examiner finding in the prompt (the Sheet's traps carry those).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.binomial-probabilities.13",
+      "itemId": "rp.fm.u3.binomial-probabilities.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts by the scratchpad stage-lint (TopicBundle) and pipeline/build-content.mts.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "FM3-BIN-02; one short recall (question at most 15 words, answer about 12).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Recall only.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "A plain recall question.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Retrieval prompts carry no marks.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "No calculation.",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Carries a fact the paper pays for; no examiner finding in the prompt (the Sheet's traps carry those).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "Context, numbers and sentences are new; scripts/qa/shingles.mjs --unit fm3 reports no breach (papers, schemes, reports and the CCEA textbooks).",
+          "at": "2026-10-08T05:15:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (v3 migration, FM3 batch A and C topics: scratchpad/probes/fm3-ac scripted editor; every value computed there and re-marked through the app's engine by its probe)",
+          "result": "pass",
+          "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
+          "at": "2026-10-08T05:15:00Z",
           "by": "claude"
         }
       ],

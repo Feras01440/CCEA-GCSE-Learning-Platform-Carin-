@@ -1,45 +1,50 @@
 [
   {
     "type": "hero",
-    "lede": "Four free throws, each scored with probability 0.8: how likely is exactly three, or at least two? Every answer like that is one or more terms of (p + q)ⁿ with the chances put in for p and q. This lesson turns that into a method you can write out line by line.",
+    "lede": "Four penalties, each scored with probability 0.7: how likely is exactly three, or at least two? Each answer is one term of $(p + q)^{n}$, or a few terms added, with the chances put in for $p$ and $q$. Write the labels, then the term, then the numbers: the marks follow those lines.",
     "can": [
-      "Name the success and write down p, q and n before any arithmetic",
-      "Work out the probability of exactly r successes as one term, coefficient and powers shown",
-      "Find at least, at most, more than and fewer than, using 1 minus a bracket when it is shorter"
+      "Check that a situation fits the binomial model, and name its success",
+      "Write the probability of exactly $r$ successes as one term and evaluate it",
+      "Turn at least, at most, more than and fewer than into terms, with the bracket when they come off 1"
     ],
-    "minutes": 13
+    "minutes": 16
   },
   {
     "type": "h",
-    "text": "Four throws, five outcomes",
+    "text": "Four trials, five outcomes",
     "role": "idea"
   },
   {
     "type": "p",
-    "md": "Aoife scores 80% of her free throws, and one throw does not affect the next. She takes four, so she could score 0, 1, 2, 3 or all 4: five outcomes to put a probability on. Each is one term of $(p + q)^{4}$, with $p = 0.8$ for a score and $q = 0.2$ for a miss."
+    "md": "Niamh scores 70% of her penalties, and one kick does not affect the next. In four kicks she could score 0, 1, 2, 3 or 4: five outcomes, each with a probability. Each is one term of $(p + q)^{4} = p^{4} + 4p^{3}q + 6p^{2}q^{2} + 4pq^{3} + q^{4}$, with $p = 0.7$ for a goal and $q = 0.3$ for a miss."
   },
   {
     "type": "figure",
-    "alt": "A table with a row for each number of scores from 0 to 4, giving the term and its probability: 0 scores, 0.2⁴ = 0.0016; 1 score, 4 × 0.8 × 0.2³ = 0.0256; 2 scores, 6 × 0.8² × 0.2² = 0.1536; 3 scores, 4 × 0.8³ × 0.2 = 0.4096; 4 scores, 0.8⁴ = 0.4096. The total of the five is 1.",
-    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Table of the five outcomes of 4 free throws with p = 0.8 and q = 0.2: 0 scores 0.0016, 1 score 0.0256, 2 scores 0.1536, 3 scores 0.4096, 4 scores 0.4096, total 1'><title>Table of the five outcomes of 4 free throws with p = 0.8 and q = 0.2: 0 scores 0.0016, 1 score 0.0256, 2 scores 0.1536, 3 scores 0.4096, 4 scores 0.4096, total 1</title><path d='M 6 34 L 394 34' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 66 L 394 66' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 98 L 394 98' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 130 L 394 130' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 162 L 394 162' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 194 L 394 194' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='42' y='22' font-weight='600' font-size='14'>scores</text><text x='178' y='22' font-weight='600' font-size='14'>term</text><text x='324' y='22' font-weight='600' font-size='14'>probability</text><text x='42' y='55'>0</text><text x='178' y='55'>0.2⁴</text><text x='324' y='55'>0.0016</text><text x='42' y='87'>1</text><text x='178' y='87'>4 × 0.8 × 0.2³</text><text x='324' y='87'>0.0256</text><text x='42' y='119'>2</text><text x='178' y='119'>6 × 0.8² × 0.2²</text><text x='324' y='119'>0.1536</text><text x='42' y='151'>3</text><text x='178' y='151'>4 × 0.8³ × 0.2</text><text x='324' y='151'>0.4096</text><text x='42' y='183'>4</text><text x='178' y='183'>0.8⁴</text><text x='324' y='183'>0.4096</text><text x='178' y='218' font-size='14'>total of the five</text><text x='324' y='218' font-weight='600'>1</text></g></svg>",
-    "caption": "The coefficients 1, 4, 6, 4, 1 are row 4 of Pascal's triangle. The five probabilities total exactly 1: one outcome must happen."
+    "alt": "A table of Niamh's four penalties, giving for each number of goals from 0 to 4 its term and its probability.",
+    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of Niamh&apos;s four penalties: 0 goals, term q to the fourth, probability 0.0081; 1 goal, 4 p q cubed, 0.0756; 2 goals, 6 p squared q squared, 0.2646; 3 goals, 4 p cubed q, 0.4116; 4 goals, p to the fourth, 0.2401.'><title>A table of Niamh&apos;s four penalties: 0 goals, term q to the fourth, probability 0.0081; 1 goal, 4 p q cubed, 0.0756; 2 goals, 6 p squared q squared, 0.2646; 3 goals, 4 p cubed q, 0.4116; 4 goals, p to the fourth, 0.2401.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 182 L388 182' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 216 L388 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M108 12 L108 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M248 12 L248 216' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M388 12 L388 216' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='60' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Goals</text><text x='178' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Term</text><text x='318' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Probability</text><text x='60' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>0</text><text x='178' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>q⁴</text><text x='318' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0.0081</text><text x='60' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>1</text><text x='178' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4pq³</text><text x='318' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0.0756</text><text x='60' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>2</text><text x='178' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>6p²q²</text><text x='318' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0.2646</text><text x='60' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>3</text><text x='178' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4p³q</text><text x='318' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0.4116</text><text x='60' y='205' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>4</text><text x='178' y='205' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>p⁴</text><text x='318' y='205' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0.2401</text></svg>",
+    "caption": "The coefficients 1, 4, 6, 4, 1 are row 4 of Pascal's triangle, and the five probabilities add to 1."
   },
   {
-    "type": "gate",
-    "id": "g1",
-    "kind": "number",
-    "prompt": "In the table of Aoife's four free throws, what is the probability that she scores exactly 2?",
-    "answer": "0.1536",
-    "explain": "Read the row for 2 scores: $6 \\times 0.8^{2} \\times 0.2^{2} = 6 \\times 0.64 \\times 0.04$\n$= 0.1536$. The 6 is the middle number of row 4 of Pascal's triangle."
-  },
-  {
-    "type": "h",
-    "text": "Watch the terms build up",
-    "role": "idea"
-  },
-  {
-    "type": "p",
-    "md": "The PhET Plinko board drops balls through rows of pegs. At each peg a ball bounces right with the probability you set, so each row is a trial and a right bounce is a success. The bin a ball lands in counts its right bounces, as $r$ counts successes."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the probability that Niamh scores exactly 3 of her 4 penalties.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "A goal is the success: $p = 0.7$, $q = 0.3$, $n = 4$",
+        "decision": "Name what is counted before any arithmetic."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{exactly 3}) = 4p^{3}q$",
+        "decision": "3 goals and 1 miss: the powers add to 4, and the 4 in front counts the places the miss can fall."
+      },
+      {
+        "n": 3,
+        "working": "$= 4 \\times 0.7^{3} \\times 0.3$\n$= 4 \\times 0.343 \\times 0.3$\n$= 0.4116$",
+        "decision": "Substitute, then multiply out."
+      }
+    ]
   },
   {
     "type": "sim",
@@ -48,70 +53,143 @@
     "title": "PhET: Plinko Probability",
     "attribution": "Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC BY-NC 4.0 (https://phet.colorado.edu)",
     "licence": "CC BY-NC 4.0",
-    "task": "Open the Lab screen. Set 4 rows and a binary probability of 0.8, then drop at least 500 balls. Before you start, use the free-throw table above to predict which two bins will fill most, and roughly what fraction of the balls each should hold."
+    "task": "Open the Lab screen. Set 4 rows and a binary probability of 0.7, then drop at least 500 balls. Before you start, use the penalty table to predict which bin will fill most, and roughly what share of the balls it should hold."
   },
   {
     "type": "gate",
-    "id": "g9",
-    "kind": "choice",
-    "prompt": "On a Plinko board with 4 rows and probability 0.8, bins 3 and 4 fill to about the same height. Which fact from the free-throw table explains that?",
-    "options": [
-      "P(3) and P(4) are both 0.4096",
-      "The board is symmetrical, so every bin fills equally",
-      "Bin 4 is the last bin, so the balls collect there"
-    ],
-    "answer": "P(3) and P(4) are both 0.4096",
-    "explain": "$4 \\times 0.8^{3} \\times 0.2 = 0.4096$ and $0.8^{4} = 0.4096$. The two terms are equal, so over hundreds of balls those two bins hold about the same share."
+    "id": "g12",
+    "kind": "number",
+    "prompt": "A game is won with probability 0.65 each time, independently. It is played 4 times. What is the probability of exactly 1 win, to 4 decimal places?",
+    "answer": "0.1115 | 0.111475",
+    "explain": "As in step 2 of See it, exactly 1 win in 4 is the term $4pq^{3}$: $4 \\times 0.65 \\times 0.35^{3} = 0.1115$. The 4 counts the places the one win can fall.",
+    "twin": {
+      "prompt": "A cyclist meets a green light with probability 0.55 on each trip, independently. On 4 trips, what is the probability of exactly 3 green lights, to 4 decimal places?",
+      "answer": "0.2995 | 0.29948",
+      "explain": "$4 \\times 0.55^{3} \\times 0.45 = 0.2995$."
+    }
   },
   {
     "type": "h",
     "text": "When the binomial model fits",
-    "role": "idea"
+    "role": "why"
   },
   {
     "type": "p",
-    "md": "The terms of $(p + q)^{n}$ are probabilities only when four things are true.\nThere is a **fixed number of trials**, $n$.\nEach trial has **two outcomes**, called success and failure.\nThe **probability of success is the same** on every trial.\nThe trials are **independent**: one result does not change the next.\nRolling a fair dice 6 times and counting the sixes passes all four."
+    "md": "The terms of $(p + q)^{n}$ are probabilities only when four things hold: a **fixed number of trials**, $n$; **two outcomes** on each, success and failure; the **same probability of success** every time; and **independent** trials, one result never changing the next."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A spinner with a red fifth is spun 10 times and the reds are counted. Does the binomial model fit?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Fixed number of trials: 10 spins",
+        "decision": "The count of trials is set before the first spin."
+      },
+      {
+        "n": 2,
+        "working": "Two outcomes: red, or not red",
+        "decision": "Every spin is one or the other."
+      },
+      {
+        "n": 3,
+        "working": "The same probability: a fifth every spin",
+        "decision": "The spinner does not change between spins."
+      },
+      {
+        "n": 4,
+        "working": "Independent: one spin does not affect the next",
+        "decision": "All four hold, so the model fits with $n = 10$ and $p = 0.2$."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g2",
+    "id": "g13",
     "kind": "choice",
     "prompt": "Using the four checks for a binomial model, which of these situations can be modelled with the binomial expansion?",
     "options": [
-      "A fair dice is rolled 8 times and the number of sixes is counted",
-      "Three sweets are taken from a bag of ten without replacement and the red ones are counted",
-      "Cards are dealt from a pack until the first ace appears, and the cards dealt are counted"
+      "A fair coin is tossed 9 times and the heads are counted",
+      "Two cards are taken from a pack without replacement and the hearts are counted",
+      "A dice is rolled until the first six, and the rolls are counted"
     ],
-    "answer": "A fair dice is rolled 8 times and the number of sixes is counted",
-    "explain": "Eight rolls give a fixed $n = 8$, two outcomes, $p = \\frac{1}{6}$ on every roll and independent rolls. Taking sweets without replacement changes the probability after each draw, and dealing until an ace has no fixed number of trials."
+    "answer": "A fair coin is tossed 9 times and the heads are counted",
+    "explain": "As in steps 1 to 4 of See it, nine tosses give a fixed number of trials, two outcomes, the same chance each time and independent tosses.",
+    "twin": {
+      "prompt": "Which of these breaks one of the four checks for a binomial model?",
+      "options": [
+        "Five pupils are picked one after another from a class of 12, without putting any back, and the girls are counted",
+        "Six penalties, each scored with probability 0.8, and the goals are counted",
+        "A fair dice is rolled 12 times and the sixes are counted"
+      ],
+      "answer": "Five pupils are picked one after another from a class of 12, without putting any back, and the girls are counted",
+      "explain": "Picking without putting back changes the chance of a girl after each pick, so the probability is not the same each time.",
+      "optionNotes": [
+        {
+          "option": "Six penalties, each scored with probability 0.8, and the goals are counted",
+          "why": "Six kicks, two outcomes, 0.8 each time and independent: all four checks pass."
+        },
+        {
+          "option": "A fair dice is rolled 12 times and the sixes are counted",
+          "why": "Twelve rolls, a sixth each time, independent: all four checks pass."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "Two cards are taken from a pack without replacement and the hearts are counted",
+        "why": "Without replacement the chance of a heart changes after the first card, so the probability is not the same each time."
+      },
+      {
+        "option": "A dice is rolled until the first six, and the rolls are counted",
+        "why": "There is no fixed number of trials: the rolling stops when a six comes."
+      }
+    ]
   },
   {
     "type": "h",
     "text": "Name the success first",
-    "role": "idea"
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "The success is whatever the question counts, even when it sounds like bad news. For a bus late on exactly 2 of 5 school days, the success is **late**. If the bus is on time on 85% of days, that 85% belongs to $q$."
+    "md": "The success is whatever the question counts, even when it sounds like bad news. If 85% of seeds sprout and the question counts the seeds that fail, a failed seed is the success, so $p = 0.15$ and the 85% belongs to $q$."
   },
   {
-    "type": "p",
-    "md": "Write four labels before any arithmetic:\nSuccess: the bus is late.\n$p = 0.15$ (late)\n$q = 0.85$ (on time)\n$n = 5$ (school days)"
-  },
-  {
-    "type": "callout",
-    "kind": "examiner",
-    "title": "The swap examiners keep reporting",
-    "md": "Writing the probability of the other outcome in for $p$ is the slip named most often in this question: 0.3 and 0.7 mixed in one year, 0.2 and 0.8 in two others. The four labels stop it before it starts.",
-    "source": "ccea-cer:further-maths:2022-summer:FM3:Q4"
+    "type": "see",
+    "kind": "calculation",
+    "stem": "85% of a packet's seeds sprout, independently. Six are sown, and a question asks about the seeds that fail. Write the labels.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Success: a seed fails to sprout",
+        "decision": "The question counts failures, so a failure is the success."
+      },
+      {
+        "n": 2,
+        "working": "$p = 1 - 0.85 = 0.15$, $q = 0.85$",
+        "decision": "The 85% belongs to the outcome that is not counted."
+      },
+      {
+        "n": 3,
+        "working": "$n = 6$",
+        "decision": "Six seeds, six trials."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g3",
+    "id": "g14",
     "kind": "number",
-    "prompt": "Write the four labels for this: a phone battery passes a quality check with probability 0.96, and a technician counts how many of 5 batteries fail. What is $p$?",
-    "answer": "0.04",
-    "explain": "The technician counts failures, so a failed battery is the success here: $p = 0.04$, which is $1 - 0.96$, then $q = 0.96$ and $n = 5$."
+    "prompt": "A lamp passes its safety test with probability 0.97, independently. An inspector counts how many of 5 lamps fail. What is $p$?",
+    "answer": "0.03",
+    "explain": "As in steps 1 and 2 of See it, the inspector counts failures, so a failed lamp is the success: $p = 1 - 0.97 = 0.03$, with $q = 0.97$ and $n = 5$.",
+    "twin": {
+      "prompt": "A train runs on time with probability 0.94. A commuter counts the late trains in a week of journeys. What is $p$?",
+      "answer": "0.06",
+      "explain": "Late trains are counted: $p = 1 - 0.94 = 0.06$."
+    }
   },
   {
     "type": "h",
@@ -119,69 +197,118 @@
     "role": "variant"
   },
   {
-    "type": "figure",
-    "alt": "The term 10 × 0.15² × 0.85³ with a label under each piece: 10 is the coefficient from row 5 of Pascal's triangle, 0.15² is p squared for 2 late days, 0.85³ is q cubed for 3 days on time.",
-    "svg": "<svg viewBox='0 0 400 129' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The term for exactly 2 late buses in 5 days taken apart: the coefficient 10, 0.15 squared and 0.85 cubed'><title>The term for exactly 2 late buses in 5 days taken apart: the coefficient 10, 0.15 squared and 0.85 cubed</title><path d='M 58 54 L 58 78' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 196 54 L 196 78' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 336 54 L 336 78' stroke='currentColor' stroke-width='1.3' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='58' y='44' font-weight='600' font-size='24'>10</text><text x='58' y='98' font-weight='600'>coefficient</text><text x='58' y='117' font-size='14'>from row 5</text><text x='124' y='44' font-size='24'>×</text><text x='196' y='44' font-weight='600' font-size='24'>0.15²</text><text x='196' y='98' font-weight='600'>p squared</text><text x='196' y='117' font-size='14'>2 late days</text><text x='268' y='44' font-size='24'>×</text><text x='336' y='44' font-weight='600' font-size='24'>0.85³</text><text x='336' y='98' font-weight='600'>q cubed</text><text x='336' y='117' font-size='14'>3 on time</text></g></svg>",
-    "caption": "Every exactly-r term has three pieces: a coefficient from Pascal's triangle, p to the number of successes, q to the number of failures."
-  },
-  {
     "type": "p",
-    "md": "Exactly $r$ successes is the term of $(p + q)^{n}$ that contains $p^{r}$. The power of $p$ counts the successes, the power of $q$ counts the failures, and the powers add up to $n$. The coefficient is the matching number in row $n$ of Pascal's triangle.\nFor exactly 2 late buses in 5 days the term is $10p^{2}q^{3}$."
+    "md": "Exactly $r$ successes is the term of $(p + q)^{n}$ with $p^{r}$. The power of $q$ counts the failures, the powers add to $n$, and the coefficient comes from row $n$ of Pascal's triangle: it counts the orders in which the $r$ successes can fall."
   },
   {
     "type": "callout",
     "kind": "why",
     "title": "Why the coefficient is there",
-    "md": "Write L for late and O for on time. Two late days can fall in 10 different places among 5 days: LLOOO, LOLOO, LOOLO and so on. Each arrangement has probability $0.15^{2} \\times 0.85^{3}$ and no two can happen at once, so the 10 equal amounts add. Row 5 of Pascal's triangle counts the arrangements."
+    "md": "Write G for a goal and M for a miss. Three goals and a miss can come as GGGM, GGMG, GMGG or MGGG: four orders, each with the same probability, and no two can both happen, so the four amounts add. Row 4 of Pascal's triangle counts the orders."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the probability that exactly 1 of the 6 seeds fails, to 4 decimal places.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(\\text{exactly 1}) = 6pq^{5}$",
+        "decision": "1 success and 5 failures; the 6 in front counts the seeds that could be the one that fails.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$= 6 \\times 0.15 \\times 0.85^{5}$\n$= 0.39933478125$",
+        "decision": "Substitute, and keep every figure the calculator shows."
+      },
+      {
+        "n": 3,
+        "working": "$= 0.3993$ to 4 decimal places",
+        "decision": "Round once, at the end.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "9Y4bhtNSW8w",
+    "title": "Pascal's Triangle / Binomial / Probability",
+    "channel": "P McAleavey",
+    "why": "A Northern Ireland teacher works Pascal's triangle, the expansion and binomial probability for CCEA Further Mathematics. Pause at each probability and check its working has the lines above: the labels, the term, the numbers in it, the rounding."
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g15",
     "kind": "number",
-    "prompt": "A term in the expansion of $(p + q)^{6}$ contains $p^{4}$. What is the power of $q$ in that term?",
-    "answer": "2",
-    "explain": "The powers in every term of $(p + q)^{6}$ add up to 6, so $q$ has the power $6 - 4 = 2$. The term is $15p^{4}q^{2}$: 4 successes and 2 failures."
+    "prompt": "Each of 8 light bulbs lasts a year with probability 0.3, independently. Find the probability that exactly 3 last a year, to 4 decimal places.",
+    "answer": "0.2541 | 0.25412",
+    "explain": "As in step 1 of See it, exactly 3 of 8 is the term $56p^{3}q^{5}$: $56 \\times 0.3^{3} \\times 0.7^{5} = 0.2541$. The 56 comes from row 8.",
+    "twin": {
+      "prompt": "Each of 5 calls is answered with probability 0.45, independently. Find the probability that exactly 2 are answered, to 4 decimal places.",
+      "answer": "0.3369 | 0.33691",
+      "explain": "$10 \\times 0.45^{2} \\times 0.55^{3} = 0.3369$."
+    }
   },
   {
     "type": "h",
-    "text": "At least r: use the complement",
+    "text": "At least r: one minus a bracket",
     "role": "variant"
   },
   {
+    "type": "p",
+    "md": "'At least 2' of 6 means 2, 3, 4, 5 or 6: five terms. All seven terms add to 1, so it is shorter to take away the two you do not want: $P(\\text{at least 2}) = 1 - \\left(P(0) + P(1)\\right)$. Write '1 − (' first. Without the bracket, $P(1)$ is added instead of taken away. Keep every figure until the last line."
+  },
+  {
     "type": "figure",
-    "alt": "The free-throw table again, with the rows for 2, 3 and 4 scores shaded and boxed. The rows for 0 and 1 scores are left plain.",
-    "svg": "<svg viewBox='0 0 400 228' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The free-throw table with the rows for 2, 3 and 4 scores shaded: at least 2 scores'><title>The free-throw table with the rows for 2, 3 and 4 scores shaded: at least 2 scores</title><path d='M 6 34 L 394 34' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 66 L 394 66' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 98 L 394 98' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='6' y='98' width='388' height='32' stroke='currentColor' stroke-width='0' fill='currentColor' fill-opacity='0.14'/><path d='M 6 130 L 394 130' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='6' y='130' width='388' height='32' stroke='currentColor' stroke-width='0' fill='currentColor' fill-opacity='0.14'/><path d='M 6 162 L 394 162' stroke='currentColor' stroke-width='0.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='6' y='162' width='388' height='32' stroke='currentColor' stroke-width='0' fill='currentColor' fill-opacity='0.14'/><path d='M 6 194 L 394 194' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><rect x='6' y='98' width='388' height='96' stroke='currentColor' stroke-width='2' fill='none'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='42' y='22' font-weight='600' font-size='14'>scores</text><text x='178' y='22' font-weight='600' font-size='14'>term</text><text x='324' y='22' font-weight='600' font-size='14'>probability</text><text x='42' y='55'>0</text><text x='178' y='55'>0.2⁴</text><text x='324' y='55'>0.0016</text><text x='42' y='87'>1</text><text x='178' y='87'>4 × 0.8 × 0.2³</text><text x='324' y='87'>0.0256</text><text x='42' y='119'>2</text><text x='178' y='119'>6 × 0.8² × 0.2²</text><text x='324' y='119'>0.1536</text><text x='42' y='151'>3</text><text x='178' y='151'>4 × 0.8³ × 0.2</text><text x='324' y='151'>0.4096</text><text x='42' y='183'>4</text><text x='178' y='183'>0.8⁴</text><text x='324' y='183'>0.4096</text><text x='178' y='218' font-size='14'>total of the five</text><text x='324' y='218' font-weight='600'>1</text></g></svg>",
-    "caption": "The shaded rows are 'at least 2'. The two plain rows are the ones to take away from 1."
+    "alt": "A table of the numbers of failed seeds, marking 0 and 1 as the rows to take from 1 and 2 to 6 as the five terms 'at least 2' would add.",
+    "svg": "<svg viewBox='0 0 400 160' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the numbers of failed seeds from 0 to 6, marking 0 and 1 as left out of &apos;at least 2&apos; and 2 to 6 as in it.'><title>A table of the numbers of failed seeds from 0 to 6, marking 0 and 1 as left out of &apos;at least 2&apos; and 2 to 6 as in it.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M172 12 L172 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M388 12 L388 148' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='92' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Seeds that fail</text><text x='280' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>In &apos;at least 2&apos;?</text><text x='92' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>0</text><text x='280' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>no: take from 1</text><text x='92' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>1</text><text x='280' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>no: take from 1</text><text x='92' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>2 to 6</text><text x='280' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>yes: five terms</text></svg>",
+    "caption": "Two rows out, five in: take the two from 1."
   },
   {
-    "type": "p",
-    "md": "'At least 2' of Aoife's four throws means 2, 3 or 4 scores: three shaded rows. You could add those three. Because all five rows add up to 1, it is shorter to take away the two rows you do not want:\n$P(\\text{at least 2}) = 1 - \\left(P(0) + P(1)\\right)$\nKeep every figure your calculator shows until the last line."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the probability that at least 2 of the 6 seeds fail, to 4 decimal places.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$P(0) = 0.85^{6} = 0.377149515625$",
+        "decision": "None fails: one term, coefficient 1."
+      },
+      {
+        "n": 2,
+        "working": "$P(1) = 0.39933478125$",
+        "decision": "From the exactly-1 working above."
+      },
+      {
+        "n": 3,
+        "working": "$1 - (0.377149515625 + 0.39933478125)$\n$= 0.223515703125$",
+        "decision": "Add inside the bracket, then take the whole bracket from 1."
+      },
+      {
+        "n": 4,
+        "working": "$= 0.2235$ to 4 decimal places",
+        "decision": "Without the bracket the line gives 1.0222, which cannot be a probability."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g6",
+    "id": "g16",
     "kind": "number",
-    "prompt": "A footballer takes 5 free kicks, each on target with probability 0.3, so $P(0) = 0.16807$ and $P(1) = 0.36015$. Work out the probability that at least 2 are on target, to 4 decimal places.",
-    "answer": "0.4718 | 0.47178",
-    "explain": "$1 - (0.16807 + 0.36015) = 1 - 0.52822$\n$= 0.47178$, which is 0.4718. Adding $P(2)$ up to $P(5)$ gives the same value with four terms instead of two."
-  },
-  {
-    "type": "p",
-    "md": "The whole of $P(0) + P(1)$ comes off the 1, so it goes inside a bracket: $1 - (0.0016 + 0.0256)$ is 0.9728. Leave the bracket out and only $P(0)$ is subtracted, while $P(1)$ is added on: for Aoife that gives 1.024, which cannot be a probability. Write '1 − (' first, then fill the bracket."
-  },
-  {
-    "type": "callout",
-    "kind": "why",
-    "title": "Why a sensible-looking answer is not safe",
-    "md": "With 5 raffle tickets that each win with probability 0.1, $P(0) = 0.59049$ and $P(1) = 0.32805$. The unbracketed line gives $1 - 0.59049 + 0.32805 = 0.73756$, which looks like a perfectly good probability. It is nowhere near the chance of at least 2 winning tickets."
-  },
-  {
-    "type": "gate",
-    "id": "g7",
-    "kind": "number",
-    "prompt": "For 5 raffle tickets that each win with probability 0.1, $P(0) = 0.59049$ and $P(1) = 0.32805$. Work out the probability that at least 2 tickets win, with the bracket in place.",
-    "answer": "0.08146 | 0.0815",
-    "explain": "$1 - (0.59049 + 0.32805) = 1 - 0.91854$\n$= 0.08146$. The unbracketed 0.73756 is about nine times too big."
+    "prompt": "Each of 9 raffle tickets wins with probability 0.09, so $P(0) = 0.427930$ and $P(1) = 0.380905$. Find the probability that at least 2 tickets win, to 4 decimal places.",
+    "answer": "0.1912 | 0.19117",
+    "explain": "As in step 3 of See it: $1 - (0.427930 + 0.380905) = 1 - 0.808835 = 0.1912$. Without the bracket the line gives 0.9530, which looks like a probability but is far from this one.",
+    "twin": {
+      "prompt": "Each of 10 parcels is lost with probability 0.05, so $P(0) = 0.598737$ and $P(1) = 0.315125$. Find the probability that at least 2 are lost, to 4 decimal places.",
+      "answer": "0.0861 | 0.08614",
+      "explain": "$1 - (0.598737 + 0.315125) = 1 - 0.913862 = 0.0861$."
+    }
   },
   {
     "type": "h",
@@ -189,110 +316,172 @@
     "role": "variant"
   },
   {
+    "type": "p",
+    "md": "Each phrase names a set of whole numbers, and the boundary is where marks go: 'at most 2' includes 2; 'more than 2' and 'fewer than 2' do not. Write the numbers out first, then take the shorter route: add those terms, or take all the others from 1."
+  },
+  {
     "type": "figure",
-    "alt": "For 6 trials, four rows of seven dots numbered 0 to 6. At least 2: dots 2 to 6 filled. At most 2: dots 0, 1 and 2 filled. More than 2: dots 3 to 6 filled. Fewer than 2: dots 0 and 1 filled.",
-    "svg": "<svg viewBox='0 0 400 170' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='For 6 trials, a row of dots 0 to 6 for each of four phrases, filled where the phrase includes that number of successes'><title>For 6 trials, a row of dots 0 to 6 for each of four phrases, filled where the phrase includes that number of successes</title><path d='M 140 48 L 382 48' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='48' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='180.33' cy='48' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='220.67' cy='48' r='8' fill='currentColor'/><circle cx='261' cy='48' r='8' fill='currentColor'/><circle cx='301.33' cy='48' r='8' fill='currentColor'/><circle cx='341.67' cy='48' r='8' fill='currentColor'/><circle cx='382' cy='48' r='8' fill='currentColor'/><path d='M 140 82 L 382 82' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='82' r='8' fill='currentColor'/><circle cx='180.33' cy='82' r='8' fill='currentColor'/><circle cx='220.67' cy='82' r='8' fill='currentColor'/><circle cx='261' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='301.33' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='341.67' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='382' cy='82' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><path d='M 140 116 L 382 116' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='116' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='180.33' cy='116' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='220.67' cy='116' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='261' cy='116' r='8' fill='currentColor'/><circle cx='301.33' cy='116' r='8' fill='currentColor'/><circle cx='341.67' cy='116' r='8' fill='currentColor'/><circle cx='382' cy='116' r='8' fill='currentColor'/><path d='M 140 150 L 382 150' stroke='currentColor' stroke-width='1' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='140' cy='150' r='8' fill='currentColor'/><circle cx='180.33' cy='150' r='8' fill='currentColor'/><circle cx='220.67' cy='150' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='261' cy='150' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='301.33' cy='150' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='341.67' cy='150' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><circle cx='382' cy='150' r='8' fill='none' stroke='currentColor' stroke-width='1.6'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='140' y='22' font-weight='600' font-size='14'>0</text><text x='180.33' y='22' font-weight='600' font-size='14'>1</text><text x='220.67' y='22' font-weight='600' font-size='14'>2</text><text x='261' y='22' font-weight='600' font-size='14'>3</text><text x='301.33' y='22' font-weight='600' font-size='14'>4</text><text x='341.67' y='22' font-weight='600' font-size='14'>5</text><text x='382' y='22' font-weight='600' font-size='14'>6</text><text x='8' y='53' text-anchor='start'>at least 2</text><text x='8' y='87' text-anchor='start'>at most 2</text><text x='8' y='121' text-anchor='start'>more than 2</text><text x='8' y='155' text-anchor='start'>fewer than 2</text></g></svg>",
-    "caption": "Six trials. A filled dot is a number of successes the phrase includes: watch whether 2 itself is filled."
+    "alt": "A table for 7 trials giving the numbers of successes that at least 3, at most 3, more than 3 and fewer than 3 each mean.",
+    "svg": "<svg viewBox='0 0 400 194' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table for 7 trials: at least 3 means 3, 4, 5, 6 or 7; at most 3 means 0, 1, 2 or 3; more than 3 means 4, 5, 6 or 7; fewer than 3 means 0, 1 or 2.'><title>A table for 7 trials: at least 3 means 3, 4, 5, 6 or 7; at most 3 means 0, 1, 2 or 3; more than 3 means 4, 5, 6 or 7; fewer than 3 means 0, 1 or 2.</title><path d='M12 12 L388 12' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 46 L388 46' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 80 L388 80' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 114 L388 114' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 148 L388 148' stroke='currentColor' stroke-width='0.9' fill='none' stroke-opacity='0.45'/><path d='M12 182 L388 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M12 12 L12 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M168 12 L168 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><path d='M388 12 L388 182' stroke='currentColor' stroke-width='1.3' fill='none' stroke-opacity='0.85'/><text x='90' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Phrase, 7 trials</text><text x='278' y='35' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>Numbers of successes</text><text x='90' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>at least 3</text><text x='278' y='69' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>3, 4, 5, 6, 7</text><text x='90' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>at most 3</text><text x='278' y='103' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0, 1, 2, 3</text><text x='90' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>more than 3</text><text x='278' y='137' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>4, 5, 6, 7</text><text x='90' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle' font-weight='600'>fewer than 3</text><text x='278' y='171' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>0, 1, 2</text></svg>",
+    "caption": "Check the boundary, 3, in each row: it is in two of them and out of two."
   },
   {
-    "type": "p",
-    "md": "Every phrase names a set of whole numbers of successes, and the boundary is where marks go. 'At most 2' includes 2; 'more than 2' and 'fewer than 2' do not. Write the numbers out first, then take the shorter route: add those terms, or take all the others away from 1."
-  },
-  {
-    "type": "p",
-    "md": "In 6 trials, 'more than 2' is 3, 4, 5 or 6: four terms to add, or $1 - (P(0) + P(1) + P(2))$ with three. 'At most 2' is $P(0) + P(1) + P(2)$ directly."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "In 7 trials, write the successes each phrase means, and choose the shorter route for 'more than 4'.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "At most 4: 0, 1, 2, 3 or 4",
+        "decision": "'At most' includes the boundary."
+      },
+      {
+        "n": 2,
+        "working": "More than 4: 5, 6 or 7",
+        "decision": "'More than' starts just above it."
+      },
+      {
+        "n": 3,
+        "working": "$P(\\text{more than 4}) = P(5) + P(6) + P(7)$",
+        "decision": "Three terms to add; the other route would take five terms from 1."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g8",
+    "id": "g17",
     "kind": "choice",
-    "prompt": "In 6 games, which numbers of wins does 'more than 4 wins' mean?",
+    "prompt": "In 8 trials, which numbers of successes does 'fewer than 3' mean?",
     "options": [
-      "5 or 6",
-      "4, 5 or 6",
-      "0, 1, 2, 3 or 4"
+      "0, 1 or 2",
+      "0, 1, 2 or 3",
+      "3, 4, 5, 6, 7 or 8"
     ],
-    "answer": "5 or 6",
-    "explain": "More than 4 starts at 5, so the probability is $P(5) + P(6)$. '4 or more' would include 4, and 0 to 4 is 'at most 4', the other side of the boundary."
+    "answer": "0, 1 or 2",
+    "explain": "As in step 2 of See it, the boundary itself is left out: fewer than 3 is 0, 1 or 2, so the probability is $P(0) + P(1) + P(2)$.",
+    "twin": {
+      "prompt": "In 9 trials, which numbers of successes does 'at least 7' mean?",
+      "options": [
+        "7, 8 or 9",
+        "8 or 9",
+        "0, 1, 2, 3, 4, 5, 6 or 7"
+      ],
+      "answer": "7, 8 or 9",
+      "explain": "'At least 7' includes 7 and everything above it.",
+      "optionNotes": [
+        {
+          "option": "8 or 9",
+          "why": "That is 'more than 7'. At least 7 includes 7 itself.",
+          "misconception": "fm.binomial.wrong-terms-selected"
+        },
+        {
+          "option": "0, 1, 2, 3, 4, 5, 6 or 7",
+          "why": "That is 'at most 7', the other direction.",
+          "misconception": "fm.binomial.at-least-ignored"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "0, 1, 2 or 3",
+        "why": "That is 'at most 3'. Fewer than 3 stops below 3.",
+        "misconception": "fm.binomial.wrong-terms-selected"
+      },
+      {
+        "option": "3, 4, 5, 6, 7 or 8",
+        "why": "That is 'at least 3', the other side of the boundary.",
+        "misconception": "fm.binomial.at-least-ignored"
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "See it done",
-    "role": "see"
-  },
-  {
-    "type": "p",
-    "md": "**Question.** A bus is on time on 85% of school days, independently. Find the probability that it is late on exactly 2 of the 5 days from Monday to Friday. Give your answer to 4 decimal places."
-  },
-  {
-    "type": "p",
-    "md": "**Line 1.** Late is the success: $p = 0.15$, $q = 0.85$, $n = 5$.\n**Line 2.** $P(\\text{exactly 2 late}) = 10p^{2}q^{3}$\n**Line 3.** $= 10(0.15)^{2}(0.85)^{3}$\n**Line 4.** $= 10 \\times 0.0225 \\times 0.614125$\n**Line 5.** $= 0.138178125$\n**Line 6.** $= 0.1382$ to 4 decimal places.\nThe method marks are for line 2: the term with its coefficient and powers."
-  },
-  {
-    "type": "video",
-    "videoId": "9Y4bhtNSW8w",
-    "title": "Pascal's Triangle / Binomial / Probability",
-    "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher takes Pascal's triangle, the expansion and binomial probability for CCEA Further Mathematics. Pause at each probability and check that its working has the lines above: the labels, the term, the numbers in it, the rounding."
-  },
-  {
-    "type": "gate",
-    "id": "g5",
-    "kind": "number",
-    "prompt": "A footballer's free kick is on target with probability 0.3, independently each time. She takes 5 free kicks. Work out the probability that exactly 1 is on target, to 4 decimal places.",
-    "answer": "0.3602 | 0.36015",
-    "explain": "$p = 0.3$, $q = 0.7$, $n = 5$, and exactly 1 is the term $5pq^{4}$: $5 \\times 0.3 \\times 0.7^{4} = 5 \\times 0.3 \\times 0.2401$\n$= 0.36015$, which is 0.3602."
-  },
-  {
-    "type": "h",
-    "text": "Exam twists",
+    "text": "Exam twists: the story hides the numbers",
     "role": "twists"
   },
   {
     "type": "p",
-    "md": "**The probability in disguise.** It has come as a fraction (2019), in words (2021) and as a percentage (2026). Turn it into $p$ at once, and keep a fraction exact rather than rounding it."
+    "md": "**The probability in disguise.** It has come as a fraction (Summer 2019), in words, one tenth (2021), and as a percentage (2026). Turn it into $p$ at once, and keep a fraction exact."
   },
   {
     "type": "p",
-    "md": "**The other outcome is given.** The stem states one outcome's chance, then counts the other (2019, 2022). What is counted is the success, so $p$ is 1 minus the stated value: write that before anything else."
+    "md": "**The other outcome is given.** Summer 2019 gave the chance of a black pen and counted red ones; Summer 2022 gave open windows and counted closed ones. What is counted is the success, so $p$ is 1 minus the stated value."
+  },
+  {
+    "type": "p",
+    "md": "**The count is in the story.** Summer 2025 gave a chance per day and asked about a school week, so $n = 5$. Summer 2024 asked for a points total from three spins: first work out how many times one score must come up."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "One kit in eight arrives damaged, independently. A shop orders 5 kits. Find the probability that exactly 4 arrive undamaged, to 4 decimal places.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Undamaged is counted: $p = 1 - \\frac{1}{8} = 0.875$, $q = 0.125$, $n = 5$",
+        "decision": "The fraction given is for the other outcome, so take it from 1."
+      },
+      {
+        "n": 2,
+        "working": "$P(\\text{exactly 4}) = 5p^{4}q = 5 \\times 0.875^{4} \\times 0.125$",
+        "decision": "4 undamaged and 1 damaged."
+      },
+      {
+        "n": 3,
+        "working": "$= 0.36636353$, which is $0.3664$",
+        "decision": "Round at the end."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g10",
+    "id": "g18",
     "kind": "choice",
-    "prompt": "A seed fails to germinate with probability one in eight. A question asks for the probability that exactly 5 of 6 seeds germinate. Which first line is right?",
+    "prompt": "A bulb fails with probability one in twenty, independently. A question asks for the probability that exactly 9 of 10 bulbs work. Which first line is right?",
     "options": [
-      "$p = 0.875$, $q = 0.125$, $n = 6$",
-      "$p = 0.125$, $q = 0.875$, $n = 6$",
-      "$p = 0.875$, $q = 0.125$, $n = 5$"
+      "$p = 0.95$, $q = 0.05$, $n = 10$",
+      "$p = 0.05$, $q = 0.95$, $n = 10$",
+      "$p = 0.95$, $q = 0.05$, $n = 9$"
     ],
-    "answer": "$p = 0.875$, $q = 0.125$, $n = 6$",
-    "explain": "Germinating is what is counted, so it is the success: $p = 0.875$, which is $1 - 0.125$, and $q = 0.125$. There are 6 seeds, so $n = 6$; the 5 is $r$, the number of successes asked for."
-  },
-  {
-    "type": "p",
-    "md": "**The count is hidden in the story.** In 2025 the chance was given per day and the question asked about a week of school days, so $n = 5$ came from the calendar rather than from the stem."
-  },
-  {
-    "type": "p",
-    "md": "**A total, not a count.** In 2024 a points total from three spins had to become a number of times one score came up. List the ways to make the total first."
-  },
-  {
-    "type": "gate",
-    "id": "g11",
-    "kind": "choice",
-    "prompt": "A spinner scores 5 points with probability 0.4, or 1 point otherwise. It is spun 4 times. Which event is a total of exactly 12 points?",
-    "options": [
-      "Exactly two spins score 5",
-      "Exactly three spins score 5",
-      "At least two spins score 5"
-    ],
-    "answer": "Exactly two spins score 5",
-    "explain": "Two 5s and two 1s make $5 + 5 + 1 + 1 = 12$; three 5s make 16, so 'at least two' would include totals that are too big. The probability is then one term: $6(0.4)^{2}(0.6)^{2}$."
+    "answer": "$p = 0.95$, $q = 0.05$, $n = 10$",
+    "explain": "As in step 1 of See it, working bulbs are counted, so $p = 1 - 0.05 = 0.95$. There are 10 bulbs, so $n = 10$; the 9 is the number of successes asked for.",
+    "twin": {
+      "prompt": "A ferry is cancelled on one day in ten, independently. A question asks for the probability that it runs on exactly 6 of 7 days. Which first line is right?",
+      "options": [
+        "$p = 0.9$, $q = 0.1$, $n = 7$",
+        "$p = 0.1$, $q = 0.9$, $n = 7$",
+        "$p = 0.9$, $q = 0.1$, $n = 6$"
+      ],
+      "answer": "$p = 0.9$, $q = 0.1$, $n = 7$",
+      "explain": "Running days are counted, so $p = 0.9$; there are 7 days, so $n = 7$.",
+      "optionNotes": [
+        {
+          "option": "$p = 0.1$, $q = 0.9$, $n = 7$",
+          "why": "That gives p to the cancelled days, but the question counts running days.",
+          "misconception": "fm.binomial.p-q-swapped"
+        },
+        {
+          "option": "$p = 0.9$, $q = 0.1$, $n = 6$",
+          "why": "The 6 is how many successes are asked for; n is the 7 days."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$p = 0.05$, $q = 0.95$, $n = 10$",
+        "why": "That gives p to the failing bulbs, but the question counts the ones that work.",
+        "misconception": "fm.binomial.p-q-swapped"
+      },
+      {
+        "option": "$p = 0.95$, $q = 0.05$, $n = 9$",
+        "why": "The 9 is how many successes are asked for. n is the number of bulbs, 10."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
@@ -300,26 +489,19 @@
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "After the triangle and the expansion come the probabilities: usually exactly $r$ for about 3 marks, then at least $r$ for 3 more, each to 4 decimal places. The first marks are for the term with its coefficient and powers, the last for the rounded value. Stuck? Write the labels and the term with the right powers: that line earns marks on its own."
+    "md": "After the triangle and the expansion come the probabilities: usually exactly $r$ for about 3 marks, then at least $r$, at most $r$ or more than $r$ for 3 more, to 4 decimal places. The first marks are for the term with its coefficient and powers, the last for the rounded value. Stuck? Write the labels and the term: that line earns marks on its own."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.binomial-probabilities.01"
+    "promptId": "rp.fm.u3.binomial-probabilities.09"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.binomial-probabilities.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.binomial-probabilities.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.binomial-probabilities.04"
+    "promptId": "rp.fm.u3.binomial-probabilities.11"
   }
 ]
