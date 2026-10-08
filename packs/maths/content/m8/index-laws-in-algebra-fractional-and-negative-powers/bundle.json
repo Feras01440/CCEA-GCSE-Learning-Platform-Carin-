@@ -26,7 +26,7 @@
       "ccea-cer:maths:2024-summer:M81:Q10",
       "ccea-cer:maths:2023-summer:M82:Q1"
     ],
-    "examWeightHint": "Both M8 papers, most series, for 2 or 3 marks. On Paper 2 it is an early question of three one-mark index statements with a blank index (Summer 2025 Q3, where about three candidates in four answered every part correctly; November 2025 Q2, which the report describes as confidently done). On Paper 1 it sits around Q8 to Q11 for 2 or 3 marks, usually a bracket with a coefficient raised to an outside power (November 2025 Q11(a); November 2024 Q8; Summer 2024 Q10, 3 marks).",
+    "examWeightHint": "Both M8 papers, most series, for 2 or 3 marks. On Paper 2 it is an early question of three one-mark index statements with a blank index (Summer 2025 Q3, where about three candidates in four answered every part correctly; November 2025 Q2, two one-mark simplifications which the report describes as confidently done). On Paper 1 it sits around Q8 to Q11 for 2 or 3 marks, usually a bracket with a coefficient raised to an outside power (November 2025 Q11(a); November 2024 Q8; Summer 2024 Q10, 3 marks).",
     "mustMemorise": [
       "a^m x a^n = a^(m+n), a^m / a^n = a^(m-n), (a^m)^n = a^(mn) — unchanged for fractional and negative indices",
       "The indices themselves are added, subtracted and multiplied as ordinary fractions and directed numbers",
@@ -122,21 +122,21 @@
         "Write the answer as a single term with no times sign, and say whether a negative index or a fraction is wanted",
         "Use an earlier part's simplified term in a later part, so the follow-through the scheme allows is available"
       ],
-      "howExamined": "Both M8 papers. Paper 2 usually opens with three one-mark statements with the index missing, and the Summer 2025 report has about three candidates in four answering every part correctly. Paper 1 carries a 2 or 3 mark simplification around Q8 to Q11, typically a bracket with a number in front. Schemes give A1 per one-mark statement, and M1 A1 on the longer items where the method mark is for one correct element (the coefficient, or one letter's index) and the accuracy mark for the whole single term.",
+      "howExamined": "Both M8 papers. Paper 2 often opens with index statements to complete or simplify, one mark each (Summer 2025 Q3, three blanks, all three right for about three candidates in four; November 2025 Q2, which the report calls confidently done). Paper 1 carries a 2 or 3 mark simplification around Q8 to Q11, usually a bracket with a number in front: schemes give A2 for the single term and A1 for two of its three parts right (November 2025 Q11(a); November 2024 Q8), or a bracket power then a division for 3 marks (Summer 2024 Q10, full marks for just over a quarter).",
       "traps": [
-        "Leaving the coefficient untouched inside a bracket power, November 2025 M8 Paper 1 Q11(a)",
-        "Multiplying the coefficient by the outside index instead of raising it to that index, November 2025 M8 Paper 1 Q11(a)",
-        "Multiplying the indices when the terms are multiplied, November 2024 M8 Paper 1 Q8",
-        "Adding the indices when a power is raised to a power, November 2025 M8 Paper 1 Q11(a)",
-        "Leaving a times sign in the final answer, so it is not a single term, November 2024 M8 Paper 1 Q8",
+        "Two of the three parts of a bracket answer right, the number or one letter's index wrong: one mark of two (November 2025 M8 Paper 1 Q11(a))",
+        "Multiplying the indices when the terms are multiplied (November 2024 M8 Paper 1 Q8)",
+        "Leaving a times sign in the final answer, so it is not a single term (November 2024 M8 Paper 1 Q8)",
+        "Going wrong on the power of a power when the simpler laws were right (Summer 2025 M8 Paper 2 Q3)",
+        "Leaving the number in front untouched inside a bracket power, or multiplying it by the outside index",
         "Adding fractional indices by adding numerators and denominators separately",
-        "Leaving a root sign in place, so the laws cannot be applied at all",
+        "Leaving a root sign in place, so the laws cannot be applied",
         "Dropping the minus sign on an index, so a subtraction that should add takes away instead"
       ]
     },
     "verification": "ver.note.maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
     "version": 1,
-    "updated": "2026-09-13"
+    "updated": "2026-10-08"
   },
   "workedExamples": [
     {
@@ -170,6 +170,16 @@
             ],
             "correct": 0,
             "explain": "$\\left(2a^{3}\\right)^{4}$ means four copies of $2a^{3}$ multiplied together, so the $2$ appears four times as well: $2^{4} = 16$."
+          },
+          "input": {
+            "kind": "algebraic",
+            "latex": "16a^{12}b^{-8}",
+            "equivalence": "equivalent",
+            "variables": [
+              "a",
+              "b"
+            ],
+            "domain": "positive values of each letter"
           }
         },
         {
@@ -178,7 +188,33 @@
           "decision": "Numbers divide as numbers: $16 \\div 4 = 4$. Letters divide by subtracting indices, and the index being subtracted is negative, so the subtraction adds.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "Divide the numbers, 16 ÷ 4, and subtract the $b$ indices",
+                "correct": true,
+                "feedback": "Numbers divide as numbers; only the indices are subtracted."
+              },
+              {
+                "id": "b",
+                "text": "Subtract the numbers, 16 − 4, and subtract the $b$ indices",
+                "correct": false,
+                "feedback": "The numbers in front divide, they are not subtracted: 16 ÷ 4 = 4.",
+                "misconception": "maths.indices.coefficients-not-combined-normally"
+              },
+              {
+                "id": "c",
+                "text": "Divide the numbers and divide the $b$ indices, $-8 \\div -3$",
+                "correct": false,
+                "feedback": "Dividing the terms subtracts the indices; dividing the indices is not a law.",
+                "misconception": "maths.indices.divide-powers-instead-of-subtract"
+              }
+            ]
+          }
         },
         {
           "n": 3,
@@ -186,7 +222,17 @@
           "decision": "$-8 - (-3) = -5$. The answer is one term, with no times sign in it, which is what the scheme wants to see.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "4a^{12}b^{-5}",
+            "equivalence": "equivalent",
+            "variables": [
+              "a",
+              "b"
+            ],
+            "domain": "positive values of each letter"
+          }
         }
       ],
       "finalAnswer": "$4a^{12}b^{-5}$, or $\\frac{4a^{12}}{b^{5}}$",
@@ -243,7 +289,32 @@
           "decision": "Splitting the bracket into three pieces first means the number and the letters never get confused with each other. Nothing has been worked out yet.",
           "earns": [
             "M1"
-          ]
+          ],
+          "input": {
+            "kind": "mcq",
+            "shuffle": true,
+            "options": [
+              {
+                "id": "a",
+                "text": "On the $8$, on $p^{9}$ and on $q^{-6}$",
+                "correct": true,
+                "feedback": "The outside index reaches everything in the bracket."
+              },
+              {
+                "id": "b",
+                "text": "On $p^{9}$ and $q^{-6}$ only",
+                "correct": false,
+                "feedback": "The number in front is inside the bracket too, so the power reaches it.",
+                "misconception": "maths.indices.coefficient-not-raised"
+              },
+              {
+                "id": "c",
+                "text": "On the $8$ only",
+                "correct": false,
+                "feedback": "Each letter's index is multiplied by the outside index as well."
+              }
+            ]
+          }
         },
         {
           "n": 2,
@@ -251,7 +322,28 @@
           "decision": "The coefficient obeys the numerical rule from M8-NA-03: bottom number is the root, top number is the power. Cube root of $8$ is $2$, squared is $4$.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 4,
+            "tolerance": {
+              "type": "exact"
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          },
+          "whyMenu": {
+            "options": [
+              "The 3 underneath is a cube root and the 2 on top a square: the cube root of 8 is 2, and 2 squared is 4",
+              "8 multiplied by two thirds",
+              "8 squared, then divided by 3"
+            ],
+            "correct": 0,
+            "explain": "In a fractional index the bottom number is the root and the top the power. Multiplying 8 by two thirds would treat the index as a multiplier."
+          }
         },
         {
           "n": 3,
@@ -259,7 +351,17 @@
           "decision": "Power of a power multiplies the indices: $9 \\times \\frac{2}{3} = 6$ and $-6 \\times \\frac{2}{3} = -4$. Both come out whole, which is the usual sign that the fractional index was chosen to fit the powers.",
           "earns": [
             "MA1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "p^{6}q^{-4}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "domain": "positive values of each letter"
+          }
         },
         {
           "n": 4,
@@ -267,7 +369,17 @@
           "decision": "Put the three pieces back together as one term. Writing it as $\\frac{4p^{6}}{q^{4}}$ is equally acceptable unless the question asks for a particular form.",
           "earns": [
             "A1"
-          ]
+          ],
+          "input": {
+            "kind": "algebraic",
+            "latex": "4p^{6}q^{-4}",
+            "equivalence": "equivalent",
+            "variables": [
+              "p",
+              "q"
+            ],
+            "domain": "positive values of each letter"
+          }
         }
       ],
       "finalAnswer": "$4p^{6}q^{-4}$, or $\\frac{4p^{6}}{q^{4}}$",
@@ -484,6 +596,80 @@
           "secondsExpected": 30,
           "confidence": true,
           "hypercorrectionQueue": true
+        },
+        {
+          "id": "06",
+          "stem": "Simplify $\\left(a^{-4}\\right)^{\\frac{1}{2}}$.",
+          "skill": "A fractional power of a negative index",
+          "options": [
+            {
+              "id": "a",
+              "text": "$a^{-2}$",
+              "correct": true,
+              "feedback": "Yes. A power of a power multiplies: $-4 \\times \\frac{1}{2} = -2$."
+            },
+            {
+              "id": "b",
+              "text": "$a^{2}$",
+              "correct": false,
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "feedback": "The minus sign was dropped: $-4$ times a half is $-2$."
+            },
+            {
+              "id": "c",
+              "text": "$a^{-\\frac{7}{2}}$",
+              "correct": false,
+              "misconception": "maths.indices.power-of-power-added",
+              "feedback": "The indices were added; a power of a power multiplies them."
+            },
+            {
+              "id": "d",
+              "text": "$a^{-8}$",
+              "correct": false,
+              "misconception": "maths.indices.root-and-power-swapped",
+              "feedback": "That multiplies by 2, the root number; a power of one half halves the index."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "07",
+          "stem": "Simplify $\\dfrac{6p^{5}}{3p^{-2}}$.",
+          "skill": "Divide numbers as numbers and subtract indices",
+          "options": [
+            {
+              "id": "a",
+              "text": "$2p^{7}$",
+              "correct": true,
+              "feedback": "Yes. $6 \\div 3 = 2$ and $5 - (-2) = 7$."
+            },
+            {
+              "id": "b",
+              "text": "$2p^{3}$",
+              "correct": false,
+              "misconception": "maths.indices.negative-index-sign-dropped",
+              "feedback": "That works $5 - 2$; the index taken away is $-2$, so $5 - (-2) = 7$."
+            },
+            {
+              "id": "c",
+              "text": "$3p^{7}$",
+              "correct": false,
+              "misconception": "maths.indices.coefficients-not-combined-normally",
+              "feedback": "The numbers were subtracted; numbers in front divide as numbers: $6 \\div 3 = 2$."
+            },
+            {
+              "id": "d",
+              "text": "$2p^{-\\frac{5}{2}}$",
+              "correct": false,
+              "misconception": "maths.indices.divide-powers-instead-of-subtract",
+              "feedback": "The indices were divided; dividing the terms subtracts the indices."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
         }
       ]
     }
@@ -555,8 +741,7 @@
                 "latex": "x^{7}"
               },
               "feedback": "The minus sign on the second index was not carried into the addition. $5 + (-2) = 3$, so the answer is $x^{3}$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-november:M81:Q8"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -566,7 +751,7 @@
       "timeAllowanceSec": 90,
       "skeleton": "(main)simplify1",
       "examinerSources": [
-        "ccea-cer:maths:2025-november:M81:Q11"
+        "ccea-cer:maths:2024-november:M81:Q8"
       ],
       "solutionProgram": "x^5 * x^-2 = x^(5 + (-2)) = x^3",
       "verification": "ver.q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0001",
@@ -648,7 +833,7 @@
       "timeAllowanceSec": 90,
       "skeleton": "(main)simplify1",
       "examinerSources": [
-        "ccea-cer:maths:2025-november:M81:Q11"
+        "ccea-cer:maths:2024-november:M81:Q8"
       ],
       "solutionProgram": "1/2 + 3/2 = 2; y^(1/2) * y^(3/2) = y^2",
       "verification": "ver.q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0002",
@@ -720,8 +905,7 @@
                 "latex": "t^{4}"
               },
               "feedback": "The subtraction was carried out as $7 - 3$. The index being subtracted is $-3$, and subtracting a negative adds, so the answer is $t^{10}$.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-november:M81:Q8"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -730,9 +914,7 @@
       "totalMarks": 1,
       "timeAllowanceSec": 90,
       "skeleton": "(main)simplify1",
-      "examinerSources": [
-        "ccea-cer:maths:2025-november:M81:Q11"
-      ],
+      "examinerSources": [],
       "solutionProgram": "t^7 / t^-3 = t^(7 - (-3)) = t^10",
       "verification": "ver.q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0003",
       "version": 1
@@ -804,7 +986,7 @@
               },
               "feedback": "The indices were added. A power of a power multiplies them, which is why a cube root divides the index by $3$.",
               "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2025-november:M81:Q11"
+              "source": "ccea-cer:maths:2025-summer:M82:Q3"
             }
           ],
           "requiresWorking": false
@@ -814,7 +996,7 @@
       "timeAllowanceSec": 90,
       "skeleton": "(main)simplify1",
       "examinerSources": [
-        "ccea-cer:maths:2025-november:M81:Q11"
+        "ccea-cer:maths:2025-summer:M82:Q3"
       ],
       "solutionProgram": "6 * 1/3 = 2; (k^6)^(1/3) = k^2",
       "verification": "ver.q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0004",
@@ -981,14 +1163,13 @@
           "workedSolution": "$\\sqrt{9} = 3$ and $4 \\times \\frac{1}{2} = 2$, so $\\left(9w^{4}\\right)^{\\frac{1}{2}} = 3w^{2}$.",
           "commonErrors": [
             {
-              "misconception": "maths.indices.coefficient-not-raised",
+              "misconception": "maths.indices.root-and-power-swapped",
               "pattern": {
                 "kind": "algebraic",
                 "latex": "3w^{8}"
               },
-              "feedback": "The $9$ was rooted correctly but the index on $w$ was left alone. Halve it: $4 \\times \\frac{1}{2} = 2$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:maths:2025-november:M81:Q11"
+              "feedback": "The $9$ was rooted correctly, so the method mark stands. The index on $w$ was multiplied by $2$, the root number, instead of by $\\frac{1}{2}$: $4 \\times \\frac{1}{2} = 2$, so the answer is $3w^{2}$.",
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1080,8 +1261,7 @@
                 "latex": "4n^{6}"
               },
               "feedback": "The index on $n$ is right, so the method mark stands. The minus on the outside index was not applied to the $2$: it should be turned over, giving $1/4$ in front.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:maths:2025-summer:M81:Q8"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true
@@ -1164,7 +1344,7 @@
             "A square root is a power of $\\frac{1}{2}$, so rewrite before you do anything else.",
             "Then add the two indices."
           ],
-          "workedSolution": "$\\sqrt{x^{5}} = x^{\\frac{5}{2}}$, so the product is $x^{\\frac{5}{2}} \\times x^{\\frac{1}{2}} = x^{\\frac{5}{2} + \\frac{1}{2}} = x^{3}$.",
+          "workedSolution": "$\\sqrt{x^{5}} = x^{\\frac{5}{2}}$, so the product is $x^{\\frac{5}{2}} \\times x^{\\frac{1}{2}}$, which is $x^{\\frac{5}{2} + \\frac{1}{2}} = x^{3}$.",
           "commonErrors": [
             {
               "misconception": "maths.indices.root-not-written-as-power",
@@ -1173,8 +1353,7 @@
                 "latex": "x^{\\frac{11}{2}}"
               },
               "feedback": "The root sign was left in place, so the two indices could not be added. Rewriting $\\sqrt{x^{5}}$ as $x^{\\frac{5}{2}}$ first turns the whole thing into one addition.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2025-november:M81:Q11"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -1183,9 +1362,7 @@
       "totalMarks": 2,
       "timeAllowanceSec": 180,
       "skeleton": "(main)simplify2",
-      "examinerSources": [
-        "ccea-cer:maths:2025-november:M81:Q11"
-      ],
+      "examinerSources": [],
       "solutionProgram": "sqrt(x^5) = x^(5/2); 5/2 + 1/2 = 3; checked at x = 1.4, 0.9, 3.2",
       "verification": "ver.q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0008",
       "version": 1
@@ -1264,8 +1441,7 @@
                 }
               },
               "feedback": "The two indices were multiplied. Multiplying the terms adds the indices, which is exactly why a half power is a square root.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2025-summer:M82:Q3"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -1310,8 +1486,7 @@
                 }
               },
               "feedback": "The subtraction was done as $2 - 3$. Subtracting a negative index adds, so the missing index is 5.",
-              "marksTypicallyEarned": 0,
-              "source": "ccea-cer:maths:2024-november:M81:Q8"
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": false
@@ -1355,7 +1530,7 @@
                   "value": 0
                 }
               },
-              "feedback": "The indices were added. A power of a power multiplies them, so the missing index is 2. On this question type the Summer 2025 report puts almost all the remaining errors in the third part.",
+              "feedback": "The indices were added. A power of a power multiplies them, so the missing index is 2. On the Summer 2025 paper, most of those who lost a mark lost it on the power of a power.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:maths:2025-summer:M82:Q3"
             }
@@ -1504,8 +1679,7 @@
                 "latex": "x^{2}y^{2}"
               },
               "feedback": "The indices are right, so the method mark is safe. The two numbers in front still have to be multiplied: $2 \\times 2 = 4$.",
-              "marksTypicallyEarned": 1,
-              "source": "ccea-cer:maths:2024-november:M81:Q8"
+              "marksTypicallyEarned": 1
             }
           ],
           "requiresWorking": true,
@@ -1552,6 +1726,56 @@
         "M1"
       ],
       "feedback": "The index work is completely right: both indices were multiplied by the outside power, and the division subtracted correctly, so the method mark stands. What slipped is the number. A bracket raised to a power means that many copies of the whole term multiplied together, so the coefficient is raised as well: $2^{4} = 16$, and after dividing by $4$ the number in front is 4. Before you touch the letters, deal with the number on its own line.",
+      "source": "ccea-cer:maths:2025-november:M81:Q11"
+    },
+    {
+      "id": "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02",
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "stem": "Cormac was asked to simplify $5a^{\\frac{1}{2}}b^{3} \\times 2a^{\\frac{3}{2}}b^{-1}$. His working:",
+      "studentWorking": [
+        "5 × 2 = 10",
+        "a^(1/2) × a^(3/2) = a^(3/4)",
+        "b^3 × b^(-1) = b^2",
+        "= 10a^(3/4)b^2"
+      ],
+      "mistakeLine": 2,
+      "misconception": "maths.indices.multiply-powers-instead-of-add",
+      "whatWentWrong": "Line 2 multiplies the two indices. Multiplying the terms adds the indices: a half plus three halves is four halves, which is 2.",
+      "correction": [
+        "a^(1/2) × a^(3/2) = a^2",
+        "= 10a^2b^2"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "The number and the b part are right, so most of the work is sound. On the November 2024 paper some multiplied rather than added the indices, which is this slip. Multiplying terms adds indices; only a power of a power multiplies them.",
+      "source": "ccea-cer:maths:2024-november:M81:Q8"
+    },
+    {
+      "id": "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "stem": "Niamh was asked to simplify $\\left(3m^{-2}n^{4}\\right)^{3}$. Her working:",
+      "studentWorking": [
+        "m index: -2 × 3 = -6",
+        "n index: 4 × 3 = 12",
+        "Number in front: 3",
+        "= 3m^(-6)n^12"
+      ],
+      "mistakeLine": 3,
+      "misconception": "maths.indices.coefficient-not-raised",
+      "whatWentWrong": "Line 3 leaves the 3 alone, but the bracket power reaches the number too: three copies of 3 multiplied make 27.",
+      "correction": [
+        "Number in front: 3^3 = 27",
+        "= 27m^(-6)n^12"
+      ],
+      "marksEarnedAsWritten": [
+        "A1"
+      ],
+      "feedback": "Both indices are right, two of the three parts, which on the November 2025 paper kept one mark of two. The number in front is raised as well: 3³ = 27.",
       "source": "ccea-cer:maths:2025-november:M81:Q11"
     }
   ],
@@ -1670,6 +1894,96 @@
         "M8-NA-06"
       ],
       "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.08",
+      "kind": "formula",
+      "prompt": "What do you do to the indices when multiplying powers of x?",
+      "answer": "Add them, even when they are fractions or negative.",
+      "keyWords": [
+        "add"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.09",
+      "kind": "procedure",
+      "prompt": "What does a power outside a bracket act on?",
+      "answer": "Every letter inside and the number in front.",
+      "keyWords": [
+        "number in front"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.10",
+      "kind": "definition",
+      "prompt": "How do you write the cube root of x as a power?",
+      "answer": "As x to the power one third.",
+      "keyWords": [
+        "one third"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.11",
+      "kind": "trap",
+      "prompt": "Is 3 × x⁴ an acceptable simplified answer?",
+      "answer": "No: write it as one term, 3x⁴.",
+      "keyWords": [
+        "one term"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.12",
+      "kind": "definition",
+      "prompt": "What does a negative index mean?",
+      "answer": "One over the positive power: x⁻² is 1 over x².",
+      "keyWords": [
+        "one over"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "examUnit": "M8"
+    },
+    {
+      "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.13",
+      "kind": "trap",
+      "prompt": "Subtracting a negative index: does the power rise or fall?",
+      "answer": "It rises, because subtracting a negative adds.",
+      "keyWords": [
+        "rises"
+      ],
+      "difficultyPrior": 3,
+      "topic": "maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
+      "specRefs": [
+        "M8-NA-06"
+      ],
+      "examUnit": "M8"
     }
   ],
   "sets": [
@@ -1684,12 +1998,12 @@
       ],
       "itemIds": [
         "dx.maths.m8.index-laws-in-algebra-fractional-and-negative-powers",
-        "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.01",
+        "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.08",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0001",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0002",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0003",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0004",
-        "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03"
+        "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.10"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -1706,11 +2020,12 @@
       "itemIds": [
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0005",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0006",
-        "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.01",
+        "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0007",
+        "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0008",
         "q.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.0010",
-        "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02"
+        "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.09"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -1785,10 +2100,77 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner. Prose between gates checked against the 150-word limit in src/components/items/gates.ts.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: every citation checked against the report text. November 2025 M8 Paper 1 Q11: over a third both marks, just over a third none, the rest two of three elements (scheme A2, two correct A1). November 2024 M8 Paper 1 Q8: around two thirds right, some multiplied rather than added, a few left a multiplication sign. Summer 2025 M82 Q3: three quarters all three right, most of the rest wrong only on the third part, the power of a power. Summer 2024 M81 Q10: just over a quarter full marks, just over a quarter none. November 2025 M8 Paper 2 Q2: confidently done. Sources the reports do not support were removed from common errors.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: seven teaching sections (idea, five variants, twists), each explain -> See it -> Your turn on the note's own expressions; gates g8-g14, each with a twin on new numbers and a note on every wrong option, probed through markGate by text and position; the two-way overlap scan finds nothing of the note, a gate, a twin or a worked example that a later item asks. Seven gates withdrawn (the records above).",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "g1",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "An interface warm-up ('A warm-up. In x^3 x x^4 …'), with nothing shown worked before it; g8 is a real check after the first See it.",
+          "on": "2026-10-08T05:05:00Z"
+        },
+        {
+          "id": "g2",
+          "kind": "gate",
+          "replacedBy": "g8",
+          "reason": "y^(1/2) x y^(3/2) is practice question 0002 and diagnostic 01 word for word, asked before anything was worked; g8 adds fractional indices on new numbers after its See it.",
+          "on": "2026-10-08T05:05:00Z"
+        },
+        {
+          "id": "g7",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "A fill-the-gap on the coefficient, asked before the section showed a bracket power worked; g11 raises a bracket with a number in front after its See it.",
+          "on": "2026-10-08T05:05:00Z"
+        },
+        {
+          "id": "g3",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "(3c^4)^3 is practice question 0005 and diagnostic 03 word for word; g11 asks a new bracket after its See it.",
+          "on": "2026-10-08T05:05:00Z"
+        },
+        {
+          "id": "g4",
+          "kind": "gate",
+          "replacedBy": "g9",
+          "reason": "t^7 / t^-3 is practice question 0003 word for word; g9 asks negative indices on new numbers after its See it.",
+          "on": "2026-10-08T05:05:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "The cube root of x^2 as a power is diagnostic 04's own question, asked before a root was worked; g13 rewrites a root and combines after its See it.",
+          "on": "2026-10-08T05:05:00Z"
+        },
+        {
+          "id": "g6",
+          "kind": "gate",
+          "replacedBy": "g11",
+          "reason": "Its explanation named options by their place ('The third option …; the second …'), so it was shown in its written order with its answer first; the one-term rule is a twist, and g11's options carry it.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.01",
@@ -1865,6 +2247,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: an input on every step in place (the bracket raised, 16a^12 b^-8; how the division is done, from its routes; the single term 4a^12 b^-5), probed through markAnswer; working, earns, faded and the twin unchanged.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
@@ -1947,6 +2337,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: an input on every step in place (what the outside index reaches, from its routes; 8^(2/3) = 4; p^6 q^-4; the single term) and a whyMenu on step 2 (the root and the power in two thirds), probed through markAnswer; working, earns, faded and the twin unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2027,6 +2425,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026 v3 pass: items 06 and 07 added (post), so the post-instruction check holds three items as the S floor asks; every distractor from its route with its registry id. Items 01-05 unchanged.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
@@ -2109,6 +2515,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common-error source no report supports removed, and the item's examiner sources set to the findings it exercises; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2189,6 +2603,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common-error source no report supports removed, and the item's examiner sources set to the findings it exercises; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
@@ -2271,6 +2693,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common-error source no report supports removed, and the item's examiner sources set to the findings it exercises; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2351,6 +2781,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): the power-of-a-power error now cites Summer 2025 M82 Q3, whose report puts most remaining errors on that part; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
@@ -2514,6 +2952,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): the common error 3w^8 re-labelled to the route that gives it (the index multiplied by the root number 2, root-and-power-swapped) with its feedback describing that route, and its unsupported source removed; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2594,6 +3040,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common-error source no report supports removed, and the item's examiner sources set to the findings it exercises; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
@@ -2676,6 +3130,22 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common-error source no report supports removed, and the item's examiner sources set to the findings it exercises; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: the worked solution's one long maths segment split at an equals sign so it wraps on a phone; same working, every marked field unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2756,6 +3226,14 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): two unsupported sources removed, and part (c)'s feedback reworded to what the Summer 2025 M82 Q3 report says; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
@@ -2838,6 +3316,14 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "8 Oct 2026: citations checked against the report text and made true in place (credit-only): a common-error source no report supports removed, and the item's examiner sources set to the findings it exercises; values, patterns, marks and specs unchanged.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -2919,10 +3405,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): Its expression, (2a^3 b^-2)^4 / 4b^-3, is worked example 01's own, so the example works in front of her what the mistake then asks; ftm.03 sets the same finding (a coefficient left unraised) on new numbers. Replaced by ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
+          "reason": "Its expression, (2a^3 b^-2)^4 / 4b^-3, is worked example 01's own, so the example works in front of her what the mistake then asks; ftm.03 sets the same finding (a coefficient left unraised) on new numbers.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.01",
@@ -2976,10 +3479,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks for a list (the three laws) with a 31-word answer, and its key words are not in its own answer; rp.08 asks one law in eleven words. Replaced by rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.08.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.01",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.08",
+          "reason": "It asks for a list (the three laws) with a 31-word answer, and its key words are not in its own answer; rp.08 asks one law in eleven words.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02",
@@ -3033,10 +3553,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks why, with a 31-word answer; rp.09 asks what a bracket power reaches, as one fact. Replaced by rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.09.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.09",
+          "reason": "It asks why, with a 31-word answer; rp.09 asks what a bracket power reaches, as one fact.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
@@ -3090,10 +3627,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks exactly what practice question 0002 and diagnostic 01 ask (y^(1/2) x y^(3/2)), so the deck held the same card twice; the law is rp.08.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asks exactly what practice question 0002 and diagnostic 01 ask (y^(1/2) x y^(3/2)), so the deck held the same card twice; the law is rp.08.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.04",
@@ -3147,10 +3701,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks two things at once in 17 words, with a 36-word answer; rp.10 asks the root as a power on its own. Replaced by rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.10.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.04",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.10",
+          "reason": "It asks two things at once in 17 words, with a 36-word answer; rp.10 asks the root as a power on its own.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.05",
@@ -3204,10 +3775,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks exactly what practice question 0003 asks (t^7 / t^-3) and asks why as well; rp.13 asks the sign rule as one fact. Replaced by rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.13.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.05",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.13",
+          "reason": "It asks exactly what practice question 0003 asks (t^7 / t^-3) and asks why as well; rp.13 asks the sign rule as one fact.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.06",
@@ -3261,10 +3849,27 @@
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It carries an examiner's finding (November 2024), which belongs to the Sheet's traps, and its answer runs to 46 words; rp.11 asks the one-term rule. Replaced by rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.11.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.06",
+          "kind": "prompt",
+          "replacedBy": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.11",
+          "reason": "It carries an examiner's finding (November 2024), which belongs to the Sheet's traps, and its answer runs to 46 words; rp.11 asks the one-term rule.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.07",
@@ -3317,6 +3922,447 @@
           "result": "pass",
           "detail": "Every $...$ segment written in KaTeX-safe syntax; British English throughout; no exclamation marks; no 9-1 grade labels; no verdict language aimed at the learner.",
           "at": "2026-09-13T12:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "fail",
+          "detail": "Withdrawn 8 Oct 2026 (M8 v3 migration, group 0): It asks exactly what worked example 02 works ((8p^9 q^-6)^(2/3)), so the deck replayed the example as a card.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.07",
+          "kind": "prompt",
+          "replacedBy": null,
+          "reason": "It asks exactly what worked example 02 works ((8p^9 q^-6)^(2/3)), so the deck replayed the example as a card.",
+          "on": "2026-10-08T05:05:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ver.ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02",
+      "itemId": "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "1/2 + 3/2 = 2 (her 1/2 x 3/2 = 3/4); 3 + (-1) = 2; 5 x 2 = 10: 10a^2 b^2.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "November 2024 M8 Paper 1 Q8: around two thirds right, some multiplied rather than added the indices.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own expression and wording; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; exactly one wrong line.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass for the S floor (two find-the-mistake items from different findings). markFix probed: her line refused, the corrected line and its value accepted in several wordings.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
+      "itemId": "ftm.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.03",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "3^3 = 27; -2 x 3 = -6; 4 x 3 = 12: 27m^-6 n^12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "November 2025 M8 Paper 1 Q11(a): the rest had two of the three parts of the answer right, for one mark (scheme: A2, two correct A1).",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own expression and wording; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; exactly one wrong line.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass in place of ftm.01 (withdrawn: worked example 01's own expression). markFix probed: her line refused, the corrected line and its value accepted in several wordings.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.08",
+      "itemId": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.08",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 9 words; key words [\"add\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.09",
+      "itemId": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.09",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 8 words; key words [\"number in front\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.10",
+      "itemId": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.10",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 7 words; key words [\"one third\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.11",
+      "itemId": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.11",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 7 words; key words [\"one term\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.12",
+      "itemId": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.12",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 10 words; key words [\"one over\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.13",
+      "itemId": "rp.maths.m8.index-laws-in-algebra-fractional-and-negative-powers.13",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Validated against src/lib/content/schema.ts (TopicBundle) by pipeline/build-content.mts after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Higher tier, M8-NA-06.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Our own words; shingles.mjs --unit m8 prints no breach after this pass.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "British English; the question at most 15 words and the answer at most 12.",
+          "at": "2026-10-08T05:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (8 Oct 2026 v3 pass, scratchpad/probes/m8-g0/il.mjs; every index computed with exact fractions in il.mjs; marking probed through markAnswer, markGate, markFix, stepLineMatches and keywordsPresent in ts/probe-index-laws-in-algebra-fractional-and-negative-powers.mts)",
+          "result": "pass",
+          "detail": "Issued in the 8 Oct 2026 v3 pass. Answer 7 words; key words [\"rises\"] in the answer by keywordsPresent; recallFit passes.",
+          "at": "2026-10-08T05:05:00Z",
           "by": "claude"
         }
       ],
