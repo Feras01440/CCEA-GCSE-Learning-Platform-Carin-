@@ -1,225 +1,676 @@
 [
   {
     "type": "hero",
-    "lede": "Somewhere near the top of a hill the ground is level for an instant, and the same is true of a curve. Those level places are the stationary points, and calculus finds them exactly: set the gradient to zero, solve, then decide whether you are standing on a peak or in a valley.",
+    "lede": "Near the top of a hill the ground is level for a moment, and a curve is the same. Those level places are its stationary points. Calculus finds them exactly: set the gradient to zero and solve, then use the second derivative to tell a peak from a dip.",
     "can": [
-      "Set dy/dx = 0, solve it, and find the coordinates of every stationary point",
-      "Use the second derivative to say whether each one is a maximum or a minimum",
-      "Check an answer by asking whether the shape of the curve agrees with it"
+      "Set dy/dx = 0, solve it and give every stationary point as coordinates",
+      "Name each point a maximum or a minimum from the value and sign of d²y/dx²",
+      "Check the answer against the shape: one of each on a cubic"
     ],
-    "minutes": 17
+    "minutes": 14
   },
   {
     "type": "h",
-    "text": "Where the curve goes level"
+    "text": "Where a curve goes level",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "Follow a curve from left to right and the gradient changes as you go: positive while it climbs, negative while it falls. In between it must pass through zero.\nThose are the **stationary points**, and on a cubic there are usually two: one at the top of a rise, one at the bottom of a dip."
+    "md": "Follow a curve from left to right. While it climbs, its gradient is positive; while it falls, the gradient is negative. Between a climb and a fall the curve is level for an instant, so its gradient there is zero. Those level places are the **stationary points**, also called turning points."
   },
   {
     "type": "figure",
-    "alt": "A cubic curve drawn on axes with a peak on the left and a dip on the right, each marked with a short flat dashed line to show that the tangent there is horizontal.",
-    "svg": "<svg viewBox='0 0 560 350' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A cubic curve with a maximum and a minimum, each marked with a flat dashed tangent'><title>A cubic curve with a maximum and a minimum, each marked with a flat dashed tangent</title><path d='M 79.9 24 L 79.9 304 M 219.3 24 L 219.3 304 M 358.7 24 L 358.7 304 M 498.2 24 L 498.2 304 M 52 284 L 540 284 M 52 244 L 540 244 M 52 204 L 540 204 M 52 164 L 540 164 M 52 124 L 540 124 M 52 84 L 540 84 M 52 44 L 540 44' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 204 L 540 204' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 79.9 24 L 79.9 304' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 219.3 200 L 219.3 208' stroke='currentColor' stroke-width='1' fill='none'/><text x='219.3' y='221' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><path d='M 358.7 200 L 358.7 208' stroke='currentColor' stroke-width='1' fill='none'/><text x='358.7' y='221' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 498.2 200 L 498.2 208' stroke='currentColor' stroke-width='1' fill='none'/><text x='498.2' y='221' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><path d='M 75.9 284 L 83.9 284' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='288' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><path d='M 75.9 244 L 83.9 244' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='248' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><path d='M 75.9 164 L 83.9 164' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='168' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><path d='M 75.9 124 L 83.9 124' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='128' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><path d='M 75.9 84 L 83.9 84' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='88' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><path d='M 75.9 44 L 83.9 44' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='48' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='72.9' y='218' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 60.1 301.7 L 95.9 238.7 L 128.5 200.5 L 159.4 178.3 L 195.1 166 L 365.9 183.8 L 401.7 177.1 L 432.6 161.2 L 461.9 134.9 L 492.8 92.9 L 527 26.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 128.7 164 L 309.9 164' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.85'/><path d='M 275.1 184 L 442.4 184' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linejoin='round' stroke-linecap='round' stroke-dasharray='6 4' stroke-opacity='0.85'/><circle cx='219.3' cy='164' r='3.6' fill='currentColor'/><text x='211.3' y='154' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>maximum (1, 2)</text><circle cx='358.7' cy='184' r='3.6' fill='currentColor'/><text x='366.7' y='204' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>minimum (2, 1)</text><text x='540' y='196' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='86.9' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='340' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>at both marked points the tangent is flat</text></svg>",
-    "caption": "Two level places on one curve: a maximum and a minimum."
+    "alt": "A cubic curve rising to a peak, falling to a dip and rising again, with a flat dashed tangent marked gradient 0 at the peak and at the dip.",
+    "svg": "<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A cubic curve that rises to a peak, falls to a dip and rises again; at the peak and at the dip a short dashed tangent is flat, marked gradient 0.'><title>A cubic curve that rises to a peak, falls to a dip and rises again; at the peak and at the dip a short dashed tangent is flat, marked gradient 0.</title><path d='M 36 118 L 368 118' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 368 118 L 361 114 L 361 122 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 200 210 L 200 22' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 200 22 L 196 29 L 204 29 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='368' y='109' font-family='inherit' font-size='16' fill='currentColor' text-anchor='end' font-style='italic'>x</text><text x='209' y='26' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start' font-style='italic'>y</text><path d='M 50.4 213.9 L 54.2 198.4 L 57.9 183.8 L 61.7 170.2 L 65.4 157.6 L 69.1 145.9 L 72.9 135.1 L 76.6 125.1 L 80.3 116 L 84.1 107.8 L 87.8 100.3 L 91.6 93.6 L 95.3 87.6 L 99 82.3 L 102.8 77.8 L 106.5 73.9 L 110.3 70.6 L 114 68 L 117.7 65.9 L 121.5 64.4 L 125.2 63.5 L 129 63 L 132.7 63.1 L 136.4 63.6 L 140.2 64.5 L 143.9 65.9 L 147.7 67.6 L 151.4 69.7 L 155.1 72.2 L 158.9 74.9 L 162.6 77.9 L 166.3 81.2 L 170.1 84.7 L 173.8 88.4 L 177.6 92.3 L 181.3 96.4 L 185 100.5 L 188.8 104.8 L 192.5 109.2 L 196.3 113.6 L 200 118 L 203.7 122.4 L 207.5 126.8 L 211.2 131.2 L 215 135.5 L 218.7 139.6 L 222.4 143.7 L 226.2 147.6 L 229.9 151.3 L 233.7 154.8 L 237.4 158.1 L 241.1 161.1 L 244.9 163.8 L 248.6 166.3 L 252.3 168.4 L 256.1 170.1 L 259.8 171.5 L 263.6 172.4 L 267.3 172.9 L 271 173 L 274.8 172.5 L 278.5 171.6 L 282.3 170.1 L 286 168 L 289.7 165.4 L 293.5 162.1 L 297.2 158.2 L 301 153.7 L 304.7 148.4 L 308.4 142.4 L 312.2 135.7 L 315.9 128.2 L 319.7 120 L 323.4 110.9 L 327.1 100.9 L 330.9 90.1 L 334.6 78.4 L 338.3 65.8 L 342.1 52.2 L 345.8 37.6 L 349.6 22.1' fill='none' stroke='currentColor' stroke-width='1.9'/><line x1='92.2' y1='63' x2='168.7' y2='63' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='130.4' cy='63' r='4.5' fill='currentColor'/><text x='130.4' y='49' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>gradient 0</text><line x1='231.3' y1='173' x2='307.8' y2='173' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='269.6' cy='173' r='4.5' fill='currentColor'/><text x='269.6' y='201' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>gradient 0</text></svg>",
+    "caption": "At the top of a rise and the bottom of a dip the tangent is flat: gradient 0."
+  },
+  {
+    "type": "p",
+    "md": "So finding them is an equation: differentiate, set $\\frac{dy}{dx} = 0$ and solve. For a quadratic curve the derivative has no squared term, so there is exactly one answer."
+  },
+  {
+    "type": "see",
+    "stem": "Find the value of $x$ at which $y = x^{2} - 4x + 7$ is stationary.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2x - 4$",
+        "decision": "Differentiate each term; the constant 7 differentiates to zero.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$2x - 4 = 0$, so $x = 2$",
+        "decision": "Stationary means the gradient is zero, so set the derivative equal to 0 and solve.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
   },
   {
     "type": "gate",
-    "id": "g1",
-    "kind": "choice",
-    "prompt": "One tap to start. What is the gradient of the curve at either of the two marked points?",
-    "options": [
-      "Zero",
-      "One",
-      "It cannot be worked out"
-    ],
-    "answer": "Zero",
-    "explain": "The tangent there is flat, and a flat line has gradient zero. That single fact is the equation you are about to solve."
+    "id": "g8",
+    "kind": "number",
+    "prompt": "At what value of $x$ is $y = x^{2} - 10x + 4$ stationary?",
+    "answer": "5",
+    "explain": "As in See it: differentiate to get $\\frac{dy}{dx} = 2x - 10$, then set it equal to zero. $2x - 10 = 0$ gives $x = 5$.",
+    "twin": {
+      "prompt": "At what value of $x$ is $y = x^{2} + 6x - 1$ stationary?",
+      "answer": "-3",
+      "explain": "$\\frac{dy}{dx} = 2x + 6$, and $2x + 6 = 0$ gives $x = -3$: the sign comes from solving the equation."
+    }
   },
   {
     "type": "h",
-    "text": "1. Set the gradient to zero and solve"
+    "text": "The height comes from the curve",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "Flat means $\\frac{dy}{dx} = 0$, so the search turns into an equation. Differentiate, write the derivative equal to zero, and solve it the way you would solve any equation.\nFrom a quadratic curve the derivative is linear and there is one answer. From a cubic it is a quadratic, so factorise and expect **two**."
+    "md": "Solving $\\frac{dy}{dx} = 0$ gives the $x$-coordinate only. The height comes from putting that $x$ back into the **equation of the curve**, because the point lies on the curve. Putting it into $\\frac{dy}{dx}$ always gives 0, which is the gradient there, not the height."
   },
   {
     "type": "figure",
-    "alt": "A three-row card: differentiate the cubic, set the derivative equal to zero, factorise and read off the two values of x.",
-    "svg": "<svg viewBox='0 0 560 174' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The three lines that find a stationary point: differentiate, set the derivative to zero, solve'><title>The three lines that find a stationary point: differentiate, set the derivative to zero, solve</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>y = 2x^3 - 9x^2 + 12x - 3</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>dy/dx = 6x^2 - 18x + 12</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>the gradient rule</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>6x^2 - 18x + 12 = 0</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>flat means zero gradient</text><rect x='14' y='114' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='132' font-family='inherit' font-size='13' fill='currentColor'>6(x - 1)(x - 2) = 0, so x = 1 or x = 2</text><text x='532' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>two places, on a cubic</text><text x='280' y='166' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>the equation is the whole idea: flat means the gradient is zero</text></svg>",
-    "caption": "The derivative is set to zero, not evaluated. Everything else follows from that line."
+    "alt": "The curve y = x² − 2x + 6 with its lowest point at (1, 5), dashed down to 1 on the x-axis and across to 5 on the y-axis.",
+    "svg": "<svg viewBox='0 0 400 232' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y = x² − 2x + 6, a U shape whose lowest point is at (1, 5); dashed lines run from that point down to 1 on the x-axis and across to 5 on the y-axis.'><title>The curve y = x² − 2x + 6, a U shape whose lowest point is at (1, 5); dashed lines run from that point down to 1 on the x-axis and across to 5 on the y-axis.</title><path d='M 36 206 L 368 206' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 368 206 L 361 202 L 361 210 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 138.5 210 L 138.5 22' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 138.5 22 L 134.5 29 L 142.5 29 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='368' y='197' font-family='inherit' font-size='16' fill='currentColor' text-anchor='end' font-style='italic'>x</text><text x='147.5' y='26' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start' font-style='italic'>y</text><path d='M 49.2 44.6 L 53 49 L 56.8 53.2 L 60.5 57.3 L 64.3 61.4 L 68.1 65.3 L 71.8 69.1 L 75.6 72.7 L 79.4 76.3 L 83.2 79.8 L 86.9 83.1 L 90.7 86.4 L 94.5 89.5 L 98.2 92.6 L 102 95.5 L 105.8 98.3 L 109.5 101 L 113.3 103.6 L 117.1 106 L 120.8 108.4 L 124.6 110.7 L 128.4 112.8 L 132.2 114.8 L 135.9 116.8 L 139.7 118.6 L 143.5 120.3 L 147.2 121.9 L 151 123.4 L 154.8 124.7 L 158.5 126 L 162.3 127.2 L 166.1 128.2 L 169.8 129.1 L 173.6 130 L 177.4 130.7 L 181.2 131.3 L 184.9 131.8 L 188.7 132.2 L 192.5 132.4 L 196.2 132.6 L 200 132.7 L 203.8 132.6 L 207.5 132.4 L 211.3 132.2 L 215.1 131.8 L 218.8 131.3 L 222.6 130.7 L 226.4 130 L 230.2 129.1 L 233.9 128.2 L 237.7 127.2 L 241.5 126 L 245.2 124.7 L 249 123.4 L 252.8 121.9 L 256.5 120.3 L 260.3 118.6 L 264.1 116.8 L 267.8 114.8 L 271.6 112.8 L 275.4 110.7 L 279.2 108.4 L 282.9 106 L 286.7 103.6 L 290.5 101 L 294.2 98.3 L 298 95.5 L 301.8 92.6 L 305.5 89.5 L 309.3 86.4 L 313.1 83.1 L 316.8 79.8 L 320.6 76.3 L 324.4 72.7 L 328.2 69.1 L 331.9 65.3 L 335.7 61.4 L 339.5 57.3 L 343.2 53.2 L 347 49 L 350.8 44.6' fill='none' stroke='currentColor' stroke-width='1.9'/><line x1='200' y1='138.7' x2='200' y2='206' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4'/><line x1='194' y1='132.7' x2='138.5' y2='132.7' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4'/><circle cx='200' cy='132.7' r='4.5' fill='currentColor'/><text x='200' y='225' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>1</text><text x='130.5' y='137.7' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>5</text><text x='212' y='154.7' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>(1, 5)</text></svg>",
+    "caption": "The lowest point of y = x² − 2x + 6 is at x = 1, and the curve gives its height, 5."
+  },
+  {
+    "type": "p",
+    "md": "Then write the two numbers as a pair in brackets, $x$ first. The question asks where the point is, so the last mark is for the coordinates."
+  },
+  {
+    "type": "callout",
+    "kind": "examiner",
+    "title": "Where the marks slip",
+    "md": "The reports find the slips in the height more than in the $x$: an arithmetic error after substituting, especially when $x$ is a fraction (2019), and a turning point not written as coordinates (2025). Write each substitution on a line of its own."
+  },
+  {
+    "type": "see",
+    "stem": "Find the turning point of $y = x^{2} - 2x + 6$ as a pair of coordinates.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 2x - 2 = 0$, so $x = 1$",
+        "decision": "The gradient is zero first: that gives the x-coordinate only.",
+        "earns": [
+          "MW1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$y = 1^{2} - 2(1) + 6 = 5$",
+        "decision": "Put $x = 1$ into the curve itself, never into the derivative, which would give 0.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "The turning point is $(1, 5)$",
+        "decision": "Coordinates in brackets, x first: the question asked where the point is.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "choice",
+    "prompt": "Where is the turning point of $y = x^{2} + 4x + 9$?",
+    "options": [
+      "$(-2, 5)$",
+      "$(-2, 0)$",
+      "$(2, 21)$"
+    ],
+    "answer": "$(-2, 5)$",
+    "explain": "As steps 1 to 3 of See it: $2x + 4 = 0$ gives $x = -2$, and the curve gives $y = 4 - 8 + 9 = 5$. A height of 0 comes from the derivative, which is zero at every stationary point.",
+    "twin": {
+      "prompt": "Where is the turning point of $y = x^{2} + 8x + 20$?",
+      "options": [
+        "$(-4, 4)$",
+        "$(-4, 0)$",
+        "$(4, 68)$"
+      ],
+      "answer": "$(-4, 4)$",
+      "explain": "$2x + 8 = 0$ gives $x = -4$, and the curve gives $16 - 32 + 20 = 4$.",
+      "optionNotes": [
+        {
+          "option": "$(-4, 0)$",
+          "why": "The x is right, but 0 is the gradient there: the height comes from putting −4 into the curve.",
+          "misconception": "fm.calc.stationary-y-from-derivative"
+        },
+        {
+          "option": "$(4, 68)$",
+          "why": "2x + 8 = 0 gives x = −4, not 4: the sign was lost in solving."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$(-2, 0)$",
+        "why": "The x is right, but 0 is the gradient there: the height comes from putting −2 into the curve.",
+        "misconception": "fm.calc.stationary-y-from-derivative"
+      },
+      {
+        "option": "$(2, 21)$",
+        "why": "2x + 4 = 0 gives x = −2, not 2: the sign was lost in solving."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Two turning points on a cubic",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "A cubic's derivative is a quadratic, so $\\frac{dy}{dx} = 0$ usually has **two** solutions and the curve has two turning points. Take out any common factor first to keep the numbers small, then factorise. Each value of $x$ goes back into the curve on a line of its own."
+  },
+  {
+    "type": "see",
+    "stem": "Find both turning points of $y = x^{3} - 12x + 5$, each as coordinates.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 3x^{2} - 12$",
+        "decision": "Differentiate each term; the 5 differentiates to zero.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$3(x^{2} - 4) = 0$, so $x = 2$ or $x = -2$",
+        "decision": "Take out the 3, then solve: a square root gives two values.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$y = 8 - 24 + 5 = -11$ and $y = -8 + 24 + 5 = 21$",
+        "decision": "One substitution into the curve for each value of x.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "Turning points $(2, -11)$ and $(-2, 21)$",
+        "decision": "Each pair in brackets, each x with its own height.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g10",
+    "kind": "choice",
+    "prompt": "Which are the turning points of $y = x^{3} - 6x^{2} + 9x + 3$?",
+    "options": [
+      "$(1, 7)$ and $(3, 3)$",
+      "$(1, 0)$ and $(3, 0)$",
+      "$(-1, -13)$ and $(-3, -105)$"
+    ],
+    "answer": "$(1, 7)$ and $(3, 3)$",
+    "explain": "As in See it: $3x^{2} - 12x + 9 = 3(x - 1)(x - 3)$, so $x = 1$ or $x = 3$, and the curve gives heights 7 and 3. Heights of 0 come from the derivative; negative values of $x$ come from misreading the brackets.",
+    "twin": {
+      "prompt": "Which are the turning points of $y = 2x^{3} - 9x^{2} - 24x + 6$?",
+      "options": [
+        "$(-1, 19)$ and $(4, -106)$",
+        "$(-1, 0)$ and $(4, 0)$",
+        "$(1, -25)$ and $(-4, -170)$"
+      ],
+      "answer": "$(-1, 19)$ and $(4, -106)$",
+      "explain": "$6x^{2} - 18x - 24 = 6(x - 4)(x + 1)$, so $x = 4$ or $x = -1$, and the curve gives $-106$ and $19$.",
+      "optionNotes": [
+        {
+          "option": "$(-1, 0)$ and $(4, 0)$",
+          "why": "The values of x are right, but the heights came from the derivative, which is 0 at both points.",
+          "misconception": "fm.calc.stationary-y-from-derivative"
+        },
+        {
+          "option": "$(1, -25)$ and $(-4, -170)$",
+          "why": "(x − 4)(x + 1) = 0 gives x = 4 and x = −1: each bracket's sign flips when it is solved."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$(1, 0)$ and $(3, 0)$",
+        "why": "The values of x are right, but the heights came from the derivative, which is 0 at both points.",
+        "misconception": "fm.calc.stationary-y-from-derivative"
+      },
+      {
+        "option": "$(-1, -13)$ and $(-3, -105)$",
+        "why": "(x − 1)(x − 3) = 0 gives x = 1 and x = 3: each bracket's sign flips when it is solved."
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "Which is which: the second derivative",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Differentiate a second time to get $\\frac{d^{2}y}{dx^{2}}$, then put in each $x$ and read the **sign**. Positive means the curve bends upwards there, so the point is a **minimum**. Negative means it bends downwards, so the point is a **maximum**. Write the value and its sign: a word with no number earns nothing."
+  },
+  {
+    "type": "figure",
+    "alt": "A cap with a flat tangent at its top, labelled second derivative below zero, maximum; a cup with a flat tangent at its bottom, labelled second derivative above zero, minimum.",
+    "svg": "<svg viewBox='0 0 400 216' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='Two curves side by side. On the left a cap, bending downwards, with a flat tangent at its top: second derivative below zero, a maximum. On the right a cup, bending upwards, with a flat tangent at its bottom: second derivative above zero, a minimum.'><title>Two curves side by side. On the left a cap, bending downwards, with a flat tangent at its top: second derivative below zero, a maximum. On the right a cup, bending upwards, with a flat tangent at its bottom: second derivative above zero, a minimum.</title><path d='M 35 150 Q 105 30 175 150' fill='none' stroke='currentColor' stroke-width='1.9'/><path d='M 225 50 Q 295 170 365 50' fill='none' stroke='currentColor' stroke-width='1.9'/><circle cx='105' cy='90' r='4.5' fill='currentColor'/><circle cx='295' cy='110' r='4.5' fill='currentColor'/><line x1='75' y1='90' x2='135' y2='90' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><line x1='265' y1='110' x2='325' y2='110' stroke='currentColor' stroke-width='1.3' stroke-dasharray='5 4'/><text x='105' y='182' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>d²y/dx² &lt; 0</text><text x='105' y='204' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>maximum</text><text x='295' y='182' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>d²y/dx² &gt; 0</text><text x='295' y='204' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>minimum</text></svg>",
+    "caption": "Negative second derivative: a cap, so a maximum. Positive: a cup, so a minimum."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why zero and not something else",
-    "md": "$\\frac{dy}{dx}$ is the steepness. A number bigger than zero means climbing, a number smaller than zero means falling, and the only way to be doing neither is to be exactly at zero. So the word *stationary* and the equation $\\frac{dy}{dx} = 0$ say the same thing."
+    "title": "Why the sign decides",
+    "md": "$\\frac{d^{2}y}{dx^{2}}$ is the gradient of the gradient. If it is positive, the gradient is increasing, so it climbs from negative, through zero, to positive: falling, level, rising, which is a dip. If it is negative, the gradient falls through zero: rising, level, falling, which is a peak."
   },
   {
-    "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "$y = x^{2} - 6x + 5$, so $\\frac{dy}{dx} = 2x - 6$. Solve $2x - 6 = 0$: $x = $ ___",
-    "answer": "3",
-    "explain": "$2x = 6$, so $x = 3$. A quadratic curve has exactly one stationary point, because its derivative is a straight line."
-  },
-  {
-    "type": "h",
-    "text": "2. The height comes from the curve"
-  },
-  {
-    "type": "p",
-    "md": "Solving gives you $x$ and nothing else. To finish the point you substitute that $x$ back into the **original equation**, because that is what gives heights.\nSubstituting into $\\frac{dy}{dx}$ instead always gives zero, which is how a turning point ends up written as $(2, 0)$ when it is nowhere near the $x$-axis. Then write the pair in brackets: the coordinates are the answer, not the $x$."
-  },
-  {
-    "type": "figure",
-    "alt": "The cubic with a dashed line from each turning point down to the x-axis and across to the y-axis, showing the pair of coordinates at each one.",
-    "svg": "<svg viewBox='0 0 560 330' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The cubic with dashed lines from each turning point across to the y-axis, showing where the heights come from'><title>The cubic with dashed lines from each turning point across to the y-axis, showing where the heights come from</title><path d='M 79.9 24 L 79.9 284 M 219.3 24 L 219.3 284 M 358.7 24 L 358.7 284 M 498.2 24 L 498.2 284 M 52 265.4 L 540 265.4 M 52 228.3 L 540 228.3 M 52 191.1 L 540 191.1 M 52 154 L 540 154 M 52 116.9 L 540 116.9 M 52 79.7 L 540 79.7 M 52 42.6 L 540 42.6' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 191.1 L 540 191.1' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 79.9 24 L 79.9 284' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 219.3 187.1 L 219.3 195.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='219.3' y='208.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>1</text><path d='M 358.7 187.1 L 358.7 195.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='358.7' y='208.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 498.2 187.1 L 498.2 195.1' stroke='currentColor' stroke-width='1' fill='none'/><text x='498.2' y='208.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>3</text><path d='M 75.9 265.4 L 83.9 265.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='269.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-4</text><path d='M 75.9 228.3 L 83.9 228.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='232.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-2</text><path d='M 75.9 154 L 83.9 154' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='158' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>2</text><path d='M 75.9 116.9 L 83.9 116.9' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='120.9' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>4</text><path d='M 75.9 79.7 L 83.9 79.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='83.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>6</text><path d='M 75.9 42.6 L 83.9 42.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='71.9' y='46.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>8</text><text x='72.9' y='205.1' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 52 154 L 540 154' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><path d='M 52 172.6 L 540 172.6' stroke='currentColor' stroke-width='1.1' stroke-dasharray='5 4' stroke-opacity='0.75' fill='none'/><path d='M 60.1 281.9 L 95.9 223.4 L 128.5 187.9 L 161 166.5 L 200 155.2 L 367.6 172.3 L 405 165.1 L 435.9 149.2 L 466.8 121.8 L 499.3 77.8 L 527 26.2' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 219.3 154 L 219.3 191.1' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3' stroke-opacity='0.8' fill='none'/><path d='M 358.7 172.6 L 358.7 191.1' stroke='currentColor' stroke-width='1.1' stroke-dasharray='4 3' stroke-opacity='0.8' fill='none'/><circle cx='219.3' cy='154' r='3.6' fill='currentColor'/><text x='211.3' y='144' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>(1, 2)</text><circle cx='358.7' cy='172.6' r='3.6' fill='currentColor'/><text x='368.7' y='192.6' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>(2, 1)</text><text x='540' y='183.1' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='86.9' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='320' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>each x goes back into the curve to give its own height</text></svg>",
-    "caption": "Each $x$ goes back into the curve, and the curve hands back the height."
-  },
-  {
-    "type": "gate",
-    "id": "g3",
-    "kind": "number",
-    "prompt": "The curve $y = 2x^{3} - 9x^{2} + 12x - 3$ is stationary at $x = 2$. What is $y$ there?",
-    "answer": "1",
-    "explain": "$2(8) - 9(4) + 12(2) - 3 = 1$. Substituting into the derivative would have given $0$, because that is what being stationary means."
-  },
-  {
-    "type": "h",
-    "text": "3. A worked example, start to finish"
-  },
-  {
-    "type": "p",
-    "md": "Find the coordinates of the stationary points of $y = 2x^{3} - 9x^{2} + 12x - 3$ and say what each one is.\n**Step 1.** $\\frac{dy}{dx} = 6x^{2} - 18x + 12$.\n**Step 2.** Setting it to zero and taking out the 6: $6(x - 1)(x - 2) = 0$, so $x = 1$ and $x = 2$.\n**Step 3.** From the curve, $y = 2$ and $y = 1$.\n**Step 4.** $\\frac{d^{2}y}{dx^{2}} = 12x - 18$ settles the nature."
-  },
-  {
-    "type": "figure",
-    "alt": "A two-row table giving, for each stationary point, the value of x, the height from the curve, the value of the second derivative and the resulting nature.",
-    "svg": "<svg viewBox='0 0 560 148' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The worked example set out as a table: the two stationary points with their second-derivative values and natures'><title>The worked example set out as a table: the two stationary points with their second-derivative values and natures</title><rect x='2' y='2' width='556' height='144' rx='8' fill='none' stroke='currentColor' stroke-width='1' stroke-opacity='0.5'/><text x='12' y='30' font-family='inherit' font-size='13.5' font-weight='600' fill='currentColor'>y = 2x^3 - 9x^2 + 12x - 3,  d2y/dx2 = 12x - 18</text><path d='M 10 72 L 550 72 M 10 100 L 550 100 M 10 128 L 550 128' stroke='currentColor' stroke-width='0.8' stroke-opacity='0.45' fill='none'/><text x='14' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>x</text><text x='84' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>y from the curve</text><text x='244' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>second derivative</text><text x='404' y='63' font-family='inherit' font-size='12' font-weight='600' fill='currentColor'>nature</text><text x='14' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>1</text><text x='84' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>2</text><text x='244' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>-6</text><text x='404' y='91' font-family='inherit' font-size='12.5' fill='currentColor'>maximum</text><text x='14' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>2</text><text x='84' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>1</text><text x='244' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>6</text><text x='404' y='119' font-family='inherit' font-size='12.5' fill='currentColor'>minimum</text><text x='280' y='140' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>so maximum at (1, 2), minimum at (2, 1)</text></svg>",
-    "caption": "The finished answer: $\\text{maximum at } (1, 2),\\ \\text{minimum at } (2, 1)$."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "choice",
-    "prompt": "Which pair of coordinates is the maximum of $y = 2x^{3} - 9x^{2} + 12x - 3$?",
-    "options": [
-      "$(1, 2)$",
-      "$(2, 1)$",
-      "$(1, 0)$"
+    "type": "see",
+    "stem": "Decide what each turning point of $y = x^{3} - 12x + 5$ is.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{d^{2}y}{dx^{2}} = 6x$",
+        "decision": "Differentiate $3x^{2} - 12$ once more.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "At $x = 2$: $6(2) = 12 > 0$; at $x = -2$: $6(-2) = -12 < 0$",
+        "decision": "One substitution for each point, with its sign written beside it.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "So $(2, -11)$ is a minimum and $(-2, 21)$ is a maximum",
+        "decision": "Positive gives a minimum and negative a maximum: one of each, as on every cubic.",
+        "earns": [
+          "W1"
+        ]
+      }
     ],
-    "answer": "$(1, 2)$",
-    "explain": "The second derivative at $x = 1$ is $-6$, which is negative, so that point is the maximum. The third option has the height taken from $\\frac{dy}{dx}$ rather than from the curve."
-  },
-  {
-    "type": "h",
-    "text": "4. Which one is it: the second derivative"
-  },
-  {
-    "type": "p",
-    "md": "$\\frac{d^{2}y}{dx^{2}}$ measures how the gradient itself is changing, which is the same as asking which way the curve bends.\n**Positive** means the curve bends upwards, so the point is a **minimum**. **Negative** means it bends downwards, so the point is a **maximum**. Substitute each $x$ in turn and write the sign down beside it."
-  },
-  {
-    "type": "figure",
-    "alt": "A three-row card: second derivative greater than zero means minimum, less than zero means maximum, equal to zero means the test gives no answer.",
-    "svg": "<svg viewBox='0 0 560 174' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The second-derivative test written out: positive means minimum, negative means maximum'><title>The second-derivative test written out: positive means minimum, negative means maximum</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>the second derivative decides which way the curve bends</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 &gt; 0    the curve bends upwards    MINIMUM</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>like a valley</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 &lt; 0    the curve bends downwards    MAXIMUM</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>like a hill</text><rect x='14' y='114' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='132' font-family='inherit' font-size='13' fill='currentColor'>d2y/dx2 = 0    the test says nothing</text><text x='532' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>use the gradient either side</text><text x='280' y='166' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>one substitution and one sign, and the sentence writes itself</text></svg>",
-    "caption": "Positive bends upwards into a valley; negative bends downwards into a hill."
-  },
-  {
-    "type": "gate",
-    "id": "g5",
-    "kind": "choice",
-    "prompt": "At one stationary point $\\frac{d^{2}y}{dx^{2}} = 6$. What is that point?",
-    "options": [
-      "A minimum",
-      "A maximum",
-      "It could be either"
-    ],
-    "answer": "A minimum",
-    "explain": "$6$ is positive, so the curve bends upwards there and the point sits at the bottom of a dip."
-  },
-  {
-    "type": "h",
-    "text": "5. The other test: the gradient either side"
-  },
-  {
-    "type": "p",
-    "md": "When the second derivative comes out as zero it tells you nothing, and there is a second test that always works: look at the sign of $\\frac{dy}{dx}$ just before and just after the point.\nRising then falling is a maximum. Falling then rising is a minimum. It takes two substitutions instead of one, and CCEA accepts it wherever the second derivative would be accepted."
-  },
-  {
-    "type": "figure",
-    "alt": "A two-row card showing the pattern of gradient signs around a turning point: plus, zero, minus gives a maximum, and minus, zero, plus gives a minimum.",
-    "svg": "<svg viewBox='0 0 560 140' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A table of the gradient just before and just after a stationary point, for a maximum and for a minimum'><title>A table of the gradient just before and just after a stationary point, for a maximum and for a minimum</title><text x='20' y='28' font-family='inherit' font-size='13' fill='currentColor' fill-opacity='0.8'>the other test: look at the gradient on each side</text><rect x='14' y='46' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='64' font-family='inherit' font-size='13' fill='currentColor'>gradient  +   0   -     the curve rises, levels, falls</text><text x='532' y='64' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>MAXIMUM</text><rect x='14' y='80' width='532' height='26' rx='5' fill='currentColor' fill-opacity='0.06' stroke='currentColor' stroke-width='1'/><text x='28' y='98' font-family='inherit' font-size='13' fill='currentColor'>gradient  -   0   +     the curve falls, levels, rises</text><text x='532' y='98' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>MINIMUM</text><text x='280' y='132' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>useful when the second derivative comes out as zero</text></svg>",
-    "caption": "Plus, zero, minus is a hilltop; minus, zero, plus is the bottom of a dip."
+    "kind": "process"
   },
   {
     "type": "video",
     "videoId": "Y9SCt2xZzJE",
     "title": "Differentiation Turning Points - CCEA GCSE Further Mathematics",
     "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher taking a cubic all the way through against this specification, nature included."
+    "why": "A Northern Ireland teacher working a cubic through against this specification, natures included, beside our own steps above."
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "choice",
+    "prompt": "The curve $y = x^{3} + 3x^{2} - 2$ has a turning point at $x = 0$. What kind of point is it?",
+    "options": [
+      "A minimum",
+      "A maximum",
+      "It cannot be told without a sketch"
+    ],
+    "answer": "A minimum",
+    "explain": "As steps 1 to 3 of See it: $\\frac{dy}{dx} = 3x^{2} + 6x$, so $\\frac{d^{2}y}{dx^{2}} = 6x + 6$, which is $6$ at $x = 0$. Positive means the curve bends upwards there, so the point is the bottom of a dip.",
+    "twin": {
+      "prompt": "The curve $y = 4x^{3} - 6x^{2} + 1$ has a turning point at $x = 0$. What kind of point is it?",
+      "options": [
+        "A maximum",
+        "A minimum",
+        "It cannot be told without a sketch"
+      ],
+      "answer": "A maximum",
+      "explain": "$\\frac{d^{2}y}{dx^{2}} = 24x - 12$, which is $-12$ at $x = 0$: negative, so the curve bends downwards there, a peak.",
+      "optionNotes": [
+        {
+          "option": "A minimum",
+          "why": "−12 is negative, and negative bends downwards into a peak.",
+          "misconception": "fm.calc.second-derivative-sign-misread"
+        },
+        {
+          "option": "It cannot be told without a sketch",
+          "why": "The second derivative's sign decides it; using calculus, a sketch is not the evidence.",
+          "misconception": "fm.optim.nature-not-shown"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "A maximum",
+        "why": "Read the sign the other way: 6 is positive, and positive bends upwards into a dip.",
+        "misconception": "fm.calc.second-derivative-sign-misread"
+      },
+      {
+        "option": "It cannot be told without a sketch",
+        "why": "The second derivative's sign decides it; using calculus, a sketch is not the evidence.",
+        "misconception": "fm.optim.nature-not-shown"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "The other test: the gradient either side",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "When $\\frac{d^{2}y}{dx^{2}}$ comes out as 0 it gives no answer. The test that always works reads the sign of $\\frac{dy}{dx}$ just before and just after the point. Plus, zero, minus is rising, level, falling: a maximum. Minus, zero, plus is a minimum. The 2021 scheme accepted this test in place of the second derivative."
+  },
+  {
+    "type": "figure",
+    "alt": "A peak with dashed tangents: gradient positive just before the top, zero at the top and negative just after, labelled rising, level, falling: a maximum.",
+    "svg": "<svg viewBox='0 0 400 234' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A peak with three dashed tangents: just before the top the gradient is positive, at the top it is zero, just after it is negative; rising, level, falling, so the point is a maximum.'><title>A peak with three dashed tangents: just before the top the gradient is positive, at the top it is zero, just after it is negative; rising, level, falling, so the point is a maximum.</title><path d='M 36 155 L 368 155' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 368 155 L 361 151 L 361 159 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 65.6 194 L 65.6 22' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 65.6 22 L 61.599999999999994 29 L 69.6 29 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='368' y='146' font-family='inherit' font-size='16' fill='currentColor' text-anchor='end' font-style='italic'>x</text><text x='74.6' y='26' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start' font-style='italic'>y</text><path d='M 56 170.6 L 59.4 164.9 L 62.9 159.3 L 66.3 153.9 L 69.8 148.6 L 73.2 143.5 L 76.6 138.5 L 80.1 133.7 L 83.5 129 L 87 124.4 L 90.4 120 L 93.8 115.7 L 97.3 111.6 L 100.7 107.7 L 104.2 103.8 L 107.6 100.1 L 111 96.6 L 114.5 93.2 L 117.9 90 L 121.4 86.9 L 124.8 83.9 L 128.2 81.1 L 131.7 78.4 L 135.1 75.9 L 138.6 73.5 L 142 71.3 L 145.4 69.2 L 148.9 67.2 L 152.3 65.4 L 155.8 63.7 L 159.2 62.2 L 162.6 60.9 L 166.1 59.6 L 169.5 58.5 L 173 57.6 L 176.4 56.8 L 179.8 56.2 L 183.3 55.7 L 186.7 55.3 L 190.2 55.1 L 193.6 55 L 197 55.1 L 200.5 55.3 L 203.9 55.7 L 207.4 56.2 L 210.8 56.8 L 214.2 57.6 L 217.7 58.5 L 221.1 59.6 L 224.6 60.9 L 228 62.2 L 231.4 63.7 L 234.9 65.4 L 238.3 67.2 L 241.8 69.2 L 245.2 71.3 L 248.6 73.5 L 252.1 75.9 L 255.5 78.4 L 259 81.1 L 262.4 83.9 L 265.8 86.9 L 269.3 90 L 272.7 93.2 L 276.2 96.6 L 279.6 100.1 L 283 103.8 L 286.5 107.7 L 289.9 111.6 L 293.4 115.7 L 296.8 120 L 300.2 124.4 L 303.7 129 L 307.1 133.7 L 310.6 138.5 L 314 143.5 L 317.4 148.6 L 320.9 153.9 L 324.3 159.3 L 327.8 164.9 L 331.2 170.6' fill='none' stroke='currentColor' stroke-width='1.9'/><line x1='81.6' y1='126.5' x2='139.2' y2='68' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='110.4' cy='97.3' r='4.5' fill='currentColor'/><text x='94.4' y='99.3' font-family='inherit' font-size='18' fill='currentColor' text-anchor='end'>+</text><line x1='164.8' y1='55' x2='222.4' y2='55' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='193.6' cy='55' r='4.5' fill='currentColor'/><text x='193.6' y='41' font-family='inherit' font-size='18' fill='currentColor' text-anchor='middle'>0</text><line x1='248' y1='68' x2='305.6' y2='126.5' stroke='currentColor' stroke-width='1.4' stroke-dasharray='5 4'/><circle cx='276.8' cy='97.3' r='4.5' fill='currentColor'/><text x='292.8' y='99.3' font-family='inherit' font-size='18' fill='currentColor' text-anchor='start'>−</text><text x='200' y='222' font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'>rising, level, falling: a maximum</text></svg>",
+    "caption": "Just before the top the gradient is positive, at the top zero, just after negative: a maximum."
+  },
+  {
+    "type": "see",
+    "stem": "$y = 8x - x^{2}$ is stationary at $x = 4$. Use the gradient either side to decide what kind of point it is.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 8 - 2x$",
+        "decision": "The gradient at any value of x."
+      },
+      {
+        "n": 2,
+        "working": "At $x = 3$: $8 - 6 = 2 > 0$; at $x = 5$: $8 - 10 = -2 < 0$",
+        "decision": "Take a value a little each side of 4 and keep only the sign.",
+        "earns": [
+          "M1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "Rising, level, falling, so $x = 4$ gives a maximum",
+        "decision": "Plus, zero, minus reads as the top of a rise.",
+        "earns": [
+          "W1"
+        ]
+      }
+    ],
+    "kind": "process"
   },
   {
     "type": "gate",
     "id": "g6",
     "kind": "choice",
-    "prompt": "Just before a stationary point the gradient is negative, and just after it the gradient is positive. What is the point?",
+    "prompt": "For a curve, $\\frac{dy}{dx} = 3x - 12$, which is zero at $x = 4$. Work out the gradient at $x = 3$ and at $x = 5$. What kind of stationary point is at $x = 4$?",
     "options": [
       "A minimum",
       "A maximum",
-      "Neither"
+      "It cannot be told from the gradient"
     ],
     "answer": "A minimum",
-    "explain": "The curve falls into the point and climbs out of it, so the point is the bottom of a dip."
+    "explain": "As steps 2 and 3 of See it: at $x = 3$ the gradient is $-3$ and at $x = 5$ it is $3$. Minus, zero, plus is falling, level, rising: the bottom of a dip.",
+    "twin": {
+      "prompt": "For a curve, $\\frac{dy}{dx} = 10 - 2x$, which is zero at $x = 5$. Work out the gradient at $x = 4$ and at $x = 6$. What kind of stationary point is at $x = 5$?",
+      "options": [
+        "A maximum",
+        "A minimum",
+        "It cannot be told from the gradient"
+      ],
+      "answer": "A maximum",
+      "explain": "At $x = 4$ the gradient is $2$ and at $x = 6$ it is $-2$: plus, zero, minus, the top of a rise.",
+      "optionNotes": [
+        {
+          "option": "A minimum",
+          "why": "A minimum would be minus, zero, plus; here the gradient goes from 2 to −2, plus to minus."
+        },
+        {
+          "option": "It cannot be told from the gradient",
+          "why": "The change of sign is exactly what tells it: plus to minus is a peak."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "A maximum",
+        "why": "A maximum would be plus, zero, minus; here the gradient goes from −3 to 3, minus to plus."
+      },
+      {
+        "option": "It cannot be told from the gradient",
+        "why": "The change of sign is exactly what tells it: minus to plus is a dip."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "6. One free check on every answer"
+    "text": "A curve with a negative power",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "On a cubic the two stationary points are always one of each, so two maxima or two minima means an arithmetic slip somewhere earlier. Examiners say so year after year.\nOn a curve in two separate branches, though, a maximum really can sit **below** a minimum, and the picture below is one. Check the shape against the answer rather than against your expectations."
+    "md": "A term such as $\\frac{16}{x}$ is $16x^{-1}$, so it differentiates to $-16x^{-2}$. Setting the derivative to zero then leads to $x^{2} = 16$, which has **two** roots, $4$ and $-4$: the curve has two branches and a turning point on each."
   },
   {
     "type": "figure",
-    "alt": "A curve in two separate branches: the left branch has a high point below the axis and the right branch has a low point above it, so the maximum lies below the minimum.",
-    "svg": "<svg viewBox='0 0 560 350' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A curve in two branches whose maximum lies below its minimum, showing that such an answer can be correct'><title>A curve in two branches whose maximum lies below its minimum, showing that such an answer can be correct</title><path d='M 52 24 L 52 304 M 133.3 24 L 133.3 304 M 214.7 24 L 214.7 304 M 296 24 L 296 304 M 377.3 24 L 377.3 304 M 458.7 24 L 458.7 304 M 540 24 L 540 304 M 52 291.3 L 540 291.3 M 52 259.5 L 540 259.5 M 52 227.6 L 540 227.6 M 52 195.8 L 540 195.8 M 52 164 L 540 164 M 52 132.2 L 540 132.2 M 52 100.4 L 540 100.4 M 52 68.5 L 540 68.5 M 52 36.7 L 540 36.7' stroke='currentColor' stroke-width='0.5' stroke-opacity='0.16' fill='none'/><path d='M 52 164 L 540 164' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 296 24 L 296 304' stroke='currentColor' stroke-width='1.3' fill='none'/><path d='M 52 160 L 52 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='52' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-6</text><path d='M 133.3 160 L 133.3 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='133.3' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-4</text><path d='M 214.7 160 L 214.7 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='214.7' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>-2</text><path d='M 377.3 160 L 377.3 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='377.3' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>2</text><path d='M 458.7 160 L 458.7 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='458.7' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>4</text><path d='M 540 160 L 540 168' stroke='currentColor' stroke-width='1' fill='none'/><text x='540' y='181' font-family='inherit' font-size='11' fill='currentColor' text-anchor='middle'>6</text><path d='M 292 291.3 L 300 291.3' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='295.3' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-20</text><path d='M 292 259.5 L 300 259.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='263.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-15</text><path d='M 292 227.6 L 300 227.6' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='231.6' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-10</text><path d='M 292 195.8 L 300 195.8' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='199.8' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>-5</text><path d='M 292 132.2 L 300 132.2' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='136.2' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>5</text><path d='M 292 100.4 L 300 100.4' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='104.4' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>10</text><path d='M 292 68.5 L 300 68.5' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='72.5' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>15</text><path d='M 292 36.7 L 300 36.7' stroke='currentColor' stroke-width='1' fill='none'/><text x='288' y='40.7' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>20</text><text x='289' y='178' font-family='inherit' font-size='11' fill='currentColor' text-anchor='end'>0</text><path d='M 52 248.8 L 228.9 215.9 L 251.6 224.6 L 263 237.1 L 271.4 255.8 L 277.5 281.4 L 279.7 296.4' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 312.3 31.6 L 319.9 69.8 L 331.2 94.2 L 355.5 110.6 L 540 79.2' stroke='currentColor' stroke-width='2' fill='none' stroke-linejoin='round' stroke-linecap='round'/><circle cx='214.7' cy='214.9' r='3.6' fill='currentColor'/><text x='204.7' y='204.9' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='end'>maximum (-2, -8)</text><circle cx='377.3' cy='113.1' r='3.6' fill='currentColor'/><text x='387.3' y='131.1' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='start'>minimum (2, 8)</text><text x='540' y='156' font-family='inherit' font-size='12' fill='currentColor' text-anchor='end'>x</text><text x='303' y='34' font-family='inherit' font-size='12' fill='currentColor'>y</text><text x='280' y='340' font-family='inherit' font-size='11.5' fill='currentColor' text-anchor='middle'>two separate branches, so the maximum can sit below the minimum</text></svg>",
-    "caption": "Here the maximum at $(-2, -8)$ really does sit below the minimum at $(2, 8)$."
+    "alt": "The two branches of y = x + 16/x: the right one dips to its minimum (4, 8), the left one rises to its maximum (−4, −8), lower than the minimum.",
+    "svg": "<svg viewBox='0 0 400 248' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The curve y = x + 16/x in two separate branches. The right branch dips to its lowest point, the minimum (4, 8); the left branch rises to its highest point, the maximum (−4, −8), which lies below the minimum.'><title>The curve y = x + 16/x in two separate branches. The right branch dips to its lowest point, the minimum (4, 8); the left branch rises to its highest point, the maximum (−4, −8), which lies below the minimum.</title><path d='M 26 126 L 378 126' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 378 126 L 371 122 L 371 130 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><path d='M 200 228 L 200 20' fill='none' stroke='currentColor' stroke-width='1.3'/><path d='M 200 20 L 196 27 L 204 27 Z' fill='currentColor' fill-opacity='1' stroke='currentColor' stroke-width='1'/><text x='378' y='117' font-family='inherit' font-size='16' fill='currentColor' text-anchor='end' font-style='italic'>x</text><text x='209' y='24' font-family='inherit' font-size='16' fill='currentColor' text-anchor='start' font-style='italic'>y</text><path d='M 36.8 213.1 L 38.6 212.3 L 40.4 211.6 L 42.3 210.8 L 44.1 210 L 45.9 209.3 L 47.7 208.5 L 49.5 207.7 L 51.4 207 L 53.2 206.2 L 55 205.5 L 56.8 204.7 L 58.6 204 L 60.4 203.2 L 62.3 202.5 L 64.1 201.8 L 65.9 201 L 67.7 200.3 L 69.5 199.6 L 71.4 198.8 L 73.2 198.1 L 75 197.4 L 76.8 196.7 L 78.6 196 L 80.5 195.3 L 82.3 194.6 L 84.1 193.9 L 85.9 193.3 L 87.7 192.6 L 89.6 191.9 L 91.4 191.3 L 93.2 190.6 L 95 190 L 96.8 189.3 L 98.6 188.7 L 100.5 188.1 L 102.3 187.5 L 104.1 186.9 L 105.9 186.3 L 107.7 185.7 L 109.6 185.2 L 111.4 184.6 L 113.2 184.1 L 115 183.6 L 116.8 183 L 118.7 182.6 L 120.5 182.1 L 122.3 181.6 L 124.1 181.2 L 125.9 180.8 L 127.7 180.4 L 129.6 180 L 131.4 179.7 L 133.2 179.4 L 135 179.1 L 136.8 178.8 L 138.7 178.6 L 140.5 178.5 L 142.3 178.4 L 144.1 178.3 L 145.9 178.3 L 147.8 178.3 L 149.6 178.4 L 151.4 178.6 L 153.2 178.9 L 155 179.2 L 156.9 179.7 L 158.7 180.3 L 160.5 181 L 162.3 181.8 L 164.1 182.9 L 165.9 184.1 L 167.8 185.6 L 169.6 187.4 L 171.4 189.5 L 173.2 192 L 175 195 L 176.9 198.6 L 178.7 202.9 L 180.5 208.3 L 182.3 214.9' fill='none' stroke='currentColor' stroke-width='1.9'/><path d='M 217.7 37.1 L 219.5 43.7 L 221.3 49.1 L 223.1 53.4 L 225 57 L 226.8 60 L 228.6 62.5 L 230.4 64.6 L 232.2 66.4 L 234.1 67.9 L 235.9 69.1 L 237.7 70.2 L 239.5 71 L 241.3 71.7 L 243.1 72.3 L 245 72.8 L 246.8 73.1 L 248.6 73.4 L 250.4 73.6 L 252.2 73.7 L 254.1 73.7 L 255.9 73.7 L 257.7 73.6 L 259.5 73.5 L 261.3 73.4 L 263.2 73.2 L 265 72.9 L 266.8 72.6 L 268.6 72.3 L 270.4 72 L 272.3 71.6 L 274.1 71.2 L 275.9 70.8 L 277.7 70.4 L 279.5 69.9 L 281.3 69.4 L 283.2 69 L 285 68.4 L 286.8 67.9 L 288.6 67.4 L 290.4 66.8 L 292.3 66.3 L 294.1 65.7 L 295.9 65.1 L 297.7 64.5 L 299.5 63.9 L 301.4 63.3 L 303.2 62.7 L 305 62 L 306.8 61.4 L 308.6 60.7 L 310.4 60.1 L 312.3 59.4 L 314.1 58.7 L 315.9 58.1 L 317.7 57.4 L 319.5 56.7 L 321.4 56 L 323.2 55.3 L 325 54.6 L 326.8 53.9 L 328.6 53.2 L 330.5 52.4 L 332.3 51.7 L 334.1 51 L 335.9 50.2 L 337.7 49.5 L 339.6 48.8 L 341.4 48 L 343.2 47.3 L 345 46.5 L 346.8 45.8 L 348.6 45 L 350.5 44.3 L 352.3 43.5 L 354.1 42.7 L 355.9 42 L 357.7 41.2 L 359.6 40.4 L 361.4 39.7 L 363.2 38.9' fill='none' stroke='currentColor' stroke-width='1.9'/><circle cx='254.4' cy='73.7' r='4.5' fill='currentColor'/><circle cx='145.6' cy='178.3' r='4.5' fill='currentColor'/><text x='258.4' y='99.7' font-family='inherit' font-size='15' fill='currentColor' text-anchor='start'>minimum (4, 8)</text><text x='141.6' y='162.3' font-family='inherit' font-size='15' fill='currentColor' text-anchor='end'>maximum (−4, −8)</text></svg>",
+    "caption": "On y = x + 16/x the maximum, (−4, −8), lies below the minimum, (4, 8): one turning point on each branch."
+  },
+  {
+    "type": "p",
+    "md": "On such a curve a maximum can sit **below** a minimum, because each is only the highest or lowest point of its own branch. A maximum below the $x$-axis is no mistake either (2022)."
+  },
+  {
+    "type": "see",
+    "stem": "Find the turning points of $y = x + \\frac{16}{x}$ and say what each one is.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$y = x + 16x^{-1}$, so $\\frac{dy}{dx} = 1 - 16x^{-2}$",
+        "decision": "Write the fraction as a power first, then use the power rule.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$1 = \\frac{16}{x^{2}}$, so $x^{2} = 16$ and $x = 4$ or $x = -4$",
+        "decision": "Multiply through by $x^{2}$; the square root gives both signs.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$y = 4 + 4 = 8$ and $y = -4 - 4 = -8$",
+        "decision": "Each value of x into the curve.",
+        "earns": [
+          "W1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$\\frac{d^{2}y}{dx^{2}} = \\frac{32}{x^{3}}$: $0.5 > 0$ at $x = 4$ and $-0.5 < 0$ at $x = -4$",
+        "decision": "So (4, 8) is a minimum and (−4, −8) a maximum, although it lies lower.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ],
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g11",
+    "kind": "choice",
+    "prompt": "Which are the turning points of $y = x + \\frac{36}{x}$?",
+    "options": [
+      "$(6, 12)$ and $(-6, -12)$",
+      "$(6, 12)$ only",
+      "$(6, 0)$ and $(-6, 0)$"
+    ],
+    "answer": "$(6, 12)$ and $(-6, -12)$",
+    "explain": "As steps 1 to 3 of See it: $1 - 36x^{-2} = 0$ gives $x^{2} = 36$, so $x = 6$ or $x = -6$, and the curve gives $12$ and $-12$. Both roots count: one turning point on each branch.",
+    "twin": {
+      "prompt": "Which are the turning points of $y = 4x + \\frac{9}{x}$?",
+      "options": [
+        "$(1.5, 12)$ and $(-1.5, -12)$",
+        "$(1.5, 12)$ only",
+        "$(3, 15)$ and $(-3, -15)$"
+      ],
+      "answer": "$(1.5, 12)$ and $(-1.5, -12)$",
+      "explain": "$4 - 9x^{-2} = 0$ gives $x^{2} = \\frac{9}{4}$, so $x = 1.5$ or $x = -1.5$; the curve gives $6 + 6 = 12$ and $-12$.",
+      "optionNotes": [
+        {
+          "option": "$(1.5, 12)$ only",
+          "why": "x² = 9/4 has two roots; the negative one gives the turning point on the other branch.",
+          "misconception": "fm.csq.root-step-mishandled"
+        },
+        {
+          "option": "$(3, 15)$ and $(-3, -15)$",
+          "why": "That solves x² = 9 and leaves out the 4: 4x² = 9 gives x² = 9/4."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$(6, 12)$ only",
+        "why": "x² = 36 has two roots; the negative one gives the turning point on the other branch.",
+        "misconception": "fm.csq.root-step-mishandled"
+      },
+      {
+        "option": "$(6, 0)$ and $(-6, 0)$",
+        "why": "The values of x are right, but 0 is the gradient there; the heights come from the curve.",
+        "misconception": "fm.calc.stationary-y-from-derivative"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "How the paper asks it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**Coordinates and nature together** (2022, 2024, 2026, seven marks): find both points, then name each one with the second derivative's value and its sign."
+  },
+  {
+    "type": "p",
+    "md": "**Show clearly why it is a minimum** (2021, 2025, one mark): the word is printed, so the mark is for the evidence, such as $\\frac{d^{2}y}{dx^{2}} = 4 > 0$."
+  },
+  {
+    "type": "p",
+    "md": "**A slip earlier is not the end** (2023): the turning-point and nature marks follow through from your own derivative, so carry on with what you have."
+  },
+  {
+    "type": "p",
+    "md": "**Two of a kind on a cubic** (2019): a cubic has one maximum and one minimum, so two maxima, or two minima, mean a slip in the working."
+  },
+  {
+    "type": "see",
+    "stem": "Check the turning points of $y = x^{3} - 27x + 4$ against the cubic's pattern.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\frac{dy}{dx} = 3x^{2} - 27 = 0$, so $x = 3$ or $x = -3$",
+        "decision": "Two stationary points, as a cubic usually has.",
+        "earns": [
+          "M1",
+          "W1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$\\frac{d^{2}y}{dx^{2}} = 6x$: $18$ at $x = 3$ and $-18$ at $x = -3$",
+        "decision": "A cubic's second derivative is linear, so it changes sign exactly once.",
+        "earns": [
+          "MW1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "One positive and one negative: a minimum and a maximum",
+        "decision": "One of each is the only pattern a cubic can give, so the check passes."
+      }
+    ],
+    "kind": "explanation"
   },
   {
     "type": "gate",
     "id": "g7",
     "kind": "choice",
-    "prompt": "You find two stationary points on a cubic and your second derivative is negative at both. What does that tell you?",
+    "prompt": "You find the two turning points of a cubic, and your second derivative is negative at both. What does that tell you?",
     "options": [
       "There is an error to find in the earlier working",
       "The curve has two maxima",
       "The curve is a straight line"
     ],
     "answer": "There is an error to find in the earlier working",
-    "explain": "A cubic's second derivative is linear, so it changes sign exactly once. Two negatives is impossible, and noticing that is free marks."
+    "explain": "As step 2 of See it: a cubic's second derivative is linear, so it changes sign exactly once, giving one maximum and one minimum. Two negatives mean a slip, so check the derivative and each substitution.",
+    "twin": {
+      "prompt": "You find the two turning points of a cubic, and your second derivative is positive at both. What does that tell you?",
+      "options": [
+        "There is a slip somewhere in the working",
+        "The curve has two minima",
+        "Both points are maxima"
+      ],
+      "answer": "There is a slip somewhere in the working",
+      "explain": "A cubic always has one maximum and one minimum, so two positives cannot both be right: look for the slip.",
+      "optionNotes": [
+        {
+          "option": "The curve has two minima",
+          "why": "A cubic cannot have two minima: its second derivative changes sign exactly once.",
+          "misconception": "fm.calc.sketch-contradicts-results"
+        },
+        {
+          "option": "Both points are maxima",
+          "why": "Positive means a minimum, so this reads the sign the wrong way as well.",
+          "misconception": "fm.calc.second-derivative-sign-misread"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The curve has two maxima",
+        "why": "A cubic cannot have two maxima: its second derivative changes sign exactly once.",
+        "misconception": "fm.calc.sketch-contradicts-results"
+      },
+      {
+        "option": "The curve is a straight line",
+        "why": "A straight line has no turning points at all, and a cubic has two."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Differentiate, set $\\frac{dy}{dx} = 0$ and solve for every value of $x$.\nSubstitute each $x$ into the curve to get its height, and write the pair as coordinates.\nDifferentiate a second time and read the sign to name each point.\nUse the gradient either side when the second derivative is zero.\nCheck that a cubic's two points are one maximum and one minimum."
+    "md": "Differentiate, set dy/dx = 0 and solve for every value of x.\nPut each x into the curve for its height, and write each point as a pair.\nName each point from the value and sign of d²y/dx², or from the gradient either side.\nKeep both roots of x² = k on a curve with a negative power.\nCheck a cubic: one maximum and one minimum."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "Inside a longer curve question: **3 marks** for a quadratic's single point, **5 or 6** for a cubic's two, **1 or 2** more for the nature. The first mark is $\\frac{dy}{dx}$ set to zero; the last is both points written as coordinate pairs. Stuck? Write the derivative, set it to zero, and take the values of $x$ as far as you can."
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.stationary-points-and-nature.01"
+    "md": "Turning points come inside a longer curve question: about 5 to 7 marks for the coordinates and 1 or 2 for the natures. The first mark is $\\frac{dy}{dx}$, the next is setting it equal to zero, and the last is each point as a pair with its nature shown by the second derivative. Stuck? Write the derivative and set it to zero."
   },
   {
     "type": "prompt",
@@ -227,14 +678,6 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u1.stationary-points-and-nature.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.stationary-points-and-nature.06"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u1.stationary-points-and-nature.07"
+    "promptId": "rp.fm.u1.stationary-points-and-nature.03"
   }
 ]
