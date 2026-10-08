@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { allowEntries, allowedBy, bookWords, noteWithoutWithdrawn, pageOfWord, textbookPages, verdict, withoutWithdrawn, words } from "../../../scripts/qa/shingles-allow.mjs";
+import { allowEntries, allowedBy, bookWords, noteWithoutWithdrawn, pageOfWord, specRuns, textbookPages, verdict, withoutWithdrawn, words } from "../../../scripts/qa/shingles-allow.mjs";
 
 /**
  * scripts/qa/shingles.mjs's verdict on a run it shares with the corpus (QA fixer, 25 Sep 2026): the M4
@@ -123,5 +123,75 @@ describe("withdrawn items are not read", () => {
     expect(noteWithoutWithdrawn(blocks, bundle)).toEqual([{ type: "p", md: "Text." }, { type: "gate", id: "g4" }]);
     expect(noteWithoutWithdrawn(blocks, null)).toEqual(blocks);
     expect(withoutWithdrawn({ questions: [{ id: "q.1" }] })).toEqual({ questions: [{ id: "q.1" }] });
+  });
+
+  // The B2 author, 8 Oct 2026: four textbook-copy runs in b2-monohybrid-genetics sat only in the scope-tier checks of nine
+  // withdrawn items' own logs. A log's check texts never ship, and a withdrawn item's log never changes, so they are not
+  // read; the log keeps what identifies it and its withdrawn records, which the app's resolver and the lints still need.
+  it("trims a withdrawn item's own log to its id, item, status and withdrawn records, and leaves every other log whole", () => {
+    const check = (detail: string) => ({ type: "scope-tier", result: "pass", detail });
+    const own = record("q.5", "question");
+    const withLogs = {
+      ...bundle,
+      questions: [...bundle.questions, { id: "q.5", verification: "ver.q.5" }],
+      verification: [
+        ...bundle.verification.map((l) => ({ ...l, version: 1, checks: [check(`checked ${l.id}`)], reports: ["a report"] })),
+        { id: "ver.q.5", itemId: "q.5", version: 2, status: "withdrawn", checks: [check("old scope-tier text")], reports: [], withdrawn: [own] },
+      ],
+    };
+    const kept = withoutWithdrawn(withLogs);
+    const byId = new Map(kept.verification.map((l: { id: string }) => [l.id, l]));
+    // the logs of q.2 (a record), q.3, we.2 and ftm.1 (their own status) and q.5 lose their checks and reports
+    for (const id of ["ver.q.2", "ver.q.3", "ver.we.2", "ver.ftm.1"]) expect(Object.keys(byId.get(id) as object).sort(), id).toEqual(["id", "itemId", "status"]);
+    expect(byId.get("ver.q.5")).toEqual({ id: "ver.q.5", itemId: "q.5", status: "withdrawn", withdrawn: [own] });
+    // live items' logs, and the note's log with the records it carries, are untouched
+    for (const id of ["ver.note.x", "ver.q.1", "ver.q.4"]) expect(byId.get(id), id).toEqual(withLogs.verification.find((l) => l.id === id));
+    // the records survive, so the note's withdrawn gate is still dropped through the trimmed copy
+    expect(noteWithoutWithdrawn([{ type: "gate", id: "g3" }, { type: "gate", id: "g4" }], kept)).toEqual([{ type: "gate", id: "g4" }]);
+    // the pack is not changed
+    expect(withLogs.verification.find((l) => l.id === "ver.q.5")?.checks).toHaveLength(1);
+  });
+});
+
+describe("the specification's own words", () => {
+  // The B2 author, 8 Oct 2026: "gamete and offspring ratios, percentages and probabilities, homozygous and heterozygous
+  // genotypes" is 2.4.8's second and third bullets joined, which the eGuide reprints; the run crosses the join.
+  const spec = {
+    units: [
+      {
+        outcomes: [
+          {
+            text: "use the terms:",
+            bullets: [
+              { text: "dominant and recessive alleles;" },
+              { text: "genotype, phenotype, gamete and offspring ratios, percentages and probabilities;" },
+              { text: "homozygous and heterozygous genotypes;" },
+            ],
+          },
+          { text: "describe the outcome of a cross between two heterozygous parents in a Punnett square.", bullets: [] },
+        ],
+      },
+    ],
+    keywords: ["genotype", "phenotype"],
+  };
+  const runs = specRuns([spec], 8);
+
+  it("keeps every run inside one string", () => {
+    expect(runs.has("genotype phenotype gamete and offspring ratios percentages and")).toBe(true);
+  });
+
+  it("reads across the join between two bullets, and between an outcome's stem and its first bullet", () => {
+    expect(runs.has("ratios percentages and probabilities homozygous and heterozygous genotypes")).toBe(true);
+    expect(runs.has("gamete and offspring ratios percentages and probabilities homozygous")).toBe(true);
+    // an outcome's stem and its bullets print as one passage, so a run may cross more than one join
+    expect(runs.has("use the terms dominant and recessive alleles genotype")).toBe(true);
+    expect(runs.has("the terms dominant and recessive alleles genotype phenotype")).toBe(true);
+  });
+
+  it("does not join texts that never stand together", () => {
+    // one outcome's last bullet and the next outcome's stem are two outcomes, never read as one passage
+    expect(runs.has("heterozygous genotypes describe the outcome of a cross between")).toBe(false);
+    // nor are the items of a plain list (keywords)
+    expect(specRuns([{ keywords: ["a b c d", "e f g h"] }], 8).has("a b c d e f g h")).toBe(false);
   });
 });

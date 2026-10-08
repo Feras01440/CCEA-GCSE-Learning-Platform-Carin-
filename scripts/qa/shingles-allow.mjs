@@ -112,11 +112,22 @@ export function pageOfWord(pages, at) {
  * withdrawn record (VerificationLog.withdrawn[].id; a diagnostic item as "<set id>#<item id>"), or an item whose own log
  * (found by its `verification` ref, else by `itemId`) says "withdrawn". Drafts are still read: they are what an author
  * checks before filing. The pack is never changed; these return filtered copies.
+ *
+ * A withdrawn item's own verification log is trimmed too (the B2 author, 8 Oct 2026: four textbook-copy runs in
+ * b2-monohybrid-genetics sat only in the scope-tier checks of nine withdrawn items' logs). Its check and report texts
+ * never ship and never change; it keeps its id, item, status and withdrawn records, which the app's resolver
+ * (src/lib/review/withdrawn.ts) and noteWithoutWithdrawn still read.
  */
 const logsOf = (bundle) => (Array.isArray(bundle?.verification) ? bundle.verification.filter((l) => l && typeof l === "object") : []);
 const recordsOf = (bundle) => logsOf(bundle).flatMap((l) => (Array.isArray(l.withdrawn) ? l.withdrawn : [])).filter((r) => r && typeof r === "object");
 
-/** The bundle without its withdrawn questions, worked examples, diagnostic sets and items, find-the-mistake items and prompts. */
+/** A withdrawn item's log as the lints read it: what identifies it and its withdrawn records, never its check texts. */
+const trimmedLog = (l) => ({ id: l.id, itemId: l.itemId, status: l.status, ...(Array.isArray(l.withdrawn) ? { withdrawn: l.withdrawn } : {}) });
+
+/**
+ * The bundle without its withdrawn questions, worked examples, diagnostic sets and items, find-the-mistake items and
+ * prompts, and with those items' own verification logs trimmed to their ids, status and withdrawn records.
+ */
 export function withoutWithdrawn(bundle) {
   if (!bundle || typeof bundle !== "object") return bundle;
   const logs = logsOf(bundle);
@@ -129,7 +140,44 @@ export function withoutWithdrawn(bundle) {
     copy.diagnostics = bundle.diagnostics
       .filter((d) => !withdrawn(d))
       .map((d) => (Array.isArray(d?.items) ? { ...d, items: d.items.filter((it) => !gone.has(`${d.id}#${it?.id}`)) } : d));
+  // the logs of the items just dropped (by their verification ref, else by itemId), and any log that says withdrawn
+  const items = ["questions", "workedExamples", "findTheMistake", "prompts", "diagnostics"].flatMap((k) => (Array.isArray(bundle[k]) ? bundle[k] : []));
+  const ownLogIds = new Set(items.filter(withdrawn).map((it) => ownLog(it)?.id).filter(Boolean));
+  if (Array.isArray(bundle.verification))
+    copy.verification = bundle.verification.map((l) =>
+      l && typeof l === "object" && (ownLogIds.has(l.id) || gone.has(String(l.itemId)) || l.status === "withdrawn") ? trimmedLog(l) : l,
+    );
   return copy;
+}
+
+/**
+ * The specification's own runs of n words (data/spec/*.json, parsed): every run inside one string, and every run of an
+ * outcome read as the one passage it prints as, its stem followed by its bullets (and theirs) in order (the B2 author,
+ * 8 Oct 2026: "gamete and offspring ratios, percentages and probabilities, homozygous and heterozygous genotypes" is
+ * 2.4.8's second and third bullets joined, as the eGuide reprints them). Two outcomes, or the items of a plain list,
+ * are never joined: they do not stand together as one sentence.
+ * @param {unknown[]} specs  the parsed spec files
+ * @param {number} n  the run length
+ * @returns {Set<string>}
+ */
+export function specRuns(specs, n) {
+  const runs = new Set();
+  const add = (text) => {
+    const w = words(text);
+    for (let i = 0; i + n <= w.length; i++) runs.add(w.slice(i, i + n).join(" "));
+  };
+  /** An outcome's passage: its text, then each bullet's passage, in order. */
+  const passage = (o) => [typeof o?.text === "string" ? o.text : "", ...(Array.isArray(o?.bullets) ? o.bullets.map(passage) : [])].filter(Boolean).join(" ");
+  const walk = (o) => {
+    if (typeof o === "string") add(o);
+    else if (Array.isArray(o)) o.forEach(walk);
+    else if (o && typeof o === "object") {
+      if (typeof o.text === "string" && Array.isArray(o.bullets) && o.bullets.length) add(passage(o));
+      Object.values(o).forEach(walk);
+    }
+  };
+  for (const s of specs) walk(s);
+  return runs;
 }
 
 /** The note without the gates its bundle's logs withdraw (records of kind "gate"). */

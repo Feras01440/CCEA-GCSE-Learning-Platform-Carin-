@@ -43,7 +43,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { allowEntries, allowedBy as allowEntryFor, bookWords, noteWithoutWithdrawn, pageOfWord, textbookPages, verdict, withoutWithdrawn } from "./shingles-allow.mjs";
+import { allowEntries, allowedBy as allowEntryFor, bookWords, noteWithoutWithdrawn, pageOfWord, specRuns, textbookPages, verdict, withoutWithdrawn } from "./shingles-allow.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const PACKS = path.join(ROOT, "packs");
@@ -340,28 +340,20 @@ const pageText = (p) => `${p.book}, PDF page ${p.pdfPage}${p.printed ? ` (printe
  * outcomes ("explain the role of villi in providing these"), and a note quotes them in its spec callouts, which is the
  * specification, public and quoted by design, never a copy of the book. A run the textbook shares that is also the
  * specification's wording is therefore not held against us as a textbook copy (it keeps any other verdict it has).
+ * An outcome is read as the passage it prints as, its stem and bullets joined (shingles-allow.mjs specRuns), so a run
+ * across two bullets is the specification's too (the B2 author, 8 Oct 2026).
  */
 const SPEC_RUNS = (() => {
-  const set = new Set();
   const dir = path.join(ROOT, "data", "spec");
-  const strings = [];
-  const collect = (o) => {
-    if (typeof o === "string") strings.push(o);
-    else if (Array.isArray(o)) o.forEach(collect);
-    else if (o && typeof o === "object") Object.values(o).forEach(collect);
-  };
+  const specs = [];
   for (const f of fs.existsSync(dir) ? fs.readdirSync(dir) : [])
     if (f.endsWith(".json"))
       try {
-        collect(JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")));
+        specs.push(JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")));
       } catch {
         /* a malformed spec file is the spec pipeline's finding */
       }
-  for (const s of strings) {
-    const w = words(s);
-    for (let i = 0; i + N <= w.length; i++) set.add(w.slice(i, i + N).join(" "));
-  }
-  return set;
+  return specRuns(specs, N);
 })();
 let specQuotes = 0;
 
