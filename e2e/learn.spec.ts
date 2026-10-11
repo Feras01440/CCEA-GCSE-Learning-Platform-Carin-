@@ -1,10 +1,51 @@
-import { expect, test, type Page } from "@playwright/test";
-import { MAIN, completeFirstRun, expectNoHorizontalOverflow } from "./helpers";
+import { expect, test as base, type Locator, type Page } from "@playwright/test";
+import { classicTopic, manifestRows, topicContent, trialContent, type Gate, type TopicContent } from "./content";
+import {
+  MAIN,
+  answerReadGate,
+  completeFirstRun,
+  escapeRegExp,
+  expectNoHorizontalOverflow,
+  finishReadSection,
+  openSections,
+  reachReadGate,
+  readOnTo,
+  readSection,
+  showSeeIt,
+  trackPlaced,
+  walkToLessonEnd,
+} from "./helpers";
 
 /**
  * Learn is the spine: three subjects, eight Maths units, topics in teaching order, and two
  * kinds of topic page — one with original content and one that still only has the spec.
+ *
+ * What a topic's note holds (its sections, its Your turns and their answers, its See its) is read from the content the
+ * export serves, through the app's own rules (e2e/content.ts); nothing about a note is typed here. The trial topic is
+ * named once, in content.ts, as the subject of the Read v2 walks.
  */
+
+const test = base.extend<{ trial: TopicContent; classic: TopicContent[] }>({
+  // The owner's trial topic, read from what the export serves.
+  trial: async ({ request }, use) => {
+    await use(await trialContent(request));
+  },
+  // Topics still on the classic page ("Start the lesson", the rail), one per subject. Under READINESS_POLICY "structure"
+  // (9 Oct 2026) a migrated note runs Read v2, so these are notes not yet migrated: the lead's three while the content
+  // keeps them classic (the appearance spec uses the same three), else the first of their subject that is.
+  classic: async ({ request }, use) => {
+    await use(
+      await Promise.all([
+        classicTopic(request, "maths", "box-plots-and-comparing-distributions"),
+        classicTopic(request, "further-maths", "pascals-triangle-binomial-expansion"),
+        classicTopic(request, "science", "b1-enzyme-factors"),
+      ]),
+    );
+  },
+});
+
+// A control that never comes fails in 15 seconds, as an assertion does, never at the 60-second test timeout.
+test.use({ actionTimeout: 15_000, navigationTimeout: 30_000 });
 
 const MATHS_UNITS = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8"];
 
@@ -12,19 +53,19 @@ async function hrefs(page: Page, selector: string): Promise<string[]> {
   return page.locator(selector).evaluateAll((els) => els.map((e) => e.getAttribute("href") ?? ""));
 }
 
-/** The first topic in a unit list with something published: a lesson, or questions only. */
-function readyTopicLink(page: Page) {
-  return page.locator(`${MAIN} ol > li:is([data-built="lesson"], [data-built="questions"]) a`).first();
+/**
+ * A lesson whose page is still the classic one, as a unit list links it: in M4 while M4 has one (the unit this describe
+ * always walked), else in the first Maths unit that does. The content decides, by the rule, on what the export serves.
+ */
+async function classicLessonLink(page: Page): Promise<{ unit: string; link: Locator; topic: TopicContent }> {
+  for (const unit of ["M4", ...MATHS_UNITS.filter((u) => u !== "M4")]) {
+    for (const row of manifestRows().filter((r) => r.subject === "maths" && r.unit === unit && r.hasBlocks && r.ready !== true)) {
+      const topic = await topicContent(page.request, row);
+      if (!topic.readiness.ready) return { unit, topic, link: page.locator(`${MAIN} ol > li[data-built="lesson"] a[href="${topic.path}"]`) };
+    }
+  }
+  throw new Error("no published Maths topic draws the classic page any more: every one is ready");
 }
-
-/** Three long-published topics, one per subject (the appearance spec uses the same three). If a slug is renamed, change it here. */
-// Topics still on the classic page ("Start the lesson", the rail). Under READINESS_POLICY "structure" (9 Oct 2026) a migrated
-// note runs Read v2 (see "Read v2 on the trial topic" below), so these are notes not yet migrated: M3, the two FM3 left, B1.
-const TOPICS = [
-  { subject: "maths", path: "/learn/maths/M3/box-plots-and-comparing-distributions/" },
-  { subject: "further-maths", path: "/learn/further-maths/FM3/pascals-triangle-binomial-expansion/" },
-  { subject: "science", path: "/learn/science/B1/b1-enzyme-factors/" },
-] as const;
 
 async function openTopic(page: Page, path: string): Promise<void> {
   await page.goto(path);
@@ -35,22 +76,12 @@ async function openTopic(page: Page, path: string): Promise<void> {
 }
 
 /**
- * The trial topic, where Read v2 runs (TRIAL-BRIEF.md; lesson-plan.ts isReadV2): no rail beside the text, a slim track
- * with a Contents popover, Continue at each section's end, and the gate drawn as Slides draws it. Its hero offers
- * Slides first on a first visit, so it has no "Start the lesson" to wait for.
+ * The trial topic, where Read v2 runs (lesson-plan.ts isReadV2): no rail beside the text, a slim track with a Contents
+ * popover, Continue at each section's end, and the Your turn drawn as Slides draws it. Its hero offers Slides first on a
+ * first visit, so it has no "Start the lesson" to wait for.
  */
-const TRIAL = { path: "/learn/further-maths/FM1/algebraic-fractions-simplify/", bundle: "/content/further-maths/fm.u1.algebraic-fractions-simplify.json" } as const;
-/**
- * The trial note as the content session rewrote it to teach, then show, then check (25 Sep 2026): nine sections (seven
- * that teach, the recap and "In the exam"), and its first check g2, in section 1; section 2's check is g12, and section
- * 6 asks g10 then g11. The trial's design: a content edit that changes these changes them here too.
- */
-const TRIAL_SECTIONS = 12;
-const TRIAL_FIRST_GATE = "g2";
-const TRIAL_SECOND_GATE = "g14";
-
-async function openTrial(page: Page): Promise<void> {
-  await page.goto(TRIAL.path);
+async function openTrial(page: Page, trial: TopicContent): Promise<void> {
+  await page.goto(trial.path);
   await expect(page.locator(`${MAIN} header h1`)).toBeVisible();
   await expect(page.locator("#note article")).toBeVisible();
   await page.evaluate(() => document.fonts.ready.then(() => true));
@@ -61,31 +92,17 @@ function primaryWayIn(page: Page) {
   return page.locator(`${MAIN} header [data-way]`).first();
 }
 
-type TrialGate = { id: string; kind: string; options?: string[]; answer: string; prompt: string };
-
-async function trialGates(page: Page): Promise<TrialGate[]> {
-  return page.evaluate(async (url) => {
-    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string } & Partial<TrialGate>> };
-    return b.noteBlocks.filter((x) => x.type === "gate") as TrialGate[];
-  }, TRIAL.bundle);
-}
-
-/**
- * Where an authored option is shown: a gate shows its options in a seeded order of its own (engine item 11, so the
- * answer is not always A), and each option carries its authored text as `data-value`.
- */
-async function optionAt(page: Page, gateId: string, pick: (value: string) => boolean): Promise<number> {
-  const values = await page.locator(`#note [data-gate="${gateId}"] [role=radio]`).evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? ""));
-  return values.findIndex(pick);
-}
-
-/** Choose an option of a Read v2 gate and press Check: the right one, or the first shown that is not right. */
-async function answerGate(page: Page, gate: TrialGate, right = true): Promise<void> {
-  const box = page.locator(`#note [data-gate="${gate.id}"]`);
-  const at = await optionAt(page, gate.id, (v) => (right ? v === gate.answer : v !== gate.answer));
-  await box.getByRole("radio").nth(at).click();
-  await box.getByRole("button", { name: /^Check$/ }).click();
-  await expect(box.locator("[data-verdict]")).toBeVisible();
+/** A section's last Your turn, its earlier ones answered first: the one whose verdict comes just before the section's end. */
+async function toSectionsLastTurn(page: Page, trial: TopicContent, n: number): Promise<Gate> {
+  const ids = trial.read[n - 1]!.gates;
+  for (const id of ids.slice(0, -1)) {
+    if ((await page.locator(`#note [data-gate="${id}"]`).count()) === 0) await showSeeIt(page, n);
+    await answerReadGate(page, trial.gate(id));
+  }
+  await showSeeIt(page, n);
+  const last = trial.gate(ids[ids.length - 1]!);
+  await expect(page.locator(`#note [data-gate="${last.id}"]`)).toBeVisible();
+  return last;
 }
 
 /** Every sticky or fixed thing on screen but the app's own navigation: what it is, where, and whether it is beside the text. */
@@ -165,11 +182,11 @@ test.describe("Learn", () => {
   });
 
   test("a topic with content teaches first: the lesson, the examples, then the check", async ({ page }) => {
-    await page.goto("/learn/maths/M4/");
-    const link = readyTopicLink(page);
+    const { unit, link, topic } = await classicLessonLink(page);
+    await page.goto(`/learn/maths/${unit}/`);
     await expect(link).toBeVisible();
     await link.click();
-    await expect(page).toHaveURL(/\/learn\/maths\/M4\/[a-z0-9-]+\/$/);
+    await expect(page).toHaveURL(new RegExp(`${escapeRegExp(topic.path)}$`));
 
     // The hero comes first: an honest minute estimate, the lesson's own figure, and one way in.
     const hero = page.locator(`${MAIN} header`).first();
@@ -202,17 +219,18 @@ test.describe("Learn", () => {
     await expect(page.locator(`${MAIN} li`).filter({ hasText: /\S/ }).first()).toBeVisible();
   });
 
-  test("the hero promises what the spine adds up to, on one screen", async ({ page }) => {
+  test("the hero promises what the spine adds up to, on one screen", async ({ page, classic }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTopic(page, TOPICS[1].path);
+    await openTopic(page, classic[1]!.path);
     const promised = await page.locator(`${MAIN} header`).first().getByText(/^About \d+ minutes?$/).textContent();
     const stage = await page.locator("#note").getByText(/^Read and check · about \d+ min$/).textContent();
     expect(Number(/\d+/.exec(promised ?? "")?.[0]), `hero "${promised}" against the lesson's "${stage}"`).toBe(Number(/\d+/.exec(stage ?? "")?.[0]));
   });
 
   test("neither kind of topic page scrolls sideways", async ({ page }) => {
-    await page.goto("/learn/maths/M4/");
-    await readyTopicLink(page).click();
+    const { unit, link } = await classicLessonLink(page);
+    await page.goto(`/learn/maths/${unit}/`);
+    await link.click();
     await expect(page.getByRole("heading", { level: 2, name: /^The lesson$/i })).toBeVisible();
     await expectNoHorizontalOverflow(page);
 
@@ -231,28 +249,28 @@ test.describe("Learn", () => {
  * owner says yes to the trial and v2 rolls out. The 640 px rule stays for every topic, the trial's included.
  */
 test.describe("The topic page: the lesson is the page", () => {
-  test("Start the lesson is on the first phone screen, within 640 px, on a topic in each subject", async ({ page }) => {
+  test("Start the lesson is on the first phone screen, within 640 px, on a topic in each subject", async ({ page, classic, trial }) => {
     // 22 Sep, before pass 2a: 1,015 px (maths), 812 px (further maths), 942 px (science).
     await page.setViewportSize({ width: 390, height: 844 });
-    for (const topic of TOPICS) {
+    for (const topic of classic) {
       await openTopic(page, topic.path);
       await page.evaluate(() => window.scrollTo(0, 0));
       const top = await page.getByRole("button", { name: /^Start the lesson$/ }).evaluate((el) => el.getBoundingClientRect().top);
       expect(top, `Start the lesson at ${Math.round(top)} px on ${topic.path}`).toBeLessThan(640);
     }
     // The trial topic too, under its track: its first way in (Slides on a first visit) within the same 640 px.
-    await openTrial(page);
+    await openTrial(page, trial);
     await page.evaluate(() => window.scrollTo(0, 0));
     const way = primaryWayIn(page);
     await expect(way).toBeVisible();
     const top = await way.evaluate((el) => el.getBoundingClientRect().top);
-    expect(top, `the first way in at ${Math.round(top)} px on ${TRIAL.path}`).toBeLessThan(640);
+    expect(top, `the first way in at ${Math.round(top)} px on ${trial.path}`).toBeLessThan(640);
   });
 
-  test("at 1280 x 800 the lesson prose runs 640 to 720 px wide", async ({ page }) => {
+  test("at 1280 x 800 the lesson prose runs 640 to 720 px wide", async ({ page, classic }) => {
     // 22 Sep: 585 px, inside a card capped at 626 px, with 154 px of empty page to its right.
     await page.setViewportSize({ width: 1280, height: 800 });
-    for (const topic of TOPICS) {
+    for (const topic of classic) {
       await openTopic(page, topic.path);
       const { width } = await proseBox(page);
       expect(width, `prose width on ${topic.path}`).toBeGreaterThanOrEqual(640);
@@ -260,9 +278,9 @@ test.describe("The topic page: the lesson is the page", () => {
     }
   });
 
-  test("the contents rail is put away with one tap, the prose does not move, and the choice is kept", async ({ page }) => {
+  test("the contents rail is put away with one tap, the prose does not move, and the choice is kept", async ({ page, classic }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTopic(page, TOPICS[0].path);
+    await openTopic(page, classic[0]!.path);
     const spine = page.getByRole("navigation", { name: "Lesson contents" });
     const toggle = spine.getByRole("button", { name: /^Contents$/ });
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
@@ -284,21 +302,23 @@ test.describe("The topic page: the lesson is the page", () => {
     await expect(page.getByRole("navigation", { name: "Lesson contents" }).getByRole("button", { name: /^Contents$/ })).toHaveAttribute("aria-expanded", "true");
   });
 
-  test("a section she finishes ends in a place to stop, and next time the button takes her on from there", async ({ page }) => {
+  test("a section she finishes ends in a place to stop, and next time the button takes her on from there", async ({ page, classic }) => {
     // 04-critique.md §7.10 (a stopping point at every section boundary) and §7.13 (the returning-visit hero).
+    const topic = classic[1]!;
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTopic(page, TOPICS[1].path);
-    const gate = await page.evaluate(async () => {
-      const bundle = (await (await fetch("/content/further-maths/fm.u1.matrix-inverse-2x2.json")).json()) as {
-        noteBlocks: Array<{ type: string; id?: string; kind?: string; answer?: string; options?: string[] }>;
-      };
-      return bundle.noteBlocks.find((b) => b.type === "gate")!;
-    });
+    await openTopic(page, topic.path);
+    // The note's first check, read from the content it serves; a See it before it (a note part-way to v3) is shown first.
+    const gate = topic.gates[0]!;
     const box = page.locator(`#note [data-gate="${gate.id}"]`);
-    // Options are shown in the gate's own seeded order: find the answer by what it says.
-    if (gate.kind === "choice") await box.getByRole("radio").nth(await optionAt(page, gate.id!, (v) => v === gate.answer)).click();
-    else {
-      await box.locator("input").fill(gate.answer!.split("|")[0].trim().replace(/\$/g, ""));
+    for (let presses = 0; presses < 20 && (await box.count()) === 0 && (await page.locator("#note [data-next-step]").count()) > 0; presses += 1) {
+      await page.locator("#note [data-next-step]").first().click();
+    }
+    // Options are shown in the gate's own seeded order: found by what they say.
+    if (gate.kind === "choice") {
+      const at = await box.locator("[role=radio]").evaluateAll((els, v) => els.findIndex((e) => e.getAttribute("data-value") === v), gate.right);
+      await box.getByRole("radio").nth(at).click();
+    } else {
+      await box.locator("input").fill(gate.right);
       await box.getByRole("button", { name: /^Check$/ }).click();
     }
     // The next stretch opens with a way to stop before it: to Today, her place kept.
@@ -315,9 +335,9 @@ test.describe("The topic page: the lesson is the page", () => {
     await expect(page.getByRole("button", { name: /^Read from the top$/ })).toBeVisible();
   });
 
-  test("on a phone the spine is one 47 px bar, the only sticky thing besides the tab bar, and it opens the contents", async ({ page }) => {
+  test("on a phone the spine is one 47 px bar, the only sticky thing besides the tab bar, and it opens the contents", async ({ page, classic }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTopic(page, TOPICS[2].path);
+    await openTopic(page, classic[2]!.path);
     await page.evaluate(() => {
       const note = document.getElementById("note")!;
       window.scrollTo(0, note.getBoundingClientRect().top + window.scrollY + 600);
@@ -348,16 +368,17 @@ test.describe("The topic page: the lesson is the page", () => {
 });
 
 /**
- * Read v2 on the trial topic (TRIAL-BRIEF.md, the read row; art direction v2 §8.4 and §9). Measured, not looked at: one
- * centred column with the app's rail folded to its icons, nothing pinned beside the text at any width, the track and its
- * Contents popover (closed by default), Continue at the end of each section, and the gate's rhythm and marked states as
+ * Read v2 on the trial topic (TRIAL-BRIEF.md, the read row; art direction v2 §8.4 and §9; lesson structure v3). Measured,
+ * not looked at: one centred column with the app's rail folded to its icons, nothing pinned beside the text at any width,
+ * the track and its Contents popover (closed by default), a section that explains, shows its See it one step at a time
+ * and only then asks its Your turn, Continue at the end of each section, and the Your turn's rhythm and marked states as
  * Slides draws them. 23 Sep before: a 240 px app rail and a 200 px contents rail sticky beside the text, the column at
  * x = 512 with 272 px to its left and 48 px to its right; a gate stem at 18/19 px, 12 px above the options, 8 px apart.
  */
 test.describe("Read v2 on the trial topic: one column, a track, Continue", () => {
-  test("at 1280 x 800 the lesson is one centred column, the app's rail is icons, and only the track is pinned", async ({ page }) => {
+  test("at 1280 x 800 the lesson is one centred column, the app's rail is icons, and only the track is pinned", async ({ page, trial }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
+    await openTrial(page, trial);
     const { width } = await proseBox(page);
     expect(width, "prose width").toBeGreaterThanOrEqual(640);
     expect(width, "prose width").toBeLessThanOrEqual(720);
@@ -384,10 +405,10 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     expect(held[0].top).toBe(0);
   });
 
-  test("at every width nothing is pinned beside the text and nothing scrolls sideways", async ({ page }) => {
+  test("at every width nothing is pinned beside the text and nothing scrolls sideways", async ({ page, trial }) => {
     for (const width of [390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      await openTrial(page);
+      await openTrial(page, trial);
       await page.evaluate(() => window.scrollTo(0, document.getElementById("note")!.getBoundingClientRect().top + window.scrollY + 200));
       await page.waitForTimeout(300);
       const held = await pinnedThings(page);
@@ -397,13 +418,43 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     }
   });
 
-  test("the track says where she is; Contents opens a popover, closed by default, whose rows take her there", async ({ page }) => {
+  test("a section explains, shows its See it one step per Next step, and only then asks its Your turn", async ({ page, trial }) => {
+    // Lesson structure v3 (the teach-first case §6.2; the owner's answer 8): the Your turn mounts once the See it's last
+    // step is shown, so nothing is asked before it has been shown. Read from the note: section 1's See it and its steps.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page, trial);
+    const see = trial.read[0]!.sees[0]!;
+    expect(see, "section 1 shows a See it before its Your turn").toBeTruthy();
+    const box = readSection(page, 1);
+    const turn = page.locator(`#note [data-gate="${see.gate}"]`);
+    for (let shown = 1; shown <= see.steps; shown += 1) {
+      await expect(box.locator("[data-see-it] [data-step]")).toHaveCount(shown);
+      await expect(box.locator("[data-see-it] [data-ghost]")).toHaveCount(see.steps - shown);
+      if (shown === see.steps) break;
+      // Not asked yet, and no way on yet.
+      await expect(turn).toHaveCount(0);
+      await expect(page.locator("#note [data-continue]")).toHaveCount(0);
+      await box.locator("[data-next-step]").click();
+    }
+    await expect(box.locator("[data-next-step]")).toHaveCount(0);
+    await expect(turn).toBeVisible();
+    await expect(turn).toHaveAttribute("data-phase", "open");
+    await expect(page.locator("#note [data-continue]")).toHaveCount(0);
+  });
+
+  test("the track says where she is; Contents opens a popover, closed by default, whose rows take her there", async ({ page, trial }) => {
+    const total = trial.read.length;
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
+    await openTrial(page, trial);
     const track = page.locator("[data-read-track]");
-    await expect(track.locator("p")).toContainText(`1 of ${TRIAL_SECTIONS}`);
-    await expect(track.locator("p")).toContainText("Simplifying algebraic fractions");
-    await expect(track.locator("[data-segment]")).toHaveCount(TRIAL_SECTIONS);
+    // "1 of N · 2 min · Why cancelling works…": where she is, what the section costs, and the section's own title.
+    await expect(track.locator("p")).toContainText(`1 of ${total}`);
+    await expect(track.locator("p")).toContainText(`${trial.read[0]!.minutes} min`);
+    await expect(track.locator("p")).toContainText(trial.read[0]!.title);
+    // Nothing placed yet: a segment a section while they are wide enough to read, else one bar with nothing filled.
+    const drawn = await trackPlaced(page);
+    expect(drawn).toMatchObject({ placed: 0, total });
+    if (drawn.segments !== null) expect(drawn.segments).toHaveLength(total);
 
     const contents = track.getByRole("button", { name: /^Contents$/ });
     await expect(contents).toHaveAttribute("aria-expanded", "false");
@@ -411,16 +462,19 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await contents.click();
     await expect(contents).toHaveAttribute("aria-expanded", "true");
     const rows = track.locator("ol > li > button");
-    await expect(rows).toHaveCount(TRIAL_SECTIONS);
+    await expect(rows).toHaveCount(total);
     await expect(rows.first()).toHaveAttribute("aria-current", "location");
-    await expect(track.getByRole("button", { name: /^Worked examples/ })).toBeVisible();
+    await expect(track.getByRole("button", { name: /^Worked examples/ })).toHaveCount(trial.workedExamples > 0 ? 1 : 0);
 
     // Escape closes it and gives the keyboard back to the button.
     await page.keyboard.press("Escape");
     await expect(contents).toHaveAttribute("aria-expanded", "false");
     await expect(contents).toBeFocused();
 
-    // A section not open yet takes her to the check that opens it, under the bar, with the keyboard there.
+    // A section not open yet takes her to the check that opens it, under the bar, with the keyboard there. In v3 that
+    // check stands after its See it, so the See it is shown first: then the check is on the page to be taken to.
+    const opener = trial.read[0]!.gates[trial.read[0]!.gates.length - 1]!;
+    await showSeeIt(page, 1);
     await contents.click();
     await rows.nth(2).click();
     await expect(contents).toHaveAttribute("aria-expanded", "false");
@@ -428,7 +482,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
       const a = document.activeElement as HTMLElement;
       return { gate: a.getAttribute("data-gate"), top: Math.round(a.getBoundingClientRect().top), bar: Math.round(document.querySelector("[data-read-track]")!.getBoundingClientRect().bottom) };
     });
-    expect(landed.gate).toBe(TRIAL_FIRST_GATE);
+    expect(landed.gate).toBe(opener);
     expect(landed.top, `the check at ${landed.top} px, the bar ends at ${landed.bar} px`).toBeGreaterThanOrEqual(landed.bar);
 
     // Never remembered open.
@@ -438,16 +492,17 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await expect(page.locator("[data-read-track]").getByRole("button", { name: /^Contents$/ })).toHaveAttribute("aria-expanded", "false");
   });
 
-  test("each section ends in Continue and Pause here; Continue opens the next under the bar and places a segment", async ({ page }) => {
+  test("each section ends in Continue and Pause here; Continue opens the next under the bar and places it on the track", async ({ page, trial }) => {
+    const total = trial.read.length;
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
-    const gates = await trialGates(page);
+    await openTrial(page, trial);
     await expect(page.locator("#note [data-lesson-section]")).toHaveCount(1);
     await expect(page.locator("#note [data-continue]")).toHaveCount(0);
 
-    await answerGate(page, gates[0]);
+    const last = await toSectionsLastTurn(page, trial, 1);
+    await answerReadGate(page, last);
     // The verdict takes the keyboard (the Check that had it is gone), and the section ends in its two ways on.
-    await expect(page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"] [data-verdict-block]`)).toBeFocused();
+    await expect(page.locator(`#note [data-gate="${last.id}"] [data-verdict-block]`)).toBeFocused();
     const end = page.locator('#note [data-section-end="1"]');
     await expect(end.getByRole("button", { name: /^Continue/ })).toBeVisible();
     await expect(end.getByRole("link", { name: /^Pause here/ })).toHaveAttribute("href", "/");
@@ -461,8 +516,8 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     });
     expect(next.section, "the keyboard is on section 2's heading").toBe("1");
     expect(next.top, `the heading at ${next.top} px, the bar ends at ${next.bar} px`).toBeGreaterThan(next.bar);
-    await expect(page.locator("[data-read-track] p")).toContainText(`2 of ${TRIAL_SECTIONS}`);
-    await expect(page.locator("[data-read-track] [data-segment]").first()).toHaveAttribute("data-segment", "done");
+    await expect(page.locator("[data-read-track] p")).toContainText(`2 of ${total}`);
+    await expect.poll(async () => (await trackPlaced(page)).placed, { message: "section 1 placed on the track" }).toBe(1);
 
     // Her place is kept: after a reload the lesson opens as far as she had come, and no further, and the hero's Read way
     // in takes her to that section's heading, clear of the bar.
@@ -478,11 +533,14 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     expect(back.top, `the heading at ${back.top} px, the bar ends at ${back.bar} px`).toBeGreaterThan(back.bar);
   });
 
-  test("the gate answers to the keyboard: arrows choose, Enter checks, and Continue is the next stop", async ({ page }) => {
+  test("the gate answers to the keyboard: arrows choose, Enter checks, and Continue is the next stop", async ({ page, trial }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
-    const gate = page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"]`);
+    await openTrial(page, trial);
+    const asked = await toSectionsLastTurn(page, trial, 1);
+    const gate = page.locator(`#note [data-gate="${asked.id}"]`);
     const options = gate.getByRole("radio");
+    // Shown in the lesson's balanced order, the one Slides shows (src/lib/gate-order.ts).
+    expect(await options.evaluateAll((els) => els.map((e) => e.getAttribute("data-value")))).toEqual(asked.shown);
     // One stop for the group: the first option until one is chosen.
     await expect(options.nth(0)).toHaveAttribute("tabindex", "0");
     await expect(options.nth(1)).toHaveAttribute("tabindex", "-1");
@@ -494,8 +552,7 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await expect(options.nth(0)).toHaveAttribute("aria-checked", "true");
     // Nothing is marked until she checks. Down to the right answer, wherever the gate's order put it.
     await expect(gate.locator("[data-verdict]")).toHaveCount(0);
-    const first = (await trialGates(page)).find((g) => g.id === TRIAL_FIRST_GATE)!;
-    const right = await optionAt(page, TRIAL_FIRST_GATE, (v) => v === first.answer);
+    const right = asked.shown.indexOf(asked.answer);
     for (let i = 0; i < right; i += 1) await page.keyboard.press("ArrowDown");
     await expect(options.nth(right)).toHaveAttribute("aria-checked", "true");
     await page.keyboard.press("Enter");
@@ -511,11 +568,18 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     { name: "phone", width: 390, height: 844, stem: 20, maths: 28, stemToMaths: 16, toAnswer: 20 },
     { name: "desktop", width: 1280, height: 800, stem: 22, maths: 32, stemToMaths: 20, toAnswer: 24 },
   ]) {
-    test(`on the ${size.name} a gate keeps §8.4's rhythm: the stem, its maths on its own line, the answer`, async ({ page }) => {
+    test(`on the ${size.name} a gate keeps §8.4's rhythm: the stem, its maths on its own line, the answer`, async ({ page, trial }) => {
+      // The first Your turn of each stem shape the note asks, by the layout both ways share (lesson-plan.ts gateStem):
+      // its maths ending the question on a line of its own ("lifted"), no maths of its own line ("plain"), and words
+      // after the lifted maths ("tail").
+      const shapeOf = (g: Gate) => (g.stem.maths === null ? "plain" : g.stem.tail ? "tail" : g.stem.lead ? "lifted" : "bare");
+      const first = new Map<string, Gate>();
+      for (const g of trial.gates) if (!first.has(shapeOf(g))) first.set(shapeOf(g), g);
+      for (const shape of ["lifted", "plain", "tail"]) expect(first.get(shape), `the trial note asks a Your turn whose stem is ${shape}`).toBeTruthy();
+      const wanted = new Map([...first].filter(([shape]) => shape !== "bare").map(([shape, g]) => [g.id, shape]));
+
       await page.setViewportSize({ width: size.width, height: size.height });
-      await openTrial(page);
-      const gates = await trialGates(page);
-      const byId = Object.fromEntries(gates.map((g) => [g.id, g]));
+      await openTrial(page, trial);
       const rhythm = (id: string) =>
         page.locator(`#note [data-gate="${id}"]`).evaluate((box) => {
           const r = (el: Element | null) => el!.getBoundingClientRect();
@@ -534,66 +598,69 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
             gaps: options.slice(1).map((o, i) => r(o).top - r(options[i]).bottom),
           };
         });
-      const near = (a: number | null, b: number) => expect(Math.abs((a ?? -99) - b), `${a} against ${b}`).toBeLessThanOrEqual(1);
+      const near = (a: number | null, b: number, what: string) => expect(Math.abs((a ?? -99) - b), `${what}: ${a} against ${b}`).toBeLessThanOrEqual(1);
 
-      // g2, the first check: its fraction ends the question and stands on its own line.
-      const g2 = await rhythm("g2");
-      expect(g2.stem).toBe(size.stem);
-      expect(g2.maths).toBe(size.maths);
-      near(g2.stemToMaths, size.stemToMaths);
-      near(g2.toAnswer, size.toAnswer);
-
-      // g12, section 2's check: a stem with no maths of its own line.
-      await answerGate(page, byId.g2);
-      await page.locator("#note [data-continue]").click();
-      const g12 = await rhythm("g12");
-      expect(g12.stem).toBe(size.stem);
-      near(g12.toAnswer, size.toAnswer);
-      for (const h of g12.heights) expect(h).toBeGreaterThanOrEqual(52);
-      for (const gap of g12.gaps) near(gap, 10);
-
-      // On to g4 (section 5), whose fraction ends its instruction and stands on its own line.
-      await answerGate(page, byId.g12);
-      await page.locator("#note [data-continue]").click();
-      await answerGate(page, byId.g9);
-      await page.locator("#note [data-continue]").click();
-      await answerGate(page, byId.g13);
-      await page.locator("#note [data-continue]").click();
-      const g4 = await rhythm("g4");
-      expect(g4.stem).toBe(size.stem);
-      expect(g4.maths).toBe(size.maths);
-      near(g4.stemToMaths, size.stemToMaths);
-      near(g4.toAnswer, size.toAnswer);
-
-      // g11 (section 6, after g10): the words after the maths come back at the same gap, then the answer.
-      await answerGate(page, byId.g4);
-      await page.locator("#note [data-continue]").click();
-      await answerGate(page, byId.g10);
-      const g11 = await rhythm("g11");
-      expect(g11.maths).toBe(size.maths);
-      near(g11.stemToMaths, size.stemToMaths);
-      near(g11.mathsToTail, size.stemToMaths);
-      near(g11.toAnswer, size.toAnswer);
+      // In the note's order, each wanted Your turn measured as it is asked, before it is answered (the walk answers it on).
+      for (const [id, shape] of wanted) {
+        await reachReadGate(page, trial, id);
+        const m = await rhythm(id);
+        const where = `${id} (${shape}) at ${size.width}`;
+        expect(m.stem, `${where}: the stem`).toBe(size.stem);
+        if (shape === "lifted") {
+          // Its fraction ends the question and stands on its own line.
+          expect(m.maths, `${where}: the maths`).toBe(size.maths);
+          near(m.stemToMaths, size.stemToMaths, `${where}: stem to maths`);
+        } else if (shape === "plain") {
+          // A stem with no maths of its own line: the options, 52 px or more, 10 px apart.
+          for (const h of m.heights) expect(h, `${where}: an option's height`).toBeGreaterThanOrEqual(52);
+          for (const gap of m.gaps) near(gap, 10, `${where}: between options`);
+        } else {
+          // The words after the maths come back at the same gap, then the answer.
+          expect(m.maths, `${where}: the maths`).toBe(size.maths);
+          near(m.stemToMaths, size.stemToMaths, `${where}: stem to maths`);
+          near(m.mathsToTail, size.stemToMaths, `${where}: maths to the words after it`);
+        }
+        near(m.toAnswer, size.toAnswer, `${where}: the question to the answer`);
+      }
     });
   }
 
-  test("a miss lights the right answer in fern, edges hers, says 'Not quite.' with the consequence drawn, and nothing is red", async ({ page }) => {
+  test("a miss is taught again first, then shows the right answer in fern with hers edged, the consequence drawn, nothing red", async ({ page, trial }) => {
+    // The Your turn whose verdict draws its consequence (the enrichment's reaction: on the trial, x = 1 put into both).
+    const gate = trial.gates.find((g) => g.reaction !== null && g.kind === "choice");
+    expect(gate, "a Your turn in the note whose verdict draws its consequence").toBeTruthy();
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
-    const gates = await trialGates(page);
-    // g2, the first check, carries the drawn consequence (x = 1 into both): miss it.
-    await answerGate(page, gates.find((g) => g.id === TRIAL_FIRST_GATE)!, false);
+    await openTrial(page, trial);
+    await readOnTo(page, trial, gate!.section);
+    await showSeeIt(page, gate!.section);
+    await answerReadGate(page, gate!, false);
 
-    const box = page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"]`);
-    await expect(box.locator('[data-option="ok"]')).toHaveCount(1);
-    await expect(box.locator('[data-option="ok"]')).toHaveAttribute("aria-checked", "false");
-    await expect(box.locator('[data-option="miss"]')).toHaveCount(1);
-    await expect(box.locator('[data-option="miss"]')).toHaveAttribute("aria-checked", "true");
-    const verdict = box.locator("[data-verdict]");
+    // First the re-teach (the teach-first case §6.3): "Not quite.", her choice, the consequence drawn, the explanation
+    // again, and nothing lit until she asks for the answer.
+    const box = page.locator(`#note [data-gate="${gate!.id}"]`);
+    await expect(box).toHaveAttribute("data-phase", "reteach");
+    const reteach = box.locator("[data-reteach]");
+    await expect(reteach).toBeFocused();
+    const verdict = reteach.locator("[data-verdict]");
     await expect(verdict).toHaveText("Not quite.");
     expect(await verdict.evaluate((el) => getComputedStyle(el).fontSize)).toBe("21px");
-    // The consequence, drawn: x = 1 put into both.
-    await expect(box.locator('[data-reaction="afs.substitute"]')).toBeVisible();
+    await expect(reteach.locator("[data-her-choice]")).toBeVisible();
+    await expect(reteach.locator(`[data-reaction="${gate!.reaction}"]`)).toBeVisible();
+    await expect(box.locator('[data-option="ok"]')).toHaveCount(0);
+    await expect(box.locator('[data-option="miss"]')).toHaveCount(1);
+    await expect(box.locator('[data-option="miss"]')).toHaveAttribute("aria-checked", "true");
+
+    // Then the answer she asks for: the right option lit in fern, hers edged, the answer line; the re-teach stays.
+    await reteach.locator("[data-show-answer]").click();
+    await expect(box).toHaveAttribute("data-phase", "answer");
+    await expect(box.locator('[data-option="ok"]')).toHaveCount(1);
+    await expect(box.locator('[data-option="ok"]')).toHaveAttribute("aria-checked", "false");
+    await expect(box.locator('[data-option="ok"]')).toHaveAttribute("data-value", gate!.answer);
+    await expect(box.locator('[data-option="miss"]')).toHaveCount(1);
+    await expect(box.locator('[data-option="miss"]')).toHaveAttribute("aria-checked", "true");
+    await expect(box.locator("[data-verdict-block] [data-answer-line]")).toBeVisible();
+    await expect(box.locator("[data-verdict-block]")).toBeFocused();
+    await expect(reteach).toBeVisible();
     await expect(page.locator("#main").getByText(/\bWrong\b/)).toHaveCount(0);
 
     // No colour on the gate or its verdict within 20 degrees of red (LCH hue 20-60 at chroma over 20).
@@ -635,9 +702,9 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
   });
 
-  test("on a phone the track is the one thing pinned besides the tab bar, and its popover fits the screen", async ({ page }) => {
+  test("on a phone the track is the one thing pinned besides the tab bar, and its popover fits the screen", async ({ page, trial }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
+    await openTrial(page, trial);
     await page.evaluate(() => window.scrollTo(0, document.getElementById("note")!.getBoundingClientRect().top + window.scrollY + 200));
     await page.waitForTimeout(300);
     const held = await pinnedThings(page);
@@ -708,13 +775,12 @@ async function ringOf(locator: ReturnType<Page["locator"]>) {
  * keep it off, Tab and a key pressed on a control bring it, on buttons and options alike, in every theme.
  */
 test.describe("Focus: the ring follows the keyboard, not the page", () => {
-  test("a pointer on Continue lands on the next heading with no ring; Space and the arrows keep it off; Tab rings the next control", async ({ page }) => {
+  test("a pointer on Continue lands on the next heading with no ring; Space and the arrows keep it off; Tab rings the next control", async ({ page, trial }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
+    await openTrial(page, trial);
     const html = page.locator("html");
     await expect(html).toHaveAttribute("data-input", "pointer");
-    const gates = await trialGates(page);
-    await answerGate(page, gates[0]);
+    await finishReadSection(page, trial, 1);
     await page.locator('#note [data-section-end="1"] [data-continue]').click();
 
     const heading = page.locator('#note h3[data-section="1"]');
@@ -729,20 +795,20 @@ test.describe("Focus: the ring follows the keyboard, not the page", () => {
       expect(await ringOf(heading), `after ${JSON.stringify(key)}`).toMatchObject({ style: "none", shadow: "none" });
     }
 
-    // Tab moves the keyboard on: the next control, section 2's check's first option (past its figure, which is not a
-    // control), wears the accent ring.
+    // Tab moves the keyboard on to the next control of section 2 (past its figure and its words, which are not
+    // controls): in v3 its See it's "Next step", which shows before the section asks anything; the accent ring on it.
     await page.keyboard.press("Tab");
     await expect(html).toHaveAttribute("data-input", "keyboard");
-    const option = page.locator(`#note [data-gate="${TRIAL_SECOND_GATE}"] [role=radio][tabindex="0"]`);
-    await expect(option).toBeFocused();
-    expect(await ringOf(option)).toMatchObject({ style: "solid", width: "2px", accent: true });
+    const second = trial.read[1]!;
+    const control = second.sees.length > 0 ? readSection(page, 2).locator("[data-next-step]") : page.locator(`#note [data-gate="${second.gates[0]}"] [role=radio][tabindex="0"]`);
+    await expect(control).toBeFocused();
+    expect(await ringOf(control)).toMatchObject({ style: "solid", width: "2px", accent: true });
   });
 
-  test("keyboard Enter on Continue lands on the next heading with the accent ring, and Continue wears it too", async ({ page }) => {
+  test("keyboard Enter on Continue lands on the next heading with the accent ring, and Continue wears it too", async ({ page, trial }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
-    const gates = await trialGates(page);
-    await answerGate(page, gates[0]);
+    await openTrial(page, trial);
+    await finishReadSection(page, trial, 1);
     // The verdict has the keyboard after Check; Tab goes on to Continue, a button, which is ringed.
     await page.keyboard.press("Tab");
     const cont = page.locator('#note [data-section-end="1"] [data-continue]');
@@ -759,10 +825,10 @@ test.describe("Focus: the ring follows the keyboard, not the page", () => {
     expect(await ringOf(heading)).toMatchObject({ style: "solid", width: "2px" });
   });
 
-  test("high contrast keeps a visible keyboard ring in its own accent", async ({ page }) => {
-    await openTrial(page);
+  test("high contrast keeps a visible keyboard ring in its own accent", async ({ page, trial }) => {
+    await openTrial(page, trial);
     await page.evaluate(() => localStorage.setItem("cairn.theme", "hc"));
-    await openTrial(page);
+    await openTrial(page, trial);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "hc");
     await page.keyboard.press("Tab");
     const focused = page.locator(":focus");
@@ -805,7 +871,7 @@ async function heroWays(page: Page) {
  * one answer on the topic, and (CQ-10) that the first paint showed Read on the accent for half a second before swapping.
  */
 test.describe("The way in: Slides carries the accent until she chooses Read herself", () => {
-  test("her answers on the topic never move the accent, nothing swaps after the first paint, and her own choice of Read does", async ({ page }) => {
+  test("her answers on the topic never move the accent, nothing swaps after the first paint, and her own choice of Read does", async ({ page, trial }) => {
     // Every state the two ways in pass through, from the first paint.
     await page.addInitScript(() => {
       const w = window as unknown as { __ways: string[] };
@@ -822,21 +888,21 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
     const painted = () => page.evaluate(() => (window as unknown as { __ways: string[] }).__ways);
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
+    await openTrial(page, trial);
     let ways = await heroWays(page);
     expect(ways.map((w) => [w.way, w.accent])).toEqual([["slides", true], ["read", false]]);
     expect(await painted(), "a first visit never shows Read on the accent").toEqual(["slides:accent read:outline"]);
 
-    // Evidence, and no choice: the first check answered in Read under the hero and Continue pressed (so section 2 is
+    // Evidence, and no choice: section 1's checks answered in Read under the hero and Continue pressed (so section 2 is
     // where she is: a check answered alone keeps her in its section, audit READ-9), and a mastery row from an earlier week.
-    const gates = await trialGates(page);
-    await answerGate(page, gates[0]);
+    const first = trial.read[0]!.gates[0]!;
+    await finishReadSection(page, trial, 1);
     await page.locator('#note [data-section-end="1"] [data-continue]').click();
     await expect(page.locator("#note [data-lesson-section]")).toHaveCount(2);
     await expect
       .poll(() =>
         page.evaluate(
-          (first) =>
+          (id) =>
             new Promise<number>((resolve) => {
               const open = indexedDB.open("ccea-study");
               open.onerror = () => resolve(-1);
@@ -845,17 +911,17 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
                 const all = db.transaction("attempts").objectStore("attempts").getAll();
                 all.onsuccess = () => {
                   db.close();
-                  resolve((all.result as Array<{ itemId: string }>).filter((r) => r.itemId.endsWith(`#gate:${first}`)).length);
+                  resolve((all.result as Array<{ itemId: string }>).filter((r) => r.itemId.endsWith(`#gate:${id}`)).length);
                 };
                 all.onerror = () => resolve(-1);
               };
             }),
-          gates[0].id,
+          first,
         ),
       )
       .toBe(1);
     const seeded = await page.evaluate(
-      () =>
+      ({ subject, slug }) =>
         new Promise<string | null>((resolve) => {
           const open = indexedDB.open("ccea-study");
           open.onerror = () => resolve("open failed");
@@ -863,7 +929,7 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
             const db = open.result;
             const tx = db.transaction("mastery", "readwrite");
             const at = new Date("2026-09-13T19:00:00");
-            tx.objectStore("mastery").put({ key: "further-maths:algebraic-fractions-simplify", subject: "further-maths", topicSlug: "algebraic-fractions-simplify", level: "attempted", score: 0.2, lastEvidenceAt: at, updatedAt: at });
+            tx.objectStore("mastery").put({ key: `${subject}:${slug}`, subject, topicSlug: slug, level: "attempted", score: 0.2, lastEvidenceAt: at, updatedAt: at });
             tx.oncomplete = () => {
               db.close();
               resolve(null);
@@ -871,9 +937,10 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
             tx.onerror = () => resolve(`write failed: ${tx.error?.message}`);
           };
         }),
+      { subject: trial.row.subject, slug: trial.row.slug },
     );
     expect(seeded).toBeNull();
-    await openTrial(page);
+    await openTrial(page, trial);
     await expect(page.locator(`${MAIN} header button[data-way="read"]`)).toHaveText("Read on from section 2");
     ways = await heroWays(page);
     expect(ways.map((w) => [w.way, w.accent]), JSON.stringify(ways)).toEqual([["slides", true], ["read", false]]);
@@ -884,7 +951,7 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
     // She chooses Read herself: from then on Read carries the accent, and it says where she was.
     await page.locator(`${MAIN} header button[data-way="read"]`).click();
     await expect.poll(() => page.evaluate(() => localStorage.getItem("cairn.lessonWay"))).toBe("read");
-    await openTrial(page);
+    await openTrial(page, trial);
     await expect(page.locator(`${MAIN} header button[data-way="read"]`)).toHaveText("Continue at section 2");
     ways = await heroWays(page);
     expect(ways.map((w) => [w.way, w.accent]), JSON.stringify(ways)).toEqual([["read", true], ["slides", false]]);
@@ -895,14 +962,14 @@ test.describe("The way in: Slides carries the accent until she chooses Read hers
  * One truth per way in (audit LD-04, CT-12, CD-12, 24 Sep): the hero said "About 9 minutes · 7 sections" beside a
  * "Start the slides · 25 cards" whose title card said "About 11 minutes", and neither named the video. Now each way is
  * named on the hero with its own minutes and size, and each number is the one that way prints itself: Read's in its
- * track and Contents, Slides' on its Start button and its title card.
+ * track and Contents, Slides' on its Start button and its title card; and each is the one the content's own rule gives.
  */
 test.describe("The way in: each way states its own numbers, the ones it prints itself", () => {
-  test("the trial hero's figure starts on the first screen (within 720 px) at 390 x 844, two ways in and all", async ({ page }) => {
+  test("the trial hero's figure starts on the first screen (within 720 px) at 390 x 844, two ways in and all", async ({ page, trial }) => {
     // 04-critique.md R5 and e2e/appearance.spec.ts's rule for every topic: a first screen with no picture is the real
     // "plain". The trial hero carries two ways in and their numbers; they must not push the figure below the fold.
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
+    await openTrial(page, trial);
     await page.evaluate(() => window.scrollTo(0, 0));
     const figure = page.locator(`${MAIN} header figure`).first();
     await expect(figure).toBeVisible();
@@ -910,9 +977,9 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
     expect(top, `the figure's top edge at ${Math.round(top)} px`).toBeLessThan(720);
   });
 
-  test("the hero's Slides and Read lines agree with the Slides title card, the Start button and the Read track", async ({ page }) => {
+  test("the hero's Slides and Read lines agree with the Slides title card, the Start button and the Read track", async ({ page, trial }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
+    await openTrial(page, trial);
     const num = (text: string, re: RegExp) => Number(re.exec(text)?.[1] ?? Number.NaN);
     const slidesLine = (await page.locator(`${MAIN} header [data-way-length="slides"]`).textContent()) ?? "";
     const readLine = (await page.locator(`${MAIN} header [data-way-length="read"]`).textContent()) ?? "";
@@ -929,6 +996,13 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
     if (videoFact) expect(videoFact, "the untimed video is named as not timed").toMatch(/^plus [a-z ]*videos?, not timed$/);
     const slides = { minutes: num(slidesLine, /about (\d+) min/), cards: num(slidesLine, /(\d+) cards/) };
     const read = { minutes: num(readLine, /about (\d+) min/), sections: num(readLine, /(\d+) sections/) };
+    // The rule's numbers for the same content (the deck the route builds; the sections Read numbers and prices): the hero
+    // printing others would be a stale export or a renderer that counts differently.
+    expect(slides, "the hero's Slides line against the deck the content builds (src/lib/slides/deck.ts)").toEqual({ minutes: trial.deck.stats.minutes, cards: trial.deck.stats.cards });
+    expect(read, "the hero's Read line against the note's sections (lesson-plan.ts lessonSections)").toEqual({
+      minutes: trial.read.reduce((n, s) => n + s.minutes, 0),
+      sections: trial.read.length,
+    });
 
     // Read's numbers are the track's: "1 of 9", and the Contents heading's minutes (with the same video named, were one untimed).
     const track = page.locator("[data-read-track]");
@@ -955,13 +1029,13 @@ test.describe("The way in: each way states its own numbers, the ones it prints i
  * 1280), so the first line stood about 12 px taller than the rest (audit CD-06, CT-13).
  */
 test.describe("The hero's lede: a fraction in it takes the inline size", () => {
-  test("the lede's fractions sit in their line, above the 13 px floor, at 390 and 1280", async ({ page }) => {
+  test("the lede's fractions sit in their line, above the 13 px floor, at 390 and 1280", async ({ page, trial }) => {
     for (const size of [
       { width: 390, height: 844 },
       { width: 1280, height: 800 },
     ]) {
       await page.setViewportSize(size);
-      await openTrial(page);
+      await openTrial(page, trial);
       const lede = await page.locator(`${MAIN} header [data-hero-lede]`).evaluate((el) => {
         const cs = getComputedStyle(el);
         const numerals = Array.from(el.querySelectorAll(".katex-html .mfrac .mord"))
@@ -969,7 +1043,7 @@ test.describe("The hero's lede: a fraction in it takes the inline size", () => {
           .map((m) => parseFloat(getComputedStyle(m).fontSize));
         return { font: parseFloat(cs.fontSize), line: parseFloat(cs.lineHeight), height: el.getBoundingClientRect().height, numerals };
       });
-      // Whatever fractions the lede carries (two today: 12/18 and 2/3) sit smaller than its words and above the floor.
+      // Whatever fractions the lede carries sit smaller than its words and above the floor.
       for (const px of lede.numerals) {
         expect(px, `a numeral at ${size.width}`).toBeLessThan(lede.font);
         expect(px, `a numeral at ${size.width}: the 13 px floor`).toBeGreaterThanOrEqual(13 - 0.01);
@@ -980,22 +1054,6 @@ test.describe("The hero's lede: a fraction in it takes the inline size", () => {
     }
   });
 });
-
-/** Answer every Read v2 gate right and press every Continue, until the lesson's last Continue is on the page. */
-async function walkToLessonEnd(page: Page): Promise<void> {
-  const gates = await trialGates(page);
-  for (let step = 0; step < 40; step += 1) {
-    const pending = await page.evaluate(() => Array.from(document.querySelectorAll("#note [data-gate]")).find((el) => !el.querySelector("[data-verdict]"))?.getAttribute("data-gate") ?? null);
-    if (pending) {
-      await answerGate(page, gates.find((g) => g.id === pending)!);
-      continue;
-    }
-    const next = page.locator("#note [data-continue]:not([data-finish])");
-    if ((await next.count()) === 0) break;
-    await next.first().click();
-  }
-  await expect(page.locator("#note [data-finish]")).toBeVisible();
-}
 
 /** The buttons and links on screen filled with the accent of the place they sit in (01 §4.3: at most one). */
 async function accentFilledInView(page: Page): Promise<string[]> {
@@ -1028,6 +1086,9 @@ async function accentFilledInView(page: Page): Promise<string[]> {
   });
 }
 
+/** The lesson's last Continue goes on to the first stage after it: the worked examples, where the topic has them. */
+const finishLabel = (trial: TopicContent) => (trial.workedExamples > 0 ? "Continue to the worked examples" : null);
+
 /**
  * One accent-filled control per screen (01-art-direction.md §4.3; v2 §11.1): at the lesson's end two "Show answer"
  * buttons shared the screen with "Continue to the worked examples", three accent fills at once (audit CD-04, build 7).
@@ -1039,41 +1100,44 @@ test.describe("The lesson's end: one accent-filled control on the screen", () =>
     { width: 1280, height: 800 },
     { width: 1440, height: 900 },
   ]) {
-    test(`at ${size.width} x ${size.height}, with the last Continue low on the screen and in its middle`, async ({ page }) => {
+    test(`at ${size.width} x ${size.height}, with the last Continue low on the screen and in its middle`, async ({ page, trial }) => {
       await page.setViewportSize(size);
-      await openTrial(page);
-      await walkToLessonEnd(page);
+      await openTrial(page, trial);
+      await walkToLessonEnd(page, trial);
+      const finish = page.locator("#note [data-finish]");
+      const label = ((await finish.textContent()) ?? "").trim();
+      if (finishLabel(trial)) expect(label, "the last Continue names the stage after the lesson").toBe(finishLabel(trial));
       for (const at of ["low", "middle"] as const) {
-        await page.locator("#note [data-finish]").evaluate((el, at) => {
+        await finish.evaluate((el, at) => {
           const r = el.getBoundingClientRect();
           window.scrollTo(0, at === "low" ? r.bottom + window.scrollY - window.innerHeight + 40 : r.top + window.scrollY - window.innerHeight / 2);
         }, at);
-        await expect.poll(() => accentFilledInView(page), { message: `accent fills on screen, Continue ${at}` }).toEqual(["Continue to the worked examples"]);
+        await expect.poll(() => accentFilledInView(page), { message: `accent fills on screen, Continue ${at}` }).toEqual([label]);
       }
     });
   }
 
-  test("the last Continue places the last segment, and a reload keeps the lesson finished", async ({ page }) => {
+  test("the last Continue places the last section on the track, and a reload keeps the lesson finished", async ({ page, trial }) => {
     // Build 7 (audit CQ-15): after a reload the last section went back to "here" on a lesson she had finished.
+    const total = trial.read.length;
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
-    await walkToLessonEnd(page);
-    const segments = page.locator("[data-read-track] [data-segment]");
+    await openTrial(page, trial);
+    await walkToLessonEnd(page, trial);
     await page.locator("#note [data-finish]").click();
     await expect(page.locator("#examples")).toBeFocused();
-    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(TRIAL_SECTIONS).fill("done"));
+    await expect.poll(async () => (await trackPlaced(page)).placed, { message: "every section placed" }).toBe(total);
     await page.reload();
     await expect(page.locator("#note article")).toBeVisible();
-    await expect.poll(() => segments.evaluateAll((els) => els.map((e) => e.getAttribute("data-segment")))).toEqual(Array(TRIAL_SECTIONS).fill("done"));
+    await expect.poll(async () => (await trackPlaced(page)).placed, { message: "every section placed after a reload" }).toBe(total);
   });
 });
 
 /**
- * "Practise this topic" on the Slides close links to the topic's #practice, and the page used to stay on its hero with
- * the Practice stage 11,000 px below and nothing focused (audit LD-02, CQ-06, 24 Sep): the stage is drawn only after the
- * lesson loads, when the browser and the router have already looked for it. A link naming a stage now lands on it, with
- * the keyboard there, on a fresh load and on an in-app navigation, and the stage stays put while the lesson above it
- * settles.
+ * "Practise this topic" on the Slides close (now its first way out, "Now the questions") links to the topic's #practice,
+ * and the page used to stay on its hero with the Practice stage 11,000 px below and nothing focused (audit LD-02, CQ-06,
+ * 24 Sep): the stage is drawn only after the lesson loads, when the browser and the router have already looked for it. A
+ * link naming a stage now lands on it, with the keyboard there, on a fresh load and on an in-app navigation, and the
+ * stage stays put while the lesson above it settles.
  */
 test.describe("Landing on a stage: a link to Practice arrives at Practice", () => {
   /** Where the stage sits against its own scroll margin, and whether it has the keyboard. */
@@ -1089,10 +1153,10 @@ test.describe("Landing on a stage: a link to Practice arrives at Practice", () =
     { width: 390, height: 844 },
     { width: 1280, height: 800 },
   ]) {
-    test(`at ${size.width}, on a fresh load and from the Slides close`, async ({ page }) => {
+    test(`at ${size.width}, on a fresh load and from the Slides close`, async ({ page, trial }) => {
       await page.setViewportSize(size);
       // A fresh load of the link.
-      await page.goto(`${TRIAL.path}#practice`);
+      await page.goto(`${trial.path}#practice`);
       await expect(page.locator("#practice")).toBeFocused();
       await expect.poll(async () => Math.abs((await landed(page)).offset)).toBeLessThanOrEqual(2);
       // Still there once the lesson above has settled.
@@ -1103,12 +1167,14 @@ test.describe("Landing on a stage: a link to Practice arrives at Practice", () =
       // Arrived by a link, not by the keyboard: no ring.
       expect(await page.locator("#practice").evaluate((el) => getComputedStyle(el).outlineStyle)).toBe("none");
 
-      // In the app: the close's own link, with the run restored at its last card.
-      await page.evaluate(() =>
-        localStorage.setItem("cairn.slides.fm.u1.algebraic-fractions-simplify", JSON.stringify({ at: 999, done: false, missed: [], answers: {}, checked: {}, graded: {} })),
+      // In the app: the close's own way to the questions, with the run restored at its last card (the deck's close).
+      await page.evaluate(
+        ({ key, at }) => localStorage.setItem(key, JSON.stringify({ at, key: "close", done: false, missed: [], answers: {}, checked: {}, graded: {} })),
+        { key: `cairn.slides.${trial.row.id}`, at: trial.deck.cards.length - 1 },
       );
-      await page.goto(`${TRIAL.path}slides/`);
-      await page.getByRole("link", { name: /^Practise this topic$/ }).click();
+      await page.goto(trial.slidesPath);
+      await expect(page.locator("[data-card='close']")).toBeVisible();
+      await page.locator("[data-exit='practise']").click();
       await expect(page).toHaveURL(/#practice$/);
       await expect(page.locator("#practice")).toBeFocused();
       await expect.poll(async () => Math.abs((await landed(page)).offset)).toBeLessThanOrEqual(2);
@@ -1126,10 +1192,10 @@ test.describe("Landing on a stage: a link to Practice arrives at Practice", () =
  * nothing about tiers for an untiered qualification, on a published topic and on one still being written.
  */
 test.describe("Tiers: an untiered qualification is never called Higher", () => {
-  test("the trial topic's 'On the paper' and an unpublished Further Maths topic say nothing about a tier", async ({ page }) => {
-    await openTrial(page);
+  test("the trial topic's 'On the paper' and an unpublished Further Maths topic say nothing about a tier", async ({ page, trial }) => {
+    await openTrial(page, trial);
     const onThePaper = page.locator("section[aria-labelledby='ref-spec']");
-    await expect(onThePaper).toContainText("Examined in FM1 · calculator allowed");
+    await expect(onThePaper).toContainText(`Examined in ${trial.row.unit} · calculator allowed`);
     await expect(onThePaper).not.toContainText(/higher|tier/i);
 
     // A topic with no lesson yet shows the specification instead, with the same line.
@@ -1166,16 +1232,20 @@ test.describe("The cairn: the redrawn one everywhere", () => {
     });
   }
 
-  test("first run, Today, the Map and both kinds of topic page draw no pill stack, and the stones are still counted", async ({ page }) => {
+  test("first run, Today, the Map and both kinds of topic page draw no pill stack, and the stones are still counted", async ({ page, trial, classic }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/welcome/");
     await expect(page.getByRole("button", { name: /^Continue$/ })).toBeVisible();
     expect(await oldCairns(page), "first run").toBe(0);
 
     await completeFirstRun(page);
-    // Five topics proved in FM1: five stones.
+    // Five published topics of the trial's unit proved: five stones.
+    const proved = manifestRows()
+      .filter((r) => r.subject === trial.row.subject && r.unit === trial.row.unit && r.hasBlocks)
+      .slice(0, 5);
+    expect(proved, "five published topics in the trial's unit").toHaveLength(5);
     const seeded = await page.evaluate(
-      (slugs) =>
+      ({ subject, slugs }) =>
         new Promise<string | null>((resolve) => {
           const open = indexedDB.open("ccea-study");
           open.onerror = () => resolve("open failed");
@@ -1183,7 +1253,7 @@ test.describe("The cairn: the redrawn one everywhere", () => {
             const db = open.result;
             const tx = db.transaction("mastery", "readwrite");
             const now = new Date();
-            for (const slug of slugs) tx.objectStore("mastery").put({ key: `further-maths:${slug}`, subject: "further-maths", topicSlug: slug, level: "proficient", score: 0.9, lastEvidenceAt: now, updatedAt: now });
+            for (const slug of slugs) tx.objectStore("mastery").put({ key: `${subject}:${slug}`, subject, topicSlug: slug, level: "proficient", score: 0.9, lastEvidenceAt: now, updatedAt: now });
             tx.oncomplete = () => {
               db.close();
               resolve(null);
@@ -1191,7 +1261,7 @@ test.describe("The cairn: the redrawn one everywhere", () => {
             tx.onerror = () => resolve(`write failed: ${tx.error?.message}`);
           };
         }),
-      ["algebraic-fractions-simplify", "algebraic-fractions-add-subtract", "algebraic-fractions-multiply-divide", "completing-the-square", "matrix-inverse-2x2"],
+      { subject: trial.row.subject, slugs: proved.map((r) => r.slug) },
     );
     expect(seeded).toBeNull();
 
@@ -1206,7 +1276,7 @@ test.describe("The cairn: the redrawn one everywhere", () => {
     await expect(onMap.first().locator("svg")).toHaveAttribute("aria-label", "5 stones");
     expect(await oldCairns(page), "the Map").toBe(0);
 
-    for (const path of [TRIAL.path, TOPICS[0].path]) {
+    for (const path of [trial.path, classic[0]!.path]) {
       await page.goto(path);
       await expect(page.locator("#note article")).toBeVisible();
       await expect(page.locator("nav[aria-label='Primary']:visible svg").first()).toBeVisible();
@@ -1216,59 +1286,17 @@ test.describe("The cairn: the redrawn one everywhere", () => {
 });
 
 /* ----------------------------------------------------------------------------------------------------------------------
- * The trial audit's Read flow (measured on build 8, 25 Sep; fixed 27 Sep by the read-flow agent). Each describe names
- * its row. Structure is read from the served bundle (which sections hold two checks or a video), never hard-coded.
+ * The trial audit's Read flow (measured on build 8, 25 Sep; fixed 27 Sep by the read-flow agent; walked again on the v3
+ * note, 11 Oct). Each describe names its row. Structure is read from the served content (which sections hold two checks
+ * or a video, where each See it stands), never hard-coded.
  * -------------------------------------------------------------------------------------------------------------------- */
 
-const TRIAL_ID = "fm.u1.algebraic-fractions-simplify";
-
-/** The Read v2 sections open, by number. */
-async function openSections(page: Page): Promise<number[]> {
-  return page.locator("#note [data-lesson-section]").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-lesson-section"))));
-}
-
-/** The track's segments, a letter each: d(one), h(ere), r(est). */
-async function segmentsOf(page: Page): Promise<string> {
-  return page.locator("[data-read-track] [data-segment]").evaluateAll((els) => els.map((e) => (e.getAttribute("data-segment") ?? "?")[0]).join(""));
-}
-
 /** Her kept place and the lesson she last worked in, as the page wrote them for Today (read-place.ts). */
-async function keptPlace(page: Page) {
+async function keptPlace(page: Page, trial: TopicContent) {
   return page.evaluate((id) => {
     const parse = (raw: string | null) => (raw ? JSON.parse(raw) : null);
     return { place: parse(localStorage.getItem(`cairn.read.place.${id}`)), last: parse(localStorage.getItem("cairn.read.last")) };
-  }, TRIAL_ID);
-}
-
-/** The trial note's sections as Read numbers them (one per heading): their checks, and whether they hold a video. */
-async function trialSections(page: Page): Promise<Array<{ n: number; gates: string[]; video: boolean }>> {
-  return page.evaluate(async (url) => {
-    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; id?: string }> };
-    const out: Array<{ n: number; gates: string[]; video: boolean }> = [];
-    for (const block of b.noteBlocks) {
-      if (block.type === "h") out.push({ n: out.length + 1, gates: [], video: false });
-      else if (out.length > 0 && block.type === "gate") out[out.length - 1].gates.push(block.id ?? "");
-      else if (out.length > 0 && block.type === "video") out[out.length - 1].video = true;
-    }
-    return out;
-  }, TRIAL.bundle);
-}
-
-/** Answers every check on the page and presses Continue until section `n` is open (the section she is in). */
-async function readOnTo(page: Page, n: number): Promise<void> {
-  const gates = await trialGates(page);
-  for (let step = 0; step < 40; step += 1) {
-    const open = Math.max(...(await openSections(page)));
-    if (open >= n) return;
-    const pending = await page.evaluate(() => Array.from(document.querySelectorAll("#note [data-gate]")).find((el) => !el.querySelector("[data-verdict]"))?.getAttribute("data-gate") ?? null);
-    if (pending) {
-      await answerGate(page, gates.find((g) => g.id === pending)!);
-      continue;
-    }
-    await page.locator(`#note [data-section-end="${open}"] [data-continue]`).click();
-    await expect.poll(async () => Math.max(...(await openSections(page)))).toBe(open + 1);
-  }
-  throw new Error(`could not read on to section ${n}`);
+  }, trial.row.id);
 }
 
 /** An element's top edge on the screen, in whole px. */
@@ -1278,20 +1306,19 @@ const topOf = (locator: ReturnType<Page["locator"]>) => locator.evaluate((el) =>
 const trackBottom = (page: Page) => page.evaluate(() => Math.round(document.querySelector("[data-read-track]")!.getBoundingClientRect().bottom));
 
 test.describe("Read v2: her place is kept by her own Continue and Pause here (audit READ-9, READ-12)", () => {
-  test("a check answered is not a Continue; Continue and Pause here move her on; the page, the track, the hero and Today's record agree", async ({ page }) => {
+  test("a check answered is not a Continue; Continue and Pause here move her on; the page, the track, the hero and Today's record agree", async ({ page, trial }) => {
+    const total = trial.read.length;
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
-    const gates = await trialGates(page);
-    const byId = Object.fromEntries(gates.map((g) => [g.id, g]));
+    await openTrial(page, trial);
 
     // Build 8: the first check answered and a reload opened section 2 and placed section 1's segment.
-    await answerGate(page, byId[TRIAL_FIRST_GATE]);
+    await finishReadSection(page, trial, 1);
     await page.reload();
     await expect(page.locator("#note article")).toBeVisible();
     await expect.poll(() => openSections(page)).toEqual([1]);
     await page.evaluate(() => window.scrollTo(0, 0));
-    await expect.poll(() => segmentsOf(page)).toMatch(/^h/);
-    expect((await keptPlace(page)).place).toMatchObject({ v: 1, topicId: TRIAL_ID, total: TRIAL_SECTIONS, open: 1, finished: false, pausedAt: null });
+    await expect.poll(async () => (await trackPlaced(page)).placed, { message: "nothing placed by a check alone" }).toBe(0);
+    expect((await keptPlace(page, trial)).place).toMatchObject({ v: 1, topicId: trial.row.id, total, open: 1, finished: false, pausedAt: null });
 
     // Her Continue moves her on, and a reload keeps it.
     await page.locator('#note [data-section-end="1"] [data-continue]').click();
@@ -1301,25 +1328,25 @@ test.describe("Read v2: her place is kept by her own Continue and Pause here (au
     await expect.poll(() => openSections(page)).toEqual([1, 2]);
 
     // Pause here at the end of section 2: "the lesson opens at the next section", and Today can say so.
-    await answerGate(page, byId[TRIAL_SECOND_GATE]);
+    await finishReadSection(page, trial, 2);
     await page.locator('#note [data-section-end="2"]').getByRole("link", { name: /^Pause here/ }).click();
-    await expect(page).not.toHaveURL(/algebraic-fractions-simplify/);
-    const kept = await keptPlace(page);
+    await expect(page).not.toHaveURL(new RegExp(escapeRegExp(trial.path)));
+    const kept = await keptPlace(page, trial);
     expect(kept.place).toMatchObject({ open: 3, finished: false });
     expect(kept.place.pausedAt, "Pause here was the last thing she did").toBe(kept.place.updatedAt);
-    expect(kept.last).toEqual({ topicId: TRIAL_ID, at: kept.place.updatedAt });
+    expect(kept.last).toEqual({ topicId: trial.row.id, at: kept.place.updatedAt });
 
-    // Next time: section 3 open and nothing after it; two segments placed; the hero names section 3.
-    await openTrial(page);
+    // Next time: section 3 open and nothing after it; two sections placed; the hero names section 3.
+    await openTrial(page, trial);
     await expect.poll(() => openSections(page)).toEqual([1, 2, 3]);
     await page.evaluate(() => window.scrollTo(0, 0));
-    await expect.poll(() => segmentsOf(page)).toMatch(/^dd[^d]/);
+    await expect.poll(async () => (await trackPlaced(page)).placed, { message: "sections 1 and 2 placed" }).toBe(2);
     await expect(page.locator(`${MAIN} header button[data-way="read"]`)).toHaveText("Read on from section 3");
     await expect(page.locator("#note [data-finish]")).toHaveCount(0);
 
     // Today's way back is the page with #resume: it lands on section 3's heading, under the track, keyboard there.
     await page.goto("/learn/");
-    await page.goto(`${TRIAL.path}#resume`);
+    await page.goto(`${trial.path}#resume`);
     const heading = page.locator('#note [data-lesson-section="3"] [data-section]');
     await expect(heading).toBeFocused();
     await expect.poll(async () => (await topOf(heading)) - (await trackBottom(page))).toBeGreaterThan(0);
@@ -1331,10 +1358,10 @@ test.describe("Read v2: a reload or a Back brings her back to where she was read
     { width: 390, height: 844 },
     { width: 1280, height: 800 },
   ]) {
-    test(`at ${size.width} x ${size.height}: the same block, where it stood on the screen`, async ({ page }) => {
+    test(`at ${size.width} x ${size.height}: the same block, where it stood on the screen`, async ({ page, trial }) => {
       await page.setViewportSize(size);
-      await openTrial(page);
-      await readOnTo(page, 3);
+      await openTrial(page, trial);
+      await readOnTo(page, trial, 3);
       // She reads on into section 3; the page keeps the block at the reading line a moment after she stops scrolling.
       const block = page.locator('#note [data-lesson-section="3"] > :nth-child(2)');
       await block.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 140));
@@ -1346,13 +1373,15 @@ test.describe("Read v2: a reload or a Back brings her back to where she was read
       await expect.poll(async () => Math.abs((await topOf(block)) - before), { message: `the block back at ${before} px` }).toBeLessThanOrEqual(2);
       expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(size.height);
 
-      // Pause here, Today, then the browser's Back (build 8 at 390: 2937 -> 5361, inside "See it").
+      // Pause here, Today, then the browser's Back (build 8 at 390: 2937 -> 5361, inside "See it"). She reads section 2's
+      // end where she can press it: in the middle of the screen, clear of the track (a link under the track is not one she
+      // can tap, and a click there would first move the page).
       const end = page.locator('#note [data-section-end="2"]');
-      await end.getByRole("link", { name: /^Pause here/ }).scrollIntoViewIfNeeded();
+      await end.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2));
       await page.waitForTimeout(600);
       const atPause = await topOf(end);
       await end.getByRole("link", { name: /^Pause here/ }).click();
-      await expect(page).not.toHaveURL(/algebraic-fractions-simplify/);
+      await expect(page).not.toHaveURL(new RegExp(escapeRegExp(trial.path)));
       await page.goBack();
       await expect(page.locator("#note article")).toBeVisible();
       await expect.poll(async () => Math.abs((await topOf(end)) - atPause), { message: `section 2's end back at ${atPause} px` }).toBeLessThanOrEqual(2);
@@ -1361,18 +1390,17 @@ test.describe("Read v2: a reload or a Back brings her back to where she was read
 });
 
 test.describe("The hero names the section she is in, and its Read button lands there (audit HERO-1)", () => {
-  test("stopped between the two checks of a section, the hero names that section, not the next, and lands on its heading", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
-    const sections = await trialSections(page);
-    const two = sections.find((s) => s.gates.length >= 2);
+  test("stopped between the two checks of a section, the hero names that section, not the next, and lands on its heading", async ({ page, trial }) => {
+    const two = trial.read.find((s) => s.gates.length >= 2);
     expect(two, "the trial note has a section with two checks").toBeTruthy();
-    await readOnTo(page, two!.n);
-    await answerGate(page, (await trialGates(page)).find((g) => g.id === two!.gates[0])!);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page, trial);
+    await reachReadGate(page, trial, two!.gates[0]!);
+    await answerReadGate(page, trial.gate(two!.gates[0]!));
 
     // A new visit (build 8: "Read on from section 4" and Rowan's "Section 4 is where you stopped", with section 3's
     // second check waiting; the button then landed on the lesson's top, 2,560 to 3,013 px above that check).
-    await openTrial(page);
+    await openTrial(page, trial);
     await page.evaluate(() => window.scrollTo(0, 0));
     const read = page.locator(`${MAIN} header button[data-way="read"]`);
     await expect(read).toHaveText(`Read on from section ${two!.n}`);
@@ -1390,11 +1418,11 @@ test.describe("The hero names the section she is in, and its Read button lands t
 });
 
 test.describe("On a phone the tab bar never covers what she needs next (audit READ-10)", () => {
-  test("after Check the section's Continue stands above the tab bar, and Tab from the verdict reaches it uncovered", async ({ page }) => {
+  test("after Check the section's Continue stands above the tab bar, and Tab from the verdict reaches it uncovered", async ({ page, trial }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
-    const first = (await trialGates(page)).find((g) => g.id === TRIAL_FIRST_GATE)!;
-    await answerGate(page, first);
+    await openTrial(page, trial);
+    const last = await toSectionsLastTurn(page, trial, 1);
+    await answerReadGate(page, last);
     const cont = page.locator('#note [data-section-end="1"] [data-continue]');
     await expect(cont).toBeVisible();
     // Build 8: Continue at 780-832 under a bar that starts at 787; 7 px of it showed.
@@ -1406,7 +1434,7 @@ test.describe("On a phone the tab bar never covers what she needs next (audit RE
         }),
       )
       .toBeLessThanOrEqual(0);
-    await expect(page.locator(`#note [data-gate="${TRIAL_FIRST_GATE}"] [data-verdict-block]`)).toBeFocused();
+    await expect(page.locator(`#note [data-gate="${last.id}"] [data-verdict-block]`)).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(cont).toBeFocused();
     const covered = await cont.evaluate((el) => {
@@ -1419,13 +1447,15 @@ test.describe("On a phone the tab bar never covers what she needs next (audit RE
 });
 
 test.describe("Offline, a section's video says so and opens no blank player (audit READ-14)", () => {
-  test("the row names the connection, is not a button, and plays again once she is back online", async ({ page, context }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
-    const withVideo = (await trialSections(page)).find((s) => s.video);
+  test("the row names the connection, is not a button, and plays again once she is back online", async ({ page, context, trial }) => {
+    const withVideo = trial.read.find((s) => s.video);
     expect(withVideo, "the trial note has a section with a video").toBeTruthy();
-    await readOnTo(page, withVideo!.n);
-    const row = page.locator(`#note [data-lesson-section="${withVideo!.n}"] [data-video]`).first();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openTrial(page, trial);
+    // In v3 the video stands beside the section's See it, after it: it is on the page once the steps are shown, with the
+    // section's Your turn.
+    await reachReadGate(page, trial, withVideo!.gates[0]!);
+    const row = readSection(page, withVideo!.n).locator("[data-video]").first();
     await expect(row).toHaveAttribute("data-video-state", "ready");
 
     await context.setOffline(true);
@@ -1441,18 +1471,20 @@ test.describe("Offline, a section's video says so and opens no blank player (aud
 });
 
 test.describe("The exam-style close is not signed below live answer fields (audit READ-15)", () => {
-  test("after the exam-style run, nothing of Rowan's stands after the page's first answer field", async ({ page }) => {
+  test("after the exam-style run, nothing of Rowan's stands after the page's first answer field", async ({ page, trial }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${TRIAL.path}#exam`);
+    await page.goto(`${trial.path}#exam`);
     await expect(page.locator("#exam")).toBeFocused();
-    const answers = ["2(x-2)/(x+3)", "3(x+3)(x-3)", "3(x+3)/(x+5)"];
+    // Each exam-style part's answer as she would type it, read from the content (content.ts examAnswers).
+    const answers = trial.examAnswers;
+    expect(answers.length, "the trial's exam-style questions have parts to answer").toBeGreaterThan(0);
     const exam = page.locator("#exam");
     for (let step = 0, k = 0; step < 24; step += 1) {
       if (/Exam-style complete/.test((await exam.textContent()) ?? "")) break;
       const field = exam.locator("input[type=text], input:not([type]), input[inputmode]").first();
       const next = exam.getByRole("button", { name: /^(Next part|Next question|Finish|Done)/ }).first();
       if (k < answers.length && (await field.count()) > 0 && (await field.isVisible()) && (await field.isEditable())) {
-        await field.fill(answers[k]);
+        await field.fill(answers[k]!);
         k += 1;
         const check = exam.getByRole("button", { name: /^Check/ }).first();
         if ((await check.count()) > 0) await check.click();
@@ -1504,17 +1536,17 @@ async function contrastOf(locator: ReturnType<Page["locator"]>): Promise<number>
 
 test.describe("Text on the subject's wash keeps 4.5:1 in every theme (audit READ-17)", () => {
   for (const theme of ["light", "dark", "evening"] as const) {
-    test(`${theme}: the Contents row she is on, and the Slides title card's locator`, async ({ page }) => {
+    test(`${theme}: the Contents row she is on, and the Slides title card's locator`, async ({ page, trial }) => {
       await page.addInitScript((t) => localStorage.setItem("cairn.theme", t), theme);
       await page.setViewportSize({ width: 390, height: 844 });
-      await openTrial(page);
+      await openTrial(page, trial);
       await page.locator("[data-read-track]").getByRole("button", { name: /^Contents$/ }).click();
       // Build 8: "1 min" in ink-3 on the row's wash, 4.44:1 light, 4.33:1 evening, 3.90:1 dark.
       const minutes = page.locator('[data-read-track] ol button[aria-current="location"] > span').last();
       await expect(minutes).toHaveText(/\d+ min/);
       expect(await contrastOf(minutes), "the current row's minutes").toBeGreaterThanOrEqual(4.5);
 
-      await page.goto(`${TRIAL.path}slides/`);
+      await page.goto(trial.slidesPath);
       const locator = page.locator('[data-card="title"] p.uppercase:visible').first();
       await expect(locator).toBeVisible();
       expect(await contrastOf(locator), "the title card's locator on the wash").toBeGreaterThanOrEqual(4.5);
@@ -1524,9 +1556,9 @@ test.describe("Text on the subject's wash keeps 4.5:1 in every theme (audit READ
 
 test.describe("Grading buttons are tapped hundreds of times: 52 px (audit READ-22)", () => {
   for (const width of [390, 1280]) {
-    test(`at ${width}: Again, Good and Easy after Show answer`, async ({ page }) => {
+    test(`at ${width}: Again, Good and Easy after Show answer`, async ({ page, trial }) => {
       await page.setViewportSize({ width, height: 844 });
-      await openTrial(page);
+      await openTrial(page, trial);
       const prompt = page.locator("#prompts section[aria-label$='prompt']").first();
       await prompt.getByRole("button", { name: /^Show answer$/ }).click();
       const grades = prompt.getByRole("group", { name: "How did it go?" }).getByRole("button");
@@ -1540,12 +1572,12 @@ test.describe("Grading buttons are tapped hundreds of times: 52 px (audit READ-2
 test.describe("With motion allowed, only transform and opacity ever animate (audit READ-24)", () => {
   test.use({ reducedMotion: "no-preference" });
 
-  test("hovering, choosing and checking a Read gate's option changes its colours at once", async ({ page }) => {
+  test("hovering, choosing and checking a Read gate's option changes its colours at once", async ({ page, trial }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await openTrial(page);
-    const first = (await trialGates(page)).find((g) => g.id === TRIAL_FIRST_GATE)!;
+    await openTrial(page, trial);
+    const first = await toSectionsLastTurn(page, trial, 1);
     const box = page.locator(`#note [data-gate="${first.id}"]`);
-    const wrong = await optionAt(page, first.id, (v) => v !== first.answer);
+    const wrong = await box.locator("[role=radio]").evaluateAll((els, v) => els.findIndex((e) => e.getAttribute("data-value") === v), first.wrongs[0]!);
     const transitions = () =>
       page.evaluate(() =>
         document
@@ -1583,11 +1615,11 @@ const smallestFractionGlyph = (locator: ReturnType<Page["locator"]>, { scripts =
   );
 
 test.describe("The expression a question is about is legible (audit READ-18, READ-19)", () => {
-  test("a find-the-mistake stem and a retrieval prompt set their fraction at 13 px or more", async ({ page }) => {
+  test("a find-the-mistake stem and a retrieval prompt set their fraction at 13 px or more", async ({ page, trial }) => {
     // Needs the item components' patch (the read-flow agent's report): build 8 set these at 11.55 and 12.32 px. The
     // fraction each is about is its first one, before the working she marks or the field she types in.
     await page.setViewportSize({ width: 390, height: 844 });
-    await openTrial(page);
+    await openTrial(page, trial);
     const stem = page.locator("#mistakes section[aria-label='Find the mistake']").first().locator(".katex-html .mfrac").first();
     await expect(stem).toBeVisible();
     expect(await smallestFractionGlyph(stem), "the find-the-mistake stem").toBeGreaterThanOrEqual(13);
@@ -1596,9 +1628,9 @@ test.describe("The expression a question is about is legible (audit READ-18, REA
     expect(await smallestFractionGlyph(prompt), "the retrieval prompt").toBeGreaterThanOrEqual(13);
   });
 
-  test("a miss card's expected answer is never the smallest text on the card", async ({ page }) => {
+  test("a miss card's expected answer is never the smallest text on the card", async ({ page, trial }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`${TRIAL.path}#exam`);
+    await page.goto(`${trial.path}#exam`);
     const exam = page.locator("#exam");
     const field = exam.locator("input[type=text], input:not([type]), input[inputmode]").first();
     await field.fill("2");

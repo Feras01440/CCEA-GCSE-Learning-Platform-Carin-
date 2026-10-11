@@ -1,7 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
-import type { RetrievalPrompt } from "../src/lib/content/schema";
+import { expect, test as base, type Page } from "@playwright/test";
+import { substituteFor } from "../src/components/slides/enrich/afs-model";
 import { enrichmentFor, recapGlyphsFor } from "../src/lib/slides/enrichment";
-import { chooseRecall } from "../src/lib/slides/recall";
+import { trialContent, type Gate, type TopicContent } from "./content";
 
 /**
  * Slides on the trial topic (TRIAL-BRIEF.md, slides row; docs/design/2026-09-23-art-direction-v2.md §11; benchmarks
@@ -20,55 +20,38 @@ import { chooseRecall } from "../src/lib/slides/recall";
  *  - at most two recall cards, optional, each with Skip;
  *  - the close carries the character and Rowan's line and holds no answer field, and its first way out is "Now the
  *    questions" (the Practice stage), its second "Done for tonight"; no Your turn carries the character;
+ *  - Pause here after a section's Your turn keeps her place for Today and the slides open there next time;
  *  - the topic hero offers Slides on the accent on a first visit on both sizes, remembers Read when she chooses it, and
  *    says where the slides stopped when she leaves mid-run;
  *  - in dark mode the accent control keeps 4.5:1 with its text and the character keeps its own colours.
  *
- * The See it, the twin and the Skip tests read the trial note's own blocks and wait for its conversion to the See it
- * shape (docs/plan/review/2026-09-27-see-it-block-shape.md): until the note carries a `see` block (a twin), they are
- * skipped with that reason. The suite's config runs with reducedMotion "reduce", which is what the getAnimations checks
- * rely on; the steps of a See it still come one per Continue under it (src/lib/slides/run.ts).
+ * Everything about the trial note (its cards, Your turns, answers and options, See its and their steps, recall cards,
+ * recap lines, where Pause here stands) is read from the content the export serves, through the app's own rules
+ * (e2e/content.ts: the deck is src/lib/slides/deck.ts deckFor's); the page's own numbers are read from the page, and where
+ * a test compares the two, a mismatch names which is which. The suite's config runs with reducedMotion "reduce", which
+ * is what the getAnimations checks rely on; the steps of a See it still come one per Continue under it
+ * (src/lib/slides/run.ts).
  */
 
-const TOPIC = "/learn/further-maths/FM1/algebraic-fractions-simplify/";
-const SLIDES = `${TOPIC}slides/`;
-const TOPIC_ID = "fm.u1.algebraic-fractions-simplify";
-const CONTENT = "/content/further-maths/fm.u1.algebraic-fractions-simplify.json";
+const test = base.extend<{ trial: TopicContent }>({
+  // The owner's trial topic, read from what the export serves.
+  trial: async ({ request }, use) => {
+    await use(await trialContent(request));
+  },
+});
+
+// A control that never comes fails in 15 seconds, as an assertion does, never at the 60-second test timeout.
+test.use({ actionTimeout: 15_000, navigationTimeout: 30_000 });
+
 const DB_NAME = "ccea-study";
 const PHONE = { width: 390, height: 844 };
 const DESKTOP = { width: 1280, height: 800 };
-/**
- * The trial deck's numbers are read from the page and from the note it serves, never typed here (29 Sep 2026: the note
- * is the content session's, and its v3 rewrite changed every count): the cards from the title card's counter, the Your
- * turns from the note's gates, the first of them the note's first gate, the recall cards from the note's placed prompts
- * by the deck's own rule (src/lib/slides/recall.ts), the recap's glyphs by the enrichment's own rule.
- */
+
 /** The figure she acts on, 3x(x + 7) over 6(x + 7)(x − 7): the shared factors as pairs of pills, top then bottom. */
 const PAIRS: Array<[string, string]> = [
   ["t-b", "b-b"],
   ["t-n", "b-n"],
 ];
-
-interface Gate {
-  id: string;
-  answer: string;
-  options?: string[];
-  prompt?: string;
-  explain?: string;
-  twin?: { prompt: string; options?: string[]; answer: string; explain: string };
-}
-
-async function gates(page: Page): Promise<Gate[]> {
-  return page.evaluate(async (url) => {
-    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; id?: string; answer?: string; options?: string[]; prompt?: string; explain?: string; twin?: Gate["twin"] }> };
-    return b.noteBlocks.filter((x) => x.type === "gate").map((g) => ({ id: g.id!, answer: g.answer!, options: g.options, prompt: g.prompt, explain: g.explain, twin: g.twin }));
-  }, CONTENT);
-}
-
-/** The note's first Your turn: the one the first section asks. */
-async function firstGate(page: Page): Promise<Gate> {
-  return (await gates(page))[0]!;
-}
 
 /** The deck's card count as the counter states it ("1 of 55"): read before any miss has added its retry. */
 async function deckSize(page: Page): Promise<number> {
@@ -78,43 +61,6 @@ async function deckSize(page: Page): Promise<number> {
   const n = Number((onCounter ? / of (\d+)$/ : /(\d+) cards/).exec(text)?.[1] ?? Number.NaN);
   expect(n, `the counter says "${text}"`).toBeGreaterThan(1);
   return n;
-}
-
-/** The recall cards the deck deals: the note's placed prompts, by the deck's own rule (at most two, each light). */
-async function recallPrompts(page: Page): Promise<RetrievalPrompt[]> {
-  const b = await page.evaluate(async (url) => (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; promptId?: string }>; prompts: RetrievalPrompt[] }, CONTENT);
-  const byId = new Map<string, RetrievalPrompt>(b.prompts.map((p) => [p.id, p]));
-  return chooseRecall(b.noteBlocks.flatMap((x) => (x.type === "prompt" && byId.has(x.promptId ?? "") ? [byId.get(x.promptId!)!] : [])));
-}
-
-/** The recap's lines as the note writes them ("You can now" and the lines under it). */
-async function recapLines(page: Page): Promise<string[]> {
-  return page.evaluate(async (url) => {
-    const blocks = ((await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; role?: string; text?: string; md?: string }> }).noteBlocks;
-    const at = blocks.findIndex((x) => x.type === "h" && (x.role === "recap" || /^\s*you can now\b/i.test(x.text ?? "")));
-    const lines: string[] = [];
-    for (let i = at + 1; at >= 0 && i < blocks.length && blocks[i].type !== "h"; i += 1)
-      if (blocks[i].type === "p") lines.push(...(blocks[i].md ?? "").split(/\n+/).map((l) => l.trim()).filter(Boolean));
-    return lines;
-  }, CONTENT);
-}
-
-/** The note's See it blocks, in order, with how many steps each shows (a named worked example's from the bundle). */
-async function seeIts(page: Page): Promise<Array<{ steps: number }>> {
-  return page.evaluate(async (url) => {
-    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; steps?: unknown[]; workedExample?: string }>; workedExamples: Array<{ id: string; steps: unknown[] }> };
-    return b.noteBlocks
-      .filter((x) => x.type === "see")
-      .map((s) => ({ steps: s.steps?.length ?? b.workedExamples.find((w) => w.id === s.workedExample)?.steps.length ?? 0 }));
-  }, CONTENT);
-}
-
-/** The caption of the note's hoisted figure, which the registered drawing on card 2 stands in for. */
-async function heroCaption(page: Page): Promise<string> {
-  return page.evaluate(async (url) => {
-    const b = (await (await fetch(url)).json()) as { noteBlocks: Array<{ type: string; caption?: string }> };
-    return b.noteBlocks.find((x) => x.type === "figure")?.caption ?? "";
-  }, CONTENT);
 }
 
 /** Strikes every factor both lines share on the figure she acts on, pair by pair. */
@@ -130,10 +76,9 @@ async function strikeAll(page: Page): Promise<void> {
  * cards before it explain and, in a note with See its, show the idea first (the owner's answer 8): the walk asserts it.
  * On a See it a Continue shows the next step and the card stays; everywhere else it moves on one card.
  */
-async function toFirstGate(page: Page, press: () => Promise<void> = () => control(page).click(), from = 1): Promise<number> {
-  const first = (await firstGate(page)).id;
+async function toFirstGate(page: Page, trial: TopicContent, press: () => Promise<void> = () => control(page).click(), from = 1): Promise<number> {
+  const first = trial.gates[0]!.id;
   const deck = await deckSize(page);
-  const sees = (await seeIts(page)).length;
   let n = from;
   let sawSee = false;
   for (let guard = 0; guard < 60 && (await page.locator(`[data-gate='${first}']`).count()) === 0; guard += 1) {
@@ -150,12 +95,14 @@ async function toFirstGate(page: Page, press: () => Promise<void> = () => contro
   }
   await expect(page.locator(`[data-gate='${first}']`)).toBeVisible();
   expect(n, "the first Your turn comes after the cards that explain it").toBeGreaterThan(2);
-  if (sees > 0) expect(sawSee, "a See it before the first Your turn").toBe(true);
+  // Where the deck the content builds puts it.
+  expect(n, "the first Your turn's card against the deck the content builds").toBe(trial.deck.cards.find((c) => c.gate === first)!.n);
+  if (trial.sees.length > 0) expect(sawSee, "a See it before the first Your turn").toBe(true);
   return n;
 }
 
-async function openSlides(page: Page): Promise<void> {
-  await page.goto(SLIDES);
+async function openSlides(page: Page, trial: TopicContent): Promise<void> {
+  await page.goto(trial.slidesPath);
   await expect(page.locator("[data-card='title']")).toBeVisible();
   // Hydrated and restored: only then do the keys and the control have their listeners.
   await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
@@ -353,9 +300,7 @@ async function stepThrough(page: Page): Promise<void> {
 }
 
 /** Walks from the current card to the close, answering every gate right except `missIds`, which are answered wrong once. */
-async function walkToClose(page: Page, missIds: string[] = []): Promise<void> {
-  const all = await gates(page);
-  const byId = new Map(all.map((g) => [g.id, g]));
+async function walkToClose(page: Page, trial: TopicContent, missIds: string[] = []): Promise<void> {
   for (let step = 0; step < 90; step += 1) {
     const kind = await card(page).getAttribute("data-card");
     if (kind === "close") return;
@@ -369,9 +314,8 @@ async function walkToClose(page: Page, missIds: string[] = []): Promise<void> {
     } else if (kind === "gate") {
       const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
       const retry = (await page.locator("[data-gate]").getAttribute("data-retry")) !== null;
-      const g = byId.get(id)!;
-      const wrong = g.options?.find((o) => o !== g.answer) ?? "";
-      await answerChoice(page, retry ? await retryAnswer(page, g) : missIds.includes(id) ? wrong : g.answer);
+      const g = trial.gate(id);
+      await answerChoice(page, retry ? await retryAnswer(page, g) : missIds.includes(id) ? g.wrongs[0]! : g.answer);
       if (!retry && missIds.includes(id)) await showAnswer(page);
       await control(page).click();
     } else if (kind === "interaction") {
@@ -390,20 +334,65 @@ async function walkToClose(page: Page, missIds: string[] = []): Promise<void> {
   throw new Error("the deck did not reach its close in 90 steps");
 }
 
+/** Moves on through cards that need no answer until the card of `kind` (and gate id) is on screen. */
+async function walkTo(page: Page, trial: TopicContent, kind: string, gateId?: string): Promise<void> {
+  for (let step = 0; step < 90; step += 1) {
+    const k = await card(page).getAttribute("data-card");
+    if (k === kind && (!gateId || (await page.locator("[data-gate]").getAttribute("data-gate")) === gateId)) return;
+    if (k === "see") {
+      await stepThrough(page);
+      await control(page).click();
+    } else if (k === "reteach") {
+      await control(page).click();
+      await expect(page.locator("[data-verdict]")).toBeVisible();
+      await control(page).click();
+    } else if (k === "gate") {
+      const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
+      if (await page.locator("[data-verdict]").count()) await control(page).click();
+      else {
+        const g = trial.gate(id);
+        const retry = (await page.locator("[data-gate]").getAttribute("data-retry")) !== null;
+        await answerChoice(page, retry ? await retryAnswer(page, g) : g.answer);
+        await control(page).click();
+      }
+    } else if (k === "interaction") {
+      await strikeAll(page);
+      await control(page).click();
+      await control(page).click();
+    } else if (k === "recall") {
+      await control(page).click();
+      await page.locator("[data-grades] button", { hasText: "Good" }).click();
+    } else if (k === "close") {
+      throw new Error(`reached the close before ${kind} ${gateId ?? ""}`);
+    } else {
+      await control(page).click();
+    }
+    await page.waitForTimeout(80);
+  }
+  throw new Error(`did not reach ${kind} ${gateId ?? ""}`);
+}
+
+/** The card before the figure she acts on, as the deck the content builds places it (the card that works it first). */
+function beforeInteraction(trial: TopicContent) {
+  const at = trial.deck.cards.findIndex((c) => c.kind === "interaction");
+  expect(at, "the trial deck carries a figure she acts on").toBeGreaterThan(0);
+  return { card: trial.deck.cards[at - 1]!, interaction: trial.deck.cards[at]! };
+}
+
 test.describe("Slides: the title card", () => {
   for (const size of [PHONE, DESKTOP]) {
-    test(`at ${size.width} it is one screen, no chrome, one accent control, the honest count`, async ({ page }) => {
+    test(`at ${size.width} it is one screen, no chrome, one accent control, the honest count`, async ({ page, trial }) => {
       await page.setViewportSize(size);
-      await openSlides(page);
+      await openSlides(page, trial);
       await expect(page.locator("nav[aria-label='Primary']")).toHaveCount(0);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Simplifying algebraic fractions");
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(trial.title);
       const deck = await deckSize(page);
-      const checks = (await gates(page)).length;
+      expect(deck, "the title card's count against the deck the content builds (src/lib/slides/deck.ts)").toBe(trial.deck.stats.cards);
+      const checks = trial.gates.length;
       await expect(page.locator("[data-card='title']")).toContainText(`${deck} cards · ${checks} your turns`);
-      // The video states its length (341 s), so it is counted in the minutes and listed with the counts (audit LD-03); the
-      // check is named "Your turn" (the owner's answer 6), and a note with See its counts them too ("10 see its").
-      const sees = (await seeIts(page)).length;
-      await expect(page.locator("[data-promise]")).toHaveText(new RegExp(`^About \\d+ minutes · ${deck} cards · ${checks} your turns${sees ? ` · ${sees} see its?` : ""} · 1 video$`));
+      // The minutes, the cards, the Your turns (the owner's answer 6), the See its and a video with a stated length
+      // (audit LD-03): the promise the deck's own numbers make (cards.ts deckPromise), word for word.
+      await expect(page.locator("[data-promise]")).toHaveText(trial.deck.promise);
       expect(await accentControls(page)).toEqual(["Start the slides"]);
       const scroll = await page.evaluate(() => {
         const body = document.querySelector("[data-body]")!;
@@ -418,23 +407,23 @@ test.describe("Slides: the title card", () => {
     });
   }
 
-  test("Read it as a page instead goes back to the topic and is remembered", async ({ page }) => {
+  test("Read it as a page instead goes back to the topic and is remembered", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
+    await openSlides(page, trial);
     await page.getByRole("link", { name: /^Read it as a page instead$/ }).click();
-    await expect(page).toHaveURL(new RegExp(`${TOPIC.replace(/\//g, "\\/")}$`));
+    await expect(page).toHaveURL(new RegExp(`${trial.path.replace(/\//g, "\\/")}$`));
     expect(await page.evaluate(() => localStorage.getItem("cairn.lessonWay"))).toBe("read");
   });
 });
 
 test.describe("Slides: the gate", () => {
-  test("blocks the way on, records the Read gate id once, and a miss carries its meaning in colour and comes back", async ({ page }) => {
+  test("blocks the way on, records the Read gate id once, and a miss carries its meaning in colour and comes back", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
-    const first = await firstGate(page);
+    const first = trial.gates[0]!;
     // Start, then the cards of section 1 that explain and show the idea, then its Your turn (the owner's rule, 24 Sep).
-    const at = await toFirstGate(page);
+    const at = await toFirstGate(page, trial);
 
     // Locked: the arrow key and a swipe do nothing, the control says Check and is disabled until an option is chosen.
     await page.keyboard.press("ArrowRight");
@@ -445,7 +434,7 @@ test.describe("Slides: the gate", () => {
     expect(await animations(page)).toBe(0);
 
     // Her answer, wrong: first the re-teach (the teach-first case §6.3), on the same card, before anything is lit.
-    const wrong = first.options!.find((o) => o !== first.answer)!;
+    const wrong = first.wrongs[0]!;
     await answerChoice(page, wrong);
     const reteach = page.locator("[data-card='reteach']");
     await expect(reteach).toBeVisible();
@@ -477,7 +466,7 @@ test.describe("Slides: the gate", () => {
     await expect(count(page)).toHaveText(`${at} of ${deck + 1}`);
     // One attempt, the first answer, with the id Read uses; nothing for the re-teach.
     const rows = await attempts(page);
-    expect(rows).toEqual([{ itemId: `${TOPIC_ID}#gate:${first.id}`, itemKind: "practice", correct: false }]);
+    expect(rows).toEqual([{ itemId: `${trial.row.id}#gate:${first.id}`, itemKind: "practice", correct: false }]);
 
     // Back re-reads, forward returns to the answered Your turn, Continue moves on.
     await page.keyboard.press("ArrowLeft");
@@ -490,13 +479,13 @@ test.describe("Slides: the gate", () => {
     expect((await attempts(page)).length, "no second record").toBe(1);
   });
 
-  test("Enter checks and the digits choose, on the desktop", async ({ page }) => {
+  test("Enter checks and the digits choose, on the desktop", async ({ page, trial }) => {
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
-    await toFirstGate(page, () => page.keyboard.press("Enter"));
+    await openSlides(page, trial);
+    await toFirstGate(page, trial, () => page.keyboard.press("Enter"));
     await expect(page.locator("[data-hints]")).toContainText("choose");
     // The digit chooses by the shown position; the right answer's position is the seeded order's, read from the badge.
-    const first = await firstGate(page);
+    const first = trial.gates[0]!;
     const shownAt = await page.locator("[data-gate] [role='radio']").evaluateAll((els, answer) => els.findIndex((el) => el.getAttribute("data-value") === answer), first.answer);
     expect(shownAt).toBeGreaterThanOrEqual(0);
     await page.keyboard.press(String(shownAt + 1));
@@ -505,56 +494,17 @@ test.describe("Slides: the gate", () => {
     await expect(page.locator("[data-verdict='ok']")).toContainText("Yes.");
     await expect(page.locator("[data-verdict='ok']")).toContainText("Recorded. It comes back in your reviews.");
     // The lifted stem: a command's expression on its own line at the display size (art direction v2 §8.4), on the first
-    // later Your turn whose question is a command ending on a fraction ("Simplify fully" and the fraction).
-    const lifted = (await gates(page)).slice(1).find((g) => /^[^$?]+\$\\d?frac\{[^$]*\}\$\.?$/.test(g.prompt ?? ""));
+    // later Your turn whose question is a command in plain words ending on a fraction ("Simplify fully" and the fraction),
+    // as the layout both ways share reads it (lesson-plan.ts gateStem).
+    const lifted = trial.gates.slice(1).find((g) => g.stem.maths !== null && /^\\d?frac\{/.test(g.stem.maths) && g.stem.tail === "" && g.stem.lead !== "" && !g.stem.lead.includes("$"));
     expect(lifted, "a later Your turn whose question ends on a fraction").toBeTruthy();
-    await walkTo(page, "gate", lifted!.id);
+    await walkTo(page, trial, "gate", lifted!.id);
     const maths = page.locator("[data-stem-maths] .katex-display");
     await expect(maths).toBeVisible();
     expect(await maths.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(32);
-    await expect(page.locator("[data-stem] p").first()).toHaveText(lifted!.prompt!.slice(0, lifted!.prompt!.indexOf("$")).trim());
+    await expect(page.locator("[data-stem] p").first()).toHaveText(lifted!.stem.lead);
   });
 });
-
-/** Moves on through cards that need no answer until the card of `kind` (and gate id) is on screen. */
-async function walkTo(page: Page, kind: string, gateId?: string): Promise<void> {
-  const all = await gates(page);
-  const byId = new Map(all.map((g) => [g.id, g]));
-  for (let step = 0; step < 90; step += 1) {
-    const k = await card(page).getAttribute("data-card");
-    if (k === kind && (!gateId || (await page.locator("[data-gate]").getAttribute("data-gate")) === gateId)) return;
-    if (k === "see") {
-      await stepThrough(page);
-      await control(page).click();
-    } else if (k === "reteach") {
-      await control(page).click();
-      await expect(page.locator("[data-verdict]")).toBeVisible();
-      await control(page).click();
-    } else if (k === "gate") {
-      const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
-      if (await page.locator("[data-verdict]").count()) await control(page).click();
-      else {
-        const g = byId.get(id)!;
-        const retry = (await page.locator("[data-gate]").getAttribute("data-retry")) !== null;
-        await answerChoice(page, retry ? await retryAnswer(page, g) : g.answer);
-        await control(page).click();
-      }
-    } else if (k === "interaction") {
-      await strikeAll(page);
-      await control(page).click();
-      await control(page).click();
-    } else if (k === "recall") {
-      await control(page).click();
-      await page.locator("[data-grades] button", { hasText: "Good" }).click();
-    } else if (k === "close") {
-      throw new Error(`reached the close before ${kind} ${gateId ?? ""}`);
-    } else {
-      await control(page).click();
-    }
-    await page.waitForTimeout(80);
-  }
-  throw new Error(`did not reach ${kind} ${gateId ?? ""}`);
-}
 
 /** A finger's sideways swipe, as the phone sends it (touch events, so the page sees pointerType "touch"). */
 async function touchSwipe(page: Page, fromX: number, toX: number, y: number): Promise<void> {
@@ -599,28 +549,29 @@ async function cardDue(page: Page, id: string): Promise<number | null> {
 }
 
 test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to be always four … like writing an essay')", () => {
-  test("two light cards; Skip records nothing; what she typed stays beside the answer; the three grades say three returns; the tap stores the day it said", async ({ page }) => {
+  test("two light cards; Skip records nothing; what she typed stays beside the answer; the three grades say three returns; the tap stores the day it said", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    // The two the note places, both light (the deck's own rule, read here from the note it serves); optional, with Skip.
-    const [one, two] = await recallPrompts(page);
-    expect(two, "the trial's two recall cards").toBeTruthy();
+    await openSlides(page, trial);
+    // The ones the deck deals (its own rule: of the prompts the note places, at most two, each light); optional, with Skip.
+    const recall = trial.deck.recall;
+    const [one, two] = recall;
+    expect(two, "the deck deals the trial's two recall cards").toBeTruthy();
     await control(page).click();
-    await walkTo(page, "recall");
-    await expect(page.locator("[data-header]")).toContainText("Recall · optional · 1 of 2");
-    await expect(page.locator(`[data-recall='${one.id}']`)).toBeVisible();
+    await walkTo(page, trial, "recall");
+    await expect(page.locator("[data-header]")).toContainText(`Recall · optional · 1 of ${recall.length}`);
+    await expect(page.locator(`[data-recall='${one!.id}']`)).toBeVisible();
 
     // Skip moves on and records nothing: no attempt, no review card, never a miss.
     const promptRows = async () => (await attempts(page)).filter((r) => r.itemKind === "prompt").length;
     expect(await promptRows()).toBe(0);
     await page.locator("[data-skip]").click();
-    await expect(page.locator("[data-header]")).toContainText("Recall · optional · 2 of 2");
-    await expect(page.locator(`[data-recall='${two.id}']`)).toBeVisible();
+    await expect(page.locator("[data-header]")).toContainText(`Recall · optional · 2 of ${recall.length}`);
+    await expect(page.locator(`[data-recall='${two!.id}']`)).toBeVisible();
     expect(await promptRows()).toBe(0);
-    expect(await cardDue(page, one.id)).toBeNull();
+    expect(await cardDue(page, one!.id)).toBeNull();
 
     // She types the scheme's key words, then shows the answer: her words stand above the model answer (audit LD-06).
-    const keys = two.keyWords ?? [];
+    const keys = two!.keyWords ?? [];
     const typed = keys.length > 0 ? keys.join(" and ") : "my answer";
     await page.locator("[data-recall] textarea").fill(typed);
     await control(page).click();
@@ -639,8 +590,8 @@ test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to 
     await expect(page.locator("[data-card='close']")).toBeVisible();
 
     // Easy is stored as Easy: days away, not the ten minutes a Good gets (audit CQ-02). One attempt row, a prompt.
-    await expect.poll(() => cardDue(page, two.id)).not.toBeNull();
-    const due = (await cardDue(page, two.id))!;
+    await expect.poll(() => cardDue(page, two!.id)).not.toBeNull();
+    const due = (await cardDue(page, two!.id))!;
     expect(due - shownAt).toBeGreaterThan(86_400_000);
     expect(await promptRows()).toBe(1);
     // The close counts what was graded, and says nothing of the one she skipped.
@@ -649,12 +600,11 @@ test.describe("Slides: the recall cards (the owner, 24 Sep: 'it doesn't have to 
 });
 
 test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: 'most of the correct answers are option A')", () => {
-  test("the right answers are spread over A, B and C as evenly as their number allows, and Read shows the same order", async ({ page }) => {
+  test("the right answers are spread over A, B and C as evenly as their number allows, and Read shows the same order", async ({ page, trial }) => {
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     await control(page).click();
-    const all = await gates(page);
-    const byId = new Map(all.map((g) => [g.id, g]));
+    const all = trial.gates;
     const shown = new Map<string, string[]>();
     for (let step = 0; step < 90 && shown.size < all.length; step += 1) {
       const k = await card(page).getAttribute("data-card");
@@ -664,7 +614,7 @@ test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: '
       } else if (k === "gate") {
         const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
         shown.set(id, await page.locator("[data-gate] [role='radio']").evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? "")));
-        await answerChoice(page, byId.get(id)!.answer);
+        await answerChoice(page, trial.gate(id).answer);
         await control(page).click();
       } else if (k === "interaction") {
         await strikeAll(page);
@@ -677,9 +627,12 @@ test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: '
     }
     // The note's own Your turns, in the note's order.
     expect([...shown.keys()]).toEqual(all.map((g) => g.id));
-    // Each shows its own options, each once.
-    for (const [id, order] of shown) expect([...order].sort(), id).toEqual([...byId.get(id)!.options!].sort());
-    const at = [...shown.entries()].map(([id, order]) => order.indexOf(byId.get(id)!.answer));
+    // Each shows its own options, each once, in the lesson's balanced order (src/lib/gate-order.ts).
+    for (const [id, order] of shown) {
+      expect([...order].sort(), id).toEqual([...trial.gate(id).options].sort());
+      expect(order, `${id} in the order the lesson's rule gives`).toEqual(trial.gate(id).shown);
+    }
+    const at = [...shown.entries()].map(([id, order]) => order.indexOf(trial.gate(id).answer));
     const counts = [0, 1, 2].map((p) => at.filter((a) => a === p).length);
     // Build 7 showed A, A, A, A, B, A, B (five at A, none at C). No explanation names an option by place now, so every
     // gate takes part: n answers in three places differ by one at most, and no place three gates running.
@@ -688,18 +641,18 @@ test.describe("Slides: where the right answer sits (the owner's trial, 24 Sep: '
     for (let i = 2; i < at.length; i += 1) expect(at[i] === at[i - 1] && at[i] === at[i - 2], said).toBe(false);
 
     // Read shows the first gate in the same order (the lesson's order is one function of the note).
-    await page.goto(TOPIC);
-    const readFirst = page.locator(`#note [data-gate='${all[0].id}'] [role='radio']`);
+    await page.goto(trial.path);
+    const readFirst = page.locator(`#note [data-gate='${all[0]!.id}'] [role='radio']`);
     await expect(readFirst.first()).toBeVisible();
-    expect(await readFirst.evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? ""))).toEqual(shown.get(all[0].id));
+    expect(await readFirst.evaluateAll((els) => els.map((e) => e.getAttribute("data-value") ?? ""))).toEqual(shown.get(all[0]!.id));
   });
 });
 
 test.describe("Slides: the figure she acts on, and the drawn labels", () => {
-  test("the shared factors strike in pairs, (x − 7) never, a mismatch is named, Check draws the simplified fraction", async ({ page }) => {
+  test("the shared factors strike in pairs, (x − 7) never, a mismatch is named, Check draws the simplified fraction", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    await walkTo(page, "interaction");
+    await openSlides(page, trial);
+    await walkTo(page, trial, "interaction");
     // It follows the card that works the three moves in front of her (the owner's rule: shown, then hers to do).
     await expect(page.getByRole("heading", { level: 2 })).toHaveText("Strike every factor both lines share");
     expect(await smallestDrawnLabel(page)).toBeNull(); // pills are real buttons, 44 px, not drawn text
@@ -731,15 +684,17 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     expect(await animations(page)).toBe(0);
   });
 
-  test("what she struck stays struck when she goes back a card and returns, and after a reload (audit CQ-04)", async ({ page }) => {
+  test("what she struck stays struck when she goes back a card and returns, and after a reload (audit CQ-04)", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    await walkTo(page, "interaction");
+    await openSlides(page, trial);
+    const before = beforeInteraction(trial);
+    await walkTo(page, trial, "interaction");
     await page.locator("[data-pill='t-b']").click();
     await page.locator("[data-pill='b-b']").click();
-    // Before Check: back a card and forward again.
+    // Before Check: back a card (the one the deck puts before the figure: in v3 its See it) and forward again.
     await page.keyboard.press("ArrowLeft");
-    await expect(page.locator("[data-card='idea']")).toBeVisible();
+    await expect(page.locator(`[data-card='${before.card.kind}']`)).toBeVisible();
+    await expect(count(page)).toHaveText(new RegExp(`^${before.card.n} of `));
     await page.keyboard.press("ArrowRight");
     await expect(page.locator("[data-pill][data-struck]")).toHaveCount(2);
     await page.locator("[data-pill='t-n']").click();
@@ -756,17 +711,21 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     await expect(control(page)).toHaveText("Continue");
   });
 
-  test("a run kept from the old drawing (build 8's pills) opens the figure afresh, never 'done' over unstruck pills", async ({ page }) => {
+  test("a run kept from the old drawing (build 8's pills) opens the figure afresh, never 'done' over unstruck pills", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    await walkTo(page, "interaction");
+    await openSlides(page, trial);
+    const { interaction } = beforeInteraction(trial);
+    await walkTo(page, trial, "interaction");
     // What build 8 stored for this card: 2x(x + 5) over 4(x + 5)(x − 5), struck and checked.
-    await page.evaluate((key) => {
-      const raw = JSON.parse(localStorage.getItem(key) ?? "{}");
-      raw.figures = { "interaction:afs.tap-to-cancel": { struck: ["t-b", "b-b", "t-2x", "b-4"], lit: [] } };
-      raw.checked = { "interaction:afs.tap-to-cancel": { correct: true } };
-      localStorage.setItem(key, JSON.stringify(raw));
-    }, `cairn.slides.${TOPIC_ID}`);
+    await page.evaluate(
+      ({ key, card }) => {
+        const raw = JSON.parse(localStorage.getItem(key) ?? "{}");
+        raw.figures = { [card]: { struck: ["t-b", "b-b", "t-2x", "b-4"], lit: [] } };
+        raw.checked = { [card]: { correct: true } };
+        localStorage.setItem(key, JSON.stringify(raw));
+      },
+      { key: `cairn.slides.${trial.row.id}`, card: interaction.key },
+    );
     await page.reload();
     await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
     await expect(page.locator("[data-card='interaction']")).toBeVisible();
@@ -775,10 +734,10 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     await expect(control(page)).toHaveText("Check");
   });
 
-  test("a Check with a factor still shared lights it, shows the answer, and lets her finish it now (audit LD-11)", async ({ page }) => {
+  test("a Check with a factor still shared lights it, shows the answer, and lets her finish it now (audit LD-11)", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    await walkTo(page, "interaction");
+    await openSlides(page, trial);
+    await walkTo(page, trial, "interaction");
     await page.locator("[data-pill='t-b']").click();
     await page.locator("[data-pill='b-b']").click();
     await control(page).click();
@@ -799,14 +758,14 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
   });
 
   for (const scheme of ["light", "dark"] as const) {
-    test(`the pills' edges hold 3:1 against their stage, ${scheme} (WCAG 1.4.11; audit CD-05)`, async ({ page }) => {
+    test(`the pills' edges hold 3:1 against their stage, ${scheme} (WCAG 1.4.11; audit CD-05)`, async ({ page, trial }) => {
       await page.emulateMedia({ colorScheme: scheme });
       for (const [i, size] of [PHONE, DESKTOP].entries()) {
         await page.setViewportSize(size);
         // Each size starts the deck afresh: the first run's place would otherwise open it at the figure.
         if (i > 0) await page.evaluate(() => localStorage.clear());
-        await openSlides(page);
-        await walkTo(page, "interaction");
+        await openSlides(page, trial);
+        await walkTo(page, trial, "interaction");
         const ratios = await page.evaluate(() => {
           const canvas = document.createElement("canvas");
           canvas.width = canvas.height = 1;
@@ -836,22 +795,25 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     });
   }
 
-  test("the idea's drawing, the note's own figures and the miss's consequence keep every label at 13 px or more at 390", async ({ page }) => {
+  test("the idea's drawing, the note's own figures and the miss's consequence keep every label at 13 px or more at 390", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
+    await openSlides(page, trial);
     await control(page).click();
-    // Card 2 reads the drawing ("In the drawing…"): the registered drawing stands on it with the note figure's own caption.
-    const drawing = page.locator("[data-card-figure='afs.cancel']");
-    await expect(drawing.locator("svg[data-figure='afs.cancel']")).toBeVisible();
-    await expect(drawing).toContainText(await heroCaption(page));
+    // Card 2 reads the drawing ("In the drawing…"): the drawing registered for it stands on it with the note figure's own
+    // caption (src/lib/slides/enrichment.ts illustrations, keyed by the card).
+    const drawn = enrichmentFor(trial.row.id)?.illustrations?.[trial.deck.cards[1]!.key];
+    expect(drawn, "a drawing registered for card 2").toBeTruthy();
+    const drawing = page.locator(`[data-card-figure='${drawn}']`);
+    await expect(drawing.locator(`svg[data-figure='${drawn}']`)).toBeVisible();
+    await expect(drawing).toContainText(trial.heroCaption);
     expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
     // It strikes exactly the 3 out of 3x and 6 and the bracket (x + 7), and leaves (x − 7) standing.
     const struck = await drawing.locator("[data-piece]").evaluateAll((els) => els.map((e) => `${e.getAttribute("data-piece")}:${e.getAttribute("data-struck") ?? "-"}`));
     expect(struck).toEqual(["t-n:3", "t-b:all", "b-n:3", "b-b:all", "b-m:-"]);
 
-    const first = await firstGate(page);
-    await walkTo(page, "gate", first.id);
-    await answerChoice(page, first.options!.find((o) => o !== first.answer)!);
+    const first = trial.gates[0]!;
+    await walkTo(page, trial, "gate", first.id);
+    await answerChoice(page, first.wrongs[0]!);
     // The consequence is drawn on the re-teach, before the answer is shown.
     await expect(page.locator("[data-card='reteach'] [data-reaction]")).toBeVisible();
     expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
@@ -859,6 +821,8 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
 
     // The next card, the next section's first, reads the note's own figure: on its stage, as wide as its labels were sized
     // for (a 356 px drawing; on the 316 px stage the 15-unit labels were 11.9 px), and nothing scrolls sideways.
+    const next = trial.deck.cards[trial.deck.cards.findIndex((c) => c.gate === first.id) + 1]!;
+    expect(next.figure, `card ${next.n}, after the first Your turn, stands a figure of the note's`).toBe(true);
     await showAnswer(page);
     await control(page).click();
     const figure = page.locator("[data-card-figure='note'] svg");
@@ -868,16 +832,17 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     expect(await page.locator("[data-card]").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
   });
 
-  test("a worked line stands whole: no inline formula breaks across lines on the three moves' worked card, at 390 and 1280", async ({ page }) => {
+  test("a worked line stands whole: no inline formula breaks across lines on the three moves' worked card, at 390 and 1280", async ({ page, trial }) => {
+    const { card: worked } = beforeInteraction(trial);
     for (const [i, size] of [PHONE, DESKTOP].entries()) {
       await page.setViewportSize(size);
       if (i > 0) await page.evaluate(() => localStorage.clear());
-      await openSlides(page);
-      await walkTo(page, "interaction");
+      await openSlides(page, trial);
+      await walkTo(page, trial, "interaction");
       // Back one card: the card that works the three moves in front of her (the See it in a v3 note, a worked idea card
       // in a v2 one), every line of it shown.
       await page.keyboard.press("ArrowLeft");
-      await expect(page.locator("[data-card='see'], [data-card='idea']")).toBeVisible();
+      await expect(page.locator(`[data-card='${worked.kind}']`)).toBeVisible();
       await expect(page.locator("[data-ghost]")).toHaveCount(0);
       const found = await page.evaluate(() => {
         const inline = Array.from(document.querySelectorAll<HTMLElement>("[data-card] .katex")).filter((k) => !k.closest(".katex-display"));
@@ -893,22 +858,24 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
     }
   });
 
-  // g2, "What cancels in this fraction? (x + 4)/x": each wrong option draws its own consequence at x = 1, the test its
-  // explanation makes (audit CT-19, CQ-03), and the two labels under the tiles never meet, on the phone or at the
-  // verdict's full 356 px (audit CT-11, CD-02, LD-10).
-  for (const [option, value] of [
-    ["The $x$, leaving $4$", "4"],
-    ["The $x$ and the $4$", "1"],
-  ] as const) {
-    test(`g2 answered "${option}" draws x = 1 giving 5 against her ${value}, with labels that never overlap`, async ({ page }) => {
-      for (const [i, size] of [PHONE, DESKTOP].entries()) {
+  // The Your turn whose verdict draws its consequence (the enrichment's reaction; on the trial, "What cancels in this
+  // fraction?"): each wrong option draws its own consequence at x = 1, the test its explanation makes (audit CT-19,
+  // CQ-03), and the two labels under the tiles never meet, on the phone or at the verdict's full 356 px (audit CT-11,
+  // CD-02, LD-10). The value each wrong option gives is the drawing's own rule (enrich/afs-model.ts substituteFor).
+  test("each wrong answer to the Your turn with a drawn consequence draws x = 1 against her own value, with labels that never overlap", async ({ page, trial }) => {
+    const gate = trial.gates.find((g) => g.reaction === "afs.substitute");
+    expect(gate, "a Your turn whose verdict draws the x = 1 consequence").toBeTruthy();
+    expect(gate!.wrongs.length, "its wrong options").toBeGreaterThan(0);
+    for (const option of gate!.wrongs) {
+      const value = substituteFor(option, false).value;
+      for (const size of [PHONE, DESKTOP]) {
         await page.setViewportSize(size);
-        if (i > 0) await page.evaluate(() => localStorage.clear());
-        await openSlides(page);
+        await page.evaluate(() => localStorage.clear()).catch(() => undefined);
+        await openSlides(page, trial);
         await control(page).click();
-        await walkTo(page, "gate", "g2");
+        await walkTo(page, trial, "gate", gate!.id);
         await answerChoice(page, option);
-        const figure = page.locator("[data-reaction='afs.substitute']");
+        const figure = page.locator(`[data-reaction='${gate!.reaction}']`);
         await expect(figure).toBeVisible();
         await expect(figure.locator("[data-value]")).toHaveText(value);
         await expect(figure).toHaveAttribute("aria-label", new RegExp(`your cancelled version is ${value}\\.`));
@@ -920,11 +887,11 @@ test.describe("Slides: the figure she acts on, and the drawn labels", () => {
         );
         const [fraction, hers] = boxes;
         const apart = fraction.right <= hers.left || hers.right <= fraction.left || fraction.bottom <= hers.top || hers.bottom <= fraction.top;
-        expect(apart, `labels at ${size.width}: ${JSON.stringify(boxes)}`).toBe(true);
+        expect(apart, `labels for "${option}" at ${size.width}: ${JSON.stringify(boxes)}`).toBe(true);
         expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
       }
-    });
-  }
+    }
+  });
 });
 
 /**
@@ -940,9 +907,14 @@ test.describe("Slides: the focus ring follows the keyboard, not the page", () =>
       return { style: cs.outlineStyle, width: cs.outlineWidth };
     });
 
-  test("no ring on load, after a click on Continue or after the arrow keys; the ring after Enter on the control", async ({ page }) => {
+  test("no ring on load, after a click on Continue or after the arrow keys; the ring after Enter on the control", async ({ page, trial }) => {
+    // Card 2 carries its section's heading as its title; card 3, the section's next idea, has none (cards.ts: only the
+    // first card under a heading carries it), so its section is the landing place.
+    const [, titled, untitled] = trial.deck.cards;
+    expect([titled!.kind, titled!.first], "card 2 opens its section with its heading").toEqual(["idea", true]);
+    expect([untitled!.kind, untitled!.first], "card 3 is the section's next idea, untitled").toEqual(["idea", false]);
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
     const html = page.locator("html");
     await expect(html).toHaveAttribute("data-input", "pointer");
@@ -979,9 +951,9 @@ test.describe("Slides: the focus ring follows the keyboard, not the page", () =>
 });
 
 test.describe("Slides: moving on", () => {
-  test("a swipe moves on and back on a touch phone", async ({ page, isMobile }) => {
+  test("a swipe moves on and back on a touch phone", async ({ page, isMobile, trial }) => {
     test.skip(!isMobile, "the swipe is a phone gesture");
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
     await control(page).click();
     await expect(count(page)).toHaveText(`2 of ${deck}`);
@@ -994,9 +966,10 @@ test.describe("Slides: moving on", () => {
     await expect(count(page)).toHaveText(`2 of ${deck}`);
   });
 
-  test("a mouse drag that selects a sentence keeps the card and the selection (audit CQ-05)", async ({ page }) => {
+  test("a mouse drag that selects a sentence keeps the card and the selection (audit CQ-05)", async ({ page, trial }) => {
+    expect(trial.deck.cards[1]!.kind, "card 2 is an idea card, prose to select").toBe("idea");
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
     await control(page).click();
     await expect(count(page)).toHaveText(`2 of ${deck}`);
@@ -1015,11 +988,12 @@ test.describe("Slides: moving on", () => {
     }
   });
 
-  test("on a gate the arrows move the choice and Enter checks it (audit CQ-12)", async ({ page }) => {
+  test("on a gate the arrows move the choice and Enter checks it (audit CQ-12)", async ({ page, trial }) => {
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
-    const at = await toFirstGate(page);
+    const first = trial.gates[0]!;
+    const at = await toFirstGate(page, trial);
     const radios = page.locator("[data-gate] [role='radio']");
     await radios.nth(0).click();
     await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
@@ -1029,21 +1003,28 @@ test.describe("Slides: moving on", () => {
     await page.keyboard.press("ArrowUp");
     await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
     await expect(count(page)).toHaveText(`${at} of ${deck}`);
+    // The arrows on to the right answer, wherever the lesson's order put it (a miss would be re-taught before any
+    // verdict), then Enter checks the choice: the verdict, and the way on.
+    const right = (await radios.evaluateAll((els) => els.map((e) => e.getAttribute("data-value")))).indexOf(first.answer);
+    expect(right, "the right answer is one of the options shown").toBeGreaterThanOrEqual(0);
+    for (let i = 0; i < right; i += 1) await page.keyboard.press("ArrowDown");
+    await expect(radios.nth(right)).toHaveAttribute("aria-checked", "true");
+    await expect(radios.nth(right)).toBeFocused();
     await page.keyboard.press("Enter");
-    await expect(page.locator("[data-verdict]")).toBeVisible();
+    await expect(page.locator("[data-verdict='ok']")).toBeVisible();
     await expect(control(page)).toHaveText("Continue");
     await expect(page.locator("[data-hints]")).toContainText("continue");
   });
 
-  test("the Next button at the screen's edge and the arrow keys move on, on the desktop", async ({ page }) => {
+  test("the Next button at the screen's edge and the arrow keys move on, on the desktop", async ({ page, trial }) => {
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
     await page.keyboard.press("Enter");
     await expect(count(page)).toHaveText(`2 of ${deck}`);
     // The cards that explain and work the idea move on freely (on a See it the next button shows the next step first);
     // the Your turn after them is locked until answered.
-    const at = await toFirstGate(page, () => page.locator("[data-next]").click(), 2);
+    const at = await toFirstGate(page, trial, () => page.locator("[data-next]").click(), 2);
     await expect(page.locator("[data-next]")).toBeDisabled(); // a gate: locked
     await page.locator("[data-prev]").click();
     await expect(count(page)).toHaveText(`${at - 1} of ${deck}`);
@@ -1051,16 +1032,16 @@ test.describe("Slides: moving on", () => {
 });
 
 test.describe("Slides: the whole deck and the close", () => {
-  test("the missed gate returns before the recap; the close holds the character and Rowan's line and no answer field", async ({ page }) => {
+  test("the missed gate returns before the recap; the close holds the character and Rowan's line and no answer field", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
     await installPastFirstRun(page);
-    await openSlides(page);
-    const first = await firstGate(page);
-    const checks = (await gates(page)).length;
-    const recalls = (await recallPrompts(page)).length;
+    await openSlides(page, trial);
+    const first = trial.gates[0]!;
+    const checks = trial.gates.length;
+    const recalls = trial.deck.recall.length;
     const recallWords = `${recalls} recall card${recalls === 1 ? "" : "s"}`;
     await control(page).click();
-    await walkToClose(page, [first.id]);
+    await walkToClose(page, trial, [first.id]);
 
     await expect(page.locator("[data-card='close']")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Done for tonight.");
@@ -1070,8 +1051,9 @@ test.describe("Slides: the whole deck and the close", () => {
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("!");
     expect(await page.locator("[data-card='close'] :is(input, textarea, [role='radio'])").count()).toBe(0);
     await expect(page.locator("[data-card='close']")).toContainText("What returns");
-    // Every card counted, with no reason that is not one (audit CT-07, LD-05): the run's ten cards come back tonight.
-    await expect(page.locator("[data-returns] li").first()).toHaveText(`Tonight · ${checks} your turns and ${recallWords} from Simplifying algebraic fractions.`);
+    // Every card counted, with no reason that is not one (audit CT-07, LD-05): the run's Your turns and recall cards come
+    // back tonight.
+    await expect(page.locator("[data-returns] li").first()).toHaveText(`Tonight · ${checks} your turns and ${recallWords} from ${trial.title}.`);
     // And so Rowan does not say there is nothing else to do (the library's own line for a night with nothing due).
     await expect(page.locator("[data-companion='session-close']")).not.toContainText("nothing else to do");
     // The questions proper come after the teaching (the owner's answer 1: the Practice stage): the first way out, on the
@@ -1080,7 +1062,7 @@ test.describe("Slides: the whole deck and the close", () => {
     const exits = page.locator("[data-close] a[data-exit]");
     await expect(exits).toHaveCount(2);
     await expect(exits.nth(0)).toHaveText("Now the questions");
-    await expect(exits.nth(0)).toHaveAttribute("href", `${TOPIC}#practice`);
+    await expect(exits.nth(0)).toHaveAttribute("href", `${trial.path}#practice`);
     await expect(exits.nth(1)).toHaveText("Done for tonight");
     await expect(exits.nth(1)).toHaveAttribute("href", "/");
     expect(await animations(page)).toBe(0);
@@ -1088,7 +1070,7 @@ test.describe("Slides: the whole deck and the close", () => {
     // The records: every Your turn once with Read's ids, the miss on the first kept as the record, every recall graded.
     const rows = await attempts(page);
     const gateRows = rows.filter((r) => r.itemId.includes("#gate:"));
-    expect(gateRows.map((r) => r.itemId.split("#gate:")[1]).sort()).toEqual((await gates(page)).map((g) => g.id).sort());
+    expect(gateRows.map((r) => r.itemId.split("#gate:")[1]).sort()).toEqual(trial.gates.map((g) => g.id).sort());
     expect(gateRows).toHaveLength(checks);
     expect(gateRows.find((r) => r.itemId.endsWith(`#gate:${first.id}`))?.correct).toBe(false);
     expect(rows.filter((r) => r.itemKind === "prompt")).toHaveLength(recalls);
@@ -1098,13 +1080,13 @@ test.describe("Slides: the whole deck and the close", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
   });
 
-  test("a close where Rowan is silent draws no empty scene, and Now the questions lands on Practice", async ({ page }) => {
+  test("a close where Rowan is silent draws no empty scene, and Now the questions lands on Practice", async ({ page, trial }) => {
     // A device that has not been through first run: the companion says nothing, so there is no hare and no hill, and
     // no evening-coloured block where they would have stood (audit CQ-09).
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     await control(page).click();
-    await walkToClose(page);
+    await walkToClose(page, trial);
     await expect(page.locator("[data-card='close']")).toBeVisible();
     await expect(page.locator("[data-companion='session-close']")).toHaveCount(0);
     await expect(page.locator("[data-scene]")).toHaveCount(0);
@@ -1112,7 +1094,7 @@ test.describe("Slides: the whole deck and the close", () => {
     // The exit lands on the Practice stage, in view (audit LD-02, CQ-06; the topic page scrolls to #practice once the stage
     // has rendered, which is the topic agent's half).
     await page.locator("[data-exit='practise']").click();
-    await expect(page).toHaveURL(new RegExp(`${TOPIC.replace(/\//g, "\\/")}#practice$`));
+    await expect(page).toHaveURL(new RegExp(`${trial.path.replace(/\//g, "\\/")}#practice$`));
     const practice = page.locator("#practice");
     await expect(practice).toBeAttached();
     await expect
@@ -1120,14 +1102,14 @@ test.describe("Slides: the whole deck and the close", () => {
       .toBeLessThan(200);
   });
 
-  test("on a phone the re-teach, then the answer, are brought into view, not left under the foot (audit LD-14)", async ({ page }) => {
+  test("on a phone the re-teach, then the answer, are brought into view, not left under the foot (audit LD-14)", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
-    await openSlides(page);
+    await openSlides(page, trial);
     // The Your turn with the longest explanation in the note, answered wrong: the most there is to bring into view.
-    const longest = [...(await gates(page))].sort((a, b) => (b.explain?.length ?? 0) - (a.explain?.length ?? 0))[0]!;
+    const longest = [...trial.gates].sort((a, b) => (b.explain?.length ?? 0) - (a.explain?.length ?? 0))[0]!;
     await control(page).click();
-    await walkTo(page, "gate", longest.id);
-    await answerChoice(page, longest.options!.find((o) => o !== longest.answer)!);
+    await walkTo(page, trial, "gate", longest.id);
+    await answerChoice(page, longest.wrongs[0]!);
     const inView = (selector: string) =>
       page.evaluate((sel) => {
         const el = document.querySelector(sel)!.getBoundingClientRect();
@@ -1148,19 +1130,19 @@ test.describe("Slides: the whole deck and the close", () => {
       .toBeGreaterThanOrEqual(0);
   });
 
-  test("the retry card sits just before the recap and is asked once more, unrecorded; the recap draws a glyph a line", async ({ page }) => {
+  test("the retry card sits just before the recap and is asked once more, unrecorded; the recap draws a glyph a line", async ({ page, trial }) => {
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
+    await openSlides(page, trial);
     await control(page).click();
-    const all = await gates(page);
+    const all = trial.gates;
     const first = all[0]!;
-    const last = all[all.length - 1];
-    await walkTo(page, "gate", first.id);
-    await answerChoice(page, first.options!.find((o) => o !== first.answer)!);
+    const last = all[all.length - 1]!;
+    await walkTo(page, trial, "gate", first.id);
+    await answerChoice(page, first.wrongs[0]!);
     await showAnswer(page);
     await control(page).click();
     // The last Your turn of the lesson, then the retry.
-    await walkTo(page, "gate", last.id);
+    await walkTo(page, trial, "gate", last.id);
     await answerChoice(page, last.answer);
     await control(page).click();
     // The next card is the retry, before the recap: the twin on new numbers where the note has one, else the gate again.
@@ -1174,11 +1156,11 @@ test.describe("Slides: the whole deck and the close", () => {
     await control(page).click();
     await expect(page.getByRole("heading", { level: 2 })).toHaveText("You can now");
     await expect(page.locator("[data-card='recap']")).toContainText("The one you missed came back before this card, and held.");
-    // A line for each of the note's, and a drawn glyph for each line, found by what the line says (recapGlyphsFor); every
-    // glyph's numeral at the 13 px floor.
-    const lines = await recapLines(page);
+    // A line for each of the recap's, and a drawn glyph for each line, found by what the line says (recapGlyphsFor);
+    // every glyph's numeral at the 13 px floor.
+    const lines = trial.deck.recapLines;
     await expect(page.locator("[data-card='recap'] li")).toHaveCount(lines.length);
-    const glyphs = recapGlyphsFor(lines, enrichmentFor(TOPIC_ID));
+    const glyphs = recapGlyphsFor(lines, enrichmentFor(trial.row.id));
     expect(glyphs, "a glyph for every line of the note's recap").not.toBeNull();
     expect(await page.locator("[data-card='recap'] [data-glyph]").evaluateAll((els) => els.map((e) => e.getAttribute("data-glyph")))).toEqual(glyphs);
     expect(await smallestDrawnLabel(page)).toBeGreaterThanOrEqual(13);
@@ -1190,14 +1172,13 @@ test.describe("Slides: the whole deck and the close", () => {
  * own blocks: a note not yet converted to the See it shape has no See it card and no twin, and the tests say so.
  */
 test.describe("Slides: See it, and the twin before the recap", () => {
-  test("a See it shows one step per Continue, each with its reason, and its last control is Your turn", async ({ page }) => {
+  test("a See it shows one step per Continue, each with its reason, and its last control is Your turn", async ({ page, trial }) => {
+    test.skip(trial.sees.length === 0, "the trial note has no See it block yet (its conversion to the See it shape is the content session's)");
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    const sees = await seeIts(page);
-    test.skip(sees.length === 0, "the trial note has no See it block yet (its conversion to the See it shape is the content session's)");
+    await openSlides(page, trial);
     await control(page).click();
-    await walkTo(page, "see");
-    const n = sees[0]!.steps;
+    await walkTo(page, trial, "see");
+    const n = trial.sees[0]!.steps;
     const at = await count(page).textContent();
     // The topic's first See it is shown, never typed: every step comes by Continue (or →, which is the same press).
     await expect(page.locator("[data-typed-step]")).toHaveCount(0);
@@ -1225,10 +1206,10 @@ test.describe("Slides: See it, and the twin before the recap", () => {
     expect(await animations(page)).toBe(0);
   });
 
-  test("the first Your turn follows the first See it, and asks what it showed (the owner's answer 8)", async ({ page }) => {
+  test("the first Your turn follows the first See it, and asks what it showed (the owner's answer 8)", async ({ page, trial }) => {
+    test.skip(trial.sees.length === 0, "the trial note has no See it block yet");
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
-    test.skip((await seeIts(page)).length === 0, "the trial note has no See it block yet");
+    await openSlides(page, trial);
     await control(page).click();
     const kinds: string[] = [];
     for (let guard = 0; guard < 40; guard += 1) {
@@ -1244,16 +1225,16 @@ test.describe("Slides: See it, and the twin before the recap", () => {
     await expect(page.locator("[data-gate]")).not.toContainText(/one tap to start|warm-up/i);
   });
 
-  test("Skip to your turn appears only on a return visit, and shows every step on the way on", async ({ page }) => {
+  test("Skip to your turn appears only on a return visit, and shows every step on the way on", async ({ page, trial }) => {
+    test.skip(trial.sees.length === 0, "the trial note has no See it block yet");
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    test.skip((await seeIts(page)).length === 0, "the trial note has no See it block yet");
+    await openSlides(page, trial);
     await control(page).click();
-    await walkToClose(page);
+    await walkToClose(page, trial);
     // A return visit: the finished run starts afresh, and the See its she saw to their end offer the skip.
-    await openSlides(page);
+    await openSlides(page, trial);
     await control(page).click();
-    await walkTo(page, "see");
+    await walkTo(page, trial, "see");
     const skip = page.locator("[data-skip-see]");
     await expect(skip).toBeVisible();
     await expect(skip).toHaveText(/Skip to your turn/);
@@ -1266,30 +1247,23 @@ test.describe("Slides: See it, and the twin before the recap", () => {
     await expect(page.locator("[data-skip-see]")).toHaveCount(0);
   });
 
-  test("a step she types is marked through the engine and never recorded", async ({ page }) => {
+  test("a step she types is marked through the engine and never recorded", async ({ page, trial }) => {
+    // The deck's own rule: at most one typed step a See it, never in the topic's first (src/lib/slides/see.ts typedStep).
+    const typed = trial.sees.find((s) => s.typed !== null);
+    test.skip(!typed, "no See it in the trial note asks her to type a step");
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    test.skip((await seeIts(page)).length < 2, "the trial note has no second See it yet (a first See it is never typed)");
+    await openSlides(page, trial);
     await control(page).click();
-    // Walk the See its until one asks her to type a step (never the first).
-    let found = false;
-    for (let guard = 0; guard < 40 && !found; guard += 1) {
-      if ((await card(page).getAttribute("data-card")) !== "see") {
-        await walkTo(page, "see").catch(() => undefined);
-        if ((await card(page).getAttribute("data-card")) !== "see") break;
-        continue;
-      }
-      for (let i = 0; i < 8; i += 1) {
-        if (await page.locator("[data-typed-step]").count()) {
-          found = true;
-          break;
-        }
-        if ((await page.locator("[data-ghost]").count()) === 0) break;
+    // Walk the See its until the one that asks her to type a step.
+    for (let seen = 0; seen <= typed!.index; seen += 1) {
+      await walkTo(page, trial, "see");
+      if (seen < typed!.index) {
+        await stepThrough(page);
         await control(page).click();
       }
-      if (!found) await control(page).click();
     }
-    test.skip(!found, "no See it in the trial note asks her to type a step");
+    for (let i = 0; i < 8 && (await page.locator("[data-typed-step]").count()) === 0; i += 1) await control(page).click();
+    await expect(page.locator("[data-typed-step]")).toBeVisible();
     const before = (await attempts(page)).length;
     // Her line, wrong: the step is shown with what she wrote; nothing is recorded.
     await page.locator("[data-typed-step] input, [data-typed-step] textarea").first().fill("0");
@@ -1298,21 +1272,19 @@ test.describe("Slides: See it, and the twin before the recap", () => {
     expect((await attempts(page)).length).toBe(before);
   });
 
-  test("a missed Your turn with a twin comes back before the recap on new numbers, once, unrecorded", async ({ page }) => {
+  test("a missed Your turn with a twin comes back before the recap on new numbers, once, unrecorded", async ({ page, trial }) => {
+    const g = trial.gates.find((x) => x.twin && x.kind === "choice");
+    test.skip(!g, "no gate in the trial note carries a twin yet");
     await page.setViewportSize(DESKTOP);
-    await openSlides(page);
-    const all = await gates(page);
-    const withTwin = all.find((g) => g.twin && g.options);
-    test.skip(!withTwin, "no gate in the trial note carries a twin yet");
-    const g = withTwin!;
+    await openSlides(page, trial);
     await control(page).click();
-    await walkTo(page, "gate", g.id);
-    await answerChoice(page, g.options!.find((o) => o !== g.answer)!);
+    await walkTo(page, trial, "gate", g!.id);
+    await answerChoice(page, g!.wrongs[0]!);
     await showAnswer(page);
     await expect(page.locator("[data-verdict='miss']")).toContainText("comes back before the recap on new numbers");
     await control(page).click();
     // On to the retry, answering everything between right: it comes before the recap, and asks the twin.
-    for (let guard = 0; guard < 90 && (await page.locator(`[data-gate='${g.id}'][data-retry]`).count()) === 0; guard += 1) {
+    for (let guard = 0; guard < 90 && (await page.locator(`[data-gate='${g!.id}'][data-retry]`).count()) === 0; guard += 1) {
       const k = await card(page).getAttribute("data-card");
       if (k === "recap" || k === "close") throw new Error(`the ${k} came before the twin`);
       if (k === "see") {
@@ -1320,7 +1292,7 @@ test.describe("Slides: See it, and the twin before the recap", () => {
         await control(page).click();
       } else if (k === "gate") {
         const id = (await page.locator("[data-gate]").getAttribute("data-gate"))!;
-        const other = all.find((x) => x.id === id)!;
+        const other = trial.gate(id);
         if ((await page.locator("[data-verdict]").count()) === 0) await answerChoice(page, (await page.locator("[data-gate]").getAttribute("data-retry")) !== null ? await retryAnswer(page, other) : other.answer);
         await control(page).click();
       } else if (k === "interaction") {
@@ -1330,15 +1302,15 @@ test.describe("Slides: See it, and the twin before the recap", () => {
       } else await control(page).click();
       await page.waitForTimeout(60);
     }
-    const retry = page.locator(`[data-gate='${g.id}'][data-retry='twin']`);
+    const retry = page.locator(`[data-gate='${g!.id}'][data-retry='twin']`);
     await expect(retry).toBeVisible();
-    await expect(retry).toHaveAttribute("data-asked", `${g.id}~twin`);
+    await expect(retry).toHaveAttribute("data-asked", `${g!.id}~twin`);
     const options = await retry.locator("[role='radio']").evaluateAll((els) => els.map((e) => e.getAttribute("data-value")));
-    expect([...options].sort()).toEqual([...g.twin!.options!].sort());
-    await answerChoice(page, g.twin!.answer);
+    expect([...options].sort()).toEqual([...g!.twin!.options].sort());
+    await answerChoice(page, g!.twin!.answer);
     await expect(page.locator("[data-verdict='ok']")).toContainText("Asked once more, and held.");
     // One record, the first answer.
-    expect((await attempts(page)).filter((r) => r.itemId.endsWith(`#gate:${g.id}`))).toEqual([{ itemId: `${TOPIC_ID}#gate:${g.id}`, itemKind: "practice", correct: false }]);
+    expect((await attempts(page)).filter((r) => r.itemId.endsWith(`#gate:${g!.id}`))).toEqual([{ itemId: `${trial.row.id}#gate:${g!.id}`, itemKind: "practice", correct: false }]);
     await control(page).click();
     await expect(page.locator("[data-card='recap']")).toBeVisible();
   });
@@ -1350,13 +1322,16 @@ test.describe("Slides: See it, and the twin before the recap", () => {
  * src/lib/slides/place.ts keeps the place, src/components/topic/last-lesson.ts is what Today reads.
  */
 test.describe("Slides: Pause here, and the way back", () => {
-  test("after a section's Your turn she may pause; Today names the next section and the minutes left, never a card; the slides open there", async ({ page }) => {
+  test("after a section's Your turn she may pause; Today names the next section and the minutes left, never a card; the slides open there", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
     await installPastFirstRun(page);
-    await openSlides(page);
+    await openSlides(page, trial);
     const deck = await deckSize(page);
-    const first = await firstGate(page);
-    const at = await toFirstGate(page);
+    const first = trial.gates[0]!;
+    // Where the deck the content builds places the stop after this Your turn, and the card it keeps (pause.ts).
+    const stop = trial.deck.pauses.find((p) => p.after === trial.deck.cards.find((c) => c.gate === first.id)!.key);
+    expect(stop, `a stop after ${first.id}, section 1's Your turn`).toBeTruthy();
+    const at = await toFirstGate(page, trial);
     // No stop while the Your turn waits for her answer.
     await expect(page.locator("[data-pause]")).toHaveCount(0);
     await answerChoice(page, first.answer);
@@ -1370,25 +1345,29 @@ test.describe("Slides: Pause here, and the way back", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
     const row = page.locator("[data-paused-lesson]");
     await expect(row).toBeVisible();
-    await expect(row).toContainText("Simplifying algebraic fractions");
+    await expect(row).toContainText(trial.title);
     await expect(row).toContainText(/ next · about \d+ minutes? left/);
     await expect(row).not.toContainText(/\bcard\b|\d+ of \d+/);
     // The way back opens the slides on the card after the stop: the next section's first card.
-    await page.goto(SLIDES);
+    await page.goto(trial.slidesPath);
     await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
     await expect(count(page)).toHaveText(`${at + 1} of ${deck}`);
-    // One card back stands the Your turn she answered, still answered; nothing was recorded twice.
+    expect(at + 1, "the card the stop keeps, against the deck the content builds").toBe(stop!.resumeAt);
+    // One card back stands the Your turn she answered, still answered (its verdict beside it on the card); nothing was
+    // recorded twice.
     await page.keyboard.press("ArrowLeft");
-    await expect(page.locator(`[data-gate='${first.id}'] [data-verdict='ok']`)).toBeVisible();
+    await expect(page.locator(`[data-gate='${first.id}']`)).toBeVisible();
+    await expect(page.locator("[data-verdict='ok']")).toBeVisible();
+    await expect(control(page)).toHaveText("Continue");
     expect((await attempts(page)).filter((r) => r.itemId.endsWith(`#gate:${first.id}`))).toHaveLength(1);
   });
 
-  test("a run left on a Your turn she has not answered opens on its See it, the tap before it", async ({ page }) => {
+  test("a run left on a Your turn she has not answered opens on its See it, the tap before it", async ({ page, trial }) => {
+    test.skip(trial.sees.length === 0, "the trial note has no See it block");
     await page.setViewportSize(PHONE);
-    await openSlides(page);
-    test.skip((await seeIts(page)).length === 0, "the trial note has no See it block");
-    const first = await firstGate(page);
-    const at = await toFirstGate(page);
+    await openSlides(page, trial);
+    const first = trial.gates[0]!;
+    const at = await toFirstGate(page, trial);
     // She leaves on the Your turn without answering it (a reload, a closed tab), and comes back.
     await page.reload();
     await expect(page.locator("[data-slides][data-ready='true']")).toBeAttached();
@@ -1404,9 +1383,9 @@ test.describe("Slides: Pause here, and the way back", () => {
 
 test.describe("Slides: the hero's two ways in", () => {
   for (const size of [PHONE, DESKTOP]) {
-    test(`at ${size.width} Slides carries the accent on a first visit, Read is the second way, and the choice is remembered`, async ({ page }) => {
+    test(`at ${size.width} Slides carries the accent on a first visit, Read is the second way, and the choice is remembered`, async ({ page, trial }) => {
       await page.setViewportSize(size);
-      await page.goto(TOPIC);
+      await page.goto(trial.path);
       const slides = page.locator("header a[data-way='slides'], a[data-way='slides']").first();
       const read = page.locator("button[data-way='read']").first();
       await expect(slides).toBeVisible();
@@ -1438,7 +1417,7 @@ test.describe("Slides: the hero's two ways in", () => {
 });
 
 test.describe("Slides: dark mode", () => {
-  test("the accent control keeps 4.5:1 with its text and the character keeps its colours", async ({ page }) => {
+  test("the accent control keeps 4.5:1 with its text and the character keeps its colours", async ({ page, trial }) => {
     await page.setViewportSize(PHONE);
     const contrast = async () =>
       control(page).evaluate((el) => {
@@ -1462,16 +1441,16 @@ test.describe("Slides: dark mode", () => {
     const fur = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--fur").trim());
 
     await page.emulateMedia({ colorScheme: "light" });
-    await openSlides(page);
+    await openSlides(page, trial);
     const lightFur = await fur();
     expect(await contrast()).toBeGreaterThanOrEqual(4.5);
 
     await page.emulateMedia({ colorScheme: "dark" });
-    await openSlides(page);
+    await openSlides(page, trial);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     expect(await contrast()).toBeGreaterThanOrEqual(4.5);
     expect(await fur()).toBe(lightFur);
-    await toFirstGate(page);
+    await toFirstGate(page, trial);
     await page.locator("[data-gate] [role='radio']").first().click();
     expect(await contrast()).toBeGreaterThanOrEqual(4.5);
   });
