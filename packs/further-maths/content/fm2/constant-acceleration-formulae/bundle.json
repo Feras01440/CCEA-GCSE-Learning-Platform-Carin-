@@ -1202,13 +1202,13 @@
               "id": "MW1",
               "code": "MW",
               "marks": 1,
-              "for": "a = -2.5 and v = 0 used"
+              "for": "$v^2 = u^2 + 2as$ chosen with $v = 0$"
             },
             {
               "id": "MW2",
               "code": "MW",
               "marks": 1,
-              "for": "0 = 400 + 2 x (-2.5) x s seen"
+              "for": "$0 = 400 + 2(-2.5)s$"
             },
             {
               "id": "W1",
@@ -1333,8 +1333,8 @@
                   "value": 0.005
                 }
               },
-              "feedback": "The one half has been left out. The sum and the multiplication are right, so the method mark (M) stands; halving gives 120 m.",
-              "marksTypicallyEarned": 1
+              "feedback": "The one half has been left out: $s = \\tfrac{1}{2}(u + v)t$ halves the sum of the velocities, so $(6 + 14) \\times 12$ is twice the distance. Halving gives 120 m.",
+              "marksTypicallyEarned": 0
             }
           ],
           "requiresWorking": true
@@ -1402,13 +1402,13 @@
               "id": "MW1",
               "code": "MW",
               "marks": 1,
-              "for": "v = u + at chosen with a = -1.2"
+              "for": "$v = u + at$ chosen"
             },
             {
               "id": "MW2",
               "code": "MW",
               "marks": 1,
-              "for": "12 = 30 - 1.2t seen"
+              "for": "$12 = 30 - 1.2t$"
             },
             {
               "id": "W1",
@@ -2031,7 +2031,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "a",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "(26 - x) / 8"
           }
         },
         {
@@ -2095,7 +2096,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "8 / x"
           }
         },
         {
@@ -2181,7 +2183,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "176 / x"
           }
         }
       ],
@@ -2590,6 +2593,14 @@
           "result": "pass",
           "detail": "Every printed number computed in ed-constant.mjs and asserted: cyclist 11² = 3² + 2a(56), a = 1; van 0 = 16² + 2(−3.2)s, s = 40; scooter 81/3 = 27, skater 36/1.5 = 24; boat 48 = 3(U + 11), U = 5; runner 30 = 2(U + 9), U = 6; cart 100 = 5(U + 13), U = 7; X to Y (8 − 2)/2.4 = 2.5 s, YZ 132/4.8 = 27.5 m, XY 12.5 m (the figure drawn to scale); car 0 = 21² + 126a, a = -3.5.",
           "at": "2026-09-27T16:25:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "FM2 fixer pass (11 Oct 2026; the 8 Oct fixer's in-flight work verified against the schemes and completed) on the strictest reviewer's teaching findings (scratchpad/reports/review-fm2-constant-acceleration-formulae.md): q.0005(main) error 240: 1 -> 0; q.0004(main) MW1 reworded; q.0004(main) MW2 reworded; q.0006(main) MW1 reworded; q.0006(main) MW2 reworded; q.0008(b) follow-through from (a): (26 - x) / 8; q.0008(c) follow-through from (b): 8 / x; q.0008(d) follow-through from (b): 176 / x.",
+          "at": "2026-10-11T07:58:00Z",
           "by": "claude"
         }
       ],
@@ -3427,6 +3438,22 @@
           "detail": "Common-error citation cleared (27 Sep 2026): the report it named does not describe this slip (Summer 2024 Q4 praised the handling of deceleration; Summer 2019 Q2 does not mention a half left out). Value, feedback and marks unchanged.",
           "at": "2026-09-27T16:25:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Scheme line MW1 of (main) reworded in place to the cited scheme's wording (the lead's ruling, 8 Oct): \"a = -2.5 and v = 0 used\" -> \"$v^2 = u^2 + 2as$ chosen with $v = 0$\". The cited 2025 Q3(ii) scheme pays MW1 for the formula chosen, so the error that takes a as +2.5 keeps it, as its 1 mark says (the review's m1).",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Scheme line MW2 of (main) reworded in place to the cited scheme's wording (the lead's ruling, 8 Oct): \"0 = 400 + 2 x (-2.5) x s seen\" -> \"$0 = 400 + 2(-2.5)s$\". The substitution with the deceleration's sign, as the cited scheme writes it.",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3540,6 +3567,14 @@
           "detail": "Common-error citation cleared (27 Sep 2026): the report it named does not describe this slip (Summer 2024 Q4 praised the handling of deceleration; Summer 2019 Q2 does not mention a half left out). Value, feedback and marks unchanged.",
           "at": "2026-09-27T16:25:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Common error 240 on (main) re-valued 1 -> 0, feedback reworded (in place: credit-only). Its line is MW1 for the formula with the half in it (the cited 2025 Q3(i) scheme: 200 = ½(U + 30)10 MW1); without the half the formula is a different one, which earns nothing (the review's M1).",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3652,6 +3687,22 @@
           "result": "pass",
           "detail": "Common-error citation cleared (27 Sep 2026): the report it named does not describe this slip (Summer 2024 Q4 praised the handling of deceleration; Summer 2019 Q2 does not mention a half left out). Value, feedback and marks unchanged.",
           "at": "2026-09-27T16:25:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Scheme line MW1 of (main) reworded in place to the cited scheme's wording (the lead's ruling, 8 Oct): \"v = u + at chosen with a = -1.2\" -> \"$v = u + at$ chosen\". The cited 2025 Q3(ii) scheme pays MW1 for the formula chosen, so the error that takes a as +1.2 keeps it, as its 1 mark says (the review's m1).",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Scheme line MW2 of (main) reworded in place to the cited scheme's wording (the lead's ruling, 8 Oct): \"12 = 30 - 1.2t seen\" -> \"$12 = 30 - 1.2t$\". The substitution with the deceleration's sign.",
+          "at": "2026-10-11T07:58:00Z",
           "by": "claude"
         }
       ],
@@ -4742,6 +4793,30 @@
           "result": "pass",
           "detail": "British English, second person, no exclamation marks, no verdict word; every $…$ compiles (content:check).",
           "at": "2026-09-27T16:25:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Follow-through relation added in place (ruling 14, credit-only): (b) from (a), (26 - x) / 8; on (a)'s own 10 it gives 2. a = (26 − U) ÷ 8 on her U. Probed through markAnswer with a wrong earlier value (probe-fix.mts).",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Follow-through relation added in place (ruling 14, credit-only): (c) from (b), 8 / x; on (b)'s own 2 it gives 4. t = (18 − 10) ÷ a on her acceleration. Probed through markAnswer with a wrong earlier value (probe-fix.mts).",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Follow-through relation added in place (ruling 14, credit-only): (d) from (b), 176 / x; on (b)'s own 2 it gives 88. QR = (26² − 18²) ÷ 2a = 176 ÷ a on her acceleration. Probed through markAnswer with a wrong earlier value (probe-fix.mts).",
+          "at": "2026-10-11T07:58:00Z",
           "by": "claude"
         }
       ],

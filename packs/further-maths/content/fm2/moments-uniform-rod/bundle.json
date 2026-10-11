@@ -4037,7 +4037,12 @@
               "source": "ccea-cer:further-maths:2023-summer:FM2:Q5"
             }
           ],
-          "requiresWorking": true
+          "requiresWorking": true,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value",
+            "relation": "180 / (x + 20)"
+          }
         }
       ],
       "totalMarks": 9,
@@ -5039,7 +5044,6 @@
         "q.fm.u2.moments-uniform-rod.0010",
         "q.fm.u2.moments-uniform-rod.0011",
         "q.fm.u2.moments-uniform-rod.0014",
-        "q.fm.u2.moments-uniform-rod.0015",
         "ftm.fm.u2.moments-uniform-rod.02",
         "q.fm.u2.moments-uniform-rod.0016",
         "q.fm.u2.moments-uniform-rod.0017",
@@ -5170,6 +5174,14 @@
           "detail": "Every printed number of the note recomputed and asserted in ed-moments.mjs: 400 × 0.9 = 300 × 1.2 = 360; 4.4 ÷ 2 = 2.2; 350 − 230 = 120; 930 ÷ 6 = 155; 1.5 − 1.5 = 0; 3450 ÷ 6 = 575, 750 − 575 = 175; 20 ÷ 2.5 = 8; 260 − 40 = 220, 110, 70; 180, 360 ÷ 180 = 2; 600 ÷ 600 = 1; 80, 3.5; 27.5, 42.5; 30, 60, L = 2; 80, M = 4, 240, d = 0.8; every gate and twin answer.",
           "at": "2026-10-07T22:05:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "FM2 fixer pass (11 Oct 2026; the 8 Oct fixer's in-flight work verified against the schemes and completed) on the strictest reviewer's teaching findings (scratchpad/reports/review-fm2-moments-uniform-rod.md): g8 twin: the note on C now names C (it said P); gate g5 withdrawn: The two-strings See it folded into section 6 as its worked case (the review's m2); g5 checked only up equals down, which g3 already checks, and the moments step it never checked is section 6's g10.; gate g17 withdrawn: The tipping section folded into Going further as one paragraph: no FM2 paper from 2019 to 2026 sets a rod on the point of tipping (the review's m2); worked example 03 still works the case after the paragraph explains it.; tipping folded into Going further as one paragraph (section, figure, See it and g17 out); sections renumbered after the two folds; q.0018(c) follow-through from (a): 180 / (x + 20); q.0015 withdrawn: A rod on the point of tipping, a case no FM2 paper from 2019 to 2026 sets; the review (m2) found it does not earn a practice question once the case is one paragraph in Going further, where worked example 3 works it..",
+          "at": "2026-10-11T07:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5195,6 +5207,20 @@
           "replacedBy": "g19",
           "reason": "It asked for the point the further section's See it had just chosen (moments about B), so the answer could be copied; g19 asks the chain's next link, resolving vertically for the mass, which the 2022 report saw done by moments.",
           "on": "2026-10-07T22:05:00Z"
+        },
+        {
+          "id": "g5",
+          "kind": "gate",
+          "replacedBy": null,
+          "reason": "The two-strings See it folded into section 6 as its worked case (the review's m2); g5 checked only up equals down, which g3 already checks, and the moments step it never checked is section 6's g10.",
+          "on": "2026-10-11T07:58:00Z"
+        },
+        {
+          "id": "g17",
+          "kind": "gate",
+          "replacedBy": null,
+          "reason": "The tipping section folded into Going further as one paragraph: no FM2 paper from 2019 to 2026 sets a rod on the point of tipping (the review's m2); worked example 03 still works the case after the paragraph explains it.",
+          "on": "2026-10-11T07:58:00Z"
         }
       ]
     },
@@ -8441,8 +8467,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u2.moments-uniform-rod.0015",
+          "kind": "question",
+          "replacedBy": null,
+          "reason": "A rod on the point of tipping, a case no FM2 paper from 2019 to 2026 sets; the review (m2) found it does not earn a practice question once the case is one paragraph in Going further, where worked example 3 works it.",
+          "on": "2026-10-11T07:58:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u2.moments-uniform-rod.0016",
@@ -8729,6 +8764,14 @@
           "result": "pass",
           "detail": "Follow-through relation added in place (ruling 14, credit-only): (b) 100 ÷ x, each re-executed on the part's own earlier answer and probed through markAnswer with a wrong earlier value (probe-moments.mts).",
           "at": "2026-10-07T22:05:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "independent-solve",
+          "tool": "claude (fixer-fm2, 11 Oct 2026, scratchpad/probes/fixer-fm2/ed-fix.mjs; the 8 Oct FM2 fixer's in-flight fixes re-verified)",
+          "result": "pass",
+          "detail": "Follow-through relation added in place (ruling 14, credit-only): (c) from (a), 180 / (x + 20); on (a)'s own 80 it gives 1.8. The pivot now carries her (a) plus the 20 N; moments about A give 180 ÷ that. Probed through markAnswer with a wrong earlier value (probe-fix.mts).",
+          "at": "2026-10-11T07:58:00Z",
           "by": "claude"
         }
       ],
