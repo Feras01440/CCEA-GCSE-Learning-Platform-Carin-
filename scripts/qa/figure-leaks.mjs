@@ -16,7 +16,10 @@
  * What it reads, for every part that carries a figure, in every bundle under packs/<subject>/content:
  *   the figure's visible text (<text>, <tspan>, <textPath>) and ALL of its accessible text — the
  *   <title> (including the one an aria-labelledby points at), <desc>, every aria-label, and the
- *   FigureSpec's own `alt` and `caption`, which is the only text an image or photo figure has.
+ *   FigureSpec's own `alt` and `caption`, which is the only text an image or photo figure has. A generated
+ *   figure (kind "svg-gen": a histogram, a blank grid or a table the app draws from data) is read as the
+ *   renderer prints it: its tick labels, axis titles, headings, cells, caption and aria-label
+ *   (generatedChannels, 11 Oct 2026).
  *
  * What it tests them against, for that part alone:
  *   every accepted spelling, every key-word group's `any` list, every `label` target's accepted
@@ -122,6 +125,82 @@ function svgSource(src) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Generated figures (FigureSpec kind "svg-gen")
+// ---------------------------------------------------------------------------
+
+/** generated.tsx `fmt`: a whole number as itself, anything else to at most two places. */
+const genFmt = (n) => (Number.isInteger(n) ? String(n) : String(+Number(n).toFixed(2)));
+
+/** generated.tsx `steps`: from, from + step, … up to `to` (within 1e-9), each value held to six places. */
+function genSteps(from, to, step) {
+  const out = [];
+  if (![from, to, step].every(Number.isFinite) || step <= 0) return out;
+  for (let v = from; v <= to + 1e-9 && out.length < 2000; v += step) out.push(+v.toFixed(6));
+  return out;
+}
+
+/** generated.tsx `niceStep`: a tenth of the range, rounded to 1, 2, 5 or 10 times a power of ten. */
+function genNiceStep(range) {
+  const raw = range / 10;
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const m = raw / p;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+}
+
+/**
+ * The text a generated figure puts in front of her. A FigureSpec of kind "svg-gen" carries no SVG in the pack: the app
+ * draws it at run time from `data` and `options` (src/components/figures/generated.tsx, a .tsx a node script cannot
+ * import), so its text is mirrored here from what that renderer prints. Until 11 Oct 2026 this script read nothing of
+ * these figures (186 on live items: 172 tables, 10 histograms, 4 blank grids), so a table printing the value its part
+ * asks for, or a histogram whose accessible description states every bar, was never compared with the answer (the M4
+ * fixer's finding, 11 Oct 2026). Mirrored, per generator:
+ *   histogram  the svg's aria-label (options.caption, else "Histogram of <xLabel>: <from> to <to>, frequency density
+ *              <fd>; …"), the caption under it, every x tick label, every y tick label unless options.hideYScale, and the
+ *              two axis titles;
+ *   axes       the aria-label (data.caption, else "Blank grid: <xLabel> against <yLabel>"), the caption, every tick
+ *              label on both axes and the two axis titles;
+ *   table      every column heading and every cell that is not blank (a blank cell is an empty line, read "blank"),
+ *              in reading order, then the caption.
+ * Every tick value the scale carries is read, though a narrow column labels only every second or third tick: which ones
+ * are drawn depends on the width she reads at, and the rules below never count a bare tick as a reading anyway. A
+ * generator the renderer does not draw yet prints nothing, so it yields no text. The mirror was checked against the
+ * renderer's own markup for every generated figure in the corpus (renderToStaticMarkup, 11 Oct 2026).
+ */
+export function generatedChannels(fig) {
+  const out = [];
+  const push = (channel, text) => {
+    const t = String(text ?? "").trim();
+    if (t) out.push({ channel, text: t });
+  };
+  const data = fig && typeof fig.data === "object" && fig.data ? fig.data : {};
+  const options = fig && typeof fig.options === "object" && fig.options ? fig.options : {};
+  if (fig.generator === "histogram") {
+    const xMin = data.xMin ?? 0;
+    const xStep = options.xStep ?? genNiceStep(data.xMax - xMin);
+    const yStep = options.yStep ?? genNiceStep(data.yMax);
+    const bars = Array.isArray(data.bars) ? data.bars : [];
+    push("aria-label", options.caption ?? `Histogram of ${data.xLabel}: ${bars.map((b) => `${b.from} to ${b.to}, frequency density ${b.frequencyDensity}`).join("; ")}.`);
+    push("caption", options.caption);
+    for (const x of genSteps(xMin, data.xMax, xStep)) push("text", genFmt(x));
+    if (!options.hideYScale) for (const y of genSteps(0, data.yMax, yStep)) push("text", genFmt(y));
+    push("text", data.xLabel);
+    push("text", data.yLabel);
+  } else if (fig.generator === "axes") {
+    push("aria-label", data.caption ?? `Blank grid: ${data.xLabel} against ${data.yLabel}`);
+    push("caption", data.caption);
+    for (const x of genSteps(data.xMin ?? 0, data.xMax, data.xStep)) push("text", genFmt(x));
+    for (const y of genSteps(0, data.yMax, data.yStep)) push("text", genFmt(y));
+    push("text", data.xLabel);
+    push("text", data.yLabel);
+  } else if (fig.generator === "table") {
+    for (const c of Array.isArray(data.columns) ? data.columns : []) push("text", String(c));
+    for (const row of Array.isArray(data.rows) ? data.rows : []) for (const cell of Array.isArray(row) ? row : []) if (cell !== "") push("text", String(cell));
+    push("caption", data.caption);
+  }
+  return out;
+}
+
 /** Everything a learner can read or hear from a figure, tagged with the channel it came from (also read by see-it.mjs same-case). */
 export function figureChannels(fig) {
   const out = [];
@@ -131,6 +210,7 @@ export function figureChannels(fig) {
   };
   if (typeof fig.alt === "string") push("alt", fig.alt);
   if (typeof fig.caption === "string") push("caption", fig.caption);
+  if (fig.kind === "svg-gen") return [...out, ...generatedChannels(fig)];
   const svg = svgSource(fig.src ?? fig.svg);
   if (!svg) return out;
   for (const m of svg.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)) push("title", stripTags(m[1]));
@@ -143,7 +223,8 @@ export function figureChannels(fig) {
 
 /** A short stable id, so one figure serving six parts is reported once. */
 function figureId(fig) {
-  const key = `${fig.kind}:${fig.src ?? fig.svg ?? ""}:${fig.alt ?? ""}`;
+  // A generated figure has no source string: its generator, data and options are what make it this figure.
+  const key = fig.kind === "svg-gen" ? `svg-gen:${fig.generator}:${JSON.stringify(fig.data ?? null)}:${JSON.stringify(fig.options ?? null)}` : `${fig.kind}:${fig.src ?? fig.svg ?? ""}:${fig.alt ?? ""}`;
   let h = 0x811c9dc5;
   for (let i = 0; i < key.length; i += 1) {
     h ^= key.charCodeAt(i);
@@ -153,6 +234,12 @@ function figureId(fig) {
 }
 
 function figureName(fig) {
+  if (fig.kind === "svg-gen") {
+    const d = fig.data && typeof fig.data === "object" ? fig.data : {};
+    const what = fig.options?.caption ?? d.caption ?? (fig.generator === "table" ? (Array.isArray(d.columns) ? d.columns.join(" | ") : "") : [d.xLabel, d.yLabel].filter(Boolean).join(" against "));
+    const t = `generated ${fig.generator}${what ? `: ${String(what).trim()}` : ""}`;
+    return t.length > 120 ? `${t.slice(0, 120)}…` : t;
+  }
   const svg = svgSource(fig.src ?? fig.svg);
   const m = svg ? /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(svg) : null;
   const t = m ? stripTags(m[1]).trim() : String(fig.alt ?? "").trim();
@@ -187,6 +274,28 @@ function trimLabel(s) {
 function contains(haystack, needle) {
   const esc = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return new RegExp(`(?:^|[^a-z0-9])${esc}s?(?:$|[^a-z0-9])`).test(haystack);
+}
+
+/**
+ * A number the part asks for is found in figure text only as that number (11 Oct 2026): never inside a longer one ("2"
+ * in "2.8", "20" in "120" or "20.5"), and never as one end of a range ("20-25", "20 to 25"), which is a boundary on a
+ * scale, not a reading taken off it. A generated histogram's description names every bar ("20 to 25, frequency density
+ * 2.8"), and the answers 20 and 2 were read in it. A phrase that is not a bare number keeps the word-boundary rule.
+ */
+const BARE_NUMBER_PHRASE = /^-?\d+(?:\.\d+)?(?:\/\d+)?$/;
+function containsValue(haystack, needle) {
+  if (!BARE_NUMBER_PHRASE.test(needle)) return contains(haystack, needle);
+  const esc = needle.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+  // the word boundary of contains() ("v1", "2nd" are not the numbers 1 and 2), then the decimal and range exclusions
+  return new RegExp(`(?<![a-z0-9.])(?<![0-9] ?- ?|[0-9] to )${esc}(?![a-z0-9]|[./][0-9])(?! ?- ?[0-9]| to [0-9])`).test(haystack);
+}
+
+/** pieces(), for a value: a decimal point or a fraction bar between digits does not cut the piece ("height 2.8", "5/9"). */
+function valuePieces(text) {
+  return String(text)
+    .split(/[,;:!?()—–+|·→]|(?<![0-9])\.|\.(?![0-9])|(?<![0-9])\/|\/(?![0-9])|\band\b|\bwith\b|\bor\b|\bthen\b|\n/gi)
+    .map((s) => norm(s))
+    .filter(Boolean);
 }
 
 /** Does this piece NAME the phrase — is it the phrase — rather than merely contain the word? */
@@ -270,8 +379,8 @@ export const ALLOWED = new Map([
   // the printed grid is for everyone else. Reworded to hide the count, the alt would set a blind
   // learner a different question (24 Sep).
   ["q.science.p2.p2-wave-types-and-properties.0004#b", "the alt gives the grid's scale and the squares one wave spans, which is the reading the part asks for; the mark is for taking it off the drawn wave"],
-  ["q.science.p2.p2-wave-types-and-properties.0010#b", "the alt gives the grid's scale and the squares one wave spans, which is the reading the part asks for; the mark is for taking it off the drawn wave"],
-  ["q.science.p2.p2-wave-types-and-properties.0011#a", "the alt gives the grid's scale and the squares one up-and-down movement spans, which is the period the part asks for; the mark is for taking it off the drawn wave"],
+  // (0010#b and 0011#a went on 11 Oct 2026: both questions were withdrawn by the P2 fixer that morning, for 0015 and 0014,
+  // which the sweep passes without an exemption.)
   // A box plot read for its median: the alt places the whiskers, the box and the line inside the box on
   // the scale, which is the drawing in words; the mark is for knowing that the line inside the box is the
   // median (the alt no longer calls it that, 24 Sep).
@@ -283,6 +392,14 @@ export const ALLOWED = new Map([
   // is also 11). Both are readings or sums from the plot, as a sighted learner makes them.
   ["we.maths.m3.box-plots-and-comparing-distributions.03#step 1", "the alt places the boxes and the line inside each box on the scale, as the drawing does; the step is to read the medians off it and work out the IQRs"],
   ["we.maths.m3.box-plots-and-comparing-distributions.03#step 3", "the alt places Moira's box from 5 to 16 on the scale, as the drawing does; the step compares the IQRs worked out from it (16 - 5 = 11)"],
+  // Generated tables that are the data the part reads (11 Oct 2026, pipeline-registry: the first sweep that read
+  // generated figures at all). Each part needs its table to be answered, and the table has to name or print what it
+  // reports; the mark is for reading it. The part names the table ("Use the table…") or chooses among what it names.
+  ["q.science.b1.b1-biological-molecules-food-energy.0006#b", "the table has to name the three nutrients it reports; the mark is for reading which has the most energy per gram, which the part asks her to do from the table"],
+  ["q.science.b2.b2-non-communicable-diseases-cancer.0005#b", "the mcq options ARE the three people the table reports; the mark is for working out each one's units from the drinks listed and judging the weekend"],
+  ["q.science.c2.c2-displacement-and-extraction.0010#a", "the table has to name the four metals it reports; the mark is for reading which one displaces the most metals from their salts, as the part asks"],
+  ["q.science.c2.c2-displacement-and-extraction.0010#b", "the table has to name the four metals it reports; the mark is for reading which one displaces none, as the part asks"],
+  ["q.maths.m7.quadratic-graphs-and-intersections-with-straight-lines.0013#c(ii)", "the table of values is the data for her graph and lists points of the curve, among them (4, 5), one of its crossings with the line by construction; the mark is for reading off her graph where the two meet, which the table does not show"],
   // An m7 worked example whose question is to match drawn graphs (25 Sep, QA fixer): the alt is the drawing
   // in words for a screen reader, so it says what a sighted learner sees, and the faded step is that reading.
   // A blank copy would leave nothing to match.
@@ -460,6 +577,8 @@ function bareCellLeaks(acc, { figs, answer, stem, meta }) {
   const stemNumbers = new Set([...String(stem ?? "").replace(/[−–]/g, "-").matchAll(/-?\d+(?:\.\d+)?/g)].map((m) => Number(m[0])));
   for (const fig of figs) {
     if (!fig || typeof fig !== "object") continue;
+    // a generated table against a table answer is compared cell by cell in check() (positionalCellLeaks)
+    if (answer?.kind === "table" && fig.kind === "svg-gen" && fig.generator === "table") continue;
     const nodes = figureChannels(fig).filter((c) => c.channel === "text").map((c) => bareNumber(c.text)).filter((v) => v !== null);
     // an axis: a run of 3+ numbers, in the order drawn, that climbs or falls by one fixed step (a constant run is not)
     const tick = new Array(nodes.length).fill(false);
@@ -504,7 +623,27 @@ export function staleAllowances(targets) {
   return [...ALLOWED.keys()].filter((k) => !targets.has(k));
 }
 
-function check(acc, { figs, phrases, stem, answerKind, groups = 0, meta }) {
+/**
+ * A generated table's cells have places (11 Oct 2026), so a table answer is compared with it cell by cell: the part leaks
+ * only where the figure prints a value in the very cell she is asked to fill. The same word in a given cell or a heading
+ * is the question's own material ("liquid" for the two acids beside the one she completes; "Storage or structural?" as
+ * the column's question; the code table she is told to look the triplets up in). Returns the printed cells.
+ */
+function positionalCellLeaks(fig, answer) {
+  const rows = Array.isArray(fig.data?.rows) ? fig.data.rows : [];
+  const out = [];
+  for (const c of objects(answer?.cells)) {
+    const printed = rows[c.row]?.[c.col];
+    if (printed === undefined || printed === null || printed === "") continue;
+    const a = bareNumber(c.value);
+    const b = bareNumber(printed);
+    const same = a !== null && b !== null ? Math.abs(a - b) < 1e-9 : String(c.value).split("/").some((alt) => norm(alt) !== "" && norm(alt) === norm(String(printed)));
+    if (same) out.push({ cell: c, printed: String(printed) });
+  }
+  return out;
+}
+
+function check(acc, { figs, phrases, stem, answerKind, answer, groups = 0, meta }) {
   // every part checked against at least one figure is a live target for an ALLOWED entry
   if (acc.targets && figs.some((f) => f && typeof f === "object")) acc.targets.add(`${meta.item}#${meta.part}`);
   const stemNorm = norm(stem ?? "");
@@ -515,6 +654,7 @@ function check(acc, { figs, phrases, stem, answerKind, groups = 0, meta }) {
     if (channels.length === 0) continue;
     const id = figureId(fig);
     const name = figureName(fig);
+    const positional = answer?.kind === "table" && fig.kind === "svg-gen" && fig.generator === "table";
 
     // Collect first, judge after: whether a key word is a leak depends on how much of the part the
     // whole figure covers, which is only known once every channel has been read.
@@ -524,16 +664,20 @@ function check(acc, { figs, phrases, stem, answerKind, groups = 0, meta }) {
       const ps = pieces(ch.text);
       for (const p of phrases) {
         if (p.source === "equation") continue; // read as a whole below
-        if (!contains(hay, p.norm)) continue;
+        if (positional && p.source === "tableCell" && ch.channel === "text") continue; // read cell by cell below
+        // A value is found only as that number, and read in pieces that keep decimals and fractions whole.
+        const isValue = VALUE_SOURCES.has(p.source);
+        const has = isValue ? containsValue : contains;
+        if (!has(hay, p.norm)) continue;
         if (stemNorm && contains(stemNorm, p.norm)) continue;
         // A value the part asks for is a leak wherever it is printed in words; a bare number on an
         // axis, or a description of the axis range, is the reading the question is FOR.
-        const worded = (c) => contains(c, p.norm) && /[a-z]{2}/.test(c) && !SCALE_PROSE.test(c);
+        const worded = (c) => has(c, p.norm) && /[a-z]{2}/.test(c) && !SCALE_PROSE.test(c);
         const hit =
           p.source === "finalPoint"
             ? (contains(hay, p.norm) ? hay : undefined) // a coordinate pair printed is the pair, words or none
-            : VALUE_SOURCES.has(p.source)
-              ? ps.find(worded) ?? (WHOLE_NODE_SOURCES.has(p.source) && ch.channel === "text" && worded(hay) ? hay : undefined)
+            : isValue
+              ? valuePieces(ch.text).find(worded) ?? (WHOLE_NODE_SOURCES.has(p.source) && ch.channel === "text" && worded(hay) ? hay : undefined)
               : ps.find((c) => namesIt(c, p.norm));
         // A one- or two-character number that no worded piece carries is an axis tick or a count
         // in passing ("2" on every scale): not worth a reader's time even as a review line.
@@ -550,6 +694,10 @@ function check(acc, { figs, phrases, stem, answerKind, groups = 0, meta }) {
       if (p.sides.every((s) => stemEquation.includes(s))) continue;
       if (p.sides.every((s) => drawn.includes(s)))
         found.push({ ...meta, figure: id, figureName: name, channel: "text", source: "equation", phrase: p.phrase, printed: "both sides of the balanced equation", asLabel: true });
+    }
+    if (positional) {
+      for (const { cell, printed } of positionalCellLeaks(fig, answer))
+        found.push({ ...meta, figure: id, figureName: name, channel: "text", source: "tableCell", phrase: String(cell.value), printed: `row ${cell.row + 1}, column ${cell.col + 1}: ${printed}`, asLabel: true });
     }
     if (found.length === 0) continue;
 
@@ -774,6 +922,7 @@ function sweepWorkedExample(acc, we, meta) {
       phrases: answerPhrases(we.twin.answer),
       stem: we.twin.stem,
       answerKind: we.twin.answer?.kind,
+      answer: we.twin.answer,
       groups: (we.twin.answer?.keyWords ?? []).length,
       meta: { ...meta, item: we.id, part: "twin", kind: "worked-example twin" },
     });
@@ -811,6 +960,7 @@ export function sweepBundle(bundle, { subject, unit, slug }) {
         phrases: answerPhrases(part.answer),
         stem: part.stem,
         answerKind: part.answer?.kind,
+        answer: part.answer,
         groups: (part.answer?.keyWords ?? []).length,
         meta: { subject, unit, slug, item: q.id, part: part.id, kind: "question" },
       });

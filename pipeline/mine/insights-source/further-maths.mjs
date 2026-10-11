@@ -41,6 +41,7 @@ const misconceptions = [
   M("fm.algfrac.divide-before-factorise", "Divides the numerator by a constant before factorising, losing a factor", ["FM1-ALF-01"], "method"),
   M("fm.algfrac.dots-not-spotted", "Does not recognise a difference of two squares such as 4x squared - 1 or x squared - 9", ["FM1-ALF-01"], "concept"),
   M("fm.algfrac.lcd-not-lowest", "Uses the product of denominators instead of the lowest common denominator after a difference of two squares", ["FM1-ALF-01"], "method"),
+  MA("fm.algfrac.numerators-not-scaled", "Puts both fractions over the right common denominator but combines the numerators as they stood, without multiplying each by the factor its own denominator was missing", ["FM1-ALF-01"], "method", "No report names it: the FM1 reports on combining algebraic fractions name a common denominator that is not the lowest (2024 Q8, fm.algfrac.lcd-not-lowest), quadratics not factorised first (2018 Q8) and the minus sign not carried across a subtracted bracket (2025 Q7). Anticipated by FM1 algebraic-fractions-add-subtract common errors and diagnostics, retagged from fm.algfrac.lcd-not-lowest (11 Oct 2026, pipeline-registry)."),
   M("fm.algfrac.not-fully-simplified", "Stops before the final cancellation (e.g. missing a factor of 2, or leaving a fraction that still simplifies)", ["FM1-ALF-01"], "accuracy"),
   M("fm.algfrac.subtract-bracket-sign", "Subtracting a bracketed product changes only its first term's sign", ["FM1-ALF-01"], "accuracy"),
   M("fm.algfrac.expand-instead-of-factorise", "Expands everything instead of factorising when multiplying or dividing fractions", ["FM1-ALF-01"], "method"),
@@ -155,6 +156,7 @@ const misconceptions = [
   M("fm.int.differentiated-instead", "Differentiates (or finds the second derivative) when integration was required", ["FM1-INT-02"], "concept"),
   M("fm.int.gradient-word-triggers-differentiation", "Sees the word 'gradient' and differentiates, although the gradient function was given and integration was needed", ["FM1-INT-02"], "concept"),
   M("fm.int.unknown-constant-integrated", "Integrates a constant coefficient k as if it were a variable (k squared over 2)", ["FM1-INT-03"], "concept"),
+  MA("fm.int.integral-value-as-unknown", "Gives the integral's value as the answer when the question asks for the unknown constant inside it, never setting the integrated expression equal to that value and solving", ["FM1-INT-03"], "misread", "No report names it: the Summer 2019 FM1 Q13 block on an integral with an unknown constant names k integrated as though it were the variable (fm.int.unknown-constant-integrated) and a misread second part, not the integral's value given for k. Anticipated by FM1 definite-integrals q0007(c), retagged from fm.int.unknown-constant-integrated (11 Oct 2026, pipeline-registry)."),
   M("fm.int.negative-area-left", "Leaves an area as a negative value or mishandles a region below the axis", ["FM1-INT-04"], "concept"),
   M("fm.int.not-simplified-before-substituting", "Substitutes limits into unsimplified terms such as 3x cubed over 3, causing slips", ["FM1-INT-03"], "method"),
 
