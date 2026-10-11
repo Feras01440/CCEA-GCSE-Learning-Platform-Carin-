@@ -929,29 +929,29 @@
           "hypercorrectionQueue": true
         },
         {
-          "id": "d5",
-          "stem": "The matrix $S = \\begin{pmatrix}2 & 6 \\\\ 1 & 3\\end{pmatrix}$. Can the equation $SX = B$ be solved?",
+          "id": "d7",
+          "stem": "The matrix $P = \\begin{pmatrix}5 & 10 \\\\ 2 & 4\\end{pmatrix}$. Can the equation $PX = C$ be solved?",
           "skill": "A singular matrix in an equation",
           "options": [
             {
               "id": "a",
-              "text": "No, because $\\det S = 0$ and $S$ has no inverse",
+              "text": "No, because $\\det P = 0$ and $P$ has no inverse",
               "correct": true,
-              "feedback": "Without an inverse there is nothing to pre-multiply by, so the equation has no single solution."
+              "feedback": "$5 \\times 4 - 10 \\times 2 = 0$, so there is no inverse to pre-multiply by, and the equation has no single solution."
             },
             {
               "id": "b",
-              "text": "Yes, by dividing both sides by $S$",
+              "text": "Yes, by dividing both sides by $P$",
               "correct": false,
               "misconception": "fm.matrix.singular-not-recognised",
-              "feedback": "Matrices are never divided, and this one has no inverse either."
+              "feedback": "Matrices are never divided, and this one has no inverse to stand in for division either."
             },
             {
               "id": "c",
-              "text": "Yes, because $S$ is $2 \\times 2$",
+              "text": "Yes, because $P$ is $2 \\times 2$",
               "correct": false,
               "misconception": "fm.matrix.singular-not-recognised",
-              "feedback": "Being square is not enough. The determinant has to be something other than zero."
+              "feedback": "Being square is not enough. The determinant has to be something other than zero, and here it is zero."
             }
           ],
           "secondsExpected": 35,
@@ -1023,6 +1023,36 @@
             }
           ],
           "secondsExpected": 45,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d5",
+          "stem": "The matrix $S = \\begin{pmatrix}2 & 6 \\\\ 1 & 3\\end{pmatrix}$. Can the equation $SX = B$ be solved?",
+          "skill": "A singular matrix in an equation",
+          "options": [
+            {
+              "id": "a",
+              "text": "No, because $\\det S = 0$ and $S$ has no inverse",
+              "correct": true,
+              "feedback": "Without an inverse there is nothing to pre-multiply by, so the equation has no single solution."
+            },
+            {
+              "id": "b",
+              "text": "Yes, by dividing both sides by $S$",
+              "correct": false,
+              "misconception": "fm.matrix.singular-not-recognised",
+              "feedback": "Matrices are never divided, and this one has no inverse either."
+            },
+            {
+              "id": "c",
+              "text": "Yes, because $S$ is $2 \\times 2$",
+              "correct": false,
+              "misconception": "fm.matrix.singular-not-recognised",
+              "feedback": "Being square is not enough. The determinant has to be something other than zero."
+            }
+          ],
+          "secondsExpected": 35,
           "confidence": true,
           "hypercorrectionQueue": true
         }
@@ -2263,7 +2293,14 @@
                 "any": [
                   "0",
                   "zero",
-                  "singular"
+                  "singular",
+                  "no inverse",
+                  "not invertible",
+                  "cannot be inverted",
+                  "can't be inverted",
+                  "does not have an inverse",
+                  "doesn't have an inverse",
+                  "has not got an inverse"
                 ],
                 "marks": 1,
                 "reject": [
@@ -3092,6 +3129,14 @@
           "detail": "Two-way overlap scan (scratchpad/probes/fm1-g0/overlap.mjs): no matrix the note, a gate, a twin or a worked example works is asked by a later question, post diagnostic, find-the-mistake item or shipped prompt.",
           "at": "2026-10-07T21:50:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-matrix-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): note #3: the dashed curves ran below the matrices, under the bottom-left entries (1, 4 and -3), while the alt said they joined the top-left ones, so the picture pointed at the wrong entries. The three top-left entries (5, 2 and 3) are now ringed with dashed circles, the caption line moves up into the space the curves left, and the alt and the drawing's own label describe the rings. Rendered at 358 and 716 px and looked at.",
+          "at": "2026-10-11T09:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3840,6 +3885,14 @@
           "detail": "7 Oct 2026: the source removed from part (a)'s fm.matrix.adjugate-not-negated common error (the Summer 2019 Q5 report names slips in the determinant, not unnegated entries); pattern, feedback, marks and tag unchanged (a credit-only edit in place).",
           "at": "2026-10-07T21:50:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-matrix-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): part (c), probed after the review fixes: 'S has no inverse' earned 0 of 2 though the scheme's W1 is S named as the matrix with no inverse; the key words read 'singular' but not 'no inverse'. The second key-word group now reads 'no inverse' and its plain variants (not invertible, cannot be inverted, does not have an inverse), so that answer earns W1, 1 of 2. Credit-only: every other probed answer earns what it did.",
+          "at": "2026-10-11T09:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4021,6 +4074,14 @@
           "detail": "7 Oct 2026 (FM1 migration, group 0): item d3 withdrawn for d6 (new matrices); the other items unchanged.",
           "at": "2026-10-07T21:50:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-matrix-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): #d5 -> #d7; the replaced items repeated a later item's case and answer.",
+          "at": "2026-10-11T09:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4032,6 +4093,13 @@
           "replacedBy": "dx.fm.u1.matrix-equations.post#d6",
           "reason": "Its A and B are exam question 0009(b)'s own, with that part's answer as the correct option; d6 checks the same order on new matrices.",
           "on": "2026-10-07T21:50:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-equations.post#d5",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-equations.post#d7",
+          "reason": "It was practice question 0009(c)'s matrix S = (2 6; 1 3) and question, with 0009(c)'s answer keyed (the strictest review, 8 Oct 2026); #d7 asks the same on a new singular matrix, P = (5 10; 2 4).",
+          "on": "2026-10-11T09:58:00Z"
         }
       ]
     },
@@ -4907,6 +4975,13 @@
           "replacedBy": "dx.fm.u1.matrix-equations.post#d6",
           "reason": "The kept copy of dx.fm.u1.matrix-equations.post#d3, withdrawn: Its A and B are exam question 0009(b)'s own, with that part's answer as the correct option; d6 checks the same order on new matrices.",
           "on": "2026-10-07T21:50:00Z"
+        },
+        {
+          "id": "dx.fm.u1.matrix-equations.withdrawn#d5",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.matrix-equations.post#d7",
+          "reason": "The kept copy of dx.fm.u1.matrix-equations.post#d5, withdrawn: It was practice question 0009(c)'s matrix S = (2 6; 1 3) and question, with 0009(c)'s answer keyed (the strictest review, 8 Oct 2026); #d7 asks the same on a new singular matrix, P = (5 10; 2 4).",
+          "on": "2026-10-11T09:58:00Z"
         }
       ]
     }

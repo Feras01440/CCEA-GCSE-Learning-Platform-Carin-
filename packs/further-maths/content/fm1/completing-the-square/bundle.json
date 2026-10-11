@@ -291,29 +291,29 @@
       "when": "both",
       "items": [
         {
-          "id": "01",
-          "stem": "Which of these is $x^{2} + 6x + 11$ written in completed-square form?",
+          "id": "06",
+          "stem": "Which of these is $x^{2} + 4x + 9$ written in completed-square form?",
           "skill": "Halve the coefficient of x, then subtract the square of that half",
           "options": [
             {
               "id": "a",
-              "text": "$(x + 3)^{2} + 2$",
+              "text": "$(x + 2)^{2} + 5$",
               "correct": true,
-              "feedback": "Half of 6 is 3, and $(x + 3)^{2}$ carries a spare 9, so $11 - 9 = 2$."
+              "feedback": "Half of 4 is 2, and $(x + 2)^{2}$ carries a spare 4, so $9 - 4 = 5$."
             },
             {
               "id": "b",
-              "text": "$(x + 3)^{2} + 20$",
+              "text": "$(x + 2)^{2} + 13$",
               "correct": false,
               "misconception": "fm.csq.constant-term-error",
-              "feedback": "The 9 has been added instead of taken away. Expanding this gives $x^{2} + 6x + 29$, which is not what you started with."
+              "feedback": "The 4 has been added instead of taken away. Expanding this gives $x^{2} + 4x + 17$, which is not what you started with."
             },
             {
               "id": "c",
-              "text": "$(x + 6)^{2} - 25$",
+              "text": "$(x + 4)^{2} - 7$",
               "correct": false,
               "misconception": "fm.csq.coefficient-not-halved",
-              "feedback": "The whole 6 has gone inside the bracket. Expanding $(x + 6)^{2}$ gives a middle term of $12x$, twice too big."
+              "feedback": "The whole 4 has gone inside the bracket. Expanding $(x + 4)^{2}$ gives a middle term of $8x$, twice too big."
             }
           ],
           "secondsExpected": 25,
@@ -434,6 +434,46 @@
               "correct": false,
               "misconception": "fm.csq.coefficient-not-halved",
               "feedback": "That is the whole coefficient of $x$. Expanding doubles the number in the bracket, so halve it first."
+            }
+          ],
+          "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.completing-the-square.withdrawn",
+      "topic": "fm.u1.completing-the-square",
+      "specRefs": [
+        "FM1-CSQ-01"
+      ],
+      "when": "both",
+      "items": [
+        {
+          "id": "01",
+          "stem": "Which of these is $x^{2} + 6x + 11$ written in completed-square form?",
+          "skill": "Halve the coefficient of x, then subtract the square of that half",
+          "options": [
+            {
+              "id": "a",
+              "text": "$(x + 3)^{2} + 2$",
+              "correct": true,
+              "feedback": "Half of 6 is 3, and $(x + 3)^{2}$ carries a spare 9, so $11 - 9 = 2$."
+            },
+            {
+              "id": "b",
+              "text": "$(x + 3)^{2} + 20$",
+              "correct": false,
+              "misconception": "fm.csq.constant-term-error",
+              "feedback": "The 9 has been added instead of taken away. Expanding this gives $x^{2} + 6x + 29$, which is not what you started with."
+            },
+            {
+              "id": "c",
+              "text": "$(x + 6)^{2} - 25$",
+              "correct": false,
+              "misconception": "fm.csq.coefficient-not-halved",
+              "feedback": "The whole 6 has gone inside the bracket. Expanding $(x + 6)^{2}$ gives a middle term of $12x$, twice too big."
             }
           ],
           "secondsExpected": 25,
@@ -1869,10 +1909,27 @@
           "detail": "Item 05 added on 27 Sep 2026 (a deliberate addition to the set; items 01 to 04 unchanged): x^{2} - 26x + 170 = (x - 13)^{2} + 1, so a = 13; its distractors are the sign read from the (x + a) habit and the coefficient not halved, each the output of its route. One correct option, distinct texts, registered tags; marked in the probe.",
           "at": "2026-09-27T20:55:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-completing-the-square.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): #01 -> #06; the replaced items repeated a later item's case and answer.",
+          "at": "2026-10-11T09:18:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.completing-the-square#01",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.completing-the-square#06",
+          "reason": "It asked x^2 + 6x + 11 in completed-square form, practice question 0001's own question, with its answer keyed (the strictest review, 8 Oct 2026); #06 asks the same step on x^2 + 4x + 9.",
+          "on": "2026-10-11T09:18:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u1.completing-the-square.01",
@@ -3116,6 +3173,32 @@
         }
       ],
       "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.completing-the-square.withdrawn",
+      "itemId": "dx.fm.u1.completing-the-square.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-completing-the-square.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "The kept copies of dx.fm.u1.completing-the-square's withdrawn items, unchanged and with their ids, so a review card that points at them resolves.",
+          "at": "2026-10-11T09:18:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.completing-the-square.withdrawn#01",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.completing-the-square#06",
+          "reason": "The kept copy of dx.fm.u1.completing-the-square#01, withdrawn: It asked x^2 + 6x + 11 in completed-square form, practice question 0001's own question, with its answer keyed (the strictest review, 8 Oct 2026); #06 asks the same step on x^2 + 4x + 9.",
+          "on": "2026-10-11T09:18:00Z"
+        }
+      ],
       "reports": []
     }
   ]

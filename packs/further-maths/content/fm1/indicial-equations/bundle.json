@@ -389,29 +389,29 @@
       "when": "post",
       "items": [
         {
-          "id": "d1",
-          "stem": "Taking logarithms of $5^{x + 2} = 90$ gives which line?",
+          "id": "d5",
+          "stem": "Taking logarithms of $4^{x - 3} = 70$ gives which line?",
           "skill": "Bringing the index down with a bracket",
           "options": [
             {
               "id": "a",
-              "text": "$(x + 2) \\log 5 = \\log 90$",
+              "text": "$(x - 3) \\log 4 = \\log 70$",
               "correct": true,
-              "feedback": "The whole index comes down together, inside a bracket."
+              "feedback": "The whole index comes down as one bracket, and the bracket multiplies the logarithm."
             },
             {
               "id": "b",
-              "text": "$x + 2 \\log 5 = \\log 90$",
+              "text": "$x - 3 \\log 4 = \\log 70$",
               "correct": false,
               "misconception": "fm.logs.brackets-omitted",
-              "feedback": "Without the bracket only the $2$ is multiplied by the logarithm, so the equation has changed."
+              "feedback": "Without the bracket, $\\log 4$ multiplies only the $3$. The index $x - 3$ is one quantity, so it comes down as $(x - 3)$."
             },
             {
               "id": "c",
-              "text": "$\\log(x + 2) + \\log 5 = \\log 90$",
+              "text": "$\\log(x - 3) + \\log 4 = \\log 70$",
               "correct": false,
               "misconception": "fm.logs.power-as-multiplier-inside",
-              "feedback": "An index does not become a separate logarithm. The power law multiplies, it does not add."
+              "feedback": "That treats the index as something multiplied by $4$. The power law turns an index into a multiplier in front of the logarithm."
             }
           ],
           "secondsExpected": 30,
@@ -442,6 +442,106 @@
               "correct": false,
               "misconception": "fm.logs.quotient-as-divided-logs",
               "feedback": "That is the logarithm of a quotient. What the equation needs is a quotient of logarithms."
+            }
+          ],
+          "secondsExpected": 30,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d6",
+          "stem": "In $2x \\log 7 + \\log 7 = x \\log 3 + 5 \\log 3$, what happens when the $x$ term on the right is moved to the left?",
+          "skill": "Collecting the x terms",
+          "options": [
+            {
+              "id": "a",
+              "text": "It becomes $-x \\log 3$ on the left",
+              "correct": true,
+              "feedback": "Subtracting $x \\log 3$ from both sides moves it across with its sign changed, ready to take $x$ out as a factor."
+            },
+            {
+              "id": "b",
+              "text": "It stays as $+x \\log 3$ on the left",
+              "correct": false,
+              "misconception": "fm.logs.terms-not-collected",
+              "feedback": "A term that crosses the equals sign changes sign, because the same amount is taken from both sides."
+            },
+            {
+              "id": "c",
+              "text": "It cancels with $\\log 7$",
+              "correct": false,
+              "misconception": "fm.logs.terms-not-collected",
+              "feedback": "Only like terms combine. $x \\log 3$ has an $x$ in it and $\\log 7$ does not, so they stay separate."
+            }
+          ],
+          "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        },
+        {
+          "id": "d7",
+          "stem": "Solving $2^{x} = 23$, a student rounds $\\log 23$ and $\\log 2$ to two decimal places before dividing. What happens?",
+          "skill": "Keeping accuracy to the last step",
+          "options": [
+            {
+              "id": "a",
+              "text": "The answer comes out as $4.53$ instead of $4.52$",
+              "correct": true,
+              "feedback": "$1.36 \\div 0.30$ is $4.53$, but the full values give $4.52$. Keep the logarithms unrounded until the last line."
+            },
+            {
+              "id": "b",
+              "text": "Nothing changes, because rounding twice cancels out",
+              "correct": false,
+              "misconception": "fm.logs.rounded-too-early",
+              "feedback": "The two roundings need not cancel. Dividing by a rounded number can move the answer in its second decimal place, as it does here."
+            },
+            {
+              "id": "c",
+              "text": "The answer is more accurate, because the numbers are simpler",
+              "correct": false,
+              "misconception": "fm.logs.rounded-too-early",
+              "feedback": "Simpler numbers carry less accuracy, not more. Round once, at the end."
+            }
+          ],
+          "secondsExpected": 35,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u1.indicial-equations.post.withdrawn",
+      "topic": "fm.u1.indicial-equations",
+      "specRefs": [
+        "FM1-LOG-03"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "d1",
+          "stem": "Taking logarithms of $5^{x + 2} = 90$ gives which line?",
+          "skill": "Bringing the index down with a bracket",
+          "options": [
+            {
+              "id": "a",
+              "text": "$(x + 2) \\log 5 = \\log 90$",
+              "correct": true,
+              "feedback": "The whole index comes down together, inside a bracket."
+            },
+            {
+              "id": "b",
+              "text": "$x + 2 \\log 5 = \\log 90$",
+              "correct": false,
+              "misconception": "fm.logs.brackets-omitted",
+              "feedback": "Without the bracket only the $2$ is multiplied by the logarithm, so the equation has changed."
+            },
+            {
+              "id": "c",
+              "text": "$\\log(x + 2) + \\log 5 = \\log 90$",
+              "correct": false,
+              "misconception": "fm.logs.power-as-multiplier-inside",
+              "feedback": "An index does not become a separate logarithm. The power law multiplies, it does not add."
             }
           ],
           "secondsExpected": 30,
@@ -1417,6 +1517,35 @@
       ],
       "feedback": "Taking logarithms of both sides is the right first move and it earns its mark. The bracket is what the rest depends on: the index is one expression, so all of it multiplies the logarithm. Write the bracket as you bring the index down, every time, and the rest is a linear equation you can already do.",
       "source": "ccea-cer:further-maths:2018-summer:FM1:Q6"
+    },
+    {
+      "id": "ftm.fm.u1.indicial-equations.02",
+      "topic": "fm.u1.indicial-equations",
+      "specRefs": [
+        "FM1-LOG-03"
+      ],
+      "stem": "Niamh was asked to solve $3^{2x - 5} = 400$ correct to two decimal places. Her working:",
+      "studentWorking": [
+        "$\\log\\left(3^{2x - 5}\\right) = \\log 400$",
+        "2x - 5 log 3 = log 400",
+        "2x = log 400 + 5 log 3",
+        "2x = 4.987666",
+        "x = 2.49"
+      ],
+      "mistakeLine": 2,
+      "misconception": "fm.logs.brackets-omitted",
+      "whatWentWrong": "Line 1 is right: logarithms of both sides is always the first move.\nLine 2 brings the index down without a bracket, so $\\log 3$ multiplies only the $5$ and no longer multiplies the $2x$. Everything after that solves a different equation, which is why the answer is out by far more than a rounding.\nThe line should read $(2x - 5) \\log 3 = \\log 400$, and then $x = 5.23$.",
+      "correction": [
+        "(2x - 5) log 3 = log 400",
+        "2x - 5 = log 400 / log 3",
+        "2x - 5 = 5.453666",
+        "x = 5.23"
+      ],
+      "marksEarnedAsWritten": [
+        "M1"
+      ],
+      "feedback": "Taking logarithms of both sides is the right first move and it earns its mark. The bracket is what the rest depends on: the index is one expression, so all of it multiplies the logarithm. Write the bracket as you bring the index down, every time, and the rest is a linear equation you can already do.",
+      "source": "ccea-cer:further-maths:2018-summer:FM1:Q6"
     }
   ],
   "prompts": [
@@ -1651,6 +1780,14 @@
           "result": "pass",
           "detail": "Two-way overlap scan (fm1-migration-0/overlap.mjs): no equation the note, a gate, a twin or the worked example works is asked by a later question, post diagnostic, find-the-mistake item or shipped prompt.",
           "at": "2026-09-28T23:48:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): note #3: the label 'the index, now in front' ran past the right edge of the drawing; it now ends at the foot of its arrow, on the arrow's left (the arrow still points at the x). Rendered at 358 and 716 px, in a serif and a sans face, and looked at.",
+          "at": "2026-10-11T09:54:00Z",
           "by": "claude"
         }
       ],
@@ -2253,10 +2390,41 @@
           "detail": "Read through as the student before shipping; British English; no exclamation marks and no verdict word; maths segments paired and prose-free (lintTree).",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): #d1 -> #d5, #d3 -> #d6, #d4 -> #d7; the replaced items repeated a later item's case and answer.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.indicial-equations.post#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.indicial-equations.post#d5",
+          "reason": "It asked for practice question 0002's first line (5^(x + 2) = 90 with logarithms taken) with that line keyed (the strictest review, 8 Oct 2026); #d5 asks the same step on 4^(x - 3) = 70.",
+          "on": "2026-10-11T09:54:00Z"
+        },
+        {
+          "id": "dx.fm.u1.indicial-equations.post#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.indicial-equations.post#d6",
+          "reason": "It printed practice question 0007(a)'s middle line (the expanded logarithms of 2^(4x + 1) = 7^(x + 3)) and asked its next step (the strictest review, 8 Oct 2026); #d6 asks the same step on a new pair of bases.",
+          "on": "2026-10-11T09:54:00Z"
+        },
+        {
+          "id": "dx.fm.u1.indicial-equations.post#d4",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.indicial-equations.post#d7",
+          "reason": "It was practice question 0006's equation, 3^x = 11, with 0006's answer 2.18 keyed (the strictest review, 8 Oct 2026); #d7 asks the same rounding question on 2^x = 23.",
+          "on": "2026-10-11T09:54:00Z"
+        }
+      ]
     },
     {
       "id": "ver.ftm.fm.u1.indicial-equations.01",
@@ -2302,10 +2470,27 @@
           "detail": "Read through as the student; calm feedback that names the mark that stands before the one that went; no exclamation marks.",
           "at": "2026-09-23T18:20:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "Withdrawn 11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): It was practice question 0003 word for word (7^(3x - 1) = 200) and its correction printed 0003's answer, 1.24 (the strictest review, 8 Oct 2026); ftm.02 shows the same missing bracket on 3^(2x - 5) = 400. Replaced by ftm.fm.u1.indicial-equations.02.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.fm.u1.indicial-equations.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.fm.u1.indicial-equations.02",
+          "reason": "It was practice question 0003 word for word (7^(3x - 1) = 200) and its correction printed 0003's answer, 1.24 (the strictest review, 8 Oct 2026); ftm.02 shows the same missing bracket on 3^(2x - 5) = 400.",
+          "on": "2026-10-11T09:54:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u1.indicial-equations.01",
@@ -2627,6 +2812,87 @@
         }
       ],
       "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u1.indicial-equations.02",
+      "itemId": "ftm.fm.u1.indicial-equations.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (FindTheMistake) by the stage gate; mistakeLine 2 points inside studentWorking; the misconception is registered.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "(2x - 5) log 3 = log 400 gives 2x - 5 = 5.453666 and x = 5.226833, 5.23 to two decimal places (3 to the power 2(5.226833) - 5 is 400.000); the slip 2x - 5 log 3 = log 400 gives 2x = 4.987666 and x = 2.49; line 2 is the first wrong line and the lines after it follow from it.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Seeded from the Summer 2018 Q6 report (the index brought down without its bracket), as ftm.01 was; tagged fm.logs.brackets-omitted.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "British English; calm; names the mark that stands before the one that went; no exclamation marks.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u1.indicial-equations.post.withdrawn",
+      "itemId": "dx.fm.u1.indicial-equations.post.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-indicial-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "The kept copies of dx.fm.u1.indicial-equations.post's withdrawn items, unchanged and with their ids, so a review card that points at them resolves.",
+          "at": "2026-10-11T09:54:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawn": [
+        {
+          "id": "dx.fm.u1.indicial-equations.post.withdrawn#d1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.indicial-equations.post#d5",
+          "reason": "The kept copy of dx.fm.u1.indicial-equations.post#d1, withdrawn: It asked for practice question 0002's first line (5^(x + 2) = 90 with logarithms taken) with that line keyed (the strictest review, 8 Oct 2026); #d5 asks the same step on 4^(x - 3) = 70.",
+          "on": "2026-10-11T09:54:00Z"
+        },
+        {
+          "id": "dx.fm.u1.indicial-equations.post.withdrawn#d3",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.indicial-equations.post#d6",
+          "reason": "The kept copy of dx.fm.u1.indicial-equations.post#d3, withdrawn: It printed practice question 0007(a)'s middle line (the expanded logarithms of 2^(4x + 1) = 7^(x + 3)) and asked its next step (the strictest review, 8 Oct 2026); #d6 asks the same step on a new pair of bases.",
+          "on": "2026-10-11T09:54:00Z"
+        },
+        {
+          "id": "dx.fm.u1.indicial-equations.post.withdrawn#d4",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u1.indicial-equations.post#d7",
+          "reason": "The kept copy of dx.fm.u1.indicial-equations.post#d4, withdrawn: It was practice question 0006's equation, 3^x = 11, with 0006's answer 2.18 keyed (the strictest review, 8 Oct 2026); #d7 asks the same rounding question on 2^x = 23.",
+          "on": "2026-10-11T09:54:00Z"
+        }
+      ],
       "reports": []
     }
   ]

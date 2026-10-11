@@ -1257,8 +1257,8 @@
                 "kind": "numeric",
                 "value": -2.92
               },
-              "feedback": "The elimination is set up correctly, so the first method mark stands. One right-hand side was combined the wrong way: in $3 \\times (1) - (2)$ it becomes $27 - 15 = 12$. A value this far from the others is also a signal in itself, so check it in the third equation.",
-              "marksTypicallyEarned": 1
+              "feedback": "Both eliminations are set up correctly, so both method marks stand. One right-hand side was added where it should be taken away: in $3 \\times (1) - (2)$ it becomes $27 - 15 = 12$. A value this far from the others is also a signal in itself, so check it in the third equation.",
+              "marksTypicallyEarned": 2
             },
             {
               "misconception": "fm.simeq.values-in-wrong-slots",
@@ -1455,13 +1455,13 @@
               "id": "M1",
               "code": "M",
               "marks": 1,
-              "for": "removing one letter from a pair of the equations, for example noticing that $(1)$ already contains no $z$"
+              "for": "removing $z$ from the two equations that contain it, for example $5 \\times (3) - (2)$"
             },
             {
               "id": "W1",
               "code": "W",
               "marks": 1,
-              "for": "a correct two-unknown equation, $3x + 2y = 16$",
+              "for": "$5x + 3y = 25$",
               "dependsOn": [
                 "M1"
               ]
@@ -1470,13 +1470,13 @@
               "id": "M2",
               "code": "M",
               "marks": 1,
-              "for": "a second two-unknown equation in the same letters, for example $5 \\times (3) - (2)$"
+              "for": "solving $5x + 3y = 25$ with $3x + 2y = 16$, for example twice the first take away three times the second"
             },
             {
               "id": "W2",
               "code": "W",
               "marks": 1,
-              "for": "solving the pair to reach $x = 2$",
+              "for": "$x = 2$",
               "ft": true,
               "dependsOn": [
                 "M2"
@@ -1497,7 +1497,7 @@
                 "value": 82
               },
               "feedback": "The elimination itself is right, so the method mark is safe. The number on the right of the scaled equation was combined the wrong way; rebuild $(5)$ slowly, right-hand side included, and notice how far this value sits from a sensible one.",
-              "marksTypicallyEarned": 1
+              "marksTypicallyEarned": 2
             },
             {
               "misconception": "fm.simeq.values-in-wrong-slots",
@@ -1745,8 +1745,8 @@
                 "kind": "numeric",
                 "value": 9.5
               },
-              "feedback": "An equation was scaled and its right-hand side was left as it was. Multiplying an equation by $2$ multiplies both of its sides by $2$.",
-              "marksTypicallyEarned": 1
+              "feedback": "The first elimination, $(1) + (2)$, is right, so its two marks stand. Then an equation was scaled and its right-hand side was left as it was: multiplying an equation by $2$ multiplies both of its sides by $2$.",
+              "marksTypicallyEarned": 2
             },
             {
               "misconception": "fm.simeq.values-in-wrong-slots",
@@ -3428,6 +3428,14 @@
           "detail": "Follow-through relations added in place on 7 Oct 2026 (ruling 14: a part that uses an earlier part's value carries it): (b) (22 - 4*x)/3, (c) (5 + x)/3, each the worked solution's own chain from her value of x in part (a), reaching the key at x = 4; probed through markAnswer with a wrong x carried consistently.",
           "at": "2026-10-07T22:14:00Z",
           "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-solve-three-simultaneous-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): part (a)'s slip -2.92 (27 + 15 in 3 x (1) - (2)) re-valued 1 -> 2: the item's own lines pay M1 for that elimination and M1 for (1) + (3), which is right; the two W1s are lost.",
+          "at": "2026-10-11T08:48:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3541,6 +3549,14 @@
           "detail": "Follow-through relations added in place on 7 Oct 2026 (ruling 14: a part that uses an earlier part's value carries it): (b) (16 - 3*x)/2, (c) (2 + x)/2, each the worked solution's own chain from her value of x in part (a), reaching the key at x = 2; probed through markAnswer with a wrong x carried consistently.",
           "at": "2026-10-07T22:14:00Z",
           "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-solve-three-simultaneous-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): part (a)'s scheme re-stated on the shape of FM1 2023 MS Q11(iv) (M1 W1 for an elimination, M1 for combining the pair, W1 its value): the old first line paid M1 W1 for 3x + 2y = 16, which the stem prints and no elimination produces. Now M1 W1 for 5 x (3) - (2) giving 5x + 3y = 25, and M1 W1 for solving it with (1); 4 marks as before. The slip 45 + 20 in that elimination (x = 82) re-valued 1 -> 2 (both M1).",
+          "at": "2026-10-11T08:48:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -3653,6 +3669,14 @@
           "result": "pass",
           "detail": "Follow-through relations added in place on 7 Oct 2026 (ruling 14: a part that uses an earlier part's value carries it): (b) 4 - x, (c) 2*x - 2, each the worked solution's own chain from her value of x in part (a), reaching the key at x = 2.5; probed through markAnswer with a wrong x carried consistently.",
           "at": "2026-10-07T22:14:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-fm1, 11 Oct 2026: scratchpad/probes/fixer-fm1/fix-solve-three-simultaneous-equations.mjs, the FM1 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm1, the FM1 strictest review of 8 Oct): part (a)'s 9.5 (2 x (1) with the 14 undoubled) re-valued 1 -> 2: the first elimination's M1 W1 are intact; the unscaled right-hand side loses the second elimination's mark, as q0009 values that slip.",
+          "at": "2026-10-11T08:48:00Z",
           "by": "claude"
         }
       ],
