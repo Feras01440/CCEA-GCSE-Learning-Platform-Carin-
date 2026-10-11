@@ -10,8 +10,11 @@
  */
 import { focusLanding } from "@/components/shell/input-modality";
 
-/** How long a landing keeps its place while the page settles, and how still it must be to stop. */
-const HOLD_MAX_MS = 4000;
+/**
+ * How long a landing may keep its place while the page settles (a cap for a page that never does), and how many frames
+ * the place must stay still once it has settled before the hold lets go.
+ */
+const HOLD_MAX_MS = 10_000;
 const HOLD_STILL_FRAMES = 20;
 /** What tells the page she has taken over: a scroll of the wheel, a touch, a press, a key. */
 const HER_OWN = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
@@ -48,11 +51,28 @@ function layoutTop(el: Element): number {
 }
 
 /**
+ * Whether the page has settled: its fonts are in (KaTeX's arrive as the first maths draws), nothing on it is still
+ * loading (a skeleton or a busy region: Practice and the checks draw one until their place is read from the device), and
+ * every picture that loads at once has arrived. Until then a hold keeps holding however still the place looks: on the
+ * e2e's misses under load (11 Oct 2026; 5 of ~70 runs) a hold let go after twenty still frames while Practice still
+ * showed its skeleton; the skeleton then became the first question, and the page moved by the difference (348–384 px;
+ * the trace's frames show the skeleton under the stage's heading, then the question's foot at the top), the browser's
+ * scroll anchoring being back on by then. The 3 px misses fit a font arriving after the hold had gone.
+ */
+export function pageSettled(): boolean {
+  if (typeof document.fonts !== "undefined" && document.fonts.status !== "loaded") return false;
+  const main = document.querySelector("main") ?? document.body;
+  if (main.querySelector(".skeleton, [aria-busy='true']")) return false;
+  for (const img of Array.from(main.querySelectorAll("img"))) if (!img.complete && img.loading !== "lazy") return false;
+  return true;
+}
+
+/**
  * Keeps `el`'s top edge at `top()` px from the top of the screen while the page settles. Lets go as soon as she scrolls,
  * taps or presses a key herself (the page never fights her), when anything else scrolls the page (a scrollbar, a
- * screen reader, a script), once the place has been still for a moment, after four seconds, or when the place leaves
- * the page. While it holds, the browser's own scroll anchoring is off, so every change of the scroll position that it
- * did not make is someone else's. Returns the way to let go early.
+ * screen reader, a script), once the page has settled (`pageSettled`) and the place has then been still for a moment,
+ * after ten seconds, or when the place leaves the page. While it holds, the browser's own scroll anchoring is off, so
+ * every change of the scroll position that it did not make is someone else's. Returns the way to let go early.
  */
 export function holdAt(el: HTMLElement, top: () => number, onDone?: () => void): () => void {
   let stopped = false;
@@ -82,7 +102,9 @@ export function holdAt(el: HTMLElement, top: () => number, onDone?: () => void):
     if (stopped) return;
     if (!el.isConnected) return stop();
     const now = layoutTop(el);
-    still = now === lastTop ? still + 1 : 0;
+    // Stillness counts only once the page has settled: a place that is still while a stage above or under it is loading
+    // is only waiting to move.
+    still = now === lastTop && pageSettled() ? still + 1 : 0;
     lastTop = now;
     const want = top();
     if (Math.abs(now - want) > 1) window.scrollTo({ top: window.scrollY + now - want, behavior: "auto" });

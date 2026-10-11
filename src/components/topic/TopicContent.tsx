@@ -23,6 +23,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { loadBundle, type ShippedBundle } from "@/lib/content/load";
+import { loadComputeEngine } from "@/lib/marking/compute-engine";
 import type { RetrievalPrompt, WorkedExample } from "@/lib/content/schema";
 import { answeredGateIds, selectCheckItems } from "@/lib/session/flow";
 import { recordAttempt, touchSession, type ItemRef } from "@/lib/session/record";
@@ -142,7 +143,12 @@ function useLesson(subject: Subject, slug: string, topicId: string) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadBundle(subject, topicId).then(setBundle).catch((e) => setError(String(e)));
+    // The lesson's questions are marked by the compute engine, which the browser fetches on demand
+    // (src/lib/marking/compute-engine.ts): the lesson is drawn once the bundle and the engine are both in, fetched side by
+    // side, so nothing on it marks before the engine is there (QuestionRunner reads its method ladder while it draws).
+    Promise.all([loadBundle(subject, topicId), loadComputeEngine()])
+      .then(([b]) => setBundle(b))
+      .catch((e) => setError(String(e)));
   }, [subject, topicId]);
 
   // Gates she has already answered here, so a reload does not close the note behind them again, and what each first

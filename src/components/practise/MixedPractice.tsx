@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CONTENT_MANIFEST, loadBundle, type ShippedBundle } from "@/lib/content/load";
+import { loadComputeEngine } from "@/lib/marking/compute-engine";
 import type { Question } from "@/lib/content/schema";
 import { QuestionRunner } from "@/components/topic/QuestionRunner";
 import type { Subject } from "@/lib/content/taxonomy";
@@ -49,12 +50,17 @@ export function MixedPractice() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all(
-      shipped.map(async (t) => {
-        const b: ShippedBundle = await loadBundle(t.subject, t.id);
-        return { topicId: t.id, slug: t.slug, unit: t.unit, subject: t.subject as Subject, title: t.title, questions: b.questions };
-      }),
-    ).then((p) => {
+    // The questions are marked by the compute engine, which the browser fetches on demand
+    // (src/lib/marking/compute-engine.ts): the pools are ready once the bundles and the engine are in.
+    Promise.all([
+      Promise.all(
+        shipped.map(async (t) => {
+          const b: ShippedBundle = await loadBundle(t.subject, t.id);
+          return { topicId: t.id, slug: t.slug, unit: t.unit, subject: t.subject as Subject, title: t.title, questions: b.questions };
+        }),
+      ),
+      loadComputeEngine(),
+    ]).then(([p]) => {
       if (!cancelled) setPools(p);
     });
     return () => {

@@ -286,21 +286,21 @@ export async function walkToLessonEnd(page: Page, topic: TopicContent): Promise<
 }
 
 /**
- * The Read track's placed sections, as drawn. Up to eleven sections it is one segment each ("done", "here", "rest"); past
- * that a segment is too thin to read, and the track is one bar whose fill is the share placed (LessonSpine.tsx ReadTrack,
- * MAX_SEGMENTS), so the placed count is read from the fill's own scale: placed = scaleX × N, N being the track's "of N".
+ * The Read track's placed sections, from the hook the bar carries (`data-placed`, `data-total`; LessonSpine.tsx ReadTrack),
+ * never from the drawing: past eleven sections the track is one bar whose fill is the share placed, and reading that
+ * fill's scale through a DOM path tied every test to the bar's markup (the e2e agent's request, 11 Oct 2026). Up to
+ * eleven it is also one segment each ("done", "here", "rest"), returned as `segments`, and checked against the hook;
+ * past that `segments` is null.
  */
 export async function trackPlaced(page: Page): Promise<{ placed: number; total: number; segments: string | null }> {
   return page.evaluate(() => {
     const track = document.querySelector<HTMLElement>("[data-read-track]");
     if (!track) throw new Error("no Read track on the page");
-    const total = Number(/\bof (\d+)/.exec(track.querySelector("p")?.textContent ?? "")?.[1] ?? Number.NaN);
+    const placed = Number(track.dataset.placed ?? Number.NaN);
+    const total = Number(track.dataset.total ?? Number.NaN);
+    if (!Number.isInteger(placed) || !Number.isInteger(total)) throw new Error("the Read track carries no data-placed / data-total");
     const segments = Array.from(track.querySelectorAll("[data-segment]")).map((e) => (e.getAttribute("data-segment") ?? "?")[0]).join("");
-    if (segments) return { placed: segments.split("").filter((c) => c === "d").length, total, segments };
-    const fill = track.querySelector<HTMLElement>(":scope > [aria-hidden] > div:not([data-segment]) > div");
-    if (!fill) throw new Error("the Read track has neither segments nor a fill bar");
-    const t = getComputedStyle(fill).transform;
-    const scale = t === "none" ? 1 : new DOMMatrixReadOnly(t).a;
-    return { placed: Math.round(scale * total), total, segments: null };
+    if (segments && segments.split("").filter((c) => c === "d").length !== placed) throw new Error(`the track's segments (${segments}) disagree with data-placed=${placed}`);
+    return { placed, total, segments: segments || null };
   });
 }

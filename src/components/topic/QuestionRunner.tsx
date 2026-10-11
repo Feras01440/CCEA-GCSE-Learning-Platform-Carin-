@@ -327,6 +327,12 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
           // The examiner's slot holds only what an examiners' report said: a matched common error the report named,
           // cited by its series (engine item 10.3). A hint is not the examiner's sentence and no longer sits there.
           const examinerLine = state === "live" && result?.source ? "Examiners reported this same error on a real paper." : undefined;
+          // A drawing she has checked stays on screen, read-only, under the verdict and while the later parts are asked:
+          // they say "use your graph" (APP-1, the M8 fixer, 11 Oct 2026: m8 gradient q.0014(c)(d), q.0015(b)(c), q.0020(c)(d),
+          // graphical q.0026(c)(e)(f)). Its field stays mounted from the moment she draws (the field's place comes after
+          // the verdict's, and nothing stands there before she checks), so what is kept is her own drawing, not a redraw.
+          const fieldLive = state === "live" && !result && !decision && auto;
+          const keptDrawing = !fieldLive && p.answer.kind === "graph" && isAutoMarkable(p.answer) && (state === "done" || (state === "live" && !!result));
           return (
             <li key={p.id} className={state === "done" ? "opacity-70" : ""}>
               <div className="flex gap-3">
@@ -340,26 +346,6 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
                     <p className="tnum text-meta text-ink-2">
                       {earned[i]} / {p.marks}
                     </p>
-                  )}
-                  {state === "live" && !result && !decision && auto && (
-                    <div className="mt-2">
-                      <AnswerField
-                        spec={p.answer}
-                        calculator={q.paper.calculator !== false}
-                        onSubmit={submit}
-                        prompt={p.stem}
-                        underField={
-                          ladder.length > 0 ? (
-                            <WorkingField
-                              value={working}
-                              onChange={setWorking}
-                              alwaysOpen={workingAlwaysOpen}
-                              note={kind === "exam" ? "Working counts here: the scheme gives marks for method." : undefined}
-                            />
-                          ) : undefined
-                        }
-                      />
-                    </div>
                   )}
                   {state === "live" && decision && p.answer.kind === "text-long" && (
                     <div className="mt-3">
@@ -429,6 +415,30 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
                       {!reteach && partMisses >= 2 && !result.correct && p.hints[0] && <CompanionLine moment="support" context={companion} className="mt-3" />}
                       {offerSupport && hintShown && <SupportHint hint={hintShown} />}
                       <SolutionDetails workedSolution={p.workedSolution} scheme={p.scheme} open={workedOpen} />
+                    </div>
+                  )}
+                  {(fieldLive || keptDrawing) && (
+                    // Kept: the grid and what she drew on it, nothing to press (the hint, the typed rows and Check are
+                    // hidden; the field is disabled), the drawing's own label saying what is on it.
+                    <div className={keptDrawing ? "mt-3 [&_form>*:not(svg)]:hidden" : "mt-2"} data-kept-drawing={keptDrawing ? "" : undefined}>
+                      {keptDrawing && <p className="text-meta text-ink-2">Your drawing</p>}
+                      <AnswerField
+                        spec={p.answer}
+                        calculator={q.paper.calculator !== false}
+                        disabled={keptDrawing}
+                        onSubmit={submit}
+                        prompt={p.stem}
+                        underField={
+                          !keptDrawing && ladder.length > 0 ? (
+                            <WorkingField
+                              value={working}
+                              onChange={setWorking}
+                              alwaysOpen={workingAlwaysOpen}
+                              note={kind === "exam" ? "Working counts here: the scheme gives marks for method." : undefined}
+                            />
+                          ) : undefined
+                        }
+                      />
                     </div>
                   )}
                 </div>

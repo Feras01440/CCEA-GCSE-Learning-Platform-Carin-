@@ -442,7 +442,7 @@ test.describe("Slides: the gate", () => {
     await expect(page.locator("[data-her-choice]")).toBeVisible();
     await expect(page.locator("[data-outcome]")).toHaveCount(0);
     // The re-teach is part of its Your turn: the count does not move, and "Show me the answer" is the one control.
-    await expect(count(page)).toHaveText(`${at} of ${deck + 1}`);
+    await expect(count(page)).toHaveText(`${at} of ${deck}`);
     await expect(control(page)).toHaveText("Show me the answer");
     expect(await accentControls(page)).toEqual(["Show me the answer"]);
     expect(await reddish(page), "a colour near red on the re-teach").toEqual([]);
@@ -462,20 +462,20 @@ test.describe("Slides: the gate", () => {
     const missEdge = await page.locator("[data-outcome='miss']").evaluate((el) => getComputedStyle(el).borderTopColor);
     expect(okEdge).not.toBe(missEdge);
     expect(await animations(page)).toBe(0);
-    // The deck grew by the retry.
-    await expect(count(page)).toHaveText(`${at} of ${deck + 1}`);
+    // The retry owed before the recap is not a new card: the deck as dealt is still the count (src/lib/slides/dealt.ts).
+    await expect(count(page)).toHaveText(`${at} of ${deck}`);
     // One attempt, the first answer, with the id Read uses; nothing for the re-teach.
     const rows = await attempts(page);
     expect(rows).toEqual([{ itemId: `${trial.row.id}#gate:${first.id}`, itemKind: "practice", correct: false }]);
 
     // Back re-reads, forward returns to the answered Your turn, Continue moves on.
     await page.keyboard.press("ArrowLeft");
-    await expect(count(page)).toHaveText(`${at - 1} of ${deck + 1}`);
+    await expect(count(page)).toHaveText(`${at - 1} of ${deck}`);
     await page.keyboard.press("ArrowRight");
     await expect(page.locator("[data-verdict='miss']")).toBeVisible();
     await expect(control(page)).toHaveText("Continue");
     await control(page).click();
-    await expect(count(page)).toHaveText(`${at + 1} of ${deck + 1}`);
+    await expect(count(page)).toHaveText(`${at + 1} of ${deck}`);
     expect((await attempts(page)).length, "no second record").toBe(1);
   });
 
@@ -1143,11 +1143,16 @@ test.describe("Slides: the whole deck and the close", () => {
     await control(page).click();
     // The last Your turn of the lesson, then the retry.
     await walkTo(page, trial, "gate", last.id);
+    const dealt = trial.deck.cards.length;
+    const lastAt = Number(/^(\d+) of /.exec((await count(page).textContent()) ?? "")?.[1] ?? Number.NaN);
+    await expect(count(page)).toHaveText(`${lastAt} of ${dealt}`);
     await answerChoice(page, last.answer);
     await control(page).click();
     // The next card is the retry, before the recap: the twin on new numbers where the note has one, else the gate again.
     const retry = page.locator(`[data-gate='${first.id}'][data-retry]`);
     await expect(retry).toBeVisible();
+    // Asked once more, it is not a new card: the count stays on the card before it and says so, out of the deck as dealt.
+    await expect(count(page)).toHaveText(`${lastAt} of ${dealt} · once more`);
     await expect(retry).toHaveAttribute("data-retry", first.twin ? "twin" : "same");
     await expect(page.locator("[data-header]")).toContainText(first.twin ? "Once more · on new numbers" : "Once more");
     await answerChoice(page, first.twin ? first.twin.answer : first.answer);
@@ -1155,6 +1160,7 @@ test.describe("Slides: the whole deck and the close", () => {
     expect((await attempts(page)).filter((r) => r.itemId.endsWith(`#gate:${first.id}`))).toHaveLength(1);
     await control(page).click();
     await expect(page.getByRole("heading", { level: 2 })).toHaveText("You can now");
+    await expect(count(page)).toHaveText(`${lastAt + 1} of ${dealt}`);
     await expect(page.locator("[data-card='recap']")).toContainText("The one you missed came back before this card, and held.");
     // A line for each of the recap's, and a drawn glyph for each line, found by what the line says (recapGlyphsFor);
     // every glyph's numeral at the 13 px floor.

@@ -25,6 +25,7 @@ import { heroDataFor, lessonBlocks, lessonSections, seeStepsOf, spineTitle, type
 import { CairnStack } from "@/components/ux/CairnStack";
 import { CardSkeleton } from "@/components/ux/Skeleton";
 import { loadBundle, type ShippedBundle } from "@/lib/content/load";
+import { loadComputeEngine } from "@/lib/marking/compute-engine";
 import type { Question } from "@/lib/content/schema";
 import { getDB } from "@/lib/db/db";
 import { recordAttempt, type ItemRef } from "@/lib/session/record";
@@ -49,6 +50,10 @@ interface Resolved {
  * are cached by `loadBundle`, so opening the topic afterwards costs nothing.
  */
 export async function resolveSeed(plan: ExamPlan, today: string): Promise<Resolved> {
+  // The seeded lesson marks her answers on the compute engine, which the browser fetches on demand
+  // (src/lib/marking/compute-engine.ts): it comes in beside the bundles, and the lesson is drawn once it is there.
+  const engine = loadComputeEngine();
+  engine.catch(() => undefined);
   const tried = new Map<string, ShippedBundle>();
   const candidates = seedCandidates(plan, today).slice(0, MAX_TRIES);
   for (const c of candidates) {
@@ -62,7 +67,9 @@ export async function resolveSeed(plan: ExamPlan, today: string): Promise<Resolv
   const hasHero = (t: SeedTopic) => blocksHaveHero(tried.get(t.topicId)?.noteBlocks);
   const seed = chooseSeedTopic(plan, today, hasHero);
   const held = tried.get(seed.topicId);
-  return { seed, bundle: held ?? (await loadBundle(seed.subject, seed.topicId)) };
+  const bundle = held ?? (await loadBundle(seed.subject, seed.topicId));
+  await engine;
+  return { seed, bundle };
 }
 
 type Stage = "lesson" | "question" | "close";

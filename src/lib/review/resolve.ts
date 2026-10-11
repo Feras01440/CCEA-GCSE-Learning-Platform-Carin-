@@ -4,6 +4,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useMemo, useState } from "react";
 import { getDB, type ReviewCard } from "@/lib/db/db";
 import { contentFor, loadBundle, type ShippedBundle } from "@/lib/content/load";
+import { loadComputeEngine } from "@/lib/marking/compute-engine";
 import type { DiagnosticItem, FindTheMistake, Part, Question, RetrievalPrompt, WorkedExample } from "@/lib/content/schema";
 import type { Flashcard, ShippedDeck } from "@/lib/content/deck-schema";
 import { deckFor, loadDeck } from "@/lib/content/decks";
@@ -296,6 +297,10 @@ export function useInboxQueue(cap = 25): { queue: ResolvedCard[] | undefined; du
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      // Her questions are marked by the compute engine, which the browser fetches on demand
+      // (src/lib/marking/compute-engine.ts): fetched beside the settle, and the queue is served once it is in.
+      const engine = loadComputeEngine();
+      engine.catch(() => undefined);
       try {
         await settleWithdrawnCards(await cardsToSettle(), shippedBundleFor);
       } catch {
@@ -309,6 +314,12 @@ export function useInboxQueue(cap = 25): { queue: ResolvedCard[] | undefined; du
       }
       const out: ResolvedCard[] = [];
       for (const card of fresh) out.push(await resolveCard(card));
+      try {
+        await engine;
+      } catch {
+        // No engine, no queue (a reload tries again): a question marked without it would read a right answer as wrong.
+        return;
+      }
       if (!cancelled) setResolved(out);
     })();
     return () => {

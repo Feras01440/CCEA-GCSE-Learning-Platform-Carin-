@@ -14,8 +14,13 @@
  * Equations (and inequalities) are compared as `lhs - rhs` up to a non-zero
  * constant factor, so 2x + 3y = 7 is equivalent to 4x + 6y = 14.
  */
-import { ComputeEngine, isFunction, sym } from '@cortex-js/compute-engine';
-import type { BoxedExpression } from '@cortex-js/compute-engine';
+import type { BoxedExpression, ComputeEngine } from '@cortex-js/compute-engine';
+// The engine's module is fetched on demand in the browser and loaded at first use in Node (./compute-engine.ts), so
+// nothing here may touch it at module level: only inside a function that marks.
+import { computeEngine, type ComputeEngineApi } from './compute-engine';
+
+const isFunction = ((expr, operator) => computeEngine().isFunction(expr, operator)) as ComputeEngineApi['isFunction'];
+const sym: ComputeEngineApi['sym'] = (expr) => computeEngine().sym(expr);
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -99,7 +104,7 @@ export interface ParsedStudentExpression {
 let engine: ComputeEngine | null = null;
 
 export function getEngine(): ComputeEngine {
-  if (!engine) engine = new ComputeEngine();
+  if (!engine) engine = new (computeEngine().ComputeEngine)();
   return engine;
 }
 

@@ -492,6 +492,46 @@ test.describe("Read v2 on the trial topic: one column, a track, Continue", () =>
     await expect(page.locator("[data-read-track]").getByRole("button", { name: /^Contents$/ })).toHaveAttribute("aria-expanded", "false");
   });
 
+  /**
+   * The e2e agent's finding (11 Oct 2026, scratchpad/probes/e2e/probe-contents-row.mjs): while section 1's See it was
+   * still at its first step, a Contents row for a section not open did nothing (the check that opens it is drawn only
+   * once the See it ends, and there is no Continue yet), so the popover closed and the keyboard stayed on the page. The
+   * row now takes her to the See it's "Next step", under the bar, with the keyboard there, and the bar says why.
+   */
+  for (const size of [
+    { width: 390, height: 844 },
+    { width: 1280, height: 800 },
+  ]) {
+    test(`at ${size.width}, a Contents row for a section not open, while section 1's See it is still being shown, takes her to its Next step and says why`, async ({ page, trial }) => {
+      test.skip(trial.read.length < 3 || trial.read[0]!.sees.length === 0 || trial.read[0]!.sees[0]!.steps < 2, "section 1 has no See it of two steps or more, or there is no third section");
+      await page.setViewportSize(size);
+      await openTrial(page, trial);
+      const track = page.locator("[data-read-track]");
+      const next = page.locator("#note [data-next-step]").first();
+      await expect(next).toBeVisible();
+      await page.evaluate(() => window.scrollTo(0, 0));
+      const contents = track.getByRole("button", { name: /^Contents$/ });
+      await contents.click();
+      await track.locator("ol > li > button").nth(2).click();
+      await expect(contents).toHaveAttribute("aria-expanded", "false");
+      await expect(next).toBeFocused();
+      await expect(track.locator("[data-track-said]")).toHaveText("Section 3 is not open yet: finish this See it, then answer the check after it.");
+      // Under the bar, on the screen.
+      await expect
+        .poll(async () =>
+          next.evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            const bar = document.querySelector("[data-read-track]")!.getBoundingClientRect().bottom;
+            return r.top >= bar - 1 && r.bottom <= window.innerHeight;
+          }),
+        )
+        .toBe(true);
+      // Nothing opened: the lesson is still one section, and the track has placed nothing.
+      await expect(page.locator("#note [data-lesson-section]")).toHaveCount(1);
+      expect(await trackPlaced(page)).toMatchObject({ placed: 0, total: trial.read.length });
+    });
+  }
+
   test("each section ends in Continue and Pause here; Continue opens the next under the bar and places it on the track", async ({ page, trial }) => {
     const total = trial.read.length;
     await page.setViewportSize({ width: 390, height: 844 });

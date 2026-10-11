@@ -40,7 +40,8 @@ import { DEFAULT_PLAN, paperPhrase, todayISO } from "@/lib/plan/exam-plan";
 import { useExamPlan } from "@/lib/plan/store";
 import { answeredGateIds } from "@/lib/session/flow";
 import { recordAttempt, touchSession } from "@/lib/session/record";
-import { deckMinutes, deckStats, promiseLine, splitSentences, withRetries, type Card, type Deck, type GateCard, type SeeCard } from "@/lib/slides/cards";
+import { deckMinutes, promiseLine, splitSentences, withRetries, type Card, type Deck, type DeckStats, type GateCard, type SeeCard } from "@/lib/slides/cards";
+import { dealtCount, dealtPosition } from "@/lib/slides/dealt";
 import { enrichmentFor, recapGlyphsFor } from "@/lib/slides/enrichment";
 import { nextRun, readPosition, withKnownFigures, writePosition, type StepResult } from "@/lib/slides/position";
 import { minutesLeft, pausePoints, placeWords, resumeIndex } from "@/lib/slides/pause";
@@ -676,8 +677,12 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     return { checks: gates.length, answered, missed: missed.length, held, recalled };
   }, [answers, deck.cards, graded, missed]);
 
-  const stats = deckStats(cards);
-  const count = `${index + 1} of ${N}`;
+  // The deck as dealt, the one truth every surface prints (src/lib/slides/dealt.ts): the title card's numbers are the
+  // deck's own cards, the hero's and the Start button's, and the count and the track never grow with a retry; a Your
+  // turn asked once more says so and leaves the track where it stands.
+  const stats = deck.stats;
+  const dealt = dealtPosition(cards, index);
+  const count = dealtCount(dealt);
   const showTrack = card.kind !== "title" && card.kind !== "close";
   const motionCls = direction === "forward" ? "motion-card-forward" : "motion-card-back";
   // The re-teach is its Your turn's card, not a card of its own: the track and the count do not move (the case §8.1).
@@ -859,7 +864,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   return (
     <div ref={frameRef} data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
       {/* The header: the wash band with Exit, the topic, the count, the track, then the card's eyebrow and title (./frame.tsx). */}
-      <SlidesHeader exit={exit} displayTitle={displayTitle} count={count} track={showTrack ? { n: index + 1, N } : null} parts={parts} />
+      <SlidesHeader exit={exit} displayTitle={displayTitle} count={count} track={showTrack ? { n: dealt.n, N: dealt.N } : null} parts={parts} />
 
       {/* The body: the card on the paper. Prose column, then the figure or the verdict; the See it takes the whole measure. */}
       <CardBody
@@ -885,7 +890,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
 }
 
 /** The title card's words: the lede (two sentences), the honest promise, the three "you can" lines. */
-function TitleText({ card, stats }: { card: Extract<Card, { kind: "title" }>; stats: ReturnType<typeof deckStats> }) {
+function TitleText({ card, stats }: { card: Extract<Card, { kind: "title" }>; stats: DeckStats }) {
   const { minutes, plus } = deckMinutes(stats);
   return (
     <div className="flex flex-col">

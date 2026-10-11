@@ -416,7 +416,10 @@ export function LessonSpine({ sections, stages, minutes, answered, noteId = "not
  * worked examples and the questions after it have nothing above them but the page. It is never beside the text.
  * Contents opens a popover, closed by default and never a standing column: every section with its minutes and the
  * cairn's mark once it is done, then the stages after the lesson. A section not yet open takes her to the check or the
- * Continue that opens it.
+ * Continue that opens it, or, while the See it before that check is still being shown (the check is not on the page
+ * until it ends), to the See it's "Next step"; the bar says why in its live region.
+ *
+ * The bar carries what it has placed as data (`data-placed`, `data-total`), so a test reads the count, never the fill.
  *
  * Segments: done ones filled in the subject's accent, the one in view outlined, the rest on the subject's mid tint. A
  * segment fills when she presses Continue past its section (the place motion, 300 ms; nothing under reduced motion).
@@ -448,6 +451,8 @@ function barClearance(bar: HTMLElement | null): number {
 export function ReadTrack({ sections, stages, minutes, answered, open, finished, noteId = "note" }: ReadTrackProps) {
   const [active, setActive] = useState(0);
   const [popover, setPopover] = useState(false);
+  /** Why a Contents row took her somewhere other than its section, for the live region (empty until one does). */
+  const [said, setSaid] = useState("");
   const navRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -461,6 +466,7 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
   const pendingGate = sections.flatMap((s) => s.gateIds).find((id) => !answered.has(id)) ?? null;
   // Done: she has moved past it with every check in it answered, or finished the lesson.
   const done = (i: number): boolean => finished || (i + 1 < open && sections[i].gateIds.every((id) => answered.has(id)));
+  const placed = sections.filter((_, i) => done(i)).length;
 
   // Which section is in view, re-read as she scrolls and whenever another section opens. Nothing animates because of it.
   useEffect(() => {
@@ -521,12 +527,28 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
     const note = document.getElementById(noteId);
     const wrapper = note?.querySelector<HTMLElement>(`[data-lesson-section="${i + 1}"]`);
     if (wrapper) {
+      setSaid("");
       take(wrapper, wrapper.querySelector<HTMLElement>("[data-section]") ?? wrapper);
       return;
     }
-    // Not open yet: the check still to answer, or the Continue that opens the next section.
-    const frontier = (pendingGate ? note?.querySelector<HTMLElement>(`[data-gate="${pendingGate}"]`) : null) ?? note?.querySelector<HTMLElement>("[data-continue]");
-    if (frontier) take(frontier);
+    // Not open yet: the check still to answer, or the Continue that opens the next section. A check stands after its
+    // See it and is drawn only once the See it has shown its last step, so while it is still being shown the way on is
+    // its "Next step" (or the step she is asked to type). Until 11 Oct 2026 the row did nothing then: the popover
+    // closed and the keyboard stayed where it was (the e2e agent's finding).
+    const gate = pendingGate ? note?.querySelector<HTMLElement>(`[data-gate="${pendingGate}"]`) : null;
+    const next = note?.querySelector<HTMLElement>("[data-continue]");
+    const step = note?.querySelector<HTMLElement>("[data-next-step]") ?? note?.querySelector<HTMLElement>("[data-typed-step]");
+    const frontier = gate ?? next ?? step;
+    if (!frontier) return;
+    const n = i + 1;
+    setSaid(
+      frontier === gate
+        ? `Section ${n} is not open yet: answer this check first.`
+        : frontier === next
+          ? `Section ${n} is not open yet: Continue opens the next section.`
+          : `Section ${n} is not open yet: finish this See it, then answer the check after it.`,
+    );
+    take(frontier);
   };
 
   const goStage = (id: string) => () => {
@@ -543,6 +565,8 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
       ref={navRef}
       aria-label="Lesson contents"
       data-read-track
+      data-placed={placed}
+      data-total={total}
       // The ground under the bar runs 6-8 px past the track, so a line scrolling beneath is cut clear of it.
       className="sticky top-0 z-20 -mx-4 bg-ground px-4 pb-1.5 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:pb-2 md:pt-1"
     >
@@ -563,13 +587,21 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
           type="button"
           aria-expanded={popover}
           aria-controls={panelId}
-          onClick={() => setPopover((v) => !v)}
+          onClick={() => {
+            // A reason given before is said again if the same row is chosen again.
+            setSaid("");
+            setPopover((v) => !v);
+          }}
           // 36 px drawn, 44 px to press: the ::after takes the tap target to the bar's full height.
           className="relative inline-flex h-9 shrink-0 items-center gap-1.5 rounded-[var(--radius-sm)] border border-line-2 bg-surface px-3 text-meta font-medium text-ink hover:bg-surface-2 after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']"
         >
           Contents
           <ChevronDown size={16} strokeWidth={1.5} aria-hidden className={clsx("shrink-0 text-ink-2", popover && "rotate-180")} />
         </button>
+      </div>
+      {/* A div, not a p: the bar's one paragraph is its "n of N" line, which the tests read as the track's paragraph. */}
+      <div role="status" aria-live="polite" className="sr-only" data-track-said>
+        {said}
       </div>
 
       <div aria-hidden className="flex h-[3px] gap-[3px]">
@@ -593,7 +625,7 @@ export function ReadTrack({ sections, stages, minutes, answered, open, finished,
           <div className="relative h-full flex-1 overflow-hidden rounded-full bg-[var(--tint-mid)]">
             <div
               className="absolute inset-0 origin-left rounded-full bg-accent transition-transform duration-[var(--motion-place)] ease-[var(--ease-out)] motion-reduce:transition-none"
-              style={{ transform: `scaleX(${sections.filter((_, i) => done(i)).length / total})` }}
+              style={{ transform: `scaleX(${placed / total})` }}
             />
           </div>
         )}

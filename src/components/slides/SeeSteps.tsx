@@ -25,7 +25,7 @@
  *
  * Imports only the item leaves it needs, never the items index: StepRevealNote (in that index) draws this too.
  */
-import { useId, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 import { clsx } from "clsx";
 import { ChevronDown } from "lucide-react";
 import type { AnswerSpec } from "@/lib/content/schema";
@@ -33,6 +33,7 @@ import { AnswerField } from "@/components/items/AnswerField";
 import { Figure } from "@/components/items/Figure";
 import { MdInlines } from "@/components/items/Markdown";
 import { markAnswer } from "@/components/items/mark";
+import { prefetchComputeEngine, whenComputeEngine } from "@/lib/marking/compute-engine";
 import { parseInline } from "@/components/items/md";
 import { StemTex } from "@/components/items/StemTex";
 import { Tex } from "@/components/items/Tex";
@@ -245,6 +246,11 @@ function Reason({ md, id, cls, mode, beside }: { md: string; id: string; cls: st
 
 /** The step she types: the engine marks it, nothing is recorded, and the line is there for the asking. */
 function TypedStep({ n, total, spec, earns, calculator, onTyped }: { n: number; total: number; spec: AnswerSpec; earns: number; calculator?: boolean; onTyped: (r: StepResult) => void }) {
+  // Slides draws its deck from props, not from a bundle, so the compute engine that marks this line may not be in yet
+  // (src/lib/marking/compute-engine.ts): it is fetched while she reads the step, and a Check pressed before it lands
+  // waits for it rather than marking without it. In Read the bundle brought it, and both are no-ops.
+  useEffect(() => prefetchComputeEngine(), []);
+  const waiting = useRef(false);
   return (
     <div data-typed-step={n} className="flex flex-col gap-2">
       <p className="font-sans text-[15px] font-medium text-ink">Your line for step {n}</p>
@@ -254,7 +260,7 @@ function TypedStep({ n, total, spec, earns, calculator, onTyped }: { n: number; 
         label={`Step ${n} of ${total}: your line`}
         placeholder="Your line for this step"
         autoFocus
-        onSubmit={(raw) => onTyped({ raw, correct: markAnswer(raw, spec, { marks: earns }).correct })}
+        onSubmit={(raw) => whenComputeEngine(() => onTyped({ raw, correct: markAnswer(raw, spec, { marks: earns }).correct }), waiting)}
       />
       <button type="button" onClick={() => onTyped({ shown: true })} className="tap inline-flex w-fit items-center px-1 font-sans text-[15px] font-medium text-ink-2 underline decoration-accent underline-offset-[3px] hover:text-ink" data-show-step>
         Show me the step
