@@ -138,7 +138,7 @@
       "traps": [
         "Squaring the fx column instead of computing $f \\times x^{2}$ (Summer 2024 Q1, Summer 2019 Q1)",
         "Squaring the total of the fx column (Summer 2022 Q3)",
-        "Dividing by the number of classes rather than by the total frequency: rare, but named by the Summer 2019 Q1 and Summer 2022 Q3 reports as a major method error",
+        "Dividing by anything but the total frequency, such as the number of classes: rare, but the Summer 2019 Q1 and Summer 2022 Q3 reports call not dividing by the total frequency a major method error",
         "Using a class limit or the class width in place of the midpoint",
         "Explaining the estimate by rounding or by sample size instead of by the unknown individual values",
         "Giving the variance where the standard deviation was asked for"
@@ -906,26 +906,26 @@
       "when": "post",
       "items": [
         {
-          "id": "q1",
-          "stem": "A class has frequency $18$ and midpoint $32$. What is its $f x^{2}$ entry?",
+          "id": "q8",
+          "stem": "A class has frequency $14$ and midpoint $23$. What is its $f x^{2}$ entry?",
           "skill": "Building the f x squared column",
           "options": [
             {
               "id": "a",
-              "text": "$18432$",
+              "text": "$7406$",
               "correct": true,
-              "feedback": "Yes: $18 \\times 32^{2} = 18432$. Square the midpoint, then multiply."
+              "feedback": "Yes: $14 \\times 23^{2} = 7406$. Square the midpoint, then multiply."
             },
             {
               "id": "b",
-              "text": "$331776$",
+              "text": "$103684$",
               "correct": false,
               "misconception": "fm.sd.sum-squared-vs-sum-of-squares",
-              "feedback": "That is the fx entry squared, $\\left(576\\right)^{2}$. The square belongs on the midpoint alone."
+              "feedback": "That is the fx entry squared, $\\left(322\\right)^{2}$. The square belongs on the midpoint alone."
             },
             {
               "id": "c",
-              "text": "$576$",
+              "text": "$322$",
               "correct": false,
               "misconception": "fm.sd.sum-squared-vs-sum-of-squares",
               "feedback": "That is the fx entry with no squaring at all. The second column needs the midpoint squared first."
@@ -951,7 +951,7 @@
               "text": "$6$",
               "correct": false,
               "misconception": "fm.sd.divided-by-class-count",
-              "feedback": "That is the number of classes. The reports name dividing by it as a major method error, though few made it."
+              "feedback": "That is the number of classes. The reports call not dividing by the total frequency a major method error, though few made it."
             },
             {
               "id": "c",
@@ -1052,6 +1052,46 @@
             }
           ],
           "secondsExpected": 25,
+          "confidence": true,
+          "hypercorrectionQueue": true
+        }
+      ]
+    },
+    {
+      "id": "dx.fm.u3.mean-sd-grouped-data.post-b.withdrawn",
+      "topic": "fm.u3.mean-sd-grouped-data",
+      "specRefs": [
+        "FM3-CTD-01"
+      ],
+      "when": "post",
+      "items": [
+        {
+          "id": "q1",
+          "stem": "A class has frequency $18$ and midpoint $32$. What is its $f x^{2}$ entry?",
+          "skill": "Building the f x squared column",
+          "options": [
+            {
+              "id": "a",
+              "text": "$18432$",
+              "correct": true,
+              "feedback": "Yes: $18 \\times 32^{2} = 18432$. Square the midpoint, then multiply."
+            },
+            {
+              "id": "b",
+              "text": "$331776$",
+              "correct": false,
+              "misconception": "fm.sd.sum-squared-vs-sum-of-squares",
+              "feedback": "That is the fx entry squared, $\\left(576\\right)^{2}$. The square belongs on the midpoint alone."
+            },
+            {
+              "id": "c",
+              "text": "$576$",
+              "correct": false,
+              "misconception": "fm.sd.sum-squared-vs-sum-of-squares",
+              "feedback": "That is the fx entry with no squaring at all. The second column needs the midpoint squared first."
+            }
+          ],
+          "secondsExpected": 30,
           "confidence": true,
           "hypercorrectionQueue": true
         }
@@ -1325,7 +1365,12 @@
               "id": "M1",
               "code": "M",
               "marks": 1,
-              "for": "midpoints 11, 14, 17, 20, 23 used with their frequencies"
+              "for": "midpoints 11, 14, 17, 20, 23 used with their frequencies",
+              "accept": [
+                "$\\sum fx = 66 + 112 + 238 + 160 + 92$",
+                "66 + 112 + 238 + 160 + 92",
+                "$6 \\times 11 + 8 \\times 14 + 14 \\times 17 + 8 \\times 20 + 4 \\times 23$"
+              ]
             },
             {
               "id": "W1",
@@ -1387,7 +1432,7 @@
                   "value": 0.005
                 }
               },
-              "feedback": "The total was divided by the number of classes rather than by $\\sum f = 40$. The reports name this as a major method error, though few made it.",
+              "feedback": "The total was divided by the number of classes rather than by $\\sum f = 40$. The reports call not dividing by the total frequency a major method error, though few made it.",
               "marksTypicallyEarned": 0,
               "source": "ccea-cer:further-maths:2022-summer:FM3:Q3"
             },
@@ -2694,7 +2739,15 @@
                   "heights are unknown",
                   "heights are not known",
                   "midpoint",
-                  "mid-point"
+                  "mid-point",
+                  "do not know the exact",
+                  "don't know the exact",
+                  "do not know the individual",
+                  "don't know the individual",
+                  "do not know the actual",
+                  "don't know the actual",
+                  "heights of the individual plants",
+                  "each individual plant"
                 ],
                 "marks": 1,
                 "reject": [
@@ -2707,8 +2760,8 @@
           },
           "scheme": [
             {
-              "id": "W1",
-              "code": "W",
+              "id": "M1",
+              "code": "M",
               "marks": 1,
               "for": "the individual heights inside each class are unknown, so the midpoint represents them all",
               "accept": [
@@ -2762,7 +2815,10 @@
               "code": "M",
               "marks": 1,
               "for": "$\\sqrt{\\dfrac{\\sum fx^{2}}{\\sum f} - \\bar{x}^{2}}$ with the candidate's values",
-              "ft": true
+              "ft": true,
+              "accept": [
+                "$\\sigma = \\sqrt{\\dfrac{51865}{50} - 31.7^{2}}$"
+              ]
             },
             {
               "id": "W1",
@@ -2991,6 +3047,274 @@
       ],
       "solutionProgram": "no computation: the mark is for naming the unknown individual values and the midpoint that replaces them",
       "verification": "ver.q.fm.u3.mean-sd-grouped-data.0010",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u3.mean-sd-grouped-data.0011",
+      "topic": "fm.u3.mean-sd-grouped-data",
+      "specRefs": [
+        "FM3-CTD-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO1"
+      ],
+      "commandWords": [
+        "Calculate"
+      ],
+      "emphasis": [
+        "standard deviation",
+        "substitution"
+      ],
+      "context": {
+        "setting": "Totals already worked out for a grouped set of clinic waiting times",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "For a grouped set of waiting times at a clinic, $\\sum f = 50$, $\\sum fx = 650$ and $\\sum fx^{2} = 9350$.\nCalculate an estimate of the standard deviation for these waiting times.",
+          "marks": 3,
+          "answer": {
+            "kind": "numeric",
+            "value": 4.24,
+            "tolerance": {
+              "type": "dp",
+              "places": 2
+            },
+            "unit": "minutes",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          },
+          "scheme": [
+            {
+              "id": "MW1",
+              "code": "MW",
+              "marks": 1,
+              "for": "$\\bar{x} = \\dfrac{650}{50} = 13$"
+            },
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "$\\sqrt{\\dfrac{9350}{50} - \\bar{x}^{2}}$ with the candidate's mean",
+              "ft": true
+            },
+            {
+              "id": "W1",
+              "code": "W",
+              "marks": 1,
+              "for": "$\\sigma = 4.24$",
+              "dependsOn": [
+                "M1"
+              ]
+            }
+          ],
+          "hints": [
+            "The mean comes first: $720 \\div 60$.",
+            "$\\dfrac{10675}{60} = 177.9167$.",
+            "Subtract the square of the mean, then take the root."
+          ],
+          "workedSolution": "$\\bar{x} = \\dfrac{650}{50}$\n$= 13$.\n$\\sigma = \\sqrt{\\dfrac{9350}{50} - 13^{2}}$\n$= \\sqrt{187 - 169}$\n$= \\sqrt{18}$\n$= 4.24$ minutes.",
+          "commonErrors": [
+            {
+              "misconception": "fm.sd.variance-given-as-sd",
+              "pattern": {
+                "kind": "numeric",
+                "value": 18,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "That is the variance, which is what sits under the root. Finish with $\\sqrt{18} = 4.24$ minutes.",
+              "marksTypicallyEarned": 2
+            },
+            {
+              "misconception": "fm.sd.mean-square-not-subtracted",
+              "pattern": {
+                "kind": "numeric",
+                "value": 13.67,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "$\\bar{x}^{2}$ was never taken off. Subtracting 169 is what turns the size of the data into a measure of spread.",
+              "marksTypicallyEarned": 1
+            },
+            {
+              "misconception": "fm.sd.sample-divisor-used",
+              "pattern": {
+                "kind": "numeric",
+                "value": 4.29,
+                "tolerance": {
+                  "type": "absolute",
+                  "value": 0.005
+                }
+              },
+              "feedback": "Dividing by $\\sum f - 1$ gives that, as the calculator's $s_{x}$ does. The mean is right and earns its mark; the sheet's formula divides by $\\sum f$, so the estimate is 4.24 minutes.",
+              "marksTypicallyEarned": 1
+            }
+          ],
+          "requiresWorking": true
+        }
+      ],
+      "totalMarks": 3,
+      "timeAllowanceSec": 216,
+      "skeleton": "(main)calculate3",
+      "examinerSources": [
+        "ccea-cer:further-maths:2023-summer:FM3:Q6",
+        "ccea-cer:further-maths:2025-summer:FM3:Q2"
+      ],
+      "solutionProgram": "mean 650/50 = 13; sum fx^2 / sum f = 187; variance 187 - 169 = 18; sd sqrt(18) = 4.2426 -> 4.24; routes: the variance 18, the mean square not subtracted sqrt(187) = 13.67, the sample divisor sqrt(900/49) = 4.29, each executed and distinct from the answer.",
+      "verification": "ver.q.fm.u3.mean-sd-grouped-data.0011",
+      "version": 1
+    },
+    {
+      "id": "q.fm.u3.mean-sd-grouped-data.0012",
+      "topic": "fm.u3.mean-sd-grouped-data",
+      "specRefs": [
+        "FM3-CTD-01"
+      ],
+      "tier": "untiered",
+      "paper": {
+        "unit": "FM3",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator",
+          "Formula sheet printed on page 2 of the question-and-answer booklet",
+          "Normal Probability Table on page 3 of the booklet"
+        ]
+      },
+      "style": "practice",
+      "difficulty": 2,
+      "ao": [
+        "AO2"
+      ],
+      "commandWords": [
+        "Explain"
+      ],
+      "emphasis": [
+        "estimate",
+        "explanation"
+      ],
+      "context": {
+        "setting": "A grouped table of fish lengths",
+        "original": true
+      },
+      "figures": [],
+      "parts": [
+        {
+          "id": "main",
+          "stem": "A grouped table gives the lengths of 60 fish in classes such as 30 to 34 centimetres.\nExplain why the mean length calculated from the table is only an estimate.",
+          "marks": 1,
+          "answer": {
+            "kind": "text",
+            "accepted": [
+              "The exact lengths inside each class are not known, so the midpoint is used to stand for every fish in the class.",
+              "The table only gives classes, so the exact values are not known and midpoints are used instead."
+            ],
+            "keyWords": [
+              {
+                "any": [
+                  "exact values",
+                  "actual values",
+                  "individual values",
+                  "original values",
+                  "exact lengths",
+                  "actual lengths",
+                  "individual lengths",
+                  "original lengths",
+                  "values are unknown",
+                  "values are not known",
+                  "lengths are unknown",
+                  "lengths are not known",
+                  "midpoint",
+                  "mid-point",
+                  "do not know the exact",
+                  "don't know the exact",
+                  "do not know the individual",
+                  "don't know the individual",
+                  "do not know the actual",
+                  "don't know the actual",
+                  "lengths of the individual fish",
+                  "each individual fish"
+                ],
+                "marks": 1,
+                "reject": [
+                  "rounded",
+                  "rounding"
+                ]
+              }
+            ],
+            "listingRule": false
+          },
+          "scheme": [
+            {
+              "id": "M1",
+              "code": "M",
+              "marks": 1,
+              "for": "the exact lengths inside each class are unknown, so each class is represented by its midpoint",
+              "accept": [
+                "raw data not known",
+                "only the class is known",
+                "midpoints are assumed"
+              ]
+            }
+          ],
+          "hints": [
+            "What does the table not tell you?",
+            "Say what is used in place of the real values."
+          ],
+          "workedSolution": "The table records only which class each fish falls in. The exact lengths are not known, so every fish in a class is treated as having the midpoint length, and the mean that follows is an estimate.",
+          "commonErrors": [
+            {
+              "misconception": "fm.sd.estimate-reason-vague",
+              "pattern": {
+                "kind": "text",
+                "regex": "round(ed|ing)?[^;\\n]*"
+              },
+              "feedback": "Rounding is not the reason. The reason is that the table never records the individual lengths, so each class is represented by its midpoint. Say that, and the mark is there.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2022-summer:FM3:Q3"
+            },
+            {
+              "misconception": "fm.sd.estimate-reason-vague",
+              "pattern": {
+                "kind": "text",
+                "regex": "(not enough|too few|small sample)[^;\\n]*"
+              },
+              "feedback": "Sample size is a different idea. The word 'estimate' is there because the exact values inside each class are unknown and the midpoint stands in for them.",
+              "marksTypicallyEarned": 0,
+              "source": "ccea-cer:further-maths:2022-summer:FM3:Q3"
+            }
+          ],
+          "requiresWorking": false
+        }
+      ],
+      "totalMarks": 1,
+      "timeAllowanceSec": 72,
+      "skeleton": "(main)explain1",
+      "examinerSources": [
+        "ccea-cer:further-maths:2022-summer:FM3:Q3"
+      ],
+      "solutionProgram": "No number: the mark is for naming the unknown individual lengths and the midpoint standing in for them (Summer 2022 Q3(ii), M1).",
+      "verification": "ver.q.fm.u3.mean-sd-grouped-data.0012",
       "version": 1
     }
   ],
@@ -3232,7 +3556,7 @@
         "rp.fm.u3.mean-sd-grouped-data.06",
         "q.fm.u3.mean-sd-grouped-data.0003",
         "ftm.fm.u3.mean-sd-grouped-data.02",
-        "q.fm.u3.mean-sd-grouped-data.0008"
+        "q.fm.u3.mean-sd-grouped-data.0011"
       ],
       "showTopicLabels": false,
       "version": 1
@@ -3248,7 +3572,7 @@
       ],
       "itemIds": [
         "q.fm.u3.mean-sd-grouped-data.0005",
-        "q.fm.u3.mean-sd-grouped-data.0010",
+        "q.fm.u3.mean-sd-grouped-data.0012",
         "q.fm.u3.mean-sd-grouped-data.0009",
         "dx.fm.u3.mean-sd-grouped-data.post-b",
         "rp.fm.u3.mean-sd-grouped-data.07"
@@ -3341,6 +3665,22 @@
           "result": "pass",
           "detail": "v3 (7 Oct 2026): the note is rebuilt as explain, See it, Your turn in six sections on its own numbers, every value computed in ed-grouped.mjs: 40 journeys in classes 1-5 to 21-25 (midpoints 3 to 23; sum fx 490; mean 12.25; sum fx squared 7130; variance 28.1875; standard deviation 5.31); continuous classes 1.0-1.5, 1.5-2.5, 2.5-4.0 (midpoints 1.25, 2, 3.25). No value a question, worked example, diagnostic, find-the-mistake or prompt asks is worked in the note (overlap-scan 0). Gates g2, g3, g4 and g5 withdrawn and replaced (records above); g1 kept and reworded to stand alone; every gate has a twin, and the choice gate and its twin note each wrong option.",
           "at": "2026-10-07T22:10:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): Sheet trap 3 and post-b #q6's note on the option 6 said the reports name dividing by the number of classes; the Summer 2019 Q1 and 2022 Q3 reports name not dividing by the total frequency (100; 80). Both now say so.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): Items re-read after the pass: q0011 (new totals) and q0012 (fish lengths) replace q0008 and q0010; post-b #q8 replaces #q1; no practice item, diagnostic or find-the-mistake now prints or repeats another item's case. The note is unchanged.",
+          "at": "2026-10-11T11:09:00Z",
           "by": "claude"
         }
       ],
@@ -3951,6 +4291,22 @@
           "result": "pass",
           "detail": "7 Oct 2026 (v3 pass): (b) carries followThrough from (a) with the relation x / 40, so a mean from her own sum of fx is paid (probed with a perturbed sum); the class-count feedback no longer calls it 'the one major method error' (the 2019 and 2022 reports name it as an example and say few made it); the class-limit citation removed.",
           "at": "2026-10-07T22:10:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): part (b)'s common error 133.6 said the reports name dividing by the number of classes; the Summer 2019 Q1 and 2022 Q3 reports name not dividing by the total frequency (100; 80), of which the class count is one case. The feedback now says that (a citation edit, in place); its value and award are unchanged.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): part (a)'s M1 ('midpoints ... used with their frequencies') is prose with no line an answer box can match, so the part's own worked solution typed as working earned 1 of 2 (fixer-fm3 probe, 11 Oct 2026); the M1 now accepts the line an examiner ticks, the sum of the fx entries (widened acceptance, in place).",
+          "at": "2026-10-11T11:09:00Z",
           "by": "claude"
         }
       ],
@@ -5093,10 +5449,27 @@
           "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
           "at": "2026-10-07T22:10:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "Withdrawn 11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): Its stem printed the sum of fx squared, 10675, for the homework times, which is the answer practice question 0003 asks on the same data (the strictest review, 8 Oct 2026); q0011 is the same substitution on new totals. Replaced by q.fm.u3.mean-sd-grouped-data.0011.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u3.mean-sd-grouped-data.0008",
+          "kind": "question",
+          "replacedBy": "q.fm.u3.mean-sd-grouped-data.0011",
+          "reason": "Its stem printed the sum of fx squared, 10675, for the homework times, which is the answer practice question 0003 asks on the same data (the strictest review, 8 Oct 2026); q0011 is the same substitution on new totals.",
+          "on": "2026-10-11T11:09:00Z"
+        }
+      ]
     },
     {
       "id": "ver.q.fm.u3.mean-sd-grouped-data.0009",
@@ -5173,6 +5546,22 @@
           "result": "pass",
           "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
           "at": "2026-10-07T22:10:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): part (b)'s single point was coded W1; the Summer 2022 Q3(ii) scheme gives the same point M1. Relabelled in place: the mark, the wording and every award are unchanged.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): part (c)'s M1 (the formula with the candidate's values) now accepts the substituted line of its own worked solution, which earned 2 of 3 when typed as working; part (b) now also accepts 'we do not know the individual heights' and like wordings, which a negation-guard reading refused (fixer-fm3 probe, 11 Oct 2026; widened acceptance, in place).",
+          "at": "2026-10-11T11:09:00Z",
           "by": "claude"
         }
       ],
@@ -5255,10 +5644,27 @@
           "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
           "at": "2026-10-07T22:10:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "Withdrawn 11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): It was exam-style question 0009(b) (why the tomato-height mean is only an estimate) with the same accepted answers (the strictest review, 8 Oct 2026); q0012 asks it of fish lengths, coded M1 as the 2022 scheme codes the point. Replaced by q.fm.u3.mean-sd-grouped-data.0012.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "q.fm.u3.mean-sd-grouped-data.0010",
+          "kind": "question",
+          "replacedBy": "q.fm.u3.mean-sd-grouped-data.0012",
+          "reason": "It was exam-style question 0009(b) (why the tomato-height mean is only an estimate) with the same accepted answers (the strictest review, 8 Oct 2026); q0012 asks it of fish lengths, coded M1 as the 2022 scheme codes the point.",
+          "on": "2026-10-11T11:09:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.fm.u3.mean-sd-grouped-data.pre-b",
@@ -5417,10 +5823,27 @@
           "detail": "British English, second person, no exclamation marks, the word for an incorrect answer does not occur; every $...$ pair opens and closes inside one string.",
           "at": "2026-10-07T22:10:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): #q1 -> #q8; the replaced items repeated a later item's case and answer.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
-      "reports": []
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "dx.fm.u3.mean-sd-grouped-data.post-b#q1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.mean-sd-grouped-data.post-b#q8",
+          "reason": "Its class (frequency 18, midpoint 32) was a row of exam-style question 0009(c)'s table, so the check printed part of that question's working (the strictest review, 8 Oct 2026); #q8 asks the same step on a new class.",
+          "on": "2026-10-11T11:09:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.mean-sd-grouped-data.06",
@@ -5825,6 +6248,130 @@
         }
       ],
       "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.mean-sd-grouped-data.0011",
+      "itemId": "q.fm.u3.mean-sd-grouped-data.0011",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by the stage gate (validate-stage.mts, the build's own checks).",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "[3] as q0008 carried: MW1 the mean, M1 the substitution, W1 the answer (the Summer 2023 Q6 and 2025 Q2 shape).",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Executed: 650/50 = 13; 9350/50 = 187; 187 - 169 = 18; sqrt(18) = 4.2426 (4.24); the variance route 18, the unsubtracted route 13.67 and the sum f - 1 route sqrt(900/49) = 4.29 executed and distinct.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "New totals for a new situation (clinic waiting times); no other item prints or asks them.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; every $...$ pair balanced.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.q.fm.u3.mean-sd-grouped-data.0012",
+      "itemId": "q.fm.u3.mean-sd-grouped-data.0012",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (Question) by the stage gate (validate-stage.mts, the build's own checks).",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "[1], coded M1 as the Summer 2022 Q3(ii) scheme codes it (mid-points used in place of each original value).",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "The 2022 report says this part was mostly answered well; the common errors carry the vague reasons (rounding, sample size) the registry records.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "A new context (fish lengths) in our own wording; the key-word group accepts the worked solution and both accepted answers (stage gate KEYWORDS 0).",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.dx.fm.u3.mean-sd-grouped-data.post-b.withdrawn",
+      "itemId": "dx.fm.u3.mean-sd-grouped-data.post-b.withdrawn",
+      "version": 1,
+      "checks": [
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-mean-sd-grouped-data.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "The kept copies of dx.fm.u3.mean-sd-grouped-data.post-b's withdrawn items, unchanged and with their ids, so a review card that points at them resolves.",
+          "at": "2026-10-11T11:09:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "withdrawn",
+      "withdrawn": [
+        {
+          "id": "dx.fm.u3.mean-sd-grouped-data.post-b.withdrawn#q1",
+          "kind": "diagnostic",
+          "replacedBy": "dx.fm.u3.mean-sd-grouped-data.post-b#q8",
+          "reason": "The kept copy of dx.fm.u3.mean-sd-grouped-data.post-b#q1, withdrawn: Its class (frequency 18, midpoint 32) was a row of exam-style question 0009(c)'s table, so the check printed part of that question's working (the strictest review, 8 Oct 2026); #q8 asks the same step on a new class.",
+          "on": "2026-10-11T11:09:00Z"
+        }
+      ],
       "reports": []
     }
   ]

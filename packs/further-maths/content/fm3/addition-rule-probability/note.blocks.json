@@ -98,49 +98,15 @@
   },
   {
     "type": "gate",
-    "id": "g9",
-    "kind": "choice",
-    "prompt": "In the year group, 27 plus 18 comes to 45, but only 38 students do at least one. Why?",
-    "options": [
-      "The 7 students in both groups are counted in each total",
-      "The 12 who do neither were added in by mistake",
-      "The two totals should have been multiplied"
-    ],
-    "answer": "The 7 students in both groups are counted in each total",
-    "explain": "Step 3 of See it: the gap between the two counts is the overlap. Each of those 7 appears once in the 27 and again in the 18; take them off once and 38 is left.",
-    "optionNotes": [
-      {
-        "option": "The 12 who do neither were added in by mistake",
-        "why": "The 12 are in neither total, so they cannot have pushed the sum up; the excess is the overlap.",
-        "misconception": "fm.prob.venn-total-not-used"
-      },
-      {
-        "option": "The two totals should have been multiplied",
-        "why": "Multiplying is for 'and' with independent events; an 'or' count adds the circles and takes the overlap off once.",
-        "misconception": "fm.prob.or-multiplied-instead-of-added"
-      }
-    ],
+    "id": "g13",
+    "kind": "number",
+    "prompt": "In a sports club, 34 members play hockey and 21 play tennis. Those two totals add to 55, but only 42 members play at least one of the two. How many members play both?",
+    "answer": "13",
+    "explain": "As in step 3 of See it, adding the two totals counts everyone in both twice, so the sum overshoots the 'at least one' count by exactly the overlap: $55 - 42 = 13$ members play both.",
     "twin": {
-      "prompt": "In a club, 22 swim and 15 cycle, which adds to 37, but only 31 do at least one. Why?",
-      "options": [
-        "The 6 who do both are counted in each total",
-        "The 9 who do neither were added in",
-        "The totals should have been multiplied"
-      ],
-      "answer": "The 6 who do both are counted in each total",
-      "explain": "37 is 6 more than 31: the 6 who swim and cycle are in both totals, so they were counted twice.",
-      "optionNotes": [
-        {
-          "option": "The 9 who do neither were added in",
-          "why": "The people in neither club are in neither total, so they cannot push the sum up.",
-          "misconception": "fm.prob.venn-total-not-used"
-        },
-        {
-          "option": "The totals should have been multiplied",
-          "why": "Multiplying is for 'and' with independent events; an 'or' count adds and takes the overlap off once.",
-          "misconception": "fm.prob.or-multiplied-instead-of-added"
-        }
-      ]
+      "prompt": "In a youth group, 23 go hiking and 16 go kayaking. Those totals add to 39, but only 33 do at least one. How many do both?",
+      "answer": "6",
+      "explain": "The 39 counts everyone who does both twice, once in each total. The extra over the 33 is the overlap: $39 - 33 = 6$."
     }
   },
   {
@@ -183,15 +149,15 @@
   },
   {
     "type": "gate",
-    "id": "g10",
+    "id": "g14",
     "kind": "number",
-    "prompt": "For the year group of 50, where 27 play for a sports team, 18 play in the orchestra and 7 do both, work out $P(\\text{sports team or orchestra})$. Give a fraction or a decimal.",
-    "answer": "19/25 | 38/50 | 0.76",
-    "explain": "As in See it, add and take the overlap off once: $\\dfrac{27}{50} + \\dfrac{18}{50} - \\dfrac{7}{50}$ is $\\dfrac{38}{50}$, which is 0.76. Leaving the overlap in would give 0.9.",
+    "prompt": "In a school of 100 pupils, 48 have a library card, 29 have a swimming pass and 14 have both. For a pupil chosen at random, work out $P(\\text{library card or swimming pass})$. Give a fraction or a decimal.",
+    "answer": "63/100 | 0.63",
+    "explain": "As in See it, add the two and take the overlap off once: $\\dfrac{48}{100} + \\dfrac{29}{100} - \\dfrac{14}{100}$ is $\\dfrac{63}{100}$, which is 0.63. Leaving the 14 in would give 0.77.",
     "twin": {
-      "prompt": "A club of 40: 22 swim, 15 cycle and 6 do both. Work out $P(\\text{swims or cycles})$. Give a fraction or a decimal.",
-      "answer": "31/40 | 0.775",
-      "explain": "$\\dfrac{22}{40} + \\dfrac{15}{40} - \\dfrac{6}{40}$ is $\\dfrac{31}{40}$, which is 0.775."
+      "prompt": "Of the 50 staff in an office, 26 drive to work, 15 cycle and 8 do both on different days. For one member of staff chosen at random, work out $P(\\text{drives or cycles})$. Give a fraction or a decimal.",
+      "answer": "33/50 | 0.66",
+      "explain": "$\\dfrac{26}{50} + \\dfrac{15}{50} - \\dfrac{8}{50}$ is $\\dfrac{33}{50}$, which is 0.66: the 8 who do both come off once."
     }
   },
   {
@@ -289,7 +255,7 @@
   {
     "type": "see",
     "kind": "calculation",
-    "stem": "A theatre group of 60 members: 31 act, 26 work backstage and 9 do both. One member is chosen at random. Set up $P(\\text{acts or works backstage})$.",
+    "stem": "A theatre group of 60 members: 31 act, 26 work backstage and 9 do both. One member is chosen at random. Find $P(\\text{acts or works backstage})$.",
     "steps": [
       {
         "n": 1,
@@ -307,7 +273,15 @@
       {
         "n": 3,
         "working": "$\\dfrac{31}{60} + \\dfrac{26}{60} - \\dfrac{9}{60}$",
-        "decision": "Put them into the rule. The denominators already match, so only the numerators combine: that last line is yours, in the check below."
+        "decision": "Put them into the rule: add the two, then take the 9 in both off once."
+      },
+      {
+        "n": 4,
+        "working": "$= \\dfrac{48}{60} = \\dfrac{4}{5}$",
+        "decision": "The denominators already match, so only the numerators combine: $31 + 26 - 9 = 48$. The unreduced fraction earns the mark too.",
+        "earns": [
+          "W1"
+        ]
       }
     ]
   },
@@ -320,15 +294,15 @@
   },
   {
     "type": "gate",
-    "id": "g11",
+    "id": "g15",
     "kind": "number",
-    "prompt": "In the theatre group of 60, 31 act, 26 work backstage and 9 do both. What is $P(\\text{acts or works backstage})$? Give a fraction or a decimal.",
-    "answer": "4/5 | 0.8 | 48/60",
-    "explain": "Finish step 3 of See it: $\\dfrac{31 + 26 - 9}{60}$ is $\\dfrac{48}{60}$, which is $\\dfrac{4}{5}$. The unreduced form earns the same mark.",
+    "prompt": "A club of 40 members: 17 play chess, 15 play draughts and 6 play both. One member is chosen at random. What is $P(\\text{chess or draughts})$? Give a fraction or a decimal.",
+    "answer": "13/20 | 26/40 | 0.65",
+    "explain": "As in steps 3 and 4 of See it, put the three over 40 and take the overlap off once: $\\dfrac{17 + 15 - 6}{40}$ is $\\dfrac{26}{40}$, which is 0.65.",
     "twin": {
-      "prompt": "A club of 60 members: 25 play chess, 20 play draughts and 9 play both. What is $P(\\text{chess or draughts})$? Give a fraction or a decimal.",
-      "answer": "3/5 | 0.6 | 36/60",
-      "explain": "$\\dfrac{25 + 20 - 9}{60}$ is $\\dfrac{36}{60}$, which is 0.6."
+      "prompt": "A running club of 50 members: 21 run on roads, 17 run on trails and 6 do both. What is $P(\\text{roads or trails})$ for a member chosen at random? Give a fraction or a decimal.",
+      "answer": "16/25 | 32/50 | 0.64",
+      "explain": "$\\dfrac{21 + 17 - 6}{50}$ is $\\dfrac{32}{50}$, which is 0.64: the 6 who do both were in each total, so they come off once."
     }
   },
   {
@@ -401,11 +375,11 @@
     "twin": {
       "prompt": "Which question needs the addition rule rather than multiplying?",
       "options": [
-        "One card is drawn. What is the probability that it is a heart or a king?",
+        "One card is drawn from a pack. Find the chance of a heart or a king.",
         "Two coins are tossed. What is the probability that both land heads?",
         "A dice is thrown twice. What is the probability of two sixes?"
       ],
-      "answer": "One card is drawn. What is the probability that it is a heart or a king?",
+      "answer": "One card is drawn from a pack. Find the chance of a heart or a king.",
       "explain": "Heart or king is an 'or' about one card, with an overlap, the king of hearts, to take off once. The other two ask for 'both' across two independent events, so they multiply.",
       "optionNotes": [
         {
@@ -459,9 +433,9 @@
     "answer": "0.25 | 1/4",
     "explain": "As in step 2 of See it, rearrange the rule: $0.35 + 0.5 - 0.6 = 0.25$. The two probabilities add to more than the union by exactly the overlap.",
     "twin": {
-      "prompt": "$P(A) = 0.6$, $P(B) = 0.3$ and $P(A \\cup B) = 0.78$. What is $P(A \\cap B)$?",
-      "answer": "0.12 | 3/25",
-      "explain": "$0.6 + 0.3 - 0.78 = 0.12$."
+      "prompt": "$P(A) = 0.54$, $P(B) = 0.36$ and $P(A \\cup B) = 0.81$. What is $P(A \\cap B)$?",
+      "answer": "0.09 | 9/100",
+      "explain": "Rearrange the rule: $0.54 + 0.36 - 0.81 = 0.09$. The two probabilities add to more than the union by exactly the overlap."
     }
   },
   {
@@ -475,7 +449,7 @@
   },
   {
     "type": "p",
-    "md": "**An answer above 1.** Summer 2019 examiners reported probabilities greater than 1: the overlap left in. $0.7 + 0.45 = 1.15$ can never be a probability, so a total like that means the overlap still has to come off."
+    "md": "**An answer above 1.** The Summer 2019 report was disappointed by probabilities greater than 1 on its Venn question. No probability can be, so stop at a total like $0.7 + 0.45 = 1.15$: in an 'or' question, the usual cause is an overlap still to come off."
   },
   {
     "type": "see",
@@ -506,9 +480,9 @@
     "answer": "0.6 | 3/5",
     "explain": "As in See it, 'during the weekend' is at least one of the two days, an 'or': $0.45 + 0.2 - 0.05 = 0.6$.",
     "twin": {
-      "prompt": "The chance of snow on Saturday is $0.4$, on Sunday $0.3$, and on both days $0.16$. What is the probability of snow during the weekend?",
-      "answer": "0.54 | 27/50",
-      "explain": "At least one of the two days: $0.4 + 0.3 - 0.16 = 0.54$."
+      "prompt": "The chance of snow on Saturday is $0.4$, on Sunday $0.26$, and on both days $0.14$. What is the probability of snow during the weekend?",
+      "answer": "0.52 | 13/25",
+      "explain": "'During the weekend' is at least one of the two days: $0.4 + 0.26 - 0.14 = 0.52$, the both-days case taken off once."
     }
   },
   {
@@ -531,7 +505,7 @@
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.addition-rule-probability.01"
+    "promptId": "rp.fm.u3.addition-rule-probability.07"
   },
   {
     "type": "prompt",

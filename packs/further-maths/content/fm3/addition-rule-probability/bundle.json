@@ -124,7 +124,7 @@
       "traps": [
         "Multiplying two probabilities when the question does not ask for both events: a one-mark part that gave the first outcome and asked for the second was read as an 'and' question (Summer 2024 FM3 Q3)",
         "Adding the probabilities of two successive events where 'and' needed them multiplied, on one of the easier questions of the paper (Summer 2022 FM3 Q1)",
-        "Leaving the overlap in, so the answer comes out above 1; answers greater than 1 were reported as disappointing (Summer 2019 FM3 Q7)",
+        "Giving a probability greater than 1, which the report noted on the Venn question (Summer 2019 FM3 Q7); in an 'or' question, an overlap left in is the usual way to get there, so check every answer lies between 0 and 1",
         "Giving a bare count where a probability was asked for (Summer 2019 FM3 Q7)",
         "Misreading 'only', so an overlap goes in the wrong region of the Venn diagram, and leaving out the value that belongs outside the circles (Summer 2025 FM3 Q3)",
         "Subtracting the overlap twice, which removes those members from the answer altogether"
@@ -1504,6 +1504,30 @@
       "marksEarnedAsWritten": [],
       "feedback": "Line 1 is right, but the method mark is for the whole rule with the overlap taken off, so both marks go at line 2, where the 8 stay counted twice. A quick check would have caught it: 0.925 is close to 1 for a group where 11 students do neither. The answer is $\\dfrac{29}{40}$.",
       "source": "ccea-cer:further-maths:2019-summer:FM3:Q7"
+    },
+    {
+      "id": "ftm.fm.u3.addition-rule-probability.02",
+      "topic": "fm.u3.addition-rule-probability",
+      "specRefs": [
+        "FM3-PRB-01"
+      ],
+      "stem": "Eoin was asked for the probability that a member chosen at random from a youth club of 80 plays pool or table tennis. 33 play pool, 28 play table tennis and 11 play both. His working:",
+      "studentWorking": [
+        "P(pool) = 33/80, P(table tennis) = 28/80",
+        "P(pool or table tennis) = 33/80 + 28/80 = 61/80",
+        "= 0.7625"
+      ],
+      "mistakeLine": 2,
+      "misconception": "fm.prob.overlap-not-subtracted",
+      "whatWentWrong": "Line 2 adds the two probabilities and stops. The 11 members who play both are inside each total, so they have been counted twice. The rule on the formula sheet has a third term for exactly this: subtract $P(\\text{both}) = 11/80$ once.",
+      "correction": [
+        "P(pool) = 33/80, P(table tennis) = 28/80, P(both) = 11/80",
+        "P(pool or table tennis) = 33/80 + 28/80 - 11/80 = 50/80",
+        "= 50/80 = 0.625"
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Line 1 is right, but the method mark is for the whole rule with the overlap taken off, so both marks go at line 2, where the 11 stay counted twice. A count check catches it: 61 of the 80 would leave 19 playing neither, yet $80 - 50 = 30$ play neither. The answer is $\\dfrac{5}{8}$.",
+      "source": "ccea-cer:further-maths:2019-summer:FM3:Q7"
     }
   ],
   "prompts": [
@@ -1515,6 +1539,18 @@
       ],
       "kind": "formula",
       "prompt": "The addition rule for two events, as the Unit 3 formula sheet prints it.",
+      "answer": "$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$",
+      "examUnit": "FM3",
+      "difficultyPrior": 2
+    },
+    {
+      "id": "rp.fm.u3.addition-rule-probability.07",
+      "topic": "fm.u3.addition-rule-probability",
+      "specRefs": [
+        "FM3-PRB-01"
+      ],
+      "kind": "formula",
+      "prompt": "What does the addition rule give for $P(A \\cup B)$?",
       "answer": "$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$",
       "examUnit": "FM3",
       "difficultyPrior": 2
@@ -1616,9 +1652,9 @@
         "dx.fm.u3.addition-rule-probability.pre",
         "q.fm.u3.addition-rule-probability.0001",
         "q.fm.u3.addition-rule-probability.0002",
-        "rp.fm.u3.addition-rule-probability.01",
+        "rp.fm.u3.addition-rule-probability.07",
         "q.fm.u3.addition-rule-probability.0003",
-        "ftm.fm.u3.addition-rule-probability.01",
+        "ftm.fm.u3.addition-rule-probability.02",
         "q.fm.u3.addition-rule-probability.0004"
       ],
       "showTopicLabels": false,
@@ -1723,6 +1759,46 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose.",
           "at": "2026-09-25T04:24:00Z",
           "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): gate g6's twin option (one card drawn, a heart or a king) shared an eight-word stimulus run with three CCEA Mathematics question papers (2024 M6-F-P2, M7-H-P2, M8-H-P2) that carries no instruction language: reworded in place as a 'find the chance' sentence. The gate's id, kind, prompt and answer are unchanged; the twin's correct option is the same card question. shingles.mjs --unit fm3 re-run on the staged copy.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): the twins of g7 and g12 shared 0.3 with their See its (lesson-v2 --see same-case), and g7's twin answer 0.12 was See it #32's own answer: both re-set in place on new numbers (0.54, 0.36, 0.81 giving 0.09; snow 0.4, 0.26, 0.14 giving 0.52). The gates' ids, kinds, prompts and answers are unchanged.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): twist #36 and Sheet trap 3 said the Summer 2019 report blamed answers above 1 on the overlap left in; the report (Q7) only regrets answers greater than 1 and gives no cause, and its question formed no union. Both now report the answers above 1 and give the overlap left in as our reading of the usual cause.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): the ladder set now lists rp.07 and ftm.02 in place of the withdrawn rp.01 and ftm.01, so every entry ships.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): Teach before check re-read after the pass: g13 (the overlap from the overshoot, a new club), g14 (the rule on a new school) and g15 (a new club after the theatre group's See it, which now finishes itself) each follow their section's See it and ask a case the See it does not print; twins on further new numbers; the first check g8 unchanged.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -1755,6 +1831,27 @@
           "replacedBy": "g11",
           "reason": "Its answer, 17/20, is question 0008(a)'s; g11 asks the note's own theatre group.",
           "on": "2026-09-25T05:15:00Z"
+        },
+        {
+          "id": "g9",
+          "kind": "gate",
+          "replacedBy": "g13",
+          "reason": "It asked why 27 + 18 = 45 when 38 do at least one, on the year group whose See it step 3 had just printed the reason (45 - 38 = 7, the overlap counted twice); g13 asks the same step as a value on a new club (the strictest review, 8 Oct 2026).",
+          "on": "2026-10-11T10:29:00Z"
+        },
+        {
+          "id": "g10",
+          "kind": "gate",
+          "replacedBy": "g14",
+          "reason": "It asked P(sports team or orchestra) for the year group whose count of 38 the section had printed twice (figure #8 and See it #9), so the answer was 38 over the 50 in the stem; g14 asks the rule on a new school (the strictest review, 8 Oct 2026).",
+          "on": "2026-10-11T10:29:00Z"
+        },
+        {
+          "id": "g11",
+          "kind": "gate",
+          "replacedBy": "g15",
+          "reason": "It asked the sum See it #22 had set up on the same theatre group, so it finished the See it rather than asking a new case; the See it now finishes itself and g15 asks a new club (the strictest review, 8 Oct 2026).",
+          "on": "2026-10-11T10:29:00Z"
         }
       ]
     },
@@ -2119,10 +2216,27 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose.",
           "at": "2026-09-23T13:29:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "Withdrawn 11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): It was practice question 0002 (the form group of 40: 22, 15 and 8) with one slip, and its correction printed 0002's answer 29/40 = 0.725 (the strictest review, 8 Oct 2026); ftm.02 shows the same slip on a new youth club. Replaced by ftm.fm.u3.addition-rule-probability.02.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.fm.u3.addition-rule-probability.01",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.fm.u3.addition-rule-probability.02",
+          "reason": "It was practice question 0002 (the form group of 40: 22, 15 and 8) with one slip, and its correction printed 0002's answer 29/40 = 0.725 (the strictest review, 8 Oct 2026); ftm.02 shows the same slip on a new youth club.",
+          "on": "2026-10-11T10:29:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.addition-rule-probability.01",
@@ -2184,10 +2298,27 @@
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose. Every key word appears in the prompt's own answer.",
           "at": "2026-09-23T13:29:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "fail",
+          "detail": "Withdrawn 11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): Its question 'The addition rule for two events, as the Unit 3 formula sheet prints it.' reads to recallFit as a request for two things, so the lesson dropped its recall card; rp.07 asks for the same rule by its left-hand side (pipeline findings, FM3; the strictest review, 8 Oct 2026). Replaced by rp.fm.u3.addition-rule-probability.07.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "rp.fm.u3.addition-rule-probability.01",
+          "kind": "prompt",
+          "replacedBy": "rp.fm.u3.addition-rule-probability.07",
+          "reason": "Its question 'The addition rule for two events, as the Unit 3 formula sheet prints it.' reads to recallFit as a request for two things, so the lesson dropped its recall card; rp.07 asks for the same rule by its left-hand side (pipeline findings, FM3; the strictest review, 8 Oct 2026).",
+          "on": "2026-10-11T10:29:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.fm.u3.addition-rule-probability.02",
@@ -3173,6 +3304,96 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word used for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes inside one string and every maths segment is free of prose.",
           "at": "2026-09-23T13:29:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.fm.u3.addition-rule-probability.02",
+      "itemId": "ftm.fm.u3.addition-rule-probability.02",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (FindTheMistake) by the stage gate; mistakeLine 2 points inside studentWorking; the misconception is registered.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Unit 3 (Statistics), untiered, calculator throughout; statement FM3-PRB-01, two events only.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Executed: (33 + 28 - 11)/80 = 50/80 = 5/8 = 0.625; the slip 33/80 + 28/80 = 61/80 = 0.7625; 80 - 50 = 30 play neither, 80 - 61 = 19. Line 2 is the only wrong line; line 3 follows from it.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Seeded, as ftm.01 was, from the Summer 2019 Q7 report, which regrets probabilities greater than 1 and names no cause; the registry entry fm.prob.overlap-not-subtracted reads that finding as the rule half-applied, and this item shows that slip. Neither the stem nor the feedback says the report named it.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "New wording and a new situation (a youth club of 80), on numbers no practice question, gate or worked example uses; shingles.mjs --unit fm3 on the staged copy.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "British English; calm; names the mark that stands before the one that goes; no exclamation marks.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.rp.fm.u3.addition-rule-probability.07",
+      "itemId": "rp.fm.u3.addition-rule-probability.07",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "Shape validated against src/lib/content/schema.ts (RetrievalPrompt) by the stage gate.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "The rule as page 2 of the Unit 3 booklet gives it; the prompt asks for it by its left-hand side.",
+          "at": "2026-10-11T10:29:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-addition-rule-probability.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "One question of nine words, one formula as the answer; recallFit (src/lib/slides/recall.ts) passes it on the staged copy.",
+          "at": "2026-10-11T10:29:00Z",
           "by": "claude"
         }
       ],

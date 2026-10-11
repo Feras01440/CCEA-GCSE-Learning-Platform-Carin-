@@ -244,7 +244,12 @@
         }
       ],
       "verification": "ver.we.fm.u3.normal-distribution-z-probabilities.01",
-      "version": 1
+      "version": 1,
+      "figurePlain": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 400 174' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A normal curve with the mean 102 g marked and 104.32 g marked to its right'><title>A normal curve with the mean 102 g marked and 104.32 g marked to its right</title><path d='M 14 145.78 L 18.65 145.7 L 23.3 145.6 L 27.95 145.47 L 32.6 145.3 L 37.25 145.08 L 41.9 144.8 L 46.55 144.45 L 51.2 144.02 L 55.85 143.47 L 60.5 142.81 L 65.15 142 L 69.8 141.03 L 74.45 139.86 L 79.1 138.48 L 83.75 136.86 L 88.4 134.97 L 93.05 132.8 L 97.7 130.32 L 102.35 127.51 L 107 124.37 L 111.65 120.89 L 116.3 117.07 L 120.95 112.92 L 125.6 108.47 L 130.25 103.74 L 134.9 98.78 L 139.55 93.64 L 144.2 88.38 L 148.85 83.07 L 153.5 77.81 L 158.15 72.66 L 162.8 67.73 L 167.45 63.1 L 172.1 58.87 L 176.75 55.13 L 181.4 51.94 L 186.05 49.39 L 190.7 47.52 L 195.35 46.38 L 200 46 L 204.65 46.38 L 209.3 47.52 L 213.95 49.39 L 218.6 51.94 L 223.25 55.13 L 227.9 58.87 L 232.55 63.1 L 237.2 67.73 L 241.85 72.66 L 246.5 77.81 L 251.15 83.07 L 255.8 88.38 L 260.45 93.64 L 265.1 98.78 L 269.75 103.74 L 274.4 108.47 L 279.05 112.92 L 283.7 117.07 L 288.35 120.89 L 293 124.37 L 297.65 127.51 L 302.3 130.32 L 306.95 132.8 L 311.6 134.97 L 316.25 136.86 L 320.9 138.48 L 325.55 139.86 L 330.2 141.03 L 334.85 142 L 339.5 142.81 L 344.15 143.47 L 348.8 144.02 L 353.45 144.45 L 358.1 144.8 L 362.75 145.08 L 367.4 145.3 L 372.05 145.47 L 376.7 145.6 L 381.35 145.7 L 386 145.78' stroke='currentColor' stroke-width='1.8' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 6 146 L 394 146' stroke='currentColor' stroke-width='1.4' fill='none' stroke-linejoin='round' stroke-linecap='round'/><path d='M 200 146 L 200 46' stroke='currentColor' stroke-width='1.2' fill='none' stroke-dasharray='5 4' stroke-linejoin='round' stroke-linecap='round'/><path d='M 277.06 152 L 277.06 111.05' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linejoin='round' stroke-linecap='round'/><g font-family='inherit' font-size='15' fill='currentColor' text-anchor='middle'><text x='200' y='166'>102 g</text><text x='277.06' y='166' font-weight='600'>104.32 g</text></g></svg>",
+        "alt": "A normal curve with the mean 102 g under the peak and 104.32 g marked to its right."
+      }
     },
     {
       "id": "we.fm.u3.normal-distribution-z-probabilities.02",
@@ -731,7 +736,12 @@
               "source": "ccea-cer:further-maths:2019-summer:FM3:Q5"
             }
           ],
-          "requiresWorking": false
+          "requiresWorking": false,
+          "followThrough": {
+            "fromPart": "a",
+            "rule": "use-candidate-value",
+            "relation": "1 - x"
+          }
         }
       ],
       "totalMarks": 2,
@@ -2556,7 +2566,8 @@
           "requiresWorking": true,
           "followThrough": {
             "fromPart": "b",
-            "rule": "use-candidate-value"
+            "rule": "use-candidate-value",
+            "relation": "x / 0.9554"
           }
         }
       ],
@@ -3013,6 +3024,14 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, every TeX command keeps its backslash.",
           "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-normal-distribution-z-probabilities.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): figure-leaks WE-LEAK: the example's figure shades the region above 104.32 g and labels it, which is step 2 (the sketch) that the faded versions leave to her; a figurePlain (the same curve, no shading, no label) is now shown in the faded and problem modes. The full example keeps its figure.",
+          "at": "2026-10-11T11:20:00Z",
           "by": "claude"
         }
       ],
@@ -3859,6 +3878,14 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, every TeX command keeps its backslash.",
           "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-normal-distribution-z-probabilities.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): part (b) works from part (a)'s 0.9671 but carried no follow-through, so 1 minus her own (a) was refused (build MARKING line, ruling 14): followThrough relation 1 - x added (credit-only).",
+          "at": "2026-10-11T11:20:00Z",
           "by": "claude"
         }
       ],
@@ -4838,6 +4865,14 @@
           "result": "pass",
           "detail": "British English; second person; no exclamation marks; the word for an incorrect answer and the 9-1 grade label do not occur; every $...$ pair opens and closes on one line, no maths segment holds prose, every TeX command keeps its backslash.",
           "at": "2026-09-22T23:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-fm3, 11 Oct 2026: scratchpad/probes/fixer-fm3/fix-normal-distribution-z-probabilities.mjs, the FM3 strictest review of 8 Oct)",
+          "result": "pass",
+          "detail": "11 Oct 2026 (fixer-fm3, the FM3 strictest review of 8 Oct): part (c) divides part (b) by 0.9554 but its follow-through had no relation (build MARKING line, ruling 14): relation x / 0.9554 added (credit-only).",
+          "at": "2026-10-11T11:20:00Z",
           "by": "claude"
         }
       ],
