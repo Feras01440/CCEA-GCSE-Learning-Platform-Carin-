@@ -47,7 +47,9 @@ async function drawnLabelSizes(page: Page, scope: string): Promise<Array<{ text:
       if (!box || box.width <= 0 || drawn <= 0) continue;
       for (const t of Array.from(svg.querySelectorAll("text"))) {
         const size = parseFloat(t.getAttribute("font-size") ?? getComputedStyle(t).fontSize);
-        out.push({ text: (t.textContent ?? "").trim(), px: (size * drawn) / box.width });
+        // A long label wraps into tspans (ApparatusFigure LINE_UNITS); textContent would run its lines together.
+        const spans = Array.from(t.querySelectorAll("tspan"));
+        out.push({ text: (spans.length ? spans.map((s) => s.textContent ?? "").join(" ") : (t.textContent ?? "")).trim(), px: (size * drawn) / box.width });
       }
     }
     return out;

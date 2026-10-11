@@ -18,9 +18,11 @@ function readyTopicLink(page: Page) {
 }
 
 /** Three long-published topics, one per subject (the appearance spec uses the same three). If a slug is renamed, change it here. */
+// Topics still on the classic page ("Start the lesson", the rail). Under READINESS_POLICY "structure" (9 Oct 2026) a migrated
+// note runs Read v2 (see "Read v2 on the trial topic" below), so these are notes not yet migrated: M3, the two FM3 left, B1.
 const TOPICS = [
-  { subject: "maths", path: "/learn/maths/M4/histograms-unequal-widths/" },
-  { subject: "further-maths", path: "/learn/further-maths/FM1/matrix-inverse-2x2/" },
+  { subject: "maths", path: "/learn/maths/M3/box-plots-and-comparing-distributions/" },
+  { subject: "further-maths", path: "/learn/further-maths/FM3/pascals-triangle-binomial-expansion/" },
   { subject: "science", path: "/learn/science/B1/b1-enzyme-factors/" },
 ] as const;
 
@@ -43,9 +45,9 @@ const TRIAL = { path: "/learn/further-maths/FM1/algebraic-fractions-simplify/", 
  * that teach, the recap and "In the exam"), and its first check g2, in section 1; section 2's check is g12, and section
  * 6 asks g10 then g11. The trial's design: a content edit that changes these changes them here too.
  */
-const TRIAL_SECTIONS = 9;
+const TRIAL_SECTIONS = 12;
 const TRIAL_FIRST_GATE = "g2";
-const TRIAL_SECOND_GATE = "g12";
+const TRIAL_SECOND_GATE = "g14";
 
 async function openTrial(page: Page): Promise<void> {
   await page.goto(TRIAL.path);

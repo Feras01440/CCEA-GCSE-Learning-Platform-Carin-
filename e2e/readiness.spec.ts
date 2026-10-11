@@ -59,8 +59,10 @@ test("the trial topic offers Slides, draws Read v2, and has its /slides/ route",
 });
 
 test("a published topic its reviewers have not passed offers Read alone, draws the classic page, and has no /slides/ route", async ({ page }) => {
-  // The first published topic the served content says is not ready, from the trial's own unit first.
-  const candidates = [...ROWS.filter((t) => t.unit === TRIAL.unit && t.slug !== TRIAL.slug), ...ROWS.filter((t) => t.unit !== TRIAL.unit)];
+  // The first published topic the served content says is not ready. The manifest's own verdict orders the search (the
+  // rows it calls not ready first, then the rest), so that under the structure policy, with 133 ready topics, the test
+  // does not fetch sixty ready bundles before it finds a classic one; the served content still gives the verdict.
+  const candidates = [...ROWS.filter((t) => t.ready !== true && t.slug !== TRIAL.slug), ...ROWS.filter((t) => t.ready === true && t.slug !== TRIAL.slug)];
   let topic: Row | null = null;
   for (const t of candidates) {
     if (!(await servedReadiness(page.request, t)).ready) {
@@ -92,12 +94,15 @@ test("over every published topic, a /slides/ route exists exactly when the serve
 
   const wrong: string[] = [];
   const ready = new Set<string>();
+  // The service worker precaches the reviewed and waived Slides only; under the structure policy the rest load on demand.
+  const precached = new Set<string>();
   const queue = [...ROWS];
   const worker = async () => {
     for (let t = queue.shift(); t !== undefined; t = queue.shift()) {
       const verdict = await servedReadiness(request, t);
       const route = (await request.get(`${topicPath(t)}slides/`)).status();
       if (verdict.ready) ready.add(topicPath(t));
+      if (verdict.ready && verdict.via !== "structure") precached.add(topicPath(t));
       if (verdict.ready && route !== 200) wrong.push(`${topicPath(t)}: ready (${verdict.via}), but its /slides/ route answers ${route}`);
       if (!verdict.ready && route !== 404) wrong.push(`${topicPath(t)}: not ready (${verdict.reasons[0] ?? ""}), but its /slides/ route answers ${route}`);
       if ("ready" in t && t.ready !== verdict.ready) wrong.push(`${topicPath(t)}: the manifest says ready ${String(t.ready)}, the served content says ${verdict.ready}`);
@@ -111,5 +116,5 @@ test("over every published topic, a /slides/ route exists exactly when the serve
   const sw = await (await request.get("/sw.js")).text();
   const precache = JSON.parse(/const PRECACHE = (\[.*?\]);/.exec(sw)?.[1] ?? "[]") as string[];
   const precachedSlides = new Set(precache.flatMap((u) => /^(\/learn\/[^/]+\/[^/]+\/[^/]+\/)slides\//.exec(u)?.[1] ?? []));
-  expect([...precachedSlides].sort()).toEqual([...ready].sort());
+  expect([...precachedSlides].sort()).toEqual([...precached].sort());
 });

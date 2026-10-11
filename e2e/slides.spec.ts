@@ -72,8 +72,10 @@ async function firstGate(page: Page): Promise<Gate> {
 
 /** The deck's card count as the counter states it ("1 of 55"): read before any miss has added its retry. */
 async function deckSize(page: Page): Promise<number> {
-  const text = ((await count(page).textContent()) ?? "").trim();
-  const n = Number(/ of (\d+)$/.exec(text)?.[1] ?? Number.NaN);
+  // The title card has no counter (the header with it starts on card 2): there the promise line states the count.
+  const onCounter = (await count(page).count()) > 0;
+  const text = ((await (onCounter ? count(page) : page.locator("[data-promise]")).textContent()) ?? "").trim();
+  const n = Number((onCounter ? / of (\d+)$/ : /(\d+) cards/).exec(text)?.[1] ?? Number.NaN);
   expect(n, `the counter says "${text}"`).toBeGreaterThan(1);
   return n;
 }

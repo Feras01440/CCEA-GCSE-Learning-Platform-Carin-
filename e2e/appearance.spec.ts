@@ -14,11 +14,14 @@ import { completeFirstRun, expectNoHorizontalOverflow } from "./helpers";
  *    (the hero was re-ordered in pass 2a, 23 Sep; the 640 px rule for the button lives in e2e/learn.spec.ts).
  *  - Display maths never scrolls the page and never hides its right-hand end at 390.
  *
- * Three topics, one per subject, all long published. If a slug is renamed, change it here.
+ * Three topics, one per subject, all long published and all still on the classic page ("Start the lesson", the rail): these
+ * are the classic page's checks. Under READINESS_POLICY "structure" (src/lib/slides/readiness.ts, 9 Oct 2026) every topic
+ * whose note passes lesson structure v3 runs Read v2 instead, so the picks here are notes not yet migrated (M3; the two
+ * FM3 topics left; B1). If a slug is renamed or its note is migrated, change it here.
  */
 const TOPICS = [
-  { subject: "maths", path: "/learn/maths/M4/histograms-unequal-widths/" },
-  { subject: "further-maths", path: "/learn/further-maths/FM1/matrix-inverse-2x2/" },
+  { subject: "maths", path: "/learn/maths/M3/box-plots-and-comparing-distributions/" },
+  { subject: "further-maths", path: "/learn/further-maths/FM3/pascals-triangle-binomial-expansion/" },
   { subject: "science", path: "/learn/science/B1/b1-enzyme-factors/" },
 ] as const;
 
