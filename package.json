@@ -25,7 +25,8 @@
     "decks:build": "tsx pipeline/build-decks.mts",
     "sw:build": "node scripts/build-sw.mjs",
     "e2e": "playwright test",
-    "e2e:serve": "serve out -l 3200",
+    "e2e:serve": "node scripts/serve-export.mjs 3200",
+    "verify": "node scripts/verify.mjs",
     "content:check": "tsx pipeline/build-content.mts --strict && node scripts/qa/lesson-v2.mjs",
     "export:fix": "node scripts/fix-export.mjs"
   },

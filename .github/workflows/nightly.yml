@@ -1,0 +1,117 @@
+# Nightly, at 02:37 UK summer time (01:37 in winter; GitHub's cron is UTC and may start a few minutes late): the whole
+# suite as CI runs it (ci.yml, called, with every test run however many fail), the content lints in report mode, and one
+# line per unit in the summary:
+# topics · v3.1 · structure-pass · reviewed · ready · lint warnings · specs green. Runs on main whether or not anything
+# was pushed, so a spec that drifts with the date or the content is caught the next morning. By hand: Actions →
+# Nightly → Run workflow. GitHub pauses scheduled workflows in a public repository after 60 days without a push.
+name: Nightly
+
+on:
+  schedule:
+    - cron: "37 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  suite:
+    name: Suite
+    uses: ./.github/workflows/ci.yml
+    with:
+      full-suite: true
+
+  lints:
+    name: Content lints (report mode)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Content build, strict (the bundles and manifest the counts read)
+        id: content
+        continue-on-error: true
+        run: |
+          mkdir -p reports
+          set -o pipefail
+          npx tsx pipeline/build-content.mts --strict 2>&1 | tee reports/content-build.log
+
+      - name: lesson-v2, every report (see, teach, prompts, withdrawn, depth)
+        id: lesson
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: node scripts/qa/lesson-v2.mjs --see --teach --prompts --withdrawn --depth --json > reports/lesson-v2.json
+
+      - name: figure-leaks
+        id: leaks
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: node scripts/qa/figure-leaks.mjs --json reports/figure-leaks.json
+
+      # shingles compares the content with the private corpus (docs/sources/papers), which is never in the repository:
+      # here it can only say that it did not run. It stays a local check (scripts/verify.mjs --lints, or by hand).
+      - name: shingles (needs the private corpus; reports that it cannot run here)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: node scripts/qa/shingles.mjs 2>&1 | tee reports/shingles.txt
+
+      - name: Readiness, v3.1 and lint warnings per unit
+        id: health
+        if: ${{ !cancelled() }}
+        run: npx tsx .github/scripts/unit-health.mts --lesson-v2 reports/lesson-v2.json --figure-leaks reports/figure-leaks.json --out reports/unit-health.json
+
+      - name: Upload the lint reports (kept 14 days)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: lint-reports
+          path: reports/
+          retention-days: 14
+
+      - name: Did a gating lint fail?
+        if: ${{ !cancelled() }}
+        env:
+          CONTENT: ${{ steps.content.outcome }}
+          LESSON: ${{ steps.lesson.outcome }}
+          LEAKS: ${{ steps.leaks.outcome }}
+        run: |
+          echo "content build --strict: ${CONTENT}; lesson-v2: ${LESSON}; figure-leaks: ${LEAKS}"
+          [ "$CONTENT" = "success" ] && [ "$LESSON" = "success" ] && [ "$LEAKS" = "success" ]
+
+  summary:
+    name: Summary
+    needs: [suite, lints]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: The lint reports
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: lint-reports
+          path: reports
+
+      - name: The suite's Playwright results
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: playwright-report
+          path: playwright
+
+      - name: One line per unit
+        run: node .github/scripts/summary.mjs nightly reports/unit-health.json playwright/playwright-results.json >> "$GITHUB_STEP_SUMMARY"

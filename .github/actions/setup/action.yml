@@ -1,0 +1,15 @@
+name: Node and dependencies
+description: Node 24 with the npm download cache (~/.npm, keyed on package-lock.json), then npm ci.
+
+runs:
+  using: composite
+  steps:
+    - name: Node 24
+      uses: actions/setup-node@v7
+      with:
+        node-version: 24
+        cache: npm
+
+    - name: npm ci
+      shell: bash
+      run: npm ci --no-audit --no-fund

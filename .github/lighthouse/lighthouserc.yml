@@ -1,0 +1,48 @@
+# Lighthouse CI (the quality job in .github/workflows/ci.yml): three pages at Lighthouse's default phone profile
+# (an emulated mid-range phone, simulated slow 4G and a 4x slower CPU), three runs each, the median run asserted.
+# The pages are the ones e2e/a11y.spec.ts scans with axe: the first screen a new device lands on (/ redirects there),
+# the trial topic's lesson (Read v2) and its Slides. Served by scripts/serve-export.mjs on :3200 in the job.
+#
+# Budgets (11 Oct 2026):
+# - accessibility >= 0.95 on every page (error);
+# - total transfer per page (error): build 11 measured on a Pixel 7 profile, brotli as `serve` sends it, plus 15 %:
+#   /welcome/ 1572 KB, the lesson 1933 KB, Slides 1672 KB. The 3.4 MB chunk every page loads (935 KB brotli) is most
+#   of each; a page that grows past its budget fails the job, and a deliberate rise moves the number here;
+# - performance >= 0.9 is a WARNING until it has been measured on the CI runner: the first runs' scores (job summary)
+#   decide the floor, and then this line becomes an error at that floor.
+# The service worker is blocked (sw.js): it precaches about 10 MB of app shell in the background on a first visit, by
+# design (docs/dev/README.md, "Offline"), and the budgets measure the page itself.
+
+ci:
+  collect:
+    url:
+      - http://localhost:3200/welcome/
+      - http://localhost:3200/learn/further-maths/FM1/algebraic-fractions-simplify/
+      - http://localhost:3200/learn/further-maths/FM1/algebraic-fractions-simplify/slides/
+    numberOfRuns: 3
+    settings:
+      chromeFlags: "--no-sandbox"
+      blockedUrlPatterns:
+        - "*/sw.js"
+
+  assert:
+    assertMatrix:
+      - matchingUrlPattern: /welcome/$
+        assertions:
+          categories:accessibility: [error, { minScore: 0.95 }]
+          categories:performance: [warn, { minScore: 0.9 }]
+          total-byte-weight: [error, { maxNumericValue: 1851392 }]
+      - matchingUrlPattern: /algebraic-fractions-simplify/$
+        assertions:
+          categories:accessibility: [error, { minScore: 0.95 }]
+          categories:performance: [warn, { minScore: 0.9 }]
+          total-byte-weight: [error, { maxNumericValue: 2276352 }]
+      - matchingUrlPattern: /algebraic-fractions-simplify/slides/$
+        assertions:
+          categories:accessibility: [error, { minScore: 0.95 }]
+          categories:performance: [warn, { minScore: 0.9 }]
+          total-byte-weight: [error, { maxNumericValue: 1969152 }]
+
+  upload:
+    target: filesystem
+    outputDir: .lighthouseci/reports

@@ -8,11 +8,78 @@ A private CCEA GCSE study platform (Mathematics, Further Mathematics, Double Awa
 npm install
 npm run dev            # http://localhost:3000 (the in-app preview uses port 3017)
 npm run build          # content + decks build, static export to out/, RSC payload fix (scripts/fix-export.mjs), service worker
-npx serve out          # serve the export locally
+npm run e2e:serve      # serve out/ on :3200 (scripts/serve-export.mjs: restarted if it dies, no ETags; see "Verification")
 npm test               # vitest
+npm run verify         # the whole local loop: tsc, vitest, content check, build, every spec file alone ("Verification")
 ```
 
 Windows: use Git Bash or `npm.cmd`; keep the folder excluded from Defender scanning for faster file watching.
+
+## Verification
+
+The same checks at four places: the local loop before a build is handed over, CI on every push, the nightly on main, and the preview her phone opens. On this machine every spec file is run alone.
+
+### The local loop: `npm run verify`
+
+`node scripts/verify.mjs` runs, in order: `npx tsc --noEmit -p .` → `npx vitest run --testTimeout=30000` (the surveys over every published lesson take 6 to 14 s under load, past vitest's 5 s default) → `npm run content:check` (the strict content build, then lesson-v2) → `npm run build` → the export server on :3200 → every `e2e/*.spec.ts` alone, one after another → a summary table. Everything printed also goes to `scratchpad/state/verify/<ISO>.log`, with a JSON summary beside it. A spec file that fails keeps its HTML report and traces under `scratchpad/state/verify/<ISO>/<spec>/` (the summary prints the `npx playwright show-report` line); a green one keeps only its `results.json`.
+
+| Option | What it changes |
+|---|---|
+| `--no-build` | no build: the specs run against what :3200 serves |
+| `--specs today,papers` | only these spec files (their names in `e2e/` without `.spec.ts`) |
+| `--skip-unit` | no tsc and no vitest |
+| `--skip-content`, `--skip-specs` | no content check; no export server and no specs |
+| `--lints` | also `figure-leaks` and `shingles` (shingles needs the private corpus, so this machine is the only place it runs) |
+| `--workers <n>` | Playwright workers per spec file (default: the config's, half the cores) |
+| `--root <dir>` | verify another checkout, such as the build worktree: `node scripts/verify.mjs --root ../cairn-build` |
+| `--no-wait` | do not wait for another Playwright run or content build on the machine |
+
+What it guarantees:
+
+- It prints `build exit N` and the `out/index.html` time, and the build counts as failed when `out/index.html` was not rewritten.
+- It never runs two Playwright files at once. Before each spec file, and before the content check, it waits while another Playwright run (any on the machine), or another content build of the same checkout, is going, and says for what: ten agents share the machine, and a spec under load times out without being wrong. The waiting is capped at 20 minutes over the whole run; after that a spec file that had to run alongside another run is marked so in the summary.
+- When nothing answers on :3200 it starts `scripts/serve-export.mjs` for the checkout's `out/` and leaves it running (log: `scratchpad/state/verify/serve-3200.log`). When something answers, it compares the served `/sw.js` with `out/sw.js` and prints both versions (`cairn-<build time, UTC>`): after a build, a server that serves another export (another worktree's) fails the step and no spec runs; with `--no-build` it is a warning, and the specs run against what is served.
+- Exit 0 only when no step failed (a warning, such as :3200 serving another export under `--no-build`, does not fail it).
+
+Times on this machine (11 Oct 2026, with the agents at work): tsc 4 to 33 s, vitest 47 s to 1.5 minutes, the content check 11 to 16 s, the build about 3.5 minutes, the spec files about 13 minutes in all at the default workers (build 10: learn 6, offline 2.5, slides, appearance and readiness about a minute each, the rest seconds).
+
+### CI: `.github/workflows/ci.yml`
+
+On every push to main and every pull request, and by hand (Actions → CI → Run workflow):
+
+| Job | What it runs | After |
+|---|---|---|
+| check | content build (strict) → decks build → tsc → vitest → lesson-v2, then a note when the committed `public/` differs from a fresh build of the committed packs | — |
+| build | `npm run build`; uploads `out/` (artifact `export`, kept 14 days) and `src/generated/` (`generated`, which two specs read) | — |
+| e2e 1/3, 2/3, 3/3 | the export served by `scripts/serve-export.mjs` on :3200; Playwright `--shard=i/3 --workers=1`, with her time zone and language (Europe/London, en-GB); a shard stops after 10 failed tests, the rest reported as not run | build |
+| e2e-report | one HTML report from the three shards (artifact `playwright-report`) and a table of spec files in the run's summary | e2e |
+| quality | Lighthouse CI on three pages at the phone profile, three runs each, with budgets (`.github/lighthouse/lighthouserc.yml`): accessibility ≥ 0.95 and each page's total transfer (build 11 + 15 %) fail the job; performance ≥ 0.9 warns until the first runs set its floor | build |
+| preview | publishes the build to Cloudflare Pages (`deploy-preview.yml`) for main and same-repository pull requests, once the owner has added the token (docs/dev/deploy.md) | build |
+
+`check` and `build` start together, so the specs never wait for the unit tests. Caches: `~/.npm` (keyed on package-lock.json) and the Playwright browser (keyed on its version). Two tools are installed for the run only, pinned in ci.yml and proposed as devDependencies: `@axe-core/playwright`, for `e2e/a11y.spec.ts` (axe's WCAG 2.x A and AA rules on the same three pages, light and dark; the spec skips locally until the package is installed and fails in CI if it is missing), and `@lhci/cli`. A newer push cancels the run in progress on the same branch.
+
+Wall time, estimated from this machine's timings and not yet measured on GitHub's 4-core runners: check about 5 minutes; build 8 to 14 minutes (954 static pages is the long pole); each shard 2 to 3 minutes of setup, then 9 to 12 minutes of tests when they pass; the report about a minute. About 20 to 27 minutes for a green run. A red one is longer, by up to two minutes per failed test (its 60 s timeout and CI's one retry), bounded by the 10-failure stop. The run page shows each job's real time.
+
+### The nightly: `.github/workflows/nightly.yml`
+
+Every night at 02:37 UK summer time (01:37 in winter), on main: the CI suite with every test run (no 10-failure stop), and the content lints in report mode (`lesson-v2 --see --teach --prompts --withdrawn --depth --json` and `figure-leaks --json`; `shingles` can only say it did not run, because the private corpus is never in the repository). The run's summary has one line per unit: topics · v3.1 · structure-pass · reviewed · ready · lint warnings · specs green (`.github/scripts/unit-health.mts`, `.github/scripts/summary.mjs`; "specs green" counts the tests whose file or title names the unit or one of its topics, and the suite line covers the rest). The lint reports are the `lint-reports` artifact. GitHub pauses a public repository's scheduled workflows after 60 days without a push.
+
+### The preview
+
+docs/dev/deploy.md: Cloudflare Pages, with a stable `https://cairn-preview.pages.dev` for the latest main and an address per build, after a five-minute setup by the owner. Until then each CI run's "Preview" job says that it did not publish.
+
+### Reading a failed run
+
+1. The run's summary page first: `build exit N` and the export's size, the table of spec files with each failing test and its first error line, the Lighthouse scores and any budget not met.
+2. The `playwright-report` artifact: unzip it, open `index.html`, open the failed test. It holds the error, the steps, the screenshot and the trace (the page at every step, with its console and network). One trace opens with `npx playwright show-trace <trace.zip>`; the raw traces are also in the `traces-<shard>` artifacts.
+3. Run that spec file alone here before calling it a regression: `node scripts/verify.mjs --no-build --skip-unit --skip-content --specs <name>`. A failure that repeats alone is real.
+4. Lighthouse: the `lighthouse` artifact has each page's full report (the `.html` files).
+
+### Rules
+
+- On this machine every spec file is run alone: never two Playwright files at once, and never the whole suite in one command (`npm run verify` runs it file by file). In CI each shard is one worker on its own runner.
+- The export server is `scripts/serve-export.mjs` (`npm run e2e:serve`), never a bare `npx serve`: serve-handler leaks a file handle per 304 reply (hence `--no-etag` and the restarts), and serve 14.2.6 quietly moves to a random port when its port is taken (so the supervisor checks the port first and stops with the reason).
+- Visual snapshots are not switched on (the Slides owner's call). The mechanism: `await expect(card).toHaveScreenshot("title-card.png")` in a spec, with `snapshotPathTemplate: "{testDir}/__screenshots__/{platform}/{projectName}/{testFilePath}/{arg}{ext}"` in playwright.config.ts so each project keeps its own baselines under `e2e/__screenshots__/`, generated and compared in CI (`--update-snapshots` in a CI run; Linux fonts differ from Windows). Percy and Chromatic need an account and a service, so they are not installed.
 
 ## Layout
 

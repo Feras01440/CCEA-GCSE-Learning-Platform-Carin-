@@ -1,0 +1,64 @@
+name: Export, browsers and the export server
+description: >-
+  The build job's export (out/) and manifests (src/generated/, read by e2e/readiness.spec.ts and e2e/unit7.spec.ts),
+  Playwright's Chromium headless shell (cached per Playwright version) with its system packages, and out/ served on
+  :3200 by scripts/serve-export.mjs (the supervisor), so Playwright reuses that server instead of starting its own.
+
+inputs:
+  browsers:
+    description: Install Playwright's Chromium and its system packages ("false" for a job that only needs the server).
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: The export (out/)
+      uses: actions/download-artifact@v8
+      with:
+        name: export
+        path: out
+
+    - name: The manifests the specs read (src/generated/)
+      uses: actions/download-artifact@v8
+      with:
+        name: generated
+        path: src/generated
+
+    - name: Playwright version
+      id: pw
+      if: inputs.browsers == 'true'
+      shell: bash
+      run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+    - name: Browser cache
+      id: browsers
+      if: inputs.browsers == 'true'
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-chromium-headless-shell
+
+    - name: Chromium (headless shell) and its system packages
+      if: inputs.browsers == 'true' && steps.browsers.outputs.cache-hit != 'true'
+      shell: bash
+      run: npx playwright install --with-deps --only-shell chromium
+
+    - name: Chromium's system packages (the browser came from the cache)
+      if: inputs.browsers == 'true' && steps.browsers.outputs.cache-hit == 'true'
+      shell: bash
+      run: npx playwright install-deps chromium
+
+    - name: Serve out/ on :3200 (scripts/serve-export.mjs)
+      shell: bash
+      run: |
+        nohup node scripts/serve-export.mjs 3200 > "$RUNNER_TEMP/serve-export.log" 2>&1 &
+        for i in $(seq 1 30); do
+          if curl -sf -o /dev/null http://localhost:3200/; then
+            echo "out/ is served on :3200 (after ${i} s)"
+            exit 0
+          fi
+          sleep 1
+        done
+        echo "::error title=Export server::nothing answered on http://localhost:3200/ within 30 s"
+        cat "$RUNNER_TEMP/serve-export.log"
+        exit 1

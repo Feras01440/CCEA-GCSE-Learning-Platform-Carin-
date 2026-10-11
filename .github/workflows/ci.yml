@@ -1,0 +1,283 @@
+# CI: every push to main and every pull request; the nightly runs the same suite (nightly.yml).
+#
+#   check ─────────────────────────── content build (strict) → decks → tsc → vitest → lesson-v2 → public/ drift note
+#   build ──┬── e2e 1/3 ─┐
+#           ├── e2e 2/3 ─┼── e2e-report (one HTML report from the shards, a table per spec file in the summary)
+#           ├── e2e 3/3 ─┘
+#           ├── quality (Lighthouse CI on three pages at the phone profile, with budgets)
+#           └── preview (deploy-preview.yml: Cloudflare Pages, once the owner has added the token; docs/dev/deploy.md)
+#
+# check and build start together, so the specs never wait for the unit tests. A failed run is read from its summary
+# page first, then the playwright-report artifact (open index.html; each failure carries its trace). docs/dev/README.md,
+# "Verification", has the whole loop, local and here.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      preview:
+        description: Also publish this build to the preview (needs the Cloudflare secrets; docs/dev/deploy.md)
+        type: boolean
+        default: false
+      full-suite:
+        description: Run every test however many fail (otherwise a shard stops after 10 failed tests)
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      preview:
+        description: Also publish this build to the preview
+        type: boolean
+        default: false
+      full-suite:
+        description: Run every test however many fail (the nightly)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the run in progress, so an older build can never land on the preview last.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Tools that are not in package.json, pinned here (proposed as devDependencies: docs/dev/README.md, "Verification").
+  AXE_PLAYWRIGHT_VERSION: 4.13.0
+  LHCI_VERSION: 0.15.1
+
+jobs:
+  check:
+    name: Types, unit tests and the content check
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      # First, because tsc and vitest import the manifests it writes (src/generated/ is git-ignored).
+      - name: Content build, strict (public/content and src/generated/manifest.json)
+        run: npx tsx pipeline/build-content.mts --strict
+
+      - name: Decks build (public/decks and src/generated/decks-manifest.json)
+        if: ${{ !cancelled() }}
+        run: npx tsx pipeline/build-decks.mts
+
+      - name: Type check
+        if: ${{ !cancelled() }}
+        run: npx tsc --noEmit -p .
+
+      # 30 s a test instead of vitest's 5 s: the surveys over every published lesson take seconds on a busy machine.
+      - name: Unit tests
+        if: ${{ !cancelled() }}
+        run: npx vitest run --testTimeout=30000
+
+      - name: Lesson lints (lesson-v2 with the unit defaults in scripts/qa/lesson-v2.fatal.json)
+        if: ${{ !cancelled() }}
+        run: node scripts/qa/lesson-v2.mjs
+
+      - name: Is the committed public/ the build of the committed packs?
+        if: ${{ !cancelled() }}
+        run: |
+          changed="$(git status --porcelain -- public/content public/decks)"
+          if [ -z "$changed" ]; then
+            echo "public/content and public/decks are exactly the build of the committed packs." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          n="$(printf '%s\n' "$changed" | wc -l)"
+          echo "::notice title=public/ drift::${n} file(s) under public/content or public/decks differ from a fresh build of the committed packs. The export is always built from the packs, so this is a note for the next commit, not a failure."
+          {
+            echo "### public/ drift: ${n} file(s) differ from a fresh content build"
+            echo
+            echo '```'
+            printf '%s\n' "$changed" | head -40
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    name: Build the export
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: npm run build (content, decks, next build, fix-export, service worker)
+        run: |
+          set +e
+          npm run build 2>&1 | tee "$RUNNER_TEMP/build.log"
+          code="${PIPESTATUS[0]}"
+          echo "build exit ${code}"
+          {
+            echo "### Build"
+            echo
+            echo "build exit ${code}"
+            if [ -f out/index.html ]; then
+              echo
+              echo "out/index.html $(date -u -r out/index.html +%Y-%m-%dT%H:%M:%SZ); $(find out -type f | wc -l) files, $(du -sh out | cut -f1)"
+            fi
+            echo
+            echo '```'
+            grep -E "topic bundle\(s\) published|deck\(s\) →|fix-export:|out/sw.js written" "$RUNNER_TEMP/build.log" | cut -c1-400
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "${code}"
+
+      - name: Upload the export (out/, kept 14 days)
+        uses: actions/upload-artifact@v7
+        with:
+          name: export
+          path: out/
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload the generated manifests (src/generated/, which two specs read)
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated
+          path: src/generated/
+          retention-days: 14
+          if-no-files-found: error
+
+  e2e:
+    name: Playwright ${{ matrix.shard }}/3
+    needs: build
+    runs-on: ubuntu-latest
+    # The nightly's full suite has no failure stop, so it gets the time a very red night needs.
+    timeout-minutes: ${{ inputs.full-suite && 150 || 45 }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: axe-core for e2e/a11y.spec.ts (for this run only; proposed as a devDependency)
+        run: npm install --no-save --no-audit --no-fund "@axe-core/playwright@${AXE_PLAYWRIGHT_VERSION}"
+
+      - uses: ./.github/actions/e2e-env
+
+      # One worker per shard, as on a small machine. Her clock and language, so dates and numbers read as on her phone.
+      # A failing test costs up to two minutes here (its 60 s timeout, then CI's one retry), so on a push a shard stops
+      # after 10 failed tests and reports the rest as not run; the nightly runs everything (full-suite).
+      - name: Playwright, shard ${{ matrix.shard }} of 3, one worker
+        run: |
+          max=10
+          if [ "$FULL_SUITE" = "true" ]; then max=0; fi
+          npx playwright test --shard=${{ matrix.shard }}/3 --workers=1 --max-failures="$max" --reporter=list,blob
+        env:
+          FULL_SUITE: ${{ inputs.full-suite }}
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report
+          CAIRN_REQUIRE_AXE: "1"
+          TZ: Europe/London
+          LANG: en_GB.UTF-8
+
+      - name: Upload the shard's blob report (merged by e2e-report)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Upload the failures' traces and screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: traces-${{ matrix.shard }}
+          path: e2e/.artifacts/test-results/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  e2e-report:
+    name: Playwright report
+    needs: e2e
+    if: ${{ !cancelled() && needs.e2e.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: The shards' blob reports
+        uses: actions/download-artifact@v8
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+
+      - name: One HTML report from the three shards
+        run: |
+          version="$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")"
+          npx --yes "playwright@${version}" merge-reports --reporter=html,json all-blob-reports
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report
+          PLAYWRIGHT_HTML_OPEN: never
+          PLAYWRIGHT_JSON_OUTPUT_FILE: playwright-results.json
+
+      - name: Spec files, green or not
+        if: ${{ !cancelled() }}
+        run: node .github/scripts/summary.mjs e2e playwright-results.json >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the report (open index.html; kept 14 days)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            playwright-results.json
+          retention-days: 14
+          if-no-files-found: ignore
+
+  quality:
+    name: Lighthouse (phone)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - uses: ./.github/actions/e2e-env
+        with:
+          browsers: "false"
+
+      - name: Lighthouse CI, three pages (budgets in .github/lighthouse/lighthouserc.yml)
+        run: npx --yes "@lhci/cli@${LHCI_VERSION}" autorun --config=.github/lighthouse/lighthouserc.yml
+
+      - name: Scores and budgets
+        if: ${{ !cancelled() }}
+        run: node .github/scripts/summary.mjs lighthouse .lighthouseci/reports .lighthouseci >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the Lighthouse reports (kept 14 days)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse
+          path: .lighthouseci/
+          retention-days: 14
+          include-hidden-files: true
+          if-no-files-found: ignore
+
+  preview:
+    name: Preview
+    needs: build
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || inputs.preview }}
+    uses: ./.github/workflows/deploy-preview.yml
+    secrets: inherit

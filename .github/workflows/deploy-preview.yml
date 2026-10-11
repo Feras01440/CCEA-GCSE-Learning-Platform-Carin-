@@ -1,0 +1,156 @@
+# Publishes the build job's export (out/) to Cloudflare Pages. Called by ci.yml after its build job, for pushes to main
+# (the production address, https://<project>.pages.dev, always the latest main) and for pull requests from this
+# repository (https://<branch>.<project>.pages.dev); every deployment also keeps its own address
+# (https://<hash>.<project>.pages.dev). The project is named in wrangler.toml.
+#
+# Nothing is published until the owner has added two repository secrets, CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID
+# (docs/dev/deploy.md, a five-minute setup). Until then the job says so in its summary and passes.
+name: Deploy preview
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Cloudflare Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: deploy-preview-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: true
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_VERSION: 4.149.0
+      BRANCH: ${{ github.head_ref || github.ref_name }}
+      COMMIT_MESSAGE: ${{ github.event.head_commit.message || github.event.pull_request.title || '' }}
+    steps:
+      - name: Are the Cloudflare secrets set?
+        id: gate
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+          echo "::notice title=Preview not published::the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets are not set (docs/dev/deploy.md)"
+          {
+            echo "### Preview not published"
+            echo
+            echo "The repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are not set. docs/dev/deploy.md has the five-minute setup; after it every push to main is published to a phone-reachable address."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # wrangler.toml only (with the other root files), into repo/, so that npx runs wrangler from its own cache and
+      # never installs the project's dependencies.
+      - uses: actions/checkout@v7
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          path: repo
+          sparse-checkout: .github
+
+      - uses: actions/setup-node@v7
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          node-version: 24
+
+      - name: The export (out/)
+        if: steps.gate.outputs.ready == 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: export
+          path: out
+
+      - name: Project and branch
+        id: meta
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          project="$(sed -n 's/^name *= *"\([^"]*\)".*/\1/p' repo/wrangler.toml | head -n 1)"
+          if [ -z "$project" ]; then
+            echo "::error title=wrangler.toml::no project name (name = \"...\") in wrangler.toml"
+            exit 1
+          fi
+          echo "project=${project}" >> "$GITHUB_OUTPUT"
+          echo "branch=$(printf '%s' "$BRANCH" | tr -c 'A-Za-z0-9._/-' '-')" >> "$GITHUB_OUTPUT"
+
+      # The same headers vercel.json sets: never indexed, and the service worker always revalidated.
+      - name: Headers (out/_headers)
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          cat > out/_headers <<'EOF'
+          /*
+            X-Robots-Tag: noindex, nofollow
+          /sw.js
+            Cache-Control: no-cache
+          /content/*
+            Cache-Control: public, max-age=300
+          /decks/*
+            Cache-Control: public, max-age=300
+          EOF
+
+      - name: The Pages project (created by the first deploy)
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          PROJECT: ${{ steps.meta.outputs.project }}
+        run: |
+          if out="$(npx --yes "wrangler@${WRANGLER_VERSION}" pages project create "$PROJECT" --production-branch=main 2>&1)"; then
+            echo "created the Pages project ${PROJECT}"
+          elif printf '%s' "$out" | grep -qi "already exists"; then
+            echo "the Pages project ${PROJECT} exists"
+          else
+            printf '%s\n' "$out"
+            exit 1
+          fi
+
+      - name: Publish
+        id: deploy
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          PROJECT: ${{ steps.meta.outputs.project }}
+          DEPLOY_BRANCH: ${{ steps.meta.outputs.branch }}
+          WRANGLER_OUTPUT_FILE_PATH: ${{ runner.temp }}/wrangler-output.ndjson
+        run: |
+          set -o pipefail
+          npx --yes "wrangler@${WRANGLER_VERSION}" pages deploy out \
+            --project-name="$PROJECT" --branch="$DEPLOY_BRANCH" \
+            --commit-hash="$GITHUB_SHA" --commit-message="$(printf '%s' "$COMMIT_MESSAGE" | head -n 1 | cut -c1-200)" --commit-dirty=true \
+            2>&1 | tee "$RUNNER_TEMP/wrangler-deploy.log"
+          # The addresses: wrangler's machine-readable record of the deployment (the file wrangler-action reads too),
+          # else the "Take a peek" and "alias URL" lines of its output.
+          node -e '
+            const fs = require("fs");
+            let d = {};
+            try {
+              const rows = fs.readFileSync(process.env.WRANGLER_OUTPUT_FILE_PATH, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
+              d = rows.reverse().find((r) => r.type === "pages-deploy-detailed" || r.type === "pages-deploy") || {};
+            } catch {}
+            const log = fs.readFileSync(process.env.RUNNER_TEMP + "/wrangler-deploy.log", "utf8");
+            const url = d.url || (log.match(/Take a peek over at (https:\/\/\S+)/) || [])[1] || "";
+            const alias = d.alias || (log.match(/alias URL: (https:\/\/\S+)/i) || [])[1] || "";
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `url=${url}\nalias=${alias}\n`);
+          '
+
+      - name: Addresses
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.url }}
+          ALIAS_URL: ${{ steps.deploy.outputs.alias }}
+          PROJECT: ${{ steps.meta.outputs.project }}
+        run: |
+          host="${DEPLOYMENT_URL#https://}"
+          {
+            echo "### Preview published"
+            echo
+            echo "- This build: ${DEPLOYMENT_URL:-(wrangler gave no address; see the Publish step)}"
+            if [ "$BRANCH" = "main" ] && [ -n "$host" ]; then
+              echo "- Production, always the latest main: https://${host#*.}"
+            elif [ "$BRANCH" = "main" ]; then
+              echo "- Production, always the latest main: https://${PROJECT}.pages.dev (or with the suffix Cloudflare added if the name was taken; the Pages dashboard shows it)"
+            elif [ -n "$ALIAS_URL" ]; then
+              echo "- This branch, always its latest build: ${ALIAS_URL}"
+            fi
+            echo
+            echo "Open it on the phone and use Add to Home Screen; the service worker keeps it working offline."
+          } >> "$GITHUB_STEP_SUMMARY"
