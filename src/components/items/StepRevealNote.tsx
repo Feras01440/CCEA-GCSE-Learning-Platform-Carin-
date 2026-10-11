@@ -380,6 +380,8 @@ interface SeeIts {
   /** Whether the newest step was shown just now (it arrives with the reveal motion). */
   fresh: (i: number) => boolean;
   reveal: (i: number) => void;
+  /** "Step through again": back to the first step; the page's cut does not move (a See it once complete stays complete). */
+  restart: (i: number) => void;
   settle: (i: number, r: StepResult) => void;
 }
 
@@ -401,8 +403,13 @@ function useSeeIts(blocks: readonly NoteBlock[], workedExamples: readonly Worked
     return g !== null && g !== undefined && answered[g] !== undefined;
   };
   const total = (i: number) => Math.max(1, resolved[i]?.steps.length ?? 1);
-  const revealedAt = (i: number) => (done(i) ? total(i) : Math.min(total(i), Math.max(1, revealed[i] ?? 1)));
+  // Her own stepping first (a "Step through again" on a See it whose gate is answered shows its first step again); else
+  // a See it whose gate is answered opens complete; else the first step.
+  const revealedAt = (i: number) => (revealed[i] !== undefined ? Math.min(total(i), Math.max(1, revealed[i])) : done(i) ? total(i) : 1);
   const resultAt = (i: number): StepResult | null => results[i] ?? (done(i) && typedAt[i] !== null ? { shown: true } : null);
+  // Stepped through again after it was complete (its Your turn is on the page by then): stepping it again never cuts
+  // the page. Set only by restart, never by a reveal: a typed last step still waiting for her line is not complete.
+  const [finished, setFinished] = useState<Record<number, true>>({});
   return {
     resolved: (i) => resolved[i] ?? null,
     typedAt: (i) => typedAt[i] ?? null,
@@ -411,6 +418,7 @@ function useSeeIts(blocks: readonly NoteBlock[], workedExamples: readonly Worked
     complete: (i) => {
       const r = resolved[i];
       if (!r) return true;
+      if (done(i) || finished[i]) return true;
       const shown = revealedAt(i);
       const typed = typedAt[i];
       return shown >= r.steps.length && (typed === null || typed === undefined || resultAt(i) !== null);
@@ -419,6 +427,11 @@ function useSeeIts(blocks: readonly NoteBlock[], workedExamples: readonly Worked
     reveal: (i) => {
       setRevealed((s) => ({ ...s, [i]: Math.min(total(i), (s[i] ?? 1) + 1) }));
       setFresh(i);
+    },
+    restart: (i) => {
+      setFinished((f) => (f[i] ? f : { ...f, [i]: true }));
+      setRevealed((s) => ({ ...s, [i]: 1 }));
+      setFresh(null);
     },
     settle: (i, r) => setResults((s) => ({ ...s, [i]: r })),
   };
@@ -436,7 +449,7 @@ function SeeItBlock({ i, sees, paced }: { i: number; sees: SeeIts; paced: boolea
   return (
     <section data-see-it={i} aria-label="See it" className={clsx("my-6 rounded-[var(--radius)] border border-line-2 bg-surface p-5 sm:p-6", paced && "scroll-mt-24")}>
       <div className="mb-3 font-sans text-meta font-medium text-ink-2">See it</div>
-      <SeeSteps see={see} revealed={shown} typed={typed} typedResult={result} onTyped={(r) => sees.settle(i, r)} size="page" animateLast={sees.fresh(i)} />
+      <SeeSteps see={see} revealed={shown} typed={typed} typedResult={result} onTyped={(r) => sees.settle(i, r)} size="page" animateLast={sees.fresh(i)} onRestart={() => sees.restart(i)} announce="live" />
       {shown < see.steps.length && !waiting && (
         <button ref={nextRef} type="button" data-next-step className={clsx(btnPrimary, "tap-lg mt-5 px-6")} onClick={() => sees.reveal(i)}>
           Next step

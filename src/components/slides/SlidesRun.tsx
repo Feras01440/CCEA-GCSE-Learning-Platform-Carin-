@@ -54,8 +54,9 @@ import { calloutParts, gateParts, ideaParts, interactionParts, mediaParts, point
 import { ILLUSTRATIONS, INTERACTIONS } from "./enrich";
 import type { TapResult } from "./enrich/afs";
 import type { TapState } from "./enrich/afs-model";
+import { CardBody, SlidesFoot, SlidesHeader, slidesRootCls } from "./frame";
 import { SlidesClose } from "./SlidesClose";
-import { Caption, CardTitle, Eyebrow, Kbd, Prose, Stage, Track, controlPrimary, quietLink } from "./ui";
+import { Caption, Kbd, Prose, Stage, controlPrimary, quietLink } from "./ui";
 
 export interface SlidesRunProps {
   subject: Subject;
@@ -291,7 +292,9 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   // the answer") takes the keyboard, so a screen reader reads it and Tab carries on from it (audit SLIDES-37, SLIDES-27:
   // the option she pressed Enter on is disabled and focus fell to the page), and is brought into view inside the card,
   // so its last line is never left under the foot on a phone (audit LD-14). Set by the action, read once it has rendered.
-  const landOn = useRef<{ key: string; selector: string } | null>(null);
+  // A See it's new step takes the keyboard the same way but is never scrolled to (`scroll: false`): the ledger keeps it
+  // inside the card, and a card that moved under her on every Continue was the owner's finding of 11 Oct 2026.
+  const landOn = useRef<{ key: string; selector: string; scroll?: boolean } | null>(null);
   useEffect(() => {
     const want = landOn.current;
     if (!want || want.key !== card.key) return;
@@ -299,6 +302,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     if (!el) return;
     landOn.current = null;
     focusLanding(el);
+    if (want.scroll === false) return;
     const reduce = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     el.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
   });
@@ -397,9 +401,17 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
   const revealStep = useCallback(() => {
     if (!seeCard || !progress || progress.waiting) return;
     if (progress.revealed >= progress.total) return;
+    // The new step takes the keyboard where it arrives; nothing scrolls (a typed step's field takes it itself).
+    landOn.current = { key: seeCard.key, selector: "[data-step][data-current]", scroll: false };
     setSteps((s) => ({ ...s, [seeCard.key]: progress.revealed + 1 }));
     setAnimateKey(seeCard.key);
   }, [progress, seeCard]);
+  /** "Step through again": the See it back to its first step; a typed step she settled stays settled; nothing is recorded. */
+  const restartSee = useCallback(() => {
+    if (!seeCard) return;
+    setSteps((s) => ({ ...s, [seeCard.key]: 1 }));
+    setAnimateKey(null);
+  }, [seeCard]);
   const onTyped = useCallback(
     (r: StepResult) => {
       if (!seeCard) return;
@@ -609,6 +621,7 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
           onTyped,
           animateLast: animateKey === card.key,
           onSkip: progress && canSkipSee(card, seenBefore, progress) ? skipSee : null,
+          onRestart: progress?.complete ? restartSee : null,
         });
       case "gate": {
         const reactionId = enrichment?.reactions?.[card.gate.id] ?? null;
@@ -772,19 +785,11 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
     </div>
   );
 
-  /** The foot: on the phone the control with its note under it; from lg the full-width bottom bar. */
-  const foot: ReactNode = (
-    <div className="flex flex-col gap-2 px-6 pb-6 pt-3 lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:border-t lg:border-line lg:bg-surface lg:px-10 lg:py-4" data-foot>
-      {hints}
-      <div className="flex flex-col gap-2 lg:flex-row-reverse lg:items-center lg:gap-4">
-        <div className={clsx("w-full", grading ? "lg:w-[420px]" : "lg:w-[300px]")}>{control}</div>
-        {footNote && <div className="flex justify-center lg:justify-start">{footNote}</div>}
-      </div>
-    </div>
-  );
+  /** The foot: on the phone the control with its note under it; from lg the full-width bottom bar (./frame.tsx). */
+  const foot: ReactNode = <SlidesFoot hints={hints} control={control} footNote={footNote} wide={grading} />;
 
   // `data-ready` marks the hydrated, restored deck: before it, a key press has no listener yet.
-  const rootCls = "fixed inset-0 z-50 flex flex-col overflow-hidden bg-ground text-ink";
+  const rootCls = slidesRootCls;
   const ready = restored ? "true" : undefined;
 
   if (card.kind === "close") {
@@ -853,51 +858,26 @@ export function SlidesRun({ subject, unit, slug, topicId, title, displayTitle, l
 
   return (
     <div ref={frameRef} data-slides data-palette="v2" data-ready={ready} className={rootCls} role="region" aria-label={`Slides: ${displayTitle}`}>
-      {/* The header: the wash band with Exit, the topic, the count, the track, then the card's eyebrow and title. */}
-      <header className="bg-[var(--tint-wash)] px-6 pb-4 pt-3 lg:px-10 lg:pb-6 lg:pt-5" data-header>
-        <div className="flex items-center gap-4 lg:gap-6">
-          {exit}
-          <div className="flex min-w-0 flex-1 flex-col gap-2 lg:mx-auto lg:max-w-[720px]">
-            <div className="flex items-baseline justify-between gap-3 font-sans text-[13px] text-ink-2">
-              <span className="min-w-0 truncate">{displayTitle}</span>
-              <span className="tnum shrink-0" aria-live="polite" data-count>
-                {count}
-              </span>
-            </div>
-            {showTrack && <Track n={index + 1} N={N} />}
-          </div>
-          <span className="hidden lg:block lg:w-[120px]" aria-hidden />
-        </div>
-        {parts && (
-          <div className="mt-4 flex w-full flex-col gap-1.5 lg:mx-auto lg:mt-5 lg:max-w-[1000px]">
-            <Eyebrow>{parts.eyebrow}</Eyebrow>
-            {parts.title && <CardTitle>{parts.title}</CardTitle>}
-          </div>
-        )}
-      </header>
+      {/* The header: the wash band with Exit, the topic, the count, the track, then the card's eyebrow and title (./frame.tsx). */}
+      <SlidesHeader exit={exit} displayTitle={displayTitle} count={count} track={showTrack ? { n: index + 1, N } : null} parts={parts} />
 
-      {/* The body: the card on the paper. Prose column, then the figure or the verdict. */}
-      <div className="relative flex min-h-0 flex-1 lg:justify-center lg:px-10 lg:pt-9" data-body onPointerDown={onPointerDown} onPointerUp={onPointerUp} style={{ touchAction: "pan-y" }}>
-        <button type="button" aria-label="Previous card" onClick={back} disabled={index === 0} className="absolute left-10 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-2 bg-surface text-[18px] text-ink-2 hover:bg-surface-2 disabled:opacity-40 lg:flex" data-prev>
-          <span aria-hidden>‹</span>
-        </button>
-        <div ref={cardRef} key={index} className={clsx("flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pb-4 pt-4 lg:w-[1000px] lg:max-w-full lg:flex-none lg:px-0 lg:pt-0", motionCls)} data-card={cardKind} style={{ touchAction: "pan-y" }}>
-          <section aria-label={`Card ${count}`} tabIndex={-1} data-card-section data-focus-quiet="" className={clsx("flex flex-col gap-3 lg:grid lg:items-start lg:gap-14", parts?.right ? "lg:grid-cols-[minmax(0,1fr)_400px]" : "lg:grid-cols-[minmax(0,640px)]")}>
-            <div className="flex min-w-0 flex-col gap-3.5">{parts?.left}</div>
-            {parts?.right && <div className="flex min-w-0 flex-col gap-2.5">{parts.right}</div>}
-          </section>
-        </div>
-        <button
-          type="button"
-          aria-label={seeCard && progress && !progress.complete ? "Next step" : "Next card"}
-          onClick={forward}
-          disabled={isLast || !(unlocked || (seeCard && progress && !progress.complete && !progress.waiting))}
-          className="absolute right-10 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-2 bg-surface text-[18px] text-ink-2 hover:bg-surface-2 disabled:opacity-40 lg:flex"
-          data-next
-        >
-          <span aria-hidden>›</span>
-        </button>
-      </div>
+      {/* The body: the card on the paper. Prose column, then the figure or the verdict; the See it takes the whole measure. */}
+      <CardBody
+        cardRef={cardRef}
+        cardKey={index}
+        cardKind={cardKind}
+        motionCls={motionCls}
+        count={count}
+        parts={parts}
+        prev={{ label: "Previous card", onClick: back, disabled: index === 0 }}
+        next={{
+          label: seeCard && progress && !progress.complete ? "Next step" : "Next card",
+          onClick: forward,
+          disabled: isLast || !(unlocked || (seeCard && progress && !progress.complete && !progress.waiting)),
+        }}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+      />
 
       {foot}
     </div>

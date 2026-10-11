@@ -41,6 +41,8 @@ export interface CardParts {
   title: ReactNode | null;
   left: ReactNode;
   right: ReactNode | null;
+  /** The body takes the whole 1000 px measure from lg (the See it's two-column ladder), not the 640 px prose column. */
+  wide?: boolean;
 }
 
 type Sectioned = { section: { n: number; total: number; title: string } | null };
@@ -143,12 +145,16 @@ export interface SeeState {
   animateLast: boolean;
   /** "Skip to your turn", on a return visit only (null otherwise). */
   onSkip: (() => void) | null;
+  /** "Step through again" once every step is shown (null before); nothing is recorded. */
+  onRestart?: (() => void) | null;
 }
 
 /**
- * The See it card (the teach-first case §8.1): the stem with its maths on its own line, the steps one per Continue, each
- * a working line with its reason under it and its mark on the right, the ones to come as numbered ghosts. A See it
- * whose named worked example did not ship says so rather than showing an empty card (the build refuses such a note).
+ * The See it card (the teach-first case §8.1; the ledger of DESIGN.md, 11 Oct 2026): the stem with its maths on its own
+ * line, the steps one per Continue, each a working line with its reason and its mark, the finished ones folded around
+ * the newest, the ones to come as one rail, the whole ladder at the end. It takes the whole measure from lg (`wide`): the
+ * rows are the line and its reason side by side, or the ladder beside the figure's column. A See it whose named worked
+ * example did not ship says so rather than showing an empty card (the build refuses such a note).
  */
 export function seeParts(card: SeeCard, state: SeeState): CardParts {
   const title = card.first && card.section?.heading ? <MdInlines inlines={parseInline(card.section.heading)} /> : null;
@@ -159,7 +165,7 @@ export function seeParts(card: SeeCard, state: SeeState): CardParts {
     left: (
       // Every kind renders the same steps today (V3.1); the kind is on the card for a layout that differs later.
       <div className="flex flex-col gap-4" data-see-card data-see-kind={card.see.kind ?? undefined}>
-        <SeeSteps see={card.see} revealed={state.revealed} typed={card.typed} typedResult={state.typedResult} onTyped={state.onTyped} size="card" animateLast={state.animateLast} />
+        <SeeSteps see={card.see} revealed={state.revealed} typed={card.typed} typedResult={state.typedResult} onTyped={state.onTyped} size="card" animateLast={state.animateLast} onRestart={state.onRestart ?? null} announce="focus" />
         {state.onSkip && (
           <button type="button" onClick={state.onSkip} className="tap inline-flex w-fit items-center px-1 font-sans text-[15px] font-medium text-ink-2 underline decoration-accent underline-offset-[3px] hover:text-ink" data-skip-see>
             Skip to your turn
@@ -169,6 +175,7 @@ export function seeParts(card: SeeCard, state: SeeState): CardParts {
       </div>
     ),
     right: null,
+    wide: true,
   };
 }
 
