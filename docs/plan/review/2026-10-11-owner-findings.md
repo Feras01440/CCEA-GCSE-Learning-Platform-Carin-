@@ -15,3 +15,11 @@ Acceptance: the owner opens http://localhost:3200/lab/see-its/ on the next build
 "Some of your work quality has dropped, delayed and become slow and not super efficient; plan how to solve this in the best possible way; introduce new ways, apps, tools, environments if that would make a huge help."
 
 Changes in force the same morning: a link goes out the moment it exists and test results follow; builds are cut from the committed state in a detached worktree (`../cairn-build`) so agents' in-flight edits never block a build; a scheduled resume restarts every agent the weekly limit cuts; the `ci-tooling` agent is building CI on every push, a nightly drift job, a one-command local verify and a phone-reachable preview; the `assessor` agent is writing the programme assessment with the quality-consistency system and the plan (`docs/plan/review/2026-10-11-programme-assessment.md`).
+
+## 3. The assessor's product findings on build 10 (11 Oct, 09:17; `docs/plan/review/2026-10-11-programme-assessment.md` §2), kept here for the planned pass after the student test
+
+Defects, fixed at once (exempt from the one-pass rule): a B2 feedback line prints the engine's own key-word list ("cheap|less expensive|…") instead of a sentence (routed to the engine agent as a display fix); the deck's "n of N" grows as twins are appended (55 became 62 in a walk), a trust wobble on a surface built on trust (routed to slides-steps for after the See it fix).
+
+For the planned pass (one brief, one build): the unit page is a plain list with no sign of where she is (per-topic state: not started / paused at section n / done / proved); the hero should offer the section as the unit of an evening ("Section 1 · 4 min"); the first thing she reads on day one is "Nothing back tonight."; no Previous control on the phone deck; a miss is final in Read; one manipulable object in 55 cards where Brilliant has one on most screens; drawings on about a third of cards against the art direction's one per card; density per minute (a 37-minute first topic under a Today card that says ten minutes is enough).
+
+Missing, each behind a feature case: practice inside the lesson (the owner's answer 1 defers it); Papers exam mode; a "this is wrong" button on a card that files a finding; search; a visible plan across weeks.

@@ -420,3 +420,19 @@ A topic switches to Slides and the v3 lesson per topic, never per unit, from two
 `{ "type": "human-spot", "tool": "teach-show-check", "result": "pass" | "fail" | "waived", "detail": "<what was read, Slides and Read, at which widths, and the judgement>", "at": "<ISO date-time>", "by": "claude" | "developer" | "teacher" }`
 
 Rules: only a strictest reviewer writes it, and only on a "confirmed" verdict (an author never writes its own pass); the latest by `at` counts; a re-review is one more appended check, nothing is edited; "waived" needs its reason in `detail` and stops counting once the note gains a See it block; a pass switches nothing on while the structure fails; a record by "pipeline" never counts. `lessonReadiness(bundle).reasons` names the shortfall in plain words.
+
+
+## Definition of done per topic (11 Oct 2026; the programme assessment §4.1; the author ticks it, the reviewer re-ticks it, the lints enforce what they can)
+
+1. Sources read in full: the specification statement, every paper and scheme for the topic 2018–2026, the examiner reports, the textbook chapter where a dossier exists; all listed in the note's `sources`.
+2. Structure v3.1: every section explains → See it (2–6 steps, each with its reason ≤ 40 words and its mark chip) → Your turn last; the first check real; ≤ 2 recall prompts in the close; `node scripts/qa/lesson-v2.mjs --unit <u> --see --teach-fatal` exits 0.
+3. New numbers everywhere: no Your turn, twin, worked example, find-the-mistake or question shares its case with the See it or with another item (`--see` same-case 0; the overlap scan of worked examples against questions 0).
+4. Every choice gate and twin carries option notes; no explanation names an option by its place.
+5. Marking proved through the engine: every typed part probed with right answers in six student phrasings, three wrong answers and two near misses; the awards in a table in the STATE; a refused right answer is engine-pending, never a note in the content.
+6. Tariffs and `marksTypicallyEarned` match the cited scheme line; every citation checked against the report text; "show that" pays through working only.
+7. Figures: no figure prints an answer; every SVG well-formed; labels ≥ 3.5% of the figure; dark mode checked; `node scripts/qa/figure-leaks.mjs` 0 for the topic.
+8. Nothing copied: `node scripts/qa/shingles.mjs` 0 for the topic; British English; no CCEA text.
+9. Sizes within limits; MARKING / GATE / SIZE / CHARACTER lines 0 for the topic in the strict build; withdrawn chains resolve.
+10. Read as the student: the author opens Slides and Read at 390 × 844 and 1280 × 800 (the `/lab/` gallery once it lands) and reads every card once; the hero's minutes are the model's.
+11. Credit-only edits in place; anything that changes what is right is withdraw-and-replace with the record.
+12. The reviewer's `teach-show-check` pass record is written only when 1–11 hold; its `detail` names the widths and what was read.
