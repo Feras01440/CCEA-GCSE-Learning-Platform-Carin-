@@ -645,59 +645,59 @@
   },
   {
     "type": "gate",
-    "id": "g13",
+    "id": "g17",
     "kind": "choice",
-    "prompt": "The probability that it rains on Saturday is $0.4$. If it rains, the probability that the match is called off is $0.3$; if it does not rain, it is $0.05$. What is the probability that the match is called off?",
+    "prompt": "The probability that it rains on Saturday is $0.3$. If it rains, the probability that the match is called off is $0.5$; if it stays dry, it is $0.06$. What is the probability that the match is called off?",
     "options": [
+      "$0.192$",
       "$0.15$",
-      "$0.12$",
-      "$0.35$",
-      "$0.14$"
+      "$0.56$",
+      "$0.168$"
     ],
-    "answer": "$0.15$",
-    "explain": "Called off happens two ways, rain then off and no rain then off, as steps 4 and 5 of See it: 0.4 × 0.3 + 0.6 × 0.05 = 0.15. 0.12 is the rain branch alone; 0.35 adds the two 'if' chances without their first branches; 0.14 puts 0.4 on the no-rain branch.",
+    "answer": "$0.192$",
+    "explain": "Called off happens two ways, as in steps 4 and 5 of See it: rain then off, $0.3 \\times 0.5 = 0.15$, and dry then off, $0.7 \\times 0.06 = 0.042$. Adding the two gives $0.192$.",
     "twin": {
-      "prompt": "The probability that a day is windy is $0.25$. If it is windy, the probability that the ferry is cancelled is $0.4$; if not, it is $0.02$. What is the probability that the ferry is cancelled?",
+      "prompt": "The probability that a day is windy is $0.25$. If it is windy, the probability that the ferry is cancelled is $0.3$; if not, it is $0.03$. What is the probability that the ferry is cancelled?",
       "options": [
-        "$0.115$",
-        "$0.1$",
-        "$0.42$",
-        "$0.105$"
+        "$0.0975$",
+        "$0.075$",
+        "$0.33$",
+        "$0.0825$"
       ],
-      "answer": "$0.115$",
-      "explain": "Two branches end in a cancellation: 0.25 × 0.4 + 0.75 × 0.02 = 0.115. The not-windy branch carries 0.75, not 0.25.",
+      "answer": "$0.0975$",
+      "explain": "Two branches end in a cancellation: $0.25 \\times 0.3 = 0.075$ and $0.75 \\times 0.03 = 0.0225$, which add to $0.0975$. The calm branch carries $0.75$, not $0.25$.",
       "optionNotes": [
         {
-          "option": "$0.1$",
+          "option": "$0.075$",
           "why": "The ferry can also be cancelled on a calm day, so that branch is added to the windy one.",
           "misconception": "maths.prob.one-event-only"
         },
         {
-          "option": "$0.42$",
-          "why": "Adding the two 'if' chances skips the first branches they belong to.",
+          "option": "$0.33$",
+          "why": "Adding the two 'if' chances skips the first branches they belong to; each is multiplied by its first branch first.",
           "misconception": "maths.prob.one-event-only"
         },
         {
-          "option": "$0.105$",
-          "why": "The calm branch carries 1 minus the windy chance, not the windy chance again.",
+          "option": "$0.0825$",
+          "why": "The calm branch carries 1 minus the windy chance, $0.75$, not the windy chance again.",
           "misconception": "maths.prob.complement-not-from-one"
         }
       ]
     },
     "optionNotes": [
       {
-        "option": "$0.12$",
-        "why": "The rain branch is one way for the match to be called off, but it can also be called off when it stays dry, so that branch is added.",
+        "option": "$0.15$",
+        "why": "The rain branch is one way for the match to be called off, but it can also be called off on a dry day, so that branch is added.",
         "misconception": "maths.prob.one-event-only"
       },
       {
-        "option": "$0.35$",
-        "why": "The two 'if' chances belong to different first branches, so each must be multiplied by its first branch before they are added.",
+        "option": "$0.56$",
+        "why": "The two 'if' chances belong to different first branches, so each is multiplied by its first branch before they are added.",
         "misconception": "maths.prob.one-event-only"
       },
       {
-        "option": "$0.14$",
-        "why": "The dry branch carries 1 minus the chance of rain, not the chance of rain again.",
+        "option": "$0.168$",
+        "why": "The dry branch carries 1 minus the chance of rain, $0.7$, not the chance of rain again.",
         "misconception": "maths.prob.complement-not-from-one"
       }
     ]
@@ -829,6 +829,10 @@
   {
     "type": "p",
     "md": "**'Show that'.** When the answer is printed (Summer 2023 Paper 1 Q11), every mark is in the working: write each product and the sum before the given fraction."
+  },
+  {
+    "type": "p",
+    "md": "**Numbered cards.** Two numbered cards are drawn without replacement and a rule is set on their product or sum. List the pairs that fit, count each pair in both orders, and multiply along each (November 2024 Paper 2 Q14)."
   },
   {
     "type": "see",
