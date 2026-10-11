@@ -1,13 +1,13 @@
 [
   {
     "type": "hero",
-    "lede": "Start with a 1, and make every new row by adding the two numbers above. That is Pascal's triangle, and each row is a ready-made set of coefficients: row 5 expands (p + q)⁵ without multiplying out a single bracket. Build the triangle, pick the right row, and write the terms with their powers.",
+    "lede": "Start with a 1, and make every new row by adding the two numbers above. That is Pascal's triangle, and each row is a ready-made set of coefficients: row 4 expands (p + q)⁴ without multiplying out a single bracket. Build the triangle, pick the right row, and write the terms with their powers.",
     "can": [
-      "Build Pascal's triangle to row 8 by adding pairs, and pick the row for any power",
-      "Expand (p + q)ⁿ with every coefficient and power, joined by plus signs",
-      "Handle a minus sign or a number inside the bracket, such as (p − q)⁴ or (1 + 2x)⁴"
+      "Build Pascal's triangle to row 8 by adding pairs, and check each row you build",
+      "Expand (p + q)ⁿ with every coefficient and power, joined by plus signs, and pick out one term",
+      "Handle a minus sign or a number inside the bracket, such as (p − q)⁷ or (1 + 4x)³"
     ],
-    "minutes": 8
+    "minutes": 18
   },
   {
     "type": "h",
@@ -25,6 +25,31 @@
     "caption": "Each number is the sum of the two above it; the lines show two of the sums."
   },
   {
+    "type": "see",
+    "kind": "process",
+    "stem": "Row 3 of Pascal's triangle is 1 3 3 1. Build row 4.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "1 at each end: 1 _ _ _ 1",
+        "decision": "Every row starts and ends with 1."
+      },
+      {
+        "n": 2,
+        "working": "1 + 3 = 4, 3 + 3 = 6, 3 + 1 = 4",
+        "decision": "Each inside number is the sum of the two numbers just above it in row 3."
+      },
+      {
+        "n": 3,
+        "working": "Row 4: 1 4 6 4 1",
+        "decision": "Five numbers that read the same both ways. In the exam the completed triangle earns one mark, for every row right.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
+  },
+  {
     "type": "gate",
     "id": "g1",
     "kind": "choice",
@@ -35,11 +60,41 @@
       "1 and 4"
     ],
     "answer": "4 and 6",
-    "explain": "Row 4 is 1 4 6 4 1. The first 10 in row 5 sits below the 4 and the 6, and $4 + 6 = 10$."
+    "explain": "As in step 2 of See it, each number is the sum of the two just above it. The first 10 in row 5 sits below the 4 and the 6 of row 4, and $4 + 6 = 10$.",
+    "twin": {
+      "prompt": "In Pascal's triangle, which two numbers from row 5 add to make the first 15 in row 6?",
+      "options": [
+        "5 and 10",
+        "10 and 10",
+        "1 and 5"
+      ],
+      "answer": "5 and 10",
+      "explain": "Row 5 is 1 5 10 10 5 1. The first 15 in row 6 sits below the 5 and the 10, and $5 + 10 = 15$.",
+      "optionNotes": [
+        {
+          "option": "10 and 10",
+          "why": "10 + 10 makes 20, the middle number of row 6. The first 15 sits one place further out, below the 5 and the 10."
+        },
+        {
+          "option": "1 and 5",
+          "why": "1 + 5 makes 6, the second number of row 6. The first 15 comes next, below the 5 and the 10."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "5 and 5",
+        "why": "Those sit in row 5 itself, beside the 10s. The two numbers that make a 10 are in the row above, row 4."
+      },
+      {
+        "option": "1 and 4",
+        "why": "1 + 4 makes 5, the second number of row 5. The first 10 sits one place further in, below the 4 and the 6."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "The rows are numbered from 0",
+    "text": "Count the rows from 0",
     "role": "idea"
   },
   {
@@ -50,15 +105,79 @@
   },
   {
     "type": "p",
-    "md": "The single 1 at the top is row 0, so row $n$ is the row that starts 1, $n$. Three facts check any row you build: row $n$ has $n + 1$ numbers, it reads the same from either end, and its numbers add up to $2^{n}$.\nThe exam gives you nothing here: the triangle is not on the formula sheet, so you build it every time."
+    "md": "The single 1 at the top is row 0, so row $n$ is the row that starts 1, $n$. Three facts check any row you build: row $n$ has $n + 1$ numbers, it reads the same from either end, and its numbers add up to $2^{n}$. The triangle is not on the formula sheet, so you build it every time."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "Check that 1 5 10 10 5 1 is row 5 of Pascal's triangle.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "It starts 1, 5, so it is row 5.",
+        "decision": "Row n starts 1, n, because the single 1 at the top is row 0."
+      },
+      {
+        "n": 2,
+        "working": "It has six numbers, and 5 + 1 = 6.",
+        "decision": "Row n has n + 1 numbers, one for each term of the expansion it gives."
+      },
+      {
+        "n": 3,
+        "working": "It reads the same from either end.",
+        "decision": "Every row is symmetric, because each one is built from a symmetric row above it."
+      },
+      {
+        "n": 4,
+        "working": "$1 + 5 + 10 + 10 + 5 + 1 = 32$, which is $2^{5}$.",
+        "decision": "Each row's total doubles the one above, so row $n$ adds up to $2^{n}$. All three checks pass."
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g2",
-    "kind": "number",
-    "prompt": "Row 7 of Pascal's triangle begins 1, 7, 21, 35, 35. What is the fourth number of row 8?",
-    "answer": "56",
-    "explain": "The fourth number of row 8 sits below the third and fourth numbers of row 7: $21 + 35 = 56$. Row 8 begins 1, 8, 28, 56."
+    "id": "g8",
+    "kind": "choice",
+    "prompt": "Row 4 of Pascal's triangle is written as 1 4 5 4 1. Which check shows that it cannot be right?",
+    "options": [
+      "Its numbers add up to 15, but row 4 must add up to 16",
+      "It has 5 numbers, but row 4 must have 4",
+      "It does not read the same from either end"
+    ],
+    "answer": "Its numbers add up to 15, but row 4 must add up to 16",
+    "explain": "As in steps 2 to 4 of See it: five numbers is right for row 4, and the row is symmetric, so those checks pass. Its total must be $2^{4} = 16$, and these add up to 15: the middle number should be 6.",
+    "twin": {
+      "prompt": "Row 5 of Pascal's triangle is written as 1 5 9 9 5 1. Which check shows that it cannot be right?",
+      "options": [
+        "Its numbers add up to 30, but row 5 must add up to 32",
+        "It has 6 numbers, but row 5 must have 5",
+        "It does not read the same from either end"
+      ],
+      "answer": "Its numbers add up to 30, but row 5 must add up to 32",
+      "explain": "Six numbers and symmetric, so those checks pass, but row 5 must total $2^{5} = 32$ and these add up to 30: the middle pair should be 10 and 10.",
+      "optionNotes": [
+        {
+          "option": "It has 6 numbers, but row 5 must have 5",
+          "why": "Row n has n + 1 numbers, so row 5 has six: the count is right.",
+          "misconception": "fm.binomial.wrong-power"
+        },
+        {
+          "option": "It does not read the same from either end",
+          "why": "1 5 9 9 5 1 does read the same both ways, so symmetry passes. The total is what fails."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "It has 5 numbers, but row 4 must have 4",
+        "why": "Row n has n + 1 numbers, so row 4 has five: the count is right. Counting the rows from 1 instead of 0 makes it look short.",
+        "misconception": "fm.binomial.wrong-power"
+      },
+      {
+        "option": "It does not read the same from either end",
+        "why": "1 4 5 4 1 does read the same both ways. Symmetry cannot catch a middle number that is off; the total can."
+      }
+    ]
   },
   {
     "type": "h",
@@ -67,7 +186,34 @@
   },
   {
     "type": "p",
-    "md": "In the PhET Plinko board a ball bounces left or right at each peg. To finish in a given bin it needs a certain number of right bounces, and the number of different paths with that many right bounces is exactly the entry of Pascal's triangle. With a fair board, the bins fill in the proportions of the row."
+    "md": "On a Plinko board a ball bounces left or right at each peg. The bin it lands in depends only on how many of its bounces went right, and the number of different paths with that many right bounces is exactly the entry of Pascal's triangle. With a fair board, the bins fill in the proportions of the row."
+  },
+  {
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A fair Plinko board has 3 rows of pegs and 4 bins. How many paths lead to each bin?",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Each ball bounces 3 times, left (L) or right (R).",
+        "decision": "One bounce per row of pegs; the order of the bounces is the path."
+      },
+      {
+        "n": 2,
+        "working": "End bins: LLL or RRR, 1 path each.",
+        "decision": "To reach an end bin, every bounce must go the same way."
+      },
+      {
+        "n": 3,
+        "working": "Middle bins: RLL, LRL, LLR, and RRL, RLR, LRR: 3 paths each.",
+        "decision": "The one bounce that differs can come first, second or third."
+      },
+      {
+        "n": 4,
+        "working": "Paths 1, 3, 3, 1: row 3 of the triangle.",
+        "decision": "Every path is equally likely on a fair board, so the bins fill in the ratio 1 : 3 : 3 : 1."
+      }
+    ]
   },
   {
     "type": "sim",
@@ -89,11 +235,41 @@
       "Balls that land in the middle bins bounce fewer times"
     ],
     "answer": "Each bin can be reached by as many different paths as its number in row 4",
-    "explain": "Every ball bounces 4 times. There are 6 orders of 2 rights and 2 lefts, but only 1 order of 4 rights, so the middle bin collects about 6 times as many balls as an end bin."
+    "explain": "As in steps 2 to 4 of See it: every ball bounces 4 times, and a bin is reached by as many orders of left and right as its number in row 4. Two rights and two lefts can come in 6 orders; four rights in only 1.",
+    "twin": {
+      "prompt": "On a fair Plinko board with 5 rows of pegs, which bins fill most?",
+      "options": [
+        "The two middle bins, reached by 10 paths each",
+        "The two end bins, reached by 1 path each",
+        "All six bins equally, because every bounce is fair"
+      ],
+      "answer": "The two middle bins, reached by 10 paths each",
+      "explain": "Row 5 is 1 5 10 10 5 1: the two middle bins are each reached by 10 orders of bounces, more than any other bin.",
+      "optionNotes": [
+        {
+          "option": "The two end bins, reached by 1 path each",
+          "why": "An end bin needs every bounce the same way: 1 path only, so the end bins fill least."
+        },
+        {
+          "option": "All six bins equally, because every bounce is fair",
+          "why": "Each bounce is fair, but the bins are reached by 1, 5, 10, 10, 5 and 1 paths, so they cannot fill equally."
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "The pegs are placed closer together near the middle",
+        "why": "The pegs are evenly spaced. What differs from bin to bin is how many orders of left and right bounces reach it."
+      },
+      {
+        "option": "Balls that land in the middle bins bounce fewer times",
+        "why": "Every ball bounces once per row, 4 times in all. The middle bins are reached by more orders of bounces, not by fewer bounces."
+      }
+    ]
   },
   {
     "type": "h",
-    "text": "The powers fall and rise",
+    "text": "Expand: the powers fall and rise",
     "role": "variant"
   },
   {
@@ -113,6 +289,38 @@
     "md": "Multiplying out $(p + q)^{4}$ means choosing $p$ or $q$ from each of the four brackets. Choosing $q$ from exactly two of them gives $p^{2}q^{2}$, and there are 6 ways to pick those two brackets. The 6 in row 4 counts them, and every entry counts choices the same way."
   },
   {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Use Pascal's triangle to expand $(p + q)^{4}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Row 4: 1 4 6 4 1",
+        "decision": "The fourth power takes row 4: five numbers, so five terms."
+      },
+      {
+        "n": 2,
+        "working": "Powers of p: 4, 3, 2, 1, 0. Powers of q: 0, 1, 2, 3, 4.",
+        "decision": "p falls as q rises, and in each term the two powers add up to 4."
+      },
+      {
+        "n": 3,
+        "working": "$(p + q)^{4} = p^{4} + 4p^{3}q + 6p^{2}q^{2}$\n$+ 4pq^{3} + q^{4}$",
+        "decision": "The coefficients in order, joined by plus signs: an expansion is one expression. A 1 in front of a term is not written.",
+        "earns": [
+          "MW1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "video",
+    "videoId": "9Y4bhtNSW8w",
+    "title": "Pascal's Triangle / Binomial / Probability",
+    "channel": "P McAleavey",
+    "why": "A Northern Ireland teacher takes Pascal's triangle, the expansion and binomial probability for CCEA Further Mathematics. As you watch, write the triangle out alongside and check that the powers add up to n in every term."
+  },
+  {
     "type": "gate",
     "id": "g3",
     "kind": "choice",
@@ -123,7 +331,88 @@
       "$p^{3} + 2p^{2}q + 2pq^{2} + q^{3}$"
     ],
     "answer": "$p^{3} + 3p^{2}q + 3pq^{2} + q^{3}$",
-    "explain": "Row 3 is 1 3 3 1, so there are four terms with coefficients 1, 3, 3, 1. Leaving out the middle terms, or using 2s from row 2, loses the coefficient marks."
+    "explain": "As in steps 1 to 3 of See it: row 3 is 1 3 3 1, so the cube has four terms, the power of $p$ falling from 3 as the power of $q$ rises to 3.",
+    "twin": {
+      "prompt": "Which of these is the start of the expansion of $(p + q)^{8}$?",
+      "options": [
+        "$p^{8} + 8p^{7}q + 28p^{6}q^{2} + \\dots$",
+        "$p^{8} + 7p^{7}q + 21p^{6}q^{2} + \\dots$",
+        "$p^{8} + 8p^{7}q + 28p^{7}q^{2} + \\dots$"
+      ],
+      "answer": "$p^{8} + 8p^{7}q + 28p^{6}q^{2} + \\dots$",
+      "explain": "Row 8 starts 1, 8, 28, and the powers run $p^{8}$, $p^{7}q$, $p^{6}q^{2}$: each pair adds up to 8.",
+      "optionNotes": [
+        {
+          "option": "$p^{8} + 7p^{7}q + 21p^{6}q^{2} + \\dots$",
+          "why": "7 and 21 come from row 7. The eighth power takes row 8, which starts 1, 8, 28.",
+          "misconception": "fm.binomial.wrong-power"
+        },
+        {
+          "option": "$p^{8} + 8p^{7}q + 28p^{7}q^{2} + \\dots$",
+          "why": "The coefficients are right, but in the third term the powers add up to 9. The power of $p$ falls by 1 each term: $p^{6}q^{2}$.",
+          "misconception": "fm.binomial.wrong-power"
+        }
+      ]
+    },
+    "optionNotes": [
+      {
+        "option": "$p^{3} + q^{3}$",
+        "why": "That leaves out the middle terms. Row 3 is 1 3 3 1, so the cube has four terms, with $3p^{2}q$ and $3pq^{2}$ between the ends.",
+        "misconception": "fm.binomial.wrong-power"
+      },
+      {
+        "option": "$p^{3} + 2p^{2}q + 2pq^{2} + q^{3}$",
+        "why": "The 2s come from row 2. The cube takes row 3, 1 3 3 1, so the inside coefficients are 3s.",
+        "misconception": "fm.binomial.wrong-power"
+      }
+    ]
+  },
+  {
+    "type": "h",
+    "text": "One term: its place and its coefficient",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "To write down one term of $(p + q)^{n}$, let the power of $q$ fix its place: the term with $q^{k}$ is term $k + 1$, and its coefficient is number $k + 1$ of row $n$. The power of $p$ is whatever makes the two powers add up to $n$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write down the term in $p^{3}q^{4}$ in the expansion of $(p + q)^{7}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "The power of $q$ is 4, so this is the fifth term.",
+        "decision": "Count from $q^{0}$: the first term has no $q$, the second has $q$, the third $q^{2}$, and so on."
+      },
+      {
+        "n": 2,
+        "working": "Row 7 begins 1, 7, 21, 35, 35: the fifth number is 35.",
+        "decision": "Read along the row the expansion uses, row 7 for the seventh power. Past the middle, the row repeats itself in reverse."
+      },
+      {
+        "n": 3,
+        "working": "$35p^{3}q^{4}$",
+        "decision": "Check: the powers 3 and 4 add up to 7. Choosing the right term is a method mark on the probability parts that follow.",
+        "earns": [
+          "M1"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gate",
+    "id": "g4",
+    "kind": "number",
+    "prompt": "In the expansion of $(p + q)^{7}$, what is the coefficient of the term $p^{2}q^{5}$?",
+    "answer": "21",
+    "explain": "As in steps 1 to 3 of See it: the power of $q$ is 5, so this is the sixth term, and the sixth number of row 7 is 21. The powers $2 + 5 = 7$ check it.",
+    "twin": {
+      "prompt": "In the expansion of $(p + q)^{8}$, what is the coefficient of $p^{6}q^{2}$?",
+      "answer": "28",
+      "explain": "The power of $q$ is 2, so it is the third term, and the third number of row 8 is 28."
+    }
   },
   {
     "type": "h",
@@ -132,7 +421,35 @@
   },
   {
     "type": "p",
-    "md": "For $(p - q)^{n}$, think of it as $(p + (-q))^{n}$. The coefficients and the powers are exactly as before, but every odd power of $-q$ is negative, so the signs alternate:\n$(p - q)^{4} = p^{4} - 4p^{3}q + 6p^{2}q^{2} - 4pq^{3} + q^{4}$"
+    "md": "For $(p - q)^{n}$, think of it as $(p + (-q))^{n}$. The coefficients and the powers are exactly as before, but each power of $-q$ carries its sign: an odd power is negative and an even power positive, so the signs alternate."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Beyond what CCEA sets",
+    "md": "Unit 3 has only set $(p + q)^{n}$ with letters. The same method covers a minus sign or a number in the bracket, as here and in the next section, and in Unit 1 (Summer 2024) the majority lost a mark by not cubing the 2 in $(2x)^{3}$."
+  },
+  {
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Write down the terms in $p^{4}q^{3}$ and in $p^{3}q^{4}$ in the expansion of $(p - q)^{7}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$(p - q)^{7} = (p + (-q))^{7}$",
+        "decision": "Treat $-q$ as the second letter: row 7 and the powers work exactly as before."
+      },
+      {
+        "n": 2,
+        "working": "$35p^{4}(-q)^{3}$\n$= -35p^{4}q^{3}$",
+        "decision": "Row 7's fourth number is 35. Keep the bracket round $-q$: an odd power of a negative is negative."
+      },
+      {
+        "n": 3,
+        "working": "$35p^{3}(-q)^{4}$\n$= 35p^{3}q^{4}$",
+        "decision": "The fifth number is 35 again, and an even power of a negative is positive. The signs alternate along the expansion."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -140,7 +457,12 @@
     "kind": "number",
     "prompt": "In the expansion of $(p - q)^{5}$, what is the coefficient of $p^{2}q^{3}$? Give its sign.",
     "answer": "-10 | −10",
-    "explain": "Row 5 gives 10 for the term in $p^{2}q^{3}$, and $(-q)^{3}$ is negative, so the term is $-10p^{2}q^{3}$."
+    "explain": "As in step 2 of See it: row 5 gives 10 for the term in $p^{2}q^{3}$, and $(-q)^{3}$ is negative, an odd power, so the term is $-10p^{2}q^{3}$ and the coefficient is $-10$.",
+    "twin": {
+      "prompt": "In the expansion of $(p - q)^{8}$, what is the coefficient of $p^{4}q^{4}$? Give its sign.",
+      "answer": "70 | +70",
+      "explain": "The middle number of row 8 is 70, and $(-q)^{4}$ is an even power, so it is positive: the coefficient is $+70$."
+    }
   },
   {
     "type": "h",
@@ -149,13 +471,29 @@
   },
   {
     "type": "p",
-    "md": "For $(1 + 2x)^{4}$, use row 4 with 1 in place of $p$ and $2x$ in place of $q$. Every power acts on the whole of $2x$, the 2 as well as the $x$:\n$6(2x)^{2} = 24x^{2}$, not $12x^{2}$\n$(1 + 2x)^{4} = 1 + 8x + 24x^{2} + 32x^{3} + 16x^{4}$"
+    "md": "For a bracket such as $(1 + kx)^{n}$, use row $n$ with 1 in place of $p$ and $kx$ in place of $q$. Every power acts on the whole of $kx$: $(kx)^{2} = k^{2}x^{2}$, the number squared as well as the letter. Powers of 1 are all 1, so they drop out."
   },
   {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "Beyond what CCEA sets",
-    "md": "Unit 3 has only set $(p + q)^{n}$ with letters. The same rule covers a minus sign or a number in the bracket, and in Unit 1 most candidates once lost a mark by not cubing the 2 in $(2x)^{3}$."
+    "type": "see",
+    "kind": "calculation",
+    "stem": "Find the term in $x^{2}$ in the expansion of $(1 + 4x)^{3}$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Row 3: 1 3 3 1, with $p = 1$ and $q = 4x$",
+        "decision": "The bracket is $(p + q)^{3}$ with a number and a term in $x$ in place of the letters."
+      },
+      {
+        "n": 2,
+        "working": "The $x^{2}$ term is $3 \\times 1 \\times (4x)^{2}$",
+        "decision": "The term with $q^{2}$ is the third, so its coefficient is 3, and $1$ to any power is 1."
+      },
+      {
+        "n": 3,
+        "working": "$(4x)^{2} = 16x^{2}$\nso the term is $48x^{2}$",
+        "decision": "Square the 4 as well as the $x$: $3 \\times 16 = 48$, not $3 \\times 4 = 12$."
+      }
+    ]
   },
   {
     "type": "gate",
@@ -163,66 +501,88 @@
     "kind": "number",
     "prompt": "In the expansion of $(1 + 3x)^{4}$, what is the coefficient of $x^{2}$?",
     "answer": "54",
-    "explain": "The $x^{2}$ term is $6 \\times (3x)^{2} = 6 \\times 9x^{2}$\n$= 54x^{2}$. Squaring the $x$ but not the 3 would give 18."
+    "explain": "As in steps 2 and 3 of See it: the $x^{2}$ term is $6 \\times (3x)^{2}$, and $(3x)^{2} = 9x^{2}$, so the term is $54x^{2}$. Squaring the $x$ but not the 3 would give 18.",
+    "twin": {
+      "prompt": "In the expansion of $(1 + 5x)^{3}$, what is the coefficient of $x^{2}$?",
+      "answer": "75",
+      "explain": "Row 3 gives 3 for the term with $q^{2}$, and $(5x)^{2} = 25x^{2}$:\n$3 \\times 25x^{2} = 75x^{2}$."
+    }
   },
   {
     "type": "h",
-    "text": "See it done",
-    "role": "see"
+    "text": "Exam twists: the grid and hence",
+    "role": "twists"
   },
   {
     "type": "p",
-    "md": "**Question.** Complete Pascal's triangle as far as row 6. Hence expand $(p + q)^{6}$."
+    "md": "**The grid.** Every paper since 2021 printed the top of the triangle in a grid to complete, down to the row its expansion needs: row 3 in 2024, row 7 in 2021. In 2026 rows 0 to 6 came printed, with the next two rows to fill. Count the printed rows from 0 to see which rows are yours."
   },
   {
     "type": "p",
-    "md": "**Line 1.** Write the triangle out from row 0 to row 6. It earns a mark of its own.\n**Line 2.** Row 6 is 1 6 15 20 15 6 1: seven numbers, because $n + 1 = 7$.\n**Line 3.** $(p + q)^{6} = p^{6} + 6p^{5}q + 15p^{4}q^{2} + 20p^{3}q^{3}$\n$+ 15p^{2}q^{4} + 6pq^{5} + q^{6}$\n**Check.** Seven terms, plus signs between, powers adding to 6 in each."
+    "md": "**Hence.** 'Hence write down the expansion' means use the row you have just built: choosing that row earns a mark of its own (2021). With no grid (2019), write the triangle out anyway, because it earns a mark."
   },
   {
-    "type": "video",
-    "videoId": "9Y4bhtNSW8w",
-    "title": "Pascal's Triangle / Binomial / Probability",
-    "channel": "P McAleavey",
-    "why": "A Northern Ireland teacher takes Pascal's triangle, the expansion and binomial probability for CCEA Further Mathematics. As you watch, write the triangle out alongside and check each row with the three facts above."
+    "type": "see",
+    "kind": "explanation",
+    "stem": "A grid shows rows 0 to 5 of Pascal's triangle and asks for the next two rows, then for the expansion of $(p + q)^{7}$. Plan the answer.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "The last printed row starts 1, 5: it is row 5.",
+        "decision": "Count from the single 1 at the top as row 0."
+      },
+      {
+        "n": 2,
+        "working": "The next two rows are rows 6 and 7: 7 numbers, then 8.",
+        "decision": "Row n has n + 1 numbers. Each is the sum of the two above it, with 1 at each end."
+      },
+      {
+        "n": 3,
+        "working": "Hence $(p + q)^{7}$: row 7, eight terms from $p^{7}$ to $q^{7}$, joined by plus signs.",
+        "decision": "Choosing the row you built earns a mark of its own; then each coefficient comes from that row, in order.",
+        "earns": [
+          "M1"
+        ]
+      }
+    ]
   },
   {
     "type": "gate",
-    "id": "g4",
+    "id": "g2",
     "kind": "number",
-    "prompt": "In the expansion of $(p + q)^{7}$, what is the coefficient of the term $p^{2}q^{5}$?",
-    "answer": "21",
-    "explain": "Row 7 is 1, 7, 21, 35, then the same four in reverse. The term with $q^{5}$ is the sixth term, and its coefficient is 21; the powers $2 + 5 = 7$ check it."
+    "prompt": "Row 7 of Pascal's triangle begins 1, 7, 21, 35, 35. What is the fourth number of row 8?",
+    "answer": "56",
+    "explain": "As in step 2 of See it, each number is the sum of the two just above it: the fourth number of row 8 sits below the third and fourth numbers of row 7, so $21 + 35 = 56$. Row 8 begins 1, 8, 28, 56.",
+    "twin": {
+      "prompt": "Row 6 of Pascal's triangle begins 1, 6, 15, 20. What is the third number of row 7?",
+      "answer": "21",
+      "explain": "It sits below the second and third numbers of row 6: $6 + 15 = 21$."
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Build Pascal's triangle to row 8 by adding pairs, starting from row 0.\nCheck a row: $n + 1$ numbers, symmetric, total $2^{n}$.\nExpand $(p + q)^{n}$: row $n$ for the coefficients, the power of $p$ falling and $q$ rising, plus signs between.\nKeep the signs and the whole bracket when the second term is negative or has a number."
+    "md": "Build the triangle to row 8 by adding pairs, from row 0.\nCheck a row: $n + 1$ numbers, symmetric, a total of $2^{n}$.\nExpand $(p + q)^{n}$ from row $n$: $p$ falls as $q$ rises, plus signs between.\nPick out one term: the power of $q$ fixes its place.\nKeep the sign of a minus, and raise the whole of a term such as $4x$."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "The binomial question usually opens with this: complete the triangle for 1 mark, then expand $(p + q)^{n}$ for 1 or 2 marks. In 2026 the grid gave the triangle down to row 6 and asked for rows 7 and 8 first, so build every row you need. Write the triangle out in full, because it is a mark in itself, and join the terms with plus signs."
+    "md": "The binomial question usually opens with this: complete the triangle for 1 mark, then 'hence' expand $(p + q)^{n}$ for 1 or 2 marks, with $n$ anywhere from 3 to 8. Write the triangle out in full, because it is a mark in itself; use the row you built; and join the terms with plus signs. Stuck? Count the rows from 0 and build down."
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.01"
+    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.06"
   },
   {
     "type": "prompt",
-    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.02"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.03"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.04"
+    "promptId": "rp.fm.u3.pascals-triangle-binomial-expansion.07"
   }
 ]
