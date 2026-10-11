@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { withModelMinutes } from "./hero-minutes";
 import { lessonMinutesFor } from "@/lib/slides/minutes";
 import { packTopics } from "@/lib/slides/packs-corpus.test-helper";
@@ -10,6 +10,10 @@ import { packTopics } from "@/lib/slides/packs-corpus.test-helper";
  * own Read minutes (src/lib/slides/minutes.ts lessonMinutesFor), priced on what ships; the authored number is kept only
  * where the model has nothing to measure (lessonMinutesFor returns it then).
  */
+
+// The packs survey below reads every shipped bundle; the default 5 s timed out twice on 9 and 11 Oct 2026 while a build
+// or ten agents loaded the disk. The survey is the point of the test, so it gets the time it needs.
+vi.setConfig({ testTimeout: 60_000 });
 
 type Block = Record<string, unknown>;
 const words = (n: number) => Array.from({ length: n }, (_, i) => `w${i}`).join(" ");
