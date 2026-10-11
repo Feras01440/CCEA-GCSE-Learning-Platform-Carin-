@@ -317,8 +317,8 @@ if (opts.unit) {
 
   // 30 s a test instead of vitest's 5 s: the surveys over every published lesson ran 6 to 14 s under this machine's
   // load (11 Oct 2026) and timed out without being wrong; a hang still fails.
-  heading("vitest run --testTimeout=30000");
-  const v = await run("npx vitest run --testTimeout=30000");
+  heading("vitest run");
+  const v = await run("npx vitest run");
   const files = lastLine(v.out, /^Test Files\s/).replace(/\s+/g, " ");
   const tests = lastLine(v.out, /^Tests\s/).replace(/\s+/g, " ");
   record("vitest", v.code === 0 ? "ok" : "FAILED", v.ms, [files, tests].filter(Boolean).join("; ") || `exit ${v.code}`);

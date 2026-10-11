@@ -75,7 +75,7 @@ jobs:
       # 30 s a test instead of vitest's 5 s: the surveys over every published lesson take seconds on a busy machine.
       - name: Unit tests
         if: ${{ !cancelled() }}
-        run: npx vitest run --testTimeout=30000
+        run: npx vitest run
 
       - name: Lesson lints (lesson-v2 with the unit defaults in scripts/qa/lesson-v2.fatal.json)
         if: ${{ !cancelled() }}
