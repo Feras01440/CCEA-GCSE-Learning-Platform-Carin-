@@ -1,31 +1,64 @@
 [
   {
     "type": "hero",
-    "lede": "A measurement is never exact. A crate weighed as 50 kg to the nearest 5 kg is anywhere from 47.5 kg up to 52.5 kg: half of that 5 either side of what is written. This topic asks how far a calculation can drift once every number going into it is rounded like that.",
+    "lede": "A measurement is never exact. A crate weighed as 50 kg to the nearest 5 kg could be anything from 47.5 kg up to 52.5 kg. Put two numbers like that into a subtraction or a division and the answer drifts too: this topic finds how far, in each direction.",
     "can": [
-      "Write the half unit for any stated accuracy, then both bounds.",
-      "Write the interval of a truncated value.",
-      "Pair an upper bound with a lower one for a difference or a quotient."
+      "Write both bounds of any rounded value from its half unit.",
+      "Pair an upper bound with a lower one for the greatest or least difference or quotient.",
+      "Carry bounds through a speed, a printed formula, a count or Pythagoras."
     ],
-    "minutes": 15
-  },
-  {
-    "type": "h",
-    "text": "Upper and lower bounds in subtraction and division"
-  },
-  {
-    "type": "p",
-    "md": "A rounded measurement stands for an interval, not a point: 50 kg to the nearest 5 kg means anywhere from 47.5 kg up to 52.5 kg. Put intervals into a calculation and the answer becomes an interval too. Adding and multiplying keep it simple, all the uppers together and all the lowers together, but subtracting and dividing cross over, because a smaller number taken away leaves a bigger answer."
+    "minutes": 24
   },
   {
     "type": "figure",
-    "alt": "A number line from 45 to 55 with a band drawn from 47.5 to 52.5. The end at 47.5 is a filled circle, the end at 52.5 is an open circle. Labels read lower bound 47.5 included, upper bound 52.5 not reached, and every mass in the band rounds to 50 kg.",
-    "svg": "<svg viewBox=\"0 0 600 180\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"nlt\"><title id=\"nlt\">The interval of masses that round to 50 kg to the nearest 5 kg</title><g stroke=\"currentColor\" fill=\"none\"><path d=\"M180 106 H420\" stroke-width=\"10\" opacity=\"0.3\"/><path d=\"M30 106 H570\" stroke-width=\"2\"/><path d=\"M60 98 V114\" stroke-width=\"2\"/><path d=\"M180 94 V118\" stroke-width=\"2\"/><path d=\"M300 98 V114\" stroke-width=\"2\"/><path d=\"M420 94 V118\" stroke-width=\"2\"/><path d=\"M540 98 V114\" stroke-width=\"2\"/><circle cx=\"420\" cy=\"106\" r=\"7\" stroke-width=\"2\"/></g><circle cx=\"180\" cy=\"106\" r=\"7\" fill=\"currentColor\"/><g font-family=\"sans-serif\" font-size=\"14\" fill=\"currentColor\" text-anchor=\"middle\"><text x=\"60\" y=\"140\">45</text><text x=\"180\" y=\"140\">47.5</text><text x=\"300\" y=\"140\">50</text><text x=\"420\" y=\"140\">52.5</text><text x=\"540\" y=\"140\">55</text><text x=\"180\" y=\"40\">lower bound</text><text x=\"180\" y=\"60\">47.5, included</text><text x=\"420\" y=\"40\">upper bound</text><text x=\"420\" y=\"60\">52.5, not reached</text><text x=\"300\" y=\"170\" font-size=\"13\">every mass in the band rounds to 50 kg — half of 5 is 2.5</text></g></svg>",
-    "caption": "Filled end included, open end not reached; half of 5 is 2.5, so 47.5 to 52.5."
+    "alt": "A number line from 45 to 55. A shaded band runs from a filled circle at 47.5, labelled included, to an open circle at 52.5, labelled not reached; every mass in the band rounds to 50 kg.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 118\" role=\"img\" font-family=\"inherit\"><title>The masses that round to 50 kg to the nearest 5 kg</title><g stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\"><path d=\"M20 74H380\"/><path d=\"M30 67V81\"/><path d=\"M200 67V81\"/><path d=\"M370 67V81\"/></g><path d=\"M115 74H279\" stroke=\"currentColor\" stroke-width=\"7\" opacity=\"0.35\" fill=\"none\"/><circle cx=\"115\" cy=\"74\" r=\"6\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"285\" cy=\"74\" r=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/><text x=\"30\" y=\"102\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">45</text><text x=\"115\" y=\"102\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">47.5</text><text x=\"200\" y=\"102\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">50</text><text x=\"285\" y=\"102\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">52.5</text><text x=\"370\" y=\"102\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">55</text><text x=\"200\" y=\"44\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">every mass here rounds to 50 kg</text><text x=\"115\" y=\"62\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">included</text><text x=\"285\" y=\"62\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">not reached</text></svg>",
+    "caption": "50 kg to the nearest 5 kg: from 47.5 kg, included, up to 52.5 kg, never reached."
+  },
+  {
+    "type": "h",
+    "text": "A rounded value is an interval",
+    "role": "idea"
   },
   {
     "type": "p",
-    "md": "The rule behind all of it: **the half unit is half of the rounding unit**, and the bounds sit that far either side of the stated value."
+    "md": "A value given **correct to** some accuracy stands for every value that rounds to it. The distance from the stated value to either end of that interval is the **half unit**: half of the rounding unit. So 50 kg to the nearest 5 kg runs from 47.5 kg up to 52.5 kg, and the upper end is never quite reached."
+  },
+  {
+    "type": "p",
+    "md": "Read the rounding unit from the question's own words: nearest 10 m, one decimal place, three significant figures. For significant figures, find the column of the last significant figure first; one of that column is the rounding unit."
+  },
+  {
+    "type": "see",
+    "stem": "Write down the lower and upper bounds of: $80$ m to the nearest $10$ m; $3.7$ kg to $1$ decimal place; $62\\,400$ people to $3$ significant figures.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$80 - 5 = 75$ m and $80 + 5 = 85$ m",
+        "decision": "The rounding unit is 10 m, so the half unit is 5 m either side.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$3.7 - 0.05 = 3.65$ kg and $3.7 + 0.05 = 3.75$ kg",
+        "decision": "One decimal place means the nearest 0.1, so the half unit is 0.05.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$62\\,400 - 50 = 62\\,350$ and $62\\,400 + 50 = 62\\,450$",
+        "decision": "The third significant figure, 4, is in the hundreds column, so the rounding unit is 100 and the half unit 50.",
+        "earns": [
+          "MA1"
+        ]
+      }
+    ],
+    "finalAnswer": "$75$ m and $85$ m; $3.65$ kg and $3.75$ kg; $62\\,350$ and $62\\,450$",
+    "kind": "calculation"
   },
   {
     "type": "gate",
@@ -38,77 +71,96 @@
       "25 kg"
     ],
     "answer": "0.5 kg",
-    "explain": "The rounding unit is 1 kg, and half of 1 is 0.5."
-  },
-  {
-    "type": "callout",
-    "kind": "notonspec",
-    "title": "Not on this spec",
-    "md": "Error-interval notation such as $47.5 \\le m < 52.5$ is never asked for: no CCEA Mathematics statement mentions error intervals, and every M4 bounds item in the corpus asks for a maximum, a minimum or a named bound **as a value**. Percentage error, absolute error and relative error appear in no statement. Bounds of an addition or a multiplication alone are M3-NA-03, and are assumed here."
-  },
-  {
-    "type": "gate",
-    "id": "g2",
-    "kind": "choice",
-    "prompt": "Which of these will an M4 bounds question actually ask you for?",
-    "options": [
-      "The greatest possible value of a calculation",
-      "The error interval, written with inequality signs",
-      "The percentage error in a measurement"
+    "explain": "Nearest kilogram makes the rounding unit 1 kg, and the half unit is half of it, as each step of See it halved its own unit: 0.5 kg. So the bag is anywhere from 24.5 kg up to 25.5 kg.",
+    "optionNotes": [
+      {
+        "option": "1 kg",
+        "why": "1 kg is the rounding unit itself. The bounds sit half a unit either side, so the half unit is 0.5 kg.",
+        "misconception": "maths.bounds.wrong-half-unit-for-nearest-5"
+      },
+      {
+        "option": "25 kg",
+        "why": "25 kg is the measurement, not its accuracy. The accuracy is the nearest kilogram, and half of 1 kg is 0.5 kg."
+      }
     ],
-    "answer": "The greatest possible value of a calculation",
-    "explain": "CCEA asks for a maximum, a minimum or a named bound as a value."
-  },
-  {
-    "type": "p",
-    "md": "The rounding unit is whatever the question names, so read it rather than the number.\n**nearest 2** → half unit $1$\n**nearest 0.5** → half unit $0.25$\n**nearest 50** → half unit $25$\n**1 decimal place** → half unit $0.05$\n**2 s.f. in 3400** → the last significant figure is the $4$, worth $400$, so the rounding unit is $100$ and the half unit is $50$\n**3 s.f. in 4.68** → the last significant figure is the $8$, in the hundredths, so the half unit is $0.005$\nFor significant figures, find the place value of the last significant figure first."
+    "twin": {
+      "prompt": "A plank is $240$ cm, correct to the nearest $10$ cm. What is the half unit?",
+      "options": [
+        "5 cm",
+        "10 cm",
+        "0.5 cm"
+      ],
+      "answer": "5 cm",
+      "explain": "Nearest 10 cm makes the rounding unit 10 cm, and the half unit is half of it: 5 cm, so the plank is from 235 cm up to 245 cm.",
+      "optionNotes": [
+        {
+          "option": "10 cm",
+          "why": "10 cm is the rounding unit. Half of it, 5 cm, sits either side of 240 cm.",
+          "misconception": "maths.bounds.wrong-half-unit-for-nearest-5"
+        },
+        {
+          "option": "0.5 cm",
+          "why": "That halves 1 cm, but the plank is measured to the nearest 10 cm, so the half unit is half of 10: 5 cm."
+        }
+      ]
+    }
   },
   {
     "type": "gate",
-    "id": "g3",
+    "id": "g16",
     "kind": "number",
-    "prompt": "A side is $4.68$ cm, correct to $3$ significant figures. Its upper bound is",
-    "answer": "4.685",
-    "explain": "The 8 sits in the hundredths, so the half unit is 0.005 and 4.68 + 0.005 = 4.685."
-  },
-  {
-    "type": "p",
-    "md": "One exception. A display that **cuts off** rather than rounds — a truncated value — is never above the true value, so its interval runs upwards from the number shown: a timer truncating at 1 d.p. and reading $9.4$ means $9.4 \\le t < 9.5$. The word truncate appears in no CCEA Mathematics paper in the corpus; every item says *correct to*. Knowing the difference costs one sentence."
-  },
-  {
-    "type": "gate",
-    "id": "g4",
-    "kind": "choice",
-    "prompt": "A digital gauge truncates at $1$ decimal place and reads $6.3$. Which interval is right?",
-    "options": [
-      "6.3 ≤ x < 6.4",
-      "6.25 ≤ x < 6.35",
-      "6.2 < x ≤ 6.3"
-    ],
-    "answer": "6.3 ≤ x < 6.4",
-    "explain": "Cutting the digits off can only lose size, so the reading is the lower bound."
+    "prompt": "A rod is $0.582$ m long, correct to $3$ significant figures. Its lower bound, in metres, is",
+    "answer": "0.5815",
+    "explain": "The last significant figure, 2, is in the thousandths, so the rounding unit is 0.001 and the half unit 0.0005, as step 3 of See it found the column first: 0.582 − 0.0005 = 0.5815.",
+    "twin": {
+      "prompt": "A pipe is $7.36$ m long, correct to $3$ significant figures. Its upper bound, in metres, is",
+      "answer": "7.365",
+      "explain": "The 6 is in the hundredths, so the half unit is 0.005: 7.36 + 0.005 = 7.365."
+    }
   },
   {
     "type": "h",
-    "text": "Subtraction and division mix an upper with a lower"
+    "text": "Why subtraction pairs upper with lower",
+    "role": "why"
+  },
+  {
+    "type": "figure",
+    "alt": "A number line from 3 to 10. Value b is a short band from 3.5 to 4.5 and value a a short band from 8.5 to 9.5. A long arrow joins the far ends, 3.5 to 9.5, labelled greatest a − b; a short arrow joins the near ends, 4.5 to 8.5, labelled least a − b.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 186\" role=\"img\" font-family=\"inherit\"><title>The greatest and least gaps between two rounded values</title><defs><marker id=\"bw\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0L10 5L0 10z\" fill=\"currentColor\"/></marker></defs><g stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\"><path d=\"M20 150H380\"/><path d=\"M20 145V155\"/><path d=\"M71.4 145V155\"/><path d=\"M122.9 145V155\"/><path d=\"M174.3 145V155\"/><path d=\"M225.7 145V155\"/><path d=\"M277.1 145V155\"/><path d=\"M328.6 145V155\"/><path d=\"M380 145V155\"/></g><path d=\"M45.7 150H97.1\" stroke=\"currentColor\" stroke-width=\"7\" opacity=\"0.45\" fill=\"none\"/><path d=\"M302.9 150H354.3\" stroke=\"currentColor\" stroke-width=\"7\" opacity=\"0.45\" fill=\"none\"/><text x=\"20\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">3</text><text x=\"71.4\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">4</text><text x=\"122.9\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">5</text><text x=\"174.3\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">6</text><text x=\"225.7\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">7</text><text x=\"277.1\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">8</text><text x=\"328.6\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">9</text><text x=\"380\" y=\"174\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">10</text><text x=\"71.4\" y=\"136\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">b</text><text x=\"328.6\" y=\"136\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">a</text><g stroke=\"currentColor\" stroke-width=\"1.2\" stroke-dasharray=\"4 4\" fill=\"none\"><path d=\"M45.7 42V144\"/><path d=\"M354.3 42V144\"/><path d=\"M97.1 102V144\"/><path d=\"M302.9 102V144\"/></g><g stroke=\"currentColor\" stroke-width=\"1.4\" fill=\"none\"><path d=\"M47.7 42H352.3\" marker-start=\"url(#bw)\" marker-end=\"url(#bw)\"/><path d=\"M99.1 102H300.9\" marker-start=\"url(#bw)\" marker-end=\"url(#bw)\"/></g><text x=\"200\" y=\"30\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">greatest a − b: 9.5 − 3.5</text><text x=\"200\" y=\"90\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">least a − b: 8.5 − 4.5</text></svg>",
+    "caption": "The greatest gap runs between the far ends of the two bands, the least between the near ends."
   },
   {
     "type": "p",
-    "md": "Addition and multiplication are comfortable because both quantities push the same way. Subtraction does not. In $a - b$ the $b$ is taken away, so **taking away less leaves more**:\ngreatest $a - b = \\text{UB}(a) - \\text{LB}(b)$, least $a - b = \\text{LB}(a) - \\text{UB}(b)$.\nDivision behaves the same way, because the bottom of a fraction works against you:\ngreatest $a \\div b = \\text{UB}(a) \\div \\text{LB}(b)$, least $a \\div b = \\text{LB}(a) \\div \\text{UB}(b)$.\nWrite all four bounds down before you choose a pair."
-  },
-  {
-    "type": "gate",
-    "id": "g5",
-    "kind": "number",
-    "prompt": "$a = 7.6$ and $b = 3.2$, each correct to $1$ d.p. The greatest possible value of $a - b$ is",
-    "answer": "4.5",
-    "explain": "7.65 − 3.15 = 4.5. Most of a, least of b."
+    "md": "In $a - b$ the $b$ is taken away, and taking away less leaves more. So the greatest difference uses the largest $a$ with the smallest $b$, and the least difference the smallest $a$ with the largest $b$: on the number line, the far ends and the near ends."
   },
   {
     "type": "callout",
     "kind": "why",
-    "title": "Why subtraction swaps the bounds",
-    "md": "Taking away a bigger number leaves less, so the largest $a - b$ comes from the smallest $b$ paired with the largest $a$. Division behaves the same way, because dividing by a smaller number gives a bigger answer."
+    "title": "Division works against its bottom number",
+    "md": "Dividing by a smaller number gives a bigger answer, so a quotient crosses over in the same way: the greatest $a \\div b$ is $\\text{UB}(a) \\div \\text{LB}(b)$. Addition and multiplication never cross over, which is why a sum or a product pairs upper with upper."
+  },
+  {
+    "type": "see",
+    "stem": "$a = 9$ and $b = 4$, each correct to the nearest whole number. Try every pairing of the bounds in $a - b$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$8.5 \\le a < 9.5$ and $3.5 \\le b < 4.5$",
+        "decision": "Half of 1 either side of each value."
+      },
+      {
+        "n": 2,
+        "working": "$9.5 - 3.5 = 6$ and $8.5 - 4.5 = 4$",
+        "decision": "Far ends give the widest gap, near ends the narrowest: the largest a with the smallest b, then the reverse."
+      },
+      {
+        "n": 3,
+        "working": "$9.5 - 4.5 = 5$ and $8.5 - 3.5 = 5$",
+        "decision": "Two uppers or two lowers land in between, so neither is a bound of the difference."
+      }
+    ],
+    "finalAnswer": "Greatest $a - b = 6$; least $a - b = 4$",
+    "kind": "explanation"
   },
   {
     "type": "gate",
@@ -121,22 +173,220 @@
       "the upper bound of a and the lower bound of b"
     ],
     "answer": "the lower bound of a and the upper bound of b",
-    "explain": "A smaller top and a larger bottom both shrink a fraction."
+    "explain": "A division works against its bottom number, as the subtraction in See it worked against b: a bigger b makes a ÷ b smaller. So the least quotient takes the smallest a over the largest b.",
+    "optionNotes": [
+      {
+        "option": "the lower bound of a and the lower bound of b",
+        "why": "A smaller b makes the quotient bigger, not smaller. For the least a ÷ b the bottom must be as large as possible: the upper bound of b.",
+        "misconception": "maths.bounds.both-upper-in-subtraction"
+      },
+      {
+        "option": "the upper bound of a and the lower bound of b",
+        "why": "That pairing makes the largest quotient: the biggest top over the smallest bottom. The least quotient is the reverse."
+      }
+    ],
+    "twin": {
+      "prompt": "To make $p \\div q$ as **large** as possible you use",
+      "options": [
+        "the upper bound of p and the lower bound of q",
+        "the upper bound of p and the upper bound of q",
+        "the lower bound of p and the upper bound of q"
+      ],
+      "answer": "the upper bound of p and the lower bound of q",
+      "explain": "The largest quotient puts the biggest top over the smallest bottom, because dividing by less gives more.",
+      "optionNotes": [
+        {
+          "option": "the upper bound of p and the upper bound of q",
+          "why": "A larger q makes p ÷ q smaller, so two uppers fall short of the greatest value. Pair the upper bound of p with the lower bound of q.",
+          "misconception": "maths.bounds.both-upper-in-subtraction"
+        },
+        {
+          "option": "the lower bound of p and the upper bound of q",
+          "why": "That pairing gives the least quotient: the smallest top over the largest bottom."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "Bounds inside a formula"
+    "text": "A difference: the greatest and the least",
+    "role": "variant"
   },
   {
     "type": "p",
-    "md": "CCEA usually hands you the formula and asks for one bound. Read it symbol by symbol before you substitute. In $h = \\dfrac{u^2}{2a}$ the $u$ is squared and the $a$ is doubled, and $u$ is on top while $a$ is on the bottom, so\n$h_{\\max} = \\dfrac{\\text{UB}(u)^2}{2 \\times \\text{LB}(a)}$.\nSubstitute once, and round nothing on the way: the scheme prints the long value, so the stored display is the answer."
+    "md": "An exam item gives each value with its own accuracy, often different ones. Write all four bounds first, then choose the pair: the greatest $a - b$ is $\\text{UB}(a) - \\text{LB}(b)$ and the least is $\\text{LB}(a) - \\text{UB}(b)$. The bounds are usually the first mark, so they belong on the page before any subtraction."
+  },
+  {
+    "type": "p",
+    "md": "The specification's own example is a circle cut from a rectangle of paper. The paper left is a difference of two areas, so its greatest value takes the largest rectangle and the smallest circle."
+  },
+  {
+    "type": "see",
+    "stem": "A circle of radius $4.2$ cm is cut from a rectangle of card $15.6$ cm by $10.3$ cm. Each measurement is correct to $1$ decimal place. Calculate the greatest possible area of card left.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$15.65$, $10.35$ and $4.15$",
+        "decision": "Largest card: both sides at their upper bounds. Smallest circle: the radius at its lower bound, because the circle is taken away.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$15.65 \\times 10.35 = 161.9775$",
+        "decision": "The rectangle's area is a product, so upper times upper.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$\\pi \\times 4.15^2 = 54.10607948\\ldots$",
+        "decision": "The circle's area from the smallest radius.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 4,
+        "working": "$161.9775 - 54.10607948\\ldots = 107.8714205\\ldots$ cm$^2$",
+        "decision": "Largest minus smallest gives the greatest area left. Leave the display unless an accuracy is asked.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$107.8714205\\ldots$ cm$^2$",
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g5",
+    "kind": "number",
+    "prompt": "$a = 7.6$ and $b = 3.2$, each correct to $1$ d.p. The greatest possible value of $a - b$ is",
+    "answer": "4.5",
+    "explain": "The greatest difference takes the largest a and the smallest b, as step 1 of See it took the largest card and the smallest circle: 7.65 − 3.15 = 4.5.",
+    "twin": {
+      "prompt": "$c = 12.4$ and $d = 5.8$, each correct to $1$ d.p. The greatest possible value of $c - d$ is",
+      "answer": "6.7",
+      "explain": "Largest c, smallest d: 12.45 − 5.75 = 6.7."
+    }
+  },
+  {
+    "type": "h",
+    "text": "A quotient: speed and density",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "Speed $=$ distance $\\div$ time and density $=$ mass $\\div$ volume are quotients, and neither is on the Higher formula sheet. The greatest speed takes the longest distance over the shortest time; the least speed, the shortest distance over the longest time. Write both bounds of each quantity before you divide."
+  },
+  {
+    "type": "see",
+    "stem": "A cyclist covers $750$ m, correct to the nearest $10$ m, in $68.4$ s, correct to $1$ decimal place. Find the upper bound of the average speed.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\text{UB}(d) = 755$ m and $\\text{LB}(t) = 68.35$ s",
+        "decision": "Half of 10 m and half of 0.1 s. The largest speed wants the longest distance and the shortest time.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$755 \\div 68.35$",
+        "decision": "Upper over lower: dividing by the smaller time gives the larger speed.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$755 \\div 68.35 = 11.04608632\\ldots$ m/s",
+        "decision": "Leave the full display: the scheme prints the long value.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$11.04608632\\ldots$ m/s",
+    "kind": "calculation"
+  },
+  {
+    "type": "video",
+    "videoId": "LdczMmb7J-g",
+    "title": "Solving Limits of Accuracy Problems",
+    "channel": "corbettmaths",
+    "corbettmathsNumber": 184,
+    "why": "The same pairings at writing speed on more problems, divisions included. Watch it once, then answer the check without going back."
+  },
+  {
+    "type": "gate",
+    "id": "g13",
+    "kind": "number",
+    "prompt": "A trolley rolls $84$ cm, correct to the nearest cm, in $3.5$ s, correct to $1$ d.p. Its least possible average speed, in cm/s, to $3$ d.p., is",
+    "answer": "23.521",
+    "explain": "The least speed takes the shortest distance over the longest time, the reverse of See it's pairing: 83.5 ÷ 3.55 = 23.521 to 3 d.p.",
+    "twin": {
+      "prompt": "A tank fills with $450$ litres, correct to the nearest $10$ litres, in $12.6$ minutes, correct to $1$ d.p. Its greatest possible rate, in litres per minute, to $3$ d.p., is",
+      "answer": "36.255",
+      "explain": "The greatest rate takes the most water over the shortest time: 455 ÷ 12.55 = 36.255 to 3 d.p."
+    }
+  },
+  {
+    "type": "h",
+    "text": "Bounds inside a printed formula",
+    "role": "variant"
+  },
+  {
+    "type": "p",
+    "md": "CCEA usually prints the formula and asks for one bound. Read it symbol by symbol: a letter on the top takes the bound in the direction you want, a letter on the bottom the opposite one, and a letter after a minus sign works against the answer too. Numbers in the formula, such as the 2 in $2a$, are exact."
   },
   {
     "type": "callout",
     "kind": "examiner",
-    "title": "Summer 2024 M4 Q16 and November 2024 M4 Q16",
-    "md": "Both papers put bounds into a formula of this shape. The bounds themselves were mostly right; the marks went on the formula — the letter on top not squared, the letter underneath not doubled — and then on rounding the final display.",
-    "source": "ccea-cer:maths:2024-summer:M4:Q16; ccea-cer:maths:2024-november:M4:Q16"
+    "title": "Where the 2024 formula marks went",
+    "md": "Both 2024 papers put bounds into a formula with a square on top and a doubled letter underneath. The reports say most candidates found the bounds; the slips named were a top letter not squared, a bottom letter not doubled, and a rounded final display.",
+    "source": "ccea-cer:maths:2024-november:M4:Q16"
+  },
+  {
+    "type": "see",
+    "stem": "$a = \\dfrac{v - u}{t}$, where $v = 24.6$, $u = 8.3$ and $t = 3.2$, each correct to $1$ decimal place. Find the upper bound of $a$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\text{UB}(v) = 24.65$, $\\text{LB}(u) = 8.25$, $\\text{LB}(t) = 3.15$",
+        "decision": "Largest a: the top as large as possible, so the largest v minus the smallest u, over the smallest t.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$a = \\dfrac{24.65 - 8.25}{3.15}$",
+        "decision": "Substitute once, with every bound in place before any arithmetic.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$24.65 - 8.25 = 16.4$",
+        "decision": "The top first: the subtraction inside it follows the difference rule."
+      },
+      {
+        "n": 4,
+        "working": "$16.4 \\div 3.15 = 5.206349206\\ldots$",
+        "decision": "Leave the full display; round only if the question names an accuracy.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$5.206349206\\ldots$",
+    "kind": "calculation"
   },
   {
     "type": "gate",
@@ -144,15 +394,135 @@
     "kind": "number",
     "prompt": "$h = \\dfrac{u^2}{2a}$ with $u = 4.2$ and $a = 2.5$, each to $1$ d.p. The upper bound of $h$, to $3$ d.p., is",
     "answer": "3.686",
-    "explain": "4.25² ÷ (2 × 2.45) = 18.0625 ÷ 4.9 = 3.68622449…"
+    "explain": "u is on the top, so take its upper bound and square it; a is on the bottom, so take its lower bound and double it, as See it chose each letter: 4.25² ÷ (2 × 2.45) = 3.686 to 3 d.p.",
+    "twin": {
+      "prompt": "$h = \\dfrac{u^2}{2a}$ with $u = 6.8$ and $a = 3.4$, each to $1$ d.p. The lower bound of $h$, to $3$ d.p., is",
+      "answer": "6.603",
+      "explain": "Lower bound: the smallest u on top, the largest a underneath: 6.75² ÷ (2 × 3.45) = 6.603 to 3 d.p."
+    }
   },
   {
     "type": "h",
-    "text": "Times, counts and the display"
+    "text": "A greatest count of whole items",
+    "role": "variant"
+  },
+  {
+    "type": "figure",
+    "alt": "A number line from 38 to 41 marked in whole numbers. A pointer sits at 39.56, between 39 and 40, labelled 455 ÷ 11.5 = 39.56…; below it, 39 boxes fit and a 40th does not.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 132\" role=\"img\" font-family=\"inherit\"><title>The greatest number of boxes lies between 39 and 40</title><g stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\"><path d=\"M30 66H370\"/><path d=\"M40 59V73\"/><path d=\"M146.7 59V73\"/><path d=\"M253.3 59V73\"/><path d=\"M360 59V73\"/></g><path d=\"M207 62l-7 -12h14z\" fill=\"currentColor\"/><text x=\"40\" y=\"94\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">38</text><text x=\"146.7\" y=\"94\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">39</text><text x=\"253.3\" y=\"94\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">40</text><text x=\"360\" y=\"94\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">41</text><text x=\"207\" y=\"42\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">455 ÷ 11.5 = 39.56…</text><text x=\"146.7\" y=\"116\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">39 boxes fit</text><text x=\"253.3\" y=\"116\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">a 40th does not</text></svg>",
+    "caption": "455 ÷ 11.5 lands between 39 and 40: only 39 whole boxes are certain to fit."
   },
   {
     "type": "p",
-    "md": "**A time in hours and minutes.** Change the whole time to minutes, bound it, then divide by $60$. One hour eleven minutes is $71$ minutes, so the shortest is $70.5$ minutes, which is $70.5 \\div 60 = 1.175$ h. Writing $1$ h $10.5$ min as $1.105$ h is not a small slip: it moves the speed by about $12$ km/h."
+    "md": "A greatest possible number of whole items is a division: the largest total over the smallest single item. Then round **down**. The next item would go over even the largest allowed total, so a decimal, or a count rounded up, is not a possible answer."
+  },
+  {
+    "type": "see",
+    "stem": "Boxes each have a mass of $12$ kg, correct to the nearest kg. A lift can carry $450$ kg, correct to the nearest $10$ kg. Work out the greatest possible number of boxes the lift can carry.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\text{LB}(\\text{box}) = 11.5$ kg and $\\text{UB}(\\text{lift}) = 455$ kg",
+        "decision": "Half of 1 kg and half of 10 kg. The most boxes come from the lightest box and the largest load.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$455 \\div 11.5 = 39.565\\ldots$",
+        "decision": "Largest load over lightest box.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$39$ boxes",
+        "decision": "A 40th box would take the load past 455 kg even at 11.5 kg each, so round down.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$39$ boxes",
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g9",
+    "kind": "number",
+    "prompt": "A greatest possible number of crates works out as $17.92$. What goes on the answer line?",
+    "answer": "17",
+    "explain": "Only whole crates count, and an 18th would go over even the largest allowed load, so a greatest count rounds down, as step 3 of See it did: 17.",
+    "twin": {
+      "prompt": "A greatest possible number of tiles works out as $41.97$. What goes on the answer line?",
+      "answer": "41",
+      "explain": "A 42nd tile would not fit within any allowed total, so round down: 41."
+    }
+  },
+  {
+    "type": "h",
+    "text": "How the paper disguises it",
+    "role": "twists"
+  },
+  {
+    "type": "p",
+    "md": "**A time in hours and minutes** (Summer 2023). Change the whole time to minutes, bound it, then divide by 60. Writing 1 h 10.5 min as 1.105 h, one of the commonest slips that year, treats minutes as hundredths of an hour."
+  },
+  {
+    "type": "p",
+    "md": "**An answer in hours and minutes** (November 2021). A least time is the shortest distance over the greatest speed; then turn the decimal part of the hours into minutes by multiplying it by 60."
+  },
+  {
+    "type": "p",
+    "md": "**A formula to rearrange** (November 2022, Summer 2026). $W = Fd$ asked for the force, $F = ma$ for the acceleration: rearrange first, then choose each bound by where its letter sits."
+  },
+  {
+    "type": "p",
+    "md": "**Mixed accuracies** (November 2022, Summer 2025, Summer 2026). Nearest 5 kg beside nearest 100 kg, or nearest metre beside 3 significant figures: each value gets its own half unit. In Summer 2025 more candidates used 45 kg than 47.5 kg for 50 kg to the nearest 5 kg."
+  },
+  {
+    "type": "p",
+    "md": "**Both bounds asked** (January 2019, November 2022). The least and the greatest in one question: write the four bounds once and use them twice, crossing over for each."
+  },
+  {
+    "type": "figure",
+    "alt": "A number line in minutes from 94 to 96. A band runs from a filled circle at 94.5 to an open circle at 95.5, labelled 1 h 35 min = 95 minutes, to the nearest minute.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 136\" role=\"img\" font-family=\"inherit\"><title>A time of 95 minutes to the nearest minute as an interval</title><g stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\"><path d=\"M30 70H370\"/><path d=\"M40 63V77\"/><path d=\"M200 63V77\"/><path d=\"M360 63V77\"/></g><path d=\"M120 70H274\" stroke=\"currentColor\" stroke-width=\"7\" opacity=\"0.35\" fill=\"none\"/><circle cx=\"120\" cy=\"70\" r=\"6\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"280\" cy=\"70\" r=\"6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/><text x=\"40\" y=\"98\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">94</text><text x=\"120\" y=\"98\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">94.5</text><text x=\"200\" y=\"98\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">95</text><text x=\"280\" y=\"98\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">95.5</text><text x=\"360\" y=\"98\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">96</text><text x=\"200\" y=\"40\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">1 h 35 min = 95 minutes</text><text x=\"200\" y=\"124\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">minutes, to the nearest minute</text></svg>",
+    "caption": "1 h 35 min to the nearest minute is 94.5 to 95.5 minutes, before any division by 60."
+  },
+  {
+    "type": "see",
+    "stem": "A coach travels $128$ km, correct to the nearest km, in $1$ hour $35$ minutes, correct to the nearest minute. Calculate the greatest possible average speed in km/h.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$1$ h $35$ min $= 95$ min, so $\\text{LB}(t) = 94.5$ min",
+        "decision": "Minutes first: the accuracy is the nearest minute, so half a minute either side of 95.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$94.5 \\div 60 = 1.575$ h",
+        "decision": "Now convert: 60 minutes make an hour. Keep the exact value.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$128.5 \\div 1.575 = 81.58730159\\ldots$ km/h",
+        "decision": "Longest distance over shortest time.",
+        "earns": [
+          "A1"
+        ]
+      }
+    ],
+    "finalAnswer": "$81.58730159\\ldots$ km/h",
+    "kind": "calculation"
   },
   {
     "type": "gate",
@@ -165,27 +535,178 @@
       "1.75 h"
     ],
     "answer": "104.5 ÷ 60 = 1.74166… h",
-    "explain": "105 minutes, lower bound 104.5 minutes, then divide by 60."
-  },
-  {
-    "type": "p",
-    "md": "**A count of whole objects.** A greatest possible number is rounded **down**, because the next item would not fit under any allowed load. A decimal left on the answer line scores nothing."
-  },
-  {
-    "type": "gate",
-    "id": "g9",
-    "kind": "number",
-    "prompt": "A greatest possible number of crates works out as $17.92$. What goes on the answer line?",
-    "answer": "17",
-    "explain": "An 18th crate would be over the allowance, so a maximum count is rounded down."
+    "explain": "Change 1 h 45 min to 105 minutes first, as step 1 of See it did, take half a minute off for the shortest time, then divide by 60: 104.5 ÷ 60 = 1.74166… h.",
+    "optionNotes": [
+      {
+        "option": "1.445 h",
+        "why": "That writes 1 h 44.5 min as a decimal, but minutes are sixtieths of an hour, not hundredths. Minutes first: 104.5 ÷ 60.",
+        "misconception": "maths.bounds.time-units-conversion"
+      },
+      {
+        "option": "1.75 h",
+        "why": "1.75 h is the stated time, 1 h 45 min itself. The shortest time is half a minute less: 104.5 minutes.",
+        "misconception": "maths.bounds.substitute-given-values"
+      }
+    ],
+    "twin": {
+      "prompt": "A flight takes $2$ h $20$ min, correct to the nearest minute. The longest possible time, in hours, is",
+      "options": [
+        "140.5 ÷ 60 = 2.34166… h",
+        "2.205 h",
+        "139.5 ÷ 60 = 2.325 h"
+      ],
+      "answer": "140.5 ÷ 60 = 2.34166… h",
+      "explain": "2 h 20 min is 140 minutes; the longest time is half a minute more, 140.5 minutes, then divide by 60.",
+      "optionNotes": [
+        {
+          "option": "2.205 h",
+          "why": "That writes 2 h 20.5 min as a decimal. Minutes are sixtieths of an hour: 140.5 ÷ 60.",
+          "misconception": "maths.bounds.time-units-conversion"
+        },
+        {
+          "option": "139.5 ÷ 60 = 2.325 h",
+          "why": "That is the shortest time. The longest adds half a minute: 140.5 minutes."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "A suitable degree of accuracy"
+    "text": "Going further: a side by Pythagoras",
+    "role": "further"
+  },
+  {
+    "type": "figure",
+    "alt": "Right-angled triangle PQR with the right angle at Q. PR, the hypotenuse, is labelled 15.2 cm and PQ is labelled 9.7 cm; QR is not labelled. Not drawn accurately.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 260\" role=\"img\" font-family=\"inherit\"><title>Right-angled triangle PQR with the right angle at Q</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"><path d=\"M92 63.7L92 214L273.4 214Z\"/></g><path d=\"M92 200H106V214\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"80\" y=\"67.7\" font-size=\"14\" text-anchor=\"end\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">P</text><text x=\"80\" y=\"230\" font-size=\"14\" text-anchor=\"end\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">Q</text><text x=\"283.4\" y=\"230\" font-size=\"14\" text-anchor=\"start\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">R</text><text x=\"80\" y=\"143.8\" font-size=\"14\" text-anchor=\"end\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">9.7 cm</text><text x=\"196.7\" y=\"128.8\" font-size=\"14\" text-anchor=\"start\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">15.2 cm</text><text x=\"392\" y=\"252\" font-size=\"14\" text-anchor=\"end\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">not drawn accurately</text></svg>",
+    "caption": "QR² = PR² − PQ²: PQ is taken away, so its lower bound gives the greatest QR."
   },
   {
     "type": "p",
-    "md": "When a question asks for a value to a **suitable degree of accuracy**, the two bounds decide it. Round both to $1$ significant figure, then $2$, then $3$, and stop at the last accuracy where they still agree; that is how many figures you actually know. A density with bounds $2.7158\\ldots$ and $2.6757\\ldots$ gives $2.7$ and $2.7$ at $2$ significant figures, but $2.72$ and $2.68$ at $3$. So the honest answer is $2.7$ g/cm$^3$, and the reason — both bounds round to it — earns the second mark."
+    "md": "November 2025 asked for the upper bound of a shorter side of a right-angled triangle, and about 30% scored full marks. The shorter side squared is the hypotenuse squared minus the other side squared: a subtraction, so the upper bound takes the largest hypotenuse and the smallest known side. Bound the inputs, never the answer."
+  },
+  {
+    "type": "callout",
+    "kind": "notonspec",
+    "title": "Where this specification stops",
+    "md": "CCEA asks for a greatest, a least or a named bound as a value. Error-interval notation such as $47.5 \\le m < 52.5$, percentage error and truncated readings appear in no M4 bounds question. Bounds of a sum or a product alone belong to M3."
+  },
+  {
+    "type": "see",
+    "stem": "In triangle $PQR$ the angle at $Q$ is a right angle. $PR = 15.2$ cm and $PQ = 9.7$ cm, each correct to $1$ decimal place. Find the upper bound of $QR$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$\\text{UB}(PR) = 15.25$ and $\\text{LB}(PQ) = 9.65$",
+        "decision": "PQ is subtracted inside Pythagoras, so its smallest value leaves the largest QR.",
+        "earns": [
+          "MA1"
+        ]
+      },
+      {
+        "n": 2,
+        "working": "$15.25^2 - 9.65^2 = 139.44$",
+        "decision": "Square each bound, then subtract.",
+        "earns": [
+          "A1"
+        ]
+      },
+      {
+        "n": 3,
+        "working": "$QR = \\sqrt{139.44} = 11.80847154\\ldots$",
+        "decision": "Root last, and leave the display: a rounded root risks the accuracy mark.",
+        "earns": [
+          "MA1"
+        ]
+      }
+    ],
+    "finalAnswer": "$11.80847154\\ldots$ cm",
+    "kind": "calculation"
+  },
+  {
+    "type": "gate",
+    "id": "g14",
+    "kind": "choice",
+    "prompt": "A right-angled triangle has hypotenuse $10.4$ cm and one shorter side $6.1$ cm, each correct to $1$ d.p. Which gives the **lower** bound of the third side?",
+    "options": [
+      "√(10.35² − 6.15²)",
+      "√(10.35² − 6.05²)",
+      "√(10.4² − 6.1²) − 0.05"
+    ],
+    "answer": "√(10.35² − 6.15²)",
+    "explain": "The least third side reverses See it's pairing: the smallest hypotenuse, minus the largest known side, because taking away more leaves less: √(10.35² − 6.15²).",
+    "optionNotes": [
+      {
+        "option": "√(10.35² − 6.05²)",
+        "why": "6.05 is the smallest known side, and taking away less leaves more. For a lower bound take away the largest, 6.15.",
+        "misconception": "maths.bounds.both-upper-in-subtraction"
+      },
+      {
+        "option": "√(10.4² − 6.1²) − 0.05",
+        "why": "That bounds the answer, not the inputs. A half unit does not survive squaring and a square root: bound 10.4 and 6.1 first.",
+        "misconception": "maths.bounds.bounds-of-answer-not-inputs"
+      }
+    ],
+    "twin": {
+      "prompt": "A right-angled triangle has hypotenuse $13.6$ cm and one shorter side $8.2$ cm, each correct to $1$ d.p. Which gives the **upper** bound of the third side?",
+      "options": [
+        "√(13.65² − 8.15²)",
+        "√(13.65² − 8.25²)",
+        "√(13.6² − 8.2²) + 0.05"
+      ],
+      "answer": "√(13.65² − 8.15²)",
+      "explain": "The largest hypotenuse and the smallest known side: taking away less leaves more.",
+      "optionNotes": [
+        {
+          "option": "√(13.65² − 8.25²)",
+          "why": "Two upper bounds: the larger side takes away more, so this falls short of the greatest. Use the lower bound, 8.15.",
+          "misconception": "maths.bounds.both-upper-in-subtraction"
+        },
+        {
+          "option": "√(13.6² − 8.2²) + 0.05",
+          "why": "That bounds the answer. Bound 13.6 and 8.2 first, then calculate once.",
+          "misconception": "maths.bounds.bounds-of-answer-not-inputs"
+        }
+      ]
+    }
+  },
+  {
+    "type": "h",
+    "text": "Going further: how many figures to trust",
+    "role": "further"
+  },
+  {
+    "type": "figure",
+    "alt": "A number line from 4.94 to 5.06 with a shaded band from 4.95 to 5.05, labelled everything in the band rounds to 5.0. Two marks show the bounds 4.9861… and 5.0273…, both inside the band.",
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 150\" role=\"img\" font-family=\"inherit\"><title>Two bounds that agree to 2 significant figures</title><g stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\"><path d=\"M30 98H369.9999999999978\"/><path d=\"M58.3 92V104\"/><path d=\"M200 92V104\"/><path d=\"M341.7 92V104\"/></g><path d=\"M58.3 98H341.7\" stroke=\"currentColor\" stroke-width=\"9\" opacity=\"0.25\" fill=\"none\"/><path d=\"M160.6 84V112\" stroke=\"currentColor\" stroke-width=\"2.4\"/><path d=\"M277.3 84V112\" stroke=\"currentColor\" stroke-width=\"2.4\"/><text x=\"58.3\" y=\"128\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">4.95</text><text x=\"200\" y=\"128\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">5.00</text><text x=\"341.7\" y=\"128\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">5.05</text><text x=\"160.6\" y=\"76\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">4.9861…</text><text x=\"277.3\" y=\"76\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">5.0273…</text><text x=\"200\" y=\"34\" font-size=\"14\" text-anchor=\"middle\" fill=\"currentColor\" stroke=\"none\" font-family=\"inherit\">everything in the band rounds to 5.0</text></svg>",
+    "caption": "Both bounds round to 5.0 at 2 significant figures; at 3 they give 4.99 and 5.03."
+  },
+  {
+    "type": "p",
+    "md": "A question may ask for a value to a **suitable degree of accuracy**. Round both bounds to 1, then 2, then 3 significant figures, and stop at the last accuracy where they agree: those are the figures you know. No CCEA M4 paper has set it yet; it tests whether the bounds mean something to you."
+  },
+  {
+    "type": "see",
+    "stem": "A speed has lower bound $4.9861\\ldots$ m/s and upper bound $5.0273\\ldots$ m/s. Give the speed to a suitable degree of accuracy.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "$1$ s.f.: $5$ and $5$",
+        "decision": "They agree, so the first figure is known."
+      },
+      {
+        "n": 2,
+        "working": "$2$ s.f.: $5.0$ and $5.0$",
+        "decision": "Still the same: two figures are known."
+      },
+      {
+        "n": 3,
+        "working": "$3$ s.f.: $4.99$ and $5.03$",
+        "decision": "Now they differ, so the third figure is not known."
+      }
+    ],
+    "finalAnswer": "$5.0$ m/s: both bounds round to $5.0$ to $2$ s.f. and differ at $3$ s.f.",
+    "kind": "explanation"
   },
   {
     "type": "gate",
@@ -198,61 +719,143 @@
       "8.4731 m"
     ],
     "answer": "8.47 m",
-    "explain": "Both bounds give 8.47 to 3 s.f.; at 4 s.f. they give 8.471 and 8.475, which disagree."
+    "explain": "Round both bounds, as See it did: to 3 significant figures both give 8.47, but to 4 they give 8.471 and 8.475, which differ. So 8.47 m is the accuracy both bounds support.",
+    "optionNotes": [
+      {
+        "option": "8.471 m",
+        "why": "At 4 significant figures the bounds give 8.471 and 8.475, which differ, so the fourth figure is not known. Stop at 8.47 m.",
+        "misconception": "maths.bounds.accuracy-not-from-agreeing-bounds"
+      },
+      {
+        "option": "8.4731 m",
+        "why": "A midpoint is not an accuracy. Round both bounds and keep only the figures they share: 8.47 m.",
+        "misconception": "maths.bounds.accuracy-not-from-agreeing-bounds"
+      }
+    ],
+    "twin": {
+      "prompt": "A mass has bounds $12.362\\ldots$ kg and $12.398\\ldots$ kg. To a suitable degree of accuracy it is",
+      "options": [
+        "12.4 kg",
+        "12.38 kg",
+        "12 kg"
+      ],
+      "answer": "12.4 kg",
+      "explain": "Both bounds give 12.4 to 3 significant figures; to 4 they give 12.36 and 12.40, which differ.",
+      "optionNotes": [
+        {
+          "option": "12.38 kg",
+          "why": "At 4 significant figures the bounds give 12.36 and 12.40, so the fourth figure is not known.",
+          "misconception": "maths.bounds.accuracy-not-from-agreeing-bounds"
+        },
+        {
+          "option": "12 kg",
+          "why": "Both bounds still agree at 3 significant figures, 12.4, so 12 throws away a figure you know."
+        }
+      ]
+    }
   },
   {
-    "type": "callout",
-    "kind": "mustknow",
-    "title": "Sheet or memory?",
-    "md": "**On the Higher sheet:** volume of a prism, area of a trapezium, sphere and cone formulae, the quadratic formula, the sine and cosine rules. No bounds rule of any kind is printed.\n**Must be known:** half unit $=$ half the rounding unit; greatest $a-b = \\text{UB}(a)-\\text{LB}(b)$; greatest $a \\div b = \\text{UB}(a) \\div \\text{LB}(b)$; speed $=$ distance $\\div$ time; density $=$ mass $\\div$ volume; $a^2+b^2=c^2$; area of a circle $\\pi r^2$; minutes $\\div\\,60 =$ decimal hours."
+    "type": "h",
+    "text": "Where the half unit comes from",
+    "role": "derivation"
+  },
+  {
+    "type": "p",
+    "md": "Why half? A value rounds to 50 to the nearest 5 when 50 is the closest multiple of 5 to it. The neighbouring multiples are 45 and 55, and the choice switches halfway to each of them. Halfway is always half the rounding unit from the stated value, whatever the unit."
+  },
+  {
+    "type": "see",
+    "stem": "Show that a value of $50$ to the nearest $5$ has bounds $47.5$ and $52.5$.",
+    "steps": [
+      {
+        "n": 1,
+        "working": "Neighbours: $45$, $50$, $55$",
+        "decision": "Rounding to the nearest 5 picks the closest multiple of 5."
+      },
+      {
+        "n": 2,
+        "working": "$\\dfrac{45 + 50}{2} = 47.5$ and $\\dfrac{50 + 55}{2} = 52.5$",
+        "decision": "At each halfway point the closest multiple changes, so these are the ends of the interval."
+      },
+      {
+        "n": 3,
+        "working": "$50 - \\tfrac{5}{2} = 47.5$ and $50 + \\tfrac{5}{2} = 52.5$",
+        "decision": "Each end is half the rounding unit from 50: the half unit, for any unit."
+      }
+    ],
+    "finalAnswer": "Bounds $= 50 \\pm \\tfrac{5}{2}$: the stated value plus or minus half the rounding unit",
+    "kind": "proof"
   },
   {
     "type": "gate",
-    "id": "g11",
+    "id": "g15",
     "kind": "choice",
-    "prompt": "Which of these is printed on the Higher formula sheet?",
+    "prompt": "A field is $300$ m long, correct to the nearest $20$ m. What is the lower bound of its length?",
     "options": [
-      "Area of a trapezium",
-      "Speed = distance ÷ time",
-      "Pythagoras' theorem"
+      "290 m",
+      "280 m",
+      "299.5 m"
     ],
-    "answer": "Area of a trapezium",
-    "explain": "Speed and Pythagoras are memory, and both turn up in bounds questions."
+    "answer": "290 m",
+    "explain": "The neighbours of 300 in steps of 20 are 280 and 320, and the switch to 280 happens halfway, at 290, as See it found 47.5 halfway between 45 and 50. So 290 m.",
+    "optionNotes": [
+      {
+        "option": "280 m",
+        "why": "280 m is the neighbouring multiple of 20, but the switch happens halfway to it, at 290 m.",
+        "misconception": "maths.bounds.wrong-half-unit-for-nearest-5"
+      },
+      {
+        "option": "299.5 m",
+        "why": "That halves 1 m, but the length is to the nearest 20 m. Half of 20 is 10, so 290 m.",
+        "misconception": "maths.bounds.wrong-half-unit-for-sig-figs"
+      }
+    ],
+    "twin": {
+      "prompt": "A crowd is $4000$, correct to the nearest $500$. What is the upper bound?",
+      "options": [
+        "4250",
+        "4500",
+        "4000.5"
+      ],
+      "answer": "4250",
+      "explain": "The neighbours are 3500 and 4500; the switch to 4500 happens halfway, at 4250.",
+      "optionNotes": [
+        {
+          "option": "4500",
+          "why": "4500 is the next multiple of 500. The switch to it happens halfway, at 4250.",
+          "misconception": "maths.bounds.wrong-half-unit-for-nearest-5"
+        },
+        {
+          "option": "4000.5",
+          "why": "That halves 1, but the crowd is to the nearest 500. Half of 500 is 250, so 4250."
+        }
+      ]
+    }
   },
   {
     "type": "h",
-    "text": "You can now"
+    "text": "You can now",
+    "role": "recap"
   },
   {
     "type": "p",
-    "md": "Turn any rounding instruction into a half unit.\nWrite all four bounds before choosing a pair.\nUse the upper over the lower for the greatest subtraction or quotient.\nSubstitute bounds into a formula without rounding on the way.\nGive an answer to an accuracy both bounds agree on."
+    "md": "Turn any stated accuracy into a half unit, then both bounds.\nPair an upper with a lower for the greatest or least difference or quotient.\nPut bounds into a speed or a printed formula, symbol by symbol, and keep the display.\nRound a greatest count of whole items down.\nMeet the twists: hours and minutes, a formula to rearrange, Pythagoras."
   },
   {
     "type": "h",
-    "text": "In the exam"
+    "text": "In the exam",
+    "role": "pointer"
   },
   {
     "type": "p",
-    "md": "One bounds item per paper. Three marks when the bounds drop straight into a subtraction or a division, four when a formula or a unit change comes first. The first mark is the four bounds written down; the last is the value, left unrounded unless an accuracy is named. Stuck: write the half unit and all four bounds."
+    "md": "A bounds item in 14 of the 15 M4 papers since 2018, usually at Q12 to Q17. Two or three marks when the bounds go straight into a calculation; four when a second stage comes first: hours and minutes, a count or Pythagoras. The first mark is for the bounds; the last is the value, as the full display unless an accuracy is named. Stuck: write every half unit and all four bounds."
   },
   {
     "type": "prompt",
-    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.01"
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.15"
   },
   {
     "type": "prompt",
-    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.04"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.06"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.09"
-  },
-  {
-    "type": "prompt",
-    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.10"
+    "promptId": "rp.maths.m4.upper-and-lower-bounds-subtraction-and-division.13"
   }
 ]
