@@ -1719,7 +1719,12 @@
               "for": "0.06 (A)"
             }
           ],
-          "workedSolution": "60 mA = 60 ÷ 1000 = 0.06 A."
+          "workedSolution": "60 mA = 60 ÷ 1000 = 0.06 A.",
+          "followThrough": {
+            "fromPart": "b",
+            "rule": "use-candidate-value",
+            "relation": "x / 1000"
+          }
         },
         {
           "hints": [
@@ -4159,6 +4164,14 @@
           "detail": "29 Sep v3 migration, in-place additions (they only add credit): follow-through relations (b) from (a), x * 2: X carries both equal branches; (d) from (c), x * 50: V = I R with her current in amps; each probed with a perturbed earlier value through markAnswer as QuestionRunner.tsx passes it.",
           "at": "2026-09-29T14:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-series-parallel.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026), in place (a follow-through relation, credit-only): (c) writes (b)'s current in amps, so her own (b) converted right earns it (relation x / 1000): her 70 mA in (b) and 0.07 in (c) now earn (c)'s mark (it earned 0). A right (b) with 60 in (c) still earns 0 with the milliamps diagnosis.",
+          "at": "2026-10-11T10:07:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5401,6 +5414,14 @@
           "result": "pass",
           "detail": "The six-reading grid with equal resistors (Summer 2019 P2 H, Summer 2026 P2 F); ammeters before and after the branches (Summer 2022); a resistor feeding an equal pair in milliamps (Summer 2021 P2 F); unequal branches and the current shared 2 : 1 (Summer 2021 and 2023 P2 H, the 2023 report). The schemes are paraphrased here, never quoted.",
           "at": "2026-09-29T14:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-series-parallel.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026) on the strictest review of 7-8 Oct: the note is unchanged; question 0007(c) follows through from (b) (x / 1000), in place. Question 0011(d)'s single-part follow-through probed end to end: a wrong (b) or (c) carries; a wrong (a) carried through (b) and (c) needs both (a) and (c) at (d), which the engine cannot express (ENGINE-PENDING EP-2).",
+          "at": "2026-10-11T10:07:00Z",
           "by": "claude"
         }
       ],

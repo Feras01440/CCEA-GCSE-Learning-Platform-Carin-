@@ -232,6 +232,114 @@
       "version": 1
     },
     {
+      "id": "we.science.p2.p2-calculating-resistance.0004",
+      "topic": "science.p2.p2-calculating-resistance",
+      "specRefs": [
+        "DA-P2-2.3.13",
+        "DA-P2-2.3.12"
+      ],
+      "paper": {
+        "unit": "P2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator"
+        ]
+      },
+      "stem": "In the diagram, resistors A, B and C each have a resistance of 22 Ω. B and C are in parallel with each other, between Q and R; A is between P and Q.\nFind the single resistor that would replace B and C, and the resistance between P and R. [2]",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 210\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><title>Between terminals P and R: resistor A, 22 ohms, then resistors B and C, 22 ohms and 22 ohms, in parallel with each other; Q is the junction after A.</title><circle cx=\"60\" cy=\"110\" r=\"5\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><text x=\"42\" y=\"116\" font-family=\"inherit\" font-size=\"16\" fill=\"currentColor\" text-anchor=\"end\" font-weight=\"600\">P</text><path d=\"M60 110 L114 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M114 101 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M166 110 L190 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"140\" y=\"90\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">A 22 Ω</text><circle cx=\"190\" cy=\"110\" r=\"3.4\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><text x=\"182\" y=\"98\" font-family=\"inherit\" font-size=\"16\" fill=\"currentColor\" text-anchor=\"end\" font-weight=\"600\">Q</text><path d=\"M190 110 L190 64 L219 64\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M219 55 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M271 64 L300 64 L300 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M190 110 L190 156 L219 156\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M219 147 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M271 156 L300 156 L300 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"245\" y=\"46\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">B 22 Ω</text><text x=\"245\" y=\"190\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">C 22 Ω</text><circle cx=\"300\" cy=\"110\" r=\"3.4\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><path d=\"M300 110 L340 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><circle cx=\"340\" cy=\"110\" r=\"5\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><text x=\"352\" y=\"116\" font-family=\"inherit\" font-size=\"16\" fill=\"currentColor\" font-weight=\"600\">R</text></svg>",
+        "alt": "Between terminals P and R: resistor A, 22 ohms, then resistors B and C, 22 ohms each, in parallel with each other; Q is the junction after A."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "B and C are an equal pair in parallel: 22 ÷ 2 = 11 Ω.",
+          "decision": "Deal with the parallel pair first, and notice it is an equal pair, so the Foundation shortcut applies: half of one.",
+          "whyMenu": {
+            "options": [
+              "Because two equal routes carry twice the current of one, so the pair has half the resistance",
+              "Because the 22 Ω is shared between B and C",
+              "Because every parallel pair is halved, whatever the two resistances"
+            ],
+            "correct": 0,
+            "explain": "Twice the route for the same voltage means twice the current, so half the resistance. The halving works only because B and C are equal; an unequal pair needs the Higher equation."
+          },
+          "earns": [
+            "P1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 11,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unit": "Ω",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "A is in series with the pair: 22 + 11 = 33 Ω.",
+          "decision": "Now the circuit is one line: A, then the single resistor that replaced the pair. Series resistances add.",
+          "earns": [
+            "P2"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 33,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unit": "Ω",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "B and C together: 11 Ω; between P and R: 33 Ω.",
+      "twin": {
+        "stem": "Three resistors each of 26 Ω are connected so that one is in series with the other two, which are in parallel with each other. Find the total resistance. [2]",
+        "answer": {
+          "kind": "numeric",
+          "value": 39,
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.05
+          },
+          "unit": "Ω",
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2
+          ]
+        },
+        {
+          "showSteps": 0,
+          "studentSupplies": [
+            1,
+            2
+          ]
+        }
+      ],
+      "verification": "ver.we.science.p2.p2-calculating-resistance.0004",
+      "version": 1
+    },
+    {
       "id": "we.science.p2.p2-calculating-resistance.0002",
       "topic": "science.p2.p2-calculating-resistance",
       "specRefs": [
@@ -342,6 +450,119 @@
         }
       ],
       "verification": "ver.we.science.p2.p2-calculating-resistance.0002",
+      "version": 1
+    },
+    {
+      "id": "we.science.p2.p2-calculating-resistance.0005",
+      "topic": "science.p2.p2-calculating-resistance",
+      "specRefs": [
+        "DA-P2-2.3.14"
+      ],
+      "paper": {
+        "unit": "P2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator"
+        ]
+      },
+      "stem": "A 20 Ω and a 30 Ω resistor are connected in parallel. Calculate their combined resistance. [3]",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 210\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><title>A 20 ohm and a 30 ohm resistor connected in parallel between terminals A and B.</title><circle cx=\"60\" cy=\"110\" r=\"5\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><text x=\"42\" y=\"116\" font-family=\"inherit\" font-size=\"16\" fill=\"currentColor\" text-anchor=\"end\" font-weight=\"600\">A</text><path d=\"M60 110 L130 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><circle cx=\"130\" cy=\"110\" r=\"3.4\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><path d=\"M130 110 L130 64 L174 64\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M174 55 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M226 64 L270 64 L270 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M130 110 L130 156 L174 156\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M174 147 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M226 156 L270 156 L270 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"200\" y=\"46\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">20 Ω</text><text x=\"200\" y=\"190\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">30 Ω</text><circle cx=\"270\" cy=\"110\" r=\"3.4\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><path d=\"M270 110 L340 110\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><circle cx=\"340\" cy=\"110\" r=\"5\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><text x=\"352\" y=\"116\" font-family=\"inherit\" font-size=\"16\" fill=\"currentColor\" font-weight=\"600\">B</text></svg>",
+        "alt": "A 20 ohm and a 30 ohm resistor connected in parallel between terminals A and B."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "1/R = 1/R1 + 1/R2 gives $\\dfrac{1}{R} = \\dfrac{1}{20} + \\dfrac{1}{30}$",
+          "decision": "Write the Higher equation first, then substitute: the equation line earns its own mark.",
+          "whyMenu": {
+            "options": [
+              "Because the two resistors are unequal, so the halving shortcut does not apply",
+              "Because the resistors are in series",
+              "Because the equation gives R directly"
+            ],
+            "correct": 0,
+            "explain": "Unequal resistors in parallel need the reciprocal equation. It gives 1/R, not R, which is why the last step turns the answer upside down."
+          },
+          "earns": [
+            "P1",
+            "P2"
+          ]
+        },
+        {
+          "n": 2,
+          "working": "$\\dfrac{3}{60} + \\dfrac{2}{60} = \\dfrac{5}{60}$, so $\\dfrac{1}{R} = \\dfrac{5}{60}$",
+          "decision": "Add the fractions over a common denominator (or add the decimals on a calculator).",
+          "input": {
+            "kind": "numeric",
+            "value": 0.0833,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.0005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "fraction"
+            ]
+          }
+        },
+        {
+          "n": 3,
+          "working": "Turn it upside down: R = 60 ÷ 5 = 12 Ω. Check: less than 20 Ω.",
+          "decision": "The sum is 1/R. Invert it, then check that the answer is below the smaller resistor.",
+          "earns": [
+            "P3"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 12,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unit": "Ω",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "R = 12 Ω",
+      "twin": {
+        "stem": "A 36 Ω and a 45 Ω resistor are connected in parallel. Calculate their combined resistance. [3]",
+        "answer": {
+          "kind": "numeric",
+          "value": 20,
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.05
+          },
+          "unit": "Ω",
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3
+          ]
+        }
+      ],
+      "verification": "ver.we.science.p2.p2-calculating-resistance.0005",
       "version": 1
     },
     {
@@ -474,6 +695,138 @@
         }
       ],
       "verification": "ver.we.science.p2.p2-calculating-resistance.0003",
+      "version": 1
+    },
+    {
+      "id": "we.science.p2.p2-calculating-resistance.0006",
+      "topic": "science.p2.p2-calculating-resistance",
+      "specRefs": [
+        "DA-P2-2.3.15",
+        "DA-P2-2.3.14",
+        "DA-P2-2.3.8"
+      ],
+      "paper": {
+        "unit": "P2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator"
+        ]
+      },
+      "stem": "A 6.2 V battery is connected to an 11 Ω resistor in series with a 30 Ω and a 60 Ω resistor in parallel. Calculate the total resistance and the current from the battery. [5]",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 270\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\"><title>A 6.2 volt battery and an ammeter connected to a 11 ohm resistor in series with a 30 ohm and a 60 ohm resistor in parallel.</title><path d=\"M90 56 L160 56\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M160 39 L160 73\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M168 48 L168 64\" stroke=\"currentColor\" stroke-width=\"4.2\" fill=\"none\"/><path d=\"M170 56 L180 56\" stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"3 3\"/><path d=\"M182 39 L182 73\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M190 48 L190 64\" stroke=\"currentColor\" stroke-width=\"4.2\" fill=\"none\"/><path d=\"M190 56 L246 56\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"176\" y=\"30\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">6.2 V</text><circle cx=\"260\" cy=\"56\" r=\"14\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"260\" y=\"61\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\" font-weight=\"600\">A</text><path d=\"M274 56 L310 56 L310 170\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M90 56 L90 170 L110 170\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M110 161 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M162 170 L190 170\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"136\" y=\"150\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">11 Ω</text><circle cx=\"190\" cy=\"170\" r=\"3.4\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><path d=\"M190 170 L190 124 L224 124\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M224 115 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M276 124 L300 124 L300 170\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M190 170 L190 216 L224 216\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M224 207 h52 v18 h-52 Z\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><path d=\"M276 216 L300 216 L300 170\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><circle cx=\"300\" cy=\"170\" r=\"3.4\" stroke=\"currentColor\" stroke-width=\"0\" fill=\"currentColor\" fill-opacity=\"1\"/><path d=\"M300 170 L310 170\" stroke=\"currentColor\" stroke-width=\"1.8\" fill=\"none\"/><text x=\"250\" y=\"106\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">30 Ω</text><text x=\"250\" y=\"250\" font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\" text-anchor=\"middle\">60 Ω</text></svg>",
+        "alt": "A 6.2 volt battery and an ammeter connected to an 11 ohm resistor in series with a 30 ohm and a 60 ohm resistor in parallel."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "The pair: 30 × 60 ÷ (30 + 60) = 20 Ω.",
+          "decision": "Parallel section first. Product over sum is quickest for two resistors; the reciprocal equation gives the same.",
+          "whyMenu": {
+            "options": [
+              "Because the series resistor can only be added once the pair is a single value",
+              "Because parallel resistors are always larger",
+              "Because the battery is next to the pair"
+            ],
+            "correct": 0,
+            "explain": "Adding along a line needs every piece of the line as one value. The pair becomes one resistor first; then the circuit is a simple series line."
+          },
+          "earns": [
+            "P1",
+            "P2"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 20,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unit": "Ω",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        },
+        {
+          "n": 2,
+          "working": "Total: 11 + 20 = 31 Ω.",
+          "decision": "Now add along the line.",
+          "earns": [
+            "P3"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 31,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unit": "Ω",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        },
+        {
+          "n": 3,
+          "working": "I = V ÷ R = 6.2 ÷ 31 = 0.2 A.",
+          "decision": "The battery sees the total resistance: V = I R rearranged for I.",
+          "earns": [
+            "P4",
+            "P5"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 0.2,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unit": "A",
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "Total 31 Ω; current 0.2 A.",
+      "twin": {
+        "stem": "A 10.0 V battery is connected to a 17 Ω resistor in series with a 24 Ω and a 12 Ω resistor in parallel. Calculate the current from the battery. [5]",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.4,
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.005
+          },
+          "unit": "A",
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal"
+          ]
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3
+          ]
+        }
+      ],
+      "verification": "ver.we.science.p2.p2-calculating-resistance.0006",
       "version": 1
     }
   ],
@@ -2177,8 +2530,8 @@
                   "value": 0.05
                 }
               },
-              "feedback": "Halving the sum only works for an equal pair. 10 Ω and 40 Ω in parallel give 8 Ω, so the total is 15 Ω.",
-              "marksTypicallyEarned": 0,
+              "feedback": "Halving the sum only works for an equal pair: 10 Ω and 40 Ω in parallel give 8 Ω, not 25 Ω. Your add was right for your pair, which earns that mark; the total is 7 + 8 = 15 Ω.",
+              "marksTypicallyEarned": 1,
               "source": "ccea-cer:science:2023-summer:P2H:Q6"
             }
           ],
@@ -3400,9 +3753,9 @@
           ],
           "workedSolution": "V = I R = 0.90 × 4 = 3.6 V. Check: the 12 Ω branch gives 0.30 × 12 = 3.6 V too.",
           "followThrough": {
-            "fromPart": "c(i)",
+            "fromPart": "a",
             "rule": "use-candidate-value",
-            "relation": "x * 12"
+            "relation": "0.9 * x"
           }
         }
       ],
@@ -4908,6 +5261,14 @@
           "detail": "7 Oct v3 migration, a common error re-valued to its own scheme (in place): (main) 7.125 now earns 3 of 4, not 2: the pair entered as 1/R and then added: the equation [1] and the substitution [1] stand, and the total's mark is e.c.f. from her pair value (7 + 0.125). Probed through markAnswer.",
           "at": "2026-10-07T22:05:00Z",
           "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026), in place (a common error re-valued to its scheme): 32 = (10 + 40) ÷ 2 + 7 earns 1, the scheme's e.c.f. mark for adding the series resistor to her own pair (total = 7 + 8 = 15 ohms, e.c.f.).",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5393,6 +5754,14 @@
           "detail": "7 Oct v3 migration, a common error re-valued to its own scheme (in place): (d) 16.2 now earns 1 of 3, not 2: the pair's resistances added (18 Ω) in V = I R: the equation [1] stands; the substitution is for 0.90 × 4 (or 0.30 × 12). Probed through markAnswer.",
           "at": "2026-10-07T22:05:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026), in place (a follow-through relation): (d) now carries her (a), the value the scheme's substitution uses (0.90 x her pair), so a wrong (a) of 18 ohms gives 16.2 V and earns 3 of 3 by error carried forward; the engine carries one earlier part only, so a wrong (c)(i) is not carried (ENGINE-PENDING EP-2).",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -5662,8 +6031,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.science.p2.p2-calculating-resistance.0001",
+          "kind": "workedExample",
+          "replacedBy": "we.science.p2.p2-calculating-resistance.0004",
+          "reason": "Its 16 ohm resistors were find-the-mistake 0001's case (two 16 ohm in parallel give 8 ohms); worked example 0004 works the same shape on 22 ohm resistors.",
+          "on": "2026-10-11T08:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.science.p2.p2-calculating-resistance.0002",
@@ -5751,8 +6129,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.science.p2.p2-calculating-resistance.0002",
+          "kind": "workedExample",
+          "replacedBy": "we.science.p2.p2-calculating-resistance.0005",
+          "reason": "Its 15 and 10 ohm pair was the post-check's item d3 (6 ohms), and its twin's 6 and 12 ohm pair was practice question 0014(a) and worked example 0003's first step; worked example 0005 works 20 and 30 ohms, its twin 36 and 45.",
+          "on": "2026-10-11T08:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.we.science.p2.p2-calculating-resistance.0003",
@@ -5840,8 +6227,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.science.p2.p2-calculating-resistance.0003",
+          "kind": "workedExample",
+          "replacedBy": "we.science.p2.p2-calculating-resistance.0006",
+          "reason": "Its 12 and 6 ohm pair was practice question 0014(a)'s case; worked example 0006 works an 11 ohm resistor with a 30 and 60 ohm pair, its twin a 17 ohm resistor with a 24 and 12 ohm pair.",
+          "on": "2026-10-11T08:55:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.science.p2.p2-calculating-resistance.pre",
@@ -6468,6 +6864,14 @@
           "detail": "The equal pair halved (Summer 2025 P2 Foundation, the report's finding on two equal resistors added instead of halved); the Higher parallel equation with its equation line first and the value after inverting; switches across a resistor and in a branch (Summer 2021 Higher, Summer 2022 Foundation); totals built from given resistors and arrangements worked backwards (Summer 2019 and 2023 Higher). The schemes are paraphrased here, never quoted.",
           "at": "2026-10-07T22:05:00Z",
           "by": "claude"
+        },
+        {
+          "type": "human-spot",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026) on the strictest review of 8 Oct: the note is unchanged; worked examples 0001-0003 withdrawn and replaced by 0004-0006 on their own resistor values (none of 16/16, 10/15 or 6/12, which items ask); q.0009's 32 re-valued to 1 (the e.c.f. add); q.0014(d) follows through from (a).",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -6488,6 +6892,249 @@
           "on": "2026-10-07T22:05:00Z"
         }
       ]
+    },
+    {
+      "id": "ver.we.science.p2.p2-calculating-resistance.0004",
+      "itemId": "we.science.p2.p2-calculating-resistance.0004",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) with validate-dry.mts (the build's own per-topic lints) before the pack was written; published by pipeline/build-content.mts --strict with zero problems.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "2.3.12-2.3.13, Foundation shape.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "R = R1 + R2 and 1/R = 1/R1 + 1/R2 are recalled (Higher); V = IR recalled and written first.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Find.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "[2]: the pair [1], the total [1].",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "22 ÷ 2 = 11; 22 + 11 = 33; twin 26 + 13 = 39.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Summer 2025 P2 Foundation Q4 (an equal pair in parallel, then in series).",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Written from scratch after reading the cited P2 and Unit 7 Physics papers, mark schemes and the 2023-2025 Chief Examiner's reports; scripts/qa/shingles.mjs --topic reports no breach for the topic.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; no 'Wrong'; feedback names the physics and the next step; KaTeX balanced on every line.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.science.p2.p2-calculating-resistance.0005",
+      "itemId": "we.science.p2.p2-calculating-resistance.0005",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) with validate-dry.mts (the build's own per-topic lints) before the pack was written; published by pipeline/build-content.mts --strict with zero problems.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "2.3.14, Higher.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "R = R1 + R2 and 1/R = 1/R1 + 1/R2 are recalled (Higher); V = IR recalled and written first.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Calculate.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "[3]: the equation and substitution [2], R [1].",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "1/20 + 1/30 = 5/60 = 0.083333; R = 60 ÷ 5 = 12 (second route: 20 x 30 ÷ 50 = 12); twin 36 x 45 ÷ 81 = 20.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Summer 2023 P2 Higher Q6 (an unequal pair: the reciprocal equation, then turned upside down).",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Written from scratch after reading the cited P2 and Unit 7 Physics papers, mark schemes and the 2023-2025 Chief Examiner's reports; scripts/qa/shingles.mjs --topic reports no breach for the topic.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; no 'Wrong'; feedback names the physics and the next step; KaTeX balanced on every line.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.science.p2.p2-calculating-resistance.0006",
+      "itemId": "we.science.p2.p2-calculating-resistance.0006",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) with validate-dry.mts (the build's own per-topic lints) before the pack was written; published by pipeline/build-content.mts --strict with zero problems.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "2.3.8, 2.3.14-2.3.15, Higher.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "R = R1 + R2 and 1/R = 1/R1 + 1/R2 are recalled (Higher); V = IR recalled and written first.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Calculate.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "[5]: the pair [2], the total [1], the current [2].",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "30 x 60 ÷ 90 = 20; 11 + 20 = 31; 6.2 ÷ 31 = 0.2; twin 24 x 12 ÷ 36 = 8, 17 + 8 = 25, 10 ÷ 25 = 0.4.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Summer 2023 P2 Higher Q6 (a network reduced pair first, then V = IR).",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Written from scratch after reading the cited P2 and Unit 7 Physics papers, mark schemes and the 2023-2025 Chief Examiner's reports; scripts/qa/shingles.mjs --topic reports no breach for the topic.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-calc-res.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; no 'Wrong'; feedback names the physics and the next step; KaTeX balanced on every line.",
+          "at": "2026-10-11T08:55:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
     }
   ]
 }

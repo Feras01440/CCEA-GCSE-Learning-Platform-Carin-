@@ -362,6 +362,139 @@
       ],
       "verification": "ver.we.science.p2.p2-electrical-power-energy-cost.0002",
       "version": 1
+    },
+    {
+      "id": "we.science.p2.p2-electrical-power-energy-cost.0003",
+      "topic": "science.p2.p2-electrical-power-energy-cost",
+      "specRefs": [
+        "DA-P2-2.3.20"
+      ],
+      "paper": {
+        "unit": "P2",
+        "calculator": true,
+        "resources": [
+          "Scientific calculator"
+        ]
+      },
+      "stem": "A 2 200 W heater is used for 2.5 hours. Find the units it uses, then the cost at 30p per unit. [5]",
+      "figure": {
+        "kind": "svg",
+        "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 400 250\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"p2powwe2\"><title id=\"p2powwe2\">A heater with its rating plate enlarged: 230 V, 2 200 W.</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M36 100 H206 V200 H36 Z\"/><path d=\"M52 112 L52 188\"/><path d=\"M70 112 L70 188\"/><path d=\"M88 112 L88 188\"/><path d=\"M106 112 L106 188\"/><path d=\"M124 112 L124 188\"/><path d=\"M52 200 L52 214\"/><path d=\"M190 200 L190 214\"/><path d=\"M30 214 L212 214\"/><path d=\"M146 170 H190 V196 H146 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><path d=\"M238 146 H388 V224 H238 Z\"/></g><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\"><path d=\"M190 183 L238 183\" stroke-dasharray=\"4 4\"/></g><g font-family=\"inherit\" font-size=\"15\" fill=\"currentColor\"><text x=\"313\" y=\"168\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"600\">HEATER</text><text x=\"313\" y=\"194\" text-anchor=\"middle\" font-size=\"15\">230 V ~ 50 Hz</text><text x=\"313\" y=\"220\" text-anchor=\"middle\" font-size=\"15\">2 200 W</text></g></svg>",
+        "alt": "A heater with its rating plate enlarged: 230 V, 2 200 W."
+      },
+      "steps": [
+        {
+          "n": 1,
+          "working": "2 200 W = 2.2 kW",
+          "decision": "Kilowatt-hours need kilowatts: divide the watts by 1000 first.",
+          "whyMenu": {
+            "options": [
+              "Because a kilowatt-hour is kilowatts × hours",
+              "Because the price is in pence",
+              "Because the heater is on for hours"
+            ],
+            "correct": 0,
+            "explain": "The unit on the bill is built from kilowatts and hours, so the power must be in kilowatts before multiplying. The pence come in only at the last step."
+          },
+          "earns": [
+            "P1"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 2.2,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.005
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "standardForm"
+            ],
+            "unit": "kW"
+          }
+        },
+        {
+          "n": 2,
+          "working": "Units = 2.2 × 2.5 = 5.5 kWh",
+          "decision": "Kilowatts × hours: the time is already in hours.",
+          "earns": [
+            "P2",
+            "P3"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 5.5,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.05
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "standardForm"
+            ]
+          }
+        },
+        {
+          "n": 3,
+          "working": "Cost = 5.5 × 30 = 165p",
+          "decision": "Units × price per unit, in pence.",
+          "earns": [
+            "P4",
+            "P5"
+          ],
+          "input": {
+            "kind": "numeric",
+            "value": 165,
+            "tolerance": {
+              "type": "absolute",
+              "value": 0.5
+            },
+            "unitRequired": false,
+            "acceptForms": [
+              "decimal",
+              "standardForm"
+            ],
+            "unit": "p"
+          }
+        }
+      ],
+      "finalAnswer": "5.5 units; 165p (£1.65)",
+      "twin": {
+        "stem": "A 450 W dehumidifier is used for 40 minutes. Calculate the cost at 36p per unit. [5]",
+        "answer": {
+          "kind": "numeric",
+          "value": 10.8,
+          "tolerance": {
+            "type": "absolute",
+            "value": 0.05
+          },
+          "unitRequired": false,
+          "acceptForms": [
+            "decimal",
+            "standardForm"
+          ],
+          "unit": "p"
+        }
+      },
+      "faded": [
+        {
+          "showSteps": 2,
+          "studentSupplies": [
+            3
+          ]
+        },
+        {
+          "showSteps": 1,
+          "studentSupplies": [
+            2,
+            3
+          ]
+        }
+      ],
+      "verification": "ver.we.science.p2.p2-electrical-power-energy-cost.0003",
+      "version": 1
     }
   ],
   "diagnostics": [
@@ -3985,6 +4118,14 @@
           "detail": "7 Oct v3 migration, in-place additions (they only add credit): follow-through relations (b) from (a(ii)), 156 - x * 26: the scheme's e.c.f.: the shower's 156p less her dryer units × 26p; each probed with a perturbed earlier value through markAnswer as QuestionRunner.tsx passes it.",
           "at": "2026-10-07T22:30:00Z",
           "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026): (b) follows through from a(ii) only; its scheme (156 and 62.4, e.c.f.) also carries a(i), which the engine cannot yet carry with a second part (ENGINE-PENDING EP-2). No change to the item.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -4635,8 +4776,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "we.science.p2.p2-electrical-power-energy-cost.0002",
+          "kind": "workedExample",
+          "replacedBy": "we.science.p2.p2-electrical-power-energy-cost.0003",
+          "reason": "Its twin (an 800 W slow cooker for 45 minutes at 26p, 15.6p) was practice question 0007, and its own 6 units and 156p were question 0009's shower; worked example 0003 works a 2 200 W heater for 2.5 hours at 30p, its twin a 450 W dehumidifier for 40 minutes at 36p.",
+          "on": "2026-10-11T08:58:00Z"
+        }
+      ]
     },
     {
       "id": "ver.dx.science.p2.p2-electrical-power-energy-cost.pre",
@@ -5180,6 +5330,95 @@
           "result": "pass",
           "detail": "The minutes left unconverted (Summer 2024 and 2025, both tiers); P = I × V not recalled, and a plate with a value missing started from power = energy ÷ time scoring nothing (Summer 2021 and 2024); the [5] cost built from the units with watts to kilowatts and minutes to hours (Summer 2021 and 2024); a unit of electricity is a kilowatt-hour, an energy. The schemes are paraphrased here, never quoted.",
           "at": "2026-10-07T22:30:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026): the note's figures' labels raised from 14 to 15 units (rendered and checked). No gate changed. Worked example 0002 withdrawn and replaced by 0003 (its own heater, time and price, and its own twin).",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.we.science.p2.p2-electrical-power-energy-cost.0003",
+      "itemId": "we.science.p2.p2-electrical-power-energy-cost.0003",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) with validate-dry.mts (the build's own per-topic lints) before the pack was written; published by pipeline/build-content.mts --strict with zero problems.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "2.3.20, the kilowatt-hour and the cost of electricity; both tiers.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Units = power in kW × time in hours, and cost = units × price, recalled and written first.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Find, Calculate.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Five marks: the Summer 2024 P2 Q6(b) shape, the units then the cost.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "2 200 W = 2.2 kW; 2.2 × 2.5 = 5.5 kWh; × 30 = 165p; twin 0.45 kW × 40/60 h = 0.3 kWh × 36 = 10.8p.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Step 1 answers the Summer 2024 P2 Q6(b) finding: the power not converted to kilowatts before the units.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Written from scratch after reading the cited P2 and Unit 7 Physics papers, mark schemes and the 2023-2025 Chief Examiner's reports; scripts/qa/shingles.mjs --topic reports no breach for the topic.",
+          "at": "2026-10-11T08:58:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-power.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; no 'Wrong'; feedback names the physics and the next step; KaTeX balanced on every line.",
+          "at": "2026-10-11T08:58:00Z",
           "by": "claude"
         }
       ],

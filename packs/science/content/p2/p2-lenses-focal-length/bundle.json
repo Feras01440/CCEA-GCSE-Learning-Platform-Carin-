@@ -2125,14 +2125,14 @@
               "misconception": "sci.practical.anomaly-included-in-average",
               "pattern": {
                 "kind": "numeric",
-                "value": 16,
+                "value": 16.05,
                 "tolerance": {
                   "type": "absolute",
-                  "value": 0.04
+                  "value": 0.06
                 }
               },
-              "feedback": "That is the mean of all four readings. The odd one out, 19.4 cm, has to be left out before the mean is taken.",
-              "marksTypicallyEarned": 1,
+              "feedback": "That is the mean of all four readings. The odd one out, 19.4 cm, has to be left out before the mean is taken: a mean with it in earns neither mark.",
+              "marksTypicallyEarned": 0,
               "source": "ccea-cer:science:2024-summer:U7BPhysH:Q2"
             },
             {
@@ -3087,8 +3087,8 @@
                   "value": 0.04
                 }
               },
-              "feedback": "That is the mean of all four readings, with 11.6 cm still in. An anomalous result is left out before the mean is taken.",
-              "marksTypicallyEarned": 1,
+              "feedback": "That is the mean of all four readings, with 11.6 cm still in. An anomalous result is left out before the mean is taken: a mean with it in earns neither mark.",
+              "marksTypicallyEarned": 0,
               "source": "ccea-cer:science:2024-summer:U7BPhysF:Q4"
             },
             {
@@ -3854,6 +3854,31 @@
       "source": "ccea-cer:science:2024-summer:U7BPhysH:Q2"
     },
     {
+      "id": "ftm.science.p2.p2-lenses-focal-length.0003",
+      "topic": "science.p2.p2-lenses-focal-length",
+      "specRefs": [
+        "DA-P2-2.2.8",
+        "DA-U7-analyse-3"
+      ],
+      "stem": "A student is working out the focal length of a lens from four lens-to-screen readings: 18.6 cm, 18.2 cm, 22.8 cm, 18.4 cm.",
+      "studentWorking": [
+        "The readings are 18.6 cm, 18.2 cm, 22.8 cm, 18.4 cm.",
+        "Mean = (18.6 + 18.2 + 22.8 + 18.4) ÷ 4 = 19.5 cm.",
+        "So the focal length of the lens is 19.5 cm."
+      ],
+      "mistakeLine": 2,
+      "misconception": "sci.practical.anomaly-included-in-average",
+      "whatWentWrong": "Line 2 averages all four readings. 22.8 cm is far outside the group the other three form, so it is anomalous and should be left out.",
+      "correction": [
+        "The readings are 18.6 cm, 18.2 cm, 22.8 cm, 18.4 cm, and 22.8 cm is anomalous.",
+        "Mean = (18.6 + 18.2 + 18.4) ÷ 3 = 18.4 cm.",
+        "So the focal length of the lens is 18.4 cm."
+      ],
+      "marksEarnedAsWritten": [],
+      "feedback": "Line 1 records the readings correctly, but a mean with the anomaly in earns neither mark. Spot the odd one out before you average: leaving 22.8 cm in moves the answer by more than a centimetre.",
+      "source": "ccea-cer:science:2024-summer:U7BPhysH:Q2"
+    },
+    {
       "id": "ftm.science.p2.p2-lenses-focal-length.0002",
       "topic": "science.p2.p2-lenses-focal-length",
       "specRefs": [
@@ -4547,6 +4572,14 @@
           "result": "pass",
           "detail": "v3 migration, 29 Sep 2026: part (b) states in noFollowThrough that its scheme allows no follow-through from (a) (the build's ruling 14). No mark any answer earns changed; the figure redrawn at the label floor.",
           "at": "2026-09-29T01:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026), in place (a common error re-valued to its scheme, STANDARDS rule 7): (b)'s mean of all four readings now earns 0, not 1, as the 2024 Unit 7 Booklet B Physics scheme pays its first mark only for the three readings that agree; its pattern now covers 16.0 to 16.1 (64.2 / 4 = 16.05, typed 16.05 or 16.1 to one decimal place, which the old 16 +/- 0.04 missed).",
+          "at": "2026-10-11T09:49:00Z",
           "by": "claude"
         }
       ],
@@ -5269,8 +5302,17 @@
           "by": "claude"
         }
       ],
-      "status": "verified",
-      "reports": []
+      "status": "withdrawn",
+      "reports": [],
+      "withdrawn": [
+        {
+          "id": "ftm.science.p2.p2-lenses-focal-length.0001",
+          "kind": "findTheMistake",
+          "replacedBy": "ftm.science.p2.p2-lenses-focal-length.0003",
+          "reason": "It used practice question 0006's four readings exactly, so its correction printed 0006(a)'s and (b)'s answers; its line 2 printed 16.0 for 64.2 / 4 = 16.05, a second error on the line she is told holds one; and it said the averaged-in mean earned a mark, which the 2024 Unit 7 Booklet B scheme does not pay. Find-the-mistake 0003 has its own readings.",
+          "on": "2026-10-11T09:49:00Z"
+        }
+      ]
     },
     {
       "id": "ver.rp.science.p2.p2-lenses-focal-length.01",
@@ -5710,6 +5752,14 @@
           "result": "pass",
           "detail": "The twists come from the papers: naming a lens from a picture (Summer 2024 Foundation Q2(c)), the definition as a sentence with gaps (Summer 2024 Unit 7 Booklet B Higher Q2(a), Summer 2026 Foundation Q3(a)(i)), and picking the method's apparatus (Summer 2025 Foundation Q3(a)).",
           "at": "2026-09-29T01:00:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026), presentation only: note[24]'s 'principal axis' label moved to the right-hand end of the axis, clear of 'optical centre' (the two had run into one another). No gate, See it or prose changed. Items: questions 0006(b) and 0017(c) re-valued in place (the averaged-in mean earns 0, the 2024 Unit 7 Booklet B scheme); find-the-mistake 0001 withdrawn and replaced by 0003 on its own readings.",
+          "at": "2026-10-11T09:49:00Z",
           "by": "claude"
         }
       ],
@@ -6214,6 +6264,14 @@
           "detail": "Summer 2025 P2 Foundation Q3(a); Summer 2024 Unit 7 Booklet B Foundation Q4(c): an anomaly left in the average.",
           "at": "2026-09-29T01:00:00Z",
           "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Fixer pass (11 Oct 2026), in place (a common error re-valued to its scheme, STANDARDS rule 7): (c)'s mean of all four readings (36.7 / 4 = 9.175, typed 9.2) now earns 0, not 1, as the 2024 Unit 7 Booklet B Physics Foundation Q4(c) scheme the error cites pays its first mark only for the three readings that agree.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
         }
       ],
       "status": "verified",
@@ -6644,6 +6702,87 @@
           "result": "pass",
           "detail": "A light recall card: the question 8 words, the answer 10; recallFit passes; its key words are in its own answer.",
           "at": "2026-09-29T01:00:00Z",
+          "by": "claude"
+        }
+      ],
+      "status": "verified",
+      "reports": []
+    },
+    {
+      "id": "ver.ftm.science.p2.p2-lenses-focal-length.0003",
+      "itemId": "ftm.science.p2.p2-lenses-focal-length.0003",
+      "version": 1,
+      "checks": [
+        {
+          "type": "schema",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Shape checked against src/lib/content/schema.ts (TopicBundle) with validate-dry.mts (the build's own per-topic lints) before the pack was written; published by pipeline/build-content.mts --strict with zero problems.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "scope-tier",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "2.2.8 and Unit 7 analysing (an anomalous reading left out of a mean); both tiers. Exactly one line is wrong (line 2).",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "formula-sheet",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "waived",
+          "detail": "No formula sheet in CCEA Double Award Science; any equation used is one the specification expects her to know and write first.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "command-words",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Calculate (the student's task); find and correct the mistake.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "tariff",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "[2] as the 2024 Unit 7 Booklet B Physics scheme pays the most reliable value: the three agreeing readings over three [1], the mean [1]; marks earned as written: none, as the scheme's first mark needs the anomaly left out.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "maths-numeric",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Readings 18.6, 18.2, 22.8, 18.4: all four 78.0 / 4 = 19.5 exactly (the flagged line, arithmetic right, method wrong); the three that agree 55.2 / 3 = 18.4 exactly. None of the four readings appears in another item, worked example, See it or gate of the topic.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "examiner-alignment",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Seeded from Summer 2024 Unit 7 Booklet B Physics, Higher Q2(c) and Foundation Q4(c) (the most reliable focal length from the three readings that agree) and the report on it (candidates who averaged the anomaly in lost both marks).",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "copy-shingle",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "Written from scratch after reading the cited P2 and Unit 7 Physics papers, mark schemes and the 2023-2025 Chief Examiner's reports; scripts/qa/shingles.mjs --topic reports no breach for the topic.",
+          "at": "2026-10-11T09:49:00Z",
+          "by": "claude"
+        },
+        {
+          "type": "style-lint",
+          "tool": "claude (fixer-p2, 11 Oct 2026: scratchpad/probes/fixer-p2/fix-lenses-focal.mjs; numbers computed in the editor and asserted; figures drawn from the same numbers and rendered to PNG and inspected; marking probed through markAnswer with the scheme, subject and follow-through, markGate, markFix and stepLineMatches)",
+          "result": "pass",
+          "detail": "British English; no exclamation marks; no 'Wrong'; feedback names the physics and the next step; KaTeX balanced on every line.",
+          "at": "2026-10-11T09:49:00Z",
           "by": "claude"
         }
       ],
