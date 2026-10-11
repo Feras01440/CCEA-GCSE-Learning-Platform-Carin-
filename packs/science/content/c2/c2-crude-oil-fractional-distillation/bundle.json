@@ -137,7 +137,7 @@
   },
   "verification": "ver.note.science.c2.c2-crude-oil-fractional-distillation",
   "version": 1,
-  "updated": "2026-09-20"
+  "updated": "2026-10-11"
  },
  "workedExamples": [
   {
@@ -1079,7 +1079,9 @@
         ],
         "marks": 1,
         "reject": [
-         "renewable"
+         "is renewable",
+         "a renewable",
+         "it's renewable"
         ]
        },
        {
@@ -1119,10 +1121,10 @@
      "workedSolution": "Crude oil is a finite resource, and it is the main source of hydrocarbons and the feedstock for the petrochemical industry.",
      "commonErrors": [
       {
-       "misconception": "sci.organic.fractional-distillation-process",
+       "misconception": "sci.organic.crude-oil-nature",
        "pattern": {
         "kind": "text",
-        "regex": "\\brenewable\\b(?![\\s\\S]*not renewable)|\\breplaced quickly\\b"
+        "regex": "(?<!non-)(?<!non )(?<!\\bnot )\\brenewable\\b|\\breplaced quickly\\b"
        },
        "feedback": "Crude oil takes millions of years to form and is being used far faster than that, so the word the specification uses is finite.",
        "marksTypicallyEarned": 1
@@ -2705,7 +2707,7 @@
      "workedSolution": "350 − 25 = 325 °C.",
      "commonErrors": [
       {
-       "misconception": "sci.quant.added-instead-of-multiplied",
+       "misconception": "sci.quant.change-subtracted-backwards",
        "pattern": {
         "kind": "numeric",
         "value": 375,
@@ -2879,7 +2881,7 @@
      "workedSolution": "Long saturated alkane molecules are broken apart into shorter ones that are worth more, and some of the products are unsaturated alkenes.",
      "commonErrors": [
       {
-       "misconception": "sci.organic.fractional-distillation-process",
+       "misconception": "sci.organic.cracking-meaning",
        "pattern": {
         "kind": "text",
         "regex": "\\bjoined together\\b|\\bjoin together\\b|\\bcombined into\\b|\\bmakes bigger molecules\\b"
@@ -3665,7 +3667,10 @@
    "misconception": "sci.organic.fraction-uses-confused",
    "whatWentWrong": "Line 2 gives kerosene the use of naphtha. Kerosene is the fuel for aircraft; naphtha is the fraction the chemical industry turns into chemicals and plastics. The other two lines are right.",
    "correction": [
-    "Kerosene is a fuel for aircraft."
+    "Kerosene is a fuel for aircraft.",
+    "Kerosene is used as aircraft fuel.",
+    "Kerosene is jet fuel.",
+    "Kerosene is a fuel for planes."
    ],
    "marksEarnedAsWritten": [
     "P1",
@@ -3952,6 +3957,14 @@
      "result": "pass",
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-c/routes.mjs.",
      "at": "2026-09-20T16:00:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "human-spot",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "fixer-c2 (11 Oct 2026), the strictest reviewer's minors of 8 Oct: the twists See it gains step 4 (a cracking answer marked against the four points, a different missing point from g14's), and g14's explanation points at it; the section's examiner callout loses the sentence its 2024 Foundation source does not hold.",
+     "at": "2026-10-11T09:13:17Z",
      "by": "claude"
     }
    ],
@@ -4629,6 +4642,14 @@
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-c/routes.mjs.",
      "at": "2026-09-20T16:00:00Z",
      "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "In place, credit only (11 Oct 2026, the strictest reviewer's first probe): the finite point's reject 'renewable' and the common error fired inside 'non-renewable' and 'not renewable', refusing the answers the point keys (probed: 'it is non-renewable' 0/2); the reject is now the wrong claim ('is renewable', 'a renewable') and the common error ignores 'non-' and 'not'. The common error is re-tagged sci.organic.crude-oil-nature (it is a crude-oil-nature slip).",
+     "at": "2026-10-11T09:13:17Z",
+     "by": "claude"
     }
    ],
    "status": "verified",
@@ -5124,6 +5145,14 @@
      "detail": "Marked through markAnswer / markGate / markFix exactly as the app calls them (scratchpad/probes/c2-abc/probe-crude.mts): the model answer, ten or more right phrasings and six or more wrong ones per text part, swaps, hedges and negations.",
      "at": "2026-10-07T22:45:00Z",
      "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Common error re-tagged in place (11 Oct 2026, strictest reviewer minor 1): 375 adds the two temperatures where the drop subtracts them; it is no added-instead-of-multiplied slip, and the registry's nearest id is the wrong operation on a change, sci.quant.change-subtracted-backwards (no registry id names adding for subtracting).",
+     "at": "2026-10-11T09:13:17Z",
+     "by": "claude"
     }
    ],
    "status": "verified",
@@ -5188,6 +5217,14 @@
      "result": "pass",
      "detail": "8 Oct 2026: the common error on part (a) no longer cites the Summer 2024 C2 Higher Q4 report, which names no wrong process for cracking; sci.organic.cracking-meaning is now an anticipated entry. Credit-only: nothing right or paid changed.",
      "at": "2026-10-08T04:44:56Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Common error re-tagged in place (11 Oct 2026, strictest reviewer minor 1): 'joined together' is a cracking-meaning slip, sci.organic.cracking-meaning.",
+     "at": "2026-10-11T09:13:17Z",
      "by": "claude"
     }
    ],
@@ -5530,6 +5567,14 @@
      "result": "pass",
      "detail": "Marked through markAnswer / markGate / markFix exactly as the app calls them (scratchpad/probes/c2-abc/probe-crude.mts): the model answer, ten or more right phrasings and six or more wrong ones per text part, swaps, hedges and negations.",
      "at": "2026-10-07T22:45:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Corrections widened in place (11 Oct 2026, the engine agent's GATE-2 G2-42): 'aircraft fuel', 'jet fuel' and 'fuel for planes' accepted beside 'a fuel for aircraft'; the mistake line and its misconception are unchanged.",
+     "at": "2026-10-11T09:19:28Z",
      "by": "claude"
     }
    ],

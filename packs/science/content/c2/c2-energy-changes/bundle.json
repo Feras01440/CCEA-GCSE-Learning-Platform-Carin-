@@ -156,7 +156,7 @@
   },
   "verification": "ver.note.science.c2.c2-energy-changes",
   "version": 1,
-  "updated": "2026-09-19"
+  "updated": "2026-10-11"
  },
  "workedExamples": [
   {
@@ -827,6 +827,210 @@
     "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 380 300\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"e3pfendoframe\"><title id=\"e3pfendoframe\">Axes of energy against progress of reaction, with one short flat line marked reactants near the bottom, for a profile still to be completed.</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M44 262 H374\"/><path d=\"M44 262 V22\"/></g><text x=\"24\" y=\"150\" font-size=\"14\" text-anchor=\"middle\" transform=\"rotate(-90 24 150)\" font-family=\"inherit\" fill=\"currentColor\">energy</text><text x=\"212\" y=\"290\" font-size=\"14\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">progress of reaction</text><path d=\"M54 222 H130\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\"/><text x=\"54\" y=\"244\" font-size=\"14\" font-family=\"inherit\" fill=\"currentColor\">reactants</text></svg>",
     "alt": "Axes of energy against progress of reaction, with one short flat line marked reactants near the bottom, for a profile still to be completed."
    }
+  },
+  {
+   "id": "we.science.c2.c2-energy-changes.04",
+   "topic": "science.c2.c2-energy-changes",
+   "specRefs": [
+    "DA-C2-2.8.4",
+    "DA-C2-2.8.5"
+   ],
+   "paper": {
+    "unit": "C2",
+    "calculator": true,
+    "resources": [
+     "Scientific calculator",
+     "Chemistry Data Leaflet including the Periodic Table"
+    ]
+   },
+   "stem": "Hydrogen reacts with fluorine: $\\ce{H2 + F2 -> 2HF}$. Use the bond energies in the table.\n(a) Calculate the energy taken in to break the bonds in the reactants. [1]\n(b) Calculate the energy given out when the bonds in the products are made. [1]\n(c) Calculate the energy change for the reaction and state whether it is exothermic or endothermic. [2]",
+   "figure": {
+    "kind": "svg-gen",
+    "generator": "table",
+    "data": {
+     "caption": "Bond energies for the reaction between hydrogen and fluorine.",
+     "columns": [
+      "Bond",
+      "Bond energy / kJ"
+     ],
+     "rows": [
+      [
+       "H–H",
+       "436"
+      ],
+      [
+       "F–F",
+       "158"
+      ],
+      [
+       "H–F",
+       "568"
+      ]
+     ]
+    }
+   },
+   "steps": [
+    {
+     "n": 1,
+     "working": "Bonds broken: one H–H and one F–F. 436 + 158 = 594 kJ.",
+     "decision": "Read the formulae, not the table: H₂ has one H–H bond and F₂ one F–F bond, so each energy is counted once here.",
+     "earns": [
+      "P1"
+     ],
+     "input": {
+      "kind": "numeric",
+      "value": 594,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     }
+    },
+    {
+     "n": 2,
+     "working": "Bonds made: two molecules of HF, each with one H–F bond. 2 × 568 = 1136 kJ.",
+     "decision": "The 2 in front of HF means two molecules, so the H–F energy is counted twice. Counting it once gives 568 kJ and the answer that follows is wrong.",
+     "earns": [
+      "P2"
+     ],
+     "whyMenu": {
+      "options": [
+       "Because the balancing number tells you how many molecules there are",
+       "Because H–Cl bonds are twice as strong as the others",
+       "Because there are two different elements in HCl"
+      ],
+      "correct": 0,
+      "explain": "The big number in front multiplies everything in that formula, bonds included."
+     },
+     "input": {
+      "kind": "numeric",
+      "value": 1136,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     }
+    },
+    {
+     "n": 3,
+     "working": "Energy change = bonds broken − bonds made = 594 − 1136 = -542 kJ.",
+     "decision": "Broken first, made second. Doing it the other way round gives 542 kJ, the right size with the wrong sign, which reverses the chemistry.",
+     "earns": [
+      "P3"
+     ],
+     "input": {
+      "kind": "numeric",
+      "value": -542,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     }
+    },
+    {
+     "n": 4,
+     "working": "The energy change is negative, so the reaction is exothermic.",
+     "decision": "Write the minus sign on the answer line. Summer 2023's report records candidates being reminded that the negative sign is needed for full credit.",
+     "earns": [
+      "P4"
+     ],
+     "input": {
+      "kind": "text",
+      "accepted": [
+       "The energy change is negative, so the reaction is exothermic."
+      ],
+      "keyWords": [
+       {
+        "any": [
+         "exothermic"
+        ],
+        "marks": 1,
+        "reject": [
+         "endothermic"
+        ]
+       }
+      ],
+      "listingRule": false
+     }
+    }
+   ],
+   "finalAnswer": "(a) 594 kJ. (b) 1136 kJ. (c) 594 − 1136 = -542 kJ, so the reaction is exothermic.",
+   "twin": {
+    "stem": "Chlorine reacts with fluorine: $\\ce{Cl2 + F2 -> 2ClF}$. Bond energies: Cl–Cl 242 kJ, F–F 158 kJ and Cl–F 253 kJ. Calculate the energy change for the reaction. Give your answer in kJ.",
+    "answer": {
+     "kind": "numeric",
+     "value": -106,
+     "tolerance": {
+      "type": "absolute",
+      "value": 0.5
+     },
+     "unit": "kJ",
+     "unitRequired": false,
+     "acceptForms": [
+      "decimal"
+     ]
+    },
+    "figure": {
+     "kind": "svg-gen",
+     "generator": "table",
+     "data": {
+      "caption": "Bond energies for the reaction between chlorine and fluorine.",
+      "columns": [
+       "Bond",
+       "Bond energy / kJ"
+      ],
+      "rows": [
+       [
+        "Cl–Cl",
+        "242"
+       ],
+       [
+        "F–F",
+        "158"
+       ],
+       [
+        "Cl–F",
+        "253"
+       ]
+      ]
+     }
+    }
+   },
+   "faded": [
+    {
+     "showSteps": 2,
+     "studentSupplies": [
+      3,
+      4
+     ]
+    },
+    {
+     "showSteps": 0,
+     "studentSupplies": [
+      1,
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   "verification": "ver.we.science.c2.c2-energy-changes.04",
+   "version": 1
   }
  ],
  "diagnostics": [
@@ -2340,8 +2544,8 @@
          "value": 0.5
         }
        },
-       "feedback": "That is the forward reaction's answer copied over. Reversing a reaction keeps the size of the energy change and flips its sign.",
-       "marksTypicallyEarned": 1
+       "feedback": "That is the forward reaction's answer copied over, which shows neither the new bonds broken (862) nor the subtraction. Reversing a reaction swaps the bonds broken and the bonds made: 862 − 678 = +184 kJ, the same size with the sign flipped.",
+       "marksTypicallyEarned": 0
       }
      ],
      "requiresWorking": true,
@@ -4064,6 +4268,554 @@
    ],
    "verification": "ver.q.science.c2.c2-energy-changes.0016",
    "version": 1
+  },
+  {
+   "id": "q.science.c2.c2-energy-changes.0017",
+   "topic": "science.c2.c2-energy-changes",
+   "specRefs": [
+    "DA-C2-2.8.5"
+   ],
+   "paper": {
+    "unit": "C2",
+    "calculator": true,
+    "resources": [
+     "Scientific calculator",
+     "Chemistry Data Leaflet including the Periodic Table"
+    ]
+   },
+   "tier": "H",
+   "style": "practice",
+   "difficulty": 3,
+   "ao": [
+    "AO2"
+   ],
+   "commandWords": [
+    "Calculate"
+   ],
+   "emphasis": [
+    "bond energies"
+   ],
+   "context": {
+    "setting": "Nitrogen and oxygen in a hot engine, broken down into two totals",
+    "original": true
+   },
+   "figures": [
+    {
+     "kind": "svg-gen",
+     "generator": "table",
+     "data": {
+      "caption": "Bond energies for the reaction between nitrogen and oxygen.",
+      "columns": [
+       "Bond",
+       "Bond energy / kJ"
+      ],
+      "rows": [
+       [
+        "N≡N",
+        "945"
+       ],
+       [
+        "O=O",
+        "498"
+       ],
+       [
+        "N=O",
+        "607"
+       ]
+      ]
+     }
+    }
+   ],
+   "parts": [
+    {
+     "id": "a",
+     "stem": "In a hot car engine, nitrogen and oxygen from the air react: N₂ + O₂ → 2NO.\nUse the bond energies in the table to calculate the energy taken in to break the bonds in the reactants.",
+     "marks": 1,
+     "answer": {
+      "kind": "numeric",
+      "value": 1443,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "945 + 498 = 1443 (kJ)"
+      }
+     ],
+     "hints": [
+      "One N≡N bond in a nitrogen molecule and one O=O bond in an oxygen molecule."
+     ],
+     "workedSolution": "Bonds broken: 945 + 498 = 1443 kJ.",
+     "commonErrors": [],
+     "requiresWorking": true,
+     "solutionProgram": "bondsBroken = 945 + 498"
+    },
+    {
+     "id": "b",
+     "stem": "Calculate the energy given out when the bonds in the products are made.",
+     "marks": 1,
+     "answer": {
+      "kind": "numeric",
+      "value": 1214,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "2 × 607 = 1214 (kJ)"
+      }
+     ],
+     "hints": [
+      "How many molecules of NO are made?"
+     ],
+     "workedSolution": "Bonds made: two N=O bonds, one in each molecule, so 2 × 607 = 1214 kJ.",
+     "commonErrors": [
+      {
+       "misconception": "sci.energy.bond-counted-once",
+       "pattern": {
+        "kind": "numeric",
+        "value": 607,
+        "tolerance": {
+         "type": "absolute",
+         "value": 0.5
+        }
+       },
+       "feedback": "That counts the N=O bond once. Two molecules of NO are formed, so its bond energy is counted twice.",
+       "marksTypicallyEarned": 0
+      }
+     ],
+     "requiresWorking": true,
+     "solutionProgram": "bondsMade = 2 * 607"
+    },
+    {
+     "id": "c",
+     "stem": "Calculate the energy change for the reaction. Give your answer in kJ.",
+     "marks": 2,
+     "answer": {
+      "kind": "numeric",
+      "value": 229,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "1443 − 1214",
+       "ft": true
+      },
+      {
+       "id": "P2",
+       "code": "P",
+       "marks": 1,
+       "for": "+229 (kJ): positive, the sign stated or shown"
+      }
+     ],
+     "hints": [
+      "Bonds broken first, bonds made second.",
+      "The sign is part of the answer."
+     ],
+     "workedSolution": "Energy change = bonds broken − bonds made = 1443 − 1214 = +229 kJ.",
+     "commonErrors": [
+      {
+       "misconception": "sci.energy.bonds-made-minus-broken",
+       "pattern": {
+        "kind": "numeric",
+        "value": -229,
+        "tolerance": {
+         "type": "absolute",
+         "value": 0.5
+        }
+       },
+       "feedback": "That is bonds made minus bonds broken, 1214 − 1443, which turns the sign round. Broken first, made second: 1443 − 1214 = +229 kJ.",
+       "marksTypicallyEarned": 0,
+       "source": "ccea-cer:science:2024-summer:C2H:Q6"
+      }
+     ],
+     "requiresWorking": true,
+     "followThrough": {
+      "fromPart": "b",
+      "rule": "use-candidate-value",
+      "relation": "1443 - x"
+     },
+     "solutionProgram": "energyChange = 1443 - 1214"
+    },
+    {
+     "id": "d",
+     "stem": "State, with a reason, whether the reaction is exothermic or endothermic.",
+     "marks": 1,
+     "answer": {
+      "kind": "text",
+      "accepted": [
+       "endothermic, because the energy change is positive",
+       "endothermic: more energy was taken in than given out"
+      ],
+      "keyWords": [
+       {
+        "any": [
+         "endothermic"
+        ],
+        "marks": 1,
+        "reject": [
+         "exothermic"
+        ]
+       }
+      ],
+      "listingRule": false
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "endothermic, because the energy change is positive (more energy in than out)",
+       "reject": [
+        "exothermic"
+       ]
+      }
+     ],
+     "hints": [
+      "Look at the sign of your answer to part (c)."
+     ],
+     "workedSolution": "Endothermic, because the energy change is positive: more energy was taken in breaking the bonds than was given out making them.",
+     "commonErrors": [
+      {
+       "misconception": "sci.energy.negative-sign-omitted",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\bexothermic\\b"
+       },
+       "feedback": "A positive energy change means more energy went in than came out, so heat is taken in: endothermic.",
+       "marksTypicallyEarned": 0
+      }
+     ],
+     "requiresWorking": false,
+     "followThrough": {
+      "fromPart": "c",
+      "rule": "use-candidate-value"
+     }
+    }
+   ],
+   "totalMarks": 5,
+   "timeAllowanceSec": 282,
+   "skeleton": "(a)calculate1|(b)calculate1|(c)calculate2|(d)state1",
+   "examinerSources": [],
+   "verification": "ver.q.science.c2.c2-energy-changes.0017",
+   "version": 1
+  },
+  {
+   "id": "q.science.c2.c2-energy-changes.0018",
+   "topic": "science.c2.c2-energy-changes",
+   "specRefs": [
+    "DA-C2-2.8.1",
+    "DA-C2-2.8.2",
+    "DA-C2-2.8.3",
+    "DA-C2-2.8.5"
+   ],
+   "paper": {
+    "unit": "C2",
+    "calculator": true,
+    "resources": [
+     "Scientific calculator",
+     "Chemistry Data Leaflet including the Periodic Table"
+    ]
+   },
+   "tier": "H",
+   "style": "exam-style",
+   "difficulty": 4,
+   "ao": [
+    "AO1",
+    "AO2"
+   ],
+   "commandWords": [
+    "State",
+    "Calculate",
+    "Label"
+   ],
+   "emphasis": [
+    "profile",
+    "bond energies",
+    "sign"
+   ],
+   "context": {
+    "setting": "A full energetics question in the shape of C2 Question 6",
+    "original": true
+   },
+   "figures": [
+    {
+     "kind": "svg",
+     "src": "data:image/svg+xml;utf8,<svg viewBox=\"0 0 700 400\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-labelledby=\"e3wide\"><title id=\"e3wide\">A reaction profile for an endothermic reaction: the product level above the reactant level. Two arrows are marked: (i) from the reactant level up to the top of the hump, and (ii) from the reactant level up to the product level.</title><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\"><path d=\"M70 330 H670\"/><path d=\"M70 330 V60\"/></g><path d=\"M96 268 H192 C246 268 252 72 368 72 C484 72 490 150 544 150 H640\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\"/><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-dasharray=\"6 6\"><path d=\"M96 268 H498\"/><path d=\"M640 150 H498\"/><path d=\"M268 72 H368\"/></g><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\"><path d=\"M278 268 V84\"/><path d=\"M488 268 V162\"/></g><path d=\"M271 84 L278 72 L285 84 z\" fill=\"currentColor\"/><path d=\"M481 162 L488 150 L495 162 z\" fill=\"currentColor\"/><text x=\"288\" y=\"208\" font-size=\"26\" font-weight=\"700\" font-family=\"inherit\" fill=\"currentColor\">(i)</text><text x=\"478\" y=\"222\" font-size=\"26\" text-anchor=\"end\" font-weight=\"700\" font-family=\"inherit\" fill=\"currentColor\">(ii)</text><text x=\"76\" y=\"302\" font-size=\"25\" font-family=\"inherit\" fill=\"currentColor\">reactants</text><text x=\"524\" y=\"136\" font-size=\"25\" font-family=\"inherit\" fill=\"currentColor\">products</text><text x=\"368\" y=\"380\" font-size=\"25\" text-anchor=\"middle\" font-family=\"inherit\" fill=\"currentColor\">progress of reaction</text><text x=\"44\" y=\"200\" font-size=\"25\" text-anchor=\"middle\" transform=\"rotate(-90 44 200)\" font-family=\"inherit\" fill=\"currentColor\">energy</text></svg>",
+     "alt": "An energy-against-progress graph for an endothermic reaction, with the product level above the reactant level, and two unnamed arrows on it: one from the reactant level to the top of the hump marked (i), and one between the two levels marked (ii)."
+    }
+   ],
+   "parts": [
+    {
+     "id": "a",
+     "stem": "The reaction profile shown is for an endothermic reaction.\nState how the profile shows that the reaction is endothermic.",
+     "marks": 1,
+     "answer": {
+      "kind": "text",
+      "accepted": [
+       "the products are above the reactants",
+       "the product level is higher than the reactant level"
+      ],
+      "keyWords": [
+       {
+        "any": [
+         "products are above the reactants",
+         "products are higher",
+         "product level is higher",
+         "products above",
+         "product level is above",
+         "products are at a higher energy level",
+         "products end up at a higher energy level",
+         "products end up above",
+         "products finish above",
+         "products finish higher",
+         "products have more energy",
+         "products are higher than the reactants",
+         "products have a higher energy",
+         "products have higher energy",
+         "product energy is higher",
+         "energy of the products is higher",
+         "energy of the products is greater",
+         "energy of products is higher",
+         "energy of products is greater",
+         "products are at a higher level",
+         "product line is above",
+         "product line is higher",
+         "products higher than",
+         "products end higher",
+         "products end up higher",
+         "reactants are lower than the products",
+         "reactants are below the products",
+         "reactants have less energy",
+         "reactants have lower energy",
+         "reactant level is lower than the product",
+         "reactant level is below the product",
+         "reactant line is below",
+         "reactant line is lower",
+         "energy of the reactants is lower",
+         "energy of the reactants is less"
+        ],
+        "marks": 1,
+        "reject": [
+         "products are below",
+         "products are lower",
+         "reactants are higher",
+         "reactants are above",
+         "reactant level is higher",
+         "reactants have more energy",
+         "products have less energy",
+         "products have lower energy",
+         "energy of the products is lower",
+         "energy of the products is less"
+        ]
+       }
+      ],
+      "listingRule": false
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "the products are at a higher energy level than the reactants",
+       "reject": [
+        "the products are lower"
+       ]
+      }
+     ],
+     "hints": [
+      "Compare the two flat levels, not the hump."
+     ],
+     "workedSolution": "The products are above the reactants on the diagram, so the chemicals have gained energy: the reaction has taken heat in.",
+     "commonErrors": [
+      {
+       "misconception": "sci.energy.profile-product-level-wrong",
+       "pattern": {
+        "kind": "text",
+        "regex": "\\bproducts are below\\b|\\bproducts are lower\\b|\\bproduct level is lower\\b"
+       },
+       "feedback": "That describes the exothermic profile. An endothermic reaction finishes at a higher level than it started.",
+       "marksTypicallyEarned": 0,
+       "source": "ccea-cer:science:2024-summer:C2H:Q6"
+      }
+     ],
+     "requiresWorking": false
+    },
+    {
+     "id": "b",
+     "stem": "Two arrows are marked on the profile. Choose the correct label for each.",
+     "marks": 2,
+     "answer": {
+      "kind": "label",
+      "targets": [
+       {
+        "id": "i",
+        "accepted": [
+         "activation energy"
+        ],
+        "position": [
+         302,
+         200
+        ],
+        "direction": "up"
+       },
+       {
+        "id": "ii",
+        "accepted": [
+         "energy change"
+        ],
+        "position": [
+         470,
+         210
+        ],
+        "direction": "up"
+       }
+      ],
+      "bank": [
+       "activation energy",
+       "energy change",
+       "reactants",
+       "products"
+      ]
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "(i) activation energy: reactant level to the top of the hump"
+      },
+      {
+       "id": "P2",
+       "code": "P",
+       "marks": 1,
+       "for": "(ii) energy change: between the reactant level and the product level"
+      }
+     ],
+     "hints": [
+      "One measures a climb, the other a gap."
+     ],
+     "workedSolution": "(i) is the activation energy and (ii) is the energy change.",
+     "commonErrors": [],
+     "requiresWorking": false
+    },
+    {
+     "id": "c",
+     "stem": "A different reaction, 2HBr + Cl₂ → 2HCl + Br₂, has bond energies H–Br 366 kJ, Cl–Cl 242 kJ, H–Cl 431 kJ and Br–Br 193 kJ.\nCalculate its energy change, in kJ. Show your working.",
+     "marks": 3,
+     "answer": {
+      "kind": "numeric",
+      "value": -81,
+      "tolerance": {
+       "type": "absolute",
+       "value": 0.5
+      },
+      "unit": "kJ",
+      "unitRequired": false,
+      "acceptForms": [
+       "decimal"
+      ]
+     },
+     "scheme": [
+      {
+       "id": "P1",
+       "code": "P",
+       "marks": 1,
+       "for": "energy to break bonds = 974"
+      },
+      {
+       "id": "P2",
+       "code": "P",
+       "marks": 1,
+       "for": "energy released forming bonds = 1055"
+      },
+      {
+       "id": "P3",
+       "code": "P",
+       "marks": 1,
+       "for": "974 − 1055 = -81, negative sign included",
+       "ft": true
+      }
+     ],
+     "hints": [
+      "Two totals, then one subtraction.",
+      "Two molecules of HBr are broken and two of HCl are made."
+     ],
+     "workedSolution": "Bonds broken: 2 × 366 + 242 = 974 kJ. Bonds made: 2 × 431 + 193 = 1055 kJ. Energy change = 974 − 1055 = -81 kJ.",
+     "commonErrors": [
+      {
+       "misconception": "sci.energy.bonds-made-minus-broken",
+       "pattern": {
+        "kind": "numeric",
+        "value": 81,
+        "tolerance": {
+         "type": "absolute",
+         "value": 0.5
+        }
+       },
+       "feedback": "Both totals are right, but that is bonds made minus bonds broken, so the sign has turned round. Broken first, made second, and keep the minus sign.",
+       "marksTypicallyEarned": 2,
+       "source": "ccea-cer:science:2024-summer:C2H:Q6"
+      },
+      {
+       "misconception": "sci.energy.bond-counted-once",
+       "pattern": {
+        "kind": "numeric",
+        "value": -16,
+        "tolerance": {
+         "type": "absolute",
+         "value": 0.5
+        }
+       },
+       "feedback": "That counts each bond once: 608 − 624. The 2 in front of HBr and of HCl means two molecules of each, so their bonds count twice: 974 − 1055 = -81 kJ. The subtraction itself is carried forward.",
+       "marksTypicallyEarned": 1,
+       "source": "ccea-cer:science:2024-summer:C2H:Q6"
+      }
+     ],
+     "requiresWorking": true,
+     "solutionProgram": "energyChange = (2 * 366 + 242) - (2 * 431 + 193)"
+    }
+   ],
+   "totalMarks": 6,
+   "timeAllowanceSec": 338,
+   "skeleton": "(a)state1|(b)label2|(c)calculate3",
+   "examinerSources": [
+    "ccea-cer:science:2024-summer:C2H:Q6",
+    "ccea-cer:science:2023-summer:C2H:Q8"
+   ],
+   "verification": "ver.q.science.c2.c2-energy-changes.0018",
+   "version": 1
   }
  ],
  "findTheMistake": [
@@ -4116,6 +4868,31 @@
     "P3"
    ],
    "feedback": "Two of the three marks: bonds broken is right, and her subtraction is carried through correctly from her own total (error carried forward). Count the bonds in one molecule, then multiply by the big number in front. The Summer 2024 report names miscalculated product totals as a common error on this question.",
+   "source": "ccea-cer:science:2024-summer:C2H:Q6"
+  },
+  {
+   "id": "ftm.science.c2.c2-energy-changes.03",
+   "topic": "science.c2.c2-energy-changes",
+   "specRefs": [
+    "DA-C2-2.8.5"
+   ],
+   "stem": "Caoimhe is asked: 'Use the bond energies I–I 151, Cl–Cl 242 and I–Cl 211 kJ to find the energy change for I₂ + Cl₂ → 2ICl, and say whether the reaction is exothermic or endothermic. [3]'\nHer working:",
+   "studentWorking": [
+    "Bonds broken = 151 + 242 = 393 kJ",
+    "Bonds made = 2 × 211 = 422 kJ",
+    "Energy change = 422 − 393 = 29 kJ, so the reaction is endothermic"
+   ],
+   "mistakeLine": 3,
+   "misconception": "sci.energy.bonds-made-minus-broken",
+   "whatWentWrong": "Both totals are right. The subtraction is the wrong way round: the rule is bonds broken minus bonds made. Done the other way, the size is right and the sign is not, and the sign decides exothermic from endothermic, so the conclusion flips too.",
+   "correction": [
+    "Energy change = 393 − 422 = -29 kJ, so the reaction is exothermic"
+   ],
+   "marksEarnedAsWritten": [
+    "P1",
+    "P2"
+   ],
+   "feedback": "Two of the three marks: both totals stand. Write the rule before you subtract (energy change = bonds broken − bonds made) and the sign follows. The 2024 report records reversed and missing signs on this kind of question.",
    "source": "ccea-cer:science:2024-summer:C2H:Q6"
   }
  ],
@@ -4304,7 +5081,7 @@
     "q.science.c2.c2-energy-changes.0013",
     "rp.science.c2.c2-energy-changes.09",
     "q.science.c2.c2-energy-changes.0004",
-    "q.science.c2.c2-energy-changes.0015"
+    "q.science.c2.c2-energy-changes.0018"
    ],
    "showTopicLabels": false,
    "version": 1
@@ -4322,8 +5099,8 @@
     "rp.science.c2.c2-energy-changes.05",
     "rp.science.c2.c2-energy-changes.06",
     "q.science.c2.c2-energy-changes.0014",
-    "q.science.c2.c2-energy-changes.0006",
-    "ftm.science.c2.c2-energy-changes.01",
+    "q.science.c2.c2-energy-changes.0017",
+    "ftm.science.c2.c2-energy-changes.03",
     "q.science.c2.c2-energy-changes.0007",
     "q.science.c2.c2-energy-changes.0008",
     "q.science.c2.c2-energy-changes.0010",
@@ -4396,6 +5173,14 @@
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-b/routes.mjs.",
      "at": "2026-09-19T23:30:00Z",
      "by": "claude"
+    },
+    {
+     "type": "human-spot",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "fixer-c2 (11 Oct 2026), the strictest reviewer's findings of 8 Oct and the same-case lint: g3 withdrawn for g13 (a student's drawn profile, one lost mark found, so nothing is copied from See it steps 3 and 4); g12 withdrawn for g14 (twin on new numbers, the explanation's typo mended). Gates marked through markGate and twinGate (scratchpad/probes/fixer-c2/probes/probe-energy.mts).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
     }
    ],
    "status": "verified",
@@ -4442,6 +5227,20 @@
      "replacedBy": null,
      "reason": "It asked for +184 kJ, the reverse-reaction value that question 0008 and worked example 01's twin ask; the reverse reaction is now an exam-twist line, practised by question 0008.",
      "on": "2026-09-27T17:30:00Z"
+    },
+    {
+     "id": "g3",
+     "kind": "gate",
+     "replacedBy": "g13",
+     "reason": "It asked where the activation energy arrow starts and ends, and its twin the energy change arrow, the lines See it steps 3 and 4 had just drawn, so both could be copied; g13 asks her to find the one lost mark on a student's drawn profile, its twin on an endothermic one.",
+     "on": "2026-10-11T08:21:03Z"
+    },
+    {
+     "id": "g12",
+     "kind": "gate",
+     "replacedBy": "g14",
+     "reason": "Its twin used the See it's own 300 kJ and 180 kJ (lesson-v2 same-case) and its explanation lost a space ('See it:340'); g14 is the same check, its twin on new numbers.",
+     "on": "2026-10-11T08:21:03Z"
     }
    ]
   },
@@ -4497,10 +5296,35 @@
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-b/routes.mjs.",
      "at": "2026-09-19T23:30:00Z",
      "by": "claude"
+    },
+    {
+     "type": "human-spot",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "fail",
+     "detail": "It worked hydrogen and chlorine (678, 862, −184 kJ), the case practice 0006, exam-style 0015(c) and find-the-mistake 01 then asked, and its twin, the reverse reaction, was practice 0008; we.04 works hydrogen and fluorine, with a twin on chlorine and fluorine.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
     }
    ],
-   "status": "verified",
-   "reports": []
+   "status": "withdrawn",
+   "reports": [
+    {
+     "at": "2026-10-11T08:21:03Z",
+     "by": "developer",
+     "text": "It worked hydrogen and chlorine (678, 862, −184 kJ), the case practice 0006, exam-style 0015(c) and find-the-mistake 01 then asked, and its twin, the reverse reaction, was practice 0008; we.04 works hydrogen and fluorine, with a twin on chlorine and fluorine.",
+     "resolvedAt": "2026-10-11T08:21:03Z",
+     "resolution": "Withdrawn; replaced by we.science.c2.c2-energy-changes.04."
+    }
+   ],
+   "withdrawn": [
+    {
+     "id": "we.science.c2.c2-energy-changes.01",
+     "kind": "workedExample",
+     "replacedBy": "we.science.c2.c2-energy-changes.04",
+     "reason": "It worked hydrogen and chlorine (678, 862, −184 kJ), the case practice 0006, exam-style 0015(c) and find-the-mistake 01 then asked, and its twin, the reverse reaction, was practice 0008; we.04 works hydrogen and fluorine, with a twin on chlorine and fluorine.",
+     "on": "2026-10-11T08:21:03Z"
+    }
+   ]
   },
   {
    "id": "ver.we.science.c2.c2-energy-changes.02",
@@ -4694,10 +5518,35 @@
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-b/routes.mjs.",
      "at": "2026-09-19T23:30:00Z",
      "by": "claude"
+    },
+    {
+     "type": "human-spot",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "fail",
+     "detail": "It set hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked; ftm.03 sets the same reversed subtraction for iodine and chlorine.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
     }
    ],
-   "status": "verified",
-   "reports": []
+   "status": "withdrawn",
+   "reports": [
+    {
+     "at": "2026-10-11T08:21:03Z",
+     "by": "developer",
+     "text": "It set hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked; ftm.03 sets the same reversed subtraction for iodine and chlorine.",
+     "resolvedAt": "2026-10-11T08:21:03Z",
+     "resolution": "Withdrawn; replaced by ftm.science.c2.c2-energy-changes.03."
+    }
+   ],
+   "withdrawn": [
+    {
+     "id": "ftm.science.c2.c2-energy-changes.01",
+     "kind": "findTheMistake",
+     "replacedBy": "ftm.science.c2.c2-energy-changes.03",
+     "reason": "It set hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked; ftm.03 sets the same reversed subtraction for iodine and chlorine.",
+     "on": "2026-10-11T08:21:03Z"
+    }
+   ]
   },
   {
    "id": "ver.rp.science.c2.c2-energy-changes.01",
@@ -5282,10 +6131,35 @@
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-b/routes.mjs.",
      "at": "2026-09-19T23:30:00Z",
      "by": "claude"
+    },
+    {
+     "type": "human-spot",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "fail",
+     "detail": "It asked hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked, and its (c) valued the 247 route at 0 although its follow-through from (b) pays it; question 0017 asks the same chain for nitrogen and oxygen, an endothermic total, with the follow-through and no common error on a follow-through value.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
     }
    ],
-   "status": "verified",
-   "reports": []
+   "status": "withdrawn",
+   "reports": [
+    {
+     "at": "2026-10-11T08:21:03Z",
+     "by": "developer",
+     "text": "It asked hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked, and its (c) valued the 247 route at 0 although its follow-through from (b) pays it; question 0017 asks the same chain for nitrogen and oxygen, an endothermic total, with the follow-through and no common error on a follow-through value.",
+     "resolvedAt": "2026-10-11T08:21:03Z",
+     "resolution": "Withdrawn; replaced by q.science.c2.c2-energy-changes.0017."
+    }
+   ],
+   "withdrawn": [
+    {
+     "id": "q.science.c2.c2-energy-changes.0006",
+     "kind": "question",
+     "replacedBy": "q.science.c2.c2-energy-changes.0017",
+     "reason": "It asked hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked, and its (c) valued the 247 route at 0 although its follow-through from (b) pays it; question 0017 asks the same chain for nitrogen and oxygen, an endothermic total, with the follow-through and no common error on a follow-through value.",
+     "on": "2026-10-11T08:21:03Z"
+    }
+   ]
   },
   {
    "id": "ver.q.science.c2.c2-energy-changes.0007",
@@ -5427,6 +6301,14 @@
      "result": "pass",
      "detail": "KaTeX with mhchem compiles, British English, calm second-person feedback, no exclamation marks and no use of the word 'Wrong'; every printed number is the rounded form of a value computed in scratchpad/c2-batch-b/routes.mjs.",
      "at": "2026-09-19T23:30:00Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Re-valued in place, credit only (11 Oct 2026, strictest reviewer major 3): the copied −184 shows neither P1 (bonds broken 862, bonds made 678, 862 − 678) nor P2 (+184), so it earns 0 of 2.",
+     "at": "2026-10-11T08:21:03Z",
      "by": "claude"
     }
    ],
@@ -5812,10 +6694,35 @@
      "detail": "Marked through markAnswer / markGate / markFix exactly as the app calls them (FORK_SP/v3-c2/probes/probe-energy.mts): the model answer, at least ten natural right phrasings and six wrong ones per text part, the question typed back, hedges and negations.",
      "at": "2026-09-27T17:30:00Z",
      "by": "claude"
+    },
+    {
+     "type": "human-spot",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "fail",
+     "detail": "Its part (c) asked hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked; question 0018 keeps parts (a) and (b) and asks (c) for chlorine and hydrogen bromide.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
     }
    ],
-   "status": "verified",
-   "reports": []
+   "status": "withdrawn",
+   "reports": [
+    {
+     "at": "2026-10-11T08:21:03Z",
+     "by": "developer",
+     "text": "Its part (c) asked hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked; question 0018 keeps parts (a) and (b) and asks (c) for chlorine and hydrogen bromide.",
+     "resolvedAt": "2026-10-11T08:21:03Z",
+     "resolution": "Withdrawn; replaced by q.science.c2.c2-energy-changes.0018."
+    }
+   ],
+   "withdrawn": [
+    {
+     "id": "q.science.c2.c2-energy-changes.0015",
+     "kind": "question",
+     "replacedBy": "q.science.c2.c2-energy-changes.0018",
+     "reason": "Its part (c) asked hydrogen and chlorine (678, 862, −184 kJ), the case worked example 01 had just worked; question 0018 keeps parts (a) and (b) and asks (c) for chlorine and hydrogen bromide.",
+     "on": "2026-10-11T08:21:03Z"
+    }
+   ]
   },
   {
    "id": "ver.q.science.c2.c2-energy-changes.0016",
@@ -6096,6 +7003,242 @@
      "result": "pass",
      "detail": "Marked through markAnswer / markGate / markFix exactly as the app calls them (FORK_SP/v3-c2/probes/probe-energy.mts): the model answer, at least ten natural right phrasings and six wrong ones per text part, the question typed back, hedges and negations.",
      "at": "2026-09-27T17:30:00Z",
+     "by": "claude"
+    }
+   ],
+   "status": "verified",
+   "reports": []
+  },
+  {
+   "id": "ver.we.science.c2.c2-energy-changes.04",
+   "itemId": "we.science.c2.c2-energy-changes.04",
+   "version": 1,
+   "checks": [
+    {
+     "type": "schema",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Shape checked by the fixer-c2 stage check (the build's per-bundle checks), zero lines.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "scope-tier",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Outcomes 2.8.4 and 2.8.5 (H): bonds broken take energy in, bonds made give energy out; energy change = bonds broken − bonds made, with its sign.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "maths-numeric",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Recomputed in scratchpad/probes/fixer-c2/edit-energy.mjs: H–H 436 + F–F 158 = 594; 2 × H–F 568 = 1136; 594 − 1136 = -542 kJ. Twin: 242 + 158 = 400; 2 × 253 = 506; -106 kJ. Bond energies are standard mean values.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Exercises the 2024 C2 Higher Q6 findings (a bond counted once instead of once per molecule; bonds made minus bonds broken) and the 2023 C2 Higher Q8 reminder that the negative sign is needed.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "copy-shingle",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Every sentence written for this example; hydrogen and fluorine is set in no CCEA paper of the corpus.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "British English; second person; no exclamation marks; every printed number computed in the editor.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    }
+   ],
+   "status": "verified",
+   "reports": []
+  },
+  {
+   "id": "ver.q.science.c2.c2-energy-changes.0017",
+   "itemId": "q.science.c2.c2-energy-changes.0017",
+   "version": 1,
+   "checks": [
+    {
+     "type": "schema",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Shape checked by the fixer-c2 stage check, zero lines.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "scope-tier",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Outcome 2.8.5 (H).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "tariff",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "1 + 1 + 2 + 1 = 5, the shape of question 0006 it replaces: each total its own mark, the subtraction and the signed value, then the conclusion from the sign.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "maths-numeric",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Recomputed: 945 + 498 = 1443; 2 × 607 = 1214; 1443 − 1214 = +229 kJ. Common errors by route: N=O counted once 607; made − broken -229. Follow-through relation 1443 − x from (b).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "The 2024 C2 Higher Q6 findings (a bond counted once; made minus broken) and the 2023 C2 Higher Q8 sign; the reversed subtraction earns neither (c) mark here because the totals are marked in (a) and (b).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "copy-shingle",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Every sentence written for this item; nitrogen and oxygen is set in no CCEA bond-energy question of the corpus.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "British English; calm second-person feedback; no exclamation marks.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    }
+   ],
+   "status": "verified",
+   "reports": []
+  },
+  {
+   "id": "ver.q.science.c2.c2-energy-changes.0018",
+   "itemId": "q.science.c2.c2-energy-changes.0018",
+   "version": 1,
+   "checks": [
+    {
+     "type": "schema",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Shape checked by the fixer-c2 stage check, zero lines.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "scope-tier",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Outcomes 2.8.1 to 2.8.5 (H), as question 0015.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "tariff",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "(a) 1, (b) 2, (c) 3 = 6, as question 0015; (c) in the 2024 C2 Higher Q6 shape: energy to break bonds [1], energy released forming bonds [1], the subtraction with its sign [1].",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "maths-numeric",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Recomputed: 2 × 366 + 242 = 974; 2 × 431 + 193 = 1055; -81 kJ. Routes: made − broken 81 (P1, P2 kept: 2); each bond once 608 − 624 = -16 (the subtraction carried forward: 1).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "The 2024 C2 Higher Q6 scheme's three points and its report (bonds counted once; the sign).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "copy-shingle",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Part (c) written for this item; parts (a) and (b) are question 0015's, already scanned.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "British English; calm second-person feedback.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    }
+   ],
+   "status": "verified",
+   "reports": []
+  },
+  {
+   "id": "ver.ftm.science.c2.c2-energy-changes.03",
+   "itemId": "ftm.science.c2.c2-energy-changes.03",
+   "version": 1,
+   "checks": [
+    {
+     "type": "schema",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Shape checked by the fixer-c2 stage check, zero lines.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "maths-numeric",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Recomputed: 151 + 242 = 393; 2 × 211 = 422; -29 kJ (the slip gives 29).",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "examiner-alignment",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "The 2024 C2 Higher Q6 report: signs missing or reversed; one wrong line, the subtraction.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "copy-shingle",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "Every line written for this item.",
+     "at": "2026-10-11T08:21:03Z",
+     "by": "claude"
+    },
+    {
+     "type": "style-lint",
+     "tool": "claude (fixer-c2, 11 Oct 2026; scripted editor in scratchpad/probes/fixer-c2 from the committed pack, every number computed once)",
+     "result": "pass",
+     "detail": "British English; calm second-person feedback.",
+     "at": "2026-10-11T08:21:03Z",
      "by": "claude"
     }
    ],
