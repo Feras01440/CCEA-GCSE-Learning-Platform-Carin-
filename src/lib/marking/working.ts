@@ -926,3 +926,21 @@ export function ladderTotal(marked: { correct: boolean; marksAwarded: number }, 
 export function workingToLines(raw: string): string[] {
   return raw.replace(/\r/g, "").split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
 }
+
+/**
+ * Her working with the answer box's own working added: a wrong answer typed as a line of working ("6.44 - 2.84 = 3.60",
+ * "10 x 18 = 180": an "=" with arithmetic before it, or a chain of "=") is working the examiner sees, and the ladder
+ * reads it as one more line (gate 2, G2-18, 11 Oct 2026: c2-hydrated-salts .0021(c) and (f) paid 0/2 for their P1 lines
+ * typed in the answer box). A bare value ("3.6") or a labelled value ("x = 5") is an answer, not working.
+ */
+export function workingLinesWithAnswer(working: string, answer: string, opts: { setAside?: boolean } = {}): string[] {
+  const lines = workingToLines(working);
+  const a = answer.trim();
+  // An answer the marker has set aside (a show-that's printed target restated, the question typed back) is never read as
+  // working: the target and the question are printed, not shown (the build-9 gate's class C: m8 simultaneous .0005(a), the
+  // target in the box beside the substitution line, stays 1/2; gate 2's sweep: "3x + 4y = 24" typed back earned a point).
+  if (opts.setAside || a.length === 0 || a.includes("\n")) return lines;
+  const sides = a.split(/[=≈]/);
+  const shows = sides.length > 2 || (sides.length === 2 && !/^[A-Za-zθα-ω][A-Za-z0-9_{}()' ]*$/.test(sides[0]!.trim()) && /\d/.test(sides[0]!) && /[+\-−×*/÷^√]|\d\s*[(\d]/.test(sides[0]!));
+  return shows && !lines.includes(a) ? [...lines, a] : lines;
+}

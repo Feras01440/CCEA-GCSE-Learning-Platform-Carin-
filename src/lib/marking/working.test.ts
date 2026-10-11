@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { MarkPoint } from "@/lib/content/schema";
-import { ladderTotal, markWorking, methodSteps } from "./working";
+import { ladderTotal, markWorking, methodSteps, workingLinesWithAnswer } from "./working";
+import { solutionLineFor } from "@/components/topic/reteach";
 
 const point = (p: Partial<MarkPoint> & Pick<MarkPoint, "id" | "code" | "marks" | "for">): MarkPoint => p as MarkPoint;
 
@@ -704,5 +705,62 @@ describe("C6 the answer point is met as written, never by an equal form of the s
   test("2(4x^2 - 1) after the common factor line does not meet the answer point; the factorised answer does", () => {
     expect(markWorking(["8x^2 - 2 = 2(4x^2 - 1)", "2(4x^2 - 1)"], scheme, "").earned.map((e) => e.id)).toEqual(["M1"]);
     expect(markWorking(["8x^2 - 2 = 2(4x^2 - 1)", "2(2x + 1)(2x - 1)"], scheme, "").earned.map((e) => e.id)).toEqual(["M1", "A1"]);
+  });
+});
+
+// Gate 2, G2-18 (11 Oct 2026; the C2 D author): a line of working typed in the answer box is working the examiner sees.
+// c2-hydrated-salts .0021(c) pays P1 "mass of water = 3.60 g" and .0021(f) P1 "10 × 18 = 180": "6.44 - 2.84 = 3.60" and
+// "10 x 18 = 180" in the answer box earned 0/2. A wrong answer that shows working (an "=" with arithmetic before it) is
+// read as one more line of her working; a bare value is not working.
+describe("workingLinesWithAnswer: the answer box's own working", () => {
+  test("an answer that shows working joins her lines; a bare value does not", () => {
+    expect(workingLinesWithAnswer("", "6.44 - 2.84 = 3.60")).toEqual(["6.44 - 2.84 = 3.60"]);
+    expect(workingLinesWithAnswer("2.84 ÷ 142 = 0.02", "10 x 18 = 180")).toEqual(["2.84 ÷ 142 = 0.02", "10 x 18 = 180"]);
+    expect(workingLinesWithAnswer("", "3.6")).toEqual([]);
+    expect(workingLinesWithAnswer("a = 2", "x = 5")).toEqual(["a = 2"]);
+    expect(workingLinesWithAnswer("", "")).toEqual([]);
+  });
+  test("the scheme line in the answer box earns its point, never every mark", () => {
+    const scheme = [point({ id: "P1", code: "P", marks: 1, for: "mass of water = 3.60 g" }), point({ id: "P2", code: "P", marks: 1, for: "3.60 ÷ 18 = 0.2" })];
+    const ws = "6.44 − 2.84 = 3.60 g; ÷ 18 = 0.2 mol.";
+    const ev = markWorking(workingLinesWithAnswer("", "6.44 - 2.84 = 3.60"), scheme, ws);
+    expect(ev.marks).toBe(1);
+    expect(ladderTotal({ correct: false, marksAwarded: 0 }, ev.marks, 2)).toBe(1);
+  });
+  test("an answer the marker has set aside for her working is never working itself", () => {
+    // The build-9 gate's class C (m8 simultaneous .0005(a)): the show-that's printed target typed in the answer box, beside
+    // the substitution line, is printed, not shown; it never joins the ladder (the part stays 1/2, as recorded).
+    expect(workingLinesWithAnswer("x^2 - 6x + 10 = 2x - 6", "x^2 - 8x + 16 = 0")).toEqual(["x^2 - 6x + 10 = 2x - 6", "x^2 - 8x + 16 = 0"]);
+    expect(workingLinesWithAnswer("x^2 - 6x + 10 = 2x - 6", "x^2 - 8x + 16 = 0", { setAside: true })).toEqual(["x^2 - 6x + 10 = 2x - 6"]);
+    expect(workingLinesWithAnswer("", "6.44 - 2.84 = 3.60", { setAside: true })).toEqual([]);
+    expect(workingLinesWithAnswer("", "6.44 - 2.84 = 3.60", { setAside: false })).toEqual(["6.44 - 2.84 = 3.60"]);
+  });
+});
+
+// Gate 2's corpus guard (11 Oct 2026): readings added for the fix box had leaked into the line reading the working ladder,
+// the line steps and the pairing of a scheme point with its solution line share. They now apply inside markFix only, and
+// these pins hold the ladder and the pairing where pass 1 had them (the shipped items' own schemes and solutions).
+describe("the ladder and the pairing read lines as before gate 2's fix-box readings", () => {
+  test("a unit after a short scheme line's value: R = 24 Ω is met by her longer line (p2 calculating-resistance .0007)", () => {
+    const scheme = [point({ id: "P2", code: "P", marks: 1, for: "1/R = 1/40 + 1/60" }), point({ id: "P3", code: "P", marks: 1, for: "R = 24 (Ω)" })];
+    const ws = "Turn it upside down: R = 120 ÷ 5 = 24 Ω.";
+    const ev = markWorking(["1/R = 1/40 + 1/60", "Turn it upside down: R = 120 ÷ 5 = 24 Ω."], scheme, ws);
+    expect(ev.earned.map((e) => e.id)).toContain("P3");
+  });
+  test("the rewriting step a scheme pays is seen as written (fm1 gradient-at-a-point .0004 M1)", () => {
+    const scheme = [point({ id: "M1", code: "M", marks: 1, for: "writing the term as $8x^{-1}$" })];
+    const ws = "Rewrite: $y = 5 + 8x^{-1}$.\nDifferentiate: $\\frac{dy}{dx} = -\\frac{8}{x^{2}}$.";
+    expect(markWorking(["Rewrite: y = 5 + 8x^{-1}."], scheme, ws).marks).toBe(1);
+  });
+  test("a word formula inside her prose earns the formula mark (p2 echoes .0021(a) P1)", () => {
+    const scheme = [point({ id: "P1", code: "P", marks: 1, for: "v = d/t", accept: ["v = d/t", "d = v × t", "distance = speed × time", "speed = distance ÷ time"] })];
+    const ws = "v = d/t, so d = v × t = 1500 × 0.05 = 75 m, down and back. The depth is half of that: 37.5 m.";
+    expect(markWorking(["the total distance can be found from distance = speed × time"], scheme, ws).marks).toBe(1);
+  });
+  test("a scheme point pairs with the solution line that states it (m7 simultaneous .0011 A1, optimisation .0014(c) W2)", () => {
+    const sim = "$5x + 3y = 79$ … (1)\n$2x + 7y = 78$ … (2)\n(1) × 2: $10x + 6y = 158$\n(2) × 5: $10x + 35y = 390$\nSubtract the first from the second: $29y = 232$, so $y = 8$.\nInto (1): $5x = 55$, so $x = 11$.\nCheck in (2): $2(11) + 7(8) = 78$, which matches. A large box holds 11 chocolates and a small box holds 8.";
+    expect(solutionLineFor({ for: "$y = 8$" }, sim)).toBe("Subtract the first from the second: $29y = 232$, so $y = 8$.");
+    const opt = "$\\frac{dA}{dw} = 8 - \\frac{1800}{w^{2}}$.\nSet it to zero: $\\frac{1800}{w^{2}} = 8$, so $w^{2} = 225$ and $w = 15$ cm, taking the positive root because $w$ is a width.\n$\\frac{d^{2}A}{dw^{2}} = \\frac{3600}{w^{3}}$, which at $w = 15$ is $\\frac{16}{15}$.\nThat is positive, so the total area is least when $w = 15$ cm.";
+    expect(solutionLineFor({ for: "$w = 15$, the negative root rejected because $w$ is a width" }, opt)).toBe("That is positive, so the total area is least when $w = 15$ cm.");
   });
 });

@@ -147,8 +147,13 @@ function rowsFromGrid(s: string): string[][] {
  * The matrix she typed, as rows of entry text, or null when nothing readable is there. Rows may come
  * back ragged: that is an answer of the wrong shape, which `checkMatrix` says rather than hides.
  */
-/** A scalar written in front of the matrix, as CCEA prints an inverse: "\\frac{1}{5}", "1/5", "0.2", "-2", with an optional times sign. */
-const LEADING_SCALAR = /^\s*(-?)\s*(?:\\[dt]?frac\{\s*(-?\d+)\s*\}\{\s*(-?\d+)\s*\}|(-?\d+)\s*\/\s*(\d+)|(-?\d+(?:\.\d+)?))\s*(?:\\times|\\cdot|\*|×)?\s*(?=\\left|\\begin|\[|\()/;
+/**
+ * A scalar written in front of the matrix, as CCEA prints an inverse and as students type it (gate 2, G2-25, 11 Oct
+ * 2026): "\\frac{1}{5}", "\\frac{1}{-16}", "1/5", "1/-16", "1/(-16)", "(1/-16)", "-1/16", "0.2", "-2", "(2)", with an
+ * optional times sign ("\\times", "\\cdot", "*", "×", or an "x" standing alone before the bracket). Groups: 1 the
+ * leading minus; 2/3 a TeX fraction; 4/5 a slash fraction (the denominator bracketed or not); 6 a plain number.
+ */
+const LEADING_SCALAR = /^\s*(-?)\s*(\()?\s*(?:\\[dt]?frac\{\s*(-?\d+(?:\.\d+)?)\s*\}\{\s*(-?\d+(?:\.\d+)?)\s*\}|(-?\d+(?:\.\d+)?)\s*\/\s*(?:\(\s*(-?\d+(?:\.\d+)?)\s*\)|(-?\d+(?:\.\d+)?))|(-?\d+(?:\.\d+)?))\s*(\))?\s*(?:\\times|\\cdot|\*|×|x(?=\s*[[(\\]))?\s*(?=\\left|\\begin|\[|\()/;
 
 function gcd(a: number, b: number): number {
   return b === 0 ? Math.abs(a) : gcd(b, a % b);
@@ -182,13 +187,21 @@ export function parseMatrix(raw: string): string[][] | null {
   let s = stripMathDelimiters(raw);
   // A scalar in front is multiplied into every entry, so "1/5 (2 -1; -3 4)" is the matrix it means.
   let scale: { num: number; den: number } | null = null;
+  // A name in front ("A^{-1} = ", "C inverse = ") comes off before the scalar is read (G2-25: the scalar after a name
+  // was never read, so "A^{-1} = -1/16 (…)" was refused).
+  if (NAMED.test(s)) s = s.replace(NAMED, "");
   const lead = LEADING_SCALAR.exec(s);
-  if (lead) {
+  // A bracket opened before the scalar must close after it ("(1/-16)(…)"), and an unopened one is not the scalar's.
+  if (lead && (lead[2] === undefined) === (lead[9] === undefined)) {
     const sign = lead[1] === "-" ? -1 : 1;
-    if (lead[2] !== undefined) scale = { num: sign * Number(lead[2]), den: Number(lead[3]) };
-    else if (lead[4] !== undefined) scale = { num: sign * Number(lead[4]), den: Number(lead[5]) };
-    else scale = { num: sign * Number(lead[6]), den: 1 };
-    if (!Number.isFinite(scale.num) || !scale.den) scale = null;
+    let num: number;
+    let den: number;
+    if (lead[3] !== undefined) [num, den] = [Number(lead[3]), Number(lead[4])];
+    else if (lead[5] !== undefined) [num, den] = [Number(lead[5]), Number(lead[6] ?? lead[7])];
+    else [num, den] = [Number(lead[8]), 1];
+    if (den < 0) [num, den] = [-num, -den];
+    scale = { num: sign * num, den };
+    if (!Number.isFinite(scale.num) || !Number.isFinite(scale.den) || !scale.den) scale = null;
     else s = s.slice(lead[0].length);
   }
   const env = MATRIX_ENV.exec(s);

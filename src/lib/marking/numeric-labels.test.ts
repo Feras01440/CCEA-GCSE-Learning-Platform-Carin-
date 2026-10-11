@@ -38,11 +38,13 @@ describe("a quantity's name before the value", () => {
     expect(checkNumeric("Mr = 62.5", { value: 62.5, unit: "g", requireUnit: true }).correct).toBe(false);
   });
   test("a function of a letter is working, not a name: it is not taken off", () => {
-    // "cos x = 0.5" is a step towards x, not the answer 0.5.
-    expect(parseNumeric("cos x = 0.5")).toBeNull();
-    expect(parseNumeric("sin θ = 0.5")).toBeNull();
+    // Gate 2, G2-23 (11 Oct 2026): a trigonometric function of a letter before "=" names the value of that function
+    // ("sin x = 0.7" is the step "sin x = 1.4 ÷ 2 = 0.7" answered), so it reads as its value; where the question asks
+    // for the angle, that value is simply not the angle and earns nothing. It was unreadable before (25 Sep).
+    expect(parseNumeric("cos x = 0.5")?.value).toBe(0.5);
+    expect(parseNumeric("sin θ = 0.5")?.value).toBe(0.5);
     expect(parseNumeric("log x = 2")).toBeNull();
-    expect(parseNumeric("tan x = 1")).toBeNull();
+    expect(parseNumeric("tan x = 1")?.value).toBe(1);
     expect(parseNumeric("sqrt x = 3")).toBeNull();
     expect(parseNumeric("x = 5, y = 3")).toBeNull();
     expect(parseNumeric("x or y = 5")).toBeNull();

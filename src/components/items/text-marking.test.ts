@@ -899,3 +899,92 @@ describe("a two-letter name is not an allele pair, and an operator is a word bou
     for (const right of ["BC = 9.6sin(52)/sin(57)", "BC = 9.6 sin(52) / sin(57)", "9.6sin52/sin57"]) expect(markText(right, s).marksAwarded, right).toBe(2);
   });
 });
+
+// Gate 2 (11 Oct 2026), the lead's note: a key-word entry may hold one idea in several spellings joined by "|", and her
+// feedback printed the whole barred entry ("still missing thins the blood|thin the blood|…", b2-heart-attacks-strokes
+// .0004(c)). The feedback names a group by its first entry's first spelling. Display only: no award moves.
+describe("feedback names a barred key-word entry by its first spelling", () => {
+  const spec: TextSpec = {
+    kind: "text",
+    accepted: ["it thins the blood, so platelets are less sticky"],
+    keyWords: [
+      { any: ["thins the blood|thin the blood|thinner blood"], marks: 1 },
+      { any: ["platelets less sticky|less sticky platelets|platelets are less sticky"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  test("still missing: the first spelling, never the bar", () => {
+    const r = markText("it thins the blood", spec);
+    expect(r.marksAwarded).toBe(1);
+    expect(r.feedback).toBe("1 of 2: still missing platelets less sticky.");
+  });
+  test("Expected: the first spelling of each group", () => {
+    const r = markText("it works", spec);
+    expect(r.marksAwarded).toBe(0);
+    expect(r.feedback).toBe("The marking points are not there yet. Expected: thins the blood, platelets less sticky.");
+  });
+  test("a dependent mark names both groups by their first spellings", () => {
+    const r = markText("platelets are less sticky", spec, { dependsOn: [[], [0]] });
+    expect(r.marksAwarded).toBe(0);
+    expect(r.feedback).not.toContain("|");
+  });
+});
+
+// Gate 2, G2-17 (11 Oct 2026; the P2 C+D author): p2-electricity-in-the-home .0006 pays "so it is safe / cannot give an
+// electric shock". "So there is no risk of electrocution" says that, but "no" was read as negating the key
+// "electrocution" plainly, which the avoided point refuses (1/2). No risk, no chance, no danger of an event is the event
+// avoided.
+describe("no risk of an event is the event avoided", () => {
+  const spec: TextSpec = {
+    kind: "text",
+    accepted: ["switching off disconnects the appliance from the live supply, so it cannot give a shock"],
+    keyWords: [
+      { any: ["cut off", "cuts off", "disconnect", "disconnects", "disconnected", "not connected to the live", "isolated"], marks: 1 },
+      { any: ["safe", "shock", "electrocuted", "electrocution", "no shock", "not get a shock", "cannot shock", "not be electrocuted"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  const model = ["So that switching off disconnects the appliance from the live wire. Then nothing inside it is live, so it is safe to touch and cannot give a shock."];
+  test("no risk / no chance / no danger of electrocution earns the safety point", () => {
+    for (const right of [
+      "to cut off the live supply so there is no risk of electrocution",
+      "it disconnects the live wire so there is no chance of a shock",
+      "it disconnects the appliance from the live so there is no danger of being electrocuted",
+    ]) expect(markText(right, spec, { model }).marksAwarded, right).toBe(2);
+  });
+});
+
+// Gate 2, G2-54 (11 Oct 2026; the M4 author's rp.16): a compound word is one word written solid, spaced or hyphenated, in
+// a chip and in a key alike. And (G2-08) a key written in TeX relations reads as her signs.
+describe("gate 2: compound words and TeX relations in key words", () => {
+  test("midpoint, mid point and mid-point are one word", () => {
+    expect(keywordsPresent("the mid-point", ["midpoint"]).all).toBe(true);
+    expect(keywordsPresent("its mid point", ["midpoint"]).all).toBe(true);
+    expect(keywordsPresent("the midpoint", ["mid point"]).all).toBe(true);
+    expect(keywordsPresent("the mid value", ["midpoint"]).all).toBe(false);
+  });
+  test("a key written in TeX relations meets her signs and her TeX", () => {
+    const s: TextSpec = { kind: "text", accepted: ["x ≤ -3 or x ≥ 4"], keyWords: [{ any: [String.raw`x \le -3`], marks: 1 }, { any: [String.raw`x \ge 4`], marks: 1 }], listingRule: false };
+    expect(markText("x ≤ -3 or x ≥ 4", s).marksAwarded).toBe(2);
+    expect(markText(String.raw`x \le -3 \text{ or } x \ge 4`, s).marksAwarded).toBe(2);
+    expect(markText("x < -3 or x > 4", s).marksAwarded).toBe(0);
+  });
+});
+
+// Gate 2's mutation check (11 Oct 2026): the G2-08 test typed the accepted answer, which the accepted route pays before
+// any key is read, so a key's TeX relation was never tested. Her answer in another order meets the keys only through them.
+// And the feedback names a TeX key as she writes it ("Expected: x ≤ -3, x ≥ 4.", never "x \le -3").
+describe("a key written in TeX relations, met through the keys", () => {
+  const s: TextSpec = { kind: "text", accepted: ["x ≤ -3 or x ≥ 4"], keyWords: [{ any: [String.raw`x \le -3`], marks: 1 }, { any: [String.raw`x \ge 4`], marks: 1 }], listingRule: false };
+  test("her signs in another order meet the TeX keys", () => {
+    expect(markText("x ≥ 4 or x ≤ -3", s).marksAwarded).toBe(2);
+    expect(markText("x ≥ 4 or x < -3", s).marksAwarded).toBe(1);
+  });
+  test("the feedback prints a TeX key as signs", () => {
+    const r = markText("x < -3 or x > 4", s);
+    expect(r.marksAwarded).toBe(0);
+    expect(r.feedback).toContain("x ≤ -3");
+    expect(r.feedback).toContain("x ≥ 4");
+    expect(r.feedback).not.toContain("\\le");
+  });
+});

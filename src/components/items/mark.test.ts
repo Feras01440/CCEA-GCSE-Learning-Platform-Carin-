@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import type { AnswerSpec, CommonError, MarkPoint } from "@/lib/content/schema";
 import { checkNumeric } from "@/lib/marking/numeric";
-import { followThroughValue, instructsAccuracy, instructsUnit, isFormTask, isShowThat, markAnswer, matchesCommonError, twinScheme, variableLetters } from "./mark";
+import { demandsWorking, followThroughValue, instructsAccuracy, instructsUnit, isFormTask, isShowThat, markAnswer, matchesCommonError, twinScheme, variableLetters } from "./mark";
 
 const median: AnswerSpec = {
   kind: "numeric",
@@ -1836,5 +1836,397 @@ describe("two key-word groups with identical lists are one idea (C2 ruling 3, pi
     expect(markAnswer("it is colourless, it has no colour", spec, { marks: 2 }).marksAwarded).toBe(1);
     expect(markAnswer("colourless and colorless", spec, { marks: 2 }).marksAwarded).toBe(1);
     expect(markAnswer("it is colourless and has no smell", spec, { marks: 2 }).marksAwarded).toBe(2);
+  });
+});
+
+// Gate 2 (11 Oct 2026), the lead's note: the text explanation rewritten in the part's marks named a group by its raw
+// barred entry. It names it by the first spelling (display only).
+describe("a text part's explanation names a barred key-word entry by its first spelling", () => {
+  test("still missing in the part's own marks", () => {
+    const spec: AnswerSpec = {
+      kind: "text",
+      accepted: ["it thins the blood, so platelets are less sticky"],
+      keyWords: [
+        { any: ["thins the blood|thin the blood|thinner blood"], marks: 1 },
+        { any: ["platelets less sticky|less sticky platelets"], marks: 1 },
+      ],
+      listingRule: false,
+    };
+    const r = markAnswer("it thins the blood", spec, { marks: 4 });
+    expect(r.marksAwarded).toBe(2);
+    expect(r.explanation).toBe("2 of 4: still missing platelets less sticky.");
+  });
+});
+
+// Gate 2, G2-01 (11 Oct 2026; the C2 author's EF-19, 8 Oct): an organic formula is read as its atom counts so that every
+// correct way of writing one compound is that compound (CH3CH3, C2H6), but a string that is no formula at all was read the
+// same way: "C2H4 + H2 → C2H4H2" (the reactants glued together) scored 2/2 for ethane. A formula never writes an element
+// twice side by side (the carboxyl and ester O-O of COOH and COO aside), and a carbon with a count of two or more opens
+// its formula (or a bracket): "C2H4H2" and "H2C2H4" are not formulae of ethane, so the product's point is lost.
+describe("an organic formula is a formula before it is read as its atom counts", () => {
+  const spec: AnswerSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "C2H4 + H2 -> C2H6", stateSymbolsRequired: false, acceptMultiples: false };
+  const scheme: MarkPoint[] = [
+    { id: "P1", code: "P", marks: 1, for: "correct reactants: C2H4 and H2" },
+    { id: "P2", code: "P", marks: 1, for: "correct product: C2H6" },
+  ];
+  test("the glued reactants are not the product: the reactants' point only", () => {
+    expect(markAnswer("C2H4 + H2 → C2H4H2", spec, { marks: 2, scheme, subject: "science" }).marksAwarded).toBe(1);
+    expect(markAnswer("C2H4 + H2 → H2C2H4", spec, { marks: 2, scheme, subject: "science" }).marksAwarded).toBe(1);
+  });
+  test("every correct formula of ethane keeps full marks", () => {
+    for (const right of ["C2H4 + H2 → C2H6", "C2H4 + H2 → CH3CH3", "CH2=CH2 + H2 → CH3CH3", "H2 + C2H4 → C2H6"]) {
+      expect(markAnswer(right, spec, { marks: 2, scheme, subject: "science" }).marksAwarded, right).toBe(2);
+    }
+  });
+  test("COOH and COO keep their two oxygens side by side", () => {
+    const acid: AnswerSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "CH3COOH + NaOH -> CH3COONa + H2O", stateSymbolsRequired: false, acceptMultiples: false };
+    expect(markAnswer("CH3COOH + NaOH → CH3COONa + H2O", acid, { marks: 2 }).correct).toBe(true);
+    expect(markAnswer("C2H4O2 + NaOH → CH3COONa + H2O", acid, { marks: 2 }).correct).toBe(true);
+  });
+});
+
+// Gate 2, G2-02 (11 Oct 2026; the C2 E author's list, "q5/we05 'of aluminium' qualifier"): c2-aluminium-extraction .0005
+// pays "lowers the melting point (of the aluminium oxide)". "It lowers the melting point of aluminium" names the wrong
+// substance inside the very words that earn the mark, and the part names that slip as its common error (0 marks); the
+// key words paid it 1/1. A phrase-level common error (a pattern that does not describe a whole answer) whose match overlaps
+// the words a group was paid for cancels that group, as a reject word does. Brackets in the scheme: not needed, but if
+// present they must be right (CCEA general marking advice).
+describe("a named wrong statement inside the words that earned a mark cancels it", () => {
+  const spec: AnswerSpec = {
+    kind: "text",
+    accepted: ["it lowers the melting point of the aluminium oxide"],
+    keyWords: [{ any: ["lowers the melting point", "lower the melting point", "reduces the melting point", "conducts electricity", "saves energy"], marks: 1 }],
+    listingRule: true,
+  };
+  const commonErrors: CommonError[] = [
+    { misconception: "sci.electrolysis.cryolite-lowers-mp-of-aluminium", pattern: { kind: "text", regex: String.raw`\bboiling (point|temperature)\b` }, feedback: "Melting, not boiling.", marksTypicallyEarned: 0 },
+    { misconception: "sci.electrolysis.cryolite-lowers-mp-of-aluminium", pattern: { kind: "text", regex: String.raw`melting (point|temperature) of (the )?alumin(i)?um\b(?!\s*oxide)` }, feedback: "The cryolite lowers the melting point of the aluminium oxide, not of the aluminium.", marksTypicallyEarned: 0 },
+    { misconception: "sci.structures.conducts-without-what", pattern: { kind: "text", regex: String.raw`^(?![\s\S]*\belectric)[\s\S]*\bconduct(s|ivity|ion|or)?\b` }, feedback: "Conducts what?", marksTypicallyEarned: 0 },
+  ];
+  const opts = { marks: 1, commonErrors, subject: "science" as const };
+  test("the wrong substance inside the paid words loses the mark, with the error's own feedback", () => {
+    const r = markAnswer("it lowers the melting point of aluminium", spec, opts);
+    expect(r.marksAwarded).toBe(0);
+    expect(r.tags).toContain("sci.electrolysis.cryolite-lowers-mp-of-aluminium");
+    expect(markAnswer("It reduces the melting point of the aluminium.", spec, opts).marksAwarded).toBe(0);
+  });
+  test("the right substance, no substance, or a slip elsewhere keeps the mark", () => {
+    for (const right of [
+      "it lowers the melting point of aluminium oxide",
+      "it lowers the melting point of the aluminium oxide",
+      "it lowers the melting point",
+      "it lowers the melting point, not the boiling point",
+      "it lowers the melting point and conducts",
+    ]) expect(markAnswer(right, spec, opts).marksAwarded, right).toBe(1);
+  });
+});
+
+// Gate 2, G2-05 (11 Oct 2026): ruling 28 (the C2 reviewer, 8 Oct) was implemented on the part's `requiresWorking` flag,
+// which authors set to open the working box (author-topic.md: the box is "open on exam-style parts and on any part with
+// requiresWorking"): on 1950 shipped numeric and algebraic parts a bare right answer then earned 0. The ruling's cited
+// line, CCEA C2 2021 Higher general instruction 9: "Full marks can be awarded for a correct numerical answer to any
+// calculation even if no working out is shown apart from degree of hydration and empirical formula calculations for which
+// working out is required"; maths GMA (ii): a correct answer earns full marks. Working is demanded where the stem says so,
+// or (science, the box flagged) for a degree-of-hydration or empirical-formula calculation.
+describe("demandsWorking: the paper's demand, not the working box's flag", () => {
+  test("a flagged part whose stem demands nothing pays a bare right answer", () => {
+    expect(demandsWorking({ stem: "The area of a pen is $A = 40x - x^{2}$ m².\nFind $\\frac{dA}{dx}$.", requiresWorking: true }, [], "further-maths")).toBe(false);
+    expect(demandsWorking({ stem: "Calculate an estimate of the number of beetles in the field.", requiresWorking: true }, [], "maths")).toBe(false);
+    expect(demandsWorking({ stem: "Use the bond energies in the table to calculate the energy change for this reaction, in kJ.", requiresWorking: true }, [], "science")).toBe(false);
+    expect(demandsWorking({ stem: "Work out the mass of hydrated magnesium sulfate used. Give it to 2 d.p.", requiresWorking: true }, ["A student heats hydrated magnesium sulfate in a crucible and records the results shown."], "science")).toBe(false);
+  });
+  test("a stem that demands working demands it, flagged or not", () => {
+    expect(demandsWorking({ stem: "Work out its perimeter, giving your answer as a surd in its simplest form.\nYou must show your working.", requiresWorking: true }, [], "maths")).toBe(true);
+    expect(demandsWorking({ stem: "Calculate the standard deviation. You must show your working.", requiresWorking: false }, [], "further-maths")).toBe(true);
+  });
+  test("science: a degree-of-hydration or empirical-formula calculation, with the box flagged", () => {
+    const stems = ["Hydrated sodium sulfate, Na₂SO₄·xH₂O, contains water of crystallisation. Define water of crystallisation.", "6.44 g of Na₂SO₄·xH₂O leaves 2.84 g at constant mass. Calculate the moles of water lost."];
+    expect(demandsWorking({ stem: "Hence determine x.", requiresWorking: true }, stems, "science")).toBe(true);
+    expect(demandsWorking({ stem: "Calculate the moles of anhydrous sodium sulfate.", requiresWorking: true }, stems, "science")).toBe(true);
+    expect(demandsWorking({ stem: "Calculate the empirical formula of the compound.", requiresWorking: true }, [], "science")).toBe(true);
+    expect(demandsWorking({ stem: "Hydrated zinc sulfate, ZnSO4.xH2O, has Mr 287. Calculate x.", requiresWorking: true }, [], "science")).toBe(true);
+    // Not flagged: the author left the box closed; GMI 9 is C2's instruction and the flag carries it.
+    expect(demandsWorking({ stem: "Hence determine x.", requiresWorking: false }, stems, "science")).toBe(false);
+    // Not science: a maths x is not a hydrate.
+    expect(demandsWorking({ stem: "Hence determine x.", requiresWorking: true }, ["Solve 3xH = 2"], "maths")).toBe(false);
+  });
+  test("markAnswer keeps its requiresWorking option: the caller decides the demand", () => {
+    const spec: AnswerSpec = { kind: "numeric", value: 10, tolerance: { type: "absolute", value: 0.1 }, unitRequired: false, acceptForms: ["decimal"] };
+    expect(markAnswer("10", spec, { marks: 1, requiresWorking: true }).marksAwarded).toBe(0);
+    expect(markAnswer("10", spec, { marks: 1, requiresWorking: false }).marksAwarded).toBe(1);
+  });
+});
+
+// Gate 2, G2-06 (11 Oct 2026; the FM3 author): a rate written "a minute" and "per minute" is one unit, and the standard
+// abbreviations bpm, wpm and rpm are their rates: "4.68 words per minute" for "words a minute" and "75.6 bpm" for "beats
+// per minute" lost a mark that no Further Maths scheme has. G2-07 (the C2 author's EF-1): CCEA writes a reaction's energy
+// change in kJ and in kJ mol⁻¹ alike (C2 2021 Higher MS: "Energy change = 3748 − 4824 = −1076 kJmol-1"), so kJ/mol is
+// the kJ the stem asks for, and "-818 kJ/mol" lost a bracketed unit's mark the scheme does not give.
+describe("one unit in its several spellings: a rate's 'a' and 'per', bpm, kJ mol⁻¹", () => {
+  const wpm: AnswerSpec = { kind: "numeric", value: 4.68, tolerance: { type: "dp", places: 2 }, unit: "words a minute", unitRequired: false, acceptForms: ["decimal"] };
+  const bpm: AnswerSpec = { kind: "numeric", value: 75.6, tolerance: { type: "sf", figures: 3 }, unit: "beats per minute", unitRequired: false, acceptForms: ["decimal"] };
+  const kj: AnswerSpec = { kind: "numeric", value: -818, tolerance: { type: "absolute", value: 0.5 }, unit: "kJ", unitRequired: false, acceptForms: ["decimal"] };
+  test("a rate's 'a' is its 'per', and a rate's abbreviation is the rate", () => {
+    for (const right of ["4.68 words per minute", "4.68 words a minute", "4.68 words/minute", "4.68 wpm"]) expect(markAnswer(right, wpm, { marks: 4, subject: "further-maths" }).marksAwarded, right).toBe(4);
+    for (const right of ["75.6 bpm", "75.6 beats a minute", "75.6 beats per minute", "75.6 beats/min"]) expect(markAnswer(right, bpm, { marks: 2, subject: "further-maths" }).marksAwarded, right).toBe(2);
+  });
+  test("a different unit is still a different unit", () => {
+    expect(markAnswer("4.68 words per hour", wpm, { marks: 4, subject: "further-maths" }).correct).toBe(false);
+    expect(markAnswer("75.6 rpm", bpm, { marks: 2, subject: "further-maths" }).correct).toBe(false);
+  });
+  test("kJ mol⁻¹ is the reaction's kJ", () => {
+    for (const right of ["-818 kJ/mol", "-818 kJ mol-1", "-818 kJ mol⁻¹", "-818 kJmol-1", "-818 kJ per mole", "-818 kJ"]) expect(markAnswer(right, kj, { marks: 3, subject: "science" }).marksAwarded, right).toBe(3);
+    expect(markAnswer("-818 J/mol", kj, { marks: 3, subject: "science" }).correct).toBe(false);
+    expect(markAnswer("-818 kJ/g", kj, { marks: 3, subject: "science" }).correct).toBe(false);
+  });
+});
+
+// Gate 2, G2-08 (11 Oct 2026; the FM1 group 1 author's #8): the answer field writes an inequality in TeX ("-6 \lt x \lt
+// 5"), and the text route read no inequality sign in it, so the right region was diagnosed as the critical values and
+// earned 0/3. A TeX relation command is its sign, and \text{…} its words.
+describe("a TeX inequality is read as its signs", () => {
+  const spec: AnswerSpec = { kind: "text", accepted: ["-6 < x < 5", "x > -6 and x < 5"], keyWords: [{ any: ["-6 < x", "x > -6"], marks: 1 }, { any: ["x < 5", "5 > x"], marks: 1 }], listingRule: false };
+  const commonErrors: CommonError[] = [
+    { misconception: "fm.qin.sign-lost-treated-as-equation", pattern: { kind: "text", regex: String.raw`^(?![\s\S]*[<>≤≥])[\s\S]*-6[\s\S]*5[\s\S]*$` }, feedback: "Those are the critical values.", marksTypicallyEarned: 1 },
+  ];
+  test("\\lt and \\gt are < and >", () => {
+    for (const right of [String.raw`-6 \lt x \lt 5`, String.raw`-6\lt x\lt5`, String.raw`x \gt -6 \text{ and } x \lt 5`, String.raw`$-6 \lt x \lt 5$`]) {
+      expect(markAnswer(right, spec, { marks: 3, commonErrors }).marksAwarded, right).toBe(3);
+    }
+  });
+  test("\\le is not <: a non-strict region is not the strict answer", () => {
+    expect(markAnswer(String.raw`-6 \le x \le 5`, spec, { marks: 3, commonErrors }).marksAwarded).toBeLessThan(3);
+  });
+  test("an outside region in TeX joined by \\text{and} names no value", () => {
+    const outside: AnswerSpec = { kind: "text", accepted: ["x < -3 or x > 5"], keyWords: [{ any: ["x < -3"], marks: 1 }, { any: ["x > 5"], marks: 1 }], listingRule: false };
+    expect(markAnswer(String.raw`x \lt -3 \text{ and } x \gt 5`, outside, { marks: 3 }).marksAwarded).toBe(0);
+    expect(markAnswer(String.raw`x \lt -3 \text{ or } x \gt 5`, outside, { marks: 3 }).marksAwarded).toBe(3);
+  });
+});
+
+// Gate 2, G2-09 and G2-10 (11 Oct 2026; the C2 author's EF-15 and EF-20). A name given with its formula is judged on the
+// one the stem asks for (CCEA C2 2021 GMI, "Both name and formula provided by candidate"), but the reading took the whole
+// answer as one pair: "carbon dioxide (CO2) and water (H2O)" was judged as "H2O" alone (1/2, "still missing CO2"), and
+// "C3H6, a gas" as "C3H6" alone, dropping the state the part's second point asks for (1/2). Each listed item is read as
+// its own pair, and a side that earns a point of its own is never dropped.
+describe("a name with its formula, item by item, and never a side that earns a point", () => {
+  const products: AnswerSpec = { kind: "text", accepted: ["CO2 and H2O"], keyWords: [{ any: ["CO2", "CO₂"], marks: 1, reject: ["CO ", "carbon monoxide"] }, { any: ["H2O", "H₂O"], marks: 1, reject: ["H2 ", "hydrogen gas"] }], listingRule: false };
+  const prompt = "Methane burns completely in a plentiful supply of oxygen.\nGive the formulae of the two products.";
+  test("every product named with its formula is judged on its formula", () => {
+    for (const right of ["carbon dioxide (CO2) and water (H2O)", "CO2 (carbon dioxide) and H2O (water)", "carbon dioxide (CO₂), water (H₂O)", "CO2 and H2O"]) {
+      expect(markAnswer(right, products, { marks: 2, prompt }).marksAwarded, right).toBe(2);
+    }
+    expect(markAnswer("carbon dioxide (CO) and water (H2O)", products, { marks: 2, prompt }).marksAwarded).toBe(1);
+  });
+  const propene: AnswerSpec = { kind: "text", accepted: ["C3H6, a gas"], keyWords: [{ any: ["C3H6", "C₃H₆"], marks: 1, reject: ["C3H8"] }, { any: ["gas", "gaseous|a gas"], marks: 1, reject: ["liquid", "solid"] }], listingRule: false };
+  const ask = "Propene is an alkene.\nGive its molecular formula and its physical state at room temperature and pressure.";
+  test("a formula beside the state the part also asks for keeps both", () => {
+    expect(markAnswer("C3H6, a gas", propene, { marks: 2, prompt: ask }).marksAwarded).toBe(2);
+    expect(markAnswer("C3H6 and it is a gas", propene, { marks: 2, prompt: ask }).marksAwarded).toBe(2);
+    // The wrong formula loses its own point only: the state is still right (two independent points).
+    expect(markAnswer("C3H8, a gas", propene, { marks: 2, prompt: ask }).marksAwarded).toBe(1);
+  });
+  test("a wrong name beside the formula asked for is still ignored", () => {
+    const one: AnswerSpec = { kind: "text", accepted: ["CO2"], keyWords: [{ any: ["CO2"], marks: 1, reject: ["carbon monoxide"] }], listingRule: true };
+    expect(markAnswer("carbon monoxide (CO2)", one, { marks: 1, prompt: "Give the formula of the gas." }).marksAwarded).toBe(1);
+  });
+});
+
+// Gate 2, G2-11 to G2-15 (11 Oct 2026; the C2 authors' EF-4, EF-9, EF-12, EF-13 and the C2 D author's WE09): chemical
+// formulae as students type them. A formula with spaces between its element groups is the formula ("C12 H26"); a
+// formula's own bracket is not a name beside a formula ("CnH(2n+2)"); a unit is not a name beside a formula ("Cm3/s",
+// where Cm happens to be curium); a list of formulae is not a name ("Mg(C3H7COO)2, H2O and CO2"); and the hydrate dot is
+// any centred dot ("CuSO4·5H2O", "CuSO4•5H2O").
+describe("chemical formulae as typed: spaces, own brackets, units, lists and the hydrate dot", () => {
+  test("a formula typed with spaces between its groups is the formula", () => {
+    const spec: AnswerSpec = { kind: "text", accepted: ["C12H26"], keyWords: [{ any: ["C12H26"], marks: 1 }], listingRule: true };
+    for (const right of ["C12 H26", "C12H26", "C₁₂H₂₆"]) expect(markAnswer(right, spec, { marks: 1, prompt: "Use the general formula of the alkanes to give its molecular formula." }).marksAwarded, right).toBe(1);
+    expect(markAnswer("C12 H24", spec, { marks: 1, prompt: "Give its molecular formula." }).marksAwarded).toBe(0);
+  });
+  test("a formula's own bracket is part of the formula", () => {
+    const spec: AnswerSpec = { kind: "text", accepted: ["CnH2n+2"], keyWords: [{ any: ["CnH2n+2", "CnH2n + 2", "CnH(2n+2)"], marks: 1, reject: ["CnH2n+1OH"] }], listingRule: true };
+    for (const right of ["CnH(2n+2)", "CnH2n+2"]) expect(markAnswer(right, spec, { marks: 1, prompt: "Give the general formula of the alkanes." }).marksAwarded, right).toBe(1);
+  });
+  test("a unit is not a name beside a formula, whatever its letter case", () => {
+    const spec: AnswerSpec = { kind: "text", accepted: ["cm³/s", "cm3/s"], keyWords: [{ any: ["cm³/s", "cm3/s", "cm^3/s"], marks: 1 }], listingRule: false };
+    for (const right of ["Cm3/s", "CM3/S", "cm3/s", "cm³/s"]) expect(markAnswer(right, spec, { marks: 1, prompt: "State the unit of your answer to part (a)." }).marksAwarded, right).toBe(1);
+  });
+  test("a list of formulae is the list, not a name beside a formula", () => {
+    const spec: AnswerSpec = { kind: "text", accepted: ["(C3H7COO)2Mg + H2O + CO2"], keyWords: [{ any: ["(C3H7COO)2Mg", "Mg(C3H7COO)2", "(C3H7CO2)2Mg"], marks: 1 }, { any: ["H2O"], marks: 1 }, { any: ["CO2"], marks: 1 }], listingRule: false };
+    expect(markAnswer("Mg(C3H7COO)2, H2O and CO2", spec, { marks: 2 }).marksAwarded).toBe(2);
+    expect(markAnswer("(C3H7COO)2Mg + H2O + CO2", spec, { marks: 2 }).marksAwarded).toBe(2);
+  });
+  test("the hydrate dot is any centred dot", () => {
+    const spec: AnswerSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "CuSO4.5H2O <=> CuSO4 + 5H2O", stateSymbolsRequired: false, acceptMultiples: false };
+    for (const right of ["CuSO4·5H2O ⇌ CuSO4 + 5H2O", "CuSO4•5H2O <=> CuSO4 + 5H2O", "CuSO4.5H2O ⇌ CuSO4 + 5H2O", "CuSO₄·5H₂O ⇌ CuSO₄ + 5H₂O"]) {
+      expect(markAnswer(right, spec, { marks: 3 }).correct, right).toBe(true);
+    }
+    expect(markAnswer("CuSO4·5H2O → CuSO4 + 5H2O", spec, { marks: 3 }).correct).toBe(false);
+  });
+});
+
+// Gate 2, G2-16 (11 Oct 2026; the FM3 author): "ninety-five percent" could not be read, where "95%" and "95 percent"
+// earn the mark. A whole number written in words (to the hundreds) is the number.
+describe("a whole number in words is the number", () => {
+  const pct: AnswerSpec = { kind: "numeric", value: 95, tolerance: { type: "range", min: 95, max: 95.5 }, unit: "%", unitRequired: false, acceptForms: ["decimal", "percent"] };
+  test("tens and units, with a hyphen or a space", () => {
+    for (const right of ["ninety-five percent", "ninety five per cent", "Ninety-five %", "95%"]) expect(markAnswer(right, pct, { marks: 1 }).marksAwarded, right).toBe(1);
+    expect(markAnswer("ninety percent", pct, { marks: 1 }).marksAwarded).toBe(0);
+  });
+  test("hundreds", () => {
+    const n: AnswerSpec = { kind: "numeric", value: 120, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] };
+    for (const right of ["one hundred and twenty", "a hundred and twenty", "one hundred twenty", "120"]) expect(markAnswer(right, n, { marks: 1 }).marksAwarded, right).toBe(1);
+    expect(markAnswer("one hundred and two", n, { marks: 1 }).marksAwarded).toBe(0);
+  });
+  test("a fraction's name after a number word is not a count of one", () => {
+    const one: AnswerSpec = { kind: "numeric", value: 1, tolerance: { type: "absolute", value: 0.001 }, unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    expect(markAnswer("one half", one, { marks: 1 }).marksAwarded).toBe(0);
+    expect(markAnswer("one third", one, { marks: 1 }).marksAwarded).toBe(0);
+  });
+});
+
+// Gate 2, G2-20 and G2-21 (11 Oct 2026; fm1-g0 E1, fm1-g1 #11, fm2-g0): a label before the expression asked for. "dA/dx =
+// 40 - 2x" was refused where "40 - 2x" and "y = 40 - 2x" earn full marks; so were "d2y/dx2 = 6x - 18", "d²y/dx² = …",
+// "f'(x) = …" and "2a + 3b = 9i - 10j" (the question's own expression as the label). Where the answer is an expression,
+// a derivative's notation or the stem's own expression before a single "=" is a label, and the side after it is judged.
+describe("a derivative or the question's own expression before = is a label", () => {
+  const d1: AnswerSpec = { kind: "algebraic", latex: "40-2x", equivalence: "equivalent", variables: ["x"] };
+  test("derivative notations", () => {
+    for (const right of ["dA/dx = 40 - 2x", "dA/dx=40-2x", String.raw`\frac{dA}{dx} = 40 - 2x`, "A'(x) = 40 - 2x", "f'(x) = 40 - 2x", "dy/dx = 40 - 2x", "d2y/dx2 = 40 - 2x", "d^2y/dx^2 = 40 - 2x", "d²y/dx² = 40 - 2x", String.raw`\frac{d^{2}y}{dx^{2}} = 40 - 2x`]) {
+      expect(markAnswer(right, d1, { marks: 2 }).marksAwarded, right).toBe(2);
+    }
+  });
+  test("the side after the label is judged: a wrong one stays wrong and meets its common error", () => {
+    const commonErrors: CommonError[] = [{ misconception: "fm.calc.linear-term-derivative-omitted", pattern: { kind: "algebraic", latex: "-2x" }, feedback: "The term 40x leaves 40.", marksTypicallyEarned: 1 }];
+    expect(markAnswer("dA/dx = -2x", d1, { marks: 2, commonErrors }).marksAwarded).toBe(1);
+    expect(markAnswer("dA/dx = 40 + 2x", d1, { marks: 2, commonErrors }).marksAwarded).toBe(0);
+    expect(markAnswer("40 - 2x = 0", d1, { marks: 2, commonErrors }).marksAwarded).toBe(0);
+  });
+  test("the question's own expression as the label", () => {
+    const vec: AnswerSpec = { kind: "algebraic", latex: "9i - 10j", equivalence: "equivalent", variables: ["i", "j"] };
+    const prompt = String.raw`$\mathbf{a} = (3\mathbf{i} + \mathbf{j})$ and $\mathbf{b} = (\mathbf{i} - 4\mathbf{j})$.` + "\n\n" + String.raw`Find $2\mathbf{a} + 3\mathbf{b}$.`;
+    expect(markAnswer("2a + 3b = 9i - 10j", vec, { marks: 3, prompt }).marksAwarded).toBe(3);
+    expect(markAnswer("2a + 3b = 9i + 14j", vec, { marks: 3, prompt }).marksAwarded).toBe(0);
+    const fac: AnswerSpec = { kind: "algebraic", latex: "(x+2)(x+3)", equivalence: "equivalent", variables: ["x"], form: "factorised" };
+    expect(markAnswer("x^2 + 5x + 6 = (x+2)(x+3)", fac, { marks: 2, prompt: "Factorise $x^{2} + 5x + 6$." }).marksAwarded).toBe(2);
+  });
+});
+
+// Gate 2, G2-22, G2-23 (11 Oct 2026; fm2-g0, fm1-g2 G2-E21, p2-cd EF-4): a labelled chain to a value with its trig function
+// glued to its numbers ("F = 24cos50 = 15.43", "T = 140sin27 = 63.56") was unreadable while "F = 24 cos 50 = 15.43 N"
+// read; "sin x = 0.7" (the value of sin x) was unreadable while "sinx = 0.7" read; and a unit conversion line ending in
+// the value ("1.61 kW = 1610 W") was unreadable while "1610 W" read.
+describe("a labelled trig chain, a trig label and a conversion line end on the value", () => {
+  const force: AnswerSpec = { kind: "numeric", value: 15.43, tolerance: { type: "absolute", value: 0.006 }, unit: "N", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+  test("a trig function glued to its numbers is working", () => {
+    for (const right of ["F = 24cos50 = 15.43", "24cos50 = 15.43", "F = 24cos(50) = 15.43 N", "F = 24 cos 50 = 15.43 N"]) expect(markAnswer(right, force, { marks: 2 }).correct, right).toBe(true);
+    expect(markAnswer("F = 24sin50 = 18.39", force, { marks: 2 }).correct).toBe(false);
+  });
+  test("an unevaluated trig expression is the method, not the value", () => {
+    expect(markAnswer("24cos50", force, { marks: 2 }).correct).toBe(false);
+  });
+  test("a trig function of a letter before = names the value", () => {
+    const sinx: AnswerSpec = { kind: "numeric", value: 0.7, tolerance: { type: "absolute", value: 0.005 }, unitRequired: false, acceptForms: ["decimal", "fraction"] };
+    for (const right of ["sin x = 0.7", "sin(x) = 0.7", "sinx = 0.7", "0.7"]) expect(markAnswer(right, sinx, { marks: 1 }).correct, right).toBe(true);
+    expect(markAnswer("sin x = 0.07", sinx, { marks: 1 }).correct).toBe(false);
+  });
+  test("a unit conversion line ends on the value", () => {
+    const watts: AnswerSpec = { kind: "numeric", value: 1610, tolerance: { type: "exact" }, unit: "W", unitRequired: false, acceptForms: ["decimal"] };
+    for (const right of ["1.61 kW = 1610 W", "1610 W", "1.61 × 1000 = 1610 W"]) expect(markAnswer(right, watts, { marks: 1 }).correct, right).toBe(true);
+    expect(markAnswer("1.61 kW = 161 W", watts, { marks: 1 }).correct).toBe(false);
+  });
+});
+
+// Gate 2, G2-49 to G2-51 (11 Oct 2026; the M4 author and the B2 author's EF-8): her own earlier value is followed through
+// at an accuracy her value can carry. A range tolerance written round the right answer (10.3 to 10.4 for 10.38) moves
+// with the followed-through value (1557.5 ÷ 155 = 10.048: "10.05" is right); an exact answer's follow-through value that
+// does not terminate (70 ÷ 6 = 11.666…) is met by her value rounded to the places she gives ("11.7", "11.67"); and a
+// relation may round ("round(9 * x / 80)"), and the value it gives wins over a common error equal to it.
+describe("follow-through at the accuracy her value can carry", () => {
+  test("a range tolerance moves with the followed-through value", () => {
+    const b: AnswerSpec = { kind: "numeric", value: 10.38, tolerance: { type: "range", min: 10.3, max: 10.4 }, unit: "mm", unitRequired: false, acceptForms: ["decimal"] };
+    const ft = { earlierRaw: "155", earlierSpec: { kind: "numeric", value: 150, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] } as AnswerSpec, relation: "1557.5 / x" };
+    expect(markAnswer("10.05", b, { marks: 4, followThrough: ft }).marksAwarded).toBe(4);
+    // The right answer stays right whatever her earlier value; a value near neither is wrong.
+    expect(markAnswer("10.4", b, { marks: 4, followThrough: ft }).correct).toBe(true);
+    expect(markAnswer("10.2", b, { marks: 4, followThrough: ft }).correct).toBe(false);
+  });
+  test("an exact answer's non-terminating follow-through value, rounded as she writes it", () => {
+    const b: AnswerSpec = { kind: "numeric", value: 12, tolerance: { type: "absolute", value: 0 }, unit: "mm²", unitRequired: false, acceptForms: ["decimal"] };
+    const ft = { earlierRaw: "70", earlierSpec: { kind: "numeric", value: 72, tolerance: { type: "absolute", value: 0 }, unitRequired: false, acceptForms: ["decimal"] } as AnswerSpec, relation: "x / 6" };
+    for (const right of ["11.7", "11.67", "11.667"]) expect(markAnswer(right, b, { marks: 2, followThrough: ft }).marksAwarded, right).toBe(2);
+    for (const wrong of ["11.6", "11.66", "11.5"]) expect(markAnswer(wrong, b, { marks: 2, followThrough: ft }).correct, wrong).toBe(false);
+  });
+  test("a relation that rounds, and its value wins over a common error equal to it", () => {
+    const d: AnswerSpec = { kind: "numeric", value: 2, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] };
+    const earlierSpec = { kind: "numeric", value: 20, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] } as AnswerSpec;
+    const commonErrors: CommonError[] = [{ misconception: "maths.histograms.partial-class-whole-counted", pattern: { kind: "numeric", value: 3 }, feedback: "The whole class was used.", marksTypicallyEarned: 1 }];
+    expect(markAnswer("4", d, { marks: 2, followThrough: { earlierRaw: "32", earlierSpec, relation: "round(9 * x / 80)" } }).marksAwarded).toBe(2);
+    expect(markAnswer("3", d, { marks: 2, commonErrors, followThrough: { earlierRaw: "24", earlierSpec, relation: "round(9 * x / 80)" } }).marksAwarded).toBe(2);
+    expect(markAnswer("3", d, { marks: 2, commonErrors, followThrough: { earlierRaw: "20", earlierSpec, relation: "round(9 * x / 80)" } }).marksAwarded).toBe(1);
+  });
+});
+
+// Gate 2, G2-55 and G2-62 (11 Oct 2026; the M8 and P2 authors): where the award is already the scheme's, the part's own
+// common error still names the slip. One root of two on a one-mark part earns 0 and is tagged, and its feedback never
+// says the root "earns its mark"; a science value given to more places than instructed loses the accuracy mark and is
+// tagged with the places error.
+describe("gate 2: the common error names the slip where the award is the scheme's", () => {
+  test("one root of two on a one-mark part", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: "x=-1, x=3", equivalence: "equivalent", variables: [] };
+    const commonErrors: CommonError[] = [{ misconception: "maths.graphs.one-crossing-only", pattern: { kind: "text", regex: String.raw`^\s*x?\s*=?\s*3\s*$` }, feedback: "Two crossings, two solutions.", marksTypicallyEarned: 0 }];
+    const r = markAnswer("x = 3", spec, { marks: 1, commonErrors });
+    expect(r.marksAwarded).toBe(0);
+    expect(r.tags).toContain("maths.graphs.one-crossing-only");
+    expect(r.explanation).not.toContain("earns its mark");
+  });
+  test("more places than a science part instructs", () => {
+    const spec: AnswerSpec = { kind: "numeric", value: 12.4, tolerance: { type: "dp", places: 1 }, unit: "p", unitRequired: false, acceptForms: ["decimal"] };
+    const commonErrors: CommonError[] = [{ misconception: "sci.practical.decimal-places-instruction-ignored", pattern: { kind: "numeric", value: 12.42, tolerance: { type: "absolute", value: 0.004 } }, feedback: "Give it to 1 decimal place.", marksTypicallyEarned: 3 }];
+    const r = markAnswer("12.42", spec, { marks: 4, commonErrors, subject: "science", prompt: "Calculate the cost, in pence.\nGive your answer to 1 decimal place." });
+    expect(r.marksAwarded).toBe(3);
+    expect(r.tags).toContain("sci.practical.decimal-places-instruction-ignored");
+  });
+});
+
+// Gate 2's mutation check (11 Oct 2026), three survivors. G2-09: G2-12's tighter name test made the whole answer no pair,
+// so the item-by-item reading was never the one that decided; a wrong name beside a right formula in a list decides it
+// (each item is judged on the formula the stem asks for, the name ignored, as one item alone already is). R3: one root of
+// three, the scheme naming that root's accuracy point and no other, earns that point and no more. And the partial-root
+// sentence prints a root as plain maths, never "frac{-2}{5}".
+describe("gate 2 mutation survivors: listed name-with-formula items, one root of three, a root printed", () => {
+  test("a wrong name beside each right formula in a list is ignored when the stem asks for formulae", () => {
+    const products: AnswerSpec = { kind: "text", accepted: ["CO2 and H2O"], keyWords: [{ any: ["CO2", "CO₂"], marks: 1, reject: ["CO ", "carbon monoxide"] }, { any: ["H2O", "H₂O"], marks: 1, reject: ["H2 ", "hydrogen gas"] }], listingRule: false };
+    const prompt = "Methane burns completely in a plentiful supply of oxygen.\nGive the formulae of the two products.";
+    expect(markAnswer("carbon monoxide (CO2) and water (H2O)", products, { marks: 2, prompt }).marksAwarded).toBe(2);
+    expect(markAnswer("carbon dioxide (CO) and water (H2O)", products, { marks: 2, prompt }).marksAwarded).toBe(1);
+  });
+  test("one root of three earns the one accuracy point that names it", () => {
+    const three: AnswerSpec = { kind: "algebraic", latex: "x=2, x=3, x=5", equivalence: "equivalent", variables: ["x"] };
+    const scheme: MarkPoint[] = [{ id: "A1", code: "A", marks: 1, for: "x = 2" }, { id: "A2", code: "A", marks: 1, for: "the second root" }, { id: "A3", code: "A", marks: 1, for: "the third root" }];
+    const r = markAnswer("x = 2", three, { marks: 3, scheme });
+    expect(r.correct).toBe(false);
+    expect(r.marksAwarded).toBe(1);
+  });
+  test("the partial-root sentence prints a fractional root as plain maths", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: String.raw`x=10, x=-\frac{2}{5}`, equivalence: "equivalent", variables: ["x"] };
+    const r = markAnswer("x = -2/5", spec, { marks: 3 });
+    expect(r.marksAwarded).toBe(1);
+    expect(r.explanation).toContain("x = -2/5 you found");
+    expect(r.explanation).not.toContain("frac");
+  });
+});
+
+// Gate 2's sweep (11 Oct 2026): the question typed back takes no step, and the runner must never read it as a line of her
+// working either (m3 straight-lines .0008(a) "3x + 4y = 24" earned a ladder point through the answer box's own working,
+// G2-18). The verdict says so, and the runner sets the answer aside.
+describe("the question typed back is flagged for the runner", () => {
+  const spec: AnswerSpec = { kind: "algebraic", latex: String.raw`y = 6 - \frac{3}{4}x`, equivalence: "equivalent", variables: ["x", "y"] };
+  const prompt = "The line $3x + 4y = 24$ crosses the axes at A and B.\nWrite the equation of the line in the form $y = mx + c$.";
+  test("an equation the stem prints, typed back, earns 0 and is flagged; her own step is not", () => {
+    const r = markAnswer("3x + 4y = 24", spec, { marks: 2, prompt });
+    expect(r.marksAwarded).toBe(0);
+    expect(r.copiesQuestion).toBe(true);
+    expect(markAnswer("4y = 24 - 3x", spec, { marks: 2, prompt }).copiesQuestion).toBeUndefined();
   });
 });

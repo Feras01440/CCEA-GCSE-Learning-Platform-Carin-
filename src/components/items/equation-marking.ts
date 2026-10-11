@@ -178,6 +178,9 @@ export function normaliseEquation(input: string, opts: NormaliseEquationOptions 
   // (25 Sep 2026: every typed arrow was refused against a key written with \rightarrow).
   s = s.replace(/\\(?:left|right)(?![A-Za-z])|\\(?:,|;|!|quad|qquad| )/g, "");
   s = fracToSlash(s);
+  // A centred dot before a count of water is the hydrate's dot ("CuSO4·5H2O", "CuSO4•5H2O" are CuSO4.5H2O; gate 2,
+  // G2-13, the C2 author's EF-4); anywhere else it multiplies.
+  s = s.replace(/([A-Za-z0-9₀-₉)\]])\s*(?:\\cdot|[·•∙⋅])\s*(?=\d*\s*H(?:2|₂)O)/g, "$1.");
   s = s.replace(/\\(times|cdot)\b/g, "*").replace(/[×·⋅]/g, "*");
   s = s.replace(/\\div\b/g, "/").replace(/÷/g, "/");
   s = s.replace(/\\(rightleftharpoons|leftrightarrow)\b|⇌|<=>|<->/g, "<->");
@@ -195,7 +198,9 @@ export function normaliseEquation(input: string, opts: NormaliseEquationOptions 
   s = s.replace(/[{}\\]/g, "").replace(/\s+/g, "");
   // Drop brackets that merely wrap an atom in a formula: (distancemoved) → distancemoved. In a chemical
   // equation the brackets are the formula (Mg(NO3)2 is not MgNO32), so they stay when symbols are not multiplied.
-  if (opts.implicitMultiply) s = s.replace(/\(([^()+\-*/=^]+)\)/g, "$1");
+  // A bracketed product raised to a power keeps its brackets: "(4x)^2" is 16x², not 4x² (gate 2, G2-26, 11 Oct 2026: the
+  // right fix "x² + (4x)² = 68" read as the flagged "x² + 4x² = 68"). A single symbol's brackets still go: "(x)^2" is x².
+  if (opts.implicitMultiply) s = s.replace(/\(([^()+\-*/=^]+)\)(?!\^)|\(([A-Za-z0-9.])\)(?=\^)/g, (_m, a: string | undefined, b: string | undefined) => a ?? b ?? "");
   // `m*a` → `ma`, but `2*3` keeps its star (a product of two numbers is not a symbol string).
   if (opts.implicitMultiply) s = s.replace(/(?<!\d)\*|\*(?!\d)/g, "");
   return opts.lowercase ? s.toLowerCase() : s;
@@ -227,6 +232,38 @@ function terms(side: string): Term[] {
 }
 
 /**
+ * A run of element symbols is a formula before its atoms are counted (gate 2, G2-01, 11 Oct 2026: "C2H4 + H2 → C2H4H2",
+ * the reactants glued together, scored 2/2 for ethane because its atoms add up to C2H6). A molecular or condensed
+ * structural formula never writes one element twice side by side (the O-O of a carboxyl or ester group, COOH and COO,
+ * aside: CH3COOH, C3H7COOC2H5), and a carbon with a count of two or more opens the formula or a bracket (C2H5OH,
+ * (C2H5)2O) or is an ester's alkyl group after its oxygen (CH3COOC2H5), never follows a hydrogen or a carbon
+ * ("H2C2H4"). CH3CH3, CH2=CH2, CH3CH2OH and C3H7COOH stay formulae.
+ */
+function writtenAsAFormula(formula: string): boolean {
+  let previous = "";
+  let groupStart = true;
+  for (const m of formula.matchAll(/(\()|(\))\d*|([A-Z][a-z]?)(\d*)/g)) {
+    if (m[1] !== undefined) {
+      groupStart = true;
+      previous = "";
+      continue;
+    }
+    if (m[2] !== undefined) {
+      groupStart = false;
+      previous = "";
+      continue;
+    }
+    const element = m[3]!;
+    const count = m[4] ? Number(m[4]) : 1;
+    if (element === previous && element !== "O") return false;
+    if (element === "C" && count >= 2 && !groupStart && previous !== "O") return false;
+    previous = element;
+    groupStart = false;
+  }
+  return true;
+}
+
+/**
  * The species a formula names, for comparing equations. An organic compound (carbon and hydrogen both in it) is the
  * same species whatever correct formula it is written with, so it is read as its atom counts: CH3CH2OH, C2H5OH and
  * C2H6O are one species (C2 D F05, 24 Sep 2026; CCEA credits "C3H8O/C3H7OH" for propanol, C2 Higher MS Summer 2021).
@@ -239,6 +276,7 @@ function speciesKey(species: string): string {
   const formula = (m?.[1] ?? species).replace(/[=≡]/g, "");
   const state = m?.[2] ?? "";
   if (!/^(?:[A-Z][a-z]?\d*|\((?:[A-Z][a-z]?\d*)+\)\d*)+$/.test(formula)) return species;
+  if (!writtenAsAFormula(formula)) return species;
   const counts = new Map<string, number>();
   const add = (el: string, n: number) => counts.set(el, (counts.get(el) ?? 0) + n);
   for (const g of formula.matchAll(/\(((?:[A-Z][a-z]?\d*)+)\)(\d*)|([A-Z][a-z]?)(\d*)/g)) {

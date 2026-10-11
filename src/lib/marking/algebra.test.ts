@@ -899,11 +899,30 @@ describe("simplest-fraction form with a surd on top (the corpus guard, 29 Sep 20
   });
 });
 
-// Mutation survivor pinned (7 Oct 2026): a negative power is a division in the simplest-fraction check.
+// Mutation survivor pinned (7 Oct 2026): a negative power is a division in the simplest-fraction check. Gate 2's mutation
+// run (11 Oct 2026) found the pin's expected fraction wrong: (x^2+7x+10)/(x^2+3x-10) is (x+2)/(x-2), so the old test passed
+// on "not equivalent" and never reached the form check. It now asks the form check itself.
 describe("a negative power is a division in the simplest-fraction check", () => {
   test("(x^2+7x+10)(x^2+3x-10)^-1 is the question's fraction, not simplest", () => {
-    const r = checkAlgebraic("(x^2+7x+10)(x^2+3x-10)^-1", { answer: "(x+5)/(x-2)", mode: "form", form: "simplest-fraction" });
+    const r = checkAlgebraic("(x^2+7x+10)(x^2+3x-10)^-1", { answer: "(x+2)/(x-2)", mode: "form", form: "simplest-fraction" });
     expect(r.correct).toBe(false);
-    expect(checkAlgebraic("(x+5)(x-2)^-1", { answer: "(x+5)/(x-2)", mode: "form", form: "simplest-fraction" }).correct).toBe(true);
+    expect(r.reason).toBe("not-simplified");
+    expect(checkAlgebraic("(x+2)(x-2)^-1", { answer: "(x+2)/(x-2)", mode: "form", form: "simplest-fraction" }).correct).toBe(true);
+  });
+});
+
+// Gate 2, G2-24 (11 Oct 2026; fm1-g0 E20): a logarithm of a number written without brackets ("log40/log5", "log 40 / log
+// 5") was read with the division inside the first logarithm, so the indicial step's own line was refused while
+// "log(40)/log(5)" was right. A log or ln of a bare number takes that number as its argument.
+describe("a logarithm of a bare number takes that number only", () => {
+  const spec = { answer: String.raw`3x-2=\frac{\log 40}{\log 5}`, mode: "equivalent" as const };
+  test("log40/log5, log 40 / log 5 and the bracketed form are one line", () => {
+    for (const typed of ["3x - 2 = log40/log5", "3x - 2 = log 40 / log 5", "3x-2 = log(40)/log(5)", String.raw`3x-2=\frac{\log 40}{\log 5}`]) {
+      expect(checkAlgebraic(typed, spec).correct, typed).toBe(true);
+    }
+    expect(checkAlgebraic("3x - 2 = log5/log40", spec).correct).toBe(false);
+  });
+  test("ln too", () => {
+    expect(checkAlgebraic("x = ln20/ln3", { answer: String.raw`x=\frac{\ln 20}{\ln 3}`, mode: "equivalent" }).correct).toBe(true);
   });
 });

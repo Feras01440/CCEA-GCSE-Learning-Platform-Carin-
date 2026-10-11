@@ -58,9 +58,16 @@ function tidy(line: string): string {
     // "at right angles to" says "perpendicular to" (fm2-c-1.md D4: "perpendicular to the slope" was refused against a
     // correction written "at right angles to the slope").
     .replace(/\bat right angles to\b/gi, "perpendicular to")
+    .replace(/\bat (?:90 ?°|90 degrees|90|a right angle) to\b/gi, "perpendicular to")
     .trim();
 }
 
+// The trailing unit, as the line reading has always dropped it, and in the fix box with the electrical and energy units
+// too ("10 kWh", "600 C", "0.9 A"; gate 2, G2-45). The working ladder and the line steps keep "24 Ω" and "30 mA": a scheme
+// line "R = 24 Ω" is short, so the unit would come off it and not off her longer line (gate 2's corpus guard: 16 ladder
+// points lost, p2 calculating-resistance .0007 P3 among them).
+const TRAILING_UNIT = /(?<=[\d)])\s*(?:(?:square |sq\.? )?units?(?:²|\^\{?2\}?)?|cm|mm|m|km|kg|g|s|[Mm]inutes|min|[Ss]econds|sec|[Hh]ours|h|°|[Dd]egrees|N|kN|J|kJ|W|kW|Pa|kPa|Hz|m\/s|ms⁻¹|ms\^?-1|m s⁻¹|m\/s²|m\/s\^?\{?2\}?|ms⁻²|ms\^?\{?-2\}?|m s⁻²|m s\^?\{?-2\}?)(?=[})\]]*\s*$)/;
+const TRAILING_UNIT_FIX = /(?<=[\d)])\s*(?:(?:square |sq\.? )?units?(?:²|\^\{?2\}?)?|cm|mm|m|km|kg|g|s|[Mm]inutes|min|[Ss]econds|sec|[Hh]ours|h|°|[Dd]egrees|N|kN|J|kJ|W|kW|kWh|Wh|Pa|kPa|Hz|C|mA|A|V|Ω|m\/s|ms⁻¹|ms\^?-1|m s⁻¹|m\/s²|m\/s\^?\{?2\}?|ms⁻²|ms\^?\{?-2\}?|m s⁻²|m s\^?\{?-2\}?)(?=[})\]]*\s*$)/;
 /**
  * A trailing unit comes off (mechanics units included, in ASCII and superscript spellings). Case matters: "5 j"
  * is a unit vector, not joules, and "8 i" is not a unit at all (the case-blind version read "y = 5 j" as y = 5).
@@ -69,13 +76,34 @@ function dropUnit(line: string): string {
   // A unit before the closing brackets of a group ("\dfrac{…}{\sin 57°}", "/(sin 57°)") comes off too, so the typed
   // line and the authored one lose the same thing.
   // An area in "units²" / "square units" (a grid with no scale) is a unit too (engine brief item 19).
+  return line.replace(fixBox > 0 ? TRAILING_UNIT_FIX : TRAILING_UNIT, "").trim();
+}
+
+/** A unit written after a number, spaced ("18 m"), or a unit of two or more letters glued ("18cm"). */
+const ARITHMETIC_UNIT = String.raw`(?:\s+(?:m\/s²|m\/s|cm|mm|km|kg|g|s|min|h|N|kN|J|kJ|W|kW|kWh|V|A|mA|Ω|C|Hz|Pa|m)|(?:m\/s²|m\/s|cm|mm|km|kg|min|kN|kJ|kW|kWh|mA|Hz|Pa|Ω))`;
+
+/**
+ * Units inside arithmetic come off when every number of a side carries one ("Gradient = 18 m ÷ 6 s = 3 m/s" is
+ * "18 ÷ 6 = 3"; gate 2, G2-27, 11 Oct 2026: refused where "18 ÷ 6 = 3" was the fix). A side with a number but no unit,
+ * or a letter after a number with no space ("5m + 3m", algebra), is left as it is.
+ */
+function dropArithmeticUnits(line: string): string {
+  const unit = new RegExp(`(\\d)${ARITHMETIC_UNIT}(?=\\s*(?:[×x*÷/+\\-−]|$))`, "g");
   return line
-    .replace(/(?<=[\d)])\s*(?:(?:square |sq\.? )?units?(?:²|\^\{?2\}?)?|cm|mm|m|km|kg|g|s|[Mm]inutes|min|[Ss]econds|sec|[Hh]ours|h|°|[Dd]egrees|N|kN|J|kJ|W|kW|Pa|kPa|Hz|m\/s|ms⁻¹|ms\^?-1|m s⁻¹|m\/s²|m\/s\^?\{?2\}?|ms⁻²|ms\^?\{?-2\}?|m s⁻²|m s\^?\{?-2\}?)(?=[})\]]*\s*$)/, "")
-    .trim();
+    .split(/(=)/)
+    .map((side) => {
+      if (side === "=") return side;
+      const numbers = side.match(/\d+(?:\.\d+)?/g) ?? [];
+      if (numbers.length < 2 || !/[×x*÷/+\-−]/.test(side.replace(/^\s*-/, ""))) return side;
+      const stripped = side.replace(unit, "$1");
+      const unitsGone = (side.match(unit) ?? []).length;
+      return unitsGone === numbers.length ? stripped : side;
+    })
+    .join("");
 }
 
 function prepare(line: string): string {
-  return dropUnit(tidy(line));
+  return dropUnit(dropArithmeticUnits(tidy(line)));
 }
 
 /**
@@ -167,6 +195,8 @@ export type FixMatch = { match: true; how: "line" | "value" } | { match: false; 
 
 const NONE: FixMatch = { match: false, how: "none" };
 const LINE: FixMatch = { match: true, how: "line" };
+/** Above 0 while markFix reads: the readings only the fix box uses (see TRAILING_UNIT_FIX and asTyped). */
+let fixBox = 0;
 
 /** A line with `$…$` maths in it, as plain text (the maths kept as TeX): what she might type, before tidying. */
 function plainText(line: string): string {
@@ -331,7 +361,7 @@ function valueOf(bare: string): number | null {
  * such as "4p" or "12x" is never read as a number and its unit.
  */
 const UNIT_WORD =
-  "(?:mm|cm|km|kg|mg|tonnes?|ms|min|minutes?|hours?|hrs?|days?|years?|seconds?|sec|degrees?|kN|kJ|MJ|kW|MW|Pa|kPa|Hz|kHz|mA|ohms?|mol|dm|ml|mL|litres?|square|sq|units?|m|g|t|s|h|K|N|J|W|V|A|C|l|L)";
+  "(?:mm|cm|km|kg|mg|tonnes?|ms|min|minutes?|hours?|hrs?|days?|years?|seconds?|sec|degrees?|kWh|Wh|kN|kJ|MJ|kW|MW|Pa|kPa|Hz|kHz|mA|ohms?|coulombs?|joules?|watts?|volts?|amps?|amperes?|newtons?|metres?|mol|dm|ml|mL|litres?|square|sq|units?|m|g|t|s|h|K|N|J|W|V|A|C|l|L)";
 const UNIT_POWER = "(?:\\^?\\{?[-−]?\\d\\}?|[²³]|⁻[¹²³])?";
 // A composite unit is one unit after a symbol too: "°C per minute", "°C/min" (the M8 author, 7 Oct 2026: a right fix
 // ending in "°C per minute" was refused where "-5.5" was accepted).
@@ -520,13 +550,18 @@ function isEquation(first: string): boolean {
   return /[A-Za-z]\d|\d[A-Za-z]|[A-Za-z]\s*[+\-−×*/÷^]|[+\-−×*/÷^]\s*[A-Za-z]/.test(s);
 }
 
+// The verbs before a value her line states in words; in the fix box also "be", "holds", "has", "have", "contains" and
+// "carries" ("each daughter cell holds 46"; gate 2, G2-46). The pairing of a scheme point with its solution line and the
+// line steps keep the first list (gate 2's corpus guard: m7 simultaneous .0011 A1 "y = 8" lost its solution line).
+const COPULA_VALUE = /\b(?:is|are|was|equals|gives|giving|makes|becomes|comes to|to|totals?|totalling|sums? to|adds? up to)\s+(?:about\s+|approximately\s+)?([-−]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)((?:\s*(?:°C|°|%)|(?:\s+[A-Za-z][A-Za-z'-]*[²³]?(?:\/[A-Za-z]{1,3}[²³]?)?){1,3})?)[.,;]*\s*$/i;
+const COPULA_VALUE_FIX = /\b(?:is|are|was|be|equals|gives|giving|makes|becomes|holds|has|have|contains|carries|comes to|to|totals?|totalling|sums? to|adds? up to)\s+(?:about\s+|approximately\s+)?([-−]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)((?:\s*(?:°C|°|%)|(?:\s+[A-Za-z][A-Za-z'-]*[²³]?(?:\/[A-Za-z]{1,3}[²³]?)?){1,3})?)[.,;]*\s*$/i;
 /**
  * A value her line states in words at its end: "so the mean is 59", "corrected to 94.8", "which comes to 21.5 cm".
  * Only after one of these verbs, so a stray number ("banana 36.2") is still not a value.
  */
 function copulaValue(s: string): Stated | null {
   // The value, then at most a unit or a short unit phrase ("48 press-ups", "58 loaves an hour", "22 cm").
-  const m = /\b(?:is|are|was|equals|gives|giving|makes|becomes|comes to|to|totals?|totalling|sums? to|adds? up to)\s+(?:about\s+|approximately\s+)?([-−]?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)((?:\s*(?:°C|°|%)|(?:\s+[A-Za-z][A-Za-z'-]*[²³]?(?:\/[A-Za-z]{1,3}[²³]?)?){1,3})?)[.,;]*\s*$/i.exec(s);
+  const m = (fixBox > 0 ? COPULA_VALUE_FIX : COPULA_VALUE).exec(s);
   if (!m) return null;
   return stated(m[1]);
 }
@@ -673,7 +708,7 @@ function clauses(line: string): string[] {
       push(part);
       // A lead-in ("Taking logs: 2x log 5 = …", "Multiply every term by 6: 3(x + 4) + …") is not part of the
       // statement after it.
-      const lead = /^[A-Z][A-Za-z0-9 ()]{0,40}:\s+(.+)$/.exec(part.trim());
+      const lead = /^[A-Za-z0-9(][A-Za-z0-9 ()×x*+\-−=.]{0,40}:\s+(.+)$/.exec(part.trim());
       if (lead) push(lead[1]!);
       // Two statements joined by "and" ("a/4 = 2 and a = 8", "∑x = 120 and ∑x² = 2970") are each a statement; the
       // roots of one letter ("x = 1 and x = 3") stay one set.
@@ -1214,7 +1249,11 @@ export function statementsHold(typed: string): boolean {
     for (let i = 0; i + 1 < values.length; i += 1) {
       const [a, b] = [values[i], values[i + 1]];
       if (a === null || a === undefined || b === null || b === undefined) continue;
-      if (!sidesAgree(a, b, sides[i]!, sides[i + 1]!)) return false;
+      if (sidesAgree(a, b, sides[i]!, sides[i + 1]!)) continue;
+      // One quantity in two units: "20 cm = 0.2 m", "1.61 kW = 1610 W" (gate 2, G2-27, the P2 authors).
+      const pb = parseNumeric(sides[i + 1]!);
+      if (pb?.unit && unitDimension(pb.unit) !== null && checkNumeric(sides[i]!, { value: pb.value, unit: pb.unit, tolerance: { type: "relative", value: 0.001 } }).correct) continue;
+      return false;
     }
   }
   return true;
@@ -1252,6 +1291,7 @@ function directionContradicts(typed: string, lines: readonly string[], before: r
 /** The kind of quantity a line's final value is in ("force" for N, "mass" for kg), when the unit is one the marker knows. */
 function resultDimension(line: string): string | null {
   const plain = asTyped(plainText(line)).replace(/[.,;:]+$/, "");
+  if (/^\s*(?:number of )?units\s*[=:]/i.test(plain)) return unitDimension("kWh");
   const last = plain.split(/[=≈]/).pop() ?? "";
   const m = /[-−]?\d+(?:\.\d+)?\s*([A-Za-zΩ°µ][A-Za-z²³⁻¹/^0-9]*)\s*$/.exec(last.trim());
   return m ? unitDimension(m[1]!) : null;
@@ -1294,6 +1334,236 @@ export interface FixItem {
  *   4. otherwise `fixMatches` with her working.
  */
 export function markFix(typed: string, item: FixItem): FixMatch {
+  fixBox += 1;
+  try {
+    return markFixReading(typed, item);
+  } finally {
+    fixBox -= 1;
+  }
+}
+
+function markFixReading(typed: string, item: FixItem): FixMatch {
+  // A correction line "Also accepted = …" offers its wording under the flagged line's own label, and on its own (gate 2,
+  // G2-39, 11 Oct 2026: "Step 4 = repeat heating and weighing until constant mass" was refused while the same words
+  // stood in an "Also accepted" line).
+  const flaggedRaw = plainText(item.studentWorking[item.mistakeLine - 1] ?? "").trim();
+  const flaggedLabel = /^([^:=]{1,40}?)\s*[:=]\s*\S/.exec(flaggedRaw)?.[1]?.trim() ?? null;
+  const expanded = item.correction.flatMap((c) => {
+    const m = /^\s*also accepted\s*[=:]\s*(.+)$/i.exec(c);
+    const lines = m ? [m[1]!, ...(flaggedLabel ? [`${flaggedLabel} = ${m[1]!}`] : [])] : [c];
+    // A remark in brackets at the end of a line ("12 hires (a whole number)") is the author's aside, not the fix's words.
+    return lines.flatMap((l) => {
+      const r = /^(.*\S)\s*\(([^()]*[A-Za-z]{3,}[^()]*)\)\s*\.?$/.exec(l);
+      return r && !/[=+×÷*/^]/.test(r[2]!) ? [l, r[1]!] : [l];
+    });
+  });
+  const it = { ...item, correction: expanded };
+  const verdict = markFixLines(typed, it);
+  if (verdict.match) return verdict;
+  // The flagged line typed back fixes nothing, whichever route below reads it (fixer-p2's EP-7, 11 Oct 2026: lens-ray-
+  // diagrams ftm.0003's flagged line, typed back word for word, passed the statements route as one clause the fix and the
+  // rest reasons).
+  const flaggedLine = item.studentWorking[item.mistakeLine - 1] ?? "";
+  if (sameAsMistakeLine(typed, flaggedLine)) return NONE;
+  // So does any line already on the page, as the line route's first rule reads it (a bare value aside): gate 2's corpus
+  // guard found 25 of her own sound lines paid by the routes below ("Top: x² + 9x = x(x + 9)" through the lead-in route).
+  {
+    const bare = splitLabel(canon(typed));
+    const bareValueLine = bare.label === null && bareValue(bare.body) !== null;
+    const written = asWritten(typed);
+    if (!bareValueLine && item.studentWorking.some((w) => sameWritten(written, asWritten(w)))) return NONE;
+    // A line of the correction typed as written has had the line route's whole reading (a restated sound line, or a
+    // line under another label stating a value she already reached, is not this line's fix); the routes below read her
+    // own wording and never overturn it (pressure ftm.02: "Check: 8 × 8 = 64 cm²" passed the lead-in route).
+    if (it.correction.some((c) => sameWritten(written, asWritten(c)))) return NONE;
+  }
+  // The flagged line's own wrong words: in it and in no line of the correction ("virtual", "directly" where the correction
+  // keeps "the image can be caught on the sensor, so it is real"). A negator is left out: it can sit beside any word.
+  const correctionWords = it.correction.flatMap(coreWords);
+  const wrongWords = coreWords(flaggedLine).filter(
+    (w) => w.length >= 4 && !CORE_STOP.has(w) && !CORE_DIRECTION.has(w) && !/^[0-9]/.test(w) && !/^(?:not|never|cannot|nt)$/.test(w) && !correctionWords.some((x) => sameCoreWord(x, w)),
+  );
+  // Her line with a prose lead-in ("resolving horizontally: 85 − F = 0"): the statement after it (gate 2, G2-35).
+  const lead = /^\s*[A-Za-z][A-Za-z ,]{2,40}:\s*(.*[=<>].*)$/.exec(plainText(typed));
+  if (lead && !/[=<>]/.test(lead[0].slice(0, lead[0].indexOf(":"))) && markFixLines(lead[1]!, it).match) return LINE;
+  // Statements joined by "so" or a comma: one of them the fix, and every other a reason that contradicts nothing the
+  // correction states ("a = 0, so 85 - F = 0"; gate 2, G2-35b). A value of a quantity the correction gives another value
+  // ("…, so F = 75") is a contradiction.
+  {
+    const parts = plainText(typed)
+      .split(/\s*[,;]\s*|\s+(?:so|therefore|hence|thus|giving|and so)\s+/i)
+      .map((x) => x.trim().replace(/^(?:so|therefore|hence|thus|and)\s+/i, ""))
+      .filter((x) => x.length > 0)
+      // A chain that ends on its sign ("d2N/dx2 = -24 < 0") is the statement and the sign it reads (G2-31d).
+      .flatMap((x) => {
+        const m = /^(.*=\s*([-−]?\d+(?:\.\d+)?))\s*([<>])\s*0\s*$/.exec(x);
+        return m ? [m[1]!.trim(), `${m[2]} ${m[3]} 0`] : [x];
+      });
+    if (parts.length >= 2) {
+      const correctionValue = (label: string): number[] =>
+        it.correction.flatMap((c) => {
+          const m = new RegExp(`(?:^|[^A-Za-z])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*=\\s*([-−]?\\d+(?:\\.\\d+)?)`).exec(plainText(c));
+          return m ? [Number(m[1]!.replace("−", "-"))] : [];
+        });
+      const reason = (x: string) => {
+        // A sign read off a value: "-24 < 0" is a reason when it is true.
+        const sign = /^\s*([-−]?\d+(?:\.\d+)?)\s*([<>])\s*0\s*$/.exec(x);
+        if (sign) {
+          const v = Number(sign[1]!.replace("−", "-"));
+          return sign[2] === "<" ? v < 0 : v > 0;
+        }
+        // Prose holding no value is a reason, unless it says the flagged line's own wrong words again (EP-7).
+        if (!/=/.test(x)) return !/\d/.test(x) && !coreWords(x).some((w) => wrongWords.some((v) => sameCoreWord(v, w)));
+        const m = /^\s*([A-Za-z])\s*=\s*([-−]?\d+(?:\.\d+)?)\s*[A-Za-z/²]*\s*$/.exec(x);
+        if (!m) return false;
+        const given = correctionValue(m[1]!);
+        return given.length === 0 || given.some((v) => Math.abs(v - Number(m[2]!.replace("−", "-"))) < 1e-9);
+      };
+      const fixAt = parts.findIndex((x) => !sameAsMistakeLine(x, flaggedLine) && markFixLines(x, it).match);
+      if (fixAt >= 0 && parts.every((x, k) => k === fixAt || reason(x) || markFixLines(x, it).match)) return LINE;
+    }
+  }
+  // A worded fix: the words the correction puts in place of the flagged line's (gate 2, G2-34, G2-36, G2-40 to G2-43).
+  if (correctedCore(typed, it)) return LINE;
+  // The value chosen from the flagged line's list (gate 2, G2-37: "10 cm" where the flagged line offered "−18 cm or 10 cm"
+  // and the correction keeps 10 cm).
+  if (chosenValue(typed, it)) return LINE;
+  // A list of values that are the correction's results (gate 2, G2-38, G2-46: "Bar heights: 1.5, 5, 4, 1.33", "0.9 A and
+  // 0.3 A").
+  if (resultsListed(typed, it)) return LINE;
+  return NONE;
+}
+
+/** The values a line states, a label before a colon aside: "Bar heights: 1.5, 5, 4, 1.33" → 1.5, 5, 4, 1.33. */
+function listedValues(line: string): number[] {
+  const body = plainText(line).replace(/^\s*[A-Za-z][A-Za-z ]{0,40}:\s*/, "").replace(/^[^:]{1,60}:\s*(?=[-−]?\d)/, "");
+  if (/[=<>×÷*/^√]/.test(body)) return [];
+  return (body.match(/[-−]?\d+(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace("−", "-")));
+}
+
+/** Each statement's result in a correction line: the value after its last "=" ("6 ÷ 4 = 1.5, 10 ÷ 2 = 5" → 1.5, 5). */
+function statementResults(line: string): number[] {
+  return plainText(line)
+    .split(/[,;.](?=\s)|\band\b/)
+    .map((part) => {
+      const sides = part.split("=");
+      if (sides.length < 2) return null;
+      const v = parseNumeric(sides[sides.length - 1]!.trim());
+      return v ? v.value : null;
+    })
+    .filter((v): v is number => v !== null && Number.isFinite(v));
+}
+
+function chosenValue(typed: string, item: FixItem): boolean {
+  const flagged = item.studentWorking[item.mistakeLine - 1] ?? "";
+  const offered = listedValues(flagged.replace(/^[^:]*:/, "")).length >= 2 ? listedValues(flagged.replace(/^[^:]*:/, "")) : (plainText(flagged).match(/[-−]?\d+(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace("−", "-")));
+  if (offered.length < 2 || !/\bor\b/i.test(flagged)) return false;
+  const mine = listedValues(typed);
+  if (mine.length !== 1) return false;
+  const v = mine[0]!;
+  const kept = item.correction.some((c) => {
+    const vals = (plainText(c).match(/[-−]?\d+(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace("−", "-")));
+    return vals.length === 1 && Math.abs(vals[0]! - v) < 1e-9;
+  });
+  return kept && offered.some((o) => Math.abs(o - v) < 1e-9);
+}
+
+function resultsListed(typed: string, item: FixItem): boolean {
+  const mine = listedValues(typed);
+  if (mine.length < 2) return false;
+  const flagged = item.studentWorking[item.mistakeLine - 1] ?? "";
+  const flaggedValues = (plainText(flagged).match(/[-−]?\d+(?:\.\d+)?/g) ?? []).map((n) => Number(n.replace("−", "-")));
+  const results = item.correction.flatMap(statementResults);
+  const near = (a: number, b: number) => Math.abs(a - b) <= Math.max(0.005, 0.01 * Math.abs(b));
+  const pool = [...results];
+  for (const m of mine) {
+    const k = pool.findIndex((r) => near(m, r));
+    if (k < 0) return false;
+    pool.splice(k, 1);
+  }
+  // Not the flagged line's own values said again.
+  return !mine.every((m) => flaggedValues.some((f) => near(m, f)));
+}
+
+/**
+ * The words a prose correction puts in place of the flagged line's, said in her own sentence (gate 2, 11 Oct 2026: "the
+ * ore is bauxite" for "ore = bauxite", "orange to colourless" for "The bromine water changes
+ * from orange to colourless.", "CO2 and H2O" for "The products are CO2 and H2O.", "Kerosene is used as aircraft fuel."
+ * for "Kerosene is a fuel for aircraft."). The correction and the flagged line lose their common opening and ending
+ * words; what is left of the correction (its content words, at most four) must all be in her answer, in their order where
+ * the correction runs from one to the other ("white to blue"), with none of the flagged line's own words and no negator
+ * just before them. A correction that only reorders the flagged line's words ("from the positive terminal to the
+ * negative terminal") is met by its first and last words in its order. Synonyms are the content's to list ("Also
+ * accepted" lines): "planes" is not "aircraft" here.
+ */
+const CORE_STOP = new Set(["a", "an", "the", "is", "are", "was", "were", "be", "been", "it", "its", "of", "and", "so", "that", "this", "as", "by", "for", "with", "at", "in", "on", "than", "then", "has", "have", "had", "will", "would", "can", "very", "there", "their", "they", "which", "used", "use", "uses", "acts", "act", "changes", "change", "changed", "turns", "turn", "turned", "goes", "go", "went", "becomes", "become", "became", "gives", "give", "makes", "make", "made", "should", "must"]);
+const CORE_DIRECTION = new Set(["to", "into", "from", "towards", "toward", "then"]);
+function coreWords(line: string): string[] {
+  return asTyped(plainLine(line))
+    // "n-shaped", "U-shaped": one word, before the hyphen becomes a space.
+    .replace(/\b([A-Za-z])\s*-\s*shaped\b/g, "$1shaped")
+    .replace(/n['’]t\b/g, " not")
+    .replace(/(?<=[A-Za-z])-(?=[A-Za-z])/g, " ")
+    .replace(/\bat right angles to\b/gi, "perpendicular to")
+    .replace(/\bat (?:90 ?°|90 degrees|90|a right angle) to\b/gi, "perpendicular to")
+    .toLowerCase()
+    .replace(/[^a-z0-9²³+\-−α-ωΩ]+/g, " ")
+    .split(" ")
+    .filter((w) => w.length > 0 && !/^[+\-−]+$/.test(w));
+}
+function sameCoreWord(a: string, b: string): boolean {
+  if (a === b) return true;
+  const [s, l] = a.length <= b.length ? [a, b] : [b, a];
+  return s.length >= 3 && (l === `${s}s` || l === `${s}es` || l === `${s}wards` || l === `${s}ward` || (s.length >= 5 && l.startsWith(s) && l.length - s.length <= 3));
+}
+function correctedCore(typed: string, item: FixItem): boolean {
+  const flagged = item.studentWorking[item.mistakeLine - 1] ?? "";
+  const f = coreWords(flagged);
+  const hers = coreWords(typed);
+  if (f.length === 0 || hers.length === 0) return false;
+  const has = (w: string) => hers.findIndex((h) => sameCoreWord(h, w));
+  const negatedAt = (i: number) => hers.slice(Math.max(0, i - 3), i).some((h) => /^(?:not|no|never|nt|cannot)$/.test(h));
+  for (const line of item.correction) {
+    if (item.studentWorking.some((w) => sameWritten(asWritten(line), asWritten(w)))) continue;
+    const c = coreWords(line);
+    let i = 0;
+    while (i < f.length && i < c.length && f[i] === c[i]) i += 1;
+    let j = 0;
+    while (j < f.length - i && j < c.length - i && f[f.length - 1 - j] === c[c.length - 1 - j]) j += 1;
+    const coreC = c.slice(i, c.length - j);
+    const coreF = f.slice(i, f.length - j);
+    const content = (ws: string[]) => ws.filter((w) => !CORE_STOP.has(w) && !CORE_DIRECTION.has(w));
+    const cC = content(coreC);
+    const cF = content(coreF);
+    if (cC.length === 0) continue;
+    // A number is the value routes' to judge; a formula (letters and digits) is a word.
+    if (cC.some((w) => /^\d/.test(w) && !/[a-z]/.test(w))) continue;
+    const dist = cC.filter((w) => !cF.some((x) => sameCoreWord(x, w)));
+    // Words, not symbols: a unit letter ("m" of "Ω/m") or a lone symbol is the unit and value routes' to judge. At most
+    // four of them: a longer correction is said in its own words or listed as an accepted line.
+    if (dist.some((w) => w.length < 3) || dist.length > 4) continue;
+    const distF = cF.filter((w) => !cC.some((x) => sameCoreWord(x, w)));
+    if (distF.some((w) => has(w) >= 0)) continue;
+    if (dist.length === 0) {
+      // A reorder: the first and last words of the correction's run, in its order and not the flagged order.
+      if (cC.length < 2) continue;
+      const a = has(cC[0]!);
+      const b = has(cC[cC.length - 1]!);
+      if (a >= 0 && b > a && !negatedAt(a)) return true;
+      continue;
+    }
+    const at = dist.map(has);
+    if (at.some((x) => x < 0 || negatedAt(x))) continue;
+    // A run from one word to another keeps its order ("white to blue", not "blue to white").
+    const directed = coreC.some((w) => CORE_DIRECTION.has(w) && w !== "then");
+    if (directed && dist.length >= 2 && !at.every((x, k) => k === 0 || x > at[k - 1]!)) continue;
+    return true;
+  }
+  return false;
+}
+
+/** The fix box's line and value routes (markFix before gate 2's additions). */
+function markFixLines(typed: string, item: FixItem): FixMatch {
   const written = asWritten(typed);
   if (written.length === 0) return NONE;
   // A bare value ("= 7/33") is judged by what it is worth, not by where else it is written: her line 3 may end on
@@ -1338,6 +1608,30 @@ function asTypedTeX(line: string): string {
   return line.replace(/\\(?:math(?:bf|rm|it|sf)|text(?:bf|it|rm)?|boldsymbol|operatorname)\{([^{}]*)\}/g, "$1");
 }
 
+/** Quantity words and the symbols CCEA's physics formulae use for them (a word formula is the formula). */
+const WORD_SYMBOL: Array<[RegExp, string]> = [
+  [/\bpotential difference\b|\bvoltage\b/gi, "V"],
+  [/\bresistance\b/gi, "R"],
+  [/\bcurrent\b/gi, "I"],
+  [/\bcharge\b/gi, "Q"],
+  [/\bpower\b/gi, "P"],
+  [/\benergy\b/gi, "E"],
+  [/\btime\b/gi, "t"],
+  [/\bwave ?speed\b|\bspeed\b|\bvelocity\b/gi, "v"],
+  [/\bfrequency\b/gi, "f"],
+  [/\bwavelength\b/gi, "λ"],
+  [/\bdistance\b/gi, "s"],
+  [/\bforce\b/gi, "F"],
+  [/\bmass\b/gi, "m"],
+  [/\bacceleration\b/gi, "a"],
+];
+/** "resistance = voltage ÷ current" → "R = V ÷ I"; a line with any word outside the table is left as it is. */
+function wordFormula(line: string): string {
+  let out = line;
+  for (const [re, sym] of WORD_SYMBOL) out = out.replace(re, sym);
+  return /[A-Za-z]{2,}/.test(out.replace(/\s+[x]\s+/g, " ")) ? line : out;
+}
+
 /** A ratio term: a number, a root of one ("√4", "√{9}") or a power ("2^3"). */
 const RATIO_TERM = String.raw`(?:√\{?)?\d+(?:\.\d+)?\}?(?:\^\{?\d+\}?)?`;
 /**
@@ -1360,6 +1654,28 @@ function asTyped(line: string): string {
     .replace(/\^\{-1\}/g, "^-1")
     // … and an " x " between two matrices is the product sign, as it is between two numbers below.
     .replace(/(?<=[A-Z]|\^-1)\s+x\s+(?=[A-Z(])/g, " × ")
+    // A negative power of a letter is the fraction it writes: "128x^-2" is "128/x^2", "x^{-1}" is "1/x" (gate 2, G2-31:
+    // "dL/dx = 2 - 128/x^2" was refused against "dL/dx = 2 - 128x^-2"). Notation, not form: a factorised line is still
+    // not its expansion.
+    // Only a term: a number before the letter, or an operator or bracket before it; a unit ("Ω m⁻¹") is left alone.
+    // In the fix box only: the ladder and the line steps must see the rewriting step itself ("8x^{-1}" for 8/x is the
+    // M1 a scheme pays; gate 2's corpus guard: 8 ladder points lost, fm1 gradient-at-a-point .0004 M1 among them).
+    .replace(/(^|[=+\-−×*/(]\s*|\d(?:\.\d+)?\s*)([a-z])\^\{?\s*-\s*(\d+)\s*\}?/g, (_m: string, lead: string, v: string, n: string) => {
+      if (fixBox === 0) return _m;
+      const k = /\d/.test(lead) ? lead.trim() : "";
+      return `${k ? "" : lead}${k || "1"}/${v}${n === "1" ? "" : `^${n}`}`;
+    })
+    // A second derivative in one spelling: d²y/dx², d^2y/dx^2 and d2y/dx2 are d2y/dx2 (gate 2, G2-31).
+    .replace(/\bd\s*(?:\^\s*\{?\s*2\s*\}?|²)\s*([A-Za-z])\s*\/\s*d\s*([A-Za-z])\s*(?:\^\s*\{?\s*2\s*\}?|²)/g, (_m: string, y: string, x: string) => `d2${y}/d${x}2`)
+    // "…, which is negative" states "< 0", "…, which is positive" "> 0" (G2-31: "d2y/dx2 = -12 < 0").
+    // Only straight after a value or an expression: a sentence that opens "That is positive, so …" is left as written
+    // (the pairing of optimisation .0014(c) W2 with its solution line reads it so).
+    .replace(/(?<=[0-9A-Za-z)}])\s*,?\s*(?:which|that|and this|this)\s+is\s+negative\b/gi, " < 0")
+    .replace(/(?<=[0-9A-Za-z)}])\s*,?\s*(?:which|that|and this|this)\s+is\s+positive\b/gi, " > 0")
+    // A formula in words is the formula in its symbols ("resistance = voltage ÷ current" is R = V ÷ I; G2-44), in the fix
+    // box only: the ladder reads a word formula inside her prose its own way (p2 echoes .0021(a), "…found from distance =
+    // speed × time" earns v = d/t).
+    .replace(/^(\s*[A-Za-z][A-Za-z ]*?\s*=\s*[A-Za-z][A-Za-z ]*?(?:\s*[×*÷/x]\s*[A-Za-z][A-Za-z ]*?)+\s*)$/i, (line) => (fixBox > 0 ? wordFormula(line) : line))
     // "v squared = u squared + 2as" is the formula v² = u² + 2as.
     .replace(/([A-Za-z0-9)])\s+squared\b/g, "$1^2")
     .replace(/([A-Za-z0-9)])\s+cubed\b/g, "$1^3")

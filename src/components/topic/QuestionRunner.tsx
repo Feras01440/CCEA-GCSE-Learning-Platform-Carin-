@@ -25,7 +25,8 @@ import { CompanionLine } from "@/components/companion/CompanionLine";
 import { useCompanionContext } from "@/lib/companion";
 import { recordAttempt, touchSession, type ItemRef } from "@/lib/session/record";
 import { reportsFor, saveReport } from "@/lib/db/reports";
-import { ladderTotal, markWorking, methodSteps, workingToLines, type EarnedMark } from "@/lib/marking/working";
+import { demandsWorking } from "@/components/items/mark";
+import { ladderTotal, markWorking, methodSteps, workingLinesWithAnswer, type EarnedMark } from "@/lib/marking/working";
 import { reteachFor, supportHintFor, supportOffer, type Reteach, type SupportRung } from "./reteach";
 import { WorkingField } from "./WorkingField";
 
@@ -180,9 +181,10 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
       workedSolution: part.workedSolution,
       followThrough,
       subject: item.subject,
-      // A part that requires working (its flag, or a stem that says so) pays a bare value nothing: the ladder below
-      // decides (the C2 reviewer's ruling, 8 Oct 2026; CCEA 2021 C2 Higher general instruction 9).
-      requiresWorking: part.requiresWorking === true || /\bmust show\b[^.?!]*\bworking\b/i.test(part.stem),
+      // A part whose paper demands working pays a bare value nothing: the ladder below decides (the C2 reviewer's ruling,
+      // 8 Oct 2026; CCEA 2021 C2 Higher general instruction 9). The demand is the stem's, or a science degree-of-hydration
+      // or empirical-formula calculation; the part's own flag only opens the box (gate 2, G2-05, 11 Oct 2026).
+      requiresWorking: demandsWorking(part, q.parts.map((p) => p.stem), item.subject),
     });
     answersRef.current = { ...answersRef.current, [part.id]: raw };
     setLastRaw(raw);
@@ -196,7 +198,10 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
     // scheme pays for that. The two awards are not added together — an answer part-marked through a
     // common error has usually been paid for that very method — so the higher of them stands, capped
     // at the part's tariff.
-    const evidence = !marked.correct && working.trim() ? markWorking(workingToLines(working), part.scheme, part.workedSolution) : null;
+    // Her working, with the answer box's own line when it shows working (gate 2, G2-18: "6.44 - 2.84 = 3.60" typed as the
+    // answer is working the examiner sees).
+    const lines = workingLinesWithAnswer(working, raw, { setAside: marked.workingOnly === true || marked.copiesQuestion === true });
+    const evidence = !marked.correct && lines.length > 0 ? markWorking(lines, part.scheme, part.workedSolution) : null;
     // A wrong answer never collects every mark from its working (ladderTotal; trial audit MK-04).
     // A show-that's answer box restating the printed target earns nothing; her working earns, all of it when it reaches
     // every point of the scheme (ruling 3).

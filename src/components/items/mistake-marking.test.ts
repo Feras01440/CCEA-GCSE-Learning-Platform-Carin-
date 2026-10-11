@@ -863,3 +863,179 @@ describe("the fix box never takes the mistake's own wrong value as the fix", () 
     expect(markFix(typed, item).match).toBe(true);
   });
 });
+
+// Gate 2, G2-25 (11 Oct 2026; fm1-g2 E19): the fix box read a matrix correction only in its own scalar form. A matrix's
+// name is the same name as "A^-1", "A^{-1}", "A⁻¹" or "A inverse", and its scalar in any spelling multiplies out.
+describe("the fix box reads a matrix fix under any name spelling and scalar form", () => {
+  const ftm = {
+    correction: ["A inverse = 1/-10 (1 -3 ; -4 2)", "X = 1/-10 (-60 ; 10) = (6 ; -1)", "x = 6, y = -1"],
+    studentWorking: ["A = (2 3 ; 4 1) and B = (9 ; 23)", "det A = (2)(1) - (3)(4) = -10", "A inverse = 1/10 (1 -3 ; -4 2)", "X = 1/10 (-60 ; 10) = (-6 ; 1)", "x = -6, y = 1"],
+    mistakeLine: 3,
+  };
+  test("the same inverse, named and scaled another way, is the fix", () => {
+    for (const fix of ["A^-1 = -1/10 (1 -3 ; -4 2)", "A inverse = 1/10 (-1 3 ; 4 -2)", "A^{-1} = (-0.1 0.3 ; 0.4 -0.2)", "A inverse = 1/-10 (1 -3 ; -4 2)"]) {
+      expect(markFix(fix, ftm).match, fix).toBe(true);
+    }
+  });
+  test("the flagged inverse is still refused", () => {
+    expect(markFix("A inverse = 1/10 (1 -3 ; -4 2)", ftm).match).toBe(false);
+    expect(markFix("A^-1 = 1/10 (1 -3 ; -4 2)", ftm).match).toBe(false);
+  });
+});
+
+// Gate 2, the fix box (11 Oct 2026; G2-26 to G2-48): a right fix in her own words, a label, a unit, a list or a reason
+// beside it is the fix; the flagged line, its words or a contradiction never is.
+describe("gate 2: the fix box reads a fix as she writes it", () => {
+  const fix = (typed: string, correction: string[], studentWorking: string[], mistakeLine: number) => markFix(typed, { correction, studentWorking, mistakeLine }).match;
+  test("G2-26 a bracketed product squared keeps its brackets", () => {
+    const w = ["y = 4x", "x² + 4x² = 68", "5x² = 68, so x² = 13.6"];
+    const c = ["x² + (4x)² = 68", "17x² = 68, so x² = 4"];
+    expect(fix("x² + (4x)² = 68", c, w, 2)).toBe(true);
+    expect(fix("x^2 + (4x)^2 = 68", c, w, 2)).toBe(true);
+    expect(fix("x² + 4x² = 68", c, w, 2)).toBe(false);
+  });
+  test("G2-27 units inside arithmetic, glued to a result, and a conversion line", () => {
+    expect(fix("Gradient = 18 m ÷ 6 s = 3 m/s", ["Rise = 18 × 1 = 18 m", "Run = 30 × 0.2 = 6 s", "Gradient = 18 ÷ 6 = 3 m/s"], ["Tangent drawn at t = 6", "It rises 18 small squares and runs across 30 small squares", "Gradient = 18 ÷ 30 = 0.6", "Speed at t = 6 is 0.6 m/s"], 3)).toBe(true);
+    expect(fix("Gradient = 18 m ÷ 30 s = 0.6 m/s", ["Rise = 18 × 1 = 18 m", "Run = 30 × 0.2 = 6 s", "Gradient = 18 ÷ 6 = 3 m/s"], ["Tangent drawn at t = 6", "It rises 18 small squares and runs across 30 small squares", "Gradient = 18 ÷ 30 = 0.6", "Speed at t = 6 is 0.6 m/s"], 3)).toBe(false);
+    const wave = { c: ["v = f λ", "λ = 20 ÷ 100 = 0.2 m", "v = 15 × 0.2", "v = 3 m/s"], w: ["v = f λ", "v = 15 × 20", "v = 300", "v = 300 m/s"] };
+    expect(fix("20 cm = 0.2 m", wave.c, wave.w, 2)).toBe(true);
+    expect(fix("20 cm = 20 m", wave.c, wave.w, 2)).toBe(false);
+  });
+  test("G2-31 derivative notations and a negative power as a fraction", () => {
+    const w = ["L = 2x + 128x^-1", "dL/dx = -128x^-2", "-128x^-2 is never 0, so L has no least value"];
+    const c = ["dL/dx = 2 - 128x^-2", "2 - 128x^-2 = 0 so x^2 = 64 and x = 8"];
+    expect(fix("dL/dx = 2 - 128/x^2", c, w, 2)).toBe(true);
+    expect(fix("dL/dx = -128/x^2", c, w, 2)).toBe(false);
+    const w2 = ["dN/dx = 96 - 24x", "96 - 24x = 0 so x = 4", "The sketch rises and then falls, so x = 4 gives a maximum", "N = 500 + 384 - 192 = 692"];
+    const c2 = ["d2N/dx2 = -24", "d2N/dx2 < 0, so x = 4 gives a maximum"];
+    for (const right of ["d²N/dx² = -24", "d^2N/dx^2 = -24", "d2N/dx2 = -24 < 0 so maximum"]) expect(fix(right, c2, w2, 3), right).toBe(true);
+    expect(fix("d2N/dx2 = 24 > 0 so minimum", c2, w2, 3)).toBe(false);
+  });
+  test("G2-32 an equation without its operation label, rearranged", () => {
+    const w = ["(1) + (3): 3x + 5y = 13", "2 x (1): 2x + 4y + 2z = 16", "2 x (1) - (2): -x + 5y = 23"];
+    const c = ["2 x (1) - (2): -x + 5y = 9", "Solving the pair: x = 1, y = 2"];
+    expect(fix("-x + 5y = 9", c, w, 3)).toBe(true);
+    expect(fix("5y - x = 9", c, w, 3)).toBe(true);
+    expect(fix("-x + 5y = 23", c, w, 3)).toBe(false);
+  });
+  test("G2-35 a prose lead-in, and a reason beside the fix that contradicts nothing", () => {
+    const w = ["the pull is 85 N forwards and the friction F acts backwards", "resolving horizontally: 85 − F = 25 × 3", "F = 85 − 75 = 10 N"];
+    const c = ["the pull is 85 N forwards and the friction F acts backwards", "85 − F = 0", "F = 85 N"];
+    for (const right of ["resolving horizontally: 85 − F = 0", "a = 0, so 85 - F = 0"]) expect(fix(right, c, w, 2), right).toBe(true);
+    expect(fix("85 - F = 0, so F = 75", c, w, 2)).toBe(false);
+    expect(fix("resolving horizontally: 85 − F = 25 × 3", c, w, 2)).toBe(false);
+  });
+  test("G2-37/38/46 the value kept from the flagged list, a list of the correction's results", () => {
+    const w = ["3x² + 4x − 64 = 0", "(3x + 16)(x − 4) = 0", "x = −16/3 or x = 4", "3x − 2 = −18 or 3x − 2 = 10", "Answer: the side is −18 cm or 10 cm"];
+    const c = ["x = −16/3 gives 3x − 2 = −18, and a length cannot be negative, so this root is rejected", "x = 4 gives 3x − 2 = 10", "The side is 10 cm"];
+    expect(fix("10 cm", c, w, 5)).toBe(true);
+    expect(fix("-18 cm", c, w, 5)).toBe(false);
+    const hw = ["Classes 0–4, 4–6, 6–10, 10–16", "Bar heights: 6, 10, 16, 8", "Vertical axis labelled Frequency"];
+    const hc = ["Widths 4, 2, 4, 6. Heights: 6 ÷ 4 = 1.5, 10 ÷ 2 = 5, 16 ÷ 4 = 4, 8 ÷ 6 = 1.33", "Vertical axis labelled Frequency density"];
+    expect(fix("Bar heights: 1.5, 5, 4, 1.33", hc, hw, 2)).toBe(true);
+    expect(fix("Bar heights: 6, 10, 16, 8", hc, hw, 2)).toBe(false);
+    const pw = ["Each branch has the supply voltage across it: 9 V", "The two branches share the current equally: 1.2 ÷ 2 = 0.6 A", "So each resistor carries 0.6 A"];
+    const pc = ["10 Ω branch: I = 9 ÷ 10 = 0.9 A", "30 Ω branch: I = 9 ÷ 30 = 0.3 A"];
+    expect(fix("0.9 A and 0.3 A", pc, pw, 2)).toBe(true);
+    expect(fix("I = V/R for each branch: 0.9 A and 0.3 A", pc, pw, 2)).toBe(true);
+    expect(fix("0.6 A each", pc, pw, 2)).toBe(false);
+  });
+  test("G2-39 an Also accepted line under the flagged line's label", () => {
+    const w = ["Step 1 = weigh the empty crucible", "Step 2 = add the hydrated salt and weigh again", "Step 3 = heat strongly, cool, then weigh", "Step 4 = weigh again until two masses are the same"];
+    const c = ["Step 4 = heat, cool and weigh again until two masses are the same", "Also accepted = repeat heating and weighing until constant mass", "Also accepted = heat again, cool and reweigh until two masses agree"];
+    for (const right of ["Step 4 = repeat heating and weighing until constant mass", "Step 4 = heat again, cool and reweigh until two masses agree", "repeat heating and weighing until constant mass"]) expect(fix(right, c, w, 4), right).toBe(true);
+    expect(fix("Step 4 = weigh again until two masses are the same", c, w, 4)).toBe(false);
+  });
+  test("G2-40/41/43 worded fixes: the correction's own words, in its order, none of the flagged line's", () => {
+    expect(fix("the ore is bauxite", ["ore = bauxite"], ["ore = haematite", "first reason for cryolite = lowers the melting point of the aluminium oxide"], 1)).toBe(true);
+    expect(fix("it needs a lot of energy", ["energy needed to break that bond = a lot"], ["bond in a nitrogen molecule = a triple covalent bond", "energy needed to break that bond = very little"], 2)).toBe(true);
+    expect(fix("it does not need a lot of energy", ["energy needed to break that bond = a lot"], ["bond in a nitrogen molecule = a triple covalent bond", "energy needed to break that bond = very little"], 2)).toBe(false);
+    const cw = ["Add anhydrous copper(II) sulfate to the liquid.", "It turns from blue to white."];
+    expect(fix("white to blue", ["It turns from white to blue."], cw, 2)).toBe(true);
+    expect(fix("It changes colour from white to blue.", ["It turns from white to blue."], cw, 2)).toBe(true);
+    expect(fix("blue to white", ["It turns from white to blue."], cw, 2)).toBe(false);
+    const pw = ["The long thin line is the positive terminal, so the left terminal is positive", "Conventional current flows from the negative terminal to the positive terminal", "So conventional current leaves the cell from the right-hand terminal"];
+    const pc = ["Conventional current flows from the positive terminal to the negative terminal", "So conventional current leaves the cell from the left-hand terminal"];
+    expect(fix("conventional current flows from positive to negative", pc, pw, 2)).toBe(true);
+    expect(fix("conventional current flows from negative to positive", pc, pw, 2)).toBe(false);
+    const kw = ["Petrol is a fuel for cars.", "Kerosene is used to make chemicals and plastics.", "Bitumen is used to surface roads and roofs."];
+    expect(fix("Kerosene is used as aircraft fuel.", ["Kerosene is a fuel for aircraft."], kw, 2)).toBe(true);
+    expect(fix("Kerosene is a fuel for cars.", ["Kerosene is a fuel for aircraft."], kw, 2)).toBe(false);
+  });
+  test("G2-44/45/48 a formula in words, a result with its unit in words, a count after its value", () => {
+    const rw = ["R = I ÷ V", "R = 0.25 ÷ 2.5", "R = 0.1 Ω"];
+    expect(fix("resistance = voltage ÷ current", ["R = V ÷ I", "R = 2.5 ÷ 0.25", "R = 10.0 Ω"], rw, 1)).toBe(true);
+    expect(fix("resistance = current ÷ voltage", ["R = V ÷ I", "R = 2.5 ÷ 0.25", "R = 10.0 Ω"], rw, 1)).toBe(false);
+    const qw = ["Q = I × t", "Q = 2.5 × 4", "Q = 10 C"];
+    const qc = ["Q = I × t", "t = 4 × 60 = 240 s", "Q = 2.5 × 240", "Q = 600 C"];
+    for (const right of ["600 coulombs", "Q = 2.5 × 240 = 600C", "the time should be 240 s"]) expect(fix(right, qc, qw, 2), right).toBe(true);
+    expect(fix("10 coulombs", qc, qw, 2)).toBe(false);
+    expect(fix("so each daughter cell holds 46 chromosomes", ["a body cell holds 46 chromosomes", "mitosis duplicates them exactly, then shares one full set to each daughter cell", "so each daughter cell holds 46"], ["a body cell holds 46 chromosomes", "cell division always halves the chromosome number", "46 ÷ 2 = 23"], 2)).toBe(true);
+  });
+});
+
+// fixer-p2's EP-7 (11 Oct 2026): the flagged line typed back fixes nothing on any route. Gate 2's statements route (G2-35b)
+// split lens-ray-diagrams ftm.0003's flagged line into clauses, found one the correction keeps and waved the rest through
+// as reasons; a clause that says the flagged line's own wrong words again is never a reason.
+describe("the fix box: the flagged line typed back, whole or in its clauses", () => {
+  const lens = {
+    studentWorking: [
+      "The object is beyond 2F, so the rays cross between F and 2F on the other side.",
+      "The image can be caught on the sensor, so it is real, and it is virtual as well because you cannot see it directly.",
+      "It is inverted and diminished.",
+    ],
+    correction: [
+      "The object is beyond 2F, so the rays cross between F and 2F on the other side.",
+      "The image can be caught on the sensor, so it is real.",
+      "It is inverted and diminished.",
+    ],
+    mistakeLine: 2,
+  };
+  test("the flagged line, verbatim or near it, is not there yet", () => {
+    expect(markFix(lens.studentWorking[1]!, lens).match).toBe(false);
+    expect(markFix("The image can be caught on the sensor, so it is real, and it is also virtual", lens).match).toBe(false);
+    expect(markFix("the image can be caught on the sensor so it is real and virtual", lens).match).toBe(false);
+  });
+  test("the correction, typed or in her words, is the fix", () => {
+    expect(markFix("The image can be caught on the sensor, so it is real.", lens).match).toBe(true);
+    expect(markFix("it can be caught on a sensor, so it is real", lens).match).toBe(true);
+  });
+});
+
+// Gate 2's mutation check (11 Oct 2026): the G2-37 test above gave the correction three lines, so the value route found 10
+// as the correction's last value and the chosen-value route was never reached. The shipped item (m4 quadratic-formula
+// ftm.04) ends on a check line whose value is 30: there "10 cm" is the fix only as the value kept from the flagged list.
+describe("the fix box: the value kept from the flagged list, where the correction ends on a check", () => {
+  test("m4 quadratic-formula ftm.04 as shipped: 10 cm is the kept value, -18 cm the rejected one", () => {
+    const w = ["3x² + 4x − 64 = 0", "(3x + 16)(x − 4) = 0", "x = −16/3 or x = 4", "3x − 2 = −18 or 3x − 2 = 10", "Answer: the side is −18 cm or 10 cm"];
+    const c = ["x = −16/3 gives 3x − 2 = −18, and a length cannot be negative, so this root is rejected", "x = 4 gives 3x − 2 = 10", "The side is 10 cm", "Check: the other side is 6 cm, and ½ × 10 × 6 = 30 cm², as given"];
+    const item = { studentWorking: w, correction: c, mistakeLine: 5 };
+    expect(markFix("10 cm", item).match).toBe(true);
+    expect(markFix("10", item).match).toBe(true);
+    expect(markFix("-18 cm", item).match).toBe(false);
+    // "30 cm" (the check line's area) is matched by the value route, as it was on pass 1: GATE-3 G3-06, not pinned here.
+  });
+});
+
+// Gate 2's corpus guard (11 Oct 2026): 25 of her own sound lines, and 6 correction lines that only restate them, were paid
+// by gate 2's later routes (the lead-in, the statements, the Also-accepted lines). A line already on the page fixes
+// nothing on any route, and a correction line typed as written keeps the line route's verdict.
+describe("the fix box: a line already on the page, on every route", () => {
+  test("her own sound lines typed back are not there yet; the fix still is", () => {
+    const fr = { studentWorking: ["Divide the top by 3: x² + 9x", "Top: x² + 9x = x(x + 9)", "Bottom: x² + 6x - 27 = (x + 9)(x - 3)", "Answer: x over (x - 3)"], correction: ["Top: 3x² + 27x = 3x(x + 9)", "Bottom: x² + 6x - 27 = (x + 9)(x - 3)", "Answer: 3x/(x - 3), that is 3x over (x - 3)"], mistakeLine: 1 };
+    expect(markFix("Top: x² + 9x = x(x + 9)", fr).match).toBe(false);
+    expect(markFix("Bottom: x² + 6x - 27 = (x + 9)(x - 3)", fr).match).toBe(false);
+    const vs = { studentWorking: ["Distance: scalar", "Velocity: vector", "Weight: scalar", "Tension: vector"], correction: ["Distance: scalar", "Velocity: vector", "Weight: vector", "Tension: vector"], mistakeLine: 3 };
+    expect(markFix("Velocity: vector", vs).match).toBe(false);
+    expect(markFix("Weight: vector", vs).match).toBe(true);
+    const f3 = { studentWorking: ["(1) x + y + z = 43", "(2) z = y + 25", "(3) 30x + 18y + 12z = 900", "Solving gives x = 22, y = -2, z = 23", "So there are 22 adults, -2 juniors and 23 seniors"], correction: ["(2) y = z + 25", "Solving gives x = 12, y = 28, z = 3", "Check: 12 + 28 + 3 = 43 and 360 + 504 + 36 = 900"], mistakeLine: 2 };
+    expect(markFix("(1) x + y + z = 43", f3).match).toBe(false);
+    expect(markFix("Solving gives x = 22, y = -2, z = 23", f3).match).toBe(false);
+    expect(markFix("(2) y = z + 25", f3).match).toBe(true);
+  });
+  test("a correction line typed as written keeps the line route's verdict (pressure ftm.02's check line)", () => {
+    const pr = { studentWorking: ["Area = 320 ÷ 5 = 64 cm²", "Side = 64 ÷ 4 = 16", "Side = 16 cm"], correction: ["Area = 320 ÷ 5 = 64 cm²", "Side = √64 = 8 cm", "Check: 8 × 8 = 64 cm²"], mistakeLine: 2 };
+    expect(markFix("Check: 8 × 8 = 64 cm²", pr).match).toBe(false);
+    expect(markFix("Side = √64 = 8 cm", pr).match).toBe(true);
+  });
+});

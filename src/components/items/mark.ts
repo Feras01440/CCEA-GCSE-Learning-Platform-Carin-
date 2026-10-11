@@ -22,7 +22,7 @@ import { qwcEvidence, qwcSummary } from "@/lib/marking/qwc";
 import { equationSchemeMarks, markEquation, normaliseEquation, reversedReversible } from "./equation-marking";
 import { evaluateArithmetic } from "./mistake-marking";
 import { expectedDisplay, isAutoMarkable, toAlgebraSpec, toNumericSpec, toNumericTolerance } from "./spec-map";
-import { isFormula, markMcq, markText, nameWithFormula } from "./text-marking";
+import { ideaLabel, isFormula, listedItems, markMcq, markText, nameWithFormula } from "./text-marking";
 import { markOrder, orderMarks, stepsAsOrder } from "./order-marking";
 import { FACTORISED, markWorking, methodSteps } from "@/lib/marking/working";
 
@@ -54,6 +54,11 @@ export interface MarkResult {
    * the ladder over her working, every mark when it reaches every point (ruling 3; the verifier, 29 Sep 2026).
    */
   workingOnly?: boolean;
+  /**
+   * Her answer is the question as printed (copiesTheQuestion): no step taken, so the runner never reads it as a line of
+   * her working either (gate 2's sweep, 11 Oct 2026: "3x + 4y = 24" typed back earned a ladder point through G2-18).
+   */
+  copiesQuestion?: boolean;
   /**
    * For an answer marked target by target (a label part): the ids of the targets she has not got, in the spec's
    * order. The shared-out award cannot say which one was missed, and the re-teach panel must name that one's mark
@@ -210,6 +215,78 @@ function showsWorking(raw: string): boolean {
   if (sides.length < 2) return false;
   const left = sides[0]!.trim();
   return !/^[A-Za-zθα-ω][A-Za-z0-9_{}()' ]*$/.test(left) && /[\d(]|[+\-−×*/÷^√]/.test(left);
+}
+
+/** A derivative's notation: dy/dx, dA/dx, d2y/dx2, d^2y/dx^2, d²y/dx², \\frac{dy}{dx}, \\frac{d^{2}y}{dx^{2}}, f'(x), f''(x), A'. */
+const DERIVATIVE_LABEL =
+  /^(?:\\[dt]?frac\s*\{\s*d\s*(?:\^\s*\{?\s*2\s*\}?|²)?\s*[A-Za-z]\w*\s*\}\s*\{\s*d\s*[A-Za-z]\s*(?:\^\s*\{?\s*2\s*\}?|²)?\s*\}|d\s*(?:\^?\s*2|²)?\s*[A-Za-z]\w*\s*\/\s*d\s*[A-Za-z]\s*(?:\^?\s*2|²)?|[A-Za-z](?:'{1,2}|′{1,2}|″)(?:\s*\(\s*[A-Za-z]\s*\))?)$/;
+
+/** Maths as a key for comparing an answer's label with the stem's expression: TeX bold and spacing, braces, $ and * gone. */
+function labelKey(s: string): string {
+  return s
+    .replace(/\\(?:mathbf|boldsymbol|vec|mathrm|textbf)\s*\{([^{}]*)\}/g, "$1")
+    .replace(/\\(?:left|right)\b/g, "")
+    .replace(/[\s${}*]/g, "")
+    .replace(/\\cdot|\\times|×/g, "")
+    .toLowerCase();
+}
+
+/**
+ * The expression after a label, where the answer is an expression (no "=" in the key) and she wrote "LABEL = expression"
+ * with one "=": a derivative's notation ("dA/dx = 40 - 2x", "f'(x) = …", "d²y/dx² = …") or the stem's own expression
+ * ("2a + 3b = 9i - 10j" for "Find 2a + 3b"). Gate 2, G2-20/G2-21 (11 Oct 2026): those were refused while "y = 40 - 2x"
+ * was paid. Null where there is no such label; the side after it is judged as her answer, right or wrong.
+ */
+export function expressionAfterLabel(raw: string, keyLatex: string, prompt?: string): string | null {
+  if (/[=<>≤≥]|\\(?:le|ge|lt|gt|neq?)\b/.test(keyLatex)) return null;
+  const text = raw.trim().replace(/^\$+|\$+$/g, "");
+  const sides = text.split("=");
+  if (sides.length !== 2) return null;
+  const [left, right] = [sides[0]!.trim(), sides[1]!.trim()];
+  if (left.length === 0 || right.length === 0) return null;
+  if (DERIVATIVE_LABEL.test(left)) return right;
+  if (prompt) {
+    const asked = [...prompt.matchAll(/\$([^$]+)\$/g)].map((m) => labelKey(m[1]!));
+    if (asked.includes(labelKey(left))) return right;
+  }
+  return null;
+}
+
+/**
+ * TeX relations as she would type them: \lt \gt \le \leq \leqslant \ge \geq \geqslant \ne \neq become their signs, a
+ * \text{…} or \mathrm{…} its words, and the dollar signs go. Anything without a backslash is returned unchanged.
+ */
+export function texRelationsAsTyped(s: string): string {
+  if (!s.includes("\\")) return s;
+  return s
+    .replace(/\\(?:text|mathrm|textrm|mbox)\s*\{([^{}]*)\}/g, " $1 ")
+    .replace(/\\(?:leqslant|leq|le)(?![A-Za-z])/g, " ≤ ")
+    .replace(/\\(?:geqslant|geq|ge)(?![A-Za-z])/g, " ≥ ")
+    .replace(/\\(?:neq|ne)(?![A-Za-z])/g, " ≠ ")
+    .replace(/\\lt(?![A-Za-z])/g, " < ")
+    .replace(/\\gt(?![A-Za-z])/g, " > ")
+    .replace(/\$/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Does the paper demand working for this part, so that a bare right value or expression earns nothing (`requiresWorking`
+ * in MarkOptions)? Gate 2, G2-05 (11 Oct 2026): ruling 28 (the C2 reviewer, 8 Oct) was applied to the part's
+ * `requiresWorking` flag, which authors set to open the working box (author-topic.md: the box is "open on exam-style parts
+ * and on any part with requiresWorking"), and on 1950 shipped numeric and algebraic parts a bare right answer earned 0.
+ * The ruling's cited line, CCEA C2 2021 Higher general instruction 9, reads: "Full marks can be awarded for a correct
+ * numerical answer to any calculation even if no working out is shown apart from degree of hydration and empirical
+ * formula calculations for which working out is required"; the maths general marking advice gives a correct answer full
+ * marks. So working is demanded where the stem says so ("you must show your working"), or, on a science part whose box is
+ * flagged, for a degree-of-hydration or empirical-formula calculation, read from the question's stems (a hydrate written
+ * with x, "CuSO₄·xH₂O", "Na2CO3.xH2O"; "empirical formula"; "degree of hydration"). The flag alone opens the box.
+ */
+export function demandsWorking(part: { stem: string; requiresWorking?: boolean }, questionStems: readonly string[] = [], subject?: string): boolean {
+  if (/\bmust show\b[^.?!]*\bworking\b/i.test(part.stem)) return true;
+  if (part.requiresWorking !== true || subject !== "science") return false;
+  const text = [part.stem, ...questionStems].join("\n");
+  return /[·.•∙]\s*x\s*H(?:2|₂)O|\bx\s*H(?:2|₂)O\b|\bempirical formula\b|\bdegree of hydration\b/i.test(text);
 }
 
 /**
@@ -415,6 +492,60 @@ export function statedRoots(raw: string): number[] {
   return [];
 }
 
+/**
+ * Her answer against the value her earlier answer leads to, at an accuracy that value can carry (gate 2, G2-49, 11 Oct
+ * 2026). A range written round the right answer (10.3 to 10.4 for 10.38) moves with the followed-through value
+ * (1557.5 ÷ 155 = 10.048: "10.05" is right); an exact answer whose followed-through value does not terminate (70 ÷ 6 =
+ * 11.666…) is met by that value rounded to the places she gives, one place at least. Otherwise the part's own tolerance.
+ */
+function followThroughMeets(typed: string, spec: AnswerSpec, t: number, variables: readonly string[]): boolean {
+  if (spec.kind !== "numeric") return false;
+  const base = { ...toNumericSpec(spec), value: t, variables };
+  if (checkNumeric(typed, base).correct) return true;
+  const tol = spec.tolerance;
+  if (tol.type === "range") {
+    const shifted = { ...base, tolerance: { type: "range" as const, min: t - (spec.value - tol.min), max: t + (tol.max - spec.value) } };
+    return checkNumeric(typed, shifted).correct;
+  }
+  if (tol.type === "exact" || (tol.type === "absolute" && tol.value === 0)) {
+    const hers = parseNumeric(typed.trim().replace(/^.*[=≈]\s*/, ""));
+    if (!hers || Number.isInteger(t)) return false;
+    const places = (/\.(\d+)/.exec(String(hers.raw ?? typed).replace(/[^\d.]/g, ""))?.[1] ?? "").length;
+    if (places < 1) return false;
+    const rounded = Math.round(t * 10 ** places) / 10 ** places;
+    return Math.abs(hers.value - rounded) < 1e-9;
+  }
+  return false;
+}
+
+/** A relation's value, its round(), floor() and ceil() worked out first ("round(9 * (32) / 80)" is 4; G2-50). */
+function evaluateRelation(put: string): number | null {
+  let s = put;
+  for (let guard = 0; guard < 8; guard += 1) {
+    const m = /\b(round|floor|ceil)\s*\(/.exec(s);
+    if (!m) break;
+    let depth = 0;
+    let end = -1;
+    for (let i = m.index + m[0].length - 1; i < s.length; i += 1) {
+      if (s[i] === "(") depth += 1;
+      else if (s[i] === ")") {
+        depth -= 1;
+        if (depth === 0) {
+          end = i;
+          break;
+        }
+      }
+    }
+    if (end < 0) return null;
+    const inner = evaluateRelation(s.slice(m.index + m[0].length, end));
+    if (inner === null) return null;
+    const v = m[1] === "round" ? Math.round(inner) : m[1] === "floor" ? Math.floor(inner) : Math.ceil(inner);
+    s = `${s.slice(0, m.index)}(${v})${s.slice(end + 1)}`;
+  }
+  const bare = /^[\s(]*([-+]?\d+(?:\.\d+)?)[\s)]*$/.exec(s);
+  return bare ? Number(bare[1]) : evaluateArithmetic(s);
+}
+
 export function followThroughValue(ft: FollowThrough, spec: AnswerSpec, typed?: string): number | null {
   // Her own solution list carries into a later part through its relation, root by root: "7" after "x = 4 or x = -5.5"
   // with 2x − 1 is right for her positive root (the M4 author, 8 Oct 2026: histograms/quadratics .0014(c) paid nothing
@@ -425,8 +556,7 @@ export function followThroughValue(ft: FollowThrough, spec: AnswerSpec, typed?: 
     const candidates = statedRoots(ft.earlierRaw)
       .map((x) => {
         const put = relation.replace(/\bx\b/g, `(${x})`);
-        const bare = /^[\s(]*([-+]?\d+(?:\.\d+)?)[\s)]*$/.exec(put);
-        return bare ? Number(bare[1]) : evaluateArithmetic(put);
+        return evaluateRelation(put);
       })
       .filter((v): v is number => v !== null && Number.isFinite(v));
     if (candidates.length === 0) return null;
@@ -472,8 +602,7 @@ export function followThroughValue(ft: FollowThrough, spec: AnswerSpec, typed?: 
     // The identity relation ("x", "(x)") hands the reader a bare value, which has no operator to evaluate: it is the value
     // (the P2 author, 7 Oct 2026: p2-calculating-resistance .0014(b)(ii) with her (a) = 9 paid nothing).
     const put = ft.relation.replace(/\bx\b/g, `(${x})`);
-    const bare = /^[\s(]*([-+]?\d+(?:\.\d+)?)[\s)]*$/.exec(put);
-    return bare ? Number(bare[1]) : evaluateArithmetic(put);
+    return evaluateRelation(put);
   }
   if (spec.kind !== "numeric" || !ft.workedSolution) return null;
   const target = spec.value;
@@ -819,7 +948,7 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
   const marks = Math.max(1, Math.round(opts.marks ?? 1));
   // The expected answer is shown to the accuracy the stem instructs, as the marking demands it (engine item 13).
   const expected = expectedDisplay(spec, { accuracyInstructed: instructsAccuracy(opts.prompt) });
-  const trimmed = raw.trim();
+  let trimmed = raw.trim();
 
   if (!isAutoMarkable(spec)) {
     return {
@@ -847,7 +976,7 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
     const base: MarkResult = { correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: "That is the question as it is printed: no step has been taken yet." };
     const named = withCommonError(base, trimmed, opts, undefined, undefined, spec.kind === "algebraic" ? spec.variables : undefined, spec.kind === "algebraic" ? spec.latex : undefined);
     // On a show-that part the printed target is what she typed back: her working decides (showThatTarget).
-    return { ...named, marksAwarded: 0, ...(isShowThat(opts.prompt) ? { workingOnly: true } : {}) };
+    return { ...named, marksAwarded: 0, copiesQuestion: true, ...(isShowThat(opts.prompt) ? { workingOnly: true } : {}) };
   }
 
   switch (spec.kind) {
@@ -924,7 +1053,11 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
             : plural(placesSpec.tolerance.type === "sf" ? (placesSpec.tolerance.figures ?? 0) : 0, "significant figure");
         const reminder = /on the paper/.test(said) ? "" : ` The question asks for ${places}: ${expected}.`;
         const lost = award === 0 ? `0 of ${marks}: the accuracy mark is lost.` : `${award} of ${marks}: only the accuracy mark is lost.`;
-        return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${said}${reminder} ${lost}`.replace(/\s{2,}/g, " ").trim() };
+        const placed: MarkResult = { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${said}${reminder} ${lost}`.replace(/\s{2,}/g, " ").trim() };
+        // The part's own common error for this slip (the instructed places ignored) tags it; the award is the scheme's
+        // accuracy mark lost (gate 2, G2-62, the P2 author's EF-8).
+        const named = (opts.commonErrors ?? []).find((e) => matchesCommonError(trimmed, e));
+        return named ? { ...placed, tags: [named.misconception] } : placed;
       }
       // A unit the stem instructs ("Give your answer in mA", "… in hours?"): the right value left in another unit has
       // not made the conversion asked for, and loses the unit's mark (the P2 C review, 25 Sep 2026: "0.08 A" for "in mA").
@@ -955,7 +1088,7 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
       if (v.nearMiss) base.nearMiss = v.nearMiss;
       if (!v.correct && opts.followThrough) {
         const t = followThroughValue(opts.followThrough, spec, trimmed);
-        if (t !== null && checkNumeric(trimmed, { ...toNumericSpec(spec), value: t, variables: variableLetters(opts.prompt) }).correct) {
+        if (t !== null && followThroughMeets(trimmed, spec, t, variableLetters(opts.prompt))) {
           return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Right for your answer to the earlier part: the marks follow through." };
         }
       }
@@ -970,6 +1103,8 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
         const base: MarkResult = { correct: p.correct, marksAwarded: p.correct ? marks : 0, marksAvailable: marks, expected, explanation: p.feedback };
         return p.correct ? base : withCommonError(base, trimmed, opts, undefined, names);
       }
+      // A label before the expression asked for is a label: the side after it is her answer (gate 2, G2-20/G2-21).
+      trimmed = expressionAfterLabel(trimmed, spec.latex, opts.prompt) ?? trimmed;
       // Where x is not one of the answer's letters, an x between numbers is the times sign ("2 x 5^2 x 11").
       const read = spec.variables.includes("x") ? trimmed : trimmed.replace(/(?<=[\d)²³])\s*x\s*(?=[\d(])/g, " × ");
       let v = checkAlgebraic(read, toAlgebraSpec(spec));
@@ -1013,7 +1148,15 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
         // A1 = 2 of 3 (the M4 author, 8 Oct 2026). Where no point names the missing root, the found roots' own points stand.
         const lost = pointsNaming(v.solutionsMissing ?? [], v.solutionsMissingValues ?? []);
         const award = Math.min(marks - 1, lost > 0 ? Math.max(named, marks - lost) : named > 0 ? named : v.solutionsFound.length);
-        return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${v.feedback} ${award} of ${marks}: the ${v.solutionsFound.join(", ")} you found ${v.solutionsFound.length === 1 ? "earns its mark" : "earn their marks"}; the rest wait for the other ${v.solutionsTotal! - v.solutionsFound.length === 1 ? "root" : "roots"}.` };
+        // At 0 marks there is no mark to name ("0 of 1: the x = 3 you found earns its mark" said both; gate 2, G2-55), and a
+        // common error that names the slip tags it as the scheme's own error does.
+        const said =
+          award > 0
+            ? `${v.feedback} ${award} of ${marks}: the ${(v.solutionsFoundShown ?? v.solutionsFound).join(", ")} you found ${v.solutionsFound.length === 1 ? "earns its mark" : "earn their marks"}; the rest wait for the other ${v.solutionsTotal! - v.solutionsFound.length === 1 ? "root" : "roots"}.`
+            : `${v.feedback} 0 of ${marks}: the mark is for every solution.`;
+        const partial: MarkResult = { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: said };
+        const namedError = (opts.commonErrors ?? []).find((e) => matchesCommonError(trimmed, e));
+        return namedError ? { ...partial, tags: [namedError.misconception] } : partial;
       }
       // The right expression in the wrong form (unsimplified, not yet a single log, not factorised) keeps every mark
       // but the last on a multi-mark part: the scheme's final mark is the form, the earlier ones the working.
@@ -1053,6 +1196,10 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
       return base;
     }
     case "text": {
+      // The answer field writes relations in TeX ("-6 \lt x \lt 5", "x \le -3 \text{ or } x \ge 4"): a relation command
+      // is its sign and \text{…} its words, before anything reads the answer (gate 2, G2-08, 11 Oct 2026: the right
+      // region scored 0/3, diagnosed as the critical values because no sign was read).
+      trimmed = texRelationsAsTyped(trimmed);
       // A solution set written as two inequalities is read as a set before its key words are: "x < −3 and x > 5" names
       // no value (the FM1 group 1 author, 7 Oct 2026; the 2025 FM1 report's slip), and the key-word route would pay both
       // regions. The answer earns nothing; her working still earns its method marks through the runner's ladder.
@@ -1070,14 +1217,29 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
       // A name with its formula: the part judges the one it asks for, the other is ignored even if wrong (CCEA C2 2021;
       // the verifier, 25 Sep 2026: "carbon monoxide (CO2)" was paid for carbon dioxide). The stem's "name" or
       // "formula" decides; without either, formula-only key words ask for the formula, anything else for the name.
+      const asksFormula = /\bformulae?\b/i.test(opts.prompt ?? "");
+      const asksName = /\bname\b/i.test(opts.prompt ?? "");
+      const formulaKeys = spec.keyWords.length > 0 && spec.keyWords.every((g) => g.any.every((k) => isFormula(k)));
+      // The side the part judges; the other side is dropped unless it earns a point of its own that the judged side does
+      // not ("C3H6, a gas" where the part asks for the formula AND the state; gate 2, G2-10, 11 Oct 2026: the state was
+      // dropped, 1/2).
+      const judge = (item: string, p: { name: string; formula: string }) => {
+        const kept = asksFormula && !asksName ? p.formula : asksName && !asksFormula ? p.name : formulaKeys ? p.formula : p.name;
+        const dropped = kept === p.formula ? p.name : p.formula;
+        const groupsOf = (t: string) => markText(t, spec).matchedGroups;
+        // A point of its own: a group the judged side does not earn and that names no substance by formula (a state, a
+        // property); a group keyed by formulae is the substance the stem asks about, judged on the side it asks for.
+        const own = groupsOf(dropped).filter((g) => !groupsOf(kept).includes(g) && !spec.keyWords[g]!.any.some((k) => k.split("|").some((x) => isFormula(x))));
+        return own.length > 0 ? item : kept;
+      };
+      // Item by item: each listed item that is a name with its formula is judged as its own pair ("carbon dioxide (CO2)
+      // and water (H2O)" was read as one pair and judged as "H2O" alone, 1/2; G2-09, the C2 author's EF-15).
+      const items = listedItems(trimmed);
+      const pairs = items.map((it) => nameWithFormula(it));
       const pair = nameWithFormula(trimmed);
       let judged = trimmed;
-      if (pair) {
-        const asksFormula = /\bformulae?\b/i.test(opts.prompt ?? "");
-        const asksName = /\bname\b/i.test(opts.prompt ?? "");
-        const formulaKeys = spec.keyWords.length > 0 && spec.keyWords.every((g) => g.any.every((k) => isFormula(k)));
-        judged = asksFormula && !asksName ? pair.formula : asksName && !asksFormula ? pair.name : formulaKeys ? pair.formula : pair.name;
-      }
+      if (items.length >= 2 && pairs.some((x) => x !== null)) judged = items.map((it, k) => (pairs[k] ? judge(it, pairs[k]!) : it)).join(" and ");
+      else if (pair) judged = judge(trimmed, pair);
       const v = markText(judged, spec, { wrongAnswers, dependsOn: groupDependencies(spec, opts.scheme), model: opts.workedSolution ? [opts.workedSolution] : [] });
       const groups = spec.keyWords.length > 0;
       // Key-word groups need not sum to the part's tariff: a 1-mark "state, with a reason" part is written as
@@ -1093,7 +1255,7 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
           : Math.floor((marks * v.marksAwarded) / v.marksAvailable);
       let explanation = v.feedback;
       if (groups && v.marksAvailable !== marks && v.feedback.startsWith(`${v.marksAwarded} of ${v.marksAvailable}:`)) {
-        const missing = spec.keyWords.filter((_, i) => !v.matchedGroups.includes(i)).map((g) => g.any[0]);
+        const missing = spec.keyWords.filter((_, i) => !v.matchedGroups.includes(i)).map(ideaLabel);
         explanation = `${awarded} of ${marks}: still missing ${missing.join(", ")}.`;
       }
       // A show-that's printed result typed alone earns nothing (class C, the M4 author, 8 Oct 2026: m4 quadratic-formula
@@ -1139,7 +1301,7 @@ function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}):
             .reduce((s, p) => s + p.marks, 0);
           if (lost > 0) {
             const award = Math.max(awarded, Math.min(marks - 1, marks - lost));
-            const missing = spec.keyWords.filter((_, i) => !foundGroups.includes(i)).map((g) => g.any[0]);
+            const missing = spec.keyWords.filter((_, i) => !foundGroups.includes(i)).map(ideaLabel);
             return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${award} of ${marks}: the root you have earns its marks; still missing ${missing.join(", ")}.` };
           }
         }

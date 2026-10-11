@@ -49,6 +49,13 @@ export function normaliseText(s: string): string {
     .replace(/×/g, "x")
     .replace(/÷/g, "/")
     .replace(/±\s*([^\s,;]+)/g, "$1 -$1")
+    // A TeX relation is its sign, in a key and in her answer alike ("x \le -3" and "x ≤ -3"; gate 2, G2-08: the answer
+    // field's TeX is read as signs, so a key written in TeX must read the same).
+    .replace(/\\(?:leqslant|leq|le)(?![a-z])/g, " ≤ ")
+    .replace(/\\(?:geqslant|geq|ge)(?![a-z])/g, " ≥ ")
+    .replace(/\\(?:neq|ne)(?![a-z])/g, " ≠ ")
+    .replace(/\\lt(?![a-z])/g, " < ")
+    .replace(/\\gt(?![a-z])/g, " > ")
     // Currency, percent and degree signs are dropped so "£8106.96" and "8106.96", "96°" and "96", are the same number.
     .replace(/[.,;:!?"()[\]{}£€$%°]/g, " ")
     .replace(/\s*([=<>≤≥≠≈])\s*/g, " $1 ")
@@ -107,6 +114,13 @@ export function phraseIn(haystack: string, needle: string, inflections: Readonly
   if (!needle) return false;
   const h = ` ${haystack} `;
   if (h.includes(` ${needle} `)) return true;
+  // A compound word is one word written solid, spaced or hyphenated: "midpoint", "mid point", "mid-point" (gate 2, G2-54,
+  // 11 Oct 2026: the chip for "midpoint" stayed grey on "the mid-point"). A one-word key of six letters or more is found
+  // as two of her words written together, and a two-word key as one word.
+  if (/^[a-z]{6,}$/.test(needle)) {
+    const ws = haystack.split(" ");
+    for (let i = 0; i + 1 < ws.length; i += 1) if (ws[i]!.length >= 2 && ws[i + 1]!.length >= 2 && `${ws[i]}${ws[i + 1]}` === needle) return true;
+  } else if (/^[a-z]{2,} [a-z]{2,}$/.test(needle) && h.includes(` ${needle.replace(" ", "")} `)) return true;
   // An operator before or after a key word is a boundary, as a space is: "sin(57)" stands in "9.6sin(52)/sin(57)" (the
   // M8 author, 8 Oct 2026). A needle with an operator of its own is read by the algebraic path below.
   if (!/[/×*+=÷]/.test(needle) && new RegExp(`(?:^|[\\s/×*+=÷])${needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:$|[\\s/×*+=÷])`).test(haystack)) return true;
@@ -284,7 +298,23 @@ export function nameWithFormula(raw: string): { name: string; formula: string } 
   if (!m) return null;
   const [a, b] = [m[1]!.trim(), m[2]!.trim()];
   if (isFormula(a) === isFormula(b)) return null;
-  return isFormula(a) ? { name: b, formula: a } : { name: a, formula: b };
+  const [name, formula] = isFormula(a) ? [b, a] : [a, b];
+  // The other side must be a name: a word of three letters or more and no formula in it (gate 2, 11 Oct 2026). A unit
+  // ("Cm3/s", where Cm is curium, read as "Cm3" beside the name "s"), a formula's own bracket ("CnH(2n+2)") and a list
+  // of formulae ("Mg(C3H7COO)2, H2O and CO2") are not a name given with its formula.
+  if (!/[A-Za-z]{3,}/.test(name) || name.split(/[\s,;+]+/).some((w) => w.length > 0 && isFormula(w))) return null;
+  return { name, formula };
+}
+
+/**
+ * A formula typed with spaces between its element groups, closed up: "C12 H26" is "C12H26", "Na Cl" is "NaCl". Only runs
+ * of element groups (a capital, an optional small letter, an optional count) close up; a word ("and", "is") stops it.
+ */
+export function closeFormulaGroups(raw: string): string {
+  return raw.replace(/\b[A-Z][a-z]?\d*(?:\s+[A-Z][a-z]?\d*)+\b/g, (run) => {
+    const groups = run.split(/\s+/);
+    return groups.every((g) => ELEMENT_SYMBOLS.has(g.replace(/\d+$/, ""))) ? groups.join("") : run;
+  });
 }
 
 /** The element symbols: a formula is made of these and nothing else, so "TB", "DNA" and "MRSA" are abbreviations, not formulae. */
@@ -403,6 +433,9 @@ const NEGATION_ENDS = /^(?:and|which|who|whom|whose|where|when|then|also|yet|nor
 const PREPOSITION = /^(?:to|on|in|into|onto|at|from|with|by|for|through|towards?|across|inside|within)$/;
 const DETERMINER = /^(?:the|a|an|its|their|his|her|this|that|these|those|each|every|some|any|all|both|our|your)$/;
 
+/** A noun naming the chance of an event: "no risk of …" says the event is avoided (G2-17). */
+const RISK_NOUN = /^(?:risk|risks|chance|chances|danger|dangers|possibility|likelihood|threat)$/;
+
 /** What her words say about a key word: see the model above. */
 type Polarity = "plain" | "negated" | "avoided" | "reduced" | "denied";
 /** A key word's polarity in one place, with the words its operator reaches (the event it names). */
@@ -450,6 +483,9 @@ function governorAt(words: readonly string[], at: number): Governor {
   if (op === null) return { polarity: "plain", reach: [] };
   const negated = operatorNegated(words, op.index);
   const reach = reachFrom(words, op.index + 1);
+  // No risk, no chance, no danger of an event is the event avoided (gate 2, G2-17, 11 Oct 2026: "so there is no risk of
+  // electrocution" was read as a plain denial of "electrocution" and refused on the point "so it cannot give a shock").
+  if (op.kind === "plain" && !negated && RISK_NOUN.test(words[op.index + 1] ?? "") && words[op.index + 2] === "of") return { polarity: "avoided", reach };
   if (op.kind === "plain") return { polarity: negated ? "plain" : "negated", reach };
   if (negated) return { polarity: "denied", reach };
   return { polarity: op.kind === "avoid" ? "avoided" : "reduced", reach };
@@ -599,6 +635,28 @@ export interface MarkTextOptions {
   dependsOn?: ReadonlyArray<readonly number[]>;
 }
 
+/**
+ * How a key-word group is named in her feedback: its first entry's first spelling. An entry may hold one idea in several
+ * spellings joined by "|" (author-topic.md "Phrases match word for word"), and the bars are the engine's notation, never
+ * hers to read (the lead's note of 11 Oct 2026: "still missing thins the blood|thin the blood|…" on b2-heart-attacks-strokes
+ * .0004(c)). Display only.
+ */
+export function ideaLabel(group: { any: readonly string[] }): string {
+  const first = group.any[0] ?? "";
+  const label = (first.split("|").find((s) => s.trim().length > 0) ?? first).trim();
+  // A key written in TeX reads as she writes it: "x \le -3" is "x ≤ -3" (gate 2's mutation check, 11 Oct 2026: the FM1
+  // quadratic-inequalities feedback printed "Expected: x \le -3, x \ge 4.").
+  return label
+    .replace(/\\text\s*\{([^{}]*)\}/g, "$1")
+    .replace(/\\(?:leqslant|leq|le)(?![a-z])/g, "≤")
+    .replace(/\\(?:geqslant|geq|ge)(?![a-z])/g, "≥")
+    .replace(/\\(?:neq|ne)(?![a-z])/g, "≠")
+    .replace(/\\lt(?![a-z])/g, "<")
+    .replace(/\\gt(?![a-z])/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}): TextMarkResult {
   const answer = normaliseText(raw);
   const groups = spec.keyWords;
@@ -627,6 +685,9 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   const matchedGroups: number[] = [];
   const rejected: string[] = [];
   let marks = 0;
+  // The key word each paid group was paid for (normalised), and a named slip found inside paid words (G2-02).
+  const paidBy = new Map<number, string>();
+  let namedSlip: string | null = null;
   // A key word earns one group only. "Give two symptoms" is written as two groups with the same list, and a
   // single symptom must not collect both marks; two groups that merely overlap are handled the same way.
   const used = new Set<string>();
@@ -705,7 +766,9 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   };
   /** Does the key word, as she wrote it, say what the group's point says? */
   const keyEarns = (text: string, i: number, g: TextSpec["keyWords"][number], k: string): boolean => {
-    if (!phraseIn(normaliseText(text), normaliseText(k))) return false;
+    // A formula typed with spaces between its element groups is the formula ("C12 H26" for C12H26; gate 2, G2-11, the C2
+    // author's EF-12): for a formula key the groups are closed up before the phrase is looked for.
+    if (!phraseIn(normaliseText(text), normaliseText(k)) && !(isFormula(k) && phraseIn(normaliseText(closeFormulaGroups(text)), normaliseText(k)))) return false;
     const ps = polarities(text, k);
     // A key that cannot be pinned (an algebraic key, a spelling normalised apart) is read as written.
     if (ps.length === 0) return true;
@@ -804,8 +867,54 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
       used.add(hit);
       matchedGroups.push(i);
       marks += g.marks;
+      paidBy.set(i, hit);
     }
   });
+
+  // A named wrong qualifier on the words that earned a mark (gate 2, G2-02, 11 Oct 2026): a phrase-level common error (a
+  // pattern that does not describe a whole answer, so not anchored at its start) whose match starts inside the very words
+  // a group was paid for and runs on past them into a qualifying phrase ("… of aluminium") cancels that group, as a reject
+  // word does. c2-aluminium-extraction .0005 pays "lowers the melting point (of the aluminium oxide)" and names "melting
+  // point of aluminium" as its slip: "it lowers the melting point of aluminium" was paid 1/1. CCEA: words in brackets
+  // need not be there, but if present they must be right. Only that shape: the corpus's diagnostic patterns also match
+  // right answers ("turn" inside "quarter turn", "64 … twice" around a full reason; the guard, 11 Oct 10:12), so a match
+  // that starts before the paid words, ends inside them, or adds no qualifying phrase costs nothing.
+  if (matchedGroups.length > 0 && (opts.wrongAnswers ?? []).length > 0) {
+    // The answer as she wrote it: the patterns are written against her text, whose ";" and "," are boundaries they rely on
+    // ("covered[^;\n]*kept the same" stops at a semicolon), and the paid words are found in it word by word.
+    const h = raw;
+    const spansOf = (key: string): Array<[number, number]> => {
+      const out: Array<[number, number]> = [];
+      for (const spelling of key.split("|").map((k) => normaliseText(k)).filter((k) => k.length > 0)) {
+        const words = spelling.split(" ").map(escapeRegExp).join("[^A-Za-z0-9]+");
+        const re = new RegExp(`(?<![A-Za-z0-9])${words}(?:s|es|ed|d|ing)?(?![A-Za-z0-9])`, "gi");
+        for (const m of h.matchAll(re)) out.push([m.index!, m.index! + m[0].length]);
+      }
+      return out;
+    };
+    for (const re of opts.wrongAnswers ?? []) {
+      if (re.source.startsWith("^")) continue;
+      let global: RegExp;
+      try {
+        global = new RegExp(re.source, re.flags.includes("g") ? re.flags : `${re.flags}g`);
+      } catch {
+        continue;
+      }
+      for (const m of h.matchAll(global)) {
+        if (m[0].length === 0) continue;
+        const [s0, e0] = [m.index!, m.index! + m[0].length];
+        for (const i of [...matchedGroups]) {
+          const key = paidBy.get(i);
+          if (key === undefined || !spansOf(key).some(([s1, e1]) => s1 <= s0 && s0 < e1 && e0 > e1 && /^\s*(?:of|in|on|for|to|from|at|by|with)\b/.test(h.slice(e1, e0)))) continue;
+          matchedGroups.splice(matchedGroups.indexOf(i), 1);
+          marks -= groups[i]!.marks;
+          cancelled.add(i);
+          cancelledBy ??= m[0];
+          namedSlip ??= m[0];
+        }
+      }
+    }
+  }
 
   // A dependent mark (engine brief item 3: a reason earned its mark with the direction it explains reversed). Lost
   // groups are taken off until every group left has what it depends on.
@@ -835,14 +944,15 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   const marksAwarded = Math.max(0, marks - penalty);
   const correct = groups.length > 0 && marksAwarded === marksAvailable;
 
-  const missingIdeas = groups.filter((_, i) => !matchedGroups.includes(i)).map((g) => g.any[0]);
+  const missingIdeas = groups.filter((_, i) => !matchedGroups.includes(i)).map(ideaLabel);
   let feedback: string;
   if (correct) feedback = "Every marking point is there.";
   else if (groups.length === 0) feedback = "That does not match the expected wording.";
   else if (penalty > 0)
     feedback = `Listing rule: more answers were given than asked for, so ${penalty} mark${penalty === 1 ? " is" : "s are"} lost. Give only what the question asks for.`;
   else if (lostTo !== null && matchedGroups.length === 0)
-    feedback = `The mark for "${groups[lostTo.group]!.any[0]}" depends on "${groups[lostTo.needs]!.any[0]}", which is not there yet.`;
+    feedback = `The mark for "${ideaLabel(groups[lostTo.group]!)}" depends on "${ideaLabel(groups[lostTo.needs]!)}", which is not there yet.`;
+  else if (namedSlip !== null) feedback = `"${namedSlip}" is the slip this question names, so the mark it sits in is lost.`;
   else if (cancelledBy !== null)
     feedback = `"${cancelledBy}" beside the right answer cancels its mark: an incorrect answer given with a right one earns nothing. Give one answer.`;
   else if (rejected.length > 0) feedback = `"${rejected[0]}" cancels the mark it sits with. Leave it out.`;

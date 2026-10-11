@@ -77,6 +77,8 @@ export interface AlgebraVerdict {
   details?: { sampled?: number; mismatchAt?: Record<string, number> };
   /** On 'partial-solution-set': the roots she found and the roots still missing, written as the spec writes them ("p = 7"), and how many there are in all. */
   solutionsFound?: string[];
+  /** The roots she found as a sentence prints them ("x = -2/5"); display only. */
+  solutionsFoundShown?: string[];
   solutionsMissing?: string[];
   /** The same roots as numbers (NaN where a root has no numeric value), so a scheme line naming "−4/3" meets "x = -\frac{4}{3}". */
   solutionsFoundValues?: number[];
@@ -418,6 +420,10 @@ export function toLatex(input: string): string {
   s = s.replace(/(^|[^a-zA-Z\\])pi(?![a-zA-Z])/g, '$1\\pi ');
   s = s.replace(/(^|[^a-zA-Z\\])inf(?:inity)?(?![a-zA-Z])/g, '$1\\infty ');
   s = s.replace(FUNCTION_NAMES, '$1\\$2 ');
+  // A log or ln of a bare number takes that number only: "log40/log5" is log(40)/log(5), never log(40/log 5) (gate 2,
+  // G2-24, 11 Oct 2026: the indicial step's own line was refused).
+  // Only a number standing alone: "log 3x", "log 2^3" and "log 5(x+1)" keep their whole argument.
+  s = s.replace(/\\(log|ln)\s*(\d+(?:\.\d+)?)(?![\d.A-Za-z(^{_\\]|\s*[A-Za-z(^{\\])/g, '\\$1($2)');
 
   // Exponents: ^(…) -> ^{…}, ^12 -> ^{12}, ^-1 -> ^{-1}
   s = replaceBracketed(s, /(\^\s*)\(/, (inner) => `{${inner}}`);
@@ -1560,6 +1566,35 @@ function fmtSolution(variable: string, s: Solution): string {
 }
 
 /**
+ * A root as a sentence prints it: the TeX as plain maths, "x = -2/5" and "x = (3 + √5)/2", never "x = frac{-2}{5}" with
+ * its backslashes stripped (gate 2's mutation follow-up, 11 Oct 2026: algebraic-fractions-with-linear-denominators
+ * .0024(c) said "the x = frac{-2}{5} you found earns its mark"). Display only: the scheme's matching reads fmtSolution.
+ */
+function shownSolution(variable: string, s: Solution): string {
+  let t = s.value.raw.latex;
+  const group = (x: string) => (/^[-−]?[A-Za-z0-9.√π]+$/.test(x.trim()) ? x.trim() : `(${x.trim()})`);
+  for (let i = 0; i < 4; i += 1) {
+    const before = t;
+    t = t
+      .replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, (_m, a: string, b: string) => `${group(a)}/${group(b)}`)
+      .replace(/\\sqrt\s*\{([^{}]*)\}/g, (_m, a: string) => `√${group(a)}`);
+    if (t === before) break;
+  }
+  t = t
+    .replace(/\\pm(?![a-z])/g, '±')
+    .replace(/\\mp(?![a-z])/g, '∓')
+    .replace(/\\(?:times|cdot)(?![a-z])/g, '×')
+    .replace(/\\pi(?![a-z])/g, 'π')
+    .replace(/\\(?:left|right)(?![a-z])\s*/g, '')
+    .replace(/\\[,;:! ]/g, ' ')
+    .replace(/[{}]/g, '')
+    .replace(/\\/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return `${variable} = ${t}`;
+}
+
+/**
  * A root written as a decimal to two or more places that rounds the spec's root is that root ("−1.33" for −4/3, "1.67"
  * for 5/3): CCEA's schemes print "accept −1.33 or better" (the M4 author, 8 Oct 2026). Fewer places are not.
  */
@@ -1649,6 +1684,7 @@ function checkSolutionSet(answer: string, specPieces: string[], spec: AlgebraSpe
     return {
       ...verdict(false, 'partial-solution-set', `You have found ${found} of the ${total} solutions – there ${more === 1 ? 'is one more' : `are ${more} more`} to find.`),
       solutionsFound: foundSolutions,
+      solutionsFoundShown: specSolutions.filter((_, i) => matchedSpec.has(i)).map((s) => shownSolution(variable, s)),
       solutionsMissing: missingSolutions,
       solutionsFoundValues: values((i) => matchedSpec.has(i)),
       solutionsMissingValues: values((i) => !matchedSpec.has(i)),
@@ -1661,16 +1697,16 @@ function checkSolutionSet(answer: string, specPieces: string[], spec: AlgebraSpe
       const negated = boxJson(['Negate', m.value.expr.json as unknown as MJ]);
       const r = compareExpressions(extra.value.expr, negated, ctx);
       if (r.status === 'identical' || r.status === 'equivalent') {
-        return verdict(false, 'sign-error', `Very close – ${fmtSolution(variable, extra)} has the wrong sign. Check the signs in your working.`);
+        return verdict(false, 'sign-error', `Very close – ${shownSolution(variable, extra)} has the wrong sign. Check the signs in your working.`);
       }
     }
   }
 
   if (!missing.length) {
-    const right = specSolutions.map((s) => fmtSolution(variable, s)).join(' and ');
+    const right = specSolutions.map((s) => shownSolution(variable, s)).join(' and ');
     return verdict(false, 'extra-solutions', `${right} ${total === 1 ? 'is' : 'are'} right, but you have included a value that is not a solution – substitute each value back into the equation to check.`);
   }
-  const rightOnes = [...matchedSpec].map((i) => fmtSolution(variable, specSolutions[i]));
+  const rightOnes = [...matchedSpec].map((i) => shownSolution(variable, specSolutions[i]));
   const prefix = rightOnes.length ? `${rightOnes.join(' and ')} ${rightOnes.length === 1 ? 'is' : 'are'} right, but ` : '';
   return verdict(false, 'not-equivalent', `${prefix}${prefix ? 'the other value is' : 'those are'} not ${prefix ? 'a solution' : 'the solutions'} of this equation – check your working.`);
 }

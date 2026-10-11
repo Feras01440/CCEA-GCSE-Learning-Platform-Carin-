@@ -983,6 +983,53 @@ const NUMBER_WORDS = new Map<string, number>(
     "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"].map((w, i) => [w, i]),
 );
 
+const TENS_WORDS = new Map<string, number>([["twenty", 20], ["thirty", 30], ["forty", 40], ["fifty", 50], ["sixty", 60], ["seventy", 70], ["eighty", 80], ["ninety", 90]]);
+
+/**
+ * A whole number written in words, to the hundreds ("ninety-five", "ninety five", "one hundred and twenty", "a hundred"),
+ * at the start of the answer: the number and the rest (gate 2, G2-16, 11 Oct 2026: "ninety-five percent" could not be
+ * read where "95 percent" was). Null when the words are not one whole number, or when a fraction's name follows ("one
+ * half", "three quarters": a fraction, not a count).
+ */
+export function leadingCardinal(text: string): { value: number; rest: string; words: number } | null {
+  const re = /^(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|a|and)(?=[\s-]|$)[\s-]*/i;
+  const words: string[] = [];
+  let rest = text.trim();
+  for (let m = re.exec(rest); m; m = re.exec(rest)) {
+    words.push(m[1]!.toLowerCase());
+    rest = rest.slice(m[0].length);
+  }
+  // A trailing "a" or "and" belongs to what follows ("ninety a minute").
+  while (words.length > 0 && (words[words.length - 1] === "a" || words[words.length - 1] === "and")) rest = `${words.pop()} ${rest}`.trim();
+  if (words.length === 0) return null;
+  if (/^(?:halfs?|halves|thirds?|quarters?|fourths?|fifths?|sixths?|sevenths?|eighths?|ninths?|tenths?|fold)\b/i.test(rest)) return null;
+  const small = (w: string | undefined) => (w === undefined ? undefined : NUMBER_WORDS.get(w));
+  let i = 0;
+  let value = 0;
+  if (words[1] === "hundred") {
+    const h = words[0] === "a" ? 1 : small(words[0]);
+    if (h === undefined || h < 1 || h > 9) return null;
+    value = 100 * h;
+    i = 2;
+    if (words[i] === "and") i += 1;
+  }
+  const tens = TENS_WORDS.get(words[i] ?? "");
+  if (tens !== undefined) {
+    value += tens;
+    i += 1;
+    const u = small(words[i]);
+    if (u !== undefined && u >= 1 && u <= 9) {
+      value += u;
+      i += 1;
+    }
+  } else if (small(words[i]) !== undefined) {
+    value += small(words[i])!;
+    i += 1;
+  }
+  if (i === 0 || i !== words.length) return null;
+  return { value, rest, words: words.length };
+}
+
 /**
  * A coefficient against the formula it counts, as a balanced equation writes it: "3O2", "3O₂", "2CO2" (C2 D F06).
  * The formula is kept as the answer's unit, as "3 O2" with a space already was. It must hold a digit or two element
@@ -1126,6 +1173,10 @@ const DIRECTION_TAIL_RE = /(?<=[\d)²³⁰-⁹⁻a-zA-Z°µ%])(?:\s+,?\s*|,\s*)(
 function looseUnitKey(unit: string): string {
   return superscriptToAscii(unit)
     .toLowerCase()
+    // A rate's standard abbreviations are the rate (gate 2, G2-06, 11 Oct 2026: "75.6 bpm" for beats per minute).
+    .replace(/^bpm$/, "beats per minute")
+    .replace(/^wpm$/, "words per minute")
+    .replace(/^rpm$/, "revolutions per minute")
     .replace(/\^/g, "")
     // "g s-1" is "g/s" and "mol dm-3" is "mol/dm3": a unit with a negative power after another unit is a
     // denominator, whatever the power (C2 E, 24 Sep 2026: only -1 folded, so "mol dm⁻³" was not "mol/dm³").
@@ -1198,6 +1249,12 @@ function parseNumericInner(input: string): ParsedNumber | null {
   {
     const word = NUMBER_WORDS.get(s.toLowerCase());
     if (word !== undefined) s = String(word);
+  }
+  // A whole number in two or more words, or a tens word, is its number (G2-16): "ninety-five percent" is "95 percent". A
+  // single small number word keeps the readings below ("three sections", "week ten").
+  {
+    const c = leadingCardinal(s);
+    if (c && (c.words >= 2 || c.value >= 20)) s = `${c.value}${c.rest ? ` ${c.rest}` : ""}`;
   }
   // Four readings the B2 E author found refused (7 Oct 2026), each a right value as a student writes it:
   //  - a rate's stated base is the stem's own denominator, not a second value: "34 per 10 000", "34 per 10000 patients";
@@ -1364,6 +1421,20 @@ function parseNumericInner(input: string): ParsedNumber | null {
       if (!rest.some((w, i) => unitWord(w) && !pointName(w, i)) && endsOnUnit) s = m[1]!;
     }
   }
+  // A trigonometric function of a letter before "=" names the value: "sin x = 0.7" is the value of sin x (gate 2, G2-23,
+  // the FM1 group 2 author: unreadable where "sinx = 0.7" read).
+  s = s.replace(/^\s*\\?(?:sin|cos|tan)\s*\(?\s*[A-Za-zθα-ω]\s*\)?\s*=\s*(?=[-+]?\d)/i, "");
+  // A unit conversion line ends on the value: "1.61 kW = 1610 W" (every side a number with a unit the engine knows, of
+  // one kind of quantity; G2-22, the P2 author's EF-4).
+  {
+    const sides = s.split(/\s*=\s*/);
+    const valueWithUnit = /^[-+]?\d[\d.,]*\s*([A-Za-zΩµ°%][A-Za-zΩµ°%/²³]*)$/;
+    const dims = sides.map((side) => {
+      const m = valueWithUnit.exec(side.trim());
+      return m ? unitDimension(m[1]) : null;
+    });
+    if (sides.length >= 2 && dims.every((d) => d !== null && d === dims[0])) s = sides[sides.length - 1]!.trim();
+  }
   // Working typed into the box ("3 × 10 = 30", "F = ma = 3 × 10 = 30 N"): the answer is what follows the last
   // "=", but only when what precedes it is arithmetic and the line is not a pair ("x = 5, y = 3").
   {
@@ -1373,8 +1444,9 @@ function parseNumericInner(input: string): ParsedNumber | null {
     const before = s.slice(0, eq);
     // A formula in letters before it is working too ("P = I × V = 36 W"; the P2 C review, 25 Sep 2026).
     const formula = /[A-Za-zΩ)]\s*[×*÷/+\-]\s*[A-Za-z(]|[A-Za-zΩ]\s+x\s+[A-Za-z]/.test(before);
-    // A trigonometric or logarithmic function of a number is working ("150\sin 32° = 79.49", "150 sin 32 = 79.49").
-    const fn = /\\?(?:sin|cos|tan|log|ln)\b/.test(before) && /\d/.test(before);
+    // A trigonometric or logarithmic function of a number is working ("150\sin 32° = 79.49", "150 sin 32 = 79.49"), glued
+    // to its numbers too ("F = 24cos50 = 15.43"; gate 2, G2-22, 11 Oct 2026: unreadable where the spaced line read).
+    const fn = /\\?(?:sin|cos|tan|log|ln)(?![a-z])/i.test(before) && /\d/.test(before);
     if (eq > 0 && !/[,;]|\b(?:or|and)\b/i.test(s) && (fn || (/[×x*÷/+\-^()√]|\\(?:times|cdot|div|d?frac|tfrac|sqrt)\b/.test(before) && (/\d/.test(before) || formula)))) {
       s = s.slice(eq + 1).trim();
       if (s === "") return null;
@@ -1681,6 +1753,13 @@ function reconcileUnits(p: ParsedNumber, targetUnit: string | null): Reconciled 
   }
   const a = UNIT_TABLE[aUnit];
   const t = UNIT_TABLE[targetUnit];
+  // An energy change per mole of reaction: CCEA writes a reaction's energy change in kJ and in kJ mol⁻¹ alike (C2 2021
+  // Higher MS: "Energy change = 3748 − 4824 = −1076 kJmol-1"), so kJ/mol is the kJ the stem asks for (gate 2, G2-07,
+  // the C2 author's EF-1). Only the same prefix: J/mol is not kJ.
+  if (t && t.dim === "energy") {
+    const perMole = /^(k?j)(?:\/mol|mol-1|permole?)$/.exec(superscriptToAscii(aUnit).toLowerCase().replace(/[\s^]+/g, ""));
+    if (perMole && perMole[1] === targetUnit.toLowerCase()) return { value: p.value, term, status: "ok" };
+  }
   if (a && t && a.dim === t.dim) {
     // value_in_target = value × (a.factor / t.factor)
     const num = a.factor[0] * t.factor[1];
@@ -1689,6 +1768,11 @@ function reconcileUnits(p: ParsedNumber, targetUnit: string | null): Reconciled 
   }
   // Units outside the table (rates such as "breaths per minute") match by spelling, loosely.
   if (!a && !t && looseUnitKey(aUnit) === looseUnitKey(targetUnit)) return { value: p.value, term, status: "ok" };
+  // Two rates: "a" or "an" between unit words is the rate's "per", so "words a minute" is words per minute (gate 2,
+  // G2-06, 11 Oct 2026: "4.68 words per minute" lost a mark against "words a minute"). Only when both are rates: "58
+  // loaves an hour" against "loaves" is the counted noun below.
+  const rateKey = (u: string) => looseUnitKey(u.replace(/([A-Za-z])\s+an?\s+(?=[A-Za-z])/g, "$1 per "));
+  if (!a && !t && rateKey(aUnit).includes("/") && rateKey(aUnit) === rateKey(targetUnit)) return { value: p.value, term, status: "ok" };
   // A counted noun with words after it describes the same count: "58 loaves an hour" for loaves, "10 containers can
   // be filled completely" for containers (the worked solutions typed into the box, 27 Sep 2026). A rate ("per", "/")
   // after the noun is a different unit and does not count.

@@ -217,3 +217,37 @@ describe("the field's scalar box", () => {
     expect(parseMatrix("-1 [1 2; 3 4]")).toEqual([["-1", "-2"], ["-3", "-4"]]);
   });
 });
+
+// Gate 2, G2-25 (11 Oct 2026; the FM1 authors' E17, E18, E19 and fm1-g1 #2-#6): a scalar in front of a matrix in every
+// way a student writes one, after a name or none: "1/-16 (…)", "1/(-16) (…)", "(1/-16)(…)", "-1/16 (…)", "1/8 x (…)",
+// "A^{-1} = 1/14 (…)", "C inverse = 1/8 x (…)". Each is the matrix it multiplies out to.
+describe("a scalar before a matrix, in any spelling, after a name or none", () => {
+  const inv = [["1/8", "1/8"], ["5/16", "-3/16"]];
+  test("a negative denominator, bracketed or not, and a bracketed scalar", () => {
+    for (const typed of ["1/-16 (-2 -2; -5 3)", "1/(-16) (-2 -2; -5 3)", "(1/-16)(-2 -2; -5 3)", "-1/16 (-2 -2; -5 3)", "(-1/16)(-2 -2; -5 3)", String.raw`\frac{1}{-16}\begin{pmatrix}-2 & -2 \\ -5 & 3\end{pmatrix}`]) {
+      expect(parseMatrix(typed), typed).toEqual(inv);
+    }
+  });
+  test("a name before the scalar, in symbols or words", () => {
+    for (const typed of ["A^{-1} = -1/16 (-2 -2; -5 3)", "A^-1 = 1/16 (2 2; 5 -3)", "A inverse = 1/(-16) (-2 -2; -5 3)", String.raw`A^{-1} = \frac{1}{-16}\begin{pmatrix}-2 & -2 \\ -5 & 3\end{pmatrix}`]) {
+      expect(parseMatrix(typed), typed).toEqual(inv);
+    }
+  });
+  test("an x as the times sign between the scalar and the matrix", () => {
+    expect(parseMatrix("C inverse = 1/8 x (2 -4 ; -1 6)")).toEqual([["1/4", "-1/2"], ["-1/8", "3/4"]]);
+    expect(parseMatrix("E inverse = 1/(-2) x (3 -7 ; -2 4)")).toEqual([["-3/2", "7/2"], ["1", "-2"]]);
+  });
+  test("a matrix with no scalar is untouched", () => {
+    expect(parseMatrix("(1 2; 3 4)")).toEqual([["1", "2"], ["3", "4"]]);
+    expect(parseMatrix("(2)(1 2; 3 4)")).toEqual([["2", "4"], ["6", "8"]]);
+  });
+});
+
+// Gate 2's mutation check (11 Oct 2026): scaleEntry already moves a negative denominator's sign for a number entry, so
+// only an entry that is not a number shows where the scalar's sign sits: "1/-2 (a 2; 4 6)" carries -1/2 into a.
+describe("a negative denominator's sign moves to the top, in an entry that is not a number too", () => {
+  test("1/-2 before a matrix with a letter in it", () => {
+    expect(parseMatrix("1/-2 (a 2; 4 6)")).toEqual([["(-1/2)*(a)", "-1"], ["-2", "-3"]]);
+    expect(parseMatrix("(1/-4)(k 2; 4 6)")).toEqual([["(-1/4)*(k)", "-1/2"], ["-1", "-3/2"]]);
+  });
+});
