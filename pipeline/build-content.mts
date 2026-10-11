@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 import { TopicBundle, type VerificationLog } from "../src/lib/content/schema.ts";
 import { lintKeyWords } from "../src/components/items/keyword-lint.ts";
 import { figureLeakWarnings, figureSourceWarnings, lintContent, lintNoteBlocks, markingWarnings, noteBlockWarnings, sizeWarnings } from "../src/components/items/content-lint.ts";
-import { lessonReadiness } from "../src/lib/slides/readiness.ts";
+import { lessonReadiness, READINESS_POLICY, type ReadinessPolicy } from "../src/lib/slides/readiness.ts";
 import { publicVerification } from "../src/lib/build/public-verification.ts";
 import { characterWarnings, keyWordBarWarnings } from "../src/lib/content/shipped-text-lint.ts";
 import { withModelMinutes } from "../src/lib/build/hero-minutes.ts";
@@ -40,8 +40,10 @@ type ManifestTopic = {
   hasNote: boolean;
   hasBlocks: boolean;
   version: string;
-  /** Slides and the v3 lesson switch on per topic from the note structure plus its review (src/lib/slides/readiness.ts). */
+  /** Slides and the v3 lesson switch on per topic from the note structure plus its review (src/lib/slides/readiness.ts), under the manifest's readinessPolicy. */
   ready: boolean;
+  /** How it became ready ("reviewed", "waived" or, under the structure policy, "structure"); null when it is not. The service worker precaches only reviewed and waived Slides. */
+  readyVia: "reviewed" | "waived" | "structure" | null;
 };
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -65,8 +67,9 @@ function statusOf(logs: VerificationLog[], ref: string | undefined, itemId?: str
 }
 
 const files = walk(PACKS);
-const manifest: { generatedAt: string; topics: ManifestTopic[]; problems: string[] } = {
+const manifest: { generatedAt: string; readinessPolicy: ReadinessPolicy; topics: ManifestTopic[]; problems: string[] } = {
   generatedAt: new Date().toISOString(),
+  readinessPolicy: READINESS_POLICY,
   topics: [],
   problems: [],
 };
@@ -221,6 +224,7 @@ for (const file of files) {
   fs.writeFileSync(outFile, JSON.stringify(shipped));
   written.add(path.resolve(outFile));
 
+  const readiness = lessonReadiness(shipped);
   manifest.topics.push({
     id: b.topic.id,
     subject: b.topic.subject,
@@ -233,7 +237,8 @@ for (const file of files) {
     hasNote: noteOk,
     hasBlocks: noteOk && !!noteBlocks,
     version: String(b.note?.version ?? 1),
-    ready: lessonReadiness(shipped).ready,
+    ready: readiness.ready,
+    readyVia: readiness.via,
   });
   console.log(`ok   ${b.topic.id}  we ${counts.we} · dx ${counts.dx} · q ${counts.q} · ftm ${counts.ftm} · rp ${counts.rp}${noteOk ? " · note" : ""}`);
 }

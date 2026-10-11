@@ -73,7 +73,12 @@ const readinessWarnings = [
   ...[...ready].filter((k) => !exported.has(k)).map((k) => `ready in the manifest, but the export has no /slides/ route for it: ${k}`),
   ...[...exported].filter((k) => published.has(k) && !ready.has(k)).map((k) => `the export has a /slides/ route for a topic the manifest does not mark ready (not precached): ${k}`),
 ];
-const precachedSlides = new Set([...exported].filter((k) => ready.has(k)));
+// Under the structure policy (src/lib/slides/readiness.ts READINESS_POLICY, 9 Oct 2026) a topic may be ready on its structure
+// alone (readyVia "structure"); its Slides route exists and is served, but it is not precached: 133 such routes would add
+// ~29 MB to the install, the load that collapsed the e2e suite on 13 Sep 2026. Reviewed and waived Slides stay precached.
+const reviewedReady = new Set(manifestTopics.filter((t) => t.hasBlocks === true && t.ready === true && t.readyVia !== "structure").map(topicKey));
+const structureReady = new Set([...ready].filter((k) => !reviewedReady.has(k)));
+const precachedSlides = new Set([...exported].filter((k) => reviewedReady.has(k)));
 // ---- end of readiness -----------------------------------------------------------------------------------------------
 
 const onDemand = urls.filter((u) => ON_DEMAND_RE.some((re) => re.test(u)) && !SLIDES_RE.test(u));
@@ -176,5 +181,5 @@ self.addEventListener("fetch", (event) => {
 fs.writeFileSync(path.join(OUT, "sw.js"), sw);
 for (const w of readinessWarnings) console.warn(`WARNING readiness: ${w}`);
 console.log(
-  `out/sw.js written: ${shell.length} precached URLs (the Slides of ${precachedSlides.size} ready topic${precachedSlides.size === 1 ? "" : "s"} among them), ${onDemand.length} on demand (${(onDemandBytes / 1048576).toFixed(1)} MB), version ${version}`,
+  `out/sw.js written: ${shell.length} precached URLs (the Slides of ${precachedSlides.size} reviewed topic${precachedSlides.size === 1 ? "" : "s"} among them; ${structureReady.size} structure-ready on demand), ${onDemand.length} on demand (${(onDemandBytes / 1048576).toFixed(1)} MB), version ${version}`,
 );

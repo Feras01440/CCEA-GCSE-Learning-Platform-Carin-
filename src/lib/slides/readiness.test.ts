@@ -114,12 +114,27 @@ describe("readiness: the structure AND the review", () => {
     ]);
   });
 
-  it("is not ready when structured but not reviewed: every topic is reviewed before it counts", () => {
-    const r = lessonReadiness(bundle(V3) as never);
+  it("is not ready when structured but not reviewed, under the reviewed policy: every topic is reviewed before it counts", () => {
+    const r = lessonReadiness(bundle(V3) as never, "reviewed");
     expect(r.ready).toBe(false);
     expect(r.structure).toEqual([]);
     expect(r.reasons).toHaveLength(1);
     expect(r.reasons[0]).toMatch(/^no review/);
+  });
+
+  it("under the structure policy (the test build, 9 Oct 2026) a structured note is ready without a review, via structure", () => {
+    const r = lessonReadiness(bundle(V3) as never, "structure");
+    expect(r.ready).toBe(true);
+    expect(r.via).toBe("structure");
+    expect(r.review).toBeNull();
+    expect(r.reasons).toEqual([]);
+  });
+
+  it("under the structure policy a note that fails the structure is still not ready, and a review that says fail still blocks", () => {
+    expect(lessonReadiness(bundle(V2) as never, "structure").ready).toBe(false);
+    const failed = lessonReadiness(bundle(V3, [review({ result: "fail", detail: "the twin repeats its gate" })]) as never, "structure");
+    expect(failed.ready).toBe(false);
+    expect(failed.reasons[0]).toMatch(/^the latest review .* says fail/);
   });
 });
 
@@ -177,7 +192,8 @@ describe("readiness: which record is the review", () => {
   });
 
   it("counts a reader's record only: never the pipeline's, never an unknown result", () => {
-    const r = lessonReadiness(bundle(V3, [review({ by: "pipeline" }), review({ result: "ok" })]) as never);
+    // The review half is under test here, so the reviewed policy is named (the structure policy would pass V3 on its own).
+    const r = lessonReadiness(bundle(V3, [review({ by: "pipeline" }), review({ result: "ok" })]) as never, "reviewed");
     expect(r.ready).toBe(false);
     expect(r.reasons).toEqual([
       expect.stringMatching(/^no review/),
@@ -189,12 +205,12 @@ describe("readiness: which record is the review", () => {
 
   it("reads exactly the type human-spot and the tool teach-show-check", () => {
     for (const other of [review({ tool: "teach-show-check review" }), review({ tool: "Teach-show-check" }), review({ type: "style-lint" }), review({ tool: "claude (teach-show-check)" })])
-      expect(lessonReadiness(bundle(V3, [other]) as never).ready, JSON.stringify(other)).toBe(false);
+      expect(lessonReadiness(bundle(V3, [other]) as never, "reviewed").ready, JSON.stringify(other)).toBe(false);
   });
 
   it("reads the note's own log only, never another item's", () => {
     const questionLog = { id: "ver.q.x.0001", itemId: "q.x.0001", version: 1, checks: [review()], status: "verified", reports: [] };
-    expect(lessonReadiness(bundle(V3, [], { otherLogs: [questionLog] }) as never).ready).toBe(false);
+    expect(lessonReadiness(bundle(V3, [], { otherLogs: [questionLog] }) as never, "reviewed").ready).toBe(false);
   });
 
   it("needs the published note: a shipped note, blocks, and a note log that ships", () => {

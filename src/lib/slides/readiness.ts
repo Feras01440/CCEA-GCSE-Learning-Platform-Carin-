@@ -49,6 +49,13 @@
  *    has no See it block at all: the first See it that a migration adds ends it, and the migrated note then needs a
  *    review that says "pass".
  *
+ * 4. THE POLICY (9 Oct 2026, the owner): READINESS_POLICY below names how a topic becomes ready. "reviewed" is the rule
+ *    as written above. "structure" is the test-build setting: a note that passes the structure is ready without a
+ *    review, via "structure", so the owner and a student can test Slides on every migrated topic before the unit
+ *    reviewers have written their pass records. A review that says fail still blocks under both; a waiver still counts.
+ *    The build records the policy in the manifest (readinessPolicy) and each row's way in (readyVia); the service worker
+ *    precaches only the reviewed and waived Slides, the structure-ready ones load on demand (scripts/build-sw.mjs).
+ *
  * The note must be the published one: a shipped bundle's `noteBlocks` (public/content/…, null when the note does not
  * ship), or a raw bundle.json with its note.blocks.json passed as `noteBlocks`, whose note log says verified or
  * published.
@@ -67,6 +74,15 @@
  *    TEACHING_ROLES, CONTINUING_ROLE, CLOSING_ROLES; the limits: RECALL_MAX, TURNS_IN_A_ROW_MAX.
  */
 import type { GateBlock, NoteBlock, SeeBlock } from "@/components/items/gates";
+
+/** How a topic becomes ready: "reviewed" (structure + a reviewer's pass) or "structure" (the structure alone; a test build). */
+export type ReadinessPolicy = "reviewed" | "structure";
+/**
+ * The policy in force. Set to "structure" on 9 Oct 2026 on the owner's word, so Slides and Read v2 run on every topic whose
+ * note passes lesson structure v3 (133 of 204 that day) for the owner's and the student's test; back to "reviewed" once
+ * the unit reviewers have written their teach-show-check pass records. The one place this is decided.
+ */
+export const READINESS_POLICY: ReadinessPolicy = "structure";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // The names the content session writes and the renderers read
@@ -347,8 +363,8 @@ export function reviewOf(bundle: ReadinessInput): LessonReview | null {
 export interface LessonReadiness {
   /** Offer Slides, build its route, draw Read v2. */
   ready: boolean;
-  /** "reviewed": the structure passes and the review says pass. "waived": the waiver, on a note with no See it yet. */
-  via: "reviewed" | "waived" | null;
+  /** "reviewed": the structure passes and the review says pass. "waived": the waiver, on a note with no See it yet. "structure": the structure alone, under that policy. */
+  via: "reviewed" | "waived" | "structure" | null;
   /** The structure's problems (empty when it passes), reported whatever the review says. */
   structure: string[];
   /** The review that counts, or null. */
@@ -358,7 +374,7 @@ export interface LessonReadiness {
 }
 
 /** Whether a topic's lesson is ready for Slides and Read v2, and why not. See the top of this file for the rule. */
-export function lessonReadiness(bundle: ReadinessInput | null | undefined): LessonReadiness {
+export function lessonReadiness(bundle: ReadinessInput | null | undefined, policy: ReadinessPolicy = READINESS_POLICY): LessonReadiness {
   const notReady = (reasons: string[], structure: string[] = [], review: LessonReview | null = null): LessonReadiness => ({ ready: false, via: null, structure, review, reasons: [...reasons, ...structure] });
   if (!bundle || !isObject(bundle.note) || !Array.isArray(bundle.noteBlocks)) return notReady(["no published note: the bundle ships no note blocks"]);
   const log = noteLog(bundle);
@@ -370,6 +386,8 @@ export function lessonReadiness(bundle: ReadinessInput | null | undefined): Less
   const review = reviewOf(bundle);
 
   if (review === null) {
+    // The test-build policy: a structured note is ready on its structure alone (see 4. THE POLICY above).
+    if (policy === "structure" && structure.length === 0) return { ready: true, via: "structure", structure, review: null, reasons: [] };
     const ignored = reviewRecords(bundle).filter((r) => !r.counts);
     return notReady(
       [
