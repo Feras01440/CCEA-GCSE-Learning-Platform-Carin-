@@ -65,15 +65,42 @@ function isAtom(s: string): boolean {
   return !/[+\-*/=^()×·⋅÷]|\\(?:times|cdot|div)\b/.test(s);
 }
 
-function fracToSlash(s: string): string {
-  const re = /\\frac\{([^{}]*)\}\{([^{}]*)\}/g;
-  let prev = "";
-  let cur = s;
-  for (let i = 0; i < 20 && prev !== cur; i += 1) {
-    prev = cur;
-    cur = cur.replace(re, (_, a: string, b: string) => `${isAtom(a) ? a : `(${a})`}/${isAtom(b) ? b : `(${b})`}`);
+/** The index of the brace closing the one at `open`, or −1 when it never closes. */
+function closingBrace(s: string, open: number): number {
+  let depth = 0;
+  for (let i = open; i < s.length; i += 1) {
+    if (s[i] === "{") depth += 1;
+    else if (s[i] === "}") {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
   }
-  return cur;
+  return -1;
+}
+
+/**
+ * Every \frac{a}{b} as a/b, its braces matched, so that a power or a root inside the top or the bottom
+ * ("\frac{x^{2}+x+6}{(x+3)(x-1)}") keeps the fraction a fraction: a regex over brace-free pieces left it as "frac"
+ * and lost the top (the corpus guard, 29 Sep 2026). A fraction inside a fraction is converted first.
+ */
+function fracToSlash(s: string): string {
+  let out = "";
+  let i = 0;
+  for (;;) {
+    const at = s.indexOf("\\frac{", i);
+    if (at < 0) return out + s.slice(i);
+    const closeA = closingBrace(s, at + 5);
+    const closeB = closeA >= 0 && s[closeA + 1] === "{" ? closingBrace(s, closeA + 1) : -1;
+    if (closeB < 0) {
+      out += s.slice(i, at + 6);
+      i = at + 6;
+      continue;
+    }
+    const a = fracToSlash(s.slice(at + 6, closeA));
+    const b = fracToSlash(s.slice(closeA + 2, closeB));
+    out += `${s.slice(i, at)}${isAtom(a) ? a : `(${a})`}/${isAtom(b) ? b : `(${b})`}`;
+    i = closeB + 1;
+  }
 }
 
 export interface NormaliseEquationOptions {
@@ -189,8 +216,12 @@ function terms(side: string): Term[] {
     .split("+")
     .filter((t) => t.length > 0)
     .map((t) => {
-      const m = /^(\d+(?:\.\d+)?)(.*)$/.exec(t);
-      return m ? { coefficient: Number(m[1]), species: speciesKey(m[2]) } : { coefficient: 1, species: speciesKey(t) };
+      // A coefficient may be a whole number, a decimal or a fraction ("3/2O2", "1.5O2"): CCEA's general marking
+      // instruction 7(a) (2021) accepts fractional balancing (the C2 author, 8 Oct 2026).
+      const m = /^(\d+(?:\.\d+)?)(?:\/(\d+))?(.*)$/.exec(t);
+      if (!m) return { coefficient: 1, species: speciesKey(t) };
+      const coefficient = m[2] !== undefined ? Number(m[1]) / Number(m[2]) : Number(m[1]);
+      return { coefficient, species: speciesKey(m[3]!) };
     })
     .sort((a, b) => a.species.localeCompare(b.species));
 }
@@ -354,7 +385,9 @@ export function markEquation(raw: string, spec: EquationSpec): EquationMarkResul
 function markEquationLine(equationLine: string, working: string, spec: EquationSpec): EquationMarkResult {
   const physics = spec.kindOf === "physics";
   const hasStates = /\((s|l|g|aq)\)/i.test(equationLine);
-  const compare = { allowSwap: physics, lowercase: physics, implicitMultiply: physics, acceptMultiples: spec.acceptMultiples, species: !physics };
+  // A word equation is compared with its case folded: "Propane + Oxygen" is "propane + oxygen" (the C2 author, 8 Oct
+  // 2026: a capital letter cost a mark). A symbol equation keeps its case, where Co is cobalt and CO carbon monoxide.
+  const compare = { allowSwap: physics, lowercase: physics || spec.kindOf === "word", implicitMultiply: physics, acceptMultiples: spec.acceptMultiples, species: !physics };
   const matched = equationsMatch(equationLine, spec.balancedLatex, { ...compare, stripStates: true });
   if (matched && spec.stateSymbolsRequired) {
     if (!hasStates) {

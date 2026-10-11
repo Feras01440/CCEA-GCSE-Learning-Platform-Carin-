@@ -16,7 +16,7 @@ import { AnswerField, MathsLineInput } from "./AnswerField";
 import { accuracyOf, fadeHeading, planFade, type FadeLevel } from "./fade";
 import { FeedbackCard } from "./FeedbackCard";
 import { Figure } from "./Figure";
-import { markAnswer, type MarkResult } from "./mark";
+import { markAnswer, twinScheme, type MarkResult } from "./mark";
 import { Md } from "./Markdown";
 import { stepLineMatches } from "./mistake-marking";
 import { Tex } from "./Tex";
@@ -490,7 +490,9 @@ function TwinMode({
             calculator={calculator}
             autoFocus
             onSubmit={(raw) => {
-              const r = markAnswer(raw, we.twin.answer, { marks: we.steps.reduce((a, s) => a + (s.earns?.length ?? 0), 0) || 1, prompt: we.twin.stem });
+              // The twin's scheme comes from the example's steps (mark.ts twinScheme): a factorised but uncancelled
+              // answer earns its factorising marks through the ladder, and the question typed back earns nothing.
+              const r = markAnswer(raw, we.twin.answer, { marks: we.steps.reduce((a, s) => a + (s.earns?.length ?? 0), 0) || 1, prompt: we.twin.stem, scheme: twinScheme(we) });
               setResult(r);
               onStep?.(we.steps.length, r.correct);
               onComplete?.(r.correct ? 1 : 0);

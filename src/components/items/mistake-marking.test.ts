@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { evaluateWithTrig, finalValue, firstSentence, fixMatches, lastNumber, markFix, resultValue, sameAsMistakeLine, statementsHold, stepLineMatches, workingLines } from "./mistake-marking";
+import { evaluateWithTrig, finalValue, firstSentence, fixMatches, holdsMaths, lastNumber, markFix, mathsKey, resultValue, sameAsMistakeLine, statementsHold, stepLineMatches, workingLines } from "./mistake-marking";
 
 const correction = ["Values still needed: 30 − 22 = 8 of the 26 in the class.", "Median ≈ 30 + (8 ÷ 26) × 20 = 36.2 cm"];
 
@@ -717,5 +717,149 @@ describe("a step's equation is its own transformation, not any equation with the
   test("the step's own equation with its arithmetic done still matches, either way round", () => {
     expect(stepLineMatches("600 = 500a", "Taking up as positive: $5600 - 5000 = 500a$", { pieces: true }).match).toBe(true);
     expect(stepLineMatches("500a = 600", "Taking up as positive: $5600 - 5000 = 500a$", { pieces: true }).match).toBe(true);
+  });
+});
+
+// Build-9 gate, class 6 (the verifier's B, 29 Sep 2026): the equivalent-equation route still accepted the NEXT step's
+// line, because a number-only step's two sides are equal in value, so any true equation with that value matched side
+// for side. A step matches only its own transformation: one side as the step writes it, the other as written or with
+// the step's arithmetic done (a plain number, or the same operation still shown).
+describe("a step matches only its own transformation, never the next step's (build-9 gate, class 6)", () => {
+  test("m7 index-laws-zero-and-negative-powers we.03 step 3 '(2/3)^-2 = (3/2)^2' does not accept step 4's '(3/2)^2 = 9/4'", () => {
+    const step3 = String.raw`(c) $\left(\dfrac{2}{3}\right)^{-2} = \left(\dfrac{3}{2}\right)^{2}$`;
+    const before = [String.raw`(a) $5^{-2} = \dfrac{1}{5^{2}} = \dfrac{1}{25}$`, String.raw`(b) $2^{-3} \times 2^{5} = 2^{-3+5} = 2^{2} = 4$`];
+    expect(stepLineMatches("(3/2)^2 = 9/4", step3, { pieces: true, before }).match).toBe(false);
+    expect(stepLineMatches("(2/3)^-2 = (3/2)^2", step3, { pieces: true, before }).match).toBe(true);
+    expect(stepLineMatches("(3/2)^2", step3, { pieces: true, before }).match).toBe(true);
+  });
+  test("m7 standard-form we.03 step 2 '8 × 10^6 + 2 × 10^6 = 10 × 10^6' does not accept step 3's '10 × 10^6 = 1 × 10^7'", () => {
+    const step2 = "$8 \\times 10^{6} + 2 \\times 10^{6} = 10 \\times 10^{6}$";
+    const before = ["25% of $8 \\times 10^{6} = 0.25 \\times 8 \\times 10^{6} = 2 \\times 10^{6}$"];
+    expect(stepLineMatches("10 × 10^6 = 1 × 10^7", step2, { pieces: true, before }).match).toBe(false);
+    expect(stepLineMatches("10 × 10⁶ = 1 × 10⁷", step2, { pieces: true, before }).match).toBe(false);
+    expect(stepLineMatches("8 × 10^6 + 2 × 10^6 = 10 × 10^6", step2, { pieces: true, before }).match).toBe(true);
+    expect(stepLineMatches("10 × 10^6", step2, { pieces: true, before }).match).toBe(true);
+  });
+  test("the step's arithmetic done still matches: a plain number, or the same operation still shown", () => {
+    expect(stepLineMatches("600 = 500a", "Taking up as positive: $5600 - 5000 = 500a$", { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("500a = 600", "Taking up as positive: $5600 - 5000 = 500a$", { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("40 cos 30 - 12 = 5a", "$34.64 - 12 = 5a$", { pieces: true }).match).toBe(true);
+  });
+  test("an earlier step's equation restated inside this step is not this step's line (the exclusion the mutation check found untested)", () => {
+    const step2 = "Taking up as positive: $5600 - 5000 = 500a$";
+    const step3 = "So $5600 - 5000 = 500a$ gives $600 = 500a$";
+    expect(stepLineMatches("5600 - 5000 = 500a", step3, { pieces: true, before: [step2] }).match).toBe(false);
+    expect(stepLineMatches("5600 - 5000 = 500a", step3, { pieces: true }).match).toBe(true);
+    expect(stepLineMatches("600 = 500a", step3, { pieces: true, before: [step2] }).match).toBe(true);
+  });
+});
+
+// A regression the verifier's probe4 caught on the gate's engine (29 Sep 2026): a recurring decimal typed with fewer
+// repeats is the step's own number, not another step's transformation.
+describe("a plain number on both sides is the step's own line (build-9 gate, class 6)", () => {
+  test("m8 recurring-decimals we.02 step 2 '$10x = 1.66666666...$' accepts '10x = 1.666...' and refuses step 3's '100x = 16.666...'", () => {
+    const step2 = "$10x = 1.66666666...$";
+    const before = ["Let $x = 0.16666666...$. The 1 does not repeat; only the 6 does."];
+    expect(stepLineMatches("10x = 1.666...", step2, { pieces: true, before }).match).toBe(true);
+    expect(stepLineMatches("10x = 1.6667", step2, { pieces: true, before }).match).toBe(true);
+    expect(stepLineMatches("100x = 16.666...", step2, { pieces: true, before }).match).toBe(false);
+  });
+});
+
+describe("a TeX fraction whose top carries a power in braces is read through its slash (the corpus guard, 29 Sep 2026)", () => {
+  test("mathsKey: \\frac{x^{2}+x+6}{(x+3)(x-1)} is the key of (x^2+x+6)/((x+3)(x-1)), and holds x² + x + 6 whole", () => {
+    expect(mathsKey("\\frac{x^{2}+x+6}{(x+3)(x-1)}")).toBe(mathsKey("(x^2+x+6)/((x+3)(x-1))"));
+    expect(holdsMaths(mathsKey("\\frac{x^{2}+x+6}{(x+3)(x-1)}"), mathsKey("x² + x + 6"))).toBe(true);
+  });
+  test("mathsKey: a fraction inside a fraction, and a root in the bottom, are read inside out", () => {
+    // A power underneath keeps its brackets, as "\frac{1}{x^2}" always has ("1/(x^2)").
+    expect(mathsKey("\\frac{\\frac{1}{2}}{x^{2}}")).toBe(mathsKey("(1/2)/(x^2)"));
+    expect(mathsKey("\\frac{x+1}{\\sqrt{x^{2}+1}}")).toBe(mathsKey("(x+1)/(\\sqrt{x^2+1})"));
+  });
+});
+
+describe("a step's fraction not yet cancelled is not the next step's cancelled one (build-9 gate, class 6, surds)", () => {
+  // m8 surds we.03, steps 4 and 5: 6√3/15 and 2√3/5 are equal in value; the cancelling is what step 5 is for.
+  const step4 = "$= \\dfrac{6\\sqrt{3}}{5 \\times 3} = \\dfrac{6\\sqrt{3}}{15}$";
+  const step5 = "$= \\dfrac{2\\sqrt{3}}{5}$";
+  test("step 4 refuses step 5's '= 2√3/5', and step 5 refuses step 4's '= 6√3/15'", () => {
+    expect(stepLineMatches("= \\dfrac{2\\sqrt{3}}{5}", step4, { pieces: true, before: [] }).match).toBe(false);
+    expect(stepLineMatches("= \\dfrac{6\\sqrt{3}}{5 \\times 3} = \\dfrac{6\\sqrt{3}}{15}", step5, { pieces: true, before: [step4] }).match).toBe(false);
+  });
+  test("each step still takes its own line", () => {
+    expect(stepLineMatches("= \\dfrac{6\\sqrt{3}}{15}", step4, { pieces: true, before: [] }).match).toBe(true);
+    expect(stepLineMatches("= \\dfrac{2\\sqrt{3}}{5}", step5, { pieces: true, before: [step4] }).match).toBe(true);
+  });
+});
+
+// The FM1 author (7 Oct 2026): fm1 matrix-equations ftm.03 refused a bare "(11 2; 4 3)" for the correction "B² = (11 2 ; 4 3)"
+// while ftm.02 accepts a bare matrix for "X = (3 5 ; -5 -8)": a label with a power ("B²", "B^2") is a label like "X".
+describe("the fix box reads a matrix after a label that carries a power", () => {
+  const ftm03 = { correction: ["B² = (3 1 ; 2 -1)(3 1 ; 2 -1)", "B² = (11 2 ; 4 3)"], studentWorking: ["B² = (3² 1² ; 2² (-1)²)", "B² = (9 1 ; 4 1)"], mistakeLine: 1 };
+  test.each(["(11 2; 4 3)", "(11 2 ; 4 3)", "B² = (11 2; 4 3)", "B^2 = (11 2 ; 4 3)"])("%s fixes ftm.03", (typed) => {
+    expect(markFix(typed, ftm03).match).toBe(true);
+  });
+  test("her own squared-entries line and a wrong matrix are refused", () => {
+    expect(markFix("B² = (9 1 ; 4 1)", ftm03).match).toBe(false);
+    expect(markFix("(9 1; 4 1)", ftm03).match).toBe(false);
+    expect(markFix("(11 2; 4 5)", ftm03).match).toBe(false);
+  });
+});
+
+// The M8 author (7 Oct 2026): m8 gradient-of-a-curve ftm.01 refused right fixes that carry the composite unit "°C per
+// minute" or open with "about", while accepting "-5.5" and the correction's own label. A fix is read by its value after
+// labels and units are stripped: a composite unit ("°C per minute", "m/s", "N/cm") is one unit, "about" is the value.
+describe("the fix box reads a value with a composite unit, or after about", () => {
+  const ftm01 = {
+    correction: ["Draw a tangent touching the curve at t = 4", "Take two points on the tangent, for example (1, 55.4) and (7, 22.6)", "Gradient = (22.6 − 55.4) ÷ (7 − 1) = -5.5 °C per minute"],
+    studentWorking: ["At t = 0 the temperature is 80 °C", "At t = 4 the temperature is about 39 °C", "Rate = (39 − 80) ÷ 4 = -10.25 °C per minute"],
+    mistakeLine: 3,
+  };
+  test.each(["-5.5 °C per minute", "Rate = -5.5 °C per minute", "about -5.5", "Gradient = -5.5 °C/min", "approximately -5.5 °C per minute", "-5.5"])("%s fixes ftm.01", (typed) => {
+    expect(markFix(typed, ftm01).match).toBe(true);
+  });
+  test("her own rate and a wrong value are refused", () => {
+    expect(markFix("-10.25 °C per minute", ftm01).match).toBe(false);
+    expect(markFix("about -10.25", ftm01).match).toBe(false);
+    expect(markFix("-5 °C per minute", ftm01).match).toBe(false);
+  });
+});
+
+// The P2 author (7 Oct 2026): ftm.0001 of p2-calculating-resistance refused "R = 8 Ω" while accepting "8 Ω": a label
+// before the value is optional in a fix, as everywhere else.
+describe("the fix box reads a value behind a label of her own choosing", () => {
+  const item = { correction: ["Total resistance = 16 ÷ 2 = 8 Ω"], studentWorking: ["The two resistors are in parallel", "Total resistance = 16 + 16 = 32 Ω"], mistakeLine: 2 };
+  test.each(["R = 8 Ω", "R = 8", "8 Ω", "Resistance = 8 Ω", "R_T = 8 Ω"])("%s fixes ftm.0001", (typed) => {
+    expect(markFix(typed, item).match).toBe(true);
+  });
+  test("her own total and a wrong value are refused", () => {
+    expect(markFix("R = 32 Ω", item).match).toBe(false);
+    expect(markFix("R = 7 Ω", item).match).toBe(false);
+  });
+});
+
+// Mutation survivor pinned (7 Oct 2026): a step's side with no main operation is not "done" by a plain number.
+describe("a step's result in another form is not the step's own line", () => {
+  test("B3 (2/3)^-2 = 2.25 skips the reciprocal step (2/3)^-2 = (3/2)^2", () => {
+    expect(stepLineMatches("(2/3)^-2 = 2.25", "$(2/3)^{-2} = (3/2)^2$", { pieces: true, before: [] }).match).toBe(false);
+    expect(stepLineMatches("(2/3)^-2 = (3/2)^2", "$(2/3)^{-2} = (3/2)^2$", { pieces: true, before: [] }).match).toBe(true);
+  });
+});
+
+// Build-9 gate (the M8 author, 8 Oct 2026), a wrong answer paid: m8 growth-decay ftm.01 accepted her own wrong total,
+// typed bare ("£10080", "10080"), as the fix, because 10080 lies within the value route's 1 % of the correction's
+// 10123.78. A value the item's own working states on or after the flagged line, and that no correction line states,
+// is a value the item says is wrong: it can never be the fix, with labels and currency stripped.
+describe("the fix box never takes the mistake's own wrong value as the fix", () => {
+  const item = {
+    correction: ["Multiplier = 1 + 0.04 = 1.04", "9000 x 1.04^3 = 9000 x 1.124864", "= 10123.776", "Value after 3 years = £10123.78"],
+    studentWorking: ["4% of 9000 = 360", "360 x 3 = 1080", "9000 + 1080 = 10080", "Value after 3 years = £10080"],
+    mistakeLine: 2,
+  };
+  test.each(["£10080", "10080", "Value after 3 years = £10080", "1080", "£1080"])("%s is her own wrong value, not the fix", (typed) => {
+    expect(markFix(typed, item).match).toBe(false);
+  });
+  test.each(["£10123.78", "10123.78", "Value after 3 years = £10123.78", "9000 x 1.04^3 = 9000 x 1.124864", "Multiplier = 1.04"])("%s is the fix", (typed) => {
+    expect(markFix(typed, item).match).toBe(true);
   });
 });

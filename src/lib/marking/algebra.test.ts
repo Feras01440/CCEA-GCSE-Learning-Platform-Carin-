@@ -882,3 +882,28 @@ describe("expanded form of a single fraction: the numerator is expanded", () => 
     expect(checkAlgebraic("(x(x-1) + 3(x+2))/((x+2)(x-1))", spec).correct).toBe(false);
   });
 });
+
+describe("simplest-fraction form with a surd on top (the corpus guard, 29 Sep 2026)", () => {
+  const form = (x: string, answer = x) => checkAlgebraic(x, { answer, mode: "form", form: "simplest-fraction" });
+  test("6√3/15 shares the factor 3 with its denominator; 2√3/5 is simplest; 14√7/7 is not", () => {
+    expect(form("6\\sqrt{3}/15", "2\\sqrt{3}/5").correct).toBe(false);
+    expect(form("6\\sqrt{3}/15", "2\\sqrt{3}/5").reason).toBe("not-simplified");
+    expect(form("2\\sqrt{3}/5").correct).toBe(true);
+    expect(form("14\\sqrt{7}/7", "2\\sqrt{7}").reason).toBe("not-simplified");
+  });
+  test("(4 + 2√3)/2 shares 2; (2 + √3)/2 does not; √5/2 has no common whole-number factor; √12/2 is 2√3/2, not simplest", () => {
+    expect(form("(4 + 2\\sqrt{3})/2", "2 + \\sqrt{3}").reason).toBe("not-simplified");
+    expect(form("(2 + \\sqrt{3})/2").correct).toBe(true);
+    expect(form("\\sqrt{5}/2").correct).toBe(true);
+    expect(form("\\sqrt{12}/2", "\\sqrt{3}").reason).toBe("not-simplified");
+  });
+});
+
+// Mutation survivor pinned (7 Oct 2026): a negative power is a division in the simplest-fraction check.
+describe("a negative power is a division in the simplest-fraction check", () => {
+  test("(x^2+7x+10)(x^2+3x-10)^-1 is the question's fraction, not simplest", () => {
+    const r = checkAlgebraic("(x^2+7x+10)(x^2+3x-10)^-1", { answer: "(x+5)/(x-2)", mode: "form", form: "simplest-fraction" });
+    expect(r.correct).toBe(false);
+    expect(checkAlgebraic("(x+5)(x-2)^-1", { answer: "(x+5)/(x-2)", mode: "form", form: "simplest-fraction" }).correct).toBe(true);
+  });
+});

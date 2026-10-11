@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { countListedItems, keywordsPresent, markMcq, markText, normaliseText, type McqSpec, type TextSpec } from "./text-marking";
+import { countListedItems, isFormula, keywordsPresent, listedItems, markMcq, markText, normaliseText, type McqSpec, type TextSpec } from "./text-marking";
 
 describe("normaliseText", () => {
   test("case, punctuation, quotes and dashes are unified", () => {
@@ -582,5 +582,320 @@ describe("a negated entry waives her negation only for the same idea", () => {
     expect(markText("they are not resistant and they spread easily", s).marksAwarded).toBe(1);
     expect(markText("they are resistant and they spread easily", s).marksAwarded).toBe(2);
     expect(markText("they are not killed by antibiotics and they spread easily", s).marksAwarded).toBe(2);
+  });
+});
+
+// Build-9 gate, class 1 (the verifier and the lead, 29 Sep 2026): the negation model. A negator's scope is its own verb
+// phrase; a reduction word (reduce, lower, decrease, less, fewer) governing a quantity is the reduction, not a denial; a
+// key whose point is itself a reduction or an avoidance is denied by "not" before it; "cannot get onto", "stop X
+// entering" and "prevent X" are the harm-avoided form of "stop/reduce X"; a negated avoidance or reduction ("does not
+// reduce contamination") denies the point; the model's own negation counts only about the same subject.
+describe("negation: a reduction is not a denial, and a denied avoidance is (build-9 gate, class 1)", () => {
+  test("b2-health .0007(c) 'to reduce or stop contamination / microorganisms from the air entering the dish'", () => {
+    const s: TextSpec = {
+      kind: "text",
+      accepted: ["to stop microorganisms from the air landing on the agar and contaminating it"],
+      keyWords: [{ any: ["microorganisms from the air", "microorganisms in the air", "microbes in the air", "airborne", "contaminate", "contamination", "landing on the agar", "getting onto the agar"], marks: 1 }],
+      listingRule: false,
+    };
+    const model = ["To stop microorganisms from the air landing on the agar and contaminating the culture."];
+    const mark = (t: string) => markText(t, s, { model }).marksAwarded;
+    // The harm-avoided forms earn: the key is what the lid keeps out.
+    for (const right of ["so that microorganisms from the air cannot get onto the agar", "so microbes in the air can't land on it", "to reduce contamination", "to prevent microorganisms from the air contaminating the agar", "microorganisms in the air could land on the agar and contaminate it", "less chance of microbes in the air getting in"]) {
+      expect(mark(right), right).toBe(1);
+    }
+    // A denied reduction or avoidance says the harm is not avoided.
+    for (const wrong of ["it does not reduce contamination", "it does not stop microorganisms from the air getting in", "opening it wide does not reduce contamination"]) {
+      expect(mark(wrong), wrong).toBe(0);
+    }
+  });
+  test("b2-health .0022(d) 'to reduce or stop the growth of pathogens / harmful bacteria'", () => {
+    const s: TextSpec = { kind: "text", accepted: ["to avoid growing pathogens, the bacteria that cause disease in humans"], keyWords: [{ any: ["pathogen", "harmful bacteria", "harmful microorganisms", "dangerous bacteria", "cause disease", "causes disease", "cause illness"], marks: 1 }], listingRule: false };
+    const model = ["To avoid growing pathogens: bacteria that cause disease in humans are adapted to body temperature, 37 °C, so keeping the dish at 25 °C or below makes it unlikely that any will grow."];
+    const mark = (t: string) => markText(t, s, { model }).marksAwarded;
+    for (const right of ["so that pathogens do not grow", "to stop harmful bacteria growing", "pathogens could grow", "at 37 °C pathogens that cause disease in humans would grow", "no harmful bacteria can grow"]) expect(mark(right), right).toBe(1);
+    // Her "not" denies the harm itself: the bacteria do not cause disease is the opposite of the point.
+    for (const wrong of ["so the bacteria grow quickly and do not cause disease", "the bacteria are not harmful bacteria"]) expect(mark(wrong), wrong).toBe(0);
+  });
+  test("b2-health .0018(b) 'colonies of a different type, or colonies growing away from the streak lines'", () => {
+    const s: TextSpec = { kind: "text", accepted: ["it has colonies of other kinds, away from the streak lines"], keyWords: [{ any: ["other kinds", "different colonies", "not all the same", "away from the streak", "not on the streak", "off the streak", "on the streak"], marks: 1 }], listingRule: false };
+    const model = ["The right-hand plate has colonies of other kinds, larger and differently shaped, and they grow away from the streak lines, so they did not come from the loop."];
+    expect(markText("there are colonies off the streak lines", s, { model }).marksAwarded).toBe(1);
+    // "no colonies off the streak lines" denies the evidence; "not on the streak" is not "off the streak" with a "no".
+    expect(markText("there are no colonies off the streak lines", s, { model }).marksAwarded).toBe(0);
+    // An entry that is itself the negation of her key ("not on the streak") waives her "no".
+    expect(markText("there are no colonies on the streak lines", s, { model }).marksAwarded).toBe(1);
+  });
+  test("b2-natural-selection .0011(b) 'the antibiotic killed the non-resistant bacteria (or the resistant ones survived)'", () => {
+    // The live group holds "non resistant bacteria cannot survive": with its two operators off it reads as her key, and
+    // it must not waive her "non" (an entry waives only when it is her key under one operator).
+    const s: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["non resistant bacteria died", "non resistant bacteria did not survive", "non resistant bacteria cannot survive", "resistant bacteria survived", "resistant bacteria survive"], marks: 1 }, { any: ["reproduce", "reproduced", "offspring"], marks: 1 }], listingRule: false };
+    const model = ["The antibiotic killed the bacteria that were not resistant, so the resistant bacteria survived, reproduced and passed on the gene for resistance."];
+    expect(markText("the resistant bacteria survived and reproduced", s, { model }).marksAwarded).toBe(2);
+    // "non-resistant bacteria survived" holds the key "resistant bacteria survived" under its "non": the opposite of the point.
+    expect(markText("the non-resistant bacteria survived", s, { model }).marksAwarded).toBe(0);
+  });
+  test("c2-combustion .0007 'so the blood can carry less oxygen'", () => {
+    const s: TextSpec = {
+      kind: "text",
+      accepted: ["it combines with haemoglobin in the blood, so less oxygen is carried round the body", "it binds to haemoglobin, so the blood can carry less oxygen"],
+      keyWords: [
+        { any: ["haemoglobin", "hemoglobin"], marks: 1, reject: ["plasma"] },
+        { any: ["carry less oxygen", "capacity to carry oxygen", "cannot carry oxygen", "reduces the oxygen", "less oxygen is carried", "reducing its capacity", "reducing the capacity"], marks: 1, reject: ["increases the capacity", "carry more oxygen", "more oxygen"] },
+      ],
+      listingRule: false,
+    };
+    const model = ["Carbon monoxide combines with haemoglobin in the blood, so the blood can carry less oxygen."];
+    const mark = (t: string) => markText(t, s, { model }).marksAwarded;
+    // A reduction verb governing the capacity is the reduction the point names; "carries" is "carry".
+    for (const right of ["it combines with haemoglobin, which reduces the blood's capacity to carry oxygen", "it combines with haemoglobin, reducing the blood's capacity to carry oxygen", "it binds to haemoglobin so the blood carries less oxygen", "it binds to haemoglobin so the blood can carry less oxygen", "it binds to haemoglobin so the blood cannot carry oxygen"]) {
+      expect(mark(right), right).toBe(2);
+    }
+    // A reduction key denied by "not", and a denied reduction of the capacity, are denials of the point.
+    for (const wrong of ["it binds to haemoglobin but does not carry less oxygen", "it combines with haemoglobin but it does not reduce the capacity to carry oxygen", "it combines with haemoglobin, which does not reduce the capacity to carry oxygen", "it binds to haemoglobin but does not reduce the oxygen carried", "it binds to haemoglobin so the blood can carry more oxygen"]) {
+      expect(mark(wrong), wrong).toBe(1);
+    }
+  });
+  test("b2-heart-attacks .0008(c) 'figures: 26% against 21%': a reduction verb governing the figure is the reduction", () => {
+    const s: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["300 mg", "the higher dose", "less effective"], marks: 1 }, { any: ["21%", "21 per cent", "26%", "5% more"], marks: 1 }], listingRule: false };
+    const model = ["She is in the under 65 kg group, where dose B, 300 mg, lowers the risk by 26% but dose A, 150 mg, by only 21%."];
+    expect(markText("150 mg only reduces her risk by 21%, which is less than 300 mg", s, { model }).marksAwarded).toBe(2);
+    expect(markText("150 mg only lowers her risk by 21%, which is less than 300 mg", s, { model }).marksAwarded).toBe(2);
+    // The reduction denied: the figure is denied with it.
+    expect(markText("it does not reduce her risk by 21%", s, { model }).marksAwarded).toBe(0);
+    expect(markText("no dose reduces her risk by 21%", s, { model }).marksAwarded).toBe(0);
+  });
+  test("a reject word in an inflected form does not fire under her own 'not' (b2-heart-attacks .0004(c))", () => {
+    const s: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["less sticky", "not as sticky"], marks: 1, reject: ["lowers cholesterol"] }, { any: ["less likely to clot", "fewer clots"], marks: 1, reject: ["lowers cholesterol"] }], listingRule: false };
+    expect(markText("it doesn't lower cholesterol, it makes platelets less sticky so fewer clots form", s).marksAwarded).toBe(2);
+    expect(markText("it did not lower cholesterol; it makes the platelets less sticky", s).marksAwarded).toBe(1);
+    expect(markText("it lowers cholesterol and makes platelets less sticky", s).marksAwarded).toBe(0);
+  });
+  test("a double negation is positive only when both negate the same verb", () => {
+    const s: TextSpec = { kind: "text", accepted: [], keyWords: [{ any: ["contamination"], marks: 1 }], listingRule: false };
+    // Two plain negators on one verb cancel; a "not" on an avoidance verb does not (the point is the avoidance).
+    expect(markText("there is not no contamination", s).marksAwarded).toBe(1);
+    const avoided: TextSpec = { kind: "text", accepted: ["to prevent contamination"], keyWords: [{ any: ["contamination"], marks: 1 }], listingRule: false };
+    expect(markText("it does not prevent contamination", avoided).marksAwarded).toBe(0);
+    expect(markText("it prevents contamination", avoided).marksAwarded).toBe(1);
+  });
+  test("the E-NEG-POINT set still earns (the B2 E author, 29 Sep 2026)", () => {
+    const lid: TextSpec = { kind: "text", accepted: ["to stop microorganisms from the air landing on the agar and contaminating it"], keyWords: [{ any: ["microorganisms from the air", "from the air", "other microorganisms", "contaminate", "contamination", "contaminated"], marks: 1 }], listingRule: false };
+    for (const t of ["to prevent contamination from microorganisms in the air", "to stop other microorganisms getting in", "to prevent the agar being contaminated"]) expect(markText(t, lid).marksAwarded, t).toBe(1);
+    const dose: TextSpec = { kind: "text", accepted: ["so patients are given no more antibiotic than they need, with fewer side effects and less overuse"], keyWords: [{ any: ["no more than", "side effect", "overuse", "resistant", "superbug", "not too much"], marks: 1 }], listingRule: false };
+    for (const t of ["to reduce side effects", "to stop bacteria becoming resistant like MRSA", "to prevent superbugs"]) expect(markText(t, dose).marksAwarded, t).toBe(1);
+  });
+  test("phraseIn: a word ending in -y matches its -ies and -ied forms, and back", () => {
+    expect(markText("the blood carries less oxygen", ks([["carry less oxygen"]])).marksAwarded).toBe(1);
+    expect(markText("the blood carried less oxygen", ks([["carries less oxygen"]])).marksAwarded).toBe(1);
+    expect(markText("the blood can carry less oxygen", ks([["carries less oxygen"]])).marksAwarded).toBe(1);
+  });
+});
+
+// The point is a plain negation the model states of a sibling word of the group: her negation of the sibling says the
+// same ("the active site is not the right shape for them" for "their shapes are not complementary"; b1 enzymes .0004(b),
+// a regression the gate probe caught on 29 Sep 2026). An avoidance in the model ("to avoid growing pathogens") is not
+// such a negation: "do not cause disease" stays a denial.
+describe("her negation of a sibling word, where the model plainly negates one of the group", () => {
+  test("b1-enzymes .0004(b) 'P1 their shapes are not complementary to the active site'", () => {
+    const s: TextSpec = { kind: "text", accepted: ["their shapes are not complementary to the active site so they cannot fit into it"], keyWords: [{ any: ["shape", "complementary"], marks: 1 }, { any: ["active site"], marks: 1 }], listingRule: false };
+    const model = ["The shapes of B and C are not complementary to the active site, so neither can fit into it, no enzyme-substrate complex forms and no reaction takes place."];
+    expect(markText("the active site is not the right shape for them", s, { model }).marksAwarded).toBe(2);
+    // The plain "complementary" still contradicts the point (the group is not paid through "shape").
+    expect(markText("their shape is complementary to the active site so they fit", s, { model }).marksAwarded).toBe(1);
+  });
+});
+
+// The corpus guard (29 Sep 2026): the model's own "Without light the leaf cannot photosynthesise, but it goes on
+// respiring" lost its first point, because the "without" three words back was read as governing "cannot
+// photosynthesise". "Without" governs its own object only, and a key that starts with its own operator takes a plain
+// negator only right before it.
+describe("a key that starts with its own operator, and the reach of 'without'", () => {
+  test("b1 leaf-structure .0005(b) 'P1 no photosynthesis (no light)': the worked solution earns its point", () => {
+    const s: TextSpec = { kind: "text", accepted: ["in the dark the plant cannot photosynthesise but it still respires"], keyWords: [{ any: ["cannot photosynthesise", "no photosynthesis", "could not photosynthesise"], marks: 1 }, { any: ["respir"], marks: 1 }], listingRule: false };
+    expect(markText("Without light the leaf cannot photosynthesise, but it goes on respiring, which releases carbon dioxide.", s).marksAwarded).toBe(2);
+    expect(markText("The leaf does not stop photosynthesising without light", s).marksAwarded).toBe(0);
+    expect(markText("without light", ks([["light"]])).marksAwarded).toBe(0);
+    expect(markText("without the sun the light reaches the leaf", ks([["light"]])).marksAwarded).toBe(1);
+  });
+});
+
+// Build-9 gate, class 1, the Unit 7 author's case (7 Oct 2026): a key whose point is itself a negation ("no photosynthesis",
+// "did not photosynthesise", "no starch") is matched by her negated form of the same verb, whatever negation stands earlier
+// in her sentence; it is denied only by a negation of that negation. "Because it did not get light it did not
+// photosynthesise" was read as the first "not" governing the second key, and the right answer lost a mark.
+describe("negation: a key that carries its own negator states its own polarity (build-9 gate, class 1, Unit 7)", () => {
+  const s: TextSpec = {
+    kind: "text",
+    accepted: ["The card kept the light out, so that part could not photosynthesise, so no starch was made there"],
+    keyWords: [
+      { any: ["no light", "without light", "light could not reach", "kept the light out", "in the dark", "did not get light", "didn't get light", "got no light", "dark"], marks: 1 },
+      { any: ["no photosynthesis", "cannot photosynthesise", "could not photosynthesise", "did not photosynthesise", "didn't photosynthesise", "does not photosynthesise", "not photosynthesise", "photosynthesis stopped", "stops photosynthesis", "prevents photosynthesis"], marks: 1 },
+      { any: ["no starch", "not make starch", "did not make starch", "could not make starch", "starch not made", "starch was not made", "no starch was made", "no starch made", "without starch"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  const model = ["The card kept the light out, so that part of the leaf could not photosynthesise, so no starch was made there and the iodine stayed yellow-brown."];
+  const mark = (t: string) => markText(t, s, { model }).marksAwarded;
+  test("u7-carrying-out .0010(a) 'no light; no photosynthesis; no starch': her three negated keys earn three", () => {
+    expect(mark("Because it did not get light it did not photosynthesise, so there is no starch")).toBe(3);
+    expect(mark("no light so no photosynthesis so no starch")).toBe(3);
+    expect(mark("It was in the dark, so it could not photosynthesise and no starch was made")).toBe(3);
+  });
+  test("one key alone is one mark; the positive statements earn nothing", () => {
+    expect(mark("it did not photosynthesise")).toBe(1);
+    expect(mark("the plant did photosynthesise, so there is no starch")).toBe(1);
+    expect(mark("the covered part photosynthesised and made starch")).toBe(0);
+    expect(mark("the leaf was not without light, it photosynthesised and made starch")).toBe(0);
+  });
+});
+
+// The FM1 author (7 Oct 2026): keywordsPresent("a = 10^c", ["10"]) did not find the key word 10 inside 10^c, so a right
+// line that writes the base as a power earned nothing on the key-word route. A key word is present when it appears as
+// a token of the expression, including as the base or exponent of a power and inside TeX ("10^{c}").
+describe("a key word is a token of the expression, the base or exponent of a power included", () => {
+  test.each([
+    ["a = 10^c", "10"],
+    ["a = 10^{c}", "10"],
+    ["2 × 10^c", "10"],
+    ["a = 10^c", "c"],
+    ["y = 2^x", "2"],
+    ["log a = c log 10", "10"],
+  ])("%s carries %s", (text, key) => {
+    expect(keywordsPresent(text, [key]).all).toBe(true);
+  });
+  test.each([
+    ["x = 100", "10"],
+    ["a = 10^c", "10c"],
+    ["a = 210", "10"],
+  ])("%s does not carry %s", (text, key) => {
+    expect(keywordsPresent(text, [key]).all).toBe(false);
+  });
+});
+
+// The FM1 author (7 Oct 2026): "$X = A^{-1}B$" did not register the key word "A^-1 B". TeX braces, the caret form and
+// spacing normalise to one token stream before a key word with operators is looked for.
+describe("a key word with operators is found with braces and spacing normalised away", () => {
+  test.each([
+    ["$X = A^{-1}B$", "A^-1 B"],
+    ["X = A^-1B", "A^-1 B"],
+    ["$X = A^{-1}B$", "A^{-1}B"],
+    ["X = A^-1 B", "A^{-1} B"],
+  ])("%s carries %s", (text, key) => {
+    expect(keywordsPresent(text, [key]).all).toBe(true);
+  });
+  test("a different power is not the key word", () => {
+    expect(keywordsPresent("X = A^-2 B", ["A^-1 B"]).all).toBe(false);
+    expect(keywordsPresent("X = B A^-1", ["A^-1 B"]).all).toBe(false);
+  });
+});
+
+// The B2 E author (7 Oct 2026): "lung cancer and TB" scored 1/1 under the listing rule, where a right answer listed with a
+// wrong one scores 0 (CCEA's general marking instructions). "TB" was read as a chemical formula beside a name: a formula
+// is made of element symbols, and T is none.
+describe("the listing rule counts an abbreviation as an item, not as a formula beside a name", () => {
+  test("TB, DNA and MRSA are items; CO, NaCl and C2H5OH are formulae", () => {
+    expect(listedItems("lung cancer and TB")).toHaveLength(2);
+    expect(listedItems("MRSA and TB")).toHaveLength(2);
+    expect(listedItems("ethanol, C2H5OH")).toHaveLength(1);
+    expect(listedItems("carbon monoxide, CO")).toHaveLength(1);
+    expect(listedItems("sodium chloride / NaCl")).toHaveLength(1);
+    expect(isFormula("TB")).toBe(false);
+    expect(isFormula("DNA")).toBe(false);
+    expect(isFormula("CO")).toBe(true);
+  });
+  test("b2-health .0016(c) 'one example of a non-communicable disease': a right one listed with a wrong one is 0", () => {
+    const s: TextSpec = { kind: "text", accepted: ["lung cancer"], keyWords: [{ any: ["cancer", "tumour", "diabetes", "heart disease", "stroke"], marks: 1 }], listingRule: true };
+    expect(markText("lung cancer", s).marksAwarded).toBe(1);
+    expect(markText("lung cancer and TB", s).marksAwarded).toBe(0);
+    expect(markText("TB", s).marksAwarded).toBe(0);
+  });
+});
+
+// The C2 E author (7 Oct 2026): "argon, a noble gas" scored 0 under the listing rule, the apposition read as a second
+// answer. An apposition that names the class of the answer is one answer; a list is two candidates of the same kind.
+describe("an apposition naming the class of the answer is one answer, not a list", () => {
+  test("argon, a noble gas; helium, which is inert", () => {
+    expect(listedItems("argon, a noble gas")).toHaveLength(1);
+    expect(listedItems("helium, which is inert")).toHaveLength(1);
+    expect(listedItems("argon, an unreactive gas")).toHaveLength(1);
+    expect(listedItems("argon and neon")).toHaveLength(2);
+    expect(listedItems("argon, neon")).toHaveLength(2);
+    const s: TextSpec = { kind: "text", accepted: ["argon"], keyWords: [{ any: ["argon"], marks: 1 }], listingRule: true };
+    expect(markText("argon, a noble gas", s).marksAwarded).toBe(1);
+    expect(markText("argon, neon", s).marksAwarded).toBe(0);
+  });
+});
+
+// The Unit 7 author (7 Oct 2026): u7-conclusions .0016(a) "the mass did not change after heating it again" 1/2 where "after
+// heating it again the mass did not change" is 2/2. The negator's scope is its own verb phrase; a trailing time clause
+// ("after heating it again") is outside it and carries its own key.
+describe("negation: a trailing time clause is outside the negator's scope", () => {
+  const s: TextSpec = { kind: "text", accepted: ["She heated and weighed it again until the mass did not change"], keyWords: [{ any: ["heated again", "heating it again", "heating again", "reheated", "repeated heating"], marks: 1 }, { any: ["mass did not change", "mass stayed the same", "constant mass"], marks: 1 }], listingRule: false };
+  const model = ["She heated and weighed it again until the mass did not change."];
+  test("the mass did not change after heating it again earns both", () => {
+    expect(markText("the mass did not change after heating it again", s, { model }).marksAwarded).toBe(2);
+    expect(markText("after heating it again the mass did not change", s, { model }).marksAwarded).toBe(2);
+    expect(markText("the mass did not change before heating it again", s, { model }).marksAwarded).toBe(2);
+  });
+  test("a negated key stays negated: she did not heat it again earns only the mass point", () => {
+    expect(markText("she did not heat it again and the mass stayed the same", s, { model }).marksAwarded).toBe(1);
+  });
+});
+
+// Mutation survivors pinned (7 Oct 2026): three rules of the negation model whose tests had not reached them.
+describe("negation model: cannot, every occurrence, the subject's negator", () => {
+  test("G1 cannot is a plain negator: a key word under cannot earns nothing", () => {
+    expect(markText("the plant cannot photosynthesise", ks([["photosynthesise"]])).marksAwarded).toBe(0);
+    expect(markText("the plant can photosynthesise", ks([["photosynthesise"]])).marksAwarded).toBe(1);
+  });
+  test("G10 a negated point needs every occurrence of her key negated: a contradictory answer earns nothing", () => {
+    const s: TextSpec = { kind: "text", accepted: ["their shapes are not complementary to the active site"], keyWords: [{ any: ["complementary"], marks: 1 }], listingRule: false };
+    const model = ["Their shapes are not complementary to the active site, so they do not fit."];
+    expect(markText("their shapes are not complementary", s, { model }).marksAwarded).toBe(1);
+    expect(markText("one shape is complementary and the other shape is not complementary", s, { model }).marksAwarded).toBe(0);
+  });
+  test("G15 a negator on the subject of the key's own verb negates its statement: no dose reduces the risk", () => {
+    const s = ks([["reduces the risk", "lowers the risk"]]);
+    expect(markText("a bigger dose reduces the risk", s).marksAwarded).toBe(1);
+    expect(markText("no dose reduces the risk", s).marksAwarded).toBe(0);
+  });
+});
+
+// Build-9 gate (the B2 author, 8 Oct 2026), wrong answers paid: b2-monohybrid .0003(a) paid "B and B" and "b and b" for a
+// Bb pony's gametes, where CCEA's 2024 Foundation scheme pays only "B and b". A key word made of allele letters (single
+// letters joined by and/or/comma, or an allele pair such as Bb) is matched case-sensitively against the accepted
+// answers' letters, in either order; ordinary words stay case-insensitive.
+describe("allele letters are matched case-sensitively; ordinary words are not", () => {
+  const gametes: TextSpec = { kind: "text", accepted: ["B and b", "B or b"], keyWords: [{ any: ["b and b", "b or b"], marks: 1 }], listingRule: false };
+  test("B and b (either order) earns; B and B, b and b earn nothing", () => {
+    for (const right of ["B and b", "b and B", "B or b"]) expect(markText(right, gametes).marksAwarded, right).toBe(1);
+    for (const wrong of ["B and B", "b and b", "BB and bb"]) expect(markText(wrong, gametes).marksAwarded, wrong).toBe(0);
+  });
+  test("a genotype key word keeps its case; a word key word does not", () => {
+    const genotype: TextSpec = { kind: "text", accepted: ["Bb"], keyWords: [{ any: ["Bb"], marks: 1 }], listingRule: false };
+    expect(markText("Bb", genotype).marksAwarded).toBe(1);
+    expect(markText("bB", genotype).marksAwarded).toBe(1);
+    expect(markText("BB", genotype).marksAwarded).toBe(0);
+    expect(markText("bb", genotype).marksAwarded).toBe(0);
+    const word: TextSpec = { kind: "text", accepted: ["heterozygous"], keyWords: [{ any: ["heterozygous"], marks: 1 }], listingRule: false };
+    expect(markText("Heterozygous", word).marksAwarded).toBe(1);
+    expect(markText("HETEROZYGOUS", word).marksAwarded).toBe(1);
+  });
+});
+
+// Two M8 sine-rule steps (8 Oct 2026). WE03 step 1 regressed under the allele rule: "YZ" is a side, not an allele pair,
+// so "cosine rule, YZ is opposite x" lost its key word. An allele key is one letter in two cases or repeated (Bb, bb, BB,
+// Tt), or single letters of that kind joined by and/or; two different capitals are a name and stay case-insensitive.
+// WE01 step 4 "BC = 9.6sin(52)/sin(57)" had never found "sin(57)" after the slash: an operator before or after a key word
+// is a boundary, as a space is.
+describe("a two-letter name is not an allele pair, and an operator is a word boundary", () => {
+  test("m8 sine-rule WE03 step 1: YZ is found in 'cosine rule, YZ is opposite x'", () => {
+    const s: TextSpec = { kind: "text", accepted: ["The cosine rule, with YZ opposite x"], keyWords: [{ any: ["cosine rule", "cosine", "cos rule"], marks: 1, reject: ["sine rule"] }, { any: ["YZ", "13.6"], marks: 1 }], listingRule: false };
+    for (const right of ["cosine rule, YZ is opposite x", "YZ is opposite x, cosine rule", "cosine rule with yz opposite x"]) expect(markText(right, s).marksAwarded, right).toBe(2);
+  });
+  test("m8 sine-rule WE01 step 4: sin(57) after a slash is the key word sin(57)", () => {
+    const s: TextSpec = { kind: "text", accepted: ["BC = 9.6 sin 52 / sin 57"], keyWords: [{ any: ["9.6 sin 52", "9.6sin52", "9.6sin(52)", "9.6 sin(52)"], marks: 1 }, { any: ["sin 57", "sin57", "sin(57)"], marks: 1 }], listingRule: false };
+    for (const right of ["BC = 9.6sin(52)/sin(57)", "BC = 9.6 sin(52) / sin(57)", "9.6sin52/sin57"]) expect(markText(right, s).marksAwarded, right).toBe(2);
   });
 });

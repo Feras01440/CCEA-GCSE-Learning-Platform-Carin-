@@ -24,7 +24,7 @@ import { evaluateArithmetic } from "./mistake-marking";
 import { expectedDisplay, isAutoMarkable, toAlgebraSpec, toNumericSpec, toNumericTolerance } from "./spec-map";
 import { isFormula, markMcq, markText, nameWithFormula } from "./text-marking";
 import { markOrder, orderMarks, stepsAsOrder } from "./order-marking";
-import { markWorking, methodSteps } from "@/lib/marking/working";
+import { FACTORISED, markWorking, methodSteps } from "@/lib/marking/working";
 
 export interface MarkResult {
   correct: boolean;
@@ -78,6 +78,12 @@ export interface MarkOptions {
   workedSolution?: string;
   /** Follow-through from an earlier part (the part's `followThrough`, "use-candidate-value"): see `followThroughValue`. */
   followThrough?: FollowThrough;
+  /**
+   * The part requires working (the part's `requiresWorking`, or a stem that says "you must show your working"): a bare
+   * right value or expression earns nothing, and the working ladder decides (CCEA's 2021 C2 Higher general instruction 9;
+   * the C2 reviewer's ruling, 8 Oct 2026). A text answer is its own working and is never bare.
+   */
+  requiresWorking?: boolean;
   /**
    * The part's subject ("science", "maths", "further-maths"). Science papers mark instructed decimal places as written
    * (a dropped final zero loses the accuracy mark); maths and further maths accept it. Omitted: the maths reading.
@@ -179,9 +185,19 @@ function printsTheValue(prompt: string | undefined, spec: AnswerSpec): boolean {
   return false;
 }
 
-/** A "show that" part: the stem prints the answer, and the working is what earns (ruling 3). */
-function isShowThat(prompt: string | undefined): boolean {
-  return prompt !== undefined && /\bshow that\b/i.test(prompt);
+/**
+ * A "show that" part: the stem prints the answer, and the working is what earns (ruling 3). The command ("Show that
+ * …", "(b) Show that", "hence show that", "use the sine rule to show that"), never a sentence about what some results
+ * show ("Explain why the results show that respiration is exothermic" asks for an explanation, not a proof; the
+ * verifier, 29 Sep 2026).
+ */
+export function isShowThat(prompt: string | undefined): boolean {
+  return prompt !== undefined && /(?:^|[^A-Za-z\s]\s*|\b(?:to|hence|then|now|and|also|first|next|or)\s+)show that\b/im.test(prompt);
+}
+
+/** A common error that names a verification by substitution: the printed result put into the equation and checked. */
+function isVerification(error: CommonError): boolean {
+  return /verif/i.test(error.misconception);
 }
 
 /**
@@ -255,15 +271,10 @@ function formTaskAward(raw: string, feedback: string, marks: number, expected: s
       if (!earned.has(s.id) && s.evidence.some((e) => sameExpression(e, raw))) ladder += s.marks;
     }
   }
-  // An equivalent expression that is not in the form asked ("x/3 − 2" for (x − 6)/3) shows the method: never 0 on a
-  // multi-mark part (the lead, 29 Sep 2026). A bare decimal shows none.
-  // A common error that names her answer decides over the floor: "x²/x − 4" is equal to x − 4, but its error (terms
-  // cancelled, not factors) earns 0 by the scheme; the ladder can still pay what it reads.
-  const named = (opts.commonErrors ?? []).some((e) =>
-    matchesCommonError(raw, e, undefined, spec.kind === "algebraic" ? spec.variables : undefined, spec.kind === "algebraic" ? spec.latex : undefined),
-  );
-  const floor = !copied && !bareDecimal && !named && spec.kind === "algebraic" && marks > 1 ? 1 : 0;
-  const award = Math.max(floor, Math.min(marks - 1, ladder));
+  // The ladder decides and there is no fixed floor (the lead's ruling, 29 Sep 2026): an equivalent expression that shows
+  // no scheme line (the question reordered, the answer scaled top and bottom) earns nothing, as the exam gives nothing
+  // for it; an unconditional "at least 1" paid 139 of 400 such answers across the corpus (the verifier's sweep).
+  const award = Math.min(marks - 1, ladder);
   const base: MarkResult = {
     correct: false,
     marksAwarded: award,
@@ -277,6 +288,66 @@ function formTaskAward(raw: string, feedback: string, marks: number, expected: s
   };
   const r = withCommonError(base, raw, opts, undefined, undefined, spec.kind === "algebraic" ? spec.variables : undefined, spec.kind === "algebraic" ? spec.latex : undefined);
   return { ...r, marksAwarded: Math.min(r.marksAwarded, Math.max(0, marks - 1)) };
+}
+
+/** The top and bottom of the first \frac in a stem's maths, as written (braces matched), or null. */
+function stemFraction(stem: string): { top: string; bottom: string } | null {
+  for (const m of stem.matchAll(/\$\$?([\s\S]+?)\$\$?/g)) {
+    const piece = m[1]!;
+    const at = piece.search(/\\[dt]?frac\s*\{/);
+    if (at < 0) continue;
+    const groups: string[] = [];
+    let i = piece.indexOf("{", at);
+    while (groups.length < 2 && i >= 0 && i < piece.length) {
+      let depth = 0;
+      let j = i;
+      for (; j < piece.length; j += 1) {
+        if (piece[j] === "{") depth += 1;
+        else if (piece[j] === "}") {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+      }
+      if (j >= piece.length) return null;
+      groups.push(piece.slice(i + 1, j));
+      i = piece.indexOf("{", j);
+    }
+    if (groups.length === 2) return { top: groups[0]!.trim(), bottom: groups[1]!.trim() };
+  }
+  return null;
+}
+
+/** What `twinScheme` reads of a worked example: its stem, its steps and its twin. */
+export interface TwinExample {
+  stem: string;
+  steps: ReadonlyArray<{ n: number; earns?: readonly string[]; working: string }>;
+  twin: { stem: string; answer: AnswerSpec };
+}
+
+/**
+ * The twin's mark scheme from the example's steps (the build-9 gate, class 5). The twin is marked with no scheme of
+ * its own, so a factorised but uncancelled twin answer earned nothing once the floor went. Each step that earns is one
+ * point with the step's code and one mark per earn. A step written "L = R" whose left side is the example's numerator
+ * or denominator (the stem's fraction) asks the twin for that line factorised, checked on the twin's own fraction
+ * (FM1 2021 Q8(i): "One MW1 mark for each of the three correctly factorised expressions"); any other step keeps its
+ * working as its evidence, which a twin on the same numbers can meet.
+ */
+export function twinScheme(we: TwinExample): MarkPoint[] {
+  const example = stemFraction(we.stem);
+  const twin = stemFraction(we.twin.stem);
+  return we.steps
+    .filter((s) => (s.earns?.length ?? 0) > 0)
+    .map((s) => {
+      const earns = s.earns!;
+      const point: MarkPoint = { id: `twin-step-${s.n}`, code: earns[0]!.replace(/\d+$/, ""), marks: earns.length, for: s.working } as MarkPoint;
+      const sides = s.working.replace(/\$/g, "").split("=");
+      if (example && twin && sides.length === 2) {
+        const left = mathsSpelling(sides[0]!);
+        if (left === mathsSpelling(example.top)) return { ...point, for: "numerator factorised", accept: [`${FACTORISED}${twin.top}`] };
+        if (left === mathsSpelling(example.bottom)) return { ...point, for: "denominator factorised", accept: [`${FACTORISED}${twin.bottom}`] };
+      }
+      return point;
+    });
 }
 
 /** A science part (the subject on the part; Double Award Science). */
@@ -315,13 +386,95 @@ export interface FollowThrough {
  * `relation` first; else the worked solution's chain whose last side is this part's value and whose earlier side holds
  * the earlier part's value, with her value put in its place.
  */
-export function followThroughValue(ft: FollowThrough, spec: AnswerSpec): number | null {
+/** An i, j vector as typed or as a spec writes it ("5i + 11j", "-i - 7j", "(4i - 3j) N", "5\mathbf{i} + 12\mathbf{j}"). */
+function ijVector(raw: string): { a: number; b: number } | null {
+  const s = raw
+    .replace(/\$/g, "")
+    .replace(/\\mathbf\{([ij])\}/g, "$1")
+    .replace(/\\,|\\ /g, "")
+    .replace(/[−–]/g, "-")
+    .replace(/\s+/g, "")
+    .replace(/^\(|\)N?$/g, "")
+    .replace(/N$/, "");
+  const coefficient = (c: string) => (c === "" || c === "+" ? 1 : c === "-" ? -1 : Number(c));
+  const m = /^([+-]?\d*\.?\d*)i([+-]\d*\.?\d*)j$/.exec(s) ?? null;
+  if (m) return { a: coefficient(m[1]!), b: coefficient(m[2]!) };
+  const n = /^([+-]?\d*\.?\d*)j([+-]\d*\.?\d*)i$/.exec(s);
+  if (n) return { a: coefficient(n[2]!), b: coefficient(n[1]!) };
+  return null;
+}
+
+/** The values an answer states as roots: "x = 4 or x = -5.5" gives [4, -5.5]; a bare list "3, -5.5" gives both; prose gives none. */
+export function statedRoots(raw: string): number[] {
+  const t = raw.replace(/[−–]/g, "-").trim();
+  const equated = [...t.matchAll(/(?<![A-Za-z])[a-z]\s*=\s*(-?\d+(?:\.\d+)?(?:\/\d+)?)/gi)].map((m) => parseNumeric(m[1]!)?.value).filter((v): v is number => v !== undefined);
+  if (equated.length > 0) return equated;
+  if (/^\s*-?\d+(?:\.\d+)?(?:\/\d+)?(?:\s*(?:,|;|\band\b|\bor\b)\s*-?\d+(?:\.\d+)?(?:\/\d+)?)*\s*$/i.test(t)) {
+    return t.split(/\s*(?:,|;|\band\b|\bor\b)\s*/i).map((p) => parseNumeric(p)?.value).filter((v): v is number => v !== undefined);
+  }
+  return [];
+}
+
+export function followThroughValue(ft: FollowThrough, spec: AnswerSpec, typed?: string): number | null {
+  // Her own solution list carries into a later part through its relation, root by root: "7" after "x = 4 or x = -5.5"
+  // with 2x − 1 is right for her positive root (the M4 author, 8 Oct 2026: histograms/quadratics .0014(c) paid nothing
+  // after a two-root text part). The root whose carried value her answer matches is the one the part meant.
+  if (ft.earlierSpec.kind === "text") {
+    if (!ft.relation || spec.kind !== "numeric") return null;
+    const relation = ft.relation;
+    const candidates = statedRoots(ft.earlierRaw)
+      .map((x) => {
+        const put = relation.replace(/\bx\b/g, `(${x})`);
+        const bare = /^[\s(]*([-+]?\d+(?:\.\d+)?)[\s)]*$/.exec(put);
+        return bare ? Number(bare[1]) : evaluateArithmetic(put);
+      })
+      .filter((v): v is number => v !== null && Number.isFinite(v));
+    if (candidates.length === 0) return null;
+    if (typed !== undefined) {
+      const hit = candidates.find((c) => checkNumeric(typed, { ...toNumericSpec(spec), value: c }).correct);
+      if (hit !== undefined) return hit;
+    }
+    return candidates[0]!;
+  }
+  // Her own vector carries into a numeric part: its magnitude, its direction (the angle with the positive x-axis, in the
+  // convention the part's own answer uses) or one of its components (the FM2 reviewer, 8 Oct 2026: fm2 ij-vector
+  // .0019(b)(c), .0030(c), resultant .0007(b)(c), .0009(b) refused a right answer built on her earlier vector).
+  if (ft.earlierSpec.kind === "algebraic") {
+    if (spec.kind !== "numeric") return null;
+    const was = ijVector(ft.earlierSpec.latex);
+    const hers = ijVector(ft.earlierRaw);
+    if (!was || !hers) return null;
+    const target = spec.value;
+    const slack = spec.tolerance.type === "absolute" ? spec.tolerance.value : spec.tolerance.type === "dp" ? 0.5 * Math.pow(10, -(spec.tolerance.places ?? 2)) : 0;
+    const close = (v: number) => Number.isFinite(v) && Math.abs(v - target) <= Math.max(slack, 0.006 * Math.abs(target), 0.006);
+    const deg = (y: number, x: number) => (Math.atan2(y, x) * 180) / Math.PI;
+    const readings: Array<[number, number]> = [
+      [Math.hypot(was.a, was.b), Math.hypot(hers.a, hers.b)],
+      [deg(was.b, was.a), deg(hers.b, hers.a)],
+      [Math.abs(deg(was.b, was.a)), Math.abs(deg(hers.b, hers.a))],
+      [(deg(was.b, was.a) + 360) % 360, (deg(hers.b, hers.a) + 360) % 360],
+      [Math.abs((Math.atan(was.b / was.a) * 180) / Math.PI), Math.abs((Math.atan(hers.b / hers.a) * 180) / Math.PI)],
+      [Math.abs((Math.atan(was.a / was.b) * 180) / Math.PI), Math.abs((Math.atan(hers.a / hers.b) * 180) / Math.PI)],
+      [was.a, hers.a],
+      [was.b, hers.b],
+      [Math.abs(was.a), Math.abs(hers.a)],
+      [Math.abs(was.b), Math.abs(hers.b)],
+    ];
+    for (const [ref, mine] of readings) if (close(ref)) return mine;
+    return null;
+  }
   if (ft.earlierSpec.kind !== "numeric") return null;
   const x = parseNumeric(ft.earlierRaw.trim())?.value;
   if (x === undefined || !Number.isFinite(x)) return null;
   // Her own value carries even when it is within the earlier part's tolerance (3.24 for 3.2 leads to 12.96, not 12.8).
   const v0 = ft.earlierSpec.value;
-  if (ft.relation) return evaluateArithmetic(ft.relation.replace(/\bx\b/g, `(${x})`));
+  if (ft.relation) {
+    // The identity relation ("x", "(x)") hands the reader a bare value, which has no operator to evaluate: it is the value
+    // (the P2 author, 7 Oct 2026: p2-calculating-resistance .0014(b)(ii) with her (a) = 9 paid nothing).
+    const put = ft.relation.replace(/\bx\b/g, `(${x})`);
+    const bare = /^[\s(]*([-+]?\d+(?:\.\d+)?)[\s)]*$/.exec(put);
+    return bare ? Number(bare[1]) : evaluateArithmetic(put);
+  }
   if (spec.kind !== "numeric" || !ft.workedSolution) return null;
   const target = spec.value;
   // Degree signs come off, so a chain of angles ("90° − 62° = 28°") is arithmetic like any other.
@@ -388,6 +541,65 @@ export function instructsUnit(prompt: string | undefined, unit: string): boolean
   return false;
 }
 
+/**
+ * Two inequalities in one unknown, read as the set they describe. Two outside regions ("x < −3", "x > 5") are joined by
+ * "or" (or a comma, a semicolon or a new line); "and" between them names no value, the slip the 2025 FM1 report names.
+ * An inside region ("x > −3", "x < 5") is "and" or a chain; "or" between those is every value. The message when the
+ * connective is wrong, else null (one inequality, a chain, two of the same direction or two unknowns are not judged).
+ */
+export function solutionSetFault(raw: string): string | null {
+  const t = raw.replace(/\s+/g, " ").trim();
+  const re = /(?<![A-Za-z])([a-z])\s*(<=?|>=?|≤|≥)\s*(-?\d+(?:\.\d+)?)(?![\d.])|(?<![\d.A-Za-z])(-?\d+(?:\.\d+)?)\s*(<=?|>=?|≤|≥)\s*([a-z])(?![A-Za-z])/g;
+  const found: Array<{ v: string; dir: "lt" | "gt"; n: number; at: number; end: number }> = [];
+  for (const m of t.matchAll(re)) {
+    const less = (m[2] ?? m[5] ?? "").startsWith("<") || (m[2] ?? m[5]) === "≤";
+    if (m[1] !== undefined) found.push({ v: m[1], dir: less ? "lt" : "gt", n: Number(m[3]), at: m.index!, end: m.index! + m[0].length });
+    else found.push({ v: m[6]!, dir: less ? "gt" : "lt", n: Number(m[4]), at: m.index!, end: m.index! + m[0].length });
+  }
+  if (found.length !== 2 || found[0]!.v !== found[1]!.v) return null;
+  const [p, q] = found as [(typeof found)[number], (typeof found)[number]];
+  const lt = p.dir === "lt" ? p : q.dir === "lt" ? q : null;
+  const gt = p.dir === "gt" ? p : q.dir === "gt" ? q : null;
+  if (!lt || !gt || lt.n === gt.n) return null;
+  const between = t.slice(Math.min(p.end, q.end), Math.max(p.at, q.at));
+  const joinedAnd = /\band\b|&|∩/i.test(between);
+  const joinedOr = /\bor\b|∪|[,;\n]/i.test(between);
+  const outside = lt.n < gt.n;
+  if (outside && joinedAnd && !joinedOr) {
+    return `No value of ${lt.v} is both less than ${lt.n} and greater than ${gt.n}: the two regions are separate, so they are joined by "or" (${lt.v} < ${lt.n} or ${lt.v} > ${gt.n}). The method marks come from the working.`;
+  }
+  if (!outside && joinedOr && !joinedAnd) {
+    return `Every value of ${lt.v} is either greater than ${gt.n} or less than ${lt.n}: the region between them is one region, written ${gt.n} < ${lt.v} < ${lt.n} (or with "and"). The method marks come from the working.`;
+  }
+  return null;
+}
+
+/**
+ * One term, as a simplified index answer is written: an optional sign and number, each letter once with at most one
+ * index, a quotient allowed (x³/y, \frac{1}{2}x), no multiplication sign, no root, no bracket outside an index and no
+ * number raised to a power left unworked ("3^3 c^12"). The answer's own spelling is judged, not its value.
+ */
+export function isSingleTerm(raw: string): boolean {
+  const s = raw.replace(/\$/g, "").replace(/\s+/g, "");
+  if (s.length === 0) return false;
+  if (/[×*·√=]|\\times|\\cdot|\\sqrt|sqrt/.test(s)) return false;
+  // A number raised to a power is a value still to work out ("3^3", "2^{2}").
+  if (/(^|[^A-Za-z}])\d+(?:\.\d+)?\^/.test(s)) return false;
+  const bare = s
+    .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, "$1/$2")
+    .replace(/\^(?:\{[^{}]*\}|\([^()]*\)|[-−]?\d+(?:\/\d+)?|[A-Za-z])/g, "")
+    .replace(/[²³⁻¹⁰-⁹]/g, "");
+  if (/[(){}+]/.test(bare) || /(?!^)[-−]/.test(bare)) return false;
+  const letters = bare.match(/[A-Za-z]/g) ?? [];
+  if (new Set(letters).size !== letters.length) return false;
+  return /^[-−]?(?:\d+(?:\.\d+)?)?[A-Za-z]*(?:\/(?:\d+(?:\.\d+)?)?[A-Za-z]*)?$/.test(bare) && /[A-Za-z\d]/.test(bare);
+}
+
+/** An instruction to round to the nearest whole number (or integer, or whole unit of the thing counted): zero decimal places. */
+export function instructsNearestWhole(prompt: string | undefined): boolean {
+  return instructsAccuracy(prompt) && /\b(?:to|correct to)\s+the\s+nearest\s+(?:whole\s+(?:number|[a-z]+)|integer|unit)\b/i.test(prompt ?? "");
+}
+
 export function instructsAccuracy(prompt: string | undefined): boolean {
   if (!prompt) return false;
   const text = prompt.replace(/\bd\.p\./gi, "dp").replace(/\bs\.f\./gi, "sf");
@@ -407,6 +619,8 @@ export function instructsAccuracy(prompt: string | undefined): boolean {
 const FORM_TASK = new RegExp(
   [
     String.raw`\b(?:simplif(?:y|ied)|factori[sz]e|factori[sz]ed|expand|multiply out|rationali[sz]e|as a single (?:fraction|logarithm|log))\b`,
+    // "Write down (p + q)^7 in expanded form" asks for the expansion as "Expand" does (fm3 pascals .0003, 29 Sep 2026).
+    String.raw`\bin (?:expanded|factori[sz]ed) form\b`,
     String.raw`\bexpress\b(?![^.?!]*\bin terms of\b)[^.?!]*\bas\b`,
     // "Write 550 as a product of its prime factors" (m3 hcf .0011(a), 27 Sep 2026: "550" typed back was paid 2/2).
     String.raw`\bas (?:a |the )?product of (?:its )?prime factors\b`,
@@ -586,6 +800,22 @@ function physicsValue(working: string): { holds: boolean; substitution: string |
 
 /** Marks a raw response against a spec. Non-auto-markable kinds return a self-mark placeholder. */
 export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}): MarkResult {
+  const result = markAnswerInner(raw, spec, opts);
+  // A part that requires working pays a bare right value or expression nothing: the runner's working ladder decides,
+  // as for a show-that's printed target (`workingOnly`). The answer's own line of working ("20 × 33.4 = 668") is working.
+  if (opts.requiresWorking && result.correct && (spec.kind === "numeric" || spec.kind === "algebraic") && !showsWorking(raw)) {
+    return {
+      ...result,
+      correct: false,
+      marksAwarded: 0,
+      workingOnly: true,
+      explanation: "The value is right, but this part says you must show your working: the marks are for the working. Write it in the working box.",
+    };
+  }
+  return result;
+}
+
+function markAnswerInner(raw: string, spec: AnswerSpec, opts: MarkOptions = {}): MarkResult {
   const marks = Math.max(1, Math.round(opts.marks ?? 1));
   // The expected answer is shown to the accuracy the stem instructs, as the marking demands it (engine item 13).
   const expected = expectedDisplay(spec, { accuracyInstructed: instructsAccuracy(opts.prompt) });
@@ -622,7 +852,18 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
 
   switch (spec.kind) {
     case "numeric": {
-      const v = checkNumeric(trimmed, { ...toNumericSpec(spec, { accuracyInstructed: instructsAccuracy(opts.prompt) }), variables: variableLetters(opts.prompt) });
+      const numSpec = { ...toNumericSpec(spec, { accuracyInstructed: instructsAccuracy(opts.prompt) }), variables: variableLetters(opts.prompt) };
+      // "Correct to the nearest whole number" is an accuracy demand of no decimal places, read as "to 0 decimal places"
+      // is: an unrounded value that rounds to the answer ("4856.3" for 4856) is the right value, and on a science paper,
+      // which marks instructed places as written, it loses the accuracy mark only (the B2 E author, 7 Oct 2026:
+      // b2-heart-attacks .0007(a) scored 0 of 3; maths keeps the lead's 27 Sep ruling that more places than asked are right).
+      const nearestWhole = numSpec.dp === undefined && numSpec.sigfigs === undefined && Number.isInteger(spec.value) && spec.tolerance.type === "absolute" && instructsNearestWhole(opts.prompt);
+      if (nearestWhole) {
+        numSpec.dp = 0;
+        numSpec.tolerance = { type: "dp", n: 0 };
+      }
+      const placesSpec: AnswerSpec = nearestWhole ? { ...spec, tolerance: { type: "dp", places: 0 } } : spec;
+      const v = checkNumeric(trimmed, numSpec);
       if (v.correct && isShowThat(opts.prompt) && !showsWorking(trimmed) && printsTheValue(opts.prompt, spec)) return showThatTarget(marks, expected);
       // A "work out" answered with the sum still to do ("(83 + 17)(83 − 17)" for 6600): working, not the answer. The
       // ladder pays what it shows, never the answer's mark (the verifier, 29 Sep 2026; M4 scheme: MA1 for the form, A1
@@ -673,10 +914,14 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       // 2025 chemistry report, C1 Q(b): "many lost a mark for not giving their answer to one decimal place as
       // instructed"; the lead's scope of ruling 12, 27 Sep 2026). Further Maths and Maths parts keep them right with the
       // reminder (FM GMI "Accept 1.5 instead of 1.50 for an answer required to 2 dp"; M4 2025 GMA (viii)).
-      if (v.correct && !v.converted && isScience(opts.subject) && instructsAccuracy(opts.prompt) && sciencePlacesDiffer(v, spec)) {
+      if (v.correct && !v.converted && isScience(opts.subject) && instructsAccuracy(opts.prompt) && sciencePlacesDiffer(v, placesSpec)) {
         const award = Math.max(0, marks - 1);
         const said = v.feedback.replace(/^Correct(?:, within the accepted accuracy)?\.\s*/, "The value is right. ");
-        const places = spec.tolerance.type === "dp" ? plural(spec.tolerance.places ?? 0, "decimal place") : plural(spec.tolerance.type === "sf" ? (spec.tolerance.figures ?? 0) : 0, "significant figure");
+        const places = nearestWhole
+          ? "the nearest whole number"
+          : placesSpec.tolerance.type === "dp"
+            ? plural(placesSpec.tolerance.places ?? 0, "decimal place")
+            : plural(placesSpec.tolerance.type === "sf" ? (placesSpec.tolerance.figures ?? 0) : 0, "significant figure");
         const reminder = /on the paper/.test(said) ? "" : ` The question asks for ${places}: ${expected}.`;
         const lost = award === 0 ? `0 of ${marks}: the accuracy mark is lost.` : `${award} of ${marks}: only the accuracy mark is lost.`;
         return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${said}${reminder} ${lost}`.replace(/\s{2,}/g, " ").trim() };
@@ -709,7 +954,7 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       };
       if (v.nearMiss) base.nearMiss = v.nearMiss;
       if (!v.correct && opts.followThrough) {
-        const t = followThroughValue(opts.followThrough, spec);
+        const t = followThroughValue(opts.followThrough, spec, trimmed);
         if (t !== null && checkNumeric(trimmed, { ...toNumericSpec(spec), value: t, variables: variableLetters(opts.prompt) }).correct) {
           return { correct: true, marksAwarded: marks, marksAvailable: marks, expected, explanation: "Right for your answer to the earlier part: the marks follow through." };
         }
@@ -727,8 +972,49 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       }
       // Where x is not one of the answer's letters, an x between numbers is the times sign ("2 x 5^2 x 11").
       const read = spec.variables.includes("x") ? trimmed : trimmed.replace(/(?<=[\d)²³])\s*x\s*(?=[\d(])/g, " × ");
-      const v = checkAlgebraic(read, toAlgebraSpec(spec));
+      let v = checkAlgebraic(read, toAlgebraSpec(spec));
+      // "1/2x" is half of x to one student and 1/(2x) to another, and the schemes print both ("y = −3/2x + 4" for a
+      // gradient; "\frac{1}{2x}" for a reciprocal). The engine reads the joined form as a/(bx); when that is not the
+      // answer, the coefficient reading (a/b)x is tried, and the answer is right when either reading is. The two
+      // readings differ, so a wrong answer is never paid by the other reading (the M4 author, 8 Oct 2026:
+      // perpendicular-lines .0008 to .0022 refused "y = -1/2x + 1").
+      if (!v.correct && /(^|[^\w/.\\{])\d+\/\d+(?=[A-Za-z(])/.test(read)) {
+        const coefficient = read.replace(/(^|[^\w/.\\{])(\d+)\/(\d+)(?=[A-Za-z(])/g, "$1\\frac{$2}{$3}");
+        const alt = checkAlgebraic(coefficient, toAlgebraSpec(spec));
+        if (alt.correct) v = alt;
+      }
       if (v.correct && isShowThat(opts.prompt) && !showsWorking(trimmed) && printsTheValue(opts.prompt, spec)) return showThatTarget(marks, expected);
+      // A simplify-indices task is a form task (ruling 4): the answer is one term, its number worked out, each letter
+      // once with one index, no operator between the factors and no root sign. An unfinished product ("27 × c^12",
+      // "3^3 c^12", "x^(5/2) × x^(1/2)") is equivalent and is not the answer: it earns the matching common error or the
+      // ladder only (the M8 author, 8 Oct 2026; the November 2024 M8 report: a times sign left in lost the mark).
+      if (v.correct && isFormTask(opts.prompt, spec) && isSingleTerm(spec.latex) && !isSingleTerm(trimmed)) {
+        return formTaskAward(trimmed, "The value is right, but a simplified index answer is one term: the number worked out, each letter once with one index, no multiplication sign between the factors and no root sign.", marks, expected, opts, spec);
+      }
+      // One right root of a solution set earns the scheme's accuracy point that names it, or one mark a root where the
+      // scheme names none, never the last mark (the M4 author, 8 Oct 2026: m4 perpendicular-lines .0021 "p = 7" scored
+      // 0 of 6 where the scheme pays A2). A wrong root beside a right one is not this case and earns nothing.
+      if (!v.correct && v.reason === "partial-solution-set" && v.solutionsFound && v.solutionsFound.length > 0) {
+        // A scheme's accuracy point names a root by its equation ("x = 7") or by its value ("x = −4/3 (accept −1.33 or
+        // better)", "x = 4 and x = −4").
+        const pointsNaming = (roots: readonly string[], values: readonly number[]) =>
+          (opts.scheme ?? [])
+            .filter((p) => /^[AB]/.test(p.code))
+            .filter((p) => {
+              const bare = normaliseEquation(p.for.replace(/\$/g, "").replace(/\([^()]*\)/g, ""), { lowercase: true });
+              if (roots.some((root) => bare === normaliseEquation(root, { lowercase: true }))) return true;
+              const numbers = (p.for.replace(/[−–]/g, "-").match(/-?\d+(?:\.\d+)?(?:\/\d+)?/g) ?? []).map((n) => parseNumeric(n)?.value).filter((n): n is number => n !== undefined);
+              return values.some((value) => Number.isFinite(value) && numbers.some((n) => Math.abs(n - value) <= 0.006 * Math.max(1, Math.abs(value))));
+            })
+            .reduce((s, p) => s + p.marks, 0);
+        const named = pointsNaming(v.solutionsFound, v.solutionsFoundValues ?? []);
+        // The method before the roots is implied by a right root (CCEA: a correct answer implies the method unless working
+        // is demanded), so one root loses only the accuracy point its scheme gives the missing root: "x = 1/2" is MA1 +
+        // A1 = 2 of 3 (the M4 author, 8 Oct 2026). Where no point names the missing root, the found roots' own points stand.
+        const lost = pointsNaming(v.solutionsMissing ?? [], v.solutionsMissingValues ?? []);
+        const award = Math.min(marks - 1, lost > 0 ? Math.max(named, marks - lost) : named > 0 ? named : v.solutionsFound.length);
+        return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${v.feedback} ${award} of ${marks}: the ${v.solutionsFound.join(", ")} you found ${v.solutionsFound.length === 1 ? "earns its mark" : "earn their marks"}; the rest wait for the other ${v.solutionsTotal! - v.solutionsFound.length === 1 ? "root" : "roots"}.` };
+      }
       // The right expression in the wrong form (unsimplified, not yet a single log, not factorised) keeps every mark
       // but the last on a multi-mark part: the scheme's final mark is the form, the earlier ones the working.
       // Not where the form IS the task (MK-01 ruling, 25 Sep 2026: "simplify fully" with the question typed back was
@@ -767,6 +1053,11 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       return base;
     }
     case "text": {
+      // A solution set written as two inequalities is read as a set before its key words are: "x < −3 and x > 5" names
+      // no value (the FM1 group 1 author, 7 Oct 2026; the 2025 FM1 report's slip), and the key-word route would pay both
+      // regions. The answer earns nothing; her working still earns its method marks through the runner's ladder.
+      const setFault = solutionSetFault(trimmed);
+      if (setFault !== null) return { correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: setFault };
       // The part's text common errors are its named wrong answers: offered beside the right one in a hedge, they cancel it.
       const wrongAnswers = (opts.commonErrors ?? []).flatMap((e) => {
         if (e.pattern.kind !== "text") return [];
@@ -793,7 +1084,7 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
       // two groups (the verdict and the reason). The part's marks are shared out by the fraction of group
       // marks earned, rounding down, so every group is needed for the full mark and a question's total
       // always agrees with its parts.
-      const awarded = !groups
+      let awarded = !groups
         ? v.correct
           ? marks
           : 0
@@ -805,15 +1096,72 @@ export function markAnswer(raw: string, spec: AnswerSpec, opts: MarkOptions = {}
         const missing = spec.keyWords.filter((_, i) => !v.matchedGroups.includes(i)).map((g) => g.any[0]);
         explanation = `${awarded} of ${marks}: still missing ${missing.join(", ")}.`;
       }
+      // A show-that's printed result typed alone earns nothing (class C, the M4 author, 8 Oct 2026: m4 quadratic-formula
+      // .0011, .0014(a), .0022(a) paid 1/3 for the target). A group whose every entry is the printed target counts only
+      // beside another group; a lead-in ("so …") is not working.
+      if (groups && !v.correct && isShowThat(opts.prompt)) {
+        const target = (opts.prompt ?? "").match(/show that\s*\$([^$]+)\$/i)?.[1];
+        if (target) {
+          const key = normaliseEquation(target, { lowercase: true });
+          const targetGroups = spec.keyWords.map((g, i) => (g.any.every((k) => normaliseEquation(k.replace(/\$/g, ""), { lowercase: true }) === key) ? i : -1)).filter((i) => i >= 0);
+          if (targetGroups.length > 0 && v.matchedGroups.length > 0 && v.matchedGroups.every((i) => targetGroups.includes(i))) {
+            const note = "That is the printed result, which the question gives you: the marks are for the lines that reach it. Show the working from the given facts to this equation.";
+            // The target and nothing else (a lead-in such as "so" aside) earns nothing, whatever common error its line
+            // matches; a fuller answer whose key words are only the target's pays nothing for them, and a matched
+            // common error (a verification by substitution) may still pay below.
+            const alone = normaliseEquation(trimmed.replace(/^(?:so|therefore|hence|thus|then|giving|gives)[\s,:]+/i, ""), { lowercase: true }) === key;
+            if (alone) return { correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: note };
+            awarded = 0;
+            explanation = note;
+          }
+        }
+      }
+      // A root list (every key-word group a value: "1.81" and "−1.21"): a bare list with a value that is no root earns
+      // nothing, and one right root loses only the accuracy point its scheme gives the missing root (the M4 author, 8 Oct
+      // 2026: .0008 "x = 1.81" 2/4 where the scheme gives 3; .0020 "12 and 13" 2/4 where it gives 0).
+      const rootList = groups && spec.keyWords.every((g) => g.any.every((k) => parseNumeric(k)?.value !== undefined));
+      if (rootList && !v.correct) {
+        const rootValues = spec.keyWords.map((g) => g.any.map((k) => parseNumeric(k)!.value));
+        const isRoot = (x: number) => rootValues.some((vs) => vs.some((r) => Math.abs(r - x) <= 1e-9 * Math.max(1, Math.abs(r))));
+        const stated = statedRoots(trimmed);
+        const bareList = stated.length > 0 && !/[a-z]{2,}/i.test(trimmed.replace(/\b(?:and|or)\b/gi, ""));
+        if (bareList && stated.some((x) => !isRoot(x))) {
+          return { correct: false, marksAwarded: 0, marksAvailable: marks, expected, explanation: `${stated.filter((x) => !isRoot(x)).join(", ")} is not a solution of this equation: a wrong value beside a right one earns nothing. Check the working that led to it.` };
+        }
+        // The roots she has are the ones she stated (a group dependency drawn from the scheme may have dropped one from
+        // the key-word count: "x = -4" against A1 "x = 4 and x = −4"), else the groups the key words found.
+        const foundGroups = stated.length > 0 ? rootValues.map((vs, i) => (stated.some((x) => vs.some((r) => Math.abs(r - x) <= 1e-9 * Math.max(1, Math.abs(r)))) ? i : -1)).filter((i) => i >= 0) : v.matchedGroups;
+        if (foundGroups.length > 0 && foundGroups.length < spec.keyWords.length && (stated.length === 0 || stated.every(isRoot))) {
+          const missingValues = rootValues.filter((_, i) => !foundGroups.includes(i)).flat();
+          const lost = (opts.scheme ?? [])
+            .filter((p) => /^[AB]/.test(p.code))
+            .filter((p) => (p.for.replace(/[−–]/g, "-").match(/-?\d+(?:\.\d+)?/g) ?? []).map(Number).some((n) => missingValues.some((m) => Math.abs(m - n) <= 1e-9 * Math.max(1, Math.abs(m)))))
+            .reduce((s, p) => s + p.marks, 0);
+          if (lost > 0) {
+            const award = Math.max(awarded, Math.min(marks - 1, marks - lost));
+            const missing = spec.keyWords.filter((_, i) => !foundGroups.includes(i)).map((g) => g.any[0]);
+            return { correct: false, marksAwarded: award, marksAvailable: marks, expected, explanation: `${award} of ${marks}: the root you have earns its marks; still missing ${missing.join(", ")}.` };
+          }
+        }
+      }
       const base: MarkResult = { correct: v.correct, marksAwarded: awarded, marksAvailable: marks, expected, explanation };
       if (v.correct) return base;
       // A matched common error supplies the diagnosis and the tag but never raises the key words' award (the lead's I,
       // 29 Sep 2026: "protons and neutrons" was paid 2/3 by an error written for "electrons collide with the protons").
       // The one exception is a show-that verified by substitution: the scheme pays the check its method marks, which the
-      // error names, never the last mark (the lead's H; CCEA FM2 2021 MS caps verification at 2 of 3).
+      // error names, never the last mark (the lead's H; CCEA FM2 2021 MS caps verification at 2 of 3). Only that error,
+      // on a real show-that: any other error on such a stem ("x = 2" for a discriminant proof, "multiply the whole
+      // equation by 10", a sin/cos swap) names a wrong method and pays nothing (the verifier, 29 Sep 2026).
       const diagnosed = withCommonError(base, trimmed, opts);
-      const verified = isShowThat(opts.prompt) && diagnosed.marksAwarded > base.marksAwarded;
-      return { ...diagnosed, marksAwarded: verified ? Math.min(diagnosed.marksAwarded, marks - 1) : base.marksAwarded };
+      const hit = (opts.commonErrors ?? []).find((e) => matchesCommonError(trimmed, e));
+      const verified = hit !== undefined && isVerification(hit) && isShowThat(opts.prompt) && diagnosed.marksAwarded > base.marksAwarded;
+      // The lead's ruling of 8 Oct 2026 (the M8 author): on a show-that part, a matched common error whose answer shows a
+      // line of working pays what its own scheme line gives, the author's marksTypicallyEarned (the M1 for a correct
+      // substitution with a slip after it: "x² + x² + 25 = 53", "484 − 144 = 340"), never the show-that value itself. A
+      // bare value or a sentence with no working ("x = 2", "multiply the whole equation by 10") still names a wrong
+      // method and pays nothing.
+      const slip = hit !== undefined && isShowThat(opts.prompt) && showsWorking(trimmed) && diagnosed.marksAwarded > base.marksAwarded;
+      return { ...diagnosed, marksAwarded: verified || slip ? Math.min(diagnosed.marksAwarded, marks - 1) : base.marksAwarded };
     }
     case "text-long": {
       // A banded answer: the engine gathers evidence (which indicative points have a key word present)

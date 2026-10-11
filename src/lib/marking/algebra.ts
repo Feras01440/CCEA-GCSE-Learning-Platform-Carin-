@@ -75,6 +75,13 @@ export interface AlgebraVerdict {
   /** Tutor-voice feedback, British English, concise. */
   feedback: string;
   details?: { sampled?: number; mismatchAt?: Record<string, number> };
+  /** On 'partial-solution-set': the roots she found and the roots still missing, written as the spec writes them ("p = 7"), and how many there are in all. */
+  solutionsFound?: string[];
+  solutionsMissing?: string[];
+  /** The same roots as numbers (NaN where a root has no numeric value), so a scheme line naming "−4/3" meets "x = -\frac{4}{3}". */
+  solutionsFoundValues?: number[];
+  solutionsMissingValues?: number[];
+  solutionsTotal?: number;
 }
 
 export interface ParsedStudentExpression {
@@ -996,8 +1003,15 @@ function integerContent(j: MJ): number | null {
   for (const t of terms) {
     const ts = stripNegate(t);
     let coef: number | null = 1;
-    if (!containsVariable(ts)) coef = numberValue(ts);
-    else if (head(ts) === 'Multiply') {
+    if (!containsVariable(ts)) {
+      coef = numberValue(ts);
+      // A surd term's whole-number coefficient is its content: "6√3" carries 6, "√12" carries 1, so "6√3/15" shares
+      // the factor 3 with its denominator (the corpus guard, 29 Sep 2026: m8 surds we.03 took 6√3/15 as simplest).
+      if (coef === null && head(ts) === 'Multiply') {
+        const nums = args(ts).filter((x) => numberValue(x) !== null);
+        coef = nums.length < args(ts).length ? nums.reduce<number | null>((acc, x) => (acc === null ? null : ((v) => (v === null ? null : acc * v))(numberValue(x))), 1) : null;
+      } else if (coef === null && (head(ts) === 'Sqrt' || head(ts) === 'Root')) coef = 1;
+    } else if (head(ts) === 'Multiply') {
       const nums = args(ts).filter((x) => !containsVariable(x));
       coef = nums.length ? nums.reduce<number | null>((acc, x) => (acc === null ? null : ((v) => (v === null ? null : acc * v))(numberValue(x))), 1) : 1;
     }
@@ -1016,7 +1030,10 @@ function shareCommonFactor(num: BoxedExpression, den: BoxedExpression, ctx: Ctx)
     const n = evalAt(num, {});
     const d = evalAt(den, {});
     if (n !== undefined && d !== undefined && Number.isInteger(n) && Number.isInteger(d)) return gcd(n, d) > 1;
-    return false;
+    // Not a whole-number ratio ("6√3/15", "(4 + 2√3)/2"): its whole-number content decides, as for a polynomial.
+    const cn = integerContent(nj);
+    const cd = integerContent(dj);
+    return cn !== null && cd !== null && gcd(cn, cd) > 1;
   }
 
   const cn = integerContent(nj);
@@ -1058,8 +1075,33 @@ function productAsOneFraction(e: MJ): MJ {
   return ['Divide', ['Multiply', ...others, n], d] as unknown as MJ;
 }
 
+/**
+ * A negative power is a division: "(x²+7x+10)(x²+3x−10)^-1" is the fraction (x²+7x+10)/(x²+3x−10), and "x^-1" is 1/x
+ * (the build-9 gate, class 5: the question typed back with its division as a power passed the simplest-form check as
+ * a product with no fraction in it). A product's factors with a negative whole-number power go underneath.
+ */
+function negativePowersAsDivision(e: MJ): MJ {
+  const exponent = (f: MJ): number | null => {
+    if (head(f) !== 'Power') return null;
+    const n = numberValue(args(f)[1] as MJ);
+    return n !== null && Number.isInteger(n) && n < 0 ? n : null;
+  };
+  const factors = head(e) !== null && PRODUCT_HEADS.has(head(e)!) ? args(e) : [e];
+  const under = factors.filter((f) => exponent(f) !== null);
+  if (under.length === 0) return e;
+  const over = factors.filter((f) => exponent(f) === null);
+  const inverted = under.map((f) => {
+    const n = -(exponent(f) as number);
+    const base = args(f)[0] as MJ;
+    return n === 1 ? base : (['Power', base, n] as unknown as MJ);
+  });
+  const numerator: MJ = over.length === 0 ? 1 : over.length === 1 ? over[0]! : (['Multiply', ...over] as unknown as MJ);
+  const denominator: MJ = inverted.length === 1 ? inverted[0]! : (['Multiply', ...inverted] as unknown as MJ);
+  return ['Divide', numerator, denominator] as unknown as MJ;
+}
+
 function checkSimplestFraction(student: Parsed, ctx: Ctx): FormResult {
-  const whole = unwrapEquation(student.raw.json as unknown as MJ);
+  const whole = negativePowersAsDivision(unwrapEquation(student.raw.json as unknown as MJ));
   const e = productAsOneFraction(stripNegate(whole));
   if (head(e) !== 'Divide') {
     if (hasHead(whole, new Set(['Divide']))) return fail('not-simplified', 'That is equivalent, but write it as a single fraction in its simplest form.');
@@ -1517,6 +1559,21 @@ function fmtSolution(variable: string, s: Solution): string {
   return `${variable} = ${s.value.raw.latex.replace(/\\/g, '')}`;
 }
 
+/**
+ * A root written as a decimal to two or more places that rounds the spec's root is that root ("−1.33" for −4/3, "1.67"
+ * for 5/3): CCEA's schemes print "accept −1.33 or better" (the M4 author, 8 Oct 2026). Fewer places are not.
+ */
+function roundedTo(student: Solution, spec: Solution): boolean {
+  const m = /(-?\d+\.(\d+))\s*$/.exec(student.text.replace(/\s+/g, ' ').trim());
+  if (!m) return false;
+  const places = m[2]!.length;
+  if (places < 2) return false;
+  const sv = evalAt(student.value.expr, {});
+  const tv = evalAt(spec.value.expr, {});
+  if (sv === undefined || tv === undefined || !Number.isFinite(sv) || !Number.isFinite(tv)) return false;
+  return Math.abs(sv - tv) <= 0.5 * Math.pow(10, -places) + 1e-9;
+}
+
 function checkSolutionSet(answer: string, specPieces: string[], spec: AlgebraSpec): AlgebraVerdict {
   const specSolutions: Solution[] = [];
   for (const piece of specPieces) {
@@ -1558,7 +1615,7 @@ function checkSolutionSet(answer: string, specPieces: string[], spec: AlgebraSpe
     for (let i = 0; i < specSolutions.length; i++) {
       if (matchedSpec.has(i)) continue;
       const r = compareExpressions(s.value.expr, specSolutions[i].value.expr, ctx);
-      if (r.status === 'identical' || r.status === 'equivalent') {
+      if (r.status === 'identical' || r.status === 'equivalent' || roundedTo(s, specSolutions[i])) {
         matchedSpec.add(i);
         found = true;
         if (r.status !== 'identical') allIdentical = false;
@@ -1584,11 +1641,19 @@ function checkSolutionSet(answer: string, specPieces: string[], spec: AlgebraSpe
   if (!extras.length) {
     const found = matchedSpec.size;
     const more = total - found;
-    return verdict(
-      false,
-      'partial-solution-set',
-      `You have found ${found} of the ${total} solutions – there ${more === 1 ? 'is one more' : `are ${more} more`} to find.`,
-    );
+    // The roots she found, as the spec writes them, so the marker can pay the scheme's accuracy point for each
+    // (the M4 author, 8 Oct 2026: one right root of two scored 0 of 6).
+    const foundSolutions = specSolutions.filter((_, i) => matchedSpec.has(i)).map((s) => fmtSolution(variable, s));
+    const missingSolutions = specSolutions.filter((_, i) => !matchedSpec.has(i)).map((s) => fmtSolution(variable, s));
+    const values = (keep: (i: number) => boolean) => specSolutions.filter((_, i) => keep(i)).map((s) => evalAt(s.value.expr, {})).map((v) => (v !== undefined && Number.isFinite(v) ? v : NaN));
+    return {
+      ...verdict(false, 'partial-solution-set', `You have found ${found} of the ${total} solutions – there ${more === 1 ? 'is one more' : `are ${more} more`} to find.`),
+      solutionsFound: foundSolutions,
+      solutionsMissing: missingSolutions,
+      solutionsFoundValues: values((i) => matchedSpec.has(i)),
+      solutionsMissingValues: values((i) => !matchedSpec.has(i)),
+      solutionsTotal: total,
+    };
   }
 
   for (const extra of extras) {

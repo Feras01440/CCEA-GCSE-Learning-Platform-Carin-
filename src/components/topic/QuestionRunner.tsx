@@ -180,6 +180,9 @@ export function QuestionRunner({ q, kind, item, verification, index, total, onDo
       workedSolution: part.workedSolution,
       followThrough,
       subject: item.subject,
+      // A part that requires working (its flag, or a stem that says so) pays a bare value nothing: the ladder below
+      // decides (the C2 reviewer's ruling, 8 Oct 2026; CCEA 2021 C2 Higher general instruction 9).
+      requiresWorking: part.requiresWorking === true || /\bmust show\b[^.?!]*\bworking\b/i.test(part.stem),
     });
     answersRef.current = { ...answersRef.current, [part.id]: raw };
     setLastRaw(raw);

@@ -342,3 +342,53 @@ describe("sign words are signs; denying or bounding words are no value", () => {
     expect(parseNumeric("roughly 6.5")?.value).toBe(6.5);
   });
 });
+
+// Build-9 gate, class 4 (the verifier's A, 29 Sep 2026): a denying or bounding word blanked a right answer whose reason
+// held "over", "above" or "more than". Such a word governs only a value in its own clause; a value before "because", or
+// outside the bounding clause, is her answer, and a denied alternative after a comma is not a second answer.
+describe("a denying or bounding word governs only its own clause (build-9 gate, class 4)", () => {
+  /** m4 upper-and-lower-bounds .0018: "Work out the greatest possible number of crates", scheme "A1 30". */
+  const crates: NumericSpec = { value: 30, tolerance: { type: "dp", n: 0 } };
+  test.each([
+    "30, because 31 crates would be over 710 kg",
+    "30 crates (31 would weigh more than 710 kg)",
+    "713 kg, which is above 710 kg. So the greatest possible number is 30.",
+    "710 ÷ 23 = 30.87 so 30",
+  ])("'%s' is 30", (typed) => {
+    expect(checkNumeric(typed, crates).correct, typed).toBe(true);
+  });
+  test.each(["over 30", "not 30", "below 30", "at least 30", "more than 30"])("'%s' states no value", (typed) => {
+    expect(parseNumeric(typed)).toBeNull();
+  });
+  test("a denied alternative after the value is not a second answer (p2 charge .0007(c) 'Q = 450 C'; m3 velocity-time .0011 '16 s')", () => {
+    expect(parseNumeric("450 C, not 7.5 C")).toMatchObject({ value: 450, unit: "C" });
+    expect(parseNumeric("16 seconds, not 8")).toMatchObject({ value: 16 });
+    expect(parseNumeric("Q = 450 C (the time must be in seconds, not minutes)")).toMatchObject({ value: 450, unit: "C" });
+    // A remark after the value with no number in it comes off (c2 energy-changes .0001(a) 'P1 6.5 (°C)').
+    expect(parseNumeric("6.5 °C, the temperature went up not down")).toMatchObject({ value: 6.5 });
+    // Two bare values are still two answers.
+    expect(parseNumeric("4500 C, so 450")).toBeNull();
+    expect(parseNumeric("not 450 C")).toBeNull();
+  });
+});
+
+// The verifier's probe6 A block and the B2 E author's E-WORD-BEFORE-NUMBER (29 Sep 2026): a few words naming the
+// value before the number ("a rise of 6.5 °C", "it went up by 6.5 °C", "the mean is 24.7 mm", "a fall of 64.3%") are
+// the value's name, and come off; words that deny, bound or compute ("more than 3", "half of 30") are not.
+describe("the words naming a value before its number come off (build-9 gate, the reader)", () => {
+  /** c2 energy-changes .0001(a): "Calculate the temperature change", scheme "P1 6.5 (°C), from 27.5 − 21.0". */
+  const change: NumericSpec = { value: 6.5, tolerance: { type: "dp", n: 1 }, unit: "°C" };
+  test.each(["a rise of 6.5 °C", "it went up by 6.5 °C", "increase of 6.5", "an increase of 6.5 degrees", "the temperature rose by 6.5 °C"])("'%s' is 6.5 °C", (typed) => {
+    expect(checkNumeric(typed, change).correct, typed).toBe(true);
+  });
+  test("b2 antibiotics .0019(a) 'the mean is 24.7 mm' and .0007(b) 'a fall of 64.3%'", () => {
+    expect(parseNumeric("the mean is 24.7 mm")).toMatchObject({ value: 24.7, unit: "mm" });
+    expect(parseNumeric("a fall of 64.3%")).toMatchObject({ value: 0.643, form: "percent" });
+  });
+  test("a word that computes with the number, or a function of it, is not its name", () => {
+    expect(parseNumeric("half of 30")).toBeNull();
+    expect(parseNumeric("double 4")).toBeNull();
+    expect(parseNumeric("sin 30")).toBeNull();
+    expect(parseNumeric("between 3 and 4")).toBeNull();
+  });
+});

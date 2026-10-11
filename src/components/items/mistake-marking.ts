@@ -87,7 +87,9 @@ const FORMULA_WORD = String.raw`(?:[A-Z][a-z]?\d*)*[A-Z][a-z]?\d+(?:[A-Z][a-z]?\
 /** A label's words: letters, or a formula (C2 D F01, 24 Sep 2026: "O2 molecules needed" was not a label). */
 // A symbol's subscript is part of its name: "R_D" is not "R_C" (the FM2 review, 27 Sep 2026: the wrong reaction set to
 // zero was confirmed, as "R" alone named nothing).
-const LABEL_RE = new RegExp(String.raw`^((?:${FORMULA_WORD}|[A-Za-z]+(?:_\{?[A-Za-z0-9]+\}?)?)(?: +(?:${FORMULA_WORD}|[A-Za-z]+))* *(?:\([^()]*\))?)\s*=\s*`);
+// A label may carry a power ("B² = …", "B^2 = …", "A^-1 = …"; the FM1 author, 7 Oct 2026: a bare matrix was refused against
+// "B² = (11 2 ; 4 3)" where "X = (3 5 ; -5 -8)" took one).
+const LABEL_RE = new RegExp(String.raw`^((?:${FORMULA_WORD}|[A-Za-z]+(?:_\{?[A-Za-z0-9]+\}?)?(?:[²³]|\^\{?-?\d+\}?)?)(?: +(?:${FORMULA_WORD}|[A-Za-z]+))* *(?:\([^()]*\))?)\s*=\s*`);
 
 /**
  * The label a line is written under, and what it says: "Median = 30 + …" → "Median" and "30 + …";
@@ -111,7 +113,7 @@ function splitLabel(line: string): { label: string | null; body: string; continu
 /** The words a quantity's usual symbol names, by the symbol as written (its case matters: T is a tension, t a time). */
 const QUANTITY_SYMBOLS: Record<string, readonly string[]> = {
   F: ["force", "friction"],
-  R: ["force", "reaction"],
+  R: ["force", "reaction", "resistance"],
   T: ["force", "tension"],
   W: ["force", "weight"],
   N: ["force", "reaction"],
@@ -152,7 +154,9 @@ function labelsAgree(a: string | null, b: string | null): boolean {
     if (phrase.startsWith(sym) || phrase.endsWith(` ${sym}`) || initials(phrase).startsWith(sym.replace(/_/g, ""))) return true;
     // A quantity's usual symbol names it ("R" for a force, "a" for an acceleration; FM2 D, 25 Sep 2026: "R = 35√2 =
     // 49.5" was refused against "Force = … = 49.50 N"). The letter's case matters: T is a tension, t a time.
-    const rawSym = (symbol(x) ? a : b).trim().split(/\s{2,}/).pop()!.trim();
+    // A subscript names which one ("R_T", the total resistance); the symbol is the letter before it (the P2 author,
+    // 7 Oct 2026: "R = 8 Ω" was refused against "Total resistance = … = 8 Ω").
+    const rawSym = (symbol(x) ? a : b).trim().split(/\s{2,}/).pop()!.trim().replace(/_.*$/, "");
     return (QUANTITY_SYMBOLS[rawSym] ?? []).some((word) => new RegExp(`\\b${word}`).test(phrase));
   }
   const words = (s: string) => s.split(" ").filter(Boolean).length;
@@ -329,8 +333,10 @@ function valueOf(bare: string): number | null {
 const UNIT_WORD =
   "(?:mm|cm|km|kg|mg|tonnes?|ms|min|minutes?|hours?|hrs?|days?|years?|seconds?|sec|degrees?|kN|kJ|MJ|kW|MW|Pa|kPa|Hz|kHz|mA|ohms?|mol|dm|ml|mL|litres?|square|sq|units?|m|g|t|s|h|K|N|J|W|V|A|C|l|L)";
 const UNIT_POWER = "(?:\\^?\\{?[-−]?\\d\\}?|[²³]|⁻[¹²³])?";
+// A composite unit is one unit after a symbol too: "°C per minute", "°C/min" (the M8 author, 7 Oct 2026: a right fix
+// ending in "°C per minute" was refused where "-5.5" was accepted).
 const UNIT_TAIL = new RegExp(
-  `(?:\\s*(?:°C|°|%|Ω)|\\s+${UNIT_WORD}${UNIT_POWER}(?:\\s*(?:/|per|\\s)\\s*${UNIT_WORD}${UNIT_POWER}){0,3})\\s*$`,
+  `(?:\\s*(?:°C|°|%|Ω)|\\s+${UNIT_WORD}${UNIT_POWER})(?:\\s*(?:/|per|\\s)\\s*${UNIT_WORD}${UNIT_POWER}){0,3}\\s*$`,
 );
 /** "(2 dp)", "(to 3 s.f.)", "exactly": an accuracy note after a value is not part of it. */
 const ACCURACY_NOTE = /\s*(?:\((?:to\s+)?\d+\s*(?:d\.?\s?p\.?|s\.?\s?f\.?|decimal places?|significant figures?)\)|\bexactly)\s*$/i;
@@ -460,6 +466,9 @@ function bareStated(text: string): Stated | null {
     .replace(/[.,;:]+$/, "")
     .replace(ACCURACY_NOTE, "")
     .replace(UNIT_TAIL, "")
+    // "about -5.5" states -5.5 (the M8 author, 7 Oct 2026); a word before a value with no "=" ("banana 36.2") is prose,
+    // not a label, so it is left to refuse.
+    .replace(/^(?:about|approximately|approx\.?|roughly|around|≈|~)\s+/i, "")
     .replace(/^£\s*/, "")
     .trim();
   return BARE_VALUE.test(s) ? stated(s) : null;
@@ -1292,6 +1301,17 @@ export function markFix(typed: string, item: FixItem): FixMatch {
   const bare = splitLabel(canon(typed));
   const bareValueLine = bare.label === null && bareValue(bare.body) !== null;
   if (!bareValueLine && item.studentWorking.some((w) => sameWritten(written, asWritten(w)))) return NONE;
+  // A value her working states on or after the flagged line, in a line no correction restates, is a value the item says
+  // is wrong: typed bare, with a label or a currency sign, it is never the fix (the M8 author, 8 Oct 2026: growth-decay
+  // ftm.01 took her own "£10080" because it lies within the value route's 1 % of the correction's 10123.78).
+  const correct = item.correction.flatMap(statedValues);
+  const wrong = item.studentWorking
+    .slice(Math.max(0, item.mistakeLine - 1))
+    .filter((w) => !item.correction.some((c) => sameWritten(asWritten(c), asWritten(w))))
+    .flatMap(statedValues)
+    .filter((v) => !correct.some((c) => Math.abs(c - v) <= 1e-9 * Math.max(1, Math.abs(c))));
+  const ownValue = bareValue(bare.body) ?? resultValue(canon(typed), "typed");
+  if (ownValue !== null && wrong.some((v) => Math.abs(v - ownValue) <= 1e-9 * Math.max(1, Math.abs(v)))) return NONE;
   const ctx = fixContext(item.correction, item.studentWorking, item.mistakeLine);
   if (!ctx.elsewhere(typed) && item.correction.some((c) => !ctx.restates(c) && sameWritten(written, asWritten(c)))) return LINE;
   if (sameAsMistakeLine(typed, ctx.flagged)) return NONE;
@@ -1481,11 +1501,23 @@ function sameRootEquation(typed: string, working: string, before: readonly strin
   if ((mine.match(/[=≈]/g) ?? []).length !== 1 || solvedFor(mine) !== null) return false;
   // A symbol alone on a side ("Q = 19 + 8√3") is a result, judged as one (and never a restated earlier result).
   if (mine.split(/[=≈]/).some((s) => /^\s*[A-Za-zθα-ω](?:_\{?[A-Za-z0-9]+\}?)?\s*$/.test(s))) return false;
-  const tidy =(x: string) => x.replace(/\s+/g, "").replace(/[×·]/g, "*").replace(/\\times/g, "*");
-  const side = (a: string, b: string) => {
-    if (tidy(a) === tidy(b)) return true;
-    const [va, vb] = [evaluateWithTrig(dropUnit(a)), evaluateWithTrig(dropUnit(b))];
-    return va !== null && vb !== null && sidesAgree(va, vb, a, b);
+  const tidy = (x: string) => x.replace(/\s+/g, "").replace(/[×·]/g, "*").replace(/\\times/g, "*");
+  const written = (a: string, b: string) => tidy(a) === tidy(b);
+  // The step's transformation is from its left side to its right. Her line must hold one side as the step writes it,
+  // and the other as written or with the step's arithmetic done: a plain number of the same value ("600" for
+  // "5600 − 5000"), or the same operation still shown ("40 cos 30 − 12" for "34.64 − 12"). A side matched only by
+  // value in another form is another step: "(3/2)² = 9/4" holds step 3's result "(3/2)²" and step 4's evaluation
+  // of it, and "10 × 10⁶ = 1 × 10⁷" holds step 2's result and step 3's normalisation (the build-9 gate, class 6).
+  const plainNumber = (x: string) => /^\s*[-−+]?\d+(?:\.\d+)?\s*(?:\.\.\.|…)?\s*$/.test(dropUnit(x));
+  const done = (hers: string, theirs: string) => {
+    const [vh, vt] = [evaluateWithTrig(dropUnit(hers)), evaluateWithTrig(dropUnit(theirs))];
+    if (vh === null || vt === null || !sidesAgree(vh, vt, hers, theirs)) return false;
+    // The same number to more or fewer places ("1.666..." for "1.66666666...") is the step's own number.
+    if (plainNumber(hers) && plainNumber(theirs)) return true;
+    const op = mainOperation(theirs);
+    if (op === null) return false;
+    if (plainNumber(hers)) return true;
+    return mainOperation(hers) === op;
   };
   const equationsOf = (text: string) =>
     [...text.split("\n"), ...[...text.matchAll(/\$([^$]+)\$/g)].map((m) => m[1]!)]
@@ -1494,10 +1526,30 @@ function sameRootEquation(typed: string, working: string, before: readonly strin
   const [ml, mr] = mine.split(/[=≈]/) as [string, string];
   const same = (ref: string) => {
     const [rl, rr] = ref.split(/[=≈]/) as [string, string];
+    const side = (a: string, ra: string) => written(a, ra) || done(a, ra);
     return (side(ml, rl) && side(mr, rr)) || (side(ml, rr) && side(mr, rl));
   };
   if (before.flatMap(equationsOf).some((ref) => tidy(ref) === tidy(mine))) return false;
   return equationsOf(working).some(same);
+}
+
+/**
+ * The operation a side of an equation does last, outside its brackets: "add" for a sum or difference ("5600 − 5000",
+ * "8 × 10⁶ + 2 × 10⁶"), "mul" for a product or quotient ("1 × 10⁷", "9/4"), null where there is none ("(2/3)^-2",
+ * "600"). A sign in front, or after "^" or another operator, is not an operation.
+ */
+function mainOperation(side: string): "add" | "mul" | null {
+  const s = dropUnit(side).replace(/\\times/g, "×").replace(/\s+/g, "");
+  let depth = 0;
+  let found: "add" | "mul" | null = null;
+  for (let i = 0; i < s.length; i += 1) {
+    const c = s[i]!;
+    if ("([{".includes(c)) depth += 1;
+    else if (")]}".includes(c)) depth -= 1;
+    else if (depth === 0 && i > 0 && "+-−".includes(c) && !/[\^*/×÷·(+\-−=]/.test(s[i - 1]!)) return "add";
+    else if (depth === 0 && "×*/÷·".includes(c)) found = "mul";
+  }
+  return found;
 }
 
 function stepLineMatchesOnce(typed: string, working: string, opts: { pieces?: boolean; before?: readonly string[] } = {}): FixMatch {

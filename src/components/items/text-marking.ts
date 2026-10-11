@@ -107,6 +107,9 @@ export function phraseIn(haystack: string, needle: string, inflections: Readonly
   if (!needle) return false;
   const h = ` ${haystack} `;
   if (h.includes(` ${needle} `)) return true;
+  // An operator before or after a key word is a boundary, as a space is: "sin(57)" stands in "9.6sin(52)/sin(57)" (the
+  // M8 author, 8 Oct 2026). A needle with an operator of its own is read by the algebraic path below.
+  if (!/[/×*+=÷]/.test(needle) && new RegExp(`(?:^|[\\s/×*+=÷])${needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:$|[\\s/×*+=÷])`).test(haystack)) return true;
   // An algebraic key word ("(2x - 1)(x + 3) = 30", "x^2 + 17x - 168 = 0") is matched with the spaces around its
   // operators ignored, so "(2x-1)(x+3) = 30" and "2x^2+5x-33 = 0" earn it however she spaces them.
   if (isAlgebraic(needle) && ` ${compactOperators(haystack)} `.includes(` ${compactOperators(needle)} `)) return true;
@@ -121,15 +124,28 @@ export function phraseIn(haystack: string, needle: string, inflections: Readonly
       const stem = w.endsWith("ss") ? w : w.replace(/(es|s)$/, "");
       if (stem.length < 3) return escapeRegExp(w);
       if (stem.length < STEM_MIN_LETTERS) return `${escapeRegExp(stem)}(?:es|s)?`;
-      const stems = stem.endsWith("e") && stem.length - 1 >= STEM_MIN_LETTERS ? [stem, stem.slice(0, -1)] : [stem];
-      return `(?:${stems.map(escapeRegExp).join("|")})${endings}`;
+      return `(?:${wordStems(stem).map(escapeRegExp).join("|")})${endings}`;
     })
     .join(" ");
   if (new RegExp(`(^| )${loose}( |$)`).test(h)) return true;
   if (needle.length < STEM_MIN_LETTERS || !/^[a-z]+$/.test(needle)) return false;
   // "increase" ~ "increasing", "leave" ~ "leaving": a final e is dropped before -ing / -ed / -ation.
-  const stems = needle.endsWith("e") && needle.length - 1 >= STEM_MIN_LETTERS ? [needle, needle.slice(0, -1)] : [needle];
+  const stems = wordStems(needle);
   return haystack.split(" ").some((w) => stems.some((s) => w.startsWith(s) && inflections.has(w.slice(s.length))));
+}
+
+/**
+ * The stems a word may be inflected from: itself; without a final e ("increase" ~ "increasing"); a consonant + y as
+ * consonant + i ("carry" ~ "carries", "carried"); a consonant + i (from "carries" less its -es) as consonant + y
+ * ("carries" ~ "carry", "carrying"). Only words long enough to be stemmed at all.
+ */
+function wordStems(stem: string): string[] {
+  const out = [stem];
+  if (stem.length - 1 < STEM_MIN_LETTERS) return out;
+  if (stem.endsWith("e")) out.push(stem.slice(0, -1));
+  if (/[^aeiou]y$/.test(stem)) out.push(`${stem.slice(0, -1)}i`);
+  if (/[^aeiou]i$/.test(stem)) out.push(`${stem.slice(0, -1)}y`);
+  return out;
 }
 
 export interface KeywordCheck {
@@ -174,6 +190,24 @@ export function keywordsPresent(raw: string, keyWords: readonly string[]): Keywo
   const chip = (s: string) => compactOperators(s).replace(/([a-z])-(?=[a-z])/g, "$1 ");
   const tight = ` ${compactOperators(h)} `;
   const chipped = ` ${chip(h)} `;
+  // The expression's tokens, its operators and brackets as spaces: a key word with no operator of its own is present
+  // when it is one of them, the base or the exponent of a power included ("10" in "a = 10^c" or "10^{c}"; the FM1
+  // author, 7 Oct 2026: a right line that wrote the base as a power earned nothing on the key-word route).
+  const tokens = ` ${h.replace(/[\^*/+\-=()×{}]/g, " ").replace(/\s+/g, " ").trim()} `;
+  // Braces and spacing aside: "$X = A^{-1}B$" holds "A^-1 B" once both are squashed to one stream, the match standing on
+  // its own (no letter or digit against either end; the FM1 author, 7 Oct 2026).
+  const squash = (s: string) => s.replace(/[{}\s]/g, "");
+  const squashed = squash(h);
+  const squashedHolds = (key: string) => {
+    const k = squash(key);
+    if (k.length === 0) return false;
+    for (let at = squashed.indexOf(k); at >= 0; at = squashed.indexOf(k, at + 1)) {
+      const before = squashed[at - 1] ?? "";
+      const after = squashed[at + k.length] ?? "";
+      if (!/[a-z0-9]/i.test(before) && !/[a-z0-9]/i.test(after)) return true;
+    }
+    return false;
+  };
   const present: string[] = [];
   const missing: string[] = [];
   for (const k of keyWords) {
@@ -182,8 +216,9 @@ export function keywordsPresent(raw: string, keyWords: readonly string[]): Keywo
     // looked for that way.
     const found =
       phraseIn(h, key) ||
-      (/[+\-/^*]/.test(key) && (tight.includes(` ${compactOperators(key)} `) || chipped.includes(` ${chip(key)} `))) ||
-      (/[a-z]\s*-\s*[a-z]/.test(key) && phraseIn(h, key.replace(/([a-z])\s*-\s*(?=[a-z])/g, "$1 ")));
+      (/[+\-/^*]/.test(key) && (tight.includes(` ${compactOperators(key)} `) || chipped.includes(` ${chip(key)} `) || squashedHolds(key))) ||
+      (/[a-z]\s*-\s*[a-z]/.test(key) && phraseIn(h, key.replace(/([a-z])\s*-\s*(?=[a-z])/g, "$1 "))) ||
+      (!/[+\-/^*=()]/.test(key) && tokens.includes(` ${key} `));
     (found ? present : missing).push(k);
   }
   return { present, missing, all: keyWords.length > 0 && missing.length === 0 };
@@ -223,6 +258,9 @@ export function listedItems(raw: string): string[] {
   // A long segment anywhere makes the whole answer prose; a short clause that continues the previous one is not an item.
   if (segments.some((s) => s.split(/\s+/).length > LIST_ITEM_MAX_WORDS)) return [t];
   const items = segments.filter((p, i) => i === 0 || !CLAUSE_OPENER.test(p));
+  // An apposition naming the class of the answer ("argon, a noble gas"; "helium, which is inert") is one answer, not a
+  // list: a list is two candidates of the same kind (the C2 E author, 7 Oct 2026).
+  if (items.length === 2 && /^(?:a|an|which|that)\s/i.test(items[1]!) && !/^(?:a|an|the)\s/i.test(items[0]!)) return [t];
   // A name and a formula side by side are one answer (C2 D F04, 24 Sep 2026: "ethanol, C2H5OH" was two). CCEA's general
   // marking instructions (C2 Higher MS Summer 2021, "Both name and formula provided by candidate"): where a name is
   // asked for the formula beside it is ignored, and where a formula is asked for the name beside it is ignored. Only a
@@ -249,12 +287,22 @@ export function nameWithFormula(raw: string): { name: string; formula: string } 
   return isFormula(a) ? { name: b, formula: a } : { name: a, formula: b };
 }
 
+/** The element symbols: a formula is made of these and nothing else, so "TB", "DNA" and "MRSA" are abbreviations, not formulae. */
+const ELEMENT_SYMBOLS = new Set(
+  "H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og".split(
+    " ",
+  ),
+);
+
 export function isFormula(segment: string): boolean {
   const t = segment
     .trim()
     .replace(/[₀-₉]/g, (c) => String("₀₁₂₃₄₅₆₇₈₉".indexOf(c)))
     .replace(/\s+/g, "");
   if (!/^(?:[A-Z][a-z]?\d*|\(|\)\d*|[=≡.·-])+$/.test(t)) return false;
+  // Every symbol an element (the B2 E author, 7 Oct 2026: "lung cancer and TB" was one answer, TB read as a formula
+  // beside a name, and the listing rule never fired).
+  if (!(t.match(/[A-Z][a-z]?/g) ?? []).every((sym) => ELEMENT_SYMBOLS.has(sym))) return false;
   return /\d/.test(t) || (t.match(/[A-Z]/g) ?? []).length >= 2;
 }
 
@@ -315,12 +363,24 @@ export interface TextMarkResult {
   feedback: string;
 }
 
-/** Words that negate what follows them in their clause. */
-// Prevent, stop, avoid and reduce deny what follows as "not" does ("to prevent contamination", "to stop contamination";
-// the B2 E author, 29 Sep 2026).
-const NEGATION = /^(?:not|no|never|none|nor|neither|without|non|cannot|prevents?|prevented|preventing|stops?|stopped|stopping|avoids?|avoided|avoiding|reduces?|reduced|reducing)$/;
-/** A verb's own negation inside a key word: such a key is the negation itself. */
-const VERB_NEGATION = /^(?:not|cannot|never|prevents?|prevented|preventing|stops?|stopped|stopping|avoids?|avoided|avoiding|reduces?|reduced|reducing)$/;
+/**
+ * The negation model (build-9 gate, 29 Sep 2026). Three kinds of word change what the key word after them says:
+ *   - a plain negator denies it ("not resistant", "no colonies", "cannot fit", "non-resistant");
+ *   - an avoidance verb says the event after it does not happen ("to prevent contamination", "stop microorganisms
+ *     landing on the agar");
+ *   - a reduction word says the quantity after it is smaller, not absent ("reduces her risk by 21%", "carry less
+ *     oxygen"): a reduction is never a denial.
+ * Each governs its own verb phrase only, and an avoidance or reduction that is itself negated ("does not reduce
+ * contamination", "does not stop microorganisms getting in") denies the avoidance: the harm is not kept off. Two plain
+ * negators on the same verb are a positive.
+ */
+const PLAIN_NEGATOR = /^(?:not|no|never|none|nor|neither|without|non|cannot)$/;
+const AVOIDANCE = /^(?:prevents?|prevented|preventing|stops?|stopped|stopping|avoids?|avoided|avoiding)$/;
+const REDUCTION = /^(?:reduces?|reduced|reducing|lowers?|lowered|lowering|decreases?|decreased|decreasing|lessens?|lessened|lessening|less|fewer|minimi[sz]es?|minimi[sz]ed|minimi[sz]ing)$/;
+/** Any of the three. */
+const OPERATOR = new RegExp(`${PLAIN_NEGATOR.source}|${AVOIDANCE.source}|${REDUCTION.source}`);
+/** Helping verbs and pronouns that may stand between a plain negator and the verb it governs ("does not reduce"). */
+const BETWEEN = /^(?:do|does|did|will|would|could|can|should|may|might|must|to|be|is|are|was|were|has|have|had|been|being|it|this|they|them|even|really|actually|always|ever|still)$/;
 
 /** The clauses of an answer: a negation governs only its own clause ("it is not continuous, so it is discontinuous"). */
 function clausesOf(raw: string): string[] {
@@ -331,7 +391,10 @@ function clausesOf(raw: string): string[] {
  * Words that end a negation's reach inside a clause: a coordinating word starts a new verb phrase ("light isn't
  * obstructed and can reach the chloroplasts"; "copper has no free electrons and the rubber has free electrons").
  */
-const NEGATION_ENDS = /^(?:and|which|who|whom|whose|where|when|then|also|yet|nor)$/;
+// A subordinator opening a time or condition clause ("after heating it again", "until the mass did not change") ends a
+// negator's reach as a conjunction does: the clause is outside the negated verb phrase and carries its own key (the
+// Unit 7 author, 7 Oct 2026: "the mass did not change after heating it again" lost the heating mark).
+const NEGATION_ENDS = /^(?:and|which|who|whom|whose|where|when|then|also|yet|nor|after|before|until|while|once|unless|if|because|since)$/;
 /**
  * A preposition before a determiner starts a phrase the negation is not about: "not complementary to the active
  * site" negates "complementary", not "the active site"; "no light is blocked on its way to the palisade cells".
@@ -340,96 +403,163 @@ const NEGATION_ENDS = /^(?:and|which|who|whom|whose|where|when|then|also|yet|nor
 const PREPOSITION = /^(?:to|on|in|into|onto|at|from|with|by|for|through|towards?|across|inside|within)$/;
 const DETERMINER = /^(?:the|a|an|its|their|his|her|this|that|these|those|each|every|some|any|all|both|our|your)$/;
 
-/**
- * Where a negation earlier in the clause still governs position `at`: the nearest negation word before it with no
- * end of its reach between them (the QA fixer, 25 Sep 2026: a negation governs its own verb phrase, up to the next
- * "and", "which", comma or full stop, and not a prepositional phrase after its word).
- */
-function governedAt(words: readonly string[], at: number): boolean {
-  for (let j = at - 1; j >= 0; j--) {
+/** What her words say about a key word: see the model above. */
+type Polarity = "plain" | "negated" | "avoided" | "reduced" | "denied";
+/** A key word's polarity in one place, with the words its operator reaches (the event it names). */
+interface Governor {
+  polarity: Polarity;
+  reach: string[];
+}
+/** The polarities that assert the key word: said plainly, said smaller, or said not to be avoided. */
+const ASSERTS: ReadonlySet<Polarity> = new Set<Polarity>(["plain", "reduced", "denied"]);
+
+/** The words an operator at `from − 1` governs: up to the end of its verb phrase. */
+function reachFrom(words: readonly string[], from: number): string[] {
+  const out: string[] = [];
+  for (let j = from; j < words.length; j++) {
     const w = words[j]!;
-    if (NEGATION_ENDS.test(w)) return false;
-    if (PREPOSITION.test(w) && DETERMINER.test(words[j + 1] ?? "")) return false;
-    if (NEGATION.test(w)) {
-      // A negated negator is a positive ("it does not reduce contamination" says contamination is not reduced; the B2 E
-      // author, 29 Sep 2026): a "not", "never" or "no" just before it, a helping verb between them, undoes it.
-      const before = words.slice(Math.max(0, j - 3), j).filter((x) => !/^(?:do|does|did|will|would|could|can|should|may|might|to|be)$/.test(x));
-      if (before.length > 0 && /^(?:not|never|no|cannot)$/.test(before[before.length - 1]!) && !/^(?:not|never|no|cannot|non|none|nor|neither|without)$/.test(w)) return false;
-      return true;
-    }
+    if (NEGATION_ENDS.test(w)) break;
+    if (PREPOSITION.test(w) && DETERMINER.test(words[j + 1] ?? "")) break;
+    out.push(w);
+  }
+  return out;
+}
+
+/**
+ * What the words before position `at` say about the word there, read back within its own verb phrase (the reach ends
+ * at "and", "which", …, at a preposition before a determiner, or at the clause's start): the nearest operator decides,
+ * and its own negation, a plain negator just before it with helping verbs between, turns an avoidance or reduction
+ * into a denial and a plain negator into a positive.
+ */
+function governorAt(words: readonly string[], at: number): Governor {
+  let op: { kind: "plain" | "avoid" | "reduce"; index: number } | null = null;
+  let determiners = 0;
+  for (let j = at - 1; j >= 0 && op === null; j--) {
+    const w = words[j]!;
+    if (NEGATION_ENDS.test(w)) break;
+    if (PREPOSITION.test(w) && DETERMINER.test(words[j + 1] ?? "")) break;
+    if (DETERMINER.test(w)) determiners += 1;
+    // "Without" governs its own object only ("without light"): a determiner between it and the key starts another phrase
+    // ("Without light the leaf cannot photosynthesise" says nothing against "cannot photosynthesise"; the corpus guard,
+    // 29 Sep 2026).
+    if (w === "without" && determiners > 0) break;
+    if (PLAIN_NEGATOR.test(w)) op = { kind: "plain", index: j };
+    else if (AVOIDANCE.test(w)) op = { kind: "avoid", index: j };
+    else if (REDUCTION.test(w)) op = { kind: "reduce", index: j };
+  }
+  if (op === null) return { polarity: "plain", reach: [] };
+  const negated = operatorNegated(words, op.index);
+  const reach = reachFrom(words, op.index + 1);
+  if (op.kind === "plain") return { polarity: negated ? "plain" : "negated", reach };
+  if (negated) return { polarity: "denied", reach };
+  return { polarity: op.kind === "avoid" ? "avoided" : "reduced", reach };
+}
+
+/** One word is a form of another: "lowers" of "lower", "carries" of "carry", "stopped" of "stop", "killed" of "kill". */
+function wordForm(w: string, first: string): boolean {
+  if (w === first) return true;
+  if (!/^[a-z]+$/.test(w) || !/^[a-z]+$/.test(first)) return false;
+  if (phraseIn(w, first) || phraseIn(first, w)) return true;
+  const stem = first.length >= 5 ? first.replace(/(?:es|s|e|ed|ing)$/, "") : first;
+  return w.length > stem.length + 1 && w.startsWith(`${stem}${stem.slice(-1)}`) && INFLECTIONS.has(w.slice(stem.length + 1));
+}
+
+/** Where a key word starts in a clause's words: its first word in any of its forms, the rest of the key following. */
+function keyStarts(words: readonly string[], key: string): number[] {
+  const kWords = normaliseText(key).split(" ");
+  const first = kWords[0] ?? "";
+  const k = kWords.join(" ");
+  return words.map((_, p) => p).filter((p) => wordForm(words[p]!, first) && phraseIn(words.slice(p, p + kWords.length).join(" "), k));
+}
+
+/** The normalised clauses of a text, kept between calls: the model answers are read for every key. */
+const CLAUSE_CACHE = new Map<string, string[][]>();
+function normalisedClauses(raw: string): string[][] {
+  let c = CLAUSE_CACHE.get(raw);
+  if (!c) {
+    c = clausesOf(raw).map((clause) => normaliseText(clause).split(" "));
+    if (CLAUSE_CACHE.size > 512) CLAUSE_CACHE.clear();
+    CLAUSE_CACHE.set(raw, c);
+  }
+  return c;
+}
+
+/** The polarity of every place the key word stands in the text; empty where it is absent or cannot be pinned. */
+/**
+ * An operator's own negation: a plain negator before it with helping verbs between ("does not reduce"), or a "no" on the
+ * verb's subject ("no dose reduces her risk", "nothing stops them"): one subject word may stand between.
+ */
+function operatorNegated(words: readonly string[], opIndex: number): boolean {
+  let skipped = 0;
+  for (let j = opIndex - 1; j >= 0; j--) {
+    const w = words[j]!;
+    if (PLAIN_NEGATOR.test(w)) return true;
+    if (NEGATION_ENDS.test(w) || OPERATOR.test(w)) break;
+    if (!BETWEEN.test(w) && ++skipped > 1) break;
   }
   return false;
 }
 
+function polarities(raw: string, key: string): Governor[] {
+  const out: Governor[] = [];
+  const k = normaliseText(key);
+  const kWords = k.split(" ");
+  // A key that carries its own operator ("did not photosynthesise", "no starch", "carry less oxygen") states its own
+  // polarity: her words that hold it say what it says, whatever negation stands earlier in the sentence ("Because it
+  // did not get light it did not photosynthesise"), and only a negation of the key's own operator ("does not carry
+  // less oxygen") or of its subject negates it (the Unit 7 author, 7 Oct 2026: the earlier "not" was read as
+  // governing the key, and a right answer lost a mark).
+  const ownOp = kWords.findIndex((w) => OPERATOR.test(w));
+  for (const words of normalisedClauses(raw)) {
+    if (!phraseIn(words.join(" "), k)) continue;
+    for (const at of keyStarts(words, key)) {
+      if (ownOp < 0) {
+        out.push(governorAt(words, at));
+        continue;
+      }
+      let opAt = at + ownOp;
+      if (!OPERATOR.test(words[opAt] ?? "")) opAt = words.findIndex((w, i) => i >= at && i < at + kWords.length + 2 && OPERATOR.test(w));
+      if (opAt < 0) {
+        out.push(governorAt(words, at));
+        continue;
+      }
+      // A negation of the key's own operator ("doesn't lower cholesterol" against the reject "lowers cholesterol"), or a
+      // negator quantifying the key's own subject ("none of the non-resistant bacteria survived"), negates the key's
+      // whole statement: "negated", never the "denied" that a plain key takes as asserted. A negator further back,
+      // with a new subject between ("did not get light it did not photosynthesise"), belongs to another verb phrase.
+      const quantified = (() => {
+        for (let j = at - 1; j >= 0; j--) {
+          const w = words[j]!;
+          if (PLAIN_NEGATOR.test(w)) return true;
+          if (!(DETERMINER.test(w) || PREPOSITION.test(w) || w === "of")) return false;
+        }
+        return false;
+      })();
+      out.push({ polarity: operatorNegated(words, opAt) || quantified ? "negated" : "plain", reach: reachFrom(words, opAt + 1) });
+    }
+  }
+  return out;
+}
+
 /**
- * The model negates the key word itself, not a word before it: the negation is next to the key with only an article, a
- * copula or an adverb between ("are not complementary", "is not a fair comparison", "no enzyme"). "To avoid growing
- * pathogens" negates the growing, and names the pathogens as the harm: a plain "pathogens could grow" is no contradiction.
+ * The model negates the key word itself, not a word before it: a plain negator next to the key with only an article, a
+ * copula or an adverb between ("are not complementary", "is not a fair comparison", "no enzyme"). An avoidance verb
+ * ("to avoid growing pathogens", "stop microorganisms from the air landing") names the harm, and never makes a plain
+ * mention of it a contradiction.
  */
 function negatesKeyItself(raw: string, key: string): boolean {
   const k = normaliseText(key);
-  const first = k.split(" ")[0] ?? "";
-  for (const clause of clausesOf(raw)) {
-    const c = normaliseText(clause);
-    if (!phraseIn(c, k)) continue;
-    const words = c.split(" ");
-    const at = words.findIndex((w) => w === first || w.startsWith(first.slice(0, Math.max(3, first.length - 2))));
-    if (at < 0) continue;
-    for (let j = at - 1; j >= 0; j--) {
-      const w = words[j]!;
-      if (NEGATION.test(w)) return true;
-      if (!/^(?:a|an|the|be|been|being|is|are|was|were|very|fully|quite|so|as|any|at|all|of|longer)$/.test(w)) break;
+  for (const words of normalisedClauses(raw)) {
+    if (!phraseIn(words.join(" "), k)) continue;
+    for (const at of keyStarts(words, key)) {
+      for (let j = at - 1; j >= 0; j--) {
+        const w = words[j]!;
+        if (PLAIN_NEGATOR.test(w)) return true;
+        if (!/^(?:a|an|the|be|been|being|is|are|was|were|very|fully|quite|so|as|any|at|all|of|longer)$/.test(w)) break;
+      }
     }
   }
   return false;
-}
-
-/**
- * Is every occurrence of the key word in the answer governed by a negation ("they do not have the human gene", "the
- * non-resistant bacteria"; the B2 D reviewer, 25 Sep 2026: 13 of 13 such answers were paid)? A negation governs its own
- * verb phrase only (`governedAt`). A key word that is itself a negation ("does not change direction", "no longer
- * flows") is earned as written: the key word's own words never negate it.
- */
-function negatedIn(raw: string, key: string): boolean {
-  const k = normaliseText(key);
-  const kWords = k.split(" ");
-  const first = kWords[0] ?? "";
-  const stem = first.length >= 5 ? first.replace(/(?:es|s|e|ed|ing)$/, "") : first;
-  // A key word that holds a verb's negation is that negation itself, and starts its own verb phrase ("cannot
-  // photosynthesise" in "without light the leaf cannot photosynthesise"): an earlier negation does not undo it. A
-  // negated noun ("non resistant bacteria survived") can still sit inside another negation ("none of the …").
-  // Unless her "not" denies it in turn ("it does not reduce contamination" against the key "reduce contamination"; the
-  // B2 E author's E-NEG-DOUBLE, 29 Sep 2026).
-  if (kWords.some((w) => VERB_NEGATION.test(w))) {
-    let seen = false;
-    for (const clause of clausesOf(raw)) {
-      const words = normaliseText(clause).split(" ");
-      const at = words.findIndex((w, p) => (w === first || w.startsWith(stem)) && phraseIn(words.slice(p, p + kWords.length).join(" "), k));
-      if (at < 0) continue;
-      seen = true;
-      const before = words.slice(Math.max(0, at - 3), at).filter((x) => !/^(?:do|does|did|will|would|could|can|should|may|might|to|be|it|this|that)$/.test(x));
-      if (!(before.length > 0 && /^(?:not|never|no|cannot)$/.test(before[before.length - 1]!))) return false;
-    }
-    return seen;
-  }
-  // The key's first word in any of its forms, at any length ("kill" in "killed", "kills"; the B2 E author, 29 Sep 2026:
-  // a short first word had to match exactly).
-  const startsKey = (w: string) => w === first || (w.startsWith(stem) && INFLECTIONS.has(w.slice(stem.length))) || (w.length > stem.length + 1 && w.startsWith(`${stem}${stem.slice(-1)}`) && INFLECTIONS.has(w.slice(stem.length + 1)));
-  let found = false;
-  for (const clause of clausesOf(raw)) {
-    const c = normaliseText(clause);
-    if (!phraseIn(c, k)) continue;
-    found = true;
-    const words = c.split(" ");
-    // Every place the key word starts in the clause; where none can be pinned (an algebraic key), its first word.
-    let starts = words.map((_, p) => p).filter((p) => startsKey(words[p]!) && phraseIn(words.slice(p, p + kWords.length).join(" "), k));
-    if (starts.length === 0) starts = words.map((_, p) => p).filter((p) => startsKey(words[p]!)).slice(0, 1);
-    // A key that cannot be pinned in the clause is not read as negated: the clause's end would count the key's own
-    // words ("non" in "kill the non resistant") as a negation of it.
-    if (starts.length === 0) return false;
-    if (starts.some((at) => !governedAt(words, at))) return false;
-  }
-  return found;
 }
 
 /** Words too common to name a subject. */
@@ -437,19 +567,16 @@ const NOT_A_SUBJECT = new Set(["this", "that", "they", "them", "their", "there",
 
 /**
  * The words naming what a key word is said of, in the clauses that hold it: the content words before the key (four
- * letters or more, cut to their first four), negation words aside. "The shapes of B and C are not complementary" gives
+ * letters or more, cut to their first four), operator words aside. "The shapes of B and C are not complementary" gives
  * {shap}; "the comparison is fair" gives {comp}.
  */
 function subjectBefore(raw: string, key: string): Set<string> {
   const k = normaliseText(key);
-  const first = k.split(" ")[0] ?? "";
   const out = new Set<string>();
-  for (const clause of clausesOf(raw)) {
-    const c = normaliseText(clause);
-    if (!phraseIn(c, k)) continue;
-    const words = c.split(" ");
-    const at = words.findIndex((w) => w === first || w.startsWith(first.slice(0, Math.max(3, first.length - 2))));
-    for (const w of words.slice(0, at < 0 ? words.length : at)) if (w.length >= 4 && !NEGATION.test(w) && !NOT_A_SUBJECT.has(w)) out.add(w.slice(0, 4));
+  for (const words of normalisedClauses(raw)) {
+    if (!phraseIn(words.join(" "), k)) continue;
+    const at = keyStarts(words, key)[0] ?? -1;
+    for (const w of words.slice(0, at < 0 ? words.length : at)) if (w.length >= 4 && !OPERATOR.test(w) && !NOT_A_SUBJECT.has(w)) out.add(w.slice(0, 4));
   }
   return out;
 }
@@ -481,7 +608,12 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
     return { correct: false, marksAwarded: 0, marksAvailable, matchedGroups: [], rejected: [], feedback: "Type an answer first." };
   }
 
-  if (spec.accepted.some((a) => normaliseText(a) === answer)) {
+  // An accepted answer made of allele letters ("B and b", "Bb") is the accepted answer only with its letters' case: "B
+  // and B" is not the Bb pony's gametes (the B2 author, 8 Oct 2026).
+  const ALLELE_ANSWER = /^(?:([a-z])(?:\s*(?:and|or|,|\/)\s*\1)+|([a-z])\2)$/i;
+  const alleleCase = (a: string) => (ALLELE_ANSWER.test(a.trim()) ? [...(a.match(/[A-Za-z]/g) ?? [])].sort().join("") : null);
+  const rawLetters = [...(raw.match(/[A-Za-z]/g) ?? [])].sort().join("");
+  if (spec.accepted.some((a) => normaliseText(a) === answer && (alleleCase(a) === null || alleleCase(a) === rawLetters))) {
     return {
       correct: true,
       marksAwarded: marksAvailable,
@@ -498,56 +630,123 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   // A key word earns one group only. "Give two symptoms" is written as two groups with the same list, and a
   // single symptom must not collect both marks; two groups that merely overlap are handled the same way.
   const used = new Set<string>();
-  // A group's key word is in a piece of the answer as written or, for a hydrocarbon's condensed formula, from either end,
-  // and not only inside a negation. An entry written "cheaper|costs less" is one idea in several spellings.
   const model = [...spec.accepted, ...(opts.model ?? [])];
-  // Her negated key word earns where any model text negates it ("cannot deliver oxygen"). Her un-negated key word
-  // contradicts the point only where every model text that says it negates it: one accepted answer's "no air can get
-  // in" beside a worked solution's "keeps air away" leaves "air" a plain key word.
-  const negationWaived = (k: string) => model.some((m) => negatedIn(m, k));
-  // And only about the same subject: the model's "the number who became ill is not a fair comparison" says nothing
-  // against her "a percentage lets you compare fairly" (the B2 E author, 29 Sep 2026); "the shapes … are not
-  // complementary" does contradict her "their shape is complementary". A bare key word ("complementary") has no subject
-  // of its own and meets the model's.
-  const negationIsThePoint = (k: string, text?: string) => {
-    const saying = model.filter((m) => phraseIn(normaliseText(m), normaliseText(k)));
-    if (saying.length === 0 || !saying.every((m) => negatedIn(m, k) && negatesKeyItself(m, k))) return false;
+  const entriesOf = (g: TextSpec["keyWords"][number]) => g.any.flatMap((entry) => entry.split("|"));
+  const hasOperator = (t: string) => normaliseText(t).split(" ").some((w) => OPERATOR.test(w));
+  /**
+   * The group's point is a harm avoided, a quantity reduced or a fact denied: one of its entries says so ("cannot carry
+   * oxygen", "carry less oxygen", "not on the streak"), or the model says so of one of them ("to stop microorganisms
+   * from the air landing", "to avoid growing pathogens", "so they do not contaminate"). On such a point her plain
+   * mention names the risk and earns (E-NEG-POINT), and so do her avoidance and her reduction; her denial of the
+   * avoidance ("does not reduce contamination") does not.
+   */
+  const avoidedGroups = new Map<number, boolean>();
+  const groupAvoided = (i: number, g: TextSpec["keyWords"][number]): boolean => {
+    let v = avoidedGroups.get(i);
+    if (v === undefined) {
+      const entries = entriesOf(g);
+      v = entries.some(hasOperator) || entries.some((e) => model.some((m) => polarities(m, e).some((p) => p.polarity !== "plain")));
+      avoidedGroups.set(i, v);
+    }
+    return v;
+  };
+  /**
+   * The model negates the key word itself ("their shapes are not complementary", "so they do not contaminate"): the
+   * negation is the point both ways: her negated key earns, her plain one contradicts. And only about the same
+   * subject: the model's "the number who became ill is not a fair comparison" says nothing against her "a percentage
+   * lets you compare fairly" (the B2 E author, 29 Sep 2026). A bare key word has no subject of its own and meets the
+   * model's.
+   */
+  const negationIsThePoint = (k: string, text?: string): boolean => {
+    const kn = normaliseText(k);
+    const saying = model.filter((m) => phraseIn(normaliseText(m), kn));
+    if (saying.length === 0) return false;
+    // Every place the model says the key is governed, and one of them is the key itself under a plain negator
+    // (negatesKeyItself): an avoidance next to it ("stop microorganisms from the air landing") names a harm, not a negation.
+    if (!saying.every((m) => negatesKeyItself(m, k) && polarities(m, k).every((p) => p.polarity === "negated" || p.polarity === "avoided"))) return false;
     if (text === undefined) return true;
     const hers = subjectBefore(text, k);
     if (hers.size === 0) return true;
     return saying.some((m) => [...subjectBefore(m, k)].some((w) => hers.has(w)));
   };
-  // A group whose point is a harm avoided or a thing reduced waives her negation for every one of its words: the model
-  // negates one of them ("to avoid growing pathogens" waives "to stop harmful bacteria growing"), or one of its own
-  // entries is itself a negation or a reduction ("cannot carry oxygen", "carry less oxygen" waive "stops … carrying
-  // oxygen"; the B2 E author and the C2 D author, 29 Sep 2026).
-  // An entry's own negation waives only a key about the same thing ("cannot carry oxygen" for "carrying oxygen", never
-  // "antibiotics do not work" for "resistant": "they are not resistant" is the opposite of the point).
-  const stems = (t: string) => normaliseText(t).split(" ").filter((w) => w.length >= 4 && !NEGATION.test(w)).map((w) => w.slice(0, 4));
-  const groupWaived = (g: TextSpec["keyWords"][number], k: string) => {
-    const entries = g.any.flatMap((entry) => entry.split("|"));
-    if (entries.some((e) => negationWaived(e))) return true;
-    const mine = stems(k);
+  const pointKind = (i: number, g: TextSpec["keyWords"][number], k: string, text: string): "negated" | "avoided" | "plain" =>
+    negationIsThePoint(k, text) ? "negated" : groupAvoided(i, g) ? "avoided" : "plain";
+  /**
+   * Her negated key on an avoided point earns in two cases: an entry of the group is that very negation ("not on the
+   * streak" for her "no colonies on the streak"; "cannot carry oxygen" for her "not carrying oxygen"), read word for word
+   * with the operator words and determiners off; or the event she denies is the event the model avoids ("no harmful
+   * bacteria can grow" against "to avoid growing pathogens": both name growing). A key that is itself a reduction or an
+   * avoidance ("reduce contamination", "carry less oxygen") denied by her "not" is a denial, never waived.
+   */
+  const waived = (g: TextSpec["keyWords"][number], k: string, hers: readonly Governor[]): boolean => {
+    if (hasOperator(k)) return false;
+    const strip = (t: string) => normaliseText(t).split(" ").filter((w) => !OPERATOR.test(w) && !DETERMINER.test(w));
+    const stem = (w: string) => (w.length <= 3 ? w : w.slice(0, 4));
+    const same = (a: string[], b: string[]) => a.length === b.length && a.every((w, i) => stem(w) === stem(b[i]!));
+    const mine = strip(k);
+    const entries = entriesOf(g);
+    // Exactly one operator in the entry: "non resistant bacteria cannot survive" negates the resistance and the
+    // surviving both, and is not her "non-resistant bacteria survived" (b2-natural-selection .0011(b)).
+    const operators = (t: string) => normaliseText(t).split(" ").filter((w) => OPERATOR.test(w)).length;
+    if (entries.some((e) => operators(e) === 1 && same(strip(e), mine))) return true;
+    // The point is a plain negation the model states of a sibling word of the group ("their shapes are not
+    // complementary" for the group "shape|complementary"): her negation of the sibling ("the active site is not the
+    // right shape") says the same. Only a plain negator in the model, never an avoidance ("to avoid growing pathogens"
+    // makes her "do not cause disease" no point), and only of an entry that carries no operator of its own.
+    if (entries.some((e) => !hasOperator(e) && model.some((m) => negatesKeyItself(m, e) && polarities(m, e).some((p) => p.polarity === "negated")))) return true;
+    const content = (ws: readonly string[], except: readonly string[]) => new Set(ws.filter((w) => w.length >= 4 && !OPERATOR.test(w) && !except.includes(w) && !NOT_A_SUBJECT.has(w)).map(stem));
+    const kw = normaliseText(k).split(" ");
+    const herEvents = new Set(hers.filter((h) => h.polarity === "negated").flatMap((h) => [...content(h.reach, kw)]));
+    if (herEvents.size === 0) return false;
     return entries.some((e) => {
-      const words = normaliseText(e).split(" ");
-      if (!words.some((w) => NEGATION.test(w) || w === "less" || w === "fewer")) return false;
-      const theirs = stems(e);
-      return mine.length > 0 && mine.every((s) => theirs.includes(s));
+      const ew = normaliseText(e).split(" ");
+      return model.some((m) => polarities(m, e).some((p) => p.polarity !== "plain" && [...content(p.reach, ew)].some((s) => herEvents.has(s))));
     });
   };
-  const hits = (text: string, g: TextSpec["keyWords"][number]) => {
-    const norm = normaliseText(text);
-    const waivedFor = (k: string) => groupWaived(g, k);
-    return g.any.filter((entry) =>
-      entry
-        .split("|")
-        // Where the model negates the key word, the negation is the point both ways: her negated key earns, and her
-        // un-negated one does not ("complementary" where the model says "not complementary"; the verifier, 29 Sep 2026).
-        // A key that is itself a reduction ("reduce contamination") is never waived: her "not" before it is a denial.
-        .some((k) => (phraseIn(norm, normaliseText(k)) && (negationIsThePoint(k, text) ? negatedIn(text, k) : !negatedIn(text, k) || (!normaliseText(k).split(" ").some((w) => VERB_NEGATION.test(w)) && waivedFor(k)))) || hydrocarbonIn(text, k)),
-    );
+  /** Does the key word, as she wrote it, say what the group's point says? */
+  const keyEarns = (text: string, i: number, g: TextSpec["keyWords"][number], k: string): boolean => {
+    if (!phraseIn(normaliseText(text), normaliseText(k))) return false;
+    const ps = polarities(text, k);
+    // A key that cannot be pinned (an algebraic key, a spelling normalised apart) is read as written.
+    if (ps.length === 0) return true;
+    const kind = pointKind(i, g, k, text);
+    if (kind === "negated") return ps.every((p) => p.polarity === "negated" || p.polarity === "avoided");
+    if (kind === "avoided") return ps.some((p) => p.polarity === "plain" || p.polarity === "reduced" || p.polarity === "avoided") || (ps.some((p) => p.polarity === "negated") && waived(g, k, ps));
+    return ps.some((p) => ASSERTS.has(p.polarity));
   };
-  const rejectHits = (text: string, r: string) => phraseIn(normaliseText(text), normaliseText(r), REJECT_INFLECTIONS) && !negatedIn(text, r);
+  // A group's key word is in a piece of the answer as written or, for a hydrocarbon's condensed formula, from either end,
+  // and says what the point says. An entry written "cheaper|costs less" is one idea in several spellings.
+  /**
+   * A key word made of allele letters (single letters joined by and/or/comma, or an allele pair such as Bb) is matched
+   * case-sensitively against the accepted answers' letters, in either order and with any joiner: B and b is the Bb
+   * pony's gametes, B and B is not (the B2 author, 8 Oct 2026; CCEA's 2024 Foundation scheme). Ordinary words stay
+   * case-insensitive. A key with no cased accepted answer behind it is read as before.
+   */
+  // An allele key is one letter in two cases or repeated (Bb, bb, BB, Tt), or single letters of that one letter joined
+  // by and/or/comma ("B and b"); two different letters ("YZ", "BC") are a name and stay case-insensitive (the M8 author,
+  // 8 Oct 2026: "YZ" lost its key word to this rule).
+  const ALLELE_KEY = /^(?:([a-z])(?:\s*(?:and|or|,|\/)\s*\1)+|([a-z])\2)$/i;
+  const alleleLetters = (t: string, pair: boolean): string | null => {
+    const found = pair ? t.match(/\b[A-Za-z]{2}\b/g) : t.match(/\b[A-Za-z]\b/g);
+    if (!found) return null;
+    return [...found.join("")].sort().join("");
+  };
+  const alleleCaseOk = (text: string, k: string): boolean => {
+    if (!ALLELE_KEY.test(k.trim())) return true;
+    const pair = /^[a-z]{2}$/i.test(k.trim());
+    const kn = normaliseText(k);
+    const cased = spec.accepted.filter((a) => phraseIn(normaliseText(a), kn) || (pair && normaliseText(a) === kn)).map((a) => alleleLetters(a, pair)).filter((x): x is string => x !== null);
+    if (cased.length === 0) return true;
+    const mine = alleleLetters(text, pair);
+    return mine !== null && cased.includes(mine);
+  };
+  const hits = (text: string, i: number, g: TextSpec["keyWords"][number]) => g.any.filter((entry) => entry.split("|").some((k) => (keyEarns(text, i, g, k) || hydrocarbonIn(text, k)) && alleleCaseOk(text, k)));
+  // A reject word cancels where she asserts it; under her own "not" it is no reject ("doesn't lower cholesterol").
+  const rejectHits = (text: string, r: string) => {
+    if (!phraseIn(normaliseText(text), normaliseText(r), REJECT_INFLECTIONS)) return false;
+    const ps = polarities(text, r);
+    return ps.length === 0 || ps.some((p) => ASSERTS.has(p.polarity));
+  };
   // A hedge that offers a named wrong answer beside a right one: CCEA's general marking instructions (C2 Higher MS
   // Summer 2021) "Additional incorrect responses cancel out a correct response". The groups the hedge's other
   // alternatives earn are cancelled; a reject word counts as a named wrong answer here as it does everywhere.
@@ -563,7 +762,7 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
     return numbers.length > 0 && modelNumbers.size > 0 && numbers.every((n) => !modelNumbers.has(n));
   };
   const isWrong = (p: string) =>
-    !groups.some((g) => hits(p, g).length > 0) &&
+    !groups.some((g, i) => hits(p, i, g).length > 0) &&
     ((opts.wrongAnswers ?? []).some((re) => !(re.source.startsWith("^") && re.source.endsWith("$")) && re.test(p)) ||
       groups.some((g) => (g.reject ?? []).some((r) => rejectHits(p, r))) ||
       wrongValue(p));
@@ -577,7 +776,7 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
       const clauses = p.split(/[.;,]|\b(?:and|so|then|therefore|giving)\b/i).filter((c) => c.trim().length > 0);
       const beside = wrong.every(wrongValue) && clauses.length > 1 ? clauses[clauses.length - 1]! : p;
       groups.forEach((g, i) => {
-        if (hits(beside, g).length > 0) {
+        if (hits(beside, i, g).length > 0) {
           cancelled.add(i);
           cancelledBy ??= wrong[0]!;
         }
@@ -591,7 +790,7 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
   const sameIdea = (k: string) => [...used].some((u) => u === k || u.split("|").some((a) => k.split("|").some((b) => phraseIn(a, b))));
   groups.forEach((g, i) => {
     // The longest idea first, so a short word inside it cannot be paid again by the next group.
-    const hit = hits(raw, g)
+    const hit = hits(raw, i, g)
       .map(normaliseText)
       .sort((a, b) => b.length - a.length)
       .find((k) => !sameIdea(k));
@@ -600,9 +799,7 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
     // A key word the model negates, written by her without the negation, contradicts the point: the group is not paid
     // by another of its words ("their shape is complementary" where the model says "not complementary" earned the group
     // through "shape"; the verifier, 29 Sep 2026).
-    const contradicted = g.any.some((entry) =>
-      entry.split("|").some((k) => negationIsThePoint(k, raw) && phraseIn(normaliseText(raw), normaliseText(k)) && !negatedIn(raw, k)),
-    );
+    const contradicted = g.any.some((entry) => entry.split("|").some((k) => negationIsThePoint(k, raw) && polarities(raw, k).some((p) => ASSERTS.has(p.polarity))));
     if (hit !== undefined && bad.length === 0 && !cancelled.has(i) && !contradicted) {
       used.add(hit);
       matchedGroups.push(i);
@@ -631,7 +828,7 @@ export function markText(raw: string, spec: TextSpec, opts: MarkTextOptions = {}
     // incorrect responses"): the penalty is the extra items that earn no group, at most the extra count.
     const items = listedItems(raw);
     if (items.length > groups.length) {
-      const wrong = items.filter((it) => !groups.some((g) => hits(it, g).length > 0)).length;
+      const wrong = items.filter((it) => !groups.some((g, i) => hits(it, i, g).length > 0)).length;
       penalty = Math.min(marks, items.length - groups.length, wrong);
     }
   }

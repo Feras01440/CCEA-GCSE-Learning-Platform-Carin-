@@ -489,6 +489,9 @@ const UNIT_TABLE: Record<string, UnitInfo> = {
   kPa: { dim: "pressure", factor: [1000, 1] },
   "°": { dim: "angle", factor: [1, 1] },
   "°C": { dim: "temperature", factor: [1, 1] },
+  // Fahrenheit is its own scale (an affine change from Celsius, never a factor): a value in °F is read, never converted
+  // (the FM3 author, 8 Oct 2026: "71.12°F" could not be read where "21.73°C" reads).
+  "°F": { dim: "temperature-f", factor: [1, 1] },
   "%": { dim: "percent", factor: [1, 1] },
 };
 
@@ -549,6 +552,8 @@ const UNIT_ALIASES: Array<[RegExp, string]> = [
   // Celsius as a keyboard allows it (B2E-02, 24 Sep 2026): "25oC" and "25 ºC" (the ordinal º sits where ° should)
   // and the word alone. A bare "C" is the coulomb below; reconcileUnits reads it as °C against a temperature key.
   [/^(?:[°º] ?c|oc|degrees? ?c(?:elsius)?|deg ?c|degrees? centigrade|celsius|centigrade)$/i, "°C"],
+  // Fahrenheit the same way (the FM3 author, 8 Oct 2026); a bare "F" stays whatever it is elsewhere.
+  [/^(?:[°º] ?f|degrees? ?f(?:ahrenheit)?|deg ?f|fahrenheit)$/i, "°F"],
   // After the Celsius spellings, so "°C" and "degrees C" stay temperatures (P2D-R1).
   [/^(?:c|coulombs?)$/i, "C"],
   // Case-sensitive: "mc" is not a unit anyone types for a millicoulomb, and "KC" is not a kilocoulomb.
@@ -939,6 +944,13 @@ function stripPrefixes(s: string): string {
   // "The answer is 7", "it is 5 m", "so it's 12": the sentence around the number.
   t = t.replace(/^(?:(?:so|therefore|hence|thus)\s+)?(?:the (?:answer|result|total|value)|it|it's|this)\s+(?:is\s+)?(?=[-+£$€]?\d)/i, "");
   t = t.replace(/^[≈~]\s*/, "");
+  // A statistics label in TeX ("\sum fx", "\bar{x}", "\sigma") read as its symbol, so the label rules below see it as
+  // "Σfx", "x̄", "σ" (the FM3 author, 7 Oct 2026: the FM3 schemes print these labels, 2022 Q3 and 2024 Q1, and
+  // "Σfx² = 10675" scored 0 as unreadable).
+  t = t
+    .replace(/^\\(?:sum|Sigma)\s*/, "Σ")
+    .replace(/^\\bar\{?([A-Za-z])\}?/, "$1̄")
+    .replace(/^\\sigma\b\s*/, "σ ");
   // "x = ", "y=", "n = ", "= ", and a Greek letter ("θ = 31.89", "λ = 0.03 m"; the FM2 and P2 reviews, 27 Sep 2026).
   t = t.replace(/^[a-zA-Zα-ωΑ-Ω]\s*[=≈]\s*/, "");
   // A multiple of a symbol, the scheme's own line ("3R = 112.5" for the reaction 3R): the value it states.
@@ -955,8 +967,12 @@ function stripPrefixes(s: string): string {
   return t.trim();
 }
 
-/** A word of a quantity's name: letters with an optional subscript ("M_r", "M_{r}"), or a formula ("C2H3Cl"). */
-const NAME_WORD = String.raw`(?:[A-Za-z]+(?:_\{?[A-Za-z0-9]+\}?)?|(?:[A-Z][a-z]?\d*){1,8})`;
+/**
+ * A word of a quantity's name: letters with an optional subscript ("M_r", "M_{r}"), or a formula ("C2H3Cl"). A statistics
+ * label is a name too: a Greek letter may start or be the word ("Σfx", "σ"), a macron may sit on a letter ("x̄"), and
+ * a squared sum keeps its power ("Σfx²", "Σfx^2"; the FM3 author, 7 Oct 2026).
+ */
+const NAME_WORD = String.raw`(?:[A-Za-zα-ωΑ-Ω][A-Za-zα-ωΑ-Ω̄̅]*(?:_\{?[A-Za-z0-9]+\}?)?(?:[²³]|\^\{?\d\}?)?|(?:[A-Z][a-z]?\d*){1,8})`;
 const NAME_LABEL_RE = new RegExp(String.raw`^(${NAME_WORD}(?:\s+${NAME_WORD}){0,5})\s*[=≈]\s*`);
 /** Words that make the text before "=" working or a list, not a name. */
 const NOT_A_NAME = new Set(["sin", "cos", "tan", "log", "ln", "lg", "sqrt", "exp", "arcsin", "arccos", "arctan", "or", "and"]);
@@ -1138,6 +1154,7 @@ function looseUnitKey(unit: string): string {
     // "Ω" lower-cases to "ω"; the word is the same unit (P2D-R2).
     .replace(/\b(?:ohms?)\b/g, "ω")
     .replace(/\b(?:degrees? (?:celsius|c))\b/g, "°c")
+    .replace(/\b(?:degrees? (?:fahrenheit|f))\b/g, "°f")
     .replace(/\bcubic (cm|m|mm|dm)\b/g, "$1³")
     .replace(/\b(cm|m|mm|dm)(?:3|\^3)\b/g, "$1³")
     .replace(/\b(cm|m|mm|km)(?:2|\^2)\b/g, "$1²")
@@ -1152,9 +1169,16 @@ function looseUnitKey(unit: string): string {
     .replace(/^\/\s*/, "1/");
 }
 
-/** Words that deny, bound or hedge the value after them: never a label to strip. */
-const VALUE_WORDS =
-  /(?:^|(?<![\d)])\s|[(,:=])(?:not|no|never|below|under|over|above|more than|less than|greater than|fewer than|at least|at most|up to|exceeds?|except)\s+[-+−£$€]?\d/i;
+/**
+ * Words before a number that deny or bound it ("not 450 C", "below 6.5", "over 6.5", "more than 3", "at least 450":
+ * the verifier, 29 Sep 2026, found each stripped as a label and paid), compute with it ("half of 30", "double 4"),
+ * list it ("between 3 and 4") or open a reason ("because it is 24"): never the value's name, so the number after them
+ * is no value at all. They are read only on the text the value is read from, after the clause, reason and bracket
+ * logic: "30, because 31 crates would be over 710 kg" is 30 (the build-9 gate, class 4), and "More than 60 g: 80 −
+ * 65 = 15 eggs" bounds a label, not the answer. "3 over 4" starts with its number; "about 13" is the value.
+ */
+const NOT_A_VALUE_NAME =
+  /^(?:half|halve|halves|double|doubled|twice|thrice|third|thirds|quarter|quarters|square|squared|cube|cubed|root|sqrt|exp|approx|about|times|minus|plus|less|more|over|under|sum|product|difference|divided|multiplied|percent|per|to|from|and|or|nor|between|either|neither|not|no|never|below|above|least|most|exceeds?|except|than|because|since|whereas|although|unless|if|when|while)$/i;
 
 function parseNumericInner(input: string): ParsedNumber | null {
   if (typeof input !== "string") return null;
@@ -1166,14 +1190,28 @@ function parseNumericInner(input: string): ParsedNumber | null {
   // 450 C", "below 6.5", "over 6.5", "more than 3") makes it no value at all: the verifier, 29 Sep 2026, found each
   // stripped as a label and paid. "3 over 4" is a fraction's over, not a bound; "about 13" is the value (its probe).
   s = s.replace(/(^|[\s(=:,])(?:minus|negative)\s+(?=\d)/gi, "$1-").replace(/(^|[\s(=:,])(?:plus|positive)\s+(?=\d)/gi, "$1+");
-  // Only where no working follows: "More than 60 g: 80 - 65 = 15 eggs" bounds a label, not the answer.
-  if (!/[=≈]/.test(s) && VALUE_WORDS.test(s)) return null;
+  // "degrees F" is the Fahrenheit unit, as "degrees C" is Celsius; read before a lone capital after a unit word can be
+  // taken for a label (the FM3 author, 8 Oct 2026).
+  s = s.replace(/\b(?:degrees?|deg)\s+f(?:ahrenheit)?\b/gi, "°F");
   s = stripPrefixes(s);
   if (s === "") return null;
   {
     const word = NUMBER_WORDS.get(s.toLowerCase());
     if (word !== undefined) s = String(word);
   }
+  // Four readings the B2 E author found refused (7 Oct 2026), each a right value as a student writes it:
+  //  - a rate's stated base is the stem's own denominator, not a second value: "34 per 10 000", "34 per 10000 patients";
+  //  - a number word after a label is the number, so the label comes off below: "week ten";
+  //  - a unit word in brackets after the value is the unit: "10 (weeks)";
+  //  - a unit word glued to the number is the unit: "10units", "7units".
+  s = s.replace(/^([-+]?\d[\d.]*(?:\s*[A-Za-z%]+)?)\s+per\s+\d[\d ,]*(?:\s+[A-Za-z]+)?$/i, "$1").trim();
+  {
+    const m = /^((?:[A-Za-z]{2,12}\s+){1,3})([a-z]+)$/i.exec(s);
+    const word = m ? NUMBER_WORDS.get(m[2]!.toLowerCase()) : undefined;
+    if (m && word !== undefined) s = `${m[1]}${word}`;
+  }
+  s = s.replace(/^([-+]?\d[\d.,]*)\s*\(\s*([A-Za-z]{2,})\s*\)$/, "$1 $2");
+  s = s.replace(/^([-+]?\d+(?:\.\d+)?)([a-z]{3,})$/i, "$1 $2");
   // What a typed answer carries around its number (the P2 C and P2 D reviews, 25–27 Sep 2026):
   //  - a reason after it: "5 A because the current is the same", "R = 24 Ω, because 1/R = …": the part before;
   //  - its unit in brackets, "36 (C)", or a restatement in brackets, "4800 seconds (80 minutes)": the unit is read,
@@ -1245,6 +1283,10 @@ function parseNumericInner(input: string): ParsedNumber | null {
         }
       } else if (/\s[a-z]+\s/i.test(` ${inner} `) && inner.split(/\s+/).length >= 2) s = bracket[1]!;
     }
+    // A denied alternative after the value ("450 C, not 7.5 C", "16 seconds, not 8") is not a second answer, and a
+    // remark after it with no number in it ("6.5 °C, the temperature went up not down") comes off.
+    s = s.replace(/,\s*(?:not|never|rather than|instead of)\b[^,]*$/i, "").trim();
+    s = s.replace(/^(\S.*\d[^,]*),\s*[A-Za-z][^\d,]*$/, "$1").trim();
     s = s.replace(/^(?:a|an|the)\s+(?=[-+£$€]?\d)/i, "");
     const hm = /^(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h)\s*(?:and\s+)?(\d+(?:\.\d+)?)\s*(?:minutes?|mins?|min)$/i.exec(s);
     if (hm) s = `${Number(hm[1]) * 60 + Number(hm[2])} min`;
@@ -1260,11 +1302,15 @@ function parseNumericInner(input: string): ParsedNumber | null {
     // A fraction's name after it ("one half", "three quarters") is a fraction, not a count of things.
     if (m && word !== undefined && !/^\s*(?:halfs?|halves|thirds?|quarters?|fourths?|fifths?|sixths?|sevenths?|eighths?|ninths?|tenths?|fold)\b/i.test(m[2]!)) s = `${word}${m[2]}`;
   }
-  // The stem's noun before the number ("gap 8", "in gap 8", "day 28", "on day 0"): the number is the answer. A
-  // function ("log 5", "sin 30") is working, not a noun, and one letter is a variable ("x 5").
+  // The words naming the value before its number ("gap 8", "on day 28", "a rise of 6.5 °C", "it went up by 6.5", "the
+  // mean is 24.7 mm", "a fall of 64.3%"; the B2 E author's E-WORD-BEFORE-NUMBER and the verifier's A block, 29 Sep
+  // 2026): up to five words of letters come off. A function ("log 5", "sin 30") is working, not a name; one letter is
+  // a variable ("x 5"); a word that computes with the number ("half of 30", "double 4") or lists it ("between 3 and 4")
+  // is not its name, nor is a word that denies or bounds it ("not 450 C", "over 6.5", "at least 450").
   {
-    const m = /^(?:(?:in|on|at|by)\s+)?([A-Za-z]{2,12})\s+(?=[-+]?\d)/i.exec(s);
-    if (m && !NOT_A_NAME.has(m[1]!.toLowerCase()) && !/^(?:root|sqrt|exp|approx|about)$/i.test(m[1]!)) s = s.slice(m[0].length);
+    const m = /^(?:(?:in|on|at|by|a|an|the|it|its)\s+)?((?:[A-Za-z]{2,12}\s+){1,5})(?=[-+]?\d)/i.exec(s);
+    const words = m ? m[1]!.trim().split(/\s+/) : [];
+    if (m && !words.some((w) => NOT_A_NAME.has(w.toLowerCase()) || NOT_A_VALUE_NAME.test(w))) s = s.slice(m[0].length);
   }
   // A magnification or a multiplier: "x6", "×6", "6x", "6×", "6-fold", "6 times". The number, with "×" as its unit, so
   // a unit-free key reads it and a letter the question uses as a variable ("6x" where x is one) is still refused.

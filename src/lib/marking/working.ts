@@ -42,6 +42,12 @@ export interface MethodStep {
   /** Every line that can evidence it: the mark point's own wording (each alternative separately), its
    *  authored `accept` spellings, and the worked-solution line paired with it when that is unambiguous. */
   evidence: string[];
+  /**
+   * The maths the point's wording names before its result ("x² − 5 = x − 3" before "x² − x − 2 = 0"): a line that only
+   * restates the result meets the point when it holds each of these whole ("(x + 1)(x − 2)" inside the fraction over
+   * it) and not otherwise. Prose, an example, a lone bracket and the fraction the point ends on are not named.
+   */
+  named: string[];
 }
 
 export interface EarnedMark {
@@ -218,9 +224,62 @@ function mathsFragments(pointText: string): string[] {
       if (substantial(example)) out.push(`${EXAMPLE}${example}`);
       continue;
     }
-    if (substantial(top)) out.push(top);
+    // A two-letter joining word inside a run ("(x/2)², or 9 as 3²") joins two pieces of maths, so each is read on its
+    // own; a piece too short to be working ("9", "3²") is dropped as ever (the corpus guard, 29 Sep 2026: the run was
+    // one unreadable fragment, and the point was paid for the question's own x²/4 instead).
+    for (const piece of top.split(/[\s,;]+(?:or|by|to|of|as|at|in|is|on|if)\b[\s,;:]+/i)) {
+      const t = piece.trim();
+      // An equation that opens with a joining sign ("+ 90 = 180", the author's shorthand for the equation with its start
+      // elided) is not working on its own: another part's "115 + 65 = 180" was paid through it (guard v12). An
+      // expression that opens with one ("× (x − 1)/(x + 4)", the fraction inverted) is the piece the point names.
+      if (substantial(t) && !(/^[+×÷*/]/.test(t) && /=/.test(t))) out.push(t);
+    }
   }
   return out;
+}
+
+/**
+ * A point that asks for an expression fully factorised, written "⊗3x^2-3x" in a point's `accept` (mark.ts twinScheme):
+ * a line, a side of it or the top or bottom of a fraction in it that is a factorised form of that expression.
+ */
+export const FACTORISED = "⨂";
+
+/** One scheme point with the lines that evidence it. */
+function stepOf(p: MarkPoint, workedSolution: string): MethodStep {
+  const cleaned = cleanStepText(p.for);
+  const evidence = new Set<string>(alternatives(cleaned.text));
+  for (const a of cleaned.accepts) evidence.add(a);
+  for (const a of p.accept ?? []) {
+    const c = a.startsWith(FACTORISED) ? a : cleanStepText(a).text;
+    if (c.length > 0) evidence.add(c);
+  }
+  // A point for a factorisation ("numerator factorised: 2(x + 3)(x − 2)", "denominator factorised fully: 4(x + 2)(x − 2)")
+  // is met only by a factorised line: an equal expression with the factors still multiplied out ("2(x² + x − 6)") is
+  // not that step (the verifier, 29 Sep 2026: "only the 2 taken out" was paid the factorising mark by equivalence).
+  // A quotient ("(x + 4)(x − 4) ÷ (x + 4)", a point that uses a factorisation) is not an expression to be factorised.
+  const factorising = /\bfactori[sz]/i.test(cleaned.text);
+  // The maths a point transforms is its input, not its working: "(x + 2)² − 25" before "multiplied out to x² + 4x − 21"
+  // is the question's own numerator, and "x(x − 1) + 2(x + 3)" before "collected to x² + x + 6" is the step before this
+  // one. An equation before "leading to" ("πr² = 18π") is a line of working and stays (the corpus guard, 29 Sep 2026:
+  // the numerator typed back, reordered, earned the multiplying-out mark).
+  const input = (f: string) =>
+    !f.startsWith(EXAMPLE) &&
+    !f.includes(OVER) &&
+    !/=/.test(f) &&
+    // "written as" and "rewritten as" transform; "written down" is the point itself ("(x + 4)(x + 9) written down").
+    new RegExp(`${f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*,?\\s*(?:multiplied|expanded|factori[sz]ed|simplified|(?:re)?written\\s+as|collected|combined|becomes|leading|leads|divided|rearranged)\\b`, "i").test(cleaned.text);
+  const fragments = mathsFragments(cleaned.text).filter((f) => !input(f));
+  for (const f of fragments) {
+    const bare = f.replace(/^\$|\$$/g, "");
+    evidence.add(factorising && !f.includes(OVER) && !f.startsWith(EXAMPLE) && !/[=÷/]|\\div|\\d?frac/.test(bare) && /[A-Za-z]/.test(bare) && /[()]/.test(bare) ? `${FACTORISED}${bare}` : f);
+  }
+  const line = workedSolution ? solutionLineFor({ for: cleaned.text }, workedSolution) : null;
+  if (line) evidence.add(line);
+  const named = fragments
+    .slice(0, -1)
+    .map((f) => f.replace(/^\$|\$$/g, ""))
+    .filter((f) => !f.startsWith(EXAMPLE) && !f.includes(OVER) && substantial(f) && !/[A-Za-z]{3,}/.test(f.replace(FUNCTION_WORDS, " ")));
+  return { id: p.id, code: `${p.code}${p.marks}`, marks: p.marks, for: cleaned.text, evidence: [...evidence], named };
 }
 
 /**
@@ -229,21 +288,138 @@ function mathsFragments(pointText: string): string[] {
  * line is taken, because a line put under the wrong mark point would pay for a mark she has not earned.
  */
 export function methodSteps(scheme: readonly MarkPoint[], workedSolution = ""): MethodStep[] {
-  return scheme
-    .filter((p) => METHOD_CODE.test(p.code))
-    .map((p) => {
-      const cleaned = cleanStepText(p.for);
-      const evidence = new Set<string>(alternatives(cleaned.text));
-      for (const a of cleaned.accepts) evidence.add(a);
-      for (const a of p.accept ?? []) {
-        const c = cleanStepText(a).text;
-        if (c.length > 0) evidence.add(c);
-      }
-      for (const f of mathsFragments(cleaned.text)) evidence.add(f);
-      const line = workedSolution ? solutionLineFor({ for: cleaned.text }, workedSolution) : null;
-      if (line) evidence.add(line);
-      return { id: p.id, code: `${p.code}${p.marks}`, marks: p.marks, for: cleaned.text, evidence: [...evidence] };
-    });
+  return scheme.filter((p) => METHOD_CODE.test(p.code)).map((p) => stepOf(p, workedSolution));
+}
+
+/**
+ * The scheme's final point when it is an accuracy point (A or B), which `methodSteps` leaves off: the line the working
+ * must reach on a "show that", where the answer box is nothing and every mark is the working's (the build-9 gate,
+ * class 3). It is earned only after every point before it (`markWorking`).
+ */
+function finalStep(scheme: readonly MarkPoint[], workedSolution: string): MethodStep | null {
+  const last = scheme[scheme.length - 1];
+  // Only after a method point: a scheme of accuracy points alone has no working to reach its answer through.
+  if (!last || METHOD_CODE.test(last.code) || !/^[AB]/.test(last.code) || !scheme.some((p) => METHOD_CODE.test(p.code))) return null;
+  const step = stepOf(last, workedSolution);
+  // The worked solution's final result is the line to reach, however the point words it ("the printed result reached").
+  const tail = solutionTail(workedSolution);
+  if (tail !== null && !step.evidence.includes(tail)) step.evidence.push(tail);
+  return step;
+}
+
+/** The last side of the worked solution's last chain, with the prose after it cut off ("4n^2 - 36 square centimetres, as required"). */
+function solutionTail(workedSolution: string): string | null {
+  const lines = workingLines(workedSolution);
+  const tail = lines[lines.length - 1];
+  if (tail === undefined) return null;
+  // A comma reads as a wide gap once the line is tidied ("3√2 cm  as printed"), so a gap ends the maths as a comma does;
+  // a lead-in before the maths ("So the integral is …") comes off.
+  const side = (tail.split(/[=≈]/).pop() ?? "")
+    .replace(/\$/g, "")
+    .split(/[,;]|\s{2,}/)[0]!
+    .replace(LEAD_IN, "")
+    // Prose after the maths comes off; a TeX command ("\frac", "\sqrt") is maths, not a word (29 Sep 2026: a last line
+    // ending in a \frac gave no tail at all, so the answer in that spelling was never the result restated).
+    .replace(/\s*\b(?<!\\)(?!(?:sin|cos|tan|log|ln)\b)[A-Za-z]{3,}\b[\s\S]*$/, "")
+    .trim();
+  return side.length > 0 && /[\dA-Za-z]/.test(side) ? side : null;
+}
+
+/**
+ * The links of a chain written on one line: "a = b = c" is "a = b" and "b = c". A label before the first side stays
+ * with it ("V = (1/3)π(6)²(15) = 565" gives "V = (1/3)π(6)²(15)" and "(1/3)π(6)²(15) = 565"). A line of two sides has
+ * no links beyond itself.
+ */
+function chainLinks(line: string): string[] {
+  if (/\n/.test(line)) return [];
+  const sides = line.split(/\s*[=≈]\s*/).map((s) => s.trim());
+  if (sides.length < 3 || sides.some((s) => s.length === 0)) return [];
+  const links: string[] = [];
+  for (let i = 0; i + 1 < sides.length; i += 1) links.push(`${sides[i]} = ${sides[i + 1]}`);
+  return links;
+}
+
+/**
+ * A lead-in before the maths ("so the answer is …", "answer: …", "so VP is 25 cm", "so the single logarithm is log 8x³"):
+ * words with no maths in them, up to a number, a bracket, a sign, a root, a function or a letter that is maths.
+ */
+const LEAD_IN = /^(?:(?!(?:sin|cos|tan|log|ln)\b)[A-Za-z]+[\s,:]+){1,5}(?=[\d(\-−√\\]|(?:sin|cos|tan|log|ln)\b|[A-Za-z](?:\^|\s*[=+\-−×÷*/]))/;
+
+/**
+ * Her chain arrives at the point's result: the last side of "r = √18 = √9 × √2 = 3√2" is "3√2", the last side of
+ * "4x² + 28x + 49 − 4x² = 28x + 49" is "28x + 49". The evidence must be a bare expression or value (no "=") and her
+ * line a chain; the sides are compared as maths keys, units off.
+ */
+function arrivesAt(typed: string, evidence: string): boolean {
+  if (/=/.test(evidence)) return false;
+  const plain = workingLines(typed).join(" ");
+  const sides = plain.split(/[=≈]/);
+  if (sides.length < 2) return false;
+  // The last side, its prose cut off after the maths ("60 wristbands", "130 times greater", "32.14 N, downwards").
+  const tail = sides[sides.length - 1]!.replace(/[,;].*$/, "").replace(/\s+\b(?!(?:sin|cos|tan|log|ln)\b)[A-Za-z]{2,}\b[\s\S]*$/, "");
+  const mine = expressionOf(tail);
+  const theirs = expressionOf(evidence);
+  return mine !== null && theirs !== null && mathsKey(mine) === mathsKey(theirs);
+}
+
+/**
+ * The result the scheme arrives at: the values its final point and the worked solution's last line state, and the
+ * maths (an expression or an equation) they end on, as keys.
+ */
+function finalResults(scheme: readonly MarkPoint[], workedSolution: string, final: MethodStep | null): { values: number[]; maths: string[] } {
+  const values: number[] = [];
+  const maths: string[] = [];
+  const add = (line: string) => {
+    const v = resultValue(workingLines(line).join(" "), "authored");
+    if (v !== null) values.push(v);
+    const e = expressionOf(line);
+    if (e !== null) maths.push(mathsKey(e));
+  };
+  const last = final ?? [...methodSteps(scheme, workedSolution)].pop() ?? null;
+  // The point's result is the last piece of maths its wording names ("x² − 5 = x − 3 leading to x² − x − 2 = 0" ends on
+  // the second; "2x² + 8x − 10 = 0 divided through to x² + 4x − 5 = 0" likewise): the line before it is working.
+  if (last) {
+    const own = mathsFragments(last.for).filter((f) => !f.startsWith(EXAMPLE));
+    const result = own[own.length - 1];
+    // A point that ends on a fraction ("numerator collected: 5x + 2; answer (5x + 2) over (x(x + 1))") arrives at the
+    // fraction: its numerator on its own is working on the way, not the result restated (the corpus guard, 29 Sep 2026).
+    const [top = "", bottom = ""] = result !== undefined && result.includes(OVER) ? result.split(OVER) : ["", ""];
+    if (top.trim().length > 0 && bottom.trim().length > 0) add(`\\frac{${top.trim()}}{${bottom.trim()}}`);
+    else {
+      const plain = own.filter((f) => !f.includes(OVER));
+      const named = plain[plain.length - 1];
+      if (named !== undefined) add(named.replace(/^\$|\$$/g, ""));
+    }
+  }
+  // The worked solution's final result is the last side of its last chain, never the whole line: "50 sin 40° = 32.14 N"
+  // is a line of working, and a line equal to it shows the method (the corpus guard, 29 Sep 2026).
+  const side = solutionTail(workedSolution);
+  if (side !== null) add(side);
+  return { values, maths };
+}
+
+/**
+ * The result restated: a line with no working whose value is the final value ("AC = 13", "87", "so VP is 25 cm"), or
+ * one statement whose maths is the final expression or equation ("x² − 8x + 16 = 0", "4n² − 36"). Such a line pairs
+ * with no earlier point, however the worked solution's line paired with that point ends (the verifier, 29 Sep 2026:
+ * the target typed into the working box was paid the method mark by value).
+ */
+function restatesFinal(line: string, final: { values: number[]; maths: string[] }): boolean {
+  const whole = workingLines(line).join(" ").trim();
+  if (whole.length === 0 || statementsOf(whole).length > 1) return false;
+  // A reaction equation written out is the working (its formulae and its balancing), never the result restated.
+  if (/→|->|⇌|<=>|⟶/.test(whole)) return false;
+  const plain = whole.replace(LEAD_IN, "").trim();
+  const sides = plain.split(/[=≈]/);
+  if (sides.length > 2) return false;
+  const bare = expressionOf(plain);
+  if (bare !== null && final.maths.some((m) => m === mathsKey(bare) || (m.includes("=") && m.split("=").reverse().join("=") === mathsKey(bare)))) return true;
+  const value = sides[sides.length - 1]!.trim();
+  const label = sides.length === 2 ? sides[0]!.trim() : "";
+  if (/[\d+\-−×÷*/^√]/.test(label.replace(/_\{?\w+\}?/g, ""))) return false;
+  if (/[\d)]\s*[+\-−×÷*/^]\s*[\d(√]|[√^]/.test(value)) return false;
+  const v = resultValue(plain, "typed");
+  return v !== null && final.values.some((f) => Math.abs(f - v) <= 1e-9 * Math.max(1, Math.abs(f)));
 }
 
 /**
@@ -346,8 +522,8 @@ function sidesEquivalent(a: string, b: string): boolean {
   return x.length === 2 && same(x[0]!, y[1]!) && same(x[1]!, y[0]!);
 }
 
-/** Does one typed statement evidence one authored line, as a whole? */
-function evidencesWhole(typed: string, evidence: string): boolean {
+/** Does one typed statement evidence one authored line, as a whole? `asWritten`: never by an equal expression in another form. */
+function evidencesWhole(typed: string, evidence: string, asWritten = false): boolean {
   // The faded worked examples' comparator first: the whole line as written, or the value it ends on
   // when the evidence line states a result. `stepLineMatches` already refuses a value match against an
   // evidence line that states none (a substitution line states none); the guard here is that a value is
@@ -362,7 +538,7 @@ function evidencesWhole(typed: string, evidence: string): boolean {
     // A value match that is not one still leaves the maths to compare ("\log(x³y²) = \log x³ + \log y²" for the point
     // "\log x³ + \log y²", once its lead-in comes off).
   }
-  return equivalentMaths(typed, evidence);
+  return !asWritten && equivalentMaths(typed, evidence);
 }
 
 /**
@@ -416,13 +592,67 @@ function sideOfChain(typed: string, evidence: string): boolean {
  * these only because two lines happened to end on the same number — and paid "y = 8" for "dy/dx = −4x + 8" the
  * same way; it no longer reads the last number of a line as its value, so the working is read for what it says.
  */
-function evidences(typed: string, evidence: string): boolean {
+/**
+ * `final`: the point is the scheme's last, reached by a chain that arrives at its result (a method point never is: a
+ * lone value is not the working a method mark is for; "7/33" in "… = 7/33" states a result, not the line).
+ * `answer`: the point is the scheme's final accuracy point, the answer itself: met by the answer as written, by its
+ * value, or by a chain arriving at it, never by an equal expression in another form ("2(4x² − 1)" is not
+ * "2(2x + 1)(2x − 1)"; the corpus guard, 29 Sep 2026).
+ * `contained`: only the point's exact maths standing whole in the line counts (a restated final line may show an
+ * earlier point's maths inside it, "f(x) = (x − 5/2)² + 19/4" holds the bracket "(x − 5/2)²", but pays nothing by
+ * value or by equivalence).
+ */
+function evidences(typed: string, evidence: string, final = false, answer = false, contained = false): boolean {
   if (typed.trim().length === 0 || evidence.trim().length === 0) return false;
+  if (contained) {
+    if (evidence.startsWith(EXAMPLE) || evidence.startsWith(FACTORISED)) return false;
+    if (evidence.includes(OVER)) {
+      const [top = "", bottom = ""] = evidence.split(OVER);
+      if (!substantial(top) || !substantial(bottom)) return false;
+      const key = mathsKey(workingLines(typed).join(" "));
+      return holdsMaths(key, mathsKey(top)) && holdsMaths(key, mathsKey(bottom));
+    }
+    // The point's maths as one key (TeX commands off), standing whole in the line; prose evidence is not searched.
+    const key = mathsKey(evidence);
+    const prose = /[A-Za-z]{3,}/.test(key.replace(/¦/g, " ").replace(FUNCTION_WORDS, " "));
+    if (!prose && substantial(key.replace(/¦/g, " ")) && holdsMaths(mathsKey(typed), key)) return true;
+    const maths = findableMaths(evidence);
+    return maths !== null && holdsMaths(mathsKey(typed), maths);
+  }
+  if (final && arrivesAt(typed, evidence)) return true;
+  // A factorised form of the point's expression: the line, a side of it, or the top or bottom of a fraction in it.
+  if (evidence.startsWith(FACTORISED)) {
+    const expr = evidence.slice(FACTORISED.length).trim();
+    // The factorised form as the point writes it, standing whole in her line ("Factorising the numerator gives
+    // 2(x − 2)(x + 2) and …"), is that factorisation. Only when the marker carries the factorised form itself: the
+    // twin's marker carries the expression still to be factorised ("3x² − 3x"), which her line may hold unfactorised.
+    const factorisedForm = (() => {
+      try {
+        return checkAlgebraic(expr, { answer: expr, mode: "form", form: "factorised" }).correct;
+      } catch {
+        return false;
+      }
+    })();
+    if (factorisedForm && holdsMaths(mathsKey(typed), mathsKey(expr))) return true;
+    return slashLine(typed)
+      .split("=")
+      .flatMap((side) => [side, ...fractionsIn(side, false).flat()])
+      .some((c) => {
+        const t = c.trim();
+        if (t.length === 0 || !/[A-Za-z]/.test(t)) return false;
+        try {
+          return checkAlgebraic(t, { answer: expr, mode: "form", form: "factorised" }).correct;
+        } catch {
+          return false;
+        }
+      });
+  }
   // A fraction written "A over B" in the point: her line must hold its top and its bottom.
   if (evidence.startsWith(EXAMPLE)) {
     const example = evidence.slice(EXAMPLE.length);
     const value = evaluateArithmetic(example);
-    if (value === null) return false;
+    // An example in letters ("e.g. x² + 2x − 8") has no value to stand for: it is read as the line itself.
+    if (value === null) return evidences(typed, example);
     return workingLines(typed)
       .join(" ")
       .split("=")
@@ -432,15 +662,24 @@ function evidences(typed: string, evidence: string): boolean {
       });
   }
   if (evidence.includes(OVER)) {
-    // A fraction she wrote whose top holds the point's top (when it names one) and whose bottom holds its bottom.
+    // A fraction she wrote whose top holds the point's top (when it names one) and whose bottom holds its bottom. The
+    // final point is the answer itself: its top and bottom must be hers, not merely inside hers ("2(5x + 2) over
+    // 2x(x + 1)" holds "(5x + 2) over x(x + 1)" and is not it; the verifier's floor sweep, 29 Sep 2026).
     const [top = "", bottom = ""] = evidence.split(OVER);
-    const plain = workingLines(typed).join(" ");
-    const asFraction = plain.split("=").some((side) => {
-      const parts = fractionParts(side);
-      if (parts.length !== 2) return false;
-      return (top.trim() === "" || holdsMaths(mathsKey(parts[0]!), mathsKey(top))) && holdsMaths(mathsKey(parts[1]!), mathsKey(bottom));
-    });
+    const plain = slashLine(typed);
+    // Her fraction comes from its own clause with the lead-in off ("…, so the answer is 120(x+2)" is "120(x+2)"), so
+    // its top and bottom are compared as they stand.
+    const same = (part: string, named: string) => mathsKey(unwrap(part.trim())) === mathsKey(unwrap(named));
+    // Her fraction may stand in any clause of the side (", which collects to …") and, for a point on the way, as one
+    // factor of a product; the answer itself is never one factor of a product.
+    const asFraction = plain.split("=").some((side) =>
+      fractionsIn(side, final).some((parts) => {
+        if (final) return (top.trim() === "" || same(parts[0]!, top)) && same(parts[1]!, bottom);
+        return (top.trim() === "" || holdsMaths(mathsKey(parts[0]!), mathsKey(top))) && holdsMaths(mathsKey(parts[1]!), mathsKey(bottom));
+      }),
+    );
     if (asFraction) return true;
+    if (final) return false;
     // Or both written out in one line, neither inside the other ("the numerator gives 5(x + 4) and the denominator gives
     // (x + 4)(x − 4)"): each part must be working in its own right, and the bottom must stand outside the top.
     if (top.trim() === "" || !substantial(top) || !substantial(bottom)) return false;
@@ -451,23 +690,61 @@ function evidences(typed: string, evidence: string): boolean {
     const rest = `${key.slice(0, at)}¦${key.slice(at + topKey.length)}`;
     return holdsMaths(rest, mathsKey(bottom));
   }
-  if (evidencesWhole(typed, evidence)) return true;
+  if (evidencesWhole(typed, evidence, answer)) return true;
   // Even a one-statement line is read as its statement: "So L = …" states "L = …".
-  if (statementsOf(typed).some((p) => evidencesWhole(p, evidence) || chainStates(p, evidence))) return true;
+  if (statementsOf(typed).some((p) => evidencesWhole(p, evidence, answer) || chainStates(p, evidence))) return true;
   if (chainStates(typed, evidence) || sideOfChain(typed, evidence)) return true;
   // The top or the bottom of a fraction she wrote is a whole piece of working: "2(x+3)(x-2)/(x+3)^2" shows the
   // numerator factorised (trial audit MK-04: the factorised line a candidate writes paid nothing).
   // Only a piece of algebra or working counts: a bare number on top or underneath ("1/100", "649/11") is a value on the
   // way to another, not the evidence a point's "1" or "n = 11" names (the corpus guard's catch, 25 Sep 2026).
   if (
-    workingLines(typed)
-      .join(" ")
+    slashLine(typed)
       .split("=")
-      .some((side) => fractionParts(side).some((part) => /[A-Za-z(]/.test(part) && substantial(part) && evidencesWhole(part, evidence)))
+      .some((side) => fractionsIn(side, false).some((parts) => parts.some((part) => /[A-Za-z(]/.test(part) && substantial(part) && evidencesWhole(part, evidence, answer))))
   )
     return true;
   const maths = findableMaths(evidence);
   return maths !== null && holdsMaths(mathsKey(typed), maths);
+}
+
+/** The index of the brace closing the one opened at `open`, or −1. */
+function matchingBrace(s: string, open: number): number {
+  let depth = 0;
+  for (let i = open; i < s.length; i += 1) {
+    if (s[i] === "{") depth += 1;
+    else if (s[i] === "}") {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
+/**
+ * TeX fractions as slashes, "\frac{A}{B}" → "(A)/(B)", braces matched: `workingLines` leaves a fraction whose top holds
+ * brackets as TeX ("\frac{120(x+2)}{x(x+4)}"), and a fraction is read for its top and bottom only through its slash.
+ */
+function slashFractions(s: string): string {
+  let out = s;
+  for (let guard = 0; guard < 12; guard += 1) {
+    const at = out.search(/\\[dt]?frac\s*\{/);
+    if (at < 0) break;
+    const open = out.indexOf("{", at);
+    const close = matchingBrace(out, open);
+    if (close < 0) break;
+    const open2 = out.indexOf("{", close);
+    if (open2 < 0 || out.slice(close + 1, open2).trim() !== "") break;
+    const close2 = matchingBrace(out, open2);
+    if (close2 < 0) break;
+    out = `${out.slice(0, at)}(${out.slice(open + 1, close)})/(${out.slice(open2 + 1, close2)})${out.slice(close2 + 1)}`;
+  }
+  return out;
+}
+
+/** Her line as plain maths with every fraction on a slash, for reading a fraction's top and bottom. */
+function slashLine(typed: string): string {
+  return slashFractions(workingLines(typed).join(" "));
 }
 
 /** The top and bottom of a side written as one fraction, "N/D" with a single "/" outside brackets; else none. */
@@ -502,6 +779,40 @@ function fractionParts(side: string): string[] {
   return [bare(s.slice(0, slash)), bare(s.slice(slash + 1))].filter((p) => p.length > 0);
 }
 
+/** Where one clause of a side ends and the next begins: a comma, a semicolon, or a joining word. */
+const CLAUSE_BREAK = /[,;]|\b(?:so|gives|giving|leaves|leaving|therefore|hence|thus|then|which|and|or)\b/i;
+
+/**
+ * The fractions a side holds, each as its top and bottom: one per clause ("… gives (2(x+1) + 3x)/(x(x+1)), which
+ * collects to (5x+2)/(x(x+1))" holds two), a lead-in before the fraction off, and, unless the fraction must be the
+ * whole of its clause, one per factor of a product ("(2x-1)(x+3)/(x+3) × 2(x+3)/((2x-1)(2x+1))" holds two). The
+ * corpus guard, 29 Sep 2026: the worked solution's own lines paid nothing once a side held two fractions.
+ */
+function fractionsIn(side: string, whole: boolean): string[][] {
+  const clauses = side.split(CLAUSE_BREAK);
+  const pieces = whole ? clauses : clauses.flatMap((clause) => splitFactors(clause));
+  return pieces.map((p) => fractionParts(p.trim().replace(LEAD_IN, "").trim())).filter((parts) => parts.length === 2);
+}
+
+/** The factors of a product written with a multiplication sign outside every bracket ("(3 × 5)/2" is one factor). */
+function splitFactors(clause: string): string[] {
+  const s = clause.replace(/\\times\b/g, "×");
+  const out: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < s.length; i += 1) {
+    const c = s[i];
+    if (c === "(") depth += 1;
+    else if (c === ")") depth -= 1;
+    else if ((c === "×" || c === "*") && depth === 0) {
+      out.push(s.slice(start, i));
+      start = i + 1;
+    }
+  }
+  out.push(s.slice(start));
+  return out;
+}
+
 /**
  * The method marks her typed working evidences. Each point is awarded at most once and each line is
  * spent at most once: walking the scheme in its authored order, a line that would evidence two points
@@ -509,32 +820,90 @@ function fractionParts(side: string): string[] {
  * Nothing here awards an accuracy mark, and nothing here exceeds the scheme's own method total.
  */
 export function markWorking(typedLines: readonly string[], scheme: readonly MarkPoint[], workedSolution = ""): WorkingMarks {
-  const steps = methodSteps(scheme, workedSolution);
+  const method = methodSteps(scheme, workedSolution);
+  // The scheme's final accuracy point joins the ladder (the build-9 gate, class 3): `available` counts it, so a
+  // show-that pays every mark only when the working reaches the final line, and it is earned only after every point
+  // before it. A wrong answer's award is still capped by `ladderTotal`.
+  const last = finalStep(scheme, workedSolution);
+  const steps = last ? [...method, last] : method;
   const available = steps.reduce((s, p) => s + p.marks, 0);
-  const lines = typedLines.map((l) => l.trim()).filter((l) => l.length > 0);
-  const spent = new Set<number>();
-  const earned: EarnedMark[] = [];
-  for (const step of steps) {
-    let found = false;
+  // Each typed line, and each link of a chain she wrote on one line: "(2x + 7)² = 4x² + 14x + 14x + 49 = 4x² + 28x + 49"
+  // shows the expansion and then the collecting, one link each, as the exam reads it (the build-9 gate, class 3).
+  const lines = typedLines.map((l) => l.trim()).filter((l) => l.length > 0).flatMap((l) => [l, ...chainLinks(l)]);
+  const final = finalResults(scheme, workedSolution, last);
+  // The result restated pairs with no earlier point: it may evidence only the scheme's final point.
+  const restated = lines.map((l) => restatesFinal(l, final));
+  const finalAt = steps.length - 1;
+  // Which line can evidence which point. A restated result may evidence only the final point, and only when it holds
+  // whatever that point names before the result ("x² − 5 = x − 3 leading to x² − x − 2 = 0" is not met by the result
+  // alone; "[…] over (x + 1)(x − 2)" is met by the fraction, which holds the denominator the point names).
+  const can = steps.map((step, si) =>
+    lines.map((l, i) => {
+      const isFinal = si === finalAt;
+      // A restated final line evidences an earlier point only by holding that point's exact maths whole (never by its
+      // value or by equivalence), and the final point only when it holds what that point names before the result.
+      if (restated[i] && !isFinal) return step.evidence.some((e) => evidences(l, e, false, false, true));
+      if (restated[i] && !step.named.every((e) => holdsMaths(mathsKey(l), mathsKey(e)))) return false;
+      return step.evidence.some((e) => evidences(l, e, isFinal, isFinal && last !== null));
+    }),
+  );
+  // Each line pays at most one point and each point takes at most one line: the assignment that earns the most, earlier
+  // points first (a line that would evidence two points still pays for one of them only).
+  const lineOf = new Array<number>(steps.length).fill(-1);
+  const stepOf = new Array<number>(lines.length).fill(-1);
+  const assign = (si: number, seen: Set<number>): boolean => {
     for (let i = 0; i < lines.length; i += 1) {
-      if (spent.has(i)) continue;
-      if (!step.evidence.some((e) => evidences(lines[i]!, e))) continue;
-      spent.add(i);
-      earned.push({ id: step.id, code: step.code, marks: step.marks, for: step.for, matchedLine: lines[i]! });
-      found = true;
-      break;
+      if (!can[si]![i] || seen.has(i)) continue;
+      seen.add(i);
+      if (stepOf[i]! < 0 || assign(stepOf[i]!, seen)) {
+        stepOf[i] = si;
+        lineOf[si] = i;
+        return true;
+      }
     }
-    if (found) continue;
-    // A fraction's top and bottom written on lines of their own ("5(x+4)", then "(x+4)(x-4)") show it as well as one
-    // line does; both lines are spent.
-    // Each part must be working in its own right: a lone "(x + 3)" on a line is not the bottom of an answer.
+    return false;
+  };
+  for (let si = 0; si < steps.length; si += 1) assign(si, new Set());
+  // A line pays one point, but the final point is reached by the chain that arrives at its result, and that chain may
+  // be the very line that showed the method ("50 sin 40° = 32.14": MW1 for the resolving, W1 for the value it comes
+  // to). The final point may reuse such a line; a method point never reuses one.
+  if (lineOf[finalAt]! < 0 && steps.length > 1) {
+    const i = lines.findIndex((l, li) => stepOf[li]! >= 0 && !restated[li] && steps[finalAt]!.evidence.some((e) => !e.startsWith(EXAMPLE) && !e.startsWith(FACTORISED) && !e.includes(OVER) && arrivesAt(l, e)));
+    if (i >= 0) lineOf[finalAt] = i;
+  }
+  // The final line of a scheme is reached only when the points before it are reached: an accuracy point (the answer's
+  // own line, admitted for the show-that) needs every point before it; a method point offered the result restated
+  // needs a point before it, so the bare target alone pays nothing while a whole solution with one line the ladder
+  // cannot read keeps its final mark (the corpus guard, 29 Sep 2026).
+  // A fraction's top and bottom written on lines of their own ("5(x+4)", then "(x+4)(x-4)") show it as well as one
+  // line does; both lines are spent. Each part must be working in its own right: a lone "(x + 3)" on a line is not
+  // the bottom of an answer. A point met this way is reached, for the final line's gate below as for the award.
+  const spent = new Set<number>(stepOf.map((s, i) => (s >= 0 ? i : -1)).filter((i) => i >= 0));
+  const grouped = new Map<number, string>();
+  for (const [si, step] of steps.entries()) {
+    if (lineOf[si]! >= 0) continue;
+    if (si === finalAt && last !== null && steps.slice(0, -1).some((_, s) => lineOf[s]! < 0 && !grouped.has(s))) continue;
     for (const group of step.evidence.filter((e) => e.includes(OVER) && e.split(OVER).every((part) => substantial(part)))) {
-      const at = group.split(OVER).map((part) => lines.findIndex((l, i) => !spent.has(i) && holdsMaths(mathsKey(l), mathsKey(part))));
+      const at = group.split(OVER).map((part) => lines.findIndex((l, i) => !spent.has(i) && !restated[i] && holdsMaths(mathsKey(l), mathsKey(part))));
       if (at.some((i) => i < 0) || new Set(at).size !== at.length) continue;
       at.forEach((i) => spent.add(i));
-      earned.push({ id: step.id, code: step.code, marks: step.marks, for: step.for, matchedLine: at.map((i) => lines[i]!).join("; ") });
+      grouped.set(si, at.map((i) => lines[i]!).join("; "));
       break;
     }
+  }
+  if (lineOf[finalAt]! >= 0 && steps.length > 1) {
+    const earlier = steps.slice(0, -1).map((_, si) => lineOf[si]! >= 0 || grouped.has(si));
+    const blocked = last !== null ? !earlier.every(Boolean) : restated[lineOf[finalAt]!] && !earlier.some(Boolean);
+    if (blocked) {
+      stepOf[lineOf[finalAt]!] = -1;
+      lineOf[finalAt] = -1;
+    }
+  }
+  const earned: EarnedMark[] = [];
+  for (const [si, step] of steps.entries()) {
+    const i = lineOf[si]!;
+    const matchedLine = i >= 0 ? lines[i]! : grouped.get(si);
+    if (matchedLine !== undefined) earned.push({ id: step.id, code: step.code, marks: step.marks, for: step.for, matchedLine });
   }
   // A scheme's dependsOn is not applied here (tried 25 Sep 2026 for MK-04 and withdrawn): a prerequisite written in
   // words the ladder cannot find ("two brackets expanded correctly, e.g. …", "v = u + at with v = 0 …") would take

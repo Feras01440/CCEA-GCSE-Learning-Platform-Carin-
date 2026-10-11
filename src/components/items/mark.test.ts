@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import type { AnswerSpec, CommonError } from "@/lib/content/schema";
+import type { AnswerSpec, CommonError, MarkPoint } from "@/lib/content/schema";
 import { checkNumeric } from "@/lib/marking/numeric";
-import { instructsAccuracy, instructsUnit, isFormTask, markAnswer, matchesCommonError, variableLetters } from "./mark";
+import { followThroughValue, instructsAccuracy, instructsUnit, isFormTask, isShowThat, markAnswer, matchesCommonError, twinScheme, variableLetters } from "./mark";
 
 const median: AnswerSpec = {
   kind: "numeric",
@@ -847,11 +847,13 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
     expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["fm.algfrac.not-factorised-first"] });
     expect(r.explanation).toMatch(/expression you were given/);
   });
-  // Ruling 1 as changed (27 Sep) and the lead's floor (29 Sep): an equivalent answer shows the method, never 0.
-  test("an uncancelled line with no named error and no scheme earns the floor, and the feedback says the form was the task", () => {
+  // Ruling 1 as changed (27 Sep) and the lead's ruling of 29 Sep: the ladder decides and there is no fixed floor. With
+  // no scheme there is no ladder, so an uncancelled line earns nothing here; with .0009's scheme it earns its two
+  // factorising lines (the build-9 gate, class 5).
+  test("an uncancelled line with no named error and no scheme earns nothing, and the feedback says the form was the task", () => {
     const r = markAnswer("2(x+3)(x-2)/(x+3)^2", q9, { marks: 4, commonErrors: [given], prompt });
-    expect(r.marksAwarded).toBe(1);
-    expect(r.explanation).toMatch(/form the question asks for/i);
+    expect(r.marksAwarded).toBe(0);
+    expect(r.explanation).toMatch(/form is what the marks are for/i);
   });
   test("the answer in the required form is still every mark", () => {
     expect(markAnswer("2(x-2)/(x+3)", q9, { marks: 4, commonErrors: [given], prompt })).toMatchObject({ correct: true, marksAwarded: 4 });
@@ -906,8 +908,9 @@ describe("a form task pays nothing for the right value in the wrong form (MK-01 
   test("an algebraic part whose stem is not a form task keeps marks − 1", () => {
     const spec: AnswerSpec = { kind: "algebraic", latex: "\\log 8x^3", equivalence: "equivalent", variables: ["x"], form: "single-log-expanded" };
     expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Use the laws of logarithms on your answer to part (a)." }).marksAwarded).toBe(2);
-    // The form task with the equivalent expression in another form: the floor, never 0 (the lead, 29 Sep 2026).
-    expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(1);
+    // The form task with the equivalent expression in another form and no scheme line shown: 0 (the lead's ruling of
+    // 29 Sep 2026: the ladder decides and there is no fixed floor).
+    expect(markAnswer("\\log 8 + 3\\log x", spec, { marks: 3, prompt: "Write $3\\log 2x$ as a single logarithm." }).marksAwarded).toBe(0);
   });
 });
 
@@ -1172,16 +1175,17 @@ describe("common errors on copied questions, verifications and text parts", () =
   });
 });
 
-// The floor of 1 for an equivalent answer on a form task yields to a common error that names the answer (the guard,
-// 29 Sep 2026: "x²/x − 4" equals x − 4 but is the cancel-terms error, which the scheme pays 0).
-describe("the form-task floor yields to a named common error", () => {
-  test("x²/x − 4 for (x² − 16)/(x + 4) earns the error's 0; x/3 − 2 for (x − 6)/3 earns the floor", () => {
+// A common error that names the answer keeps its tag at its own marks, and an equivalent answer on a form task that
+// shows no scheme line earns 0 (the lead's ruling of 29 Sep 2026: the ladder decides and there is no fixed floor;
+// "x/3 − 2" on a single-fraction task earns 0 when no scheme line shows).
+describe("a named common error, and no floor on a form task", () => {
+  test("x²/x − 4 for (x² − 16)/(x + 4) earns the error's 0; x/3 − 2 for (x − 6)/3 earns 0 with no scheme line shown", () => {
     const spec = { kind: "algebraic", latex: "x - 4", equivalence: "simplifiedOnly", variables: ["x"] } as AnswerSpec;
     const cancel: CommonError = { misconception: "maths.alg-fractions.cancel-terms-not-factors", pattern: { kind: "algebraic", latex: String.raw`\frac{x^2}{x} - 4` }, feedback: "Only whole factors cancel.", marksTypicallyEarned: 0 } as CommonError;
     const r = markAnswer(String.raw`\frac{x^2}{x} - 4`, spec, { marks: 2, commonErrors: [cancel], prompt: String.raw`Hence simplify $\dfrac{x^2 - 16}{x + 4}$.` });
     expect(r).toMatchObject({ correct: false, marksAwarded: 0, tags: ["maths.alg-fractions.cancel-terms-not-factors"] });
     const third = { kind: "algebraic", latex: String.raw`\frac{x-6}{3}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
-    expect(markAnswer("x/3 - 2", third, { marks: 2, prompt: String.raw`Simplify fully $\dfrac{x^{2}-36}{3x+18}$` })).toMatchObject({ correct: false, marksAwarded: 1 });
+    expect(markAnswer("x/3 - 2", third, { marks: 2, prompt: String.raw`Simplify fully $\dfrac{x^{2}-36}{3x+18}$` })).toMatchObject({ correct: false, marksAwarded: 0 });
   });
 });
 
@@ -1206,5 +1210,631 @@ describe("the question typed back, in any spelling, before any form-task credit"
     const spec = { kind: "algebraic", latex: "3", equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec;
     const prompt = "Simplify fully\n" + String.raw`$$\left(\dfrac{x}{x+1} - \dfrac{x-4}{x+2}\right) \div \dfrac{5x+4}{3x^{2}+9x+6}$$`;
     expect(markAnswer("3", spec, { marks: 7, prompt })).toMatchObject({ correct: true, marksAwarded: 7 });
+  });
+});
+
+// Build-9 gate, class 2 (the verifier, 29 Sep 2026): the show-that verification exception paid any text common error on
+// any stem holding "show that". It applies only to a verify-by-substitution error on a real show-that part; everywhere
+// else a text common error never raises the award (the lead's I).
+describe("the show-that verification exception is only for a verification (build-9 gate, class 2)", () => {
+  const show = (keys: string[][], accepted: string[]): AnswerSpec => ({ kind: "text", accepted, keyWords: keys.map((any) => ({ any, marks: 1 })), listingRule: false }) as AnswerSpec;
+  test("m8 simultaneous .0011 'MA1 x² + 4 = 0 oe dep M1': 'x = 2' with a numeric error worth 2 earns 0", () => {
+    const spec = show([["x^2 + 4 = 0", "x^2 = -4"], ["no real", "discriminant", "negative", "impossible"]], ["x^2 + 4 = 0 has no real solutions because the discriminant is -16"]);
+    const root: CommonError = { misconception: "maths.quadratics.negative-root-discarded", pattern: { kind: "numeric", value: 2, tolerance: { type: "absolute", value: 0 } }, feedback: "That solves a different equation.", marksTypicallyEarned: 2 } as CommonError;
+    const prompt = "Show that the line $y = 2x + 1$ never meets the curve $y = x^2 + 2x + 5$.";
+    expect(markAnswer("x = 2", spec, { marks: 3, commonErrors: [root], prompt }).marksAwarded).toBe(0);
+    expect(markAnswer("2", spec, { marks: 3, commonErrors: [root], prompt }).marksAwarded).toBe(0);
+  });
+  test("m8 simultaneous .0017(a) 'MA1 x² − 4x + 4 = 0 oe dep M1': 'x = 2' with the solve-instead error (2) earns 0", () => {
+    const spec = show([["x^2 - 4x + 4", "(x - 2)^2"], ["repeated", "one point", "discriminant"]], ["x^2 - 4x + 4 = 0 gives (x - 2)^2 = 0, a repeated root, so one point"]);
+    const solve: CommonError = { misconception: "maths.quadratics.show-that-solve-instead", pattern: { kind: "text", regex: String.raw`^\s*x\s*=\s*2\s*$` }, feedback: "Solving is not showing.", marksTypicallyEarned: 2 } as CommonError;
+    expect(markAnswer("x = 2", spec, { marks: 3, commonErrors: [solve], prompt: "Show that the line touches the curve at exactly one point." }).marksAwarded).toBe(0);
+  });
+  test("fm1 form-three .0005 'W1 dividing every term of that equation by 10': 'multiply the whole equation by 10' (wrong scaling, 1) earns 0", () => {
+    const spec = show([["2130", "21.3"], ["divide by 10", "dividing by 10"]], ["In pence the total is 20x + 50y + 100z = 2130, and dividing the whole equation by 10 gives the printed form."]);
+    const scaling: CommonError = { misconception: "fm.simeq.wrong-scaling-to-reach-given", pattern: { kind: "text", regex: String.raw`multipl(?:y|ied|ying)\s+(?:the\s+)?(?:whole\s+)?equation\s+by` }, feedback: "Dividing, not multiplying.", marksTypicallyEarned: 1 } as CommonError;
+    expect(markAnswer("multiply the whole equation by 10", spec, { marks: 3, commonErrors: [scaling], prompt: "The coins in the jar are worth £21.30 altogether.\n\nShow that $2x + 5y + 10z = 213$." }).marksAwarded).toBe(0);
+  });
+  test("b1 aerobic-respiration .0005(c) 'P1 flask A rose by 4.5 °C compared with 0.3 °C': 'explain why the results show that' is not a show-that", () => {
+    const spec = show([["more", "greater", "4.5", "4.2"], ["heat", "energy released", "exothermic"]], ["the living peas warmed far more than the dead ones, so respiration must be releasing heat"]);
+    const noComparison: CommonError = { misconception: "sci.comparison.no-comparative-language", pattern: { kind: "text", regex: "^[^0-9]*$" }, feedback: "Compare the two flasks.", marksTypicallyEarned: 1 } as CommonError;
+    expect(markAnswer("it got warm", spec, { marks: 2, commonErrors: [noComparison], prompt: "Flask B rose by 0.3 °C.\nExplain why the results show that respiration is exothermic." }).marksAwarded).toBe(0);
+  });
+  test("a real verification by substitution still earns its 2 of 3 (fm2 inclined-plane .0016(a) 'W1 a = 2.5 dep MW2')", () => {
+    const spec = show([["120 sin 30", "weight component along the slope"], ["60 - 30", "60 minus 30"], ["a = 2.5", "= 2.5"]], ["The weight component along the slope is 120 sin 30 = 60 N, so 60 - 30 = 12a and a = 2.5 m/s²."]);
+    const verify: CommonError = { misconception: "fm.show-that.verify-by-substitution", pattern: { kind: "text", regex: String.raw`\bsub(?:stitut\w*|bing)\b[^.;\n]{0,40}\b2\.5\b` }, feedback: "Verification, not a derivation.", marksTypicallyEarned: 2 } as CommonError;
+    const prompt = "Show that its acceleration is 2.5 m/s².";
+    // The live scheme: W1 a = 2.5 dep MW2, so the bare target's group depends on the equation's.
+    const scheme = [
+      { id: "mw1", code: "MW", marks: 1, for: "$120\\sin 30° = 60$" },
+      { id: "mw2", code: "MW", marks: 1, for: "$60 - 30 = 12a$" },
+      { id: "w1", code: "W", marks: 1, for: "$a = 2.5$", dependsOn: ["mw2"] },
+    ];
+    expect(markAnswer("Substituting a = 2.5: 12 × 2.5 = 30, so both sides agree", spec, { marks: 3, commonErrors: [verify], prompt, scheme }).marksAwarded).toBe(2);
+    expect(markAnswer("a = 2.5", spec, { marks: 3, commonErrors: [verify], prompt, scheme }).marksAwarded).toBe(0);
+  });
+});
+
+// Build-9 gate, class 5 (the lead's ruling of 29 Sep 2026): the ladder decides and there is no fixed floor. A no-step
+// equivalent (the question reordered, the answer scaled top and bottom, a division written as a negative power) earns
+// 0 on a form task; a real step still earns its scheme line.
+describe("no floor: the ladder alone decides on a form task (build-9 gate, class 5)", () => {
+  const simplify: AnswerSpec = { kind: "algebraic", latex: String.raw`\frac{2x+7}{4(x-2)}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" };
+  const scheme = [
+    { id: "mw1", code: "MW", marks: 1, for: "numerator factorised: (2x + 7)(x + 2)" },
+    { id: "mw2", code: "MW", marks: 1, for: "denominator factorised fully: 4(x + 2)(x - 2)" },
+    { id: "mw3", code: "MW", marks: 1, for: "(x + 2) cancelled" },
+    { id: "w1", code: "W", marks: 1, for: "answer (2x + 7) over 4(x - 2), with the 4 kept and nothing cancelled out of 2x + 7" },
+  ];
+  const prompt = "Simplify fully\n" + String.raw`$\dfrac{2x^{2}+11x+14}{4x^{2}-16}$`;
+  test("fm1 algebraic-fractions-simplify .0011 'MW1 numerator factorised': the question reordered earns 0 of 4", () => {
+    expect(markAnswer("(14 + 11x + 2x²)/(4x² − 16)", simplify, { marks: 4, prompt, scheme })).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(markAnswer("(2x+7)(x+2)/(4(x+2)(x-2))", simplify, { marks: 4, prompt, scheme }).marksAwarded).toBe(2);
+    expect(markAnswer("(2x+7)/(4(x-2))", simplify, { marks: 4, prompt, scheme })).toMatchObject({ correct: true, marksAwarded: 4 });
+  });
+  test("fm1 expand-three-brackets .0002 'MW1 two brackets expanded correctly': the brackets reordered earn 0 of 3", () => {
+    const expand: AnswerSpec = { kind: "algebraic", latex: "x^{3}-x^{2}-14x+24", equivalence: "equivalent", variables: ["x"], mustBeExpanded: true };
+    const s = [
+      { id: "mw1", code: "MW", marks: 1, for: "two brackets expanded correctly, e.g. x² + 2x - 8" },
+      { id: "mw2", code: "MW", marks: 1, for: "that quadratic multiplied by the remaining bracket, giving the six products x³ + 2x² - 8x and -3x² - 6x + 24" },
+      { id: "mw3", code: "MW", marks: 1, for: "like terms collected: x³ - x² - 14x + 24" },
+    ];
+    const p = "Expand and simplify the expression\n$(x-2)(x+4)(x-3)$";
+    const ws = "$(x-2)(x+4) = x^{2}+2x-8$, so the expression is $(x^{2}+2x-8)(x-3)$.\nMultiplying every term by $x$ gives $x^{3}+2x^{2}-8x$ and multiplying every term by $-3$ gives $-3x^{2}-6x+24$.\nCollecting like terms: $x^{3}-x^{2}-14x+24$.";
+    expect(markAnswer("(x−3)(x+4)(x−2)", expand, { marks: 3, prompt: p, scheme: s, workedSolution: ws }).marksAwarded).toBe(0);
+    expect(markAnswer("(x^2+2x-8)(x-3)", expand, { marks: 3, prompt: p, scheme: s, workedSolution: ws }).marksAwarded).toBe(1);
+  });
+  test("fm1 completing-the-square .0001 'M1 the bracket (x + 3)²' and laws-of-logarithms .0001 'MW1 the product law used': a reordered question earns 0", () => {
+    const square: AnswerSpec = { kind: "algebraic", latex: "(x + 3)^{2} + 2", equivalence: "equivalent", variables: ["x"], form: "completed-square" };
+    const sq = [{ id: "m1", code: "M", marks: 1, for: String.raw`the bracket $\left(x + 3\right)^{2}$, from halving the coefficient of $x$` }, { id: "w1", code: "W", marks: 1, for: "the constant $2$, so the answer reads $(x + 3)^{2} + 2$" }];
+    expect(markAnswer("11 + 6x + x²", square, { marks: 2, prompt: "Express $x^{2} + 6x + 11$ as $(x + a)^{2} + b$, for constants $a$ and $b$.", scheme: sq }).marksAwarded).toBe(0);
+    const log: AnswerSpec = { kind: "algebraic", latex: String.raw`\log(ab)`, equivalence: "equivalent", variables: ["a", "b"], form: "single-log" };
+    const lg = [{ id: "mw1", code: "MW", marks: 1, for: "the product law used" }, { id: "w1", code: "W", marks: 1, for: String.raw`$\log(ab)$` }];
+    expect(markAnswer("log b + log a", log, { marks: 2, prompt: String.raw`Express $\log a + \log b$ as a single logarithm.`, scheme: lg }).marksAwarded).toBe(0);
+  });
+  test("fm3 pascals-triangle .0003 'MW1 the coefficients 1, 7, 21, 35': 'in expanded form' is the task, so the question reordered or split earns 0 of 2", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: "p^{7} + 7p^{6}q + 21p^{5}q^{2} + 35p^{4}q^{3} + 35p^{3}q^{4} + 21p^{2}q^{5} + 7pq^{6} + q^{7}", equivalence: "equivalent", variables: ["p", "q"], form: "expanded" };
+    const s = [{ id: "mw1", code: "MW", marks: 1, for: "the coefficients 1, 7, 21, 35, then the same four in reverse" }, { id: "mw2", code: "MW", marks: 1, for: "the powers of p falling from 7 and of q rising to 7, each pair adding to 7" }];
+    const p = "Use Pascal's triangle to write down $(p + q)^{7}$ in expanded form.";
+    expect(isFormTask(p, spec)).toBe(true);
+    for (const typed of ["(q + p)^7", "(p + q)^3 (p + q)^4"]) expect(markAnswer(typed, spec, { marks: 2, prompt: p, scheme: s }).marksAwarded, typed).toBe(0);
+    expect(markAnswer("p^7 + 7p^6q + 21p^5q^2 + 35p^4q^3 + 35p^3q^4 + 21p^2q^5 + 7pq^6 + q^7", spec, { marks: 2, prompt: p, scheme: s })).toMatchObject({ correct: true, marksAwarded: 2 });
+  });
+  test("fm1 algebraic-fractions-simplify .0003 'MW1 both lines factorised': the question with its division as a negative power earns 0", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: String.raw`\frac{x+2}{x-2}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" };
+    const s = [{ id: "mw1", code: "MW", marks: 1, for: "both lines factorised: (x + 5)(x + 2) over (x + 5)(x - 2)" }, { id: "mw2", code: "MW", marks: 1, for: "(x + 5) cancelled and the answer left as (x + 2) over (x - 2)" }];
+    const p = "Simplify fully\n" + String.raw`$\dfrac{x^{2}+7x+10}{x^{2}+3x-10}$`;
+    expect(markAnswer("(x^2+7x+10)(x^2+3x-10)^-1", spec, { marks: 2, prompt: p, scheme: s })).toMatchObject({ correct: false, marksAwarded: 0 });
+    expect(markAnswer("(x+5)(x+2)/((x+5)(x-2))", spec, { marks: 2, prompt: p, scheme: s }).marksAwarded).toBe(1);
+  });
+});
+
+// Build-9 gate, class 5, the twin path: WorkedExampleAsQuestion marked the twin with no scheme, so a factorised but
+// uncancelled twin answer lived on the floor. The example's steps give the twin its ladder: a step that factorises the
+// example's numerator or denominator asks the twin for the same, checked on the twin's own fraction.
+describe("the twin's ladder from the example's steps (build-9 gate, class 5)", () => {
+  const we = {
+    stem: "Simplify fully\n" + String.raw`$\dfrac{2x^{2}+10x}{4x^{2}-100}$`,
+    steps: [
+      { n: 1, earns: ["MW1"], working: "$2x^{2}+10x = 2x(x+5)$" },
+      { n: 2, earns: ["MW1"], working: "$4x^{2}-100 = 4(x+5)(x-5)$" },
+      { n: 3, earns: ["MW1"], working: String.raw`$\frac{2x(x+5)}{4(x+5)(x-5)} = \frac{x}{2(x-5)}$` },
+    ],
+    twin: { stem: "Simplify fully " + String.raw`$\frac{3x^{2}-3x}{6x^{2}-6}$`, answer: { kind: "algebraic", latex: String.raw`\frac{x}{2(x+1)}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" } as AnswerSpec },
+  };
+  test("fm1 we.01 twin: 'MW1 numerator factorised, MW1 denominator factorised, MW1 cancelled' from the example's steps", () => {
+    const scheme = twinScheme(we);
+    expect(scheme.map((p) => `${p.code}${p.marks}`)).toEqual(["MW1", "MW1", "MW1"]);
+    const opts = { marks: 3, prompt: we.twin.stem, scheme };
+    expect(markAnswer("x/(2(x+1))", we.twin.answer, opts)).toMatchObject({ correct: true, marksAwarded: 3 });
+    expect(markAnswer("x/(2x+2)", we.twin.answer, opts)).toMatchObject({ correct: true, marksAwarded: 3 });
+    // Both lines factorised, nothing cancelled: the two factorising marks (FM1 2021 Q8(i): one MW1 for each factorised expression).
+    expect(markAnswer("3x(x-1)/(6(x+1)(x-1))", we.twin.answer, opts)).toMatchObject({ correct: false, marksAwarded: 2 });
+    // The question typed back, or reordered, shows no step.
+    expect(markAnswer("(3x^2-3x)/(6x^2-6)", we.twin.answer, opts).marksAwarded).toBe(0);
+    expect(markAnswer("(-3x + 3x^2)/(6x^2-6)", we.twin.answer, opts).marksAwarded).toBe(0);
+    expect(markAnswer("x/(2(x-1))", we.twin.answer, opts).marksAwarded).toBe(0);
+  });
+});
+
+// The verifier's floor sweep (29 Sep 2026): a factorising point is met only by a factorised line. "2(x² + x − 6)" over
+// the question's denominator has only the 2 taken out, and is equal to "2(x + 3)(x − 2)" without being it.
+describe("a factorising point needs a factorised line (build-9 gate, class 5)", () => {
+  test("fm1 algebraic-fractions-simplify .0009 'MW1 numerator factorised: 2(x + 3)(x − 2)': only the 2 taken out earns 0 of 4", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: String.raw`\frac{2(x-2)}{x+3}`, equivalence: "equivalent", variables: ["x"], form: "simplest-fraction" };
+    const scheme = [
+      { id: "mw1", code: "MW", marks: 1, for: "numerator factorised: 2(x + 3)(x - 2)" },
+      { id: "mw2", code: "MW", marks: 1, for: "denominator factorised: (x + 3)²" },
+      { id: "mw3", code: "MW", marks: 1, for: "(x + 3) cancelled" },
+      { id: "w1", code: "W", marks: 1, for: "answer fully simplified to 2(x - 2) over (x + 3), with no common factor left" },
+    ];
+    const ws = "Factorising the numerator gives $2(x+3)(x-2)$ and the denominator gives $(x+3)^{2}$.\nSo $\frac{2x^{2}+2x-12}{x^{2}+6x+9}$ becomes $\frac{2(x+3)(x-2)}{(x+3)^{2}}$.\nCancelling $(x+3)$ leaves $\frac{2(x-2)}{x+3}$.";
+    const prompt = "Simplify fully\n" + String.raw`$\dfrac{2x^{2}+2x-12}{x^{2}+6x+9}$`;
+    expect(markAnswer("2(x^2 + x - 6)/(x^2 + 6x + 9)", spec, { marks: 4, prompt, scheme, workedSolution: ws }).marksAwarded).toBe(0);
+    expect(markAnswer("(2x^2+2x-12)/(x+3)^2", spec, { marks: 4, prompt, scheme, workedSolution: ws }).marksAwarded).toBe(1);
+    expect(markAnswer("2(x+3)(x-2)/(x+3)^2", spec, { marks: 4, prompt, scheme, workedSolution: ws }).marksAwarded).toBe(2);
+  });
+});
+
+// A "show that" part is the command, not a sentence about what results show (build-9 gate, class 2).
+describe("isShowThat reads the command", () => {
+  test.each(["Show that $AC = 13$ cm.", "(b) Show that the line touches the curve.", "Use the sine rule to show that angle ABC = 87°.", "Hence show that $x = 4$.", "Find the area.\nShow that it is 91 m²."])("%s is a show-that", (stem) => {
+    expect(isShowThat(stem)).toBe(true);
+  });
+  test.each(["Flask B rose by 0.3 °C.\nExplain why the results show that respiration is exothermic.", "The data show that the rate doubles. Explain why.", "Calculate the mean."])("%s is not", (stem) => {
+    expect(isShowThat(stem)).toBe(false);
+  });
+});
+
+// The corpus guard (29 Sep 2026): once the final accuracy point joined the ladder, "2(4x² − 1)" for "Factorise fully
+// 8x² − 2" was paid the answer point too, by equivalence, one copy of the line per point. The answer point is the
+// answer as written: the common factor alone keeps the common-factor mark.
+describe("the answer point is met as written on a form task (build-9 gate, class 5)", () => {
+  test("m3 difference-of-two-squares .0011(a) 'A2 2(2x + 1)(2x − 1) dep A1': '2(4x² − 1)' earns 1 of 3", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: "2(2x+1)(2x-1)", equivalence: "equivalent", variables: ["x"], mustBeFactorised: true };
+    const scheme = [
+      { id: "ma1", code: "MA", marks: 1, for: "2(4x² − 1)" },
+      { id: "a1", code: "A", marks: 1, for: "4x² recognised as (2x)² and 1 as 1²", dependsOn: ["ma1"] },
+      { id: "a2", code: "A", marks: 1, for: "2(2x + 1)(2x − 1)", dependsOn: ["a1"] },
+    ];
+    const ws = String.raw`$8x^2 - 2 = 2(4x^2 - 1) = 2\big((2x)^2 - 1^2\big) = 2(2x + 1)(2x - 1)$.`;
+    expect(markAnswer("2(4x^2-1)", spec, { marks: 3, prompt: "Factorise **fully** $8x^2 - 2$.", scheme, workedSolution: ws }).marksAwarded).toBe(1);
+    const two = [{ id: "ma1", code: "MA", marks: 1, for: "2(4x² − 1)" }, { id: "a2", code: "A", marks: 1, for: "2(2x + 1)(2x − 1)", dependsOn: ["ma1"] }];
+    expect(markAnswer("2(4x^2-1)", spec, { marks: 2, prompt: "Factorise **fully** $8x^2 - 2$.", scheme: two, workedSolution: ws }).marksAwarded).toBe(1);
+    expect(markAnswer("2(2x+1)(2x-1)", spec, { marks: 3, prompt: "Factorise **fully** $8x^2 - 2$.", scheme, workedSolution: ws })).toMatchObject({ correct: true, marksAwarded: 3 });
+  });
+});
+
+// The FM3 author (7 Oct 2026): a value written with a statistics label scored 0 as "could not be read". The FM3 schemes
+// print these labels (2022 Q3, 2024 Q1) and students write them: a label before "=" is stripped like any other label
+// ("AC = 13", "θ = 31.89"), with Σ, x̄, σ and s read as labels, and a squared sum (Σfx²) as one.
+describe("a statistics label before = is a label (FM3 2022 Q3, 2024 Q1)", () => {
+  const spec = (value: number): AnswerSpec => ({ kind: "numeric", value, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] });
+  test.each([
+    ["Σfx² = 10675", 10675],
+    ["Σfx^2 = 10675", 10675],
+    ["Σfx = 668", 668],
+    ["Σfx = 266", 266],
+    ["Σf = 20", 20],
+    ["x̄ = 31.7", 31.7],
+    ["σ = 4.2", 4.2],
+    ["s = 4.2", 4.2],
+    ["\\sum fx = 668", 668],
+    ["\\sum fx^{2} = 10675", 10675],
+    ["\\bar{x} = 31.7", 31.7],
+  ])("%s is the value %s", (raw, value) => {
+    const r = markAnswer(raw, spec(value), { marks: 1 });
+    expect(r.correct, r.explanation).toBe(true);
+  });
+  test("the label does not make a wrong value right", () => {
+    expect(markAnswer("Σfx² = 10765", spec(10675), { marks: 1 }).correct).toBe(false);
+    expect(markAnswer("x̄ = 31.9", spec(31.7), { marks: 1 }).correct).toBe(false);
+  });
+});
+
+// The B2 E author (7 Oct 2026): right values refused as unreadable around a label, a unit or a rate.
+describe("a value with a rate, a number word after a label, a bracketed unit or a glued unit is read", () => {
+  const n = (value: number, unit?: string): AnswerSpec => ({ kind: "numeric", value, tolerance: { type: "absolute", value: 0 }, ...(unit ? { unit } : {}), unitRequired: false, acceptForms: ["decimal"] });
+  test("b2-antibiotics .0007(a) 'how many patients per 10 000': '34 per 10 000' is 34", () => {
+    for (const raw of ["34 per 10 000", "34 per 10000", "34 per 10 000 patients"]) expect(markAnswer(raw, n(34), { marks: 1 }).correct, raw).toBe(true);
+    expect(markAnswer("35 per 10 000", n(34), { marks: 1 }).correct).toBe(false);
+  });
+  test("antibiotics we02 twin 'the nearest whole week': 'week ten' and '10 (weeks)' are 10", () => {
+    const spec: AnswerSpec = { kind: "numeric", value: 10, tolerance: { type: "absolute", value: 0.5 }, unitRequired: false, acceptForms: ["decimal"] };
+    for (const raw of ["week ten", "10 (weeks)", "week 10", "ten"]) expect(markAnswer(raw, spec, { marks: 5 }).correct, raw).toBe(true);
+    expect(markAnswer("week nine", spec, { marks: 5 }).correct).toBe(false);
+  });
+  test("b2-non-communicable .0005(a) and we01 twin: a unit glued to the number is the unit", () => {
+    expect(markAnswer("10units", n(10, "units"), { marks: 1 }).correct).toBe(true);
+    expect(markAnswer("7units", n(7, "units"), { marks: 3 }).correct).toBe(true);
+    expect(markAnswer("8units", n(7, "units"), { marks: 3 }).correct).toBe(false);
+  });
+});
+
+// The B2 E author (7 Oct 2026): "correct to the nearest whole number" was not read as an accuracy demand, so an unrounded
+// right value scored 0 where only the accuracy mark is lost (b2-heart-attacks .0007(a) "4856.3" against 4856, 3 marks).
+describe("the nearest whole number is an accuracy instruction: an unrounded right value loses the accuracy mark only", () => {
+  const spec: AnswerSpec = { kind: "numeric", value: 4856, tolerance: { type: "absolute", value: 0 }, unitRequired: false, acceptForms: ["decimal"] };
+  const prompt = "The table shows a trial of two combinations of drugs. Calculate how many people in group 2 reached the target, correct to the nearest whole number.";
+  test("on a science paper 4856.3 earns 2 of 3 (places as written); 4856 earns 3; 4857 earns 0", () => {
+    const r = markAnswer("4856.3", spec, { marks: 3, prompt, subject: "science" });
+    expect(r.correct).toBe(false);
+    expect(r.marksAwarded).toBe(2);
+    expect(markAnswer("4856", spec, { marks: 3, prompt, subject: "science" }).marksAwarded).toBe(3);
+    expect(markAnswer("4857", spec, { marks: 3, prompt, subject: "science" }).marksAwarded).toBe(0);
+  });
+  test("on a maths paper more places than asked are right when they round to the answer (the lead's ruling, 27 Sep 2026)", () => {
+    expect(markAnswer("4856.3", spec, { marks: 3, prompt }).marksAwarded).toBe(3);
+    expect(markAnswer("4857", spec, { marks: 3, prompt }).marksAwarded).toBe(0);
+    // The boundary value, half a unit off, is the engine's accuracy-only case as for any d.p. demand.
+    expect(markAnswer("4856.5", spec, { marks: 3, prompt }).marksAwarded).toBe(2);
+  });
+  test("without the instruction an unrounded value is simply wrong against an exact tolerance", () => {
+    expect(markAnswer("4856.3", spec, { marks: 3, prompt: "Calculate how many people in group 2 reached the target." }).marksAwarded).toBe(0);
+  });
+});
+
+// The P2 author (7 Oct 2026): a follow-through relation that is the identity "x" paid nothing, because the relation
+// "(9)" has no operator and the arithmetic reader returned null. A bare value, with or without brackets, is an expression.
+describe("follow-through with the identity relation x (p2-calculating-resistance .0014(b)(ii))", () => {
+  const ohms: AnswerSpec = { kind: "numeric", value: 4, tolerance: { type: "absolute", value: 0.05 }, unit: "Ω", unitRequired: false, acceptForms: ["decimal"] };
+  const ft = { earlierRaw: "9", earlierSpec: ohms, relation: "x" };
+  test("her (a) = 9 carries to (b)(ii): 9 and 9 Ω earn the mark", () => {
+    expect(followThroughValue(ft, ohms)).toBe(9);
+    expect(markAnswer("9", ohms, { marks: 1, followThrough: ft, subject: "science" }).marksAwarded).toBe(1);
+    expect(markAnswer("9 Ω", ohms, { marks: 1, followThrough: ft, subject: "science" }).marksAwarded).toBe(1);
+    expect(markAnswer("4", ohms, { marks: 1, followThrough: ft, subject: "science" }).marksAwarded).toBe(1);
+    expect(markAnswer("7", ohms, { marks: 1, followThrough: ft, subject: "science" }).marksAwarded).toBe(0);
+  });
+  test("a relation with an operator still computes", () => {
+    expect(followThroughValue({ ...ft, relation: "x / 2" }, ohms)).toBe(4.5);
+    expect(followThroughValue({ ...ft, relation: "(x)" }, ohms)).toBe(9);
+  });
+});
+
+// Build-9 gate (the FM1 group 1 author, 7 Oct 2026): fm1 quadratic-inequalities .0002 paid "x < -3 and x > 5" 3/3. The
+// solution set is x < −3 or x > 5; "and" for two disjoint outside regions is the slip the 2025 FM1 report names (no x
+// satisfies both). A solution set written as two inequalities is read as a set: "or", a comma or two lines join outside
+// regions; "and" (or a chained inequality) is an intersection; an empty intersection written for a two-region answer is
+// wrong and earns only the method marks its working shows; the union written for an inside region is wrong too.
+describe("a solution set written as two inequalities is read as a set (build-9 gate, the connectives)", () => {
+  const outside: AnswerSpec = { kind: "text", accepted: ["x < -3 or x > 5", "x > 5 or x < -3"], keyWords: [{ any: ["x < -3", "-3 > x"], marks: 1 }, { any: ["x > 5", "5 < x"], marks: 1 }], listingRule: false };
+  const prompt = "Solve the inequality x^2 - 2x - 15 > 0.";
+  test("outside regions: or, a comma and two lines earn; and earns nothing", () => {
+    for (const right of ["x < -3 or x > 5", "x > 5 or x < -3", "x < -3, x > 5", "x < -3\nx > 5", "x < -3 ; x > 5"]) expect(markAnswer(right, outside, { marks: 3, prompt }).marksAwarded, right).toBe(3);
+    for (const wrong of ["x < -3 and x > 5", "x > 5 and x < -3", "x < -3 & x > 5"]) {
+      const r = markAnswer(wrong, outside, { marks: 3, prompt });
+      expect(r.correct, wrong).toBe(false);
+      expect(r.marksAwarded, wrong).toBe(0);
+    }
+  });
+  const inside: AnswerSpec = { kind: "text", accepted: ["-3 < x < 5", "x > -3 and x < 5"], keyWords: [{ any: ["x > -3", "-3 < x"], marks: 1 }, { any: ["x < 5", "5 > x"], marks: 1 }], listingRule: false };
+  test("an inside region: and or a chain earns; or (the whole line) earns nothing", () => {
+    for (const right of ["-3 < x < 5", "x > -3 and x < 5", "x < 5 and x > -3"]) expect(markAnswer(right, inside, { marks: 2, prompt: "Solve x^2 - 2x - 15 < 0." }).marksAwarded, right).toBe(2);
+    const r = markAnswer("x > -3 or x < 5", inside, { marks: 2, prompt: "Solve x^2 - 2x - 15 < 0." });
+    expect(r.correct).toBe(false);
+    expect(r.marksAwarded).toBe(0);
+  });
+});
+
+// Mutation survivors pinned (7 Oct 2026): the verification exception's two edges.
+describe("the verification exception pays only on a show-that, and never the last mark", () => {
+  const spec: AnswerSpec = { kind: "text", accepted: ["The weight component along the slope is 120 sin 30 = 60 N, so 60 - 30 = 12a and a = 2.5 m/s²."], keyWords: [{ any: ["120 sin 30", "120sin30", "weight component along the slope"], marks: 1 }, { any: ["60 - 30", "60 minus 30"], marks: 1 }, { any: ["a = 2.5", "= 2.5", "2.5 m/s"], marks: 1 }], listingRule: false };
+  const verify = (marksTypicallyEarned: number): CommonError => ({ misconception: "fm.show-that.verify-by-substitution", pattern: { kind: "text", regex: "substitut" }, feedback: "Putting the printed 2.5 into the equation is verification, not a derivation.", marksTypicallyEarned });
+  const typed = "Substituting a = 2.5: 60 - 30 = 30 and 12 × 2.5 = 30, so both sides agree";
+  // A substitution written without the scheme's own lines: the key words pay nothing, so the exception alone pays.
+  const bare = "Substituting the printed value into the equation, both sides come to 30, so it checks";
+  test("H2 the same error on a part that is not a show-that pays the key-word award only", () => {
+    expect(markAnswer(bare, spec, { marks: 3, commonErrors: [verify(2)], prompt: "A sledge of mass 12 kg is released on a rough slope. Show that its acceleration is 2.5 m/s²." }).marksAwarded).toBe(2);
+    expect(markAnswer(bare, spec, { marks: 3, commonErrors: [verify(2)], prompt: "A sledge of mass 12 kg is released on a rough slope. Find its acceleration." }).marksAwarded).toBe(0);
+    expect(markAnswer(typed, spec, { marks: 3, commonErrors: [verify(2)], prompt: "A sledge of mass 12 kg is released on a rough slope. Find its acceleration." }).marksAwarded).toBe(2);
+  });
+  test("H4 an error authored at full marks is still capped at marks - 1 on the show-that", () => {
+    expect(markAnswer(typed, spec, { marks: 3, commonErrors: [verify(3)], prompt: "Show that its acceleration is 2.5 m/s²." }).marksAwarded).toBe(2);
+  });
+});
+
+// The M4 author (8 Oct 2026): a coefficient typed a/bx was read as a/(bx), so "y = -1/2x + 1" scored 0 on m4
+// perpendicular-lines .0008/.0009/.0011/.0014/.0015/.0022 while "2x/3", "(2/3)x" and "0.5x" passed. Students write 1/2x
+// for half x and the schemes print it so ("rearranged to y = −3/2x + 4"); students also write 1/2x for 1/(2x). Both
+// readings are tried and the answer is right when either reading is the expected answer: the two readings differ, so a
+// wrong answer is never paid by the other reading.
+describe("a/bx is read both as (a/b)x and as a/(bx), and is right when either reading is the answer", () => {
+  const line = (latex: string): AnswerSpec => ({ kind: "algebraic", latex, equivalence: "equivalent", variables: ["x", "y"] });
+  const expr = (latex: string): AnswerSpec => ({ kind: "algebraic", latex, equivalence: "equivalent", variables: ["x"] });
+  test("the coefficient reading", () => {
+    expect(markAnswer("y = 2/3x - 2", line("y = \\frac{2}{3}x - 2"), { marks: 4 }).correct).toBe(true);
+    expect(markAnswer("y = -1/2x + 1", line("y = -\\frac{1}{2}x + 1"), { marks: 4 }).correct).toBe(true);
+    expect(markAnswer("y = -3/2x + 4", line("y = -\\frac{3}{2}x + 4"), { marks: 1 }).correct).toBe(true);
+    expect(markAnswer("1/2x", expr("\\frac{1}{2}x"), { marks: 1 }).correct).toBe(true);
+    expect(markAnswer("3/4x^2", expr("\\frac{3}{4}x^2"), { marks: 1 }).correct).toBe(true);
+  });
+  test("the reciprocal reading", () => {
+    expect(markAnswer("1/2x", expr("\\frac{1}{2x}"), { marks: 1 }).correct).toBe(true);
+    expect(markAnswer("1/(2x)", expr("\\frac{1}{2x}"), { marks: 1 }).correct).toBe(true);
+    expect(markAnswer("3/2x", expr("\\frac{3}{2x}"), { marks: 1 }).correct).toBe(true);
+  });
+  test("a wrong answer is still wrong under both readings", () => {
+    expect(markAnswer("y = 2/3x - 3", line("y = \\frac{2}{3}x - 2"), { marks: 4 }).marksAwarded).toBe(0);
+    expect(markAnswer("1/3x", expr("\\frac{1}{2x}"), { marks: 1 }).correct).toBe(false);
+    expect(markAnswer("1/3x", expr("\\frac{1}{2}x"), { marks: 1 }).correct).toBe(false);
+  });
+});
+
+// The M4 author (8 Oct 2026), a right partial answer refused: m4 perpendicular-lines .0021 "p = 7" scored 0/6 where the
+// scheme pays A2 for that root. One right root of a solution set earns the scheme's accuracy point that names it (or one
+// mark a root where the scheme names none), never the last mark; a wrong root beside a right one still earns nothing.
+describe("one right root of a solution set earns its accuracy mark (build-9 gate)", () => {
+  const spec: AnswerSpec = { kind: "algebraic", latex: "p=0, p=7", equivalence: "equivalent", variables: ["p"] };
+  const scheme: MarkPoint[] = [
+    { id: "MA1", code: "MA", marks: 1, for: "gradient 5/(2 − p)" },
+    { id: "MA2", code: "MA", marks: 1, for: "gradient −2/(5 − p)" },
+    { id: "MA3", code: "MA", marks: 1, for: "their product set equal to −1" },
+    { id: "MA4", code: "MA", marks: 1, for: "(2 − p)(5 − p) = 10, leading to p² − 7p = 0" },
+    { id: "A1", code: "A", marks: 1, for: "p = 0" },
+    { id: "A2", code: "A", marks: 1, for: "p = 7" },
+  ];
+  // The M4 author's ruling (8 Oct 2026): one right root earns what the scheme gives for that root, the method before the
+  // roots implied; only the missing root's accuracy point is lost: 5 of 6 here (the lead: "where the scheme gives 5").
+  test("p = 7 alone earns 5 of 6 (A1 for p = 0 lost); 7 alone the same; both roots earn 6", () => {
+    for (const raw of ["p = 7", "7", "p = 0"]) {
+      const r = markAnswer(raw, spec, { marks: 6, scheme });
+      expect(r.correct, raw).toBe(false);
+      expect(r.marksAwarded, raw).toBe(5);
+    }
+    expect(markAnswer("p = 0, p = 7", spec, { marks: 6, scheme }).marksAwarded).toBe(6);
+    expect(markAnswer("p = 0 or p = 7", spec, { marks: 6, scheme }).marksAwarded).toBe(6);
+  });
+  test("a wrong root beside a right one earns nothing; without a scheme a root earns one mark, never the last", () => {
+    expect(markAnswer("p = 7, p = 3", spec, { marks: 6, scheme }).marksAwarded).toBe(0);
+    const two: AnswerSpec = { kind: "algebraic", latex: "x = 2, x = -3", equivalence: "equivalent", variables: ["x"] };
+    expect(markAnswer("x = 2", two, { marks: 2 }).marksAwarded).toBe(1);
+    expect(markAnswer("x = 2", two, { marks: 1 }).marksAwarded).toBe(0);
+  });
+});
+
+// Build-9 gate, class H, the lead's ruling of 8 Oct 2026 (the M8 author): on a show-that part a matched common error
+// whose answer shows a line of working pays what its own scheme line gives (the M1 for a correct substitution with a
+// slip after it: the author's marksTypicallyEarned), never 0 and never the show-that value itself. A bare value or a
+// sentence with no working ("x = 2", "multiply the whole equation by 10") still names a wrong method and pays nothing;
+// off a show-that part a text common error never raises the award (rule I).
+describe("a slip in a line of working on a show-that pays its scheme line, a bare value pays nothing (build-9 gate, class H)", () => {
+  const simeq: AnswerSpec = {
+    kind: "text",
+    accepted: ["x^2 + (x + 5)^2 = 53, so 2x^2 + 10x - 28 = 0 and x^2 + 5x - 14 = 0"],
+    keyWords: [{ any: ["x^2 + (x + 5)^2 = 53"], marks: 1 }, { any: ["2x^2 + 10x - 28 = 0", "x^2 + x^2 + 10x + 25 = 53"], marks: 1 }],
+    listingRule: false,
+  };
+  const expand: CommonError = { misconception: "maths.algebra.expand-squared-bracket", pattern: { kind: "text", regex: "x\\s*\\^\\s*2\\s*\\+\\s*x\\s*\\^\\s*2\\s*\\+\\s*25\\s*=\\s*53" }, feedback: "(x + 5)^2 has lost its middle term.", marksTypicallyEarned: 1 };
+  const showThat = "The line y = x + 5 meets the circle x^2 + y^2 = 53. Show that the x-coordinates of the points where they meet satisfy x^2 + 5x - 14 = 0.";
+  test("m8 simultaneous .0020 'x^2 + x^2 + 25 = 53': the substitution with the middle term lost earns the M1 its error values", () => {
+    const r = markAnswer("x^2 + x^2 + 25 = 53", simeq, { marks: 2, commonErrors: [expand], prompt: showThat });
+    expect(r.correct).toBe(false);
+    expect(r.marksAwarded).toBe(1);
+    expect(r.tags).toContain("maths.algebra.expand-squared-bracket");
+  });
+  test("the same slip off a show-that part pays nothing (rule I), and a slip valued at full marks is capped at marks - 1", () => {
+    expect(markAnswer("x^2 + x^2 + 25 = 53", simeq, { marks: 2, commonErrors: [expand], prompt: "Find the x-coordinates of the points where the line meets the circle." }).marksAwarded).toBe(0);
+    expect(markAnswer("x^2 + x^2 + 25 = 53", simeq, { marks: 2, commonErrors: [{ ...expand, marksTypicallyEarned: 2 }], prompt: showThat }).marksAwarded).toBe(1);
+  });
+  const pyth: AnswerSpec = {
+    kind: "text",
+    accepted: ["AM² = 12² + 12² = 288, VM² = 22² − 288 = 484 − 288 = 196, VM = √196 = 14"],
+    keyWords: [{ any: ["288", "12² + 12²", "144 + 144"], marks: 1 }, { any: ["484 − 288", "484 - 288", "22² − 288"], marks: 1 }, { any: ["√196", "VM = 14"], marks: 1 }],
+    listingRule: false,
+  };
+  const halfBase: CommonError = { misconception: "maths.trig3d.half-base-vs-half-diagonal", pattern: { kind: "text", regex: "484\\s*[-−]\\s*144|\\b340\\b" }, feedback: "Half an edge was used as the run.", marksTypicallyEarned: 1 };
+  const noWorking: CommonError = { misconception: "maths.presentation.answer-without-working", pattern: { kind: "text", regex: "^\\s*(VM\\s*=\\s*)?14(\\s*cm)?\\s*$" }, feedback: "The printed value alone shows nothing.", marksTypicallyEarned: 0 };
+  test("m8 pythagoras-3d .0023(a) '484 - 144 = 340' earns the Pythagoras line's M1; '14' alone earns nothing", () => {
+    const prompt = "VABCD is a pyramid with a square base of side 24 cm and slant edges of 22 cm. Show that the vertical height VM is 14 cm.";
+    expect(markAnswer("484 - 144 = 340", pyth, { marks: 3, commonErrors: [noWorking, halfBase], prompt }).marksAwarded).toBe(1);
+    expect(markAnswer("14", pyth, { marks: 3, commonErrors: [noWorking, halfBase], prompt }).marksAwarded).toBe(0);
+  });
+  const discriminant: AnswerSpec = { kind: "text", accepted: ["x^2 + 4 = 0 has no real solutions because the discriminant is -16"], keyWords: [{ any: ["x^2 + 4 = 0", "x^2 = -4"], marks: 1 }, { any: ["no real", "discriminant", "negative"], marks: 1 }], listingRule: false };
+  const solveInstead: CommonError = { misconception: "maths.quadratics.show-that-solve-instead", pattern: { kind: "text", regex: "^\\s*x\\s*=\\s*2\\s*$" }, feedback: "x = 2 is a value, not the proof.", marksTypicallyEarned: 2 };
+  test("m8 simultaneous .0017(a) 'x = 2' on a show-that: a bare value shows no working and pays nothing, whatever its error is valued at", () => {
+    expect(markAnswer("x = 2", discriminant, { marks: 3, commonErrors: [solveInstead], prompt: "Show that the line y = 2x + 1 never meets the curve y = x^2 + 2x + 5." }).marksAwarded).toBe(0);
+  });
+});
+
+// The C2 author (8 Oct 2026), right answers refused on equation parts.
+describe("word and symbol equations: case never costs a mark in a word equation; fractional coefficients balance", () => {
+  const word: AnswerSpec = { kind: "equation", kindOf: "word", balancedLatex: "propane + oxygen -> carbon dioxide + water", stateSymbolsRequired: false, acceptMultiples: false };
+  test("EF-17 c2 combustion .0015(a): a capital letter in a word equation is the same equation", () => {
+    for (const raw of ["propane + oxygen → carbon dioxide + water", "Propane + oxygen → carbon dioxide + water", "Propane + Oxygen → Carbon dioxide + Water"]) {
+      expect(markAnswer(raw, word, { marks: 2 }).marksAwarded, raw).toBe(2);
+    }
+    expect(markAnswer("propane + oxygen → carbon monoxide + water", word, { marks: 2 }).correct).toBe(false);
+  });
+  const symbol: AnswerSpec = { kind: "equation", kindOf: "symbol", balancedLatex: "2CH4 + 3O2 -> 2CO + 4H2O", stateSymbolsRequired: false, acceptMultiples: true };
+  test("EF-16 c2 combustion .0005: an equation balanced with a fractional coefficient is the same balanced equation (CCEA 2021 general instruction 7(a))", () => {
+    for (const raw of ["CH4 + 3/2 O2 → CO + 2H2O", "CH4 + 3/2O2 → CO + 2H2O", "CH4 + 1.5O2 → CO + 2H2O", "2CH4 + 3O2 → 2CO + 4H2O"]) {
+      expect(markAnswer(raw, symbol, { marks: 3 }).marksAwarded, raw).toBe(3);
+    }
+    expect(markAnswer("CH4 + 2O2 → CO + 2H2O", symbol, { marks: 3 }).correct).toBe(false);
+  });
+});
+
+// Build-9 gate (the M8 author, 8 Oct 2026), wrong answers paid: a "Simplify" index answer left unfinished earned full
+// marks, as the engine had no single-term form: m8 index-laws .0005 "27 × c^12" and "3^3 c^12" 2/2 against 27c^12 (the
+// November 2024 M8 report: a times sign left in lost the mark); .0010(b) "4 × x^2y^2", "2x^3y^-1 × 2x^-1y^3"; .0008
+// "x^(5/2) × x^(1/2)" and the root spelling "√(x^5) × x^(1/2)" against x^3. A simplify-indices task is a form task
+// (ruling 4): the answer is one term, its number worked out, each letter once with one index, no operator between
+// factors and no root sign; anything else earns the matching common error or the ladder only.
+describe("a simplified index answer is one term (build-9 gate, the single-term form)", () => {
+  const spec = (latex: string): AnswerSpec => ({ kind: "algebraic", latex, equivalence: "equivalent", variables: ["c", "x", "y"] });
+  const simplify = "Simplify fully.";
+  test("m8 index-laws .0005 against 27c^12: the finished term earns 2, an unfinished one earns nothing", () => {
+    for (const right of ["27c^12", "27c^{12}", "27 c^12"]) expect(markAnswer(right, spec("27c^{12}"), { marks: 2, prompt: simplify }).marksAwarded, right).toBe(2);
+    for (const wrong of ["27 × c^12", "3^3 c^12", "27 * c^12", "3^3 × c^12"]) {
+      const r = markAnswer(wrong, spec("27c^{12}"), { marks: 2, prompt: simplify });
+      expect(r.correct, wrong).toBe(false);
+      expect(r.marksAwarded, wrong).toBe(0);
+    }
+  });
+  test("m8 index-laws .0010(b) against 4x^2y^2 and .0008 against x^3", () => {
+    expect(markAnswer("4x^2y^2", spec("4x^{2}y^{2}"), { marks: 2, prompt: simplify }).marksAwarded).toBe(2);
+    for (const wrong of ["4 × x^2y^2", "2x^3y^-1 × 2x^-1y^3", "2x^3y^-1 × 2x^-1y^3 = 4x^2y^2"]) expect(markAnswer(wrong, spec("4x^{2}y^{2}"), { marks: 2, prompt: simplify }).correct, wrong).toBe(false);
+    expect(markAnswer("x^3", spec("x^{3}"), { marks: 2, prompt: simplify }).marksAwarded).toBe(2);
+    for (const wrong of ["x^(5/2) × x^(1/2)", "√(x^5) × x^(1/2)", "x^(5/2) x^(1/2)"]) expect(markAnswer(wrong, spec("x^{3}"), { marks: 2, prompt: simplify }).correct, wrong).toBe(false);
+  });
+  test("a fraction or a negative index is still one term; a sum answer is not judged by the single-term rule", () => {
+    expect(markAnswer("x^3/y", spec("x^{3}y^{-1}"), { marks: 2, prompt: simplify }).marksAwarded).toBe(2);
+    expect(markAnswer("x^3y^-1", spec("x^{3}y^{-1}"), { marks: 2, prompt: simplify }).marksAwarded).toBe(2);
+    expect(markAnswer("x^2 + 2x", spec("x^{2} + 2x"), { marks: 2, prompt: simplify }).marksAwarded).toBe(2);
+    expect(markAnswer("27 × c^12", spec("27c^{12}"), { marks: 2, prompt: "Write down the value of the expression." }).marksAwarded).toBe(2);
+  });
+});
+
+// The FM2 reviewer (8 Oct 2026, E1), a right answer refused: a follow-through from a vector answer was never paid
+// (followThroughValue returned null for a non-numeric earlier spec). fm2 ij-vector .0019(b)(c), .0030(c), resultant
+// .0007(b)(c), .0009(b): the magnitude, the direction or a component of her own earlier vector follows through.
+describe("follow-through from a vector earlier answer: magnitude, direction and components", () => {
+  const vector: AnswerSpec = { kind: "algebraic", latex: "5i + 11j", equivalence: "equivalent", variables: ["i", "j"] };
+  const magnitude: AnswerSpec = { kind: "numeric", value: 12.08, tolerance: { type: "absolute", value: 0.005 }, unit: "N", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+  const angle: AnswerSpec = { kind: "numeric", value: 65.56, tolerance: { type: "absolute", value: 0.005 }, unit: "°", unitRequired: false, acceptForms: ["decimal", "fraction"] };
+  test("fm2 ij-vector .0019(b)(c): her (a) = 5i + 12j carries 13 N and 67.38°", () => {
+    const ft = { earlierRaw: "5i + 12j", earlierSpec: vector };
+    expect(followThroughValue(ft, magnitude)).toBeCloseTo(13, 6);
+    expect(followThroughValue(ft, angle)).toBeCloseTo(67.38, 2);
+    expect(markAnswer("13", magnitude, { marks: 2, followThrough: ft }).marksAwarded).toBe(2);
+    expect(markAnswer("67.38", angle, { marks: 2, followThrough: ft }).marksAwarded).toBe(2);
+    expect(markAnswer("12.08", magnitude, { marks: 2, followThrough: ft }).marksAwarded).toBe(2);
+    expect(markAnswer("14", magnitude, { marks: 2, followThrough: ft }).marksAwarded).toBe(0);
+  });
+  test("a component follows through, and a non-vector earlier answer still gives nothing", () => {
+    const component: AnswerSpec = { kind: "numeric", value: 11, tolerance: { type: "absolute", value: 0.005 }, unitRequired: false, acceptForms: ["decimal"] };
+    expect(followThroughValue({ earlierRaw: "5i + 12j", earlierSpec: vector }, component)).toBe(12);
+    expect(followThroughValue({ earlierRaw: "x + 2", earlierSpec: { kind: "algebraic", latex: "x + 1", equivalence: "equivalent", variables: ["x"] } }, component)).toBeNull();
+  });
+});
+
+// The FM3 author (8 Oct 2026), right answers refused: "71.12°F" could not be read where "21.73°C" reads, and "2.94
+// degrees Fahrenheit" lost a unit mark FM schemes do not award. The degree sign with F reads as with C, and a unit
+// spelled out is the unit its symbol is.
+describe("degrees Fahrenheit read like degrees Celsius, as a symbol or spelled out", () => {
+  const f = (value: number): AnswerSpec => ({ kind: "numeric", value, tolerance: { type: "dp", places: 2 }, unit: "°F", unitRequired: false, acceptForms: ["decimal"] });
+  test("71.12°F and 2.94 degrees Fahrenheit are the values with their unit", () => {
+    for (const [raw, value] of [["71.12°F", 71.12], ["71.12 °F", 71.12], ["2.94°F", 2.94], ["2.94 degrees Fahrenheit", 2.94], ["2.94 degrees F", 2.94], ["71.12", 71.12]] as const) {
+      const r = markAnswer(raw, f(value), { marks: 2, prompt: "Convert the temperature. Give your answer to 2 decimal places." });
+      expect(r.correct, raw).toBe(true);
+      expect(r.marksAwarded, raw).toBe(2);
+    }
+    expect(markAnswer("71.12°C", f(71.12), { marks: 2 }).marksAwarded).toBeLessThan(2);
+    expect(markAnswer("21.73°C", { kind: "numeric", value: 21.73, tolerance: { type: "dp", places: 2 }, unit: "°C", unitRequired: false, acceptForms: ["decimal"] }, { marks: 2 }).marksAwarded).toBe(2);
+  });
+});
+
+// Build-9 gate (the M4 author, 8 Oct 2026; exact inputs in scratchpad/state/m4/STATE.md), right answers refused and
+// wrong answers paid on solution lists.
+describe("one right root of two earns what the scheme gives for that root (build-9 gate, M4)", () => {
+  test("m4 quadratic-formula .0003 (algebraic spec): 'x = 1/2' earns MA1 + A1 = 2 of 3; the other root's mark waits", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: "x=\\frac{1}{2}, x=-\\frac{4}{3}", equivalence: "equivalent", variables: ["x"] };
+    const scheme: MarkPoint[] = [
+      { id: "MA1", code: "MA", marks: 1, for: "(3x + 4)(2x − 1) = 0 used, or the formula with a = 6, b = 5, c = −4" },
+      { id: "A1", code: "A", marks: 1, for: "x = 1/2 (accept 0.5)" },
+      { id: "A2", code: "A", marks: 1, for: "x = −4/3 (accept −1.33 or better)" },
+    ];
+    for (const raw of ["x = 1/2", "x = 0.5"]) {
+      const r = markAnswer(raw, spec, { marks: 3, scheme, prompt: "Hence solve 6x^2 + 5x - 4 = 0" });
+      expect(r.correct, raw).toBe(false);
+      expect(r.marksAwarded, raw).toBe(2);
+    }
+    expect(markAnswer("x = 1/2, x = -4/3", spec, { marks: 3, scheme }).marksAwarded).toBe(3);
+  });
+  test("a rounded decimal its scheme accepts is the root: '0.5, -1.33' and 'x = 1.67 or x = -1.5'", () => {
+    const spec: AnswerSpec = { kind: "algebraic", latex: "x=\\frac{1}{2}, x=-\\frac{4}{3}", equivalence: "equivalent", variables: ["x"] };
+    expect(markAnswer("0.5, -1.33", spec, { marks: 3 }).marksAwarded).toBe(3);
+    expect(markAnswer("x = 0.5 or x = -1.333", spec, { marks: 3 }).marksAwarded).toBe(3);
+    expect(markAnswer("0.5, -1.3", spec, { marks: 3 }).correct).toBe(false);
+    const thirds: AnswerSpec = { kind: "algebraic", latex: "x=\\frac{5}{3}, x=-\\frac{3}{2}", equivalence: "equivalent", variables: ["x"] };
+    expect(markAnswer("x = 1.67 or x = -1.5", thirds, { marks: 2 }).marksAwarded).toBe(2);
+  });
+  const roots = (a: string, b: string, accepted: string[]): AnswerSpec => ({ kind: "text", accepted, keyWords: [{ any: [a], marks: 1 }, { any: [b], marks: 1 }], listingRule: false });
+  test("m4 .0008 (text spec, 4 marks): 'x = 1.81' earns 3 of 4, the missing root's A mark lost", () => {
+    const spec = roots("1.81", "-1.21", ["x = 1.81 or x = -1.21", "1.81, -1.21"]);
+    const scheme: MarkPoint[] = [
+      { id: "MA1", code: "MA", marks: 1, for: "rearranged to 5x² − 3x − 11 = 0" },
+      { id: "M1", code: "M", marks: 1, for: "formula quoted and substituted with a = 5, b = -3, c = -11" },
+      { id: "A1", code: "A", marks: 1, for: "x = 1.81" },
+      { id: "A2", code: "A", marks: 1, for: "x = -1.21" },
+    ];
+    expect(markAnswer("x = 1.81", spec, { marks: 4, scheme, prompt: "Solve 5x^2 = 3x + 11. Give your answers to 2 decimal places." }).marksAwarded).toBe(3);
+    expect(markAnswer("x = 1.81 or x = -1.21", spec, { marks: 4, scheme }).marksAwarded).toBe(4);
+    expect(markAnswer("x = 1.81 or x = 2", spec, { marks: 4, scheme }).marksAwarded).toBe(0);
+  });
+  test("m4 .0001 (one A point for both roots): 'x = -4' earns 1 of 2; .0020: '12' earns 3 of 4 and '12 and 13' earns 0", () => {
+    const spec1 = roots("4", "-4", ["x = 4 or x = -4", "4, -4"]);
+    const scheme1: MarkPoint[] = [{ id: "MA1", code: "MA", marks: 1, for: "x² = 16, or 2(x + 4)(x − 4) = 0" }, { id: "A1", code: "A", marks: 1, for: "x = 4 and x = −4" }];
+    expect(markAnswer("x = -4", spec1, { marks: 2, scheme: scheme1, prompt: "Solve 2x^2 - 32 = 0" }).marksAwarded).toBe(1);
+    const spec20 = roots("12", "14", ["12 and 14", "12, 14"]);
+    const scheme20: MarkPoint[] = [
+      { id: "MA1", code: "MA", marks: 1, for: "n(n + 2) = 168, with n the smaller number" },
+      { id: "MA2", code: "MA", marks: 1, for: "n² + 2n − 168 = 0" },
+      { id: "MA3", code: "MA", marks: 1, for: "(n + 14)(n − 12) = 0, or the formula with a = 1, b = 2, c = −168" },
+      { id: "A1", code: "A", marks: 1, for: "12 and 14, with n = −14 rejected because the numbers are positive" },
+    ];
+    const prompt = "The product of two consecutive even numbers is 168. Both numbers are positive. Set up and solve a quadratic equation to find the two numbers.";
+    expect(markAnswer("12", spec20, { marks: 4, scheme: scheme20, prompt }).marksAwarded).toBe(3);
+    expect(markAnswer("12 and 14", spec20, { marks: 4, scheme: scheme20, prompt }).marksAwarded).toBe(4);
+    for (const wrong of ["12 and 13", "12, 13", "13 and 14"]) expect(markAnswer(wrong, spec20, { marks: 4, scheme: scheme20, prompt }).marksAwarded, wrong).toBe(0);
+  });
+});
+
+describe("follow-through from an earlier solution list reads each root (M4 .0014(c))", () => {
+  const b: AnswerSpec = { kind: "text", accepted: ["x = 3 or x = -5.5", "3, -5.5"], keyWords: [{ any: ["3"], marks: 1 }, { any: ["-5.5", "−5.5", "-11/2"], marks: 1 }], listingRule: false };
+  const c: AnswerSpec = { kind: "numeric", value: 5, tolerance: { type: "dp", places: 1 }, unit: "cm", unitRequired: false, acceptForms: ["decimal"] };
+  test("'7' after her (b) 'x = 4 or x = -5.5' with the relation 2 * x - 1 earns the mark; '5' still does; '9' does not", () => {
+    const ft = { earlierRaw: "x = 4 or x = -5.5", earlierSpec: b, relation: "2 * x - 1" };
+    expect(markAnswer("7", c, { marks: 1, followThrough: ft }).marksAwarded).toBe(1);
+    expect(markAnswer("5", c, { marks: 1, followThrough: ft }).marksAwarded).toBe(1);
+    expect(markAnswer("9", c, { marks: 1, followThrough: ft }).marksAwarded).toBe(0);
+  });
+});
+
+describe("a show-that's printed result typed alone on a text part earns nothing (build-9 gate, class C)", () => {
+  const spec: AnswerSpec = {
+    kind: "text",
+    accepted: ["(x + 5)(2x - 3) = 15; 2x^2 - 3x + 10x - 15 = 15; 2x^2 + 7x - 15 = 15; 2x^2 + 7x - 30 = 0"],
+    keyWords: [{ any: ["(x + 5)(2x - 3)", "(2x - 3)(x + 5)"], marks: 1 }, { any: ["2x^2 + 7x - 15", "2x^2 - 3x + 10x - 15"], marks: 1 }, { any: ["2x^2 + 7x - 30 = 0", "2x² + 7x − 30 = 0"], marks: 1 }],
+    listingRule: false,
+  };
+  const prompt = "The length of a rectangle is $(x + 5)$ cm and its width is $(2x - 3)$ cm. Its area is $15\\ \\text{cm}^2$.\n\nShow that $2x^2 + 7x - 30 = 0$";
+  test("m4 .0011: the target alone is 0; the target with the line before it earns both", () => {
+    for (const alone of ["2x^2 + 7x - 30 = 0", "2x² + 7x − 30 = 0", "so 2x^2 + 7x - 30 = 0"]) expect(markAnswer(alone, spec, { marks: 3, prompt }).marksAwarded, alone).toBe(0);
+    expect(markAnswer("2x^2 + 7x - 15 = 15 so 2x^2 + 7x - 30 = 0", spec, { marks: 3, prompt }).marksAwarded).toBe(2);
+    expect(markAnswer("(x + 5)(2x - 3) = 15, 2x^2 + 7x - 15 = 15, 2x^2 + 7x - 30 = 0", spec, { marks: 3, prompt }).marksAwarded).toBe(3);
+  });
+});
+
+// The C2 reviewer's three rulings (8 Oct 2026).
+describe("a part that requires working pays a bare answer nothing; the working ladder decides (C2 ruling 1)", () => {
+  const sum: AnswerSpec = { kind: "numeric", value: 668, tolerance: { type: "exact" }, unitRequired: false, acceptForms: ["decimal"] };
+  test("'668' alone on a requiresWorking part is 0 and working-only; the line of working that reaches it is right", () => {
+    const bare = markAnswer("668", sum, { marks: 2, requiresWorking: true, prompt: "Calculate the value of Σfx. You must show your working." });
+    expect(bare.correct).toBe(false);
+    expect(bare.marksAwarded).toBe(0);
+    expect(bare.workingOnly).toBe(true);
+    const shown = markAnswer("2 × 1 + 5 × 3 + 20 × 32.45 = 668", sum, { marks: 2, requiresWorking: true, prompt: "Calculate the value of Σfx. You must show your working." });
+    expect(shown.correct).toBe(true);
+    expect(shown.marksAwarded).toBe(2);
+    expect(markAnswer("668", sum, { marks: 2 }).marksAwarded).toBe(2);
+  });
+  test("an algebraic answer typed bare is working-only too; a text answer is never", () => {
+    const alg: AnswerSpec = { kind: "algebraic", latex: "x = 3", equivalence: "equivalent", variables: ["x"] };
+    const bare = markAnswer("x = 3", alg, { marks: 3, requiresWorking: true });
+    expect(bare.marksAwarded).toBe(0);
+    expect(bare.workingOnly).toBe(true);
+    const text: AnswerSpec = { kind: "text", accepted: ["the particles gain energy"], keyWords: [{ any: ["energy"], marks: 1 }], listingRule: false };
+    expect(markAnswer("the particles gain energy", text, { marks: 1, requiresWorking: true }).marksAwarded).toBe(1);
+  });
+});
+
+describe("dropped trailing zeros under an instructed number of places follow the subject (C2 ruling 2, pinned)", () => {
+  const spec: AnswerSpec = { kind: "numeric", value: 1.5, tolerance: { type: "dp", places: 2 }, unit: "g", unitRequired: false, acceptForms: ["decimal"] };
+  const prompt = "Calculate the mass. Give your answer to 2 decimal places.";
+  test("science loses the accuracy mark for 1.5 where 1.50 is asked; maths and further maths keep it", () => {
+    expect(markAnswer("1.5", spec, { marks: 2, prompt, subject: "science" }).marksAwarded).toBe(1);
+    expect(markAnswer("1.50", spec, { marks: 2, prompt, subject: "science" }).marksAwarded).toBe(2);
+    expect(markAnswer("1.5", spec, { marks: 2, prompt, subject: "maths" }).marksAwarded).toBe(2);
+    expect(markAnswer("1.5", spec, { marks: 2, prompt, subject: "further-maths" }).marksAwarded).toBe(2);
+  });
+});
+
+describe("two key-word groups with identical lists are one idea (C2 ruling 3, pinned)", () => {
+  const spec: AnswerSpec = {
+    kind: "text",
+    accepted: ["it is colourless and odourless"],
+    keyWords: [
+      { any: ["colourless|colorless|no colour|no color", "odourless|odorless|no smell|no odour|no odor"], marks: 1 },
+      { any: ["colourless|colorless|no colour|no color", "odourless|odorless|no smell|no odour|no odor"], marks: 1 },
+    ],
+    listingRule: false,
+  };
+  test("one property said once, or twice in two spellings, earns one; two properties earn two", () => {
+    expect(markAnswer("it is colourless", spec, { marks: 2 }).marksAwarded).toBe(1);
+    expect(markAnswer("it is colourless, it has no colour", spec, { marks: 2 }).marksAwarded).toBe(1);
+    expect(markAnswer("colourless and colorless", spec, { marks: 2 }).marksAwarded).toBe(1);
+    expect(markAnswer("it is colourless and has no smell", spec, { marks: 2 }).marksAwarded).toBe(2);
   });
 });
